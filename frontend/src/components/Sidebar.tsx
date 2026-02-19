@@ -157,6 +157,7 @@ export function Sidebar({ store, onNavigate }: Props) {
                     </div>
                   )}
                   {store.userProfile?.display_name || "Me"}
+                  <span className="ml-auto text-[10px] font-medium bg-primary/15 text-primary px-1.5 py-0.5 rounded-full leading-none">Me</span>
                 </button>
 
                 <div className="border-b border-border/50 my-1" />

@@ -394,15 +394,28 @@ pub async fn send_message_cmd(
     })
 }
 
+#[derive(serde::Serialize)]
+pub struct PaginatedMessages {
+    pub messages: Vec<Message>,
+    pub total: i64,
+}
+
 #[tauri::command]
 pub fn get_messages_cmd(
     db: State<Database>,
     character_id: String,
-    _limit: Option<i64>,
-) -> Result<Vec<Message>, String> {
+    limit: Option<i64>,
+    offset: Option<i64>,
+) -> Result<PaginatedMessages, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
-    get_all_messages(&conn, &thread.thread_id).map_err(|e| e.to_string())
+    let total = count_messages(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
+    let messages = match limit {
+        Some(lim) => list_messages_paginated(&conn, &thread.thread_id, lim, offset.unwrap_or(0))
+            .map_err(|e| e.to_string())?,
+        None => get_all_messages(&conn, &thread.thread_id).map_err(|e| e.to_string())?,
+    };
+    Ok(PaginatedMessages { messages, total })
 }
 
 /// Strip FTS5 special characters and extract plain words for safe MATCH queries.

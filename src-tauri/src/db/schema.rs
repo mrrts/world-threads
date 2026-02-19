@@ -283,5 +283,26 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             'Studio Ghibli ', '');
     ")?;
 
+    // Gallery archive & tags columns
+    let has_wi_archived: bool = conn
+        .query_row("SELECT count(*) > 0 FROM pragma_table_info('world_images') WHERE name = 'is_archived'", [], |r| r.get(0))
+        .unwrap_or(false);
+    if !has_wi_archived {
+        conn.execute_batch("
+            ALTER TABLE world_images ADD COLUMN is_archived INTEGER NOT NULL DEFAULT 0;
+            ALTER TABLE world_images ADD COLUMN tags TEXT NOT NULL DEFAULT '[]';
+        ")?;
+    }
+
+    let has_cp_archived: bool = conn
+        .query_row("SELECT count(*) > 0 FROM pragma_table_info('character_portraits') WHERE name = 'is_archived'", [], |r| r.get(0))
+        .unwrap_or(false);
+    if !has_cp_archived {
+        conn.execute_batch("
+            ALTER TABLE character_portraits ADD COLUMN is_archived INTEGER NOT NULL DEFAULT 0;
+            ALTER TABLE character_portraits ADD COLUMN tags TEXT NOT NULL DEFAULT '[]';
+        ")?;
+    }
+
     Ok(())
 }

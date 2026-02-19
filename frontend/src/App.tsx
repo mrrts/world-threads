@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, startTransition, type ReactNode } from "react";
 import { useAppStore } from "@/hooks/use-app-store";
 import { api, type DailyUsage } from "@/lib/tauri";
 import { Sidebar } from "@/components/Sidebar";
@@ -9,12 +9,12 @@ import { CharacterGrid } from "@/components/CharacterGrid";
 import { UserProfileEditor } from "@/components/UserProfileEditor";
 import { WorldFeed } from "@/components/WorldFeed";
 import { SettingsPanel } from "@/components/SettingsPanel";
-import { SceneView } from "@/components/SceneView";
+import { WorldSummary } from "@/components/WorldSummary";
 import { Gallery } from "@/components/Gallery";
 import { MoodDebugPanel } from "@/components/MoodDebugPanel";
-import { MessageSquare, Globe, Users, Settings, Sparkles, Coins, Image } from "lucide-react";
+import { MessageSquare, PenLine, Users, Settings, Sparkles, Coins, Image, BookOpen } from "lucide-react";
 
-type View = "chat" | "world" | "character" | "feed" | "settings" | "scene" | "gallery";
+type View = "chat" | "world" | "character" | "feed" | "settings" | "summary" | "gallery";
 type CharSubView = "grid" | "editor" | "profile";
 
 export default function App() {
@@ -30,7 +30,7 @@ export default function App() {
       lastChatCharRef.current = store.activeCharacter.character_id;
     }
     viewRef.current = next;
-    setView(next);
+    startTransition(() => setView(next));
   }, [store.activeCharacter]);
 
   const handleNavigate = useCallback((v: string) => {
@@ -75,15 +75,15 @@ export default function App() {
       )}
 
       <div className="w-16 flex-shrink-0 bg-card border-r border-border flex flex-col items-center py-4 gap-2">
-        <NavButton icon={<MessageSquare size={20} />} active={view === "chat"} onClick={handleChatNav} title="Chat" />
-        <NavButton icon={<Globe size={20} />} active={view === "world"} onClick={() => setViewTracked("world")} title="World Canon" />
-        <NavButton icon={<Users size={20} />} active={view === "character"} onClick={handleCharNav} title="Characters" />
-        <NavButton icon={<Image size={20} />} active={view === "gallery"} onClick={() => setViewTracked("gallery")} title="Gallery" />
-        <NavButton icon={<Sparkles size={20} />} active={view === "feed"} onClick={() => setViewTracked("feed")} title="World Feed" />
-        <NavButton icon={<span className="text-lg">◆</span>} active={view === "scene"} onClick={() => setViewTracked("scene")} title="Scene" />
+        <NavButton icon={<BookOpen size={20} />} active={view === "summary"} onClick={() => setViewTracked("summary")} title="Summary" description="World overview and conversation recaps for each character." />
+        <NavButton icon={<MessageSquare size={20} />} active={view === "chat"} onClick={handleChatNav} title="Chat" description="Talk with your characters in real time." />
+        <NavButton icon={<PenLine size={20} />} active={view === "world"} onClick={() => setViewTracked("world")} title="World Canon" description="Edit your world's name, description, tone, and rules." />
+        <NavButton icon={<Users size={20} />} active={view === "character"} onClick={handleCharNav} title="Characters" description="Create, edit, and manage your cast of characters." />
+        <NavButton icon={<Image size={20} />} active={view === "gallery"} onClick={() => setViewTracked("gallery")} title="Gallery" description="Browse, generate, and upload images for this world." />
+        <NavButton icon={<Sparkles size={20} />} active={view === "feed"} onClick={() => setViewTracked("feed")} title="World Feed" description="Timeline of world events and tick history." />
         <div className="flex-1" />
         <UsageBadge sending={store.sending} />
-        <NavButton icon={<Settings size={20} />} active={view === "settings"} onClick={() => setViewTracked("settings")} title="Settings" />
+        <NavButton icon={<Settings size={20} />} active={view === "settings"} onClick={() => setViewTracked("settings")} title="Settings" description="API key, model config, and app preferences." />
       </div>
 
       <Sidebar store={store} onNavigate={handleNavigate} />
@@ -94,15 +94,65 @@ export default function App() {
             <p className="font-medium text-primary">API key required</p>
             <p className="text-muted-foreground mt-1">
               Go to <button className="underline text-primary cursor-pointer" onClick={() => setViewTracked("settings")}>Settings</button> to add your OpenAI API key before chatting.
+              {" "}Already added one?{" "}
+              <button
+                className="underline text-primary cursor-pointer"
+                onClick={async () => {
+                  const key = await api.getApiKey();
+                  if (key) store.setApiKey(key);
+                }}
+              >
+                Try again
+              </button>
             </p>
           </div>
         )}
-        {view === "chat" && <ChatView store={store} />}
-        {view === "world" && <WorldCanonEditor store={store} />}
+        {view === "chat" && (
+          <DeferredMount key="chat">
+            <ChatView store={store} />
+          </DeferredMount>
+        )}
+        {view === "world" && (
+          <DeferredMount key="world">
+            <WorldCanonEditor store={store} />
+          </DeferredMount>
+        )}
         {view === "character" && (
-          store.editingUserProfile ? <UserProfileEditor store={store} /> :
-          charSubView === "grid" ? (
-            <CharacterGrid
+          <DeferredMount key="character">
+            {store.editingUserProfile ? <UserProfileEditor store={store} /> :
+            charSubView === "grid" ? (
+              <CharacterGrid
+                store={store}
+                onChat={(id) => {
+                  const ch = store.characters.find((c) => c.character_id === id);
+                  if (ch) { store.selectCharacter(ch); lastChatCharRef.current = id; setViewTracked("chat"); }
+                }}
+                onSettings={(id) => {
+                  const ch = store.characters.find((c) => c.character_id === id);
+                  if (ch) { store.selectCharacter(ch); setCharSubView("editor"); }
+                }}
+              />
+            ) : <CharacterEditor store={store} />}
+          </DeferredMount>
+        )}
+        {view === "gallery" && (
+          <DeferredMount key="gallery">
+            <Gallery store={store} />
+          </DeferredMount>
+        )}
+        {view === "feed" && (
+          <DeferredMount key="feed">
+            <WorldFeed store={store} />
+          </DeferredMount>
+        )}
+        {view === "settings" && (
+          <DeferredMount key="settings">
+            <SettingsPanel store={store} />
+          </DeferredMount>
+        )}
+        {view === "summary" && (
+          <DeferredMount key="summary">
+            <WorldSummary
               store={store}
               onChat={(id) => {
                 const ch = store.characters.find((c) => c.character_id === id);
@@ -110,15 +160,11 @@ export default function App() {
               }}
               onSettings={(id) => {
                 const ch = store.characters.find((c) => c.character_id === id);
-                if (ch) { store.selectCharacter(ch); setCharSubView("editor"); }
+                if (ch) { store.selectCharacter(ch); setViewTracked("character"); setCharSubView("editor"); }
               }}
             />
-          ) : <CharacterEditor store={store} />
+          </DeferredMount>
         )}
-        {view === "gallery" && <Gallery store={store} />}
-        {view === "feed" && <WorldFeed store={store} />}
-        {view === "settings" && <SettingsPanel store={store} />}
-        {view === "scene" && <SceneView store={store} />}
       </main>
 
       <MoodDebugPanel characterId={store.activeCharacter?.character_id} />
@@ -126,17 +172,45 @@ export default function App() {
   );
 }
 
-function NavButton({ icon, active, onClick, title }: { icon: React.ReactNode; active: boolean; onClick: () => void; title: string }) {
+function DeferredMount({ children }: { children: ReactNode }) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setReady(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+  if (!ready) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="animate-pulse text-primary text-2xl">✦</div>
+      </div>
+    );
+  }
+  return <>{children}</>;
+}
+
+function NavButton({ icon, active, onClick, title, description }: { icon: React.ReactNode; active: boolean; onClick: () => void; title: string; description?: string }) {
+  const [hovering, setHovering] = useState(false);
   return (
-    <button
-      onClick={onClick}
-      title={title}
-      className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors cursor-pointer ${
-        active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent"
-      }`}
+    <div
+      className="relative"
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
     >
-      {icon}
-    </button>
+      <button
+        onClick={onClick}
+        className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors cursor-pointer ${
+          active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent"
+        }`}
+      >
+        {icon}
+      </button>
+      {hovering && (
+        <div className="absolute left-12 top-1/2 -translate-y-1/2 z-50 w-48 bg-card border border-border rounded-lg shadow-xl shadow-black/30 px-3 py-2.5 pointer-events-none animate-in fade-in zoom-in-95 duration-100">
+          <p className="text-xs font-semibold text-foreground">{title}</p>
+          {description && <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{description}</p>}
+        </div>
+      )}
+    </div>
   );
 }
 

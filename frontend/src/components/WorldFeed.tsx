@@ -51,7 +51,7 @@ export function WorldFeed({ store }: Props) {
             </div>
           ) : (
             <div className="max-w-2xl space-y-3">
-              {store.worldEvents.map((evt) => (
+              {[...store.worldEvents].reverse().map((evt) => (
                 <div key={evt.event_id} className="bg-card border border-border rounded-xl p-4 hover:border-border/80 transition-colors">
                   <div className="flex items-center gap-2 mb-2.5">
                     <Badge variant="secondary" className="text-[10px] font-mono">

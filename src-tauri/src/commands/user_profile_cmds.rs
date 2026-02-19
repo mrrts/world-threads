@@ -26,36 +26,50 @@ pub fn update_user_profile_cmd(
     upsert_user_profile(&conn, &profile).map_err(|e| e.to_string())
 }
 
+#[derive(Debug, serde::Deserialize, Default)]
+pub struct UserFormHint {
+    pub display_name: Option<String>,
+    pub description: Option<String>,
+}
+
 #[tauri::command]
 pub async fn generate_user_avatar_cmd(
     db: State<'_, Database>,
     portraits_dir: State<'_, PortraitsDir>,
     api_key: String,
     world_id: String,
+    form_hint: Option<UserFormHint>,
 ) -> Result<String, String> {
     let profile = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         get_user_profile(&conn, &world_id).map_err(|e| e.to_string())?
     };
 
+    let display_name = form_hint.as_ref()
+        .and_then(|h| h.display_name.clone())
+        .unwrap_or(profile.display_name);
+    let description = form_hint.as_ref()
+        .and_then(|h| h.description.clone())
+        .unwrap_or(profile.description);
+
     let mut prompt_parts = vec![
-        "Hand-painted watercolor portrait of a person in a lush, storybook anime style.".to_string(),
-        "Soft cel-shaded edges dissolving into wet-on-wet washes, visible paper texture, warm earth tones with pops of verdant green and sky blue.".to_string(),
+        "Hand-painted watercolor portrait of a person in a lush, realistic illustration style.".to_string(),
+        "Soft edges dissolving into wet-on-wet washes, visible paper texture, warm earth tones with pops of verdant green and sky blue.".to_string(),
         "Close-up face and bust portrait only, slight three-quarter angle, expressive eyes. Framing ends at the upper chest.".to_string(),
     ];
 
-    if !profile.display_name.is_empty() && profile.display_name != "Me" {
-        prompt_parts.push(format!("Name: {}", profile.display_name));
+    if !display_name.is_empty() && display_name != "Me" {
+        prompt_parts.push(format!("Name: {}", display_name));
     }
-    if !profile.description.is_empty() {
-        let desc = if profile.description.len() > 300 {
-            format!("{}...", &profile.description[..300])
+    if !description.is_empty() {
+        let desc = if description.len() > 300 {
+            format!("{}...", &description[..300])
         } else {
-            profile.description.clone()
+            description
         };
         prompt_parts.push(format!("Appearance and personality: {desc}"));
     }
-    prompt_parts.push("No text, no words, no letters, no watermarks, no labels, no captions, no UI elements, no names.".to_string());
+    prompt_parts.push("CRITICAL: The image must contain absolutely no text, no words, no letters, no numbers, no writing, no labels, no titles, no captions, no watermarks, no signatures, no UI elements, no names.".to_string());
 
     let prompt = prompt_parts.join(" ");
     log::info!("[UserAvatar] Generating: {:.120}...", prompt);
@@ -142,6 +156,31 @@ pub fn get_user_avatar_cmd(
         return Ok(String::new());
     }
     let bytes = std::fs::read(&file_path).map_err(|e| e.to_string())?;
+    Ok(format!("data:image/png;base64,{}", base64_encode(&bytes)))
+}
+
+/// Set user avatar from any existing image file in the portraits directory.
+#[tauri::command]
+pub fn set_user_avatar_from_gallery_cmd(
+    db: State<Database>,
+    portraits_dir: State<PortraitsDir>,
+    world_id: String,
+    source_file: String,
+) -> Result<String, String> {
+    let dir = &portraits_dir.0;
+    let src_path = dir.join(&source_file);
+    if !src_path.exists() {
+        return Err(format!("Source file not found: {source_file}"));
+    }
+
+    let file_name = format!("user_{}.png", uuid::Uuid::new_v4());
+    std::fs::copy(&src_path, dir.join(&file_name))
+        .map_err(|e| format!("Failed to copy image: {e}"))?;
+
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    set_user_avatar_file(&conn, &world_id, &file_name).map_err(|e| e.to_string())?;
+
+    let bytes = std::fs::read(dir.join(&file_name)).map_err(|e| e.to_string())?;
     Ok(format!("data:image/png;base64,{}", base64_encode(&bytes)))
 }
 

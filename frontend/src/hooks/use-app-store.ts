@@ -19,10 +19,14 @@ export interface AppState {
   editingUserProfile: boolean;
   loading: boolean;
   sending: boolean;
+  totalMessages: number;
+  loadingOlder: boolean;
   chatError: string | null;
   lastFailedContent: string | null;
   error: string | null;
 }
+
+const PAGE_SIZE = 20;
 
 const defaultModelConfig: ModelConfig = {
   dialogue_model: "gpt-4o",
@@ -48,6 +52,8 @@ export function useAppStore() {
     apiKey: "",
     budgetMode: false,
     editingUserProfile: false,
+    totalMessages: 0,
+    loadingOlder: false,
     loading: true,
     sending: false,
     chatError: null,
@@ -117,6 +123,7 @@ export function useAppStore() {
       let activeCharacter: Character | null = null;
       let messages: Message[] = [];
       let worldEvents: WorldEvent[] = [];
+      let totalMessages = 0;
       let reactions: Record<string, Reaction[]> = {};
       let activePortraits: Record<string, PortraitInfo> = {};
       let activeWorldImage: WorldImageInfo | null = null;
@@ -124,17 +131,27 @@ export function useAppStore() {
 
       if (worlds.length > 0) {
         activeWorld = worlds[0];
-        characters = await api.listCharacters(activeWorld.world_id);
-        archivedCharacters = await api.listArchivedCharacters(activeWorld.world_id);
+        const wid = activeWorld.world_id;
+        const [chars, archived, wImage, uProfile, wEvents] = await Promise.all([
+          api.listCharacters(wid),
+          api.listArchivedCharacters(wid),
+          api.getActiveWorldImage(wid),
+          api.getUserProfile(wid),
+          api.listWorldEvents(wid),
+        ]);
+        characters = chars;
+        archivedCharacters = archived;
+        activeWorldImage = wImage;
+        userProfile = uProfile;
+        worldEvents = wEvents;
         activePortraits = await loadActivePortraits([...characters, ...archivedCharacters]);
-        activeWorldImage = await api.getActiveWorldImage(activeWorld.world_id);
-        userProfile = await api.getUserProfile(activeWorld.world_id);
         if (characters.length > 0) {
           activeCharacter = characters[0];
-          messages = await api.getMessages(activeCharacter.character_id);
+          const page = await api.getMessages(activeCharacter.character_id, PAGE_SIZE);
+          messages = page.messages;
+          totalMessages = page.total;
           reactions = await loadReactions(messages);
         }
-        worldEvents = await api.listWorldEvents(activeWorld.world_id);
       }
 
       setState({
@@ -144,6 +161,7 @@ export function useAppStore() {
         archivedCharacters,
         activeCharacter,
         messages,
+        totalMessages,
         reactions,
         activePortraits,
         activeWorldImage,
@@ -152,9 +170,13 @@ export function useAppStore() {
         modelConfig,
         apiKey: apiKey ?? "",
         budgetMode,
+        loadingOlder: false,
         loading: false,
         sending: false,
         error: null,
+        editingUserProfile: false,
+        chatError: null,
+        lastFailedContent: null,
       });
     } catch (e) {
       setError(String(e));
@@ -165,32 +187,58 @@ export function useAppStore() {
   useEffect(() => { loadInitial(); }, [loadInitial]);
 
   const selectWorld = useCallback(async (world: World) => {
+    setState((s) => ({
+      ...s,
+      activeWorld: world,
+      characters: [],
+      archivedCharacters: [],
+      activeCharacter: null,
+      messages: [],
+      totalMessages: 0,
+      reactions: {},
+      activePortraits: {},
+      activeWorldImage: null,
+      userProfile: null,
+      worldEvents: [],
+    }));
     try {
-      const characters = await api.listCharacters(world.world_id);
-      const archivedCharacters = await api.listArchivedCharacters(world.world_id);
-      const worldEvents = await api.listWorldEvents(world.world_id);
+      const [characters, archivedCharacters, worldEvents, activeWorldImage, userProfile] = await Promise.all([
+        api.listCharacters(world.world_id),
+        api.listArchivedCharacters(world.world_id),
+        api.listWorldEvents(world.world_id),
+        api.getActiveWorldImage(world.world_id),
+        api.getUserProfile(world.world_id),
+      ]);
       const activePortraits = await loadActivePortraits([...characters, ...archivedCharacters]);
-      const activeWorldImage = await api.getActiveWorldImage(world.world_id);
-      const userProfile = await api.getUserProfile(world.world_id);
       let activeCharacter: Character | null = null;
       let messages: Message[] = [];
+      let totalMessages = 0;
       let reactions: Record<string, Reaction[]> = {};
       if (characters.length > 0) {
         activeCharacter = characters[0];
-        messages = await api.getMessages(activeCharacter.character_id);
+        const page = await api.getMessages(activeCharacter.character_id, PAGE_SIZE);
+        messages = page.messages;
+        totalMessages = page.total;
         reactions = await loadReactions(messages);
       }
-      setState((s) => ({ ...s, activeWorld: world, characters, archivedCharacters, activeCharacter, messages, reactions, activePortraits, activeWorldImage, userProfile, worldEvents }));
+      setState((s) => {
+        if (s.activeWorld?.world_id !== world.world_id) return s;
+        return { ...s, characters, archivedCharacters, activeCharacter, messages, totalMessages, reactions, activePortraits, activeWorldImage, userProfile, worldEvents };
+      });
     } catch (e) {
       setError(String(e));
     }
   }, [setError, loadReactions, loadActivePortraits]);
 
   const selectCharacter = useCallback(async (character: Character) => {
+    setState((s) => ({ ...s, activeCharacter: character, messages: [], totalMessages: 0, reactions: {}, editingUserProfile: false, chatError: null, lastFailedContent: null }));
     try {
-      const messages = await api.getMessages(character.character_id);
-      const reactions = await loadReactions(messages);
-      setState((s) => ({ ...s, activeCharacter: character, messages, reactions, editingUserProfile: false }));
+      const page = await api.getMessages(character.character_id, PAGE_SIZE);
+      const reactions = await loadReactions(page.messages);
+      setState((s) => {
+        if (s.activeCharacter?.character_id !== character.character_id) return s;
+        return { ...s, messages: page.messages, totalMessages: page.total, reactions };
+      });
     } catch (e) {
       setError(String(e));
     }
@@ -269,8 +317,8 @@ export function useAppStore() {
       await api.deleteCharacter(characterId);
       const characters = await api.listCharacters(state.activeWorld.world_id);
       const activeCharacter = characters[0] ?? null;
-      const messages = activeCharacter ? await api.getMessages(activeCharacter.character_id) : [];
-      setState((s) => ({ ...s, characters, activeCharacter, messages }));
+      const page = activeCharacter ? await api.getMessages(activeCharacter.character_id, PAGE_SIZE) : { messages: [], total: 0 };
+      setState((s) => ({ ...s, characters, activeCharacter, messages: page.messages, totalMessages: page.total }));
     } catch (e) {
       setError(String(e));
     }
@@ -284,8 +332,14 @@ export function useAppStore() {
       const archivedCharacters = await api.listArchivedCharacters(state.activeWorld.world_id);
       const wasActive = state.activeCharacter?.character_id === characterId;
       const activeCharacter = wasActive ? (characters[0] ?? null) : state.activeCharacter;
-      const messages = wasActive && activeCharacter ? await api.getMessages(activeCharacter.character_id) : (wasActive ? [] : state.messages);
-      setState((s) => ({ ...s, characters, archivedCharacters, activeCharacter, messages }));
+      let messages = wasActive ? [] as Message[] : state.messages;
+      let totalMessages = wasActive ? 0 : state.totalMessages;
+      if (wasActive && activeCharacter) {
+        const page = await api.getMessages(activeCharacter.character_id, PAGE_SIZE);
+        messages = page.messages;
+        totalMessages = page.total;
+      }
+      setState((s) => ({ ...s, characters, archivedCharacters, activeCharacter, messages, totalMessages }));
     } catch (e) {
       setError(String(e));
     }
@@ -343,6 +397,7 @@ export function useAppStore() {
             result.user_message,
             result.assistant_message,
           ],
+          totalMessages: s.totalMessages + 2,
           reactions: merged,
         worldEvents,
         activeWorld: freshWorld,
@@ -365,6 +420,26 @@ export function useAppStore() {
   const clearChatError = useCallback(() => {
     setState((s) => ({ ...s, chatError: null, lastFailedContent: null }));
   }, []);
+
+  const loadOlderMessages = useCallback(async () => {
+    if (!state.activeCharacter || state.loadingOlder) return;
+    if (state.messages.length >= state.totalMessages) return;
+    setState((s) => ({ ...s, loadingOlder: true }));
+    try {
+      const offset = state.messages.length;
+      const page = await api.getMessages(state.activeCharacter.character_id, PAGE_SIZE, offset);
+      const olderReactions = await loadReactions(page.messages);
+      setState((s) => ({
+        ...s,
+        messages: [...page.messages, ...s.messages],
+        reactions: { ...olderReactions, ...s.reactions },
+        loadingOlder: false,
+      }));
+    } catch (e) {
+      setError(String(e));
+      setState((s) => ({ ...s, loadingOlder: false }));
+    }
+  }, [state.activeCharacter, state.messages.length, state.totalMessages, state.loadingOlder, setError, loadReactions]);
 
   const setApiKey = useCallback(async (key: string) => {
     try {
@@ -507,8 +582,11 @@ export function useAppStore() {
     }
   }, [state.reactions, setError]);
 
+  const hasMoreMessages = state.messages.length < state.totalMessages;
+
   return {
     ...state,
+    hasMoreMessages,
     loadWorlds,
     selectWorld,
     selectCharacter,
@@ -533,6 +611,7 @@ export function useAppStore() {
     loadUserProfile,
     selectUserProfile,
     clearChatError,
+    loadOlderMessages,
     setError,
   };
 }

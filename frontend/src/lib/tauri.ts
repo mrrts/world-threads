@@ -53,6 +53,11 @@ export interface Message {
   created_at: string;
 }
 
+export interface PaginatedMessages {
+  messages: Message[];
+  total: number;
+}
+
 export interface WorldEvent {
   event_id: string;
   world_id: string;
@@ -118,10 +123,14 @@ export interface WorldImageInfo {
 
 export interface GalleryItem {
   id: string;
+  source_id: string;
+  file_name: string;
   data_url: string;
   prompt: string;
   category: "world" | "character" | "user";
   label: string;
+  is_archived: boolean;
+  tags: string[];
   created_at: string;
 }
 
@@ -248,12 +257,14 @@ export const api = {
 
   getUserProfile: (worldId: string) => invoke<UserProfile | null>("get_user_profile_cmd", { worldId }),
   updateUserProfile: (profile: UserProfile) => invoke<void>("update_user_profile_cmd", { profile }),
-  generateUserAvatar: (apiKey: string, worldId: string) =>
-    invoke<string>("generate_user_avatar_cmd", { apiKey, worldId }),
+  generateUserAvatar: (apiKey: string, worldId: string, formHint?: { display_name?: string; description?: string }) =>
+    invoke<string>("generate_user_avatar_cmd", { apiKey, worldId, formHint: formHint ?? null }),
   uploadUserAvatar: (worldId: string, imageData: string) =>
     invoke<string>("upload_user_avatar_cmd", { worldId, imageData }),
   getUserAvatar: (worldId: string) =>
     invoke<string>("get_user_avatar_cmd", { worldId }),
+  setUserAvatarFromGallery: (worldId: string, sourceFile: string) =>
+    invoke<string>("set_user_avatar_from_gallery_cmd", { worldId, sourceFile }),
 
   listCharacters: (worldId: string) => invoke<Character[]>("list_characters_cmd", { worldId }),
   getCharacter: (characterId: string) => invoke<Character>("get_character_cmd", { characterId }),
@@ -266,8 +277,8 @@ export const api = {
 
   sendMessage: (apiKey: string, characterId: string, content: string) =>
     invoke<SendMessageResult>("send_message_cmd", { apiKey, characterId, content }),
-  getMessages: (characterId: string, limit?: number) =>
-    invoke<Message[]>("get_messages_cmd", { characterId, limit }),
+  getMessages: (characterId: string, limit?: number, offset?: number) =>
+    invoke<PaginatedMessages>("get_messages_cmd", { characterId, limit, offset }),
 
   listWorldEvents: (worldId: string, limit?: number) =>
     invoke<WorldEvent[]>("list_world_events_cmd", { worldId, limit }),
@@ -288,17 +299,19 @@ export const api = {
   getThreadSummary: (characterId: string) =>
     invoke<string>("get_thread_summary_cmd", { characterId }),
 
-  generatePortrait: (apiKey: string, characterId: string) =>
-    invoke<PortraitInfo>("generate_portrait_cmd", { apiKey, characterId }),
+  generatePortrait: (apiKey: string, characterId: string, formHint?: { display_name?: string; identity?: string; backstory_facts?: unknown }) =>
+    invoke<PortraitInfo>("generate_portrait_cmd", { apiKey, characterId, formHint: formHint ?? null }),
   listPortraits: (characterId: string) =>
     invoke<PortraitInfo[]>("list_portraits_cmd", { characterId }),
   setActivePortrait: (characterId: string, portraitId: string) =>
     invoke<void>("set_active_portrait_cmd", { characterId, portraitId }),
+  setPortraitFromGallery: (characterId: string, sourceFile: string) =>
+    invoke<PortraitInfo>("set_portrait_from_gallery_cmd", { characterId, sourceFile }),
   getActivePortrait: (characterId: string) =>
     invoke<PortraitInfo | null>("get_active_portrait_cmd", { characterId }),
 
-  generateWorldImage: (apiKey: string, worldId: string) =>
-    invoke<WorldImageInfo>("generate_world_image_cmd", { apiKey, worldId }),
+  generateWorldImage: (apiKey: string, worldId: string, formHint?: { name?: string; description?: string; tone_tags?: unknown }) =>
+    invoke<WorldImageInfo>("generate_world_image_cmd", { apiKey, worldId, formHint: formHint ?? null }),
   generateWorldImageWithPrompt: (apiKey: string, worldId: string, customPrompt: string) =>
     invoke<WorldImageInfo>("generate_world_image_with_prompt_cmd", { apiKey, worldId, customPrompt }),
   uploadWorldImage: (worldId: string, imageData: string, label: string) =>
@@ -307,6 +320,14 @@ export const api = {
     invoke<WorldImageInfo[]>("list_world_images_cmd", { worldId }),
   listWorldGallery: (worldId: string) =>
     invoke<GalleryItem[]>("list_world_gallery_cmd", { worldId }),
+  archiveGalleryItem: (itemId: string, category: string) =>
+    invoke<void>("archive_gallery_item_cmd", { itemId, category }),
+  unarchiveGalleryItem: (itemId: string, category: string) =>
+    invoke<void>("unarchive_gallery_item_cmd", { itemId, category }),
+  deleteGalleryItem: (itemId: string, category: string, fileName: string) =>
+    invoke<void>("delete_gallery_item_cmd", { itemId, category, fileName }),
+  saveCrop: (worldId: string, sourceCategory: string, sourceId: string, imageData: string) =>
+    invoke<GalleryItem>("save_crop_cmd", { worldId, sourceCategory, sourceId, imageData }),
   getActiveWorldImage: (worldId: string) =>
     invoke<WorldImageInfo | null>("get_active_world_image_cmd", { worldId }),
   setActiveWorldImage: (worldId: string, imageId: string) =>

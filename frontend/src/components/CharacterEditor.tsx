@@ -5,9 +5,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from "@/components/ui/dialog";
-import { Save, Plus, X, BookTemplate, ImagePlus, Loader2, Check } from "lucide-react";
+import { Save, Plus, X, BookTemplate, ImagePlus, Loader2, Check, Images } from "lucide-react";
 import { CHARACTER_TEMPLATES, type CharacterTemplate } from "@/lib/character-templates";
-import { api, type Character, type PortraitInfo } from "@/lib/tauri";
+import { api, type Character, type PortraitInfo, type GalleryItem } from "@/lib/tauri";
 import type { useAppStore } from "@/hooks/use-app-store";
 
 interface Props {
@@ -23,6 +23,9 @@ export function CharacterEditor({ store }: Props) {
   const [portraits, setPortraits] = useState<PortraitInfo[]>([]);
   const [generatingPortrait, setGeneratingPortrait] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
+  const [showWorldGallery, setShowWorldGallery] = useState(false);
+  const [worldGalleryItems, setWorldGalleryItems] = useState<GalleryItem[]>([]);
+  const [loadingWorldGallery, setLoadingWorldGallery] = useState(false);
 
   const loadPortraits = useCallback(async (characterId: string) => {
     try {
@@ -66,7 +69,11 @@ export function CharacterEditor({ store }: Props) {
     if (!ch || !store.apiKey) return;
     setGeneratingPortrait(true);
     try {
-      const portrait = await api.generatePortrait(store.apiKey, ch.character_id);
+      const portrait = await api.generatePortrait(store.apiKey, ch.character_id, {
+        display_name: form.display_name ?? ch.display_name,
+        identity: form.identity ?? ch.identity,
+        backstory_facts: form.backstory_facts ?? ch.backstory_facts,
+      });
       setPortraits((prev) => [portrait, ...prev.map((p) => ({ ...p, is_active: false }))]);
       await store.refreshPortrait(ch.character_id);
     } catch (e) {
@@ -84,6 +91,31 @@ export function CharacterEditor({ store }: Props) {
         prev.map((p) => ({ ...p, is_active: p.portrait_id === portrait.portrait_id }))
       );
       setShowGallery(false);
+      await store.refreshPortrait(ch.character_id);
+    } catch (e) {
+      store.setError?.(String(e));
+    }
+  };
+
+  const handleOpenWorldGallery = async () => {
+    const worldId = store.activeWorld?.world_id;
+    if (!worldId) return;
+    setLoadingWorldGallery(true);
+    setShowWorldGallery(true);
+    try {
+      setWorldGalleryItems(await api.listWorldGallery(worldId));
+    } catch {
+    } finally {
+      setLoadingWorldGallery(false);
+    }
+  };
+
+  const handleSelectFromWorldGallery = async (item: GalleryItem) => {
+    if (!ch || !item.file_name) return;
+    try {
+      const portrait = await api.setPortraitFromGallery(ch.character_id, item.file_name);
+      setPortraits((prev) => [portrait, ...prev.map((p) => ({ ...p, is_active: false }))]);
+      setShowWorldGallery(false);
       await store.refreshPortrait(ch.character_id);
     } catch (e) {
       store.setError?.(String(e));
@@ -197,13 +229,16 @@ export function CharacterEditor({ store }: Props) {
                       <><ImagePlus size={14} className="mr-1.5" /> Generate Portrait</>
                     )}
                   </Button>
+                  <Button size="sm" variant="ghost" onClick={handleOpenWorldGallery}>
+                    <Images size={14} className="mr-1.5" /> Choose from Gallery
+                  </Button>
                   {portraits.length > 1 && (
                     <Button size="sm" variant="ghost" onClick={() => setShowGallery(true)}>
-                      View all ({portraits.length})
+                      View all portraits ({portraits.length})
                     </Button>
                   )}
                   <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[220px]">
-                    Generates a watercolor portrait from this character's canon using DALL-E 3.
+                    Generates a watercolor portrait from this character's canon using DALL-E 3. Or choose any image from this world's gallery.
                   </p>
                 </div>
               </div>
@@ -356,6 +391,51 @@ export function CharacterEditor({ store }: Props) {
                   </button>
                 ))}
               </div>
+            </ScrollArea>
+          </DialogBody>
+        </DialogContent>
+      </Dialog>
+
+      {/* World Gallery Picker Modal */}
+      <Dialog open={showWorldGallery} onClose={() => setShowWorldGallery(false)} className="max-w-3xl">
+        <DialogContent>
+          <DialogHeader onClose={() => setShowWorldGallery(false)}>
+            <DialogTitle>Choose from World Gallery</DialogTitle>
+            <DialogDescription>
+              Select any image from this world to use as this character's portrait.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogBody className="p-0">
+            <ScrollArea className="max-h-[500px]">
+              {loadingWorldGallery ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 size={24} className="animate-spin text-muted-foreground" />
+                </div>
+              ) : worldGalleryItems.length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground text-sm">
+                  No images in this world yet.
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-3 p-4">
+                  {worldGalleryItems.filter(i => i.data_url).map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => handleSelectFromWorldGallery(item)}
+                      className="relative rounded-xl overflow-hidden border-2 border-border hover:border-primary/50 transition-all cursor-pointer group"
+                    >
+                      <img
+                        src={item.data_url}
+                        alt=""
+                        className={`w-full object-cover ${item.category === "world" ? "aspect-video" : "aspect-square"}`}
+                      />
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p className="text-[11px] text-white font-medium truncate">{item.label}</p>
+                        <p className="text-[10px] text-white/60 capitalize">{item.category}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </ScrollArea>
           </DialogBody>
         </DialogContent>

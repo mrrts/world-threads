@@ -18,8 +18,8 @@ fn json_array_to_strings(val: &serde_json::Value) -> Vec<String> {
 
 fn build_portrait_prompt(character: &Character, world: &World) -> String {
     let mut parts = vec![
-        "Hand-painted watercolor portrait of a character in a lush, storybook anime style.".to_string(),
-        "Soft cel-shaded edges dissolving into wet-on-wet washes, visible paper texture, warm earth tones with pops of verdant green and sky blue.".to_string(),
+        "Hand-painted watercolor portrait of a character in a lush, realistic illustration style.".to_string(),
+        "Soft edges dissolving into wet-on-wet washes, visible paper texture, warm earth tones with pops of verdant green and sky blue.".to_string(),
         "Gentle diffused natural lighting, nostalgic and contemplative mood, as if lifted from an illustrated fairy tale.".to_string(),
         "Close-up face and bust portrait only, slight three-quarter angle, expressive eyes. Framing ends at the upper chest.".to_string(),
     ];
@@ -50,7 +50,7 @@ fn build_portrait_prompt(character: &Character, world: &World) -> String {
         parts.push(format!("World setting: {desc}"));
     }
 
-    parts.push("No text, no words, no letters, no watermarks, no labels, no captions, no UI elements, no names.".to_string());
+    parts.push("CRITICAL: The image must contain absolutely no text, no words, no letters, no numbers, no writing, no labels, no titles, no captions, no watermarks, no signatures, no UI elements, no names.".to_string());
 
     parts.join(" ")
 }
@@ -107,19 +107,33 @@ fn base64_encode(bytes: &[u8]) -> String {
     result
 }
 
+#[derive(Debug, Deserialize, Default)]
+pub struct CharacterFormHint {
+    pub display_name: Option<String>,
+    pub identity: Option<String>,
+    pub backstory_facts: Option<serde_json::Value>,
+}
+
 #[tauri::command]
 pub async fn generate_portrait_cmd(
     db: State<'_, Database>,
     portraits_dir: State<'_, PortraitsDir>,
     api_key: String,
     character_id: String,
+    form_hint: Option<CharacterFormHint>,
 ) -> Result<PortraitInfo, String> {
-    let (character, world) = {
+    let (mut character, world) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let ch = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
         let w = get_world(&conn, &ch.world_id).map_err(|e| e.to_string())?;
         (ch, w)
     };
+
+    if let Some(hint) = form_hint {
+        if let Some(name) = hint.display_name { character.display_name = name; }
+        if let Some(id) = hint.identity { character.identity = id; }
+        if let Some(facts) = hint.backstory_facts { character.backstory_facts = facts; }
+    }
 
     let prompt = build_portrait_prompt(&character, &world);
     log::info!("[Portrait] Generating for '{}': {:.120}...", character.display_name, prompt);
@@ -231,4 +245,42 @@ pub fn get_active_portrait_cmd(
 ) -> Result<Option<PortraitInfo>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     Ok(get_active_portrait(&conn, &character_id).map(|p| portrait_to_info(&p, &portraits_dir.0)))
+}
+
+/// Set a character's active portrait from any existing image file in the portraits directory.
+#[tauri::command]
+pub fn set_portrait_from_gallery_cmd(
+    db: State<Database>,
+    portraits_dir: State<PortraitsDir>,
+    character_id: String,
+    source_file: String,
+) -> Result<PortraitInfo, String> {
+    let dir = &portraits_dir.0;
+    let src_path = dir.join(&source_file);
+    if !src_path.exists() {
+        return Err(format!("Source file not found: {source_file}"));
+    }
+
+    let portrait_id = uuid::Uuid::new_v4().to_string();
+    let file_name = format!("{portrait_id}.png");
+    std::fs::copy(&src_path, dir.join(&file_name))
+        .map_err(|e| format!("Failed to copy image: {e}"))?;
+
+    let portrait = Portrait {
+        portrait_id: portrait_id.clone(),
+        character_id: character_id.clone(),
+        prompt: String::new(),
+        file_name: file_name.clone(),
+        is_active: true,
+        created_at: chrono::Utc::now().to_rfc3339(),
+    };
+
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let _ = conn.execute(
+        "UPDATE character_portraits SET is_active = 0 WHERE character_id = ?1",
+        rusqlite::params![character_id],
+    );
+    create_portrait(&conn, &portrait).map_err(|e| e.to_string())?;
+
+    Ok(portrait_to_info(&portrait, dir))
 }

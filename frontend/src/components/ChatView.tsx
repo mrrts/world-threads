@@ -166,11 +166,38 @@ export function ChatView({ store }: Props) {
     return () => document.removeEventListener("mousedown", handler);
   }, [showBgPicker]);
 
+  const prevScrollHeightRef = useRef(0);
+  const isLoadingOlderRef = useRef(false);
+  const messageCountRef = useRef(0);
+
+  // Scroll to bottom only when new messages arrive at the end (not when older ones are prepended)
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    const el = scrollRef.current;
+    if (!el) return;
+    const prevCount = messageCountRef.current;
+    const newCount = store.messages.length;
+    messageCountRef.current = newCount;
+
+    if (isLoadingOlderRef.current) {
+      // Older messages were prepended — restore scroll position
+      const addedHeight = el.scrollHeight - prevScrollHeightRef.current;
+      el.scrollTop = addedHeight;
+      isLoadingOlderRef.current = false;
+    } else {
+      // New messages at the end — scroll to bottom
+      el.scrollTop = el.scrollHeight;
     }
   }, [store.messages, store.sending]);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el || store.loadingOlder || !store.hasMoreMessages) return;
+    if (el.scrollTop < 80) {
+      isLoadingOlderRef.current = true;
+      prevScrollHeightRef.current = el.scrollHeight;
+      store.loadOlderMessages();
+    }
+  }, [store.loadingOlder, store.hasMoreMessages, store.loadOlderMessages]);
 
   const handleSend = async () => {
     const text = input.trim();
@@ -206,6 +233,12 @@ export function ChatView({ store }: Props) {
 
   const bgStyle = chatBg?.bg_type === "color" && chatBg.bg_color ? { backgroundColor: chatBg.bg_color } : undefined;
 
+  const hasExplicitBg = chatBg && (
+    (chatBg.bg_type === "color" && chatBg.bg_color) ||
+    (chatBg.bg_type === "world_image" && (bgImageUrl || chatBg.bg_image_id))
+  );
+  const defaultAvatarBg = !hasExplicitBg ? charPortrait?.data_url : undefined;
+
   return (
     <div className="flex-1 flex flex-col min-h-0 relative" style={bgStyle}>
       {chatBg?.bg_type === "world_image" && bgImageUrl && (
@@ -217,6 +250,17 @@ export function ChatView({ store }: Props) {
             style={{ filter: chatBg.bg_blur ? `blur(${chatBg.bg_blur}px)` : undefined, transform: chatBg.bg_blur ? "scale(1.1)" : undefined }}
           />
           <div className="absolute inset-0 bg-background/40" />
+        </div>
+      )}
+      {defaultAvatarBg && (
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <img
+            src={defaultAvatarBg}
+            alt=""
+            className="w-full h-full object-cover"
+            style={{}}
+          />
+          <div className="absolute inset-0 bg-background/60" />
         </div>
       )}
       <div className="px-4 py-3 border-b border-border flex items-center gap-3 relative z-30 bg-background">
@@ -329,8 +373,27 @@ export function ChatView({ store }: Props) {
       </div>
 
       <div className="flex-1 relative overflow-hidden z-10">
-        <ScrollArea ref={scrollRef} className="h-full px-4 py-3">
+        <ScrollArea ref={scrollRef} className="h-full px-4 py-3" onScroll={handleScroll}>
         <div>
+        {store.loadingOlder && (
+          <div className="flex justify-center py-3">
+            <Loader2 size={18} className="animate-spin text-muted-foreground" />
+          </div>
+        )}
+        {store.hasMoreMessages && !store.loadingOlder && store.messages.length > 0 && (
+          <div className="flex justify-center py-2">
+            <button
+              onClick={() => {
+                isLoadingOlderRef.current = true;
+                prevScrollHeightRef.current = scrollRef.current?.scrollHeight ?? 0;
+                store.loadOlderMessages();
+              }}
+              className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors cursor-pointer"
+            >
+              Load older messages
+            </button>
+          </div>
+        )}
         {store.messages.length === 0 && (
           <div className="text-center text-muted-foreground py-12">
             <p className="text-lg mb-1">Start a conversation</p>
@@ -437,7 +500,7 @@ export function ChatView({ store }: Props) {
       </div>
 
       {store.chatError && (
-        <div className="px-4 py-2.5 bg-destructive/15 border-t border-destructive/30 flex items-center gap-3 relative z-10">
+        <div className="px-4 py-2.5 bg-background border-t border-destructive/30 flex items-center gap-3 relative z-10">
           <div className="flex-1 min-w-0">
             <p className="text-xs text-destructive font-medium truncate">{store.chatError}</p>
           </div>

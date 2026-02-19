@@ -41,7 +41,11 @@ export function WorldCanonEditor({ store }: Props) {
     if (!world || !store.apiKey || generatingImage) return;
     setGeneratingImage(true);
     try {
-      await api.generateWorldImage(store.apiKey, world.world_id);
+      await api.generateWorldImage(store.apiKey, world.world_id, {
+        name: form.name ?? world.name,
+        description: form.description ?? world.description,
+        tone_tags: form.tone_tags ?? world.tone_tags,
+      });
       await store.refreshWorldImage();
       const imgs = await api.listWorldImages(world.world_id);
       setWorldImages(imgs);

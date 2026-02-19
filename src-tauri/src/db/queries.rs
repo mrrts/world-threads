@@ -290,6 +290,27 @@ pub fn get_all_messages(conn: &Connection, thread_id: &str) -> Result<Vec<Messag
     rows.collect()
 }
 
+/// Returns the most recent `limit` messages, skipping the newest `offset`.
+/// Result is in chronological order (oldest first).
+pub fn list_messages_paginated(conn: &Connection, thread_id: &str, limit: i64, offset: i64) -> Result<Vec<Message>, rusqlite::Error> {
+    let mut stmt = conn.prepare(
+        "SELECT message_id, thread_id, role, content, tokens_estimate, created_at
+         FROM messages WHERE thread_id = ?1 ORDER BY created_at DESC LIMIT ?2 OFFSET ?3"
+    )?;
+    let rows = stmt.query_map(params![thread_id, limit, offset], row_to_message)?;
+    let mut msgs: Vec<Message> = rows.collect::<Result<Vec<_>, _>>()?;
+    msgs.reverse();
+    Ok(msgs)
+}
+
+pub fn count_messages(conn: &Connection, thread_id: &str) -> Result<i64, rusqlite::Error> {
+    conn.query_row(
+        "SELECT count(*) FROM messages WHERE thread_id = ?1",
+        params![thread_id],
+        |r| r.get(0),
+    )
+}
+
 pub fn count_messages_since_maintenance(conn: &Connection, thread_id: &str) -> i64 {
     conn.query_row(
         "SELECT count_since_maintenance FROM message_count_tracker WHERE thread_id = ?1",
