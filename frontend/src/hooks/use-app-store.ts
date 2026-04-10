@@ -18,9 +18,12 @@ export interface AppState {
   editingUserProfile: boolean;
   loading: boolean;
   autoRespond: boolean;
-  sending: boolean;
-  generatingNarrative: boolean;
-  generatingIllustration: boolean;
+  /** Character ID currently awaiting a response, or null */
+  sending: string | null;
+  /** Character ID currently generating a narrative, or null */
+  generatingNarrative: string | null;
+  /** Character ID currently generating an illustration, or null */
+  generatingIllustration: string | null;
   totalMessages: number;
   loadingOlder: boolean;
   chatError: string | null;
@@ -61,9 +64,9 @@ export function useAppStore() {
     loadingOlder: false,
     autoRespond: true,
     loading: true,
-    sending: false,
-    generatingNarrative: false,
-    generatingIllustration: false,
+    sending: null,
+    generatingNarrative: null,
+    generatingIllustration: null,
     chatError: null,
     lastFailedContent: null,
     error: null,
@@ -436,7 +439,7 @@ export function useAppStore() {
 
     setState((s) => ({
       ...s,
-      sending: true,
+      sending: state.activeCharacter!.character_id,
       chatError: null,
       lastFailedContent: null,
       messages: [...s.messages, optimisticMsg],
@@ -464,7 +467,7 @@ export function useAppStore() {
           activeWorld: freshWorld,
           characters: freshCharacters,
           activeCharacter: freshCharacters.find(c => c.character_id === s.activeCharacter?.character_id) ?? s.activeCharacter,
-          sending: false,
+          sending: null,
         };
       });
     } catch (e) {
@@ -481,7 +484,7 @@ export function useAppStore() {
   const promptCharacter = useCallback(async () => {
     if (!state.activeCharacter || !state.apiKey) return;
 
-    setState((s) => ({ ...s, sending: true, chatError: null }));
+    setState((s) => ({ ...s, sending: state.activeCharacter!.character_id, chatError: null }));
 
     try {
       const result = await api.promptCharacter(state.apiKey, state.activeCharacter.character_id);
@@ -496,7 +499,7 @@ export function useAppStore() {
           messages: [...s.messages, result.assistant_message],
           totalMessages: s.totalMessages + 1,
           reactions: merged,
-          sending: false,
+          sending: null,
         };
       });
     } catch (e) {
@@ -511,7 +514,7 @@ export function useAppStore() {
   const generateNarrative = useCallback(async () => {
     if (!state.activeCharacter || !state.apiKey) return;
 
-    setState((s) => ({ ...s, sending: true, generatingNarrative: true, chatError: null }));
+    setState((s) => ({ ...s, sending: state.activeCharacter!.character_id, generatingNarrative: state.activeCharacter!.character_id, chatError: null }));
 
     try {
       const result = await api.generateNarrative(state.apiKey, state.activeCharacter.character_id);
@@ -535,7 +538,7 @@ export function useAppStore() {
   const generateIllustration = useCallback(async (qualityTier?: string) => {
     if (!state.activeCharacter || !state.apiKey) return;
 
-    setState((s) => ({ ...s, sending: true, generatingIllustration: true, chatError: null }));
+    setState((s) => ({ ...s, sending: state.activeCharacter!.character_id, generatingIllustration: state.activeCharacter!.character_id, chatError: null }));
 
     try {
       const result = await api.generateIllustration(state.apiKey, state.activeCharacter.character_id, qualityTier);
@@ -574,8 +577,8 @@ export function useAppStore() {
 
     setState((s) => ({
       ...s,
-      sending: true,
-      generatingIllustration: true,
+      sending: state.activeCharacter!.character_id,
+      generatingIllustration: state.activeCharacter!.character_id,
       chatError: null,
       messages: s.messages.filter((m) => m.message_id !== messageId),
       totalMessages: s.totalMessages - 1,
@@ -605,8 +608,8 @@ export function useAppStore() {
 
     setState((s) => ({
       ...s,
-      sending: true,
-      generatingIllustration: true,
+      sending: state.activeCharacter!.character_id,
+      generatingIllustration: state.activeCharacter!.character_id,
       chatError: null,
       messages: s.messages.filter((m) => m.message_id !== messageId),
       totalMessages: s.totalMessages - 1,
@@ -644,7 +647,7 @@ export function useAppStore() {
         return m.created_at < anchorMsg!.created_at ||
           (m.created_at === anchorMsg!.created_at && m.message_id === messageId);
       }),
-      sending: isUserMsg,
+      sending: isUserMsg ? state.activeCharacter!.character_id : null,
       chatError: null,
     }));
 
@@ -663,14 +666,14 @@ export function useAppStore() {
             messages: [...s.messages, result.new_response!.assistant_message],
             totalMessages: s.totalMessages - result.deleted_count + 1,
             reactions: merged,
-            sending: false,
+            sending: null,
           };
         });
       } else {
         setState((s) => ({
           ...s,
           totalMessages: s.totalMessages - result.deleted_count,
-          sending: false,
+          sending: null,
         }));
       }
     } catch (e) {
@@ -683,7 +686,7 @@ export function useAppStore() {
           messages: page.messages,
           totalMessages: page.total,
           reactions,
-          sending: false,
+          sending: null,
           chatError: String(e),
         }));
       }

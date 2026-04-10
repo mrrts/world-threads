@@ -96,7 +96,7 @@ function MainApp() {
         <NavButton icon={<Users size={20} />} active={view === "character"} onClick={handleCharNav} title="Characters" description="Create, edit, and manage your cast of characters." />
         <NavButton icon={<Image size={20} />} active={view === "gallery"} onClick={() => setViewTracked("gallery")} title="Gallery" description="Browse, generate, and upload images for this world." />
         <div className="flex-1" />
-        <UsageBadge sending={store.sending} />
+        <UsageBadge sending={!!store.sending} />
         <NavButton icon={<Settings size={20} />} active={view === "settings"} onClick={() => setViewTracked("settings")} title="Settings" description="API key, model config, and app preferences." />
       </div>
 

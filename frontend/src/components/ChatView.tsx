@@ -131,6 +131,11 @@ export function ChatView({ store }: Props) {
     });
   }, [charId]);
 
+  // Derived: is this character's chat currently loading?
+  const isSending = store.sending === charId;
+  const isGeneratingNarrative = store.generatingNarrative === charId;
+  const isGeneratingIllustration = store.generatingIllustration === charId;
+
   const prevScrollHeightRef = useRef(0);
   const isLoadingOlderRef = useRef(false);
   const messageCountRef = useRef(0);
@@ -152,14 +157,14 @@ export function ChatView({ store }: Props) {
       // New messages at the end — scroll to bottom
       el.scrollTop = el.scrollHeight;
     }
-  }, [store.messages, store.sending]);
+  }, [store.messages, isSending]);
 
   // Auto-focus input after AI response arrives
   useEffect(() => {
-    if (!store.sending) {
+    if (!isSending) {
       inputRef.current?.focus();
     }
-  }, [store.sending]);
+  }, [isSending]);
 
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
@@ -173,7 +178,7 @@ export function ChatView({ store }: Props) {
 
   const handleSend = async () => {
     const text = input.trim();
-    if (!text || store.sending) return;
+    if (!text || isSending) return;
     store.clearChatError();
     setInput("");
     if (inputRef.current) inputRef.current.style.height = "auto";
@@ -182,7 +187,7 @@ export function ChatView({ store }: Props) {
   };
 
   const handleRetry = async () => {
-    if (!store.lastFailedContent || store.sending) return;
+    if (!store.lastFailedContent || isSending) return;
     const content = store.lastFailedContent;
     store.clearChatError();
     await store.sendMessage(content);
@@ -377,9 +382,9 @@ export function ChatView({ store }: Props) {
                       <img
                         src={msg.content}
                         alt="Scene illustration"
-                        className="w-full rounded-lg object-cover aspect-video"
+                        className="w-full rounded-lg"
                       />
-                      {!isPending && !store.sending && (
+                      {!isPending && !isSending && (
                         <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => { setAdjustIllustrationId(msg.message_id); setAdjustInstructions(""); }}
@@ -522,7 +527,7 @@ export function ChatView({ store }: Props) {
               </div>
             );
           })}
-          {store.sending && !store.generatingNarrative && !store.generatingIllustration && (
+          {isSending && !isGeneratingNarrative && !isGeneratingIllustration && (
             <div className="flex items-end gap-2 justify-start">
               {charPortrait?.data_url ? (
                 <img src={charPortrait.data_url} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border flex-shrink-0 mb-1" />
@@ -539,7 +544,7 @@ export function ChatView({ store }: Props) {
               </div>
             </div>
           )}
-          {store.generatingNarrative && (
+          {isGeneratingNarrative && (
             <div className="flex justify-center my-2">
               <div className="rounded-xl px-5 py-3 bg-gradient-to-br from-amber-950/40 to-amber-900/20 border border-amber-700/30 flex items-center gap-2 text-amber-500/70">
                 <BookOpen size={14} className="animate-pulse" />
@@ -550,7 +555,7 @@ export function ChatView({ store }: Props) {
               </div>
             </div>
           )}
-          {store.generatingIllustration && (
+          {isGeneratingIllustration && (
             <div className="flex justify-center my-2">
               <div className="rounded-xl px-5 py-3 bg-gradient-to-br from-emerald-950/40 to-emerald-900/20 border border-emerald-700/30 flex items-center gap-2 text-emerald-500/70">
                 <Image size={14} className="animate-pulse" />
@@ -588,7 +593,7 @@ export function ChatView({ store }: Props) {
               variant="outline"
               className="flex-shrink-0 border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
               onClick={handleRetry}
-              disabled={store.sending}
+              disabled={isSending}
             >
               Try Again
             </Button>
@@ -610,7 +615,7 @@ export function ChatView({ store }: Props) {
               size="icon"
               className="text-primary/70 hover:text-primary hover:bg-primary/10 h-10 w-10 rounded-xl"
               onClick={() => store.promptCharacter()}
-              disabled={store.sending || !store.apiKey || store.messages.length === 0}
+              disabled={isSending || !store.apiKey || store.messages.length === 0}
             >
               <MessageSquare size={16} />
             </Button>
@@ -624,7 +629,7 @@ export function ChatView({ store }: Props) {
               size="icon"
               className="text-amber-500/70 hover:text-amber-400 hover:bg-amber-500/10 h-10 w-10 rounded-xl"
               onClick={() => store.generateNarrative()}
-              disabled={store.sending || !store.apiKey || store.messages.length === 0}
+              disabled={isSending || !store.apiKey || store.messages.length === 0}
             >
               <BookOpen size={16} />
             </Button>
@@ -638,7 +643,7 @@ export function ChatView({ store }: Props) {
               size="icon"
               className="text-emerald-500/70 hover:text-emerald-400 hover:bg-emerald-500/10 h-10 w-10 rounded-xl"
               onClick={() => setShowIllustrationPicker(true)}
-              disabled={store.sending || !store.apiKey || store.messages.length === 0}
+              disabled={isSending || !store.apiKey || store.messages.length === 0}
             >
               <Image size={16} />
             </Button>
@@ -658,15 +663,15 @@ export function ChatView({ store }: Props) {
             placeholder={`Message ${store.activeCharacter.display_name}...`}
             className="flex-1 min-h-[40px] max-h-[200px] resize-none rounded-xl border border-input bg-transparent px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]"
             rows={1}
-            disabled={store.sending || (store.autoRespond && !store.apiKey)}
+            disabled={isSending || (store.autoRespond && !store.apiKey)}
           />
           <Button
             size="icon"
             className="rounded-xl h-10 w-10 flex-shrink-0"
             onClick={handleSend}
-            disabled={!input.trim() || store.sending || (store.autoRespond && !store.apiKey)}
+            disabled={!input.trim() || isSending || (store.autoRespond && !store.apiKey)}
           >
-            {store.sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+            {isSending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
           </Button>
         </div>
       </div>
