@@ -20,6 +20,7 @@ export interface AppState {
   autoRespond: boolean;
   sending: boolean;
   generatingNarrative: boolean;
+  generatingIllustration: boolean;
   totalMessages: number;
   loadingOlder: boolean;
   chatError: string | null;
@@ -62,6 +63,7 @@ export function useAppStore() {
     loading: true,
     sending: false,
     generatingNarrative: false,
+    generatingIllustration: false,
     chatError: null,
     lastFailedContent: null,
     error: null,
@@ -177,6 +179,7 @@ export function useAppStore() {
         loading: false,
         sending: false,
         generatingNarrative: false,
+    generatingIllustration: false,
         error: null,
         editingUserProfile: false,
         chatError: null,
@@ -529,6 +532,105 @@ export function useAppStore() {
     }
   }, [state.activeCharacter, state.apiKey]);
 
+  const generateIllustration = useCallback(async (qualityTier?: string) => {
+    if (!state.activeCharacter || !state.apiKey) return;
+
+    setState((s) => ({ ...s, sending: true, generatingIllustration: true, chatError: null }));
+
+    try {
+      const result = await api.generateIllustration(state.apiKey, state.activeCharacter.character_id, qualityTier);
+      setState((s) => ({
+        ...s,
+        messages: [...s.messages, result.illustration_message],
+        totalMessages: s.totalMessages + 1,
+        sending: false,
+        generatingIllustration: false,
+      }));
+    } catch (e) {
+      setState((s) => ({
+        ...s,
+        sending: false,
+        generatingIllustration: false,
+        chatError: String(e),
+      }));
+    }
+  }, [state.activeCharacter, state.apiKey]);
+
+  const deleteIllustration = useCallback(async (messageId: string) => {
+    try {
+      await api.deleteIllustration(messageId);
+      setState((s) => ({
+        ...s,
+        messages: s.messages.filter((m) => m.message_id !== messageId),
+        totalMessages: s.totalMessages - 1,
+      }));
+    } catch (e) {
+      setState((s) => ({ ...s, chatError: String(e) }));
+    }
+  }, []);
+
+  const regenerateIllustration = useCallback(async (messageId: string) => {
+    if (!state.activeCharacter || !state.apiKey) return;
+
+    setState((s) => ({
+      ...s,
+      sending: true,
+      generatingIllustration: true,
+      chatError: null,
+      messages: s.messages.filter((m) => m.message_id !== messageId),
+      totalMessages: s.totalMessages - 1,
+    }));
+
+    try {
+      const result = await api.regenerateIllustration(state.apiKey, state.activeCharacter.character_id, messageId);
+      setState((s) => ({
+        ...s,
+        messages: [...s.messages, result.illustration_message],
+        totalMessages: s.totalMessages + 1,
+        sending: false,
+        generatingIllustration: false,
+      }));
+    } catch (e) {
+      setState((s) => ({
+        ...s,
+        sending: false,
+        generatingIllustration: false,
+        chatError: String(e),
+      }));
+    }
+  }, [state.activeCharacter, state.apiKey]);
+
+  const adjustIllustration = useCallback(async (messageId: string, instructions: string) => {
+    if (!state.activeCharacter || !state.apiKey) return;
+
+    setState((s) => ({
+      ...s,
+      sending: true,
+      generatingIllustration: true,
+      chatError: null,
+      messages: s.messages.filter((m) => m.message_id !== messageId),
+      totalMessages: s.totalMessages - 1,
+    }));
+
+    try {
+      const result = await api.adjustIllustration(state.apiKey, state.activeCharacter.character_id, messageId, instructions);
+      setState((s) => ({
+        ...s,
+        messages: [...s.messages, result.illustration_message],
+        totalMessages: s.totalMessages + 1,
+        sending: false,
+        generatingIllustration: false,
+      }));
+    } catch (e) {
+      setState((s) => ({
+        ...s,
+        sending: false,
+        generatingIllustration: false,
+        chatError: String(e),
+      }));
+    }
+  }, [state.activeCharacter, state.apiKey]);
+
   const resetToMessage = useCallback(async (messageId: string) => {
     if (!state.activeCharacter || !state.apiKey) return;
 
@@ -764,6 +866,10 @@ export function useAppStore() {
     setAutoRespond,
     promptCharacter,
     generateNarrative,
+    generateIllustration,
+    deleteIllustration,
+    regenerateIllustration,
+    adjustIllustration,
     resetToMessage,
     setApiKey,
     setModelConfig,

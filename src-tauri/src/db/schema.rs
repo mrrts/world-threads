@@ -48,7 +48,7 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         CREATE TABLE IF NOT EXISTS messages (
             message_id TEXT PRIMARY KEY,
             thread_id TEXT NOT NULL REFERENCES threads(thread_id) ON DELETE CASCADE,
-            role TEXT NOT NULL CHECK(role IN ('user', 'assistant', 'system', 'narrative')),
+            role TEXT NOT NULL CHECK(role IN ('user', 'assistant', 'system', 'narrative', 'illustration')),
             content TEXT NOT NULL,
             tokens_estimate INTEGER NOT NULL DEFAULT 0,
             created_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -325,22 +325,22 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         )?;
     }
 
-    // Add 'narrative' to the messages.role CHECK constraint.
-    // SQLite doesn't support ALTER CHECK, so we detect the old constraint and recreate.
-    let role_check_old: bool = conn
+    // Ensure messages.role CHECK constraint includes all roles.
+    // SQLite doesn't support ALTER CHECK, so we detect old constraints and recreate.
+    let needs_role_migration: bool = conn
         .query_row(
-            "SELECT sql LIKE '%role IN (''user'', ''assistant'', ''system'')%' FROM sqlite_master WHERE type='table' AND name='messages'",
+            "SELECT sql NOT LIKE '%illustration%' FROM sqlite_master WHERE type='table' AND name='messages'",
             [],
             |r| r.get(0),
         )
         .unwrap_or(false);
 
-    if role_check_old {
+    if needs_role_migration {
         conn.execute_batch("
             CREATE TABLE messages_new (
                 message_id TEXT PRIMARY KEY,
                 thread_id TEXT NOT NULL REFERENCES threads(thread_id) ON DELETE CASCADE,
-                role TEXT NOT NULL CHECK(role IN ('user', 'assistant', 'system', 'narrative')),
+                role TEXT NOT NULL CHECK(role IN ('user', 'assistant', 'system', 'narrative', 'illustration')),
                 content TEXT NOT NULL,
                 tokens_estimate INTEGER NOT NULL DEFAULT 0,
                 created_at TEXT NOT NULL DEFAULT (datetime('now'))

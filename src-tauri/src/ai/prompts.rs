@@ -122,6 +122,7 @@ pub fn build_dialogue_messages(
     });
 
     for m in recent_messages {
+        if m.role == "illustration" { continue; }
         msgs.push(crate::ai::openai::ChatMessage {
             role: if m.role == "narrative" { "system".to_string() } else { m.role.clone() },
             content: if m.role == "narrative" {
@@ -300,6 +301,103 @@ pub fn build_narrative_system_prompt(
     );
 
     parts.join("\n\n")
+}
+
+pub fn build_scene_description_prompt(
+    world: &World,
+    character: &Character,
+    user_profile: Option<&UserProfile>,
+    recent_messages: &[Message],
+) -> Vec<crate::ai::openai::ChatMessage> {
+    let user_name = user_profile
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("the human");
+
+    let mut system_parts = Vec::new();
+
+    system_parts.push(format!(
+        "You are a visual scene director. Your job is to describe the current moment between {user} and {char} \
+         as a single, detailed image description suitable for an illustrator or image generation model.",
+        user = user_name,
+        char = character.display_name,
+    ));
+
+    system_parts.push(format!(
+        "CHARACTERS:\n\
+         - {user}: the human. Refer to them by name or appearance, not as \"you\".\n\
+         - {char}: the fictional character.",
+        user = user_name,
+        char = character.display_name,
+    ));
+
+    if !character.identity.is_empty() {
+        let identity = if character.identity.len() > 300 {
+            format!("{}...", &character.identity[..300])
+        } else {
+            character.identity.clone()
+        };
+        system_parts.push(format!("{} is: {}", character.display_name, identity));
+    }
+
+    if let Some(profile) = user_profile {
+        if !profile.description.is_empty() {
+            system_parts.push(format!("{} is: {}", profile.display_name, profile.description));
+        }
+    }
+
+    if !world.description.is_empty() {
+        let desc = if world.description.len() > 300 {
+            format!("{}...", &world.description[..300])
+        } else {
+            world.description.clone()
+        };
+        system_parts.push(format!("WORLD SETTING:\n{desc}"));
+    }
+
+    system_parts.push(r#"OUTPUT INSTRUCTIONS:
+- Describe the scene as a single illustration: environment, lighting, weather, spatial arrangement of the two characters, their poses, expressions, body language, clothing, and any notable objects or details.
+- Write in third person, present tense, as if describing a painting.
+- Be specific about spatial relationships: who is where, facing which direction, what they're doing with their hands, eyes, body.
+- Include atmosphere: time of day, colors, mood, textures.
+- Keep it to one dense paragraph (4-8 sentences).
+- Do NOT include dialogue, speech bubbles, or text.
+- Do NOT include meta-instructions like "paint this" or "in watercolor style" — just describe the scene itself.
+- Both characters must appear in the scene.
+- Keep the description PG-13. No nudity, explicit sexual content, or graphic violence. Romantic or tense moments are fine, but keep them tasteful and implied rather than explicit."#.to_string());
+
+    let system = system_parts.join("\n\n");
+
+    let mut msgs = vec![crate::ai::openai::ChatMessage {
+        role: "system".to_string(),
+        content: system,
+    }];
+
+    // Include recent conversation as context (skip illustrations)
+    let conversation: Vec<String> = recent_messages.iter()
+        .filter(|m| m.role != "illustration")
+        .map(|m| {
+            let speaker = if m.role == "user" {
+                user_name.to_string()
+            } else if m.role == "narrative" {
+                "[Narrative]".to_string()
+            } else {
+                character.display_name.clone()
+            };
+            format!("{}: {}", speaker, m.content)
+        })
+        .collect();
+
+    msgs.push(crate::ai::openai::ChatMessage {
+        role: "user".to_string(),
+        content: format!(
+            "Here is the recent conversation:\n\n{}\n\nDescribe the current scene as a single illustration showing both {} and {}.",
+            conversation.join("\n"),
+            user_name,
+            character.display_name,
+        ),
+    });
+
+    msgs
 }
 
 fn json_array_to_strings(val: &Value) -> Vec<String> {

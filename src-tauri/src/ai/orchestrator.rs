@@ -301,6 +301,7 @@ pub async fn run_narrative_with_base(
     });
 
     for m in recent_messages {
+        if m.role == "illustration" { continue; }
         msgs.push(openai::ChatMessage {
             role: if m.role == "narrative" { "assistant".to_string() } else { m.role.clone() },
             content: if m.role == "narrative" {
@@ -332,6 +333,128 @@ pub async fn run_narrative_with_base(
         .ok_or_else(|| "No response from model".to_string())?;
 
     Ok((reply, response.usage))
+}
+
+/// Two-step illustration: generate a scene description, then create an image with reference portraits.
+pub async fn generate_illustration_with_base(
+    base_url: &str,
+    openai_base_url: &str,
+    api_key: &str,
+    chat_model: &str,
+    image_model: &str,
+    image_quality: &str,
+    image_size: &str,
+    image_output_format: Option<&str>,
+    world: &World,
+    character: &Character,
+    recent_messages: &[Message],
+    user_profile: Option<&UserProfile>,
+    reference_images: &[Vec<u8>],
+) -> Result<(String, Vec<u8>, Option<openai::Usage>), String> {
+    // Step 1: Generate scene description
+    let scene_messages = prompts::build_scene_description_prompt(world, character, user_profile, recent_messages);
+
+    let scene_request = ChatRequest {
+        model: chat_model.to_string(),
+        messages: scene_messages,
+        temperature: Some(0.9),
+        max_completion_tokens: Some(500),
+        response_format: None,
+    };
+
+    let scene_response = openai::chat_completion_with_base(base_url, api_key, &scene_request).await?;
+    let scene_description = scene_response
+        .choices
+        .first()
+        .map(|c| c.message.content.clone())
+        .ok_or_else(|| "No scene description from model".to_string())?;
+
+    let chat_usage = scene_response.usage;
+
+    log::info!("[Illustration] Scene description ({} chars): {:.200}", scene_description.len(), scene_description);
+
+    // Step 2: Generate illustration with reference portraits
+    let user_name = user_profile
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("the human");
+
+    let mut prompt_parts = vec![
+        "Hand-painted watercolor illustration in a lush, realistic style.".to_string(),
+        "Soft edges dissolving into wet-on-wet washes, visible paper texture, warm earth tones with pops of verdant green and sky blue.".to_string(),
+        "Gentle diffused natural lighting, nostalgic and contemplative mood.".to_string(),
+        "Wide cinematic composition showing two characters in a scene together.".to_string(),
+    ];
+
+    if reference_images.len() >= 2 {
+        prompt_parts.push(format!(
+            "The first reference image is {user}. The second reference image is {char}. \
+             Both characters MUST appear in the illustration, recognizable from their reference images.",
+            user = user_name,
+            char = character.display_name,
+        ));
+    } else if reference_images.len() == 1 {
+        prompt_parts.push(format!(
+            "The reference image is {char}. They must appear in the illustration, recognizable from the reference.",
+            char = character.display_name,
+        ));
+    }
+
+    prompt_parts.push(format!("SCENE:\n{scene_description}"));
+    prompt_parts.push("CRITICAL: The image must contain absolutely no text, no words, no letters, no numbers, no writing, no labels, no titles, no captions, no watermarks, no signatures, no UI elements, no names.".to_string());
+
+    let prompt = prompt_parts.join(" ");
+
+    let image_response = openai::generate_image_edit_with_base(
+        openai_base_url, api_key, image_model,
+        &prompt, reference_images,
+        image_size, image_quality,
+        image_output_format,
+    ).await?;
+
+    let b64 = image_response.data.first()
+        .and_then(|d| d.image_b64())
+        .ok_or_else(|| "No image data in response".to_string())?;
+
+    // Decode base64 to bytes
+    let image_bytes = openai_base64_decode(b64)?;
+
+    Ok((scene_description, image_bytes, chat_usage))
+}
+
+/// Simple base64 decoder for image data.
+fn openai_base64_decode(input: &str) -> Result<Vec<u8>, String> {
+    openai_base64_decode_pub(input)
+}
+
+/// Public base64 decoder (used by chat_cmds for adjust_illustration).
+pub fn openai_base64_decode_pub(input: &str) -> Result<Vec<u8>, String> {
+    const DECODE: [u8; 128] = {
+        let mut table = [255u8; 128];
+        let chars = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        let mut i = 0;
+        while i < 64 {
+            table[chars[i] as usize] = i as u8;
+            i += 1;
+        }
+        table
+    };
+
+    let input = input.trim().trim_end_matches('=');
+    let mut out = Vec::with_capacity(input.len() * 3 / 4);
+    let mut buf = 0u32;
+    let mut bits = 0u32;
+    for &b in input.as_bytes() {
+        if b == b'\n' || b == b'\r' || b == b' ' { continue; }
+        let val = if (b as usize) < 128 { DECODE[b as usize] } else { 255 };
+        if val == 255 { return Err(format!("Invalid base64 character: {}", b as char)); }
+        buf = (buf << 6) | val as u32;
+        bits += 6;
+        if bits >= 8 {
+            bits -= 8;
+            out.push((buf >> bits) as u8);
+        }
+    }
+    Ok(out)
 }
 
 pub async fn generate_embeddings_with_base(

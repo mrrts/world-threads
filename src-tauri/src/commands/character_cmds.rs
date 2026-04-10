@@ -83,11 +83,11 @@ pub fn delete_character_cmd(
         .map(|p| p.file_name)
         .collect();
 
-    delete_character(&conn, &character_id).map_err(|e| e.to_string())?;
+    let illustration_files = delete_character(&conn, &character_id).map_err(|e| e.to_string())?;
 
-    // Remove portrait files from disk
-    for file_name in portrait_files {
-        let path = portraits_dir.0.join(&file_name);
+    // Remove portrait + illustration files from disk
+    for file_name in portrait_files.iter().chain(illustration_files.iter()) {
+        let path = portraits_dir.0.join(file_name);
         if path.exists() {
             let _ = std::fs::remove_file(&path);
         }
@@ -97,9 +97,20 @@ pub fn delete_character_cmd(
 }
 
 #[tauri::command]
-pub fn clear_chat_history_cmd(db: State<Database>, character_id: String) -> Result<(), String> {
+pub fn clear_chat_history_cmd(
+    db: State<Database>,
+    portraits_dir: State<PortraitsDir>,
+    character_id: String,
+) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    clear_chat_history(&conn, &character_id).map_err(|e| e.to_string())
+    let illustration_files = clear_chat_history(&conn, &character_id).map_err(|e| e.to_string())?;
+    for f in &illustration_files {
+        let path = portraits_dir.0.join(f);
+        if path.exists() {
+            let _ = std::fs::remove_file(&path);
+        }
+    }
+    Ok(())
 }
 
 #[tauri::command]

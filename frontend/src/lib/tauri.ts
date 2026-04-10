@@ -47,7 +47,7 @@ export interface CharacterState {
 export interface Message {
   message_id: string;
   thread_id: string;
-  role: "user" | "assistant" | "system" | "narrative";
+  role: "user" | "assistant" | "system" | "narrative" | "illustration";
   content: string;
   tokens_estimate: number;
   created_at: string;
@@ -88,6 +88,10 @@ export interface PromptCharacterResult {
 
 export interface NarrativeResult {
   narrative_message: Message;
+}
+
+export interface IllustrationResult {
+  illustration_message: Message;
 }
 
 export interface ResetToMessageResult {
@@ -294,6 +298,14 @@ export const api = {
     invoke<PromptCharacterResult>("prompt_character_cmd", { apiKey, characterId }),
   generateNarrative: (apiKey: string, characterId: string) =>
     invoke<NarrativeResult>("generate_narrative_cmd", { apiKey, characterId }),
+  generateIllustration: (apiKey: string, characterId: string, qualityTier?: string) =>
+    invoke<IllustrationResult>("generate_illustration_cmd", { apiKey, characterId, qualityTier: qualityTier ?? null }),
+  deleteIllustration: (messageId: string) =>
+    invoke<void>("delete_illustration_cmd", { messageId }),
+  regenerateIllustration: (apiKey: string, characterId: string, messageId: string) =>
+    invoke<IllustrationResult>("regenerate_illustration_cmd", { apiKey, characterId, messageId }),
+  adjustIllustration: (apiKey: string, characterId: string, messageId: string, instructions: string) =>
+    invoke<IllustrationResult>("adjust_illustration_cmd", { apiKey, characterId, messageId, instructions }),
   resetToMessage: (apiKey: string, characterId: string, messageId: string) =>
     invoke<ResetToMessageResult>("reset_to_message_cmd", { apiKey, characterId, messageId }),
   getMessages: (characterId: string, limit?: number, offset?: number) =>

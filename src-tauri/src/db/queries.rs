@@ -200,8 +200,28 @@ pub fn update_character(conn: &Connection, ch: &Character) -> Result<(), rusqlit
 /// Delete all chat-related data for a character's threads: messages, FTS, embeddings,
 /// memory artifacts, reactions, and message count trackers.
 /// Does NOT delete the threads themselves or the character.
-fn purge_thread_data(conn: &Connection, character_id: &str, thread_ids: &[String]) -> Result<(), rusqlite::Error> {
+/// Returns illustration file names that should be deleted from disk.
+fn purge_thread_data(conn: &Connection, character_id: &str, thread_ids: &[String]) -> Result<Vec<String>, rusqlite::Error> {
+    let mut illustration_files: Vec<String> = Vec::new();
+
     for tid in thread_ids {
+        // Find illustration messages and clean up their gallery entries
+        let mut stmt = conn.prepare(
+            "SELECT message_id FROM messages WHERE thread_id = ?1 AND role = 'illustration'"
+        )?;
+        let illus_ids: Vec<String> = stmt.query_map(params![tid], |row| row.get(0))?
+            .filter_map(|r| r.ok()).collect();
+        for illus_id in &illus_ids {
+            let file_name: Option<String> = conn.query_row(
+                "SELECT file_name FROM world_images WHERE image_id = ?1",
+                params![illus_id], |r| r.get(0),
+            ).ok();
+            conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![illus_id])?;
+            if let Some(f) = file_name {
+                illustration_files.push(f);
+            }
+        }
+
         // FTS entries
         conn.execute("DELETE FROM messages_fts WHERE thread_id = ?1", params![tid])?;
 
@@ -234,33 +254,35 @@ fn purge_thread_data(conn: &Connection, character_id: &str, thread_ids: &[String
         )?;
     }
 
-    Ok(())
+    Ok(illustration_files)
 }
 
-pub fn delete_character(conn: &Connection, character_id: &str) -> Result<(), rusqlite::Error> {
+/// Returns illustration file names that should be deleted from disk.
+pub fn delete_character(conn: &Connection, character_id: &str) -> Result<Vec<String>, rusqlite::Error> {
     let thread_ids: Vec<String> = {
         let mut stmt = conn.prepare("SELECT thread_id FROM threads WHERE character_id = ?1")?;
         let rows = stmt.query_map(params![character_id], |row| row.get(0))?;
         rows.filter_map(|r| r.ok()).collect()
     };
 
-    purge_thread_data(conn, character_id, &thread_ids)?;
+    let illustration_files = purge_thread_data(conn, character_id, &thread_ids)?;
 
     // Delete the character — cascade handles threads, portraits (DB rows),
     // chat_backgrounds, character_mood.
     conn.execute("DELETE FROM characters WHERE character_id = ?1", params![character_id])?;
-    Ok(())
+    Ok(illustration_files)
 }
 
 /// Clear all chat history for a character while preserving the character and thread.
-pub fn clear_chat_history(conn: &Connection, character_id: &str) -> Result<(), rusqlite::Error> {
+/// Returns illustration file names that should be deleted from disk.
+pub fn clear_chat_history(conn: &Connection, character_id: &str) -> Result<Vec<String>, rusqlite::Error> {
     let thread_ids: Vec<String> = {
         let mut stmt = conn.prepare("SELECT thread_id FROM threads WHERE character_id = ?1")?;
         let rows = stmt.query_map(params![character_id], |row| row.get(0))?;
         rows.filter_map(|r| r.ok()).collect()
     };
 
-    purge_thread_data(conn, character_id, &thread_ids)?;
+    let illustration_files = purge_thread_data(conn, character_id, &thread_ids)?;
 
     // Reset mood history (preserve current mood values, just clear history)
     conn.execute(
@@ -268,14 +290,13 @@ pub fn clear_chat_history(conn: &Connection, character_id: &str) -> Result<(), r
         params![character_id],
     )?;
 
-
-    Ok(())
+    Ok(illustration_files)
 }
 
 /// Delete all messages strictly after the given message (by created_at) in the same thread.
-/// Also cleans up FTS entries, reactions (cascaded), and vector embeddings for deleted messages.
-/// Returns the IDs and role of the deleted messages.
-pub fn delete_messages_after(conn: &Connection, thread_id: &str, character_id: &str, after_message_id: &str) -> Result<Vec<(String, String)>, rusqlite::Error> {
+/// Also cleans up FTS entries, reactions (cascaded), vector embeddings, and illustration gallery entries.
+/// Returns the IDs, roles, and any illustration file names to delete from disk.
+pub fn delete_messages_after(conn: &Connection, thread_id: &str, character_id: &str, after_message_id: &str) -> Result<(Vec<(String, String)>, Vec<String>), rusqlite::Error> {
     // Use rowid to get reliable insertion order — timestamps can collide
     let anchor_rowid: i64 = conn.query_row(
         "SELECT rowid FROM messages WHERE message_id = ?1",
@@ -292,10 +313,12 @@ pub fn delete_messages_after(conn: &Connection, thread_id: &str, character_id: &
     })?.filter_map(|r| r.ok()).collect();
 
     if deleted.is_empty() {
-        return Ok(deleted);
+        return Ok((deleted, vec![]));
     }
 
-    for (msg_id, _role) in &deleted {
+    let mut illustration_files: Vec<String> = Vec::new();
+
+    for (msg_id, role) in &deleted {
         // FTS
         conn.execute("DELETE FROM messages_fts WHERE message_id = ?1", params![msg_id])?;
         // Message (reactions cascade via FK)
@@ -309,6 +332,18 @@ pub fn delete_messages_after(conn: &Connection, thread_id: &str, character_id: &
         if let Some(rid) = rowid {
             conn.execute("DELETE FROM vec_chunks WHERE rowid = ?1", params![rid])?;
             conn.execute("DELETE FROM chunk_metadata WHERE rowid = ?1", params![rid])?;
+        }
+        // Illustration cleanup: delete world_image entry (linked by message_id = image_id)
+        if role == "illustration" {
+            let file_name: Option<String> = conn.query_row(
+                "SELECT file_name FROM world_images WHERE image_id = ?1",
+                params![msg_id],
+                |r| r.get(0),
+            ).ok();
+            conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![msg_id])?;
+            if let Some(f) = file_name {
+                illustration_files.push(f);
+            }
         }
     }
 
@@ -344,7 +379,7 @@ pub fn delete_messages_after(conn: &Connection, thread_id: &str, character_id: &
         params![thread_id],
     )?;
 
-    Ok(deleted)
+    Ok((deleted, illustration_files))
 }
 
 /// Clear all world events and their FTS entries for a world.

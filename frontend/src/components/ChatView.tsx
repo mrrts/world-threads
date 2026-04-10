@@ -3,7 +3,7 @@ import Markdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Send, Loader2, SmilePlus, X, Check, Copy, ExternalLink, BookOpen, RotateCcw, MessageSquare, Settings } from "lucide-react";
+import { Send, Loader2, SmilePlus, X, Check, Copy, ExternalLink, BookOpen, RotateCcw, MessageSquare, Settings, Image, Trash2, RefreshCw, SlidersHorizontal } from "lucide-react";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type { useAppStore } from "@/hooks/use-app-store";
 import { api, type Reaction } from "@/lib/tauri";
@@ -102,6 +102,9 @@ export function ChatView({ store }: Props) {
   const [resetConfirmId, setResetConfirmId] = useState<string | null>(null);
   const [showIdentityPopover, setShowIdentityPopover] = useState(false);
   const [showNarrationSettings, setShowNarrationSettings] = useState(false);
+  const [adjustIllustrationId, setAdjustIllustrationId] = useState<string | null>(null);
+  const [adjustInstructions, setAdjustInstructions] = useState("");
+  const [showIllustrationPicker, setShowIllustrationPicker] = useState(false);
   const [narrationTone, setNarrationTone] = useState("Auto");
   const [narrationInstructions, setNarrationInstructions] = useState("");
   const [responseLength, setResponseLength] = useState("Auto");
@@ -362,6 +365,83 @@ export function ChatView({ store }: Props) {
               );
             }
 
+            if (msg.role === "illustration") {
+              return (
+                <div key={msg.message_id} className="flex justify-center my-3">
+                  <div className="relative group max-w-[95%] rounded-xl overflow-hidden bg-gradient-to-br from-emerald-950/30 to-emerald-900/10 border border-emerald-700/20 backdrop-blur-sm">
+                    <div className="flex items-center gap-1.5 px-4 pt-3 pb-1.5 text-[10px] uppercase tracking-wider text-emerald-500/70 font-semibold">
+                      <Image size={12} />
+                      <span>Illustration</span>
+                    </div>
+                    <div className="px-2 pb-2 relative">
+                      <img
+                        src={msg.content}
+                        alt="Scene illustration"
+                        className="w-full rounded-lg object-cover aspect-video"
+                      />
+                      {!isPending && !store.sending && (
+                        <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => { setAdjustIllustrationId(msg.message_id); setAdjustInstructions(""); }}
+                            className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors backdrop-blur-sm"
+                            title="Adjust illustration"
+                          >
+                            <SlidersHorizontal size={14} />
+                          </button>
+                          <button
+                            onClick={() => store.regenerateIllustration(msg.message_id)}
+                            className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors backdrop-blur-sm"
+                            title="Regenerate illustration"
+                          >
+                            <RefreshCw size={14} />
+                          </button>
+                          <button
+                            onClick={() => store.deleteIllustration(msg.message_id)}
+                            className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-destructive transition-colors backdrop-blur-sm"
+                            title="Delete illustration"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                          <button
+                            onClick={async () => {
+                              const label = `illus-${msg.message_id.slice(0, 8)}`;
+                              try {
+                                const existing = await WebviewWindow.getByLabel(label);
+                                if (existing) { await existing.setFocus(); return; }
+                              } catch { /* not found */ }
+                              new WebviewWindow(label, {
+                                url: `index.html?illustration=${msg.message_id}`,
+                                title: "Illustration",
+                                width: 1280,
+                                height: 760,
+                                resizable: true,
+                                decorations: true,
+                              });
+                            }}
+                            className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors backdrop-blur-sm"
+                            title="Open in window"
+                          >
+                            <ExternalLink size={14} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-[10px] px-4 pb-3 text-emerald-500/50 flex items-center gap-2">
+                      {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {!isPending && (
+                        <button
+                          onClick={() => setResetConfirmId(msg.message_id)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-500/40 hover:text-emerald-400 cursor-pointer"
+                        >
+                          Reset to Here
+                        </button>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              );
+            }
+
             return (
               <div key={msg.message_id}>
                 <div className={`flex items-end gap-2 ${isUser ? "justify-end" : "justify-start"}`}>
@@ -442,7 +522,7 @@ export function ChatView({ store }: Props) {
               </div>
             );
           })}
-          {store.sending && !store.generatingNarrative && (
+          {store.sending && !store.generatingNarrative && !store.generatingIllustration && (
             <div className="flex items-end gap-2 justify-start">
               {charPortrait?.data_url ? (
                 <img src={charPortrait.data_url} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border flex-shrink-0 mb-1" />
@@ -467,6 +547,17 @@ export function ChatView({ store }: Props) {
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500/60 animate-bounce [animation-delay:0ms]" />
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500/60 animate-bounce [animation-delay:150ms]" />
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500/60 animate-bounce [animation-delay:300ms]" />
+              </div>
+            </div>
+          )}
+          {store.generatingIllustration && (
+            <div className="flex justify-center my-2">
+              <div className="rounded-xl px-5 py-3 bg-gradient-to-br from-emerald-950/40 to-emerald-900/20 border border-emerald-700/30 flex items-center gap-2 text-emerald-500/70">
+                <Image size={14} className="animate-pulse" />
+                <span className="text-xs italic">Painting scene...</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/60 animate-bounce [animation-delay:0ms]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/60 animate-bounce [animation-delay:150ms]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/60 animate-bounce [animation-delay:300ms]" />
               </div>
             </div>
           )}
@@ -539,6 +630,20 @@ export function ChatView({ store }: Props) {
             </Button>
             <span className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-0.5 px-2.5 py-1 text-[11px] font-medium text-white bg-black rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover/narr:opacity-100 pointer-events-none transition-opacity duration-150">
               + Narrative
+            </span>
+          </div>
+          <div className="relative group/illus flex-shrink-0">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-emerald-500/70 hover:text-emerald-400 hover:bg-emerald-500/10 h-10 w-10 rounded-xl"
+              onClick={() => setShowIllustrationPicker(true)}
+              disabled={store.sending || !store.apiKey || store.messages.length === 0}
+            >
+              <Image size={16} />
+            </Button>
+            <span className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-0.5 px-2.5 py-1 text-[11px] font-medium text-white bg-black rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover/illus:opacity-100 pointer-events-none transition-opacity duration-150">
+              Illustration
             </span>
           </div>
           <textarea
@@ -730,6 +835,94 @@ export function ChatView({ store }: Props) {
               }}
             >
               Save
+            </Button>
+          </div>
+        </div>
+      </Dialog>
+
+      <Dialog open={showIllustrationPicker} onClose={() => setShowIllustrationPicker(false)} className="max-w-sm">
+        <div className="p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Image size={18} className="text-emerald-500" />
+              <h3 className="font-semibold">Generate Illustration</h3>
+            </div>
+            <button
+              onClick={() => setShowIllustrationPicker(false)}
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors cursor-pointer"
+            >
+              <X size={16} />
+            </button>
+          </div>
+          <p className="text-xs text-muted-foreground">Choose a quality level for the scene illustration.</p>
+          <div className="space-y-2">
+            {([
+              { tier: "low", label: "Quick Sketch", desc: "1024px square, low quality", detail: "Fastest and cheapest" },
+              { tier: "medium", label: "Standard", desc: "1024px square, medium quality", detail: "Good balance of speed and detail" },
+              { tier: "high", label: "High Fidelity", desc: "1536x1024 landscape, medium quality", detail: "Best detail and cinematic framing" },
+            ] as const).map(({ tier, label, desc, detail }) => (
+              <button
+                key={tier}
+                onClick={() => {
+                  setShowIllustrationPicker(false);
+                  store.generateIllustration(tier);
+                }}
+                className="w-full text-left rounded-xl border border-border hover:border-emerald-500/40 hover:bg-emerald-500/5 p-3.5 transition-all cursor-pointer group"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium group-hover:text-emerald-400 transition-colors">{label}</span>
+                  <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">{tier}</span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+                <p className="text-[10px] text-muted-foreground/50 mt-0.5">{detail}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      </Dialog>
+
+      <Dialog open={!!adjustIllustrationId} onClose={() => setAdjustIllustrationId(null)} className="max-w-md">
+        <div className="p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal size={18} className="text-emerald-500" />
+              <h3 className="font-semibold">Adjust Illustration</h3>
+            </div>
+            <button
+              onClick={() => setAdjustIllustrationId(null)}
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors cursor-pointer"
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          <p className="text-xs text-muted-foreground">
+            Describe what to change about the illustration. The current image will be used as a starting point.
+          </p>
+
+          <textarea
+            value={adjustInstructions}
+            onChange={(e) => setAdjustInstructions(e.target.value)}
+            placeholder="e.g. Make it sunset instead of daytime. Add rain. Move the characters closer together..."
+            className="w-full min-h-[100px] max-h-[200px] resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+            rows={4}
+          />
+
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setAdjustIllustrationId(null)}>
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              disabled={!adjustInstructions.trim()}
+              onClick={() => {
+                if (adjustIllustrationId && adjustInstructions.trim()) {
+                  store.adjustIllustration(adjustIllustrationId, adjustInstructions.trim());
+                  setAdjustIllustrationId(null);
+                }
+              }}
+            >
+              Adjust
             </Button>
           </div>
         </div>

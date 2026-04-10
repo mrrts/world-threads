@@ -1,5 +1,6 @@
 use crate::ai::mood;
 use crate::ai::orchestrator;
+use crate::commands::portrait_cmds::PortraitsDir;
 use crate::db::queries::*;
 use crate::db::Database;
 use chrono::Utc;
@@ -604,6 +605,368 @@ pub async fn generate_narrative_cmd(
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct IllustrationResult {
+    pub illustration_message: Message,
+}
+
+#[tauri::command]
+pub async fn generate_illustration_cmd(
+    db: State<'_, Database>,
+    portraits_dir: State<'_, PortraitsDir>,
+    api_key: String,
+    character_id: String,
+    quality_tier: Option<String>,
+) -> Result<IllustrationResult, String> {
+    let (world, character, thread, recent_msgs, model_config, user_profile) = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
+        let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
+        let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
+        let model_config = orchestrator::load_model_config(&conn);
+        let recent_msgs = list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?;
+        let user_profile = get_user_profile(&conn, &character.world_id).ok();
+
+        (world, character, thread, recent_msgs, model_config, user_profile)
+    };
+
+    // Load reference portraits: user avatar first, then character's active portrait
+    let mut reference_images: Vec<Vec<u8>> = Vec::new();
+    let dir = &portraits_dir.0;
+
+    // User avatar
+    if let Some(ref profile) = user_profile {
+        if !profile.avatar_file.is_empty() {
+            let path = dir.join(&profile.avatar_file);
+            if path.exists() {
+                if let Ok(bytes) = std::fs::read(&path) {
+                    reference_images.push(bytes);
+                }
+            }
+        }
+    }
+
+    // Character active portrait
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        if let Some(portrait) = get_active_portrait(&conn, &character_id) {
+            let path = dir.join(&portrait.file_name);
+            if path.exists() {
+                if let Ok(bytes) = std::fs::read(&path) {
+                    reference_images.push(bytes);
+                }
+            }
+        }
+    }
+
+    // Resolve quality tier to image size and quality
+    let tier = quality_tier.as_deref().unwrap_or("high");
+    let (img_size, img_quality) = match tier {
+        "low" => ("1024x1024", "low"),
+        "medium" => ("1024x1024", "medium"),
+        _ => ("1536x1024", "medium"),  // "high"
+    };
+
+    log::info!("[Illustration] Generating for '{}' with {} reference images (tier={}, size={}, quality={})",
+        character.display_name, reference_images.len(), tier, img_size, img_quality);
+
+    let (scene_description, image_bytes, chat_usage) = orchestrator::generate_illustration_with_base(
+        &model_config.chat_api_base(),
+        &model_config.openai_api_base(),
+        &api_key,
+        &model_config.dialogue_model,
+        &model_config.image_model,
+        img_quality,
+        img_size,
+        model_config.image_output_format().as_deref(),
+        &world, &character, &recent_msgs,
+        user_profile.as_ref(),
+        &reference_images,
+    ).await?;
+
+    if let Some(u) = &chat_usage {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let _ = record_token_usage(&conn, "illustration", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
+    }
+
+    // Use message_id as image_id so they're linked for cleanup
+    let message_id = uuid::Uuid::new_v4().to_string();
+    let file_name = format!("illustration_{message_id}.png");
+    std::fs::create_dir_all(dir).map_err(|e| format!("Failed to create dir: {e}"))?;
+    std::fs::write(dir.join(&file_name), &image_bytes)
+        .map_err(|e| format!("Failed to save illustration: {e}"))?;
+
+    log::info!("[Illustration] Saved {} ({} bytes)", file_name, image_bytes.len());
+
+    let b64 = base64_encode_bytes(&image_bytes);
+    let data_url = format!("data:image/png;base64,{b64}");
+    let now = Utc::now().to_rfc3339();
+
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+
+        // Save to world gallery (linked by message_id)
+        let img = WorldImage {
+            image_id: message_id.clone(),
+            world_id: world.world_id.clone(),
+            prompt: scene_description,
+            file_name: file_name.clone(),
+            is_active: false,
+            source: "illustration".to_string(),
+            created_at: now.clone(),
+        };
+        let _ = create_world_image(&conn, &img);
+
+        // Store as an "illustration" role message
+        let msg = Message {
+            message_id: message_id.clone(),
+            thread_id: thread.thread_id.clone(),
+            role: "illustration".to_string(),
+            content: data_url,
+            tokens_estimate: 0,
+            created_at: now,
+        };
+        create_message(&conn, &msg).map_err(|e| e.to_string())?;
+    }
+
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let illustration_msg = conn.query_row(
+        "SELECT message_id, thread_id, role, content, tokens_estimate, created_at FROM messages WHERE message_id = ?1",
+        params![message_id], |row| Ok(Message {
+            message_id: row.get(0)?, thread_id: row.get(1)?, role: row.get(2)?,
+            content: row.get(3)?, tokens_estimate: row.get(4)?, created_at: row.get(5)?,
+        })
+    ).map_err(|e| e.to_string())?;
+
+    Ok(IllustrationResult {
+        illustration_message: illustration_msg,
+    })
+}
+
+/// Encode bytes to base64 string.
+fn base64_encode_bytes(bytes: &[u8]) -> String {
+    const CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    let mut out = String::with_capacity((bytes.len() + 2) / 3 * 4);
+    for chunk in bytes.chunks(3) {
+        let b0 = chunk[0] as u32;
+        let b1 = if chunk.len() > 1 { chunk[1] as u32 } else { 0 };
+        let b2 = if chunk.len() > 2 { chunk[2] as u32 } else { 0 };
+        let triple = (b0 << 16) | (b1 << 8) | b2;
+        out.push(CHARS[((triple >> 18) & 0x3F) as usize] as char);
+        out.push(CHARS[((triple >> 12) & 0x3F) as usize] as char);
+        if chunk.len() > 1 {
+            out.push(CHARS[((triple >> 6) & 0x3F) as usize] as char);
+        } else {
+            out.push('=');
+        }
+        if chunk.len() > 2 {
+            out.push(CHARS[(triple & 0x3F) as usize] as char);
+        } else {
+            out.push('=');
+        }
+    }
+    out
+}
+
+/// Delete a single illustration: message, gallery entry, and file on disk.
+fn delete_illustration_inner(conn: &rusqlite::Connection, portraits_dir: &std::path::Path, message_id: &str) -> Result<(), String> {
+    // Delete gallery entry (linked by message_id = image_id)
+    let file_name: Option<String> = conn.query_row(
+        "SELECT file_name FROM world_images WHERE image_id = ?1",
+        params![message_id], |r| r.get(0),
+    ).ok();
+    conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![message_id])
+        .map_err(|e| e.to_string())?;
+    // Delete FTS entry
+    conn.execute("DELETE FROM messages_fts WHERE message_id = ?1", params![message_id]).ok();
+    // Delete message
+    conn.execute("DELETE FROM messages WHERE message_id = ?1", params![message_id])
+        .map_err(|e| e.to_string())?;
+    // Delete file
+    if let Some(f) = file_name {
+        let path = portraits_dir.join(&f);
+        if path.exists() {
+            let _ = std::fs::remove_file(&path);
+        }
+    }
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn delete_illustration_cmd(
+    db: State<'_, Database>,
+    portraits_dir: State<'_, PortraitsDir>,
+    message_id: String,
+) -> Result<(), String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    delete_illustration_inner(&conn, &portraits_dir.0, &message_id)
+}
+
+#[tauri::command]
+pub async fn regenerate_illustration_cmd(
+    db: State<'_, Database>,
+    portraits_dir: State<'_, PortraitsDir>,
+    api_key: String,
+    character_id: String,
+    message_id: String,
+) -> Result<IllustrationResult, String> {
+    // Delete the old illustration
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        delete_illustration_inner(&conn, &portraits_dir.0, &message_id)?;
+    }
+
+    // Generate a new one (reuses the full generate_illustration_cmd logic)
+    generate_illustration_cmd(db, portraits_dir, api_key, character_id, Some("high".to_string())).await
+}
+
+#[tauri::command]
+pub async fn adjust_illustration_cmd(
+    db: State<'_, Database>,
+    portraits_dir: State<'_, PortraitsDir>,
+    api_key: String,
+    character_id: String,
+    message_id: String,
+    instructions: String,
+) -> Result<IllustrationResult, String> {
+    // Load the current illustration image, model config, and reference portraits
+    let (image_bytes, world, character, thread, model_config, user_profile) = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
+        let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
+        let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
+        let model_config = orchestrator::load_model_config(&conn);
+        let user_profile = get_user_profile(&conn, &character.world_id).ok();
+
+        // Read the current illustration file
+        let file_name: String = conn.query_row(
+            "SELECT file_name FROM world_images WHERE image_id = ?1",
+            params![message_id], |r| r.get(0),
+        ).map_err(|_| "Illustration not found in gallery".to_string())?;
+
+        let path = portraits_dir.0.join(&file_name);
+        let bytes = std::fs::read(&path)
+            .map_err(|e| format!("Failed to read illustration file: {e}"))?;
+
+        (bytes, world, character, thread, model_config, user_profile)
+    };
+
+    let dir = &portraits_dir.0;
+
+    // Build reference images: current illustration first, then user avatar, then character portrait
+    let mut reference_images: Vec<Vec<u8>> = vec![image_bytes];
+
+    if let Some(ref profile) = user_profile {
+        if !profile.avatar_file.is_empty() {
+            let path = dir.join(&profile.avatar_file);
+            if path.exists() {
+                if let Ok(bytes) = std::fs::read(&path) {
+                    reference_images.push(bytes);
+                }
+            }
+        }
+    }
+
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        if let Some(portrait) = get_active_portrait(&conn, &character_id) {
+            let path = dir.join(&portrait.file_name);
+            if path.exists() {
+                if let Ok(bytes) = std::fs::read(&path) {
+                    reference_images.push(bytes);
+                }
+            }
+        }
+    }
+
+    let user_name = user_profile.as_ref()
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("the human");
+
+    // Build the adjustment prompt
+    let prompt_parts = vec![
+        "Hand-painted watercolor illustration in a lush, realistic style.".to_string(),
+        "Soft edges dissolving into wet-on-wet washes, visible paper texture, warm earth tones.".to_string(),
+        "Wide cinematic composition.".to_string(),
+        "The first reference image is the current illustration to adjust. Preserve its overall composition and scene.".to_string(),
+        format!("The other reference images show {} and {}. Keep them recognizable.", user_name, character.display_name),
+        format!("ADJUSTMENT INSTRUCTIONS:\n{instructions}"),
+        "Apply the requested changes while keeping everything else about the scene intact.".to_string(),
+        "CRITICAL: The image must contain absolutely no text, no words, no letters, no numbers, no writing, no labels, no titles, no captions, no watermarks, no signatures, no UI elements, no names.".to_string(),
+    ];
+
+    let prompt = prompt_parts.join(" ");
+
+    log::info!("[Illustration Adjust] Adjusting with {} reference images, instructions: {:.100}", reference_images.len(), instructions);
+
+    let response = crate::ai::openai::generate_image_edit_with_base(
+        &model_config.openai_api_base(), &api_key, &model_config.image_model,
+        &prompt, &reference_images,
+        "1536x1024", model_config.image_quality(),
+        model_config.image_output_format().as_deref(),
+    ).await?;
+
+    let b64 = response.data.first()
+        .and_then(|d| d.image_b64())
+        .ok_or_else(|| "No image data in response".to_string())?;
+
+    let new_image_bytes = orchestrator::openai_base64_decode_pub(b64)?;
+
+    // Delete the old illustration
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        delete_illustration_inner(&conn, &portraits_dir.0, &message_id)?;
+    }
+
+    // Save new image
+    let new_message_id = uuid::Uuid::new_v4().to_string();
+    let file_name = format!("illustration_{new_message_id}.png");
+    std::fs::write(dir.join(&file_name), &new_image_bytes)
+        .map_err(|e| format!("Failed to save adjusted illustration: {e}"))?;
+
+    let b64_out = base64_encode_bytes(&new_image_bytes);
+    let data_url = format!("data:image/png;base64,{b64_out}");
+    let now = Utc::now().to_rfc3339();
+
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+
+        let img = WorldImage {
+            image_id: new_message_id.clone(),
+            world_id: world.world_id.clone(),
+            prompt: instructions.clone(),
+            file_name,
+            is_active: false,
+            source: "illustration".to_string(),
+            created_at: now.clone(),
+        };
+        let _ = create_world_image(&conn, &img);
+
+        let msg = Message {
+            message_id: new_message_id.clone(),
+            thread_id: thread.thread_id.clone(),
+            role: "illustration".to_string(),
+            content: data_url,
+            tokens_estimate: 0,
+            created_at: now,
+        };
+        create_message(&conn, &msg).map_err(|e| e.to_string())?;
+    }
+
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let illustration_msg = conn.query_row(
+        "SELECT message_id, thread_id, role, content, tokens_estimate, created_at FROM messages WHERE message_id = ?1",
+        params![new_message_id], |row| Ok(Message {
+            message_id: row.get(0)?, thread_id: row.get(1)?, role: row.get(2)?,
+            content: row.get(3)?, tokens_estimate: row.get(4)?, created_at: row.get(5)?,
+        })
+    ).map_err(|e| e.to_string())?;
+
+    Ok(IllustrationResult {
+        illustration_message: illustration_msg,
+    })
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ResetToMessageResult {
     pub deleted_count: usize,
     /// If the anchor message was from the user, this contains the new AI response
@@ -613,6 +976,7 @@ pub struct ResetToMessageResult {
 #[tauri::command]
 pub async fn reset_to_message_cmd(
     db: State<'_, Database>,
+    portraits_dir: State<'_, PortraitsDir>,
     api_key: String,
     character_id: String,
     message_id: String,
@@ -640,8 +1004,16 @@ pub async fn reset_to_message_cmd(
             }).map_err(|e| e.to_string())?
         };
 
-        let deleted = delete_messages_after(&conn, &thread.thread_id, &character_id, &message_id)
+        let (deleted, illustration_files) = delete_messages_after(&conn, &thread.thread_id, &character_id, &message_id)
             .map_err(|e| e.to_string())?;
+
+        // Delete illustration image files from disk
+        for f in &illustration_files {
+            let path = portraits_dir.0.join(f);
+            if path.exists() {
+                let _ = std::fs::remove_file(&path);
+            }
+        }
 
         (anchor.role, anchor.content, deleted.len(), thread, world, character, model_config)
     };

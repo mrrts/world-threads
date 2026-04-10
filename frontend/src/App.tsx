@@ -18,11 +18,15 @@ type View = "chat" | "world" | "character" | "settings" | "summary" | "gallery";
 type CharSubView = "grid" | "editor" | "profile";
 
 export default function App() {
-  // Check if this window is a portrait popout
+  // Check if this window is a popout
   const params = new URLSearchParams(window.location.search);
   const popoutCharacterId = params.get("portrait");
   if (popoutCharacterId) {
     return <PortraitPopout characterId={popoutCharacterId} />;
+  }
+  const illustrationMsgId = params.get("illustration");
+  if (illustrationMsgId) {
+    return <IllustrationPopout messageId={illustrationMsgId} />;
   }
 
   return <MainApp />;
@@ -215,6 +219,74 @@ function NavButton({ icon, active, onClick, title, description }: { icon: React.
           {description && <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{description}</p>}
         </div>
       )}
+    </div>
+  );
+}
+
+function IllustrationPopout({ messageId }: { messageId: string }) {
+  const [dataUrl, setDataUrl] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // The illustration content is stored as the message content (a data URL).
+    // We need to find it via the gallery since we can't query a single message by ID directly.
+    // But the world_images table has the file linked by image_id = message_id.
+    // Simplest: use getSetting to... actually, let's just look it up from the gallery.
+    // The image_id in world_images matches the message_id.
+    // We don't have a direct "get world image by id" command, but we can list all and find it.
+    // Actually simpler: the message content IS the data URL. We just need to get the message.
+    // But we don't have a get-single-message command. Let me use the gallery approach.
+    // The gallery items have data_url populated. Let's list all worlds and search.
+    (async () => {
+      try {
+        const worlds = await api.listWorlds();
+        for (const w of worlds) {
+          const gallery = await api.listWorldGallery(w.world_id);
+          const match = gallery.find((g) => g.id === messageId);
+          if (match?.data_url) {
+            setDataUrl(match.data_url);
+            break;
+          }
+        }
+      } catch {
+        // ignore
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [messageId]);
+
+  if (loading) {
+    return (
+      <div className="h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse text-primary text-2xl">...</div>
+      </div>
+    );
+  }
+
+  if (!dataUrl) {
+    return (
+      <div className="h-screen bg-background flex items-center justify-center text-muted-foreground text-sm">
+        Illustration not found
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-screen bg-black flex flex-col overflow-hidden">
+      <div
+        data-tauri-drag-region
+        className="h-8 flex-shrink-0 flex items-center pl-[72px] pr-3 bg-card border-b border-border select-none"
+      >
+        <span className="text-xs text-muted-foreground">Illustration</span>
+      </div>
+      <div className="flex-1 overflow-auto min-h-0">
+        <img
+          src={dataUrl}
+          alt="Illustration"
+          className="w-full"
+        />
+      </div>
     </div>
   );
 }
