@@ -3,11 +3,14 @@ import Markdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Send, Loader2, SmilePlus, X, Paintbrush, Check } from "lucide-react";
+import { Send, Loader2, SmilePlus, X, Check, Copy, ExternalLink, BookOpen, RotateCcw, MessageSquare, Settings } from "lucide-react";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type { useAppStore } from "@/hooks/use-app-store";
-import { api, type Reaction, type ChatBackground, type GalleryItem } from "@/lib/tauri";
+import { api, type Reaction } from "@/lib/tauri";
 
 const QUICK_EMOJIS = ["❤️", "😂", "😮", "😢", "🔥", "👍", "👎", "💀", "🙏", "✨", "👀", "💯"];
+
+
 
 interface Props {
   store: ReturnType<typeof useAppStore>;
@@ -90,81 +93,40 @@ export function ChatView({ store }: Props) {
   const [input, setInput] = useState("");
   const [pickerMessageId, setPickerMessageId] = useState<string | null>(null);
   const [showPortraitModal, setShowPortraitModal] = useState(false);
-  const [chatBg, setChatBg] = useState<ChatBackground | null>(null);
-  const [showBgPicker, setShowBgPicker] = useState(false);
-  const [showBgImagePicker, setShowBgImagePicker] = useState(false);
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
-  const [bgImageUrl, setBgImageUrl] = useState<string>("");
+  const [showUserAvatarModal, setShowUserAvatarModal] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const bgPickerRef = useRef<HTMLDivElement>(null);
   const charPortrait = store.activeCharacter ? store.activePortraits[store.activeCharacter.character_id] : undefined;
   const [userAvatarUrl, setUserAvatarUrl] = useState("");
+  const [copiedError, setCopiedError] = useState(false);
+  const [resetConfirmId, setResetConfirmId] = useState<string | null>(null);
+  const [showIdentityPopover, setShowIdentityPopover] = useState(false);
+  const [showNarrationSettings, setShowNarrationSettings] = useState(false);
+  const [narrationTone, setNarrationTone] = useState("Auto");
+  const [narrationInstructions, setNarrationInstructions] = useState("");
+  const [responseLength, setResponseLength] = useState("Auto");
+  const [narrationDirty, setNarrationDirty] = useState(false);
+
+  const charId = store.activeCharacter?.character_id;
 
   useEffect(() => {
     if (!store.activeWorld) { setUserAvatarUrl(""); return; }
     api.getUserAvatar(store.activeWorld.world_id).then((url) => setUserAvatarUrl(url || ""));
   }, [store.activeWorld?.world_id, store.userProfile?.avatar_file]);
 
-  const charId = store.activeCharacter?.character_id;
-  const worldId = store.activeWorld?.world_id;
-
   useEffect(() => {
     if (!charId) return;
-    api.getChatBackground(charId).then((bg) => setChatBg(bg));
+    Promise.all([
+      api.getSetting(`narration_tone.${charId}`),
+      api.getSetting(`narration_instructions.${charId}`),
+      api.getSetting(`response_length.${charId}`),
+    ]).then(([tone, instructions, length]) => {
+      setNarrationTone(tone || "Auto");
+      setNarrationInstructions(instructions || "");
+      setResponseLength(length || "Auto");
+      setNarrationDirty(false);
+    });
   }, [charId]);
-
-  useEffect(() => {
-    if (!worldId) return;
-    api.listWorldGallery(worldId).then(setGalleryItems).catch(() => {});
-  }, [worldId, store.activeWorldImage?.image_id, store.activePortraits, store.userProfile?.avatar_file]);
-
-  useEffect(() => {
-    if (chatBg?.bg_type === "world_image" && chatBg.bg_image_id) {
-      const cached = galleryItems.find((i) => i.id === chatBg.bg_image_id);
-      if (cached?.data_url) {
-        setBgImageUrl(cached.data_url);
-      }
-    } else if (chatBg?.bg_type === "world_image" && store.activeWorldImage?.data_url) {
-      setBgImageUrl(store.activeWorldImage.data_url);
-    } else {
-      setBgImageUrl("");
-    }
-  }, [chatBg?.bg_type, chatBg?.bg_image_id, galleryItems, store.activeWorldImage]);
-
-  const saveBg = useCallback((patch: Partial<ChatBackground>) => {
-    if (!charId) return;
-    const updated: ChatBackground = {
-      character_id: charId,
-      bg_type: patch.bg_type ?? chatBg?.bg_type ?? "color",
-      bg_color: patch.bg_color ?? chatBg?.bg_color ?? "",
-      bg_image_id: patch.bg_image_id ?? chatBg?.bg_image_id ?? "",
-      bg_blur: patch.bg_blur ?? chatBg?.bg_blur ?? 0,
-      updated_at: new Date().toISOString(),
-    };
-    setChatBg(updated);
-    api.updateChatBackground(updated);
-  }, [charId, chatBg]);
-
-  const resetBg = useCallback(() => {
-    if (!charId) return;
-    const cleared: ChatBackground = {
-      character_id: charId, bg_type: "color", bg_color: "", bg_image_id: "", bg_blur: 0, updated_at: new Date().toISOString(),
-    };
-    setChatBg(cleared);
-    api.updateChatBackground(cleared);
-  }, [charId]);
-
-  useEffect(() => {
-    if (!showBgPicker) return;
-    const handler = (e: MouseEvent) => {
-      if (bgPickerRef.current && !bgPickerRef.current.contains(e.target as Node)) {
-        setShowBgPicker(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [showBgPicker]);
 
   const prevScrollHeightRef = useRef(0);
   const isLoadingOlderRef = useRef(false);
@@ -188,6 +150,13 @@ export function ChatView({ store }: Props) {
       el.scrollTop = el.scrollHeight;
     }
   }, [store.messages, store.sending]);
+
+  // Auto-focus input after AI response arrives
+  useEffect(() => {
+    if (!store.sending) {
+      inputRef.current?.focus();
+    }
+  }, [store.sending]);
 
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
@@ -231,43 +200,49 @@ export function ChatView({ store }: Props) {
     );
   }
 
-  const bgStyle = chatBg?.bg_type === "color" && chatBg.bg_color ? { backgroundColor: chatBg.bg_color } : undefined;
-
-  const hasExplicitBg = chatBg && (
-    (chatBg.bg_type === "color" && chatBg.bg_color) ||
-    (chatBg.bg_type === "world_image" && (bgImageUrl || chatBg.bg_image_id))
-  );
-  const defaultAvatarBg = !hasExplicitBg ? charPortrait?.data_url : undefined;
-
   return (
-    <div className="flex-1 flex flex-col min-h-0 relative" style={bgStyle}>
-      {chatBg?.bg_type === "world_image" && bgImageUrl && (
+    <div className="flex-1 flex flex-col min-h-0 relative">
+      {charPortrait?.data_url && (
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
           <img
-            src={bgImageUrl}
+            src={charPortrait.data_url}
             alt=""
             className="w-full h-full object-cover"
-            style={{ filter: chatBg.bg_blur ? `blur(${chatBg.bg_blur}px)` : undefined, transform: chatBg.bg_blur ? "scale(1.1)" : undefined }}
-          />
-          <div className="absolute inset-0 bg-background/40" />
-        </div>
-      )}
-      {defaultAvatarBg && (
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <img
-            src={defaultAvatarBg}
-            alt=""
-            className="w-full h-full object-cover"
-            style={{}}
           />
           <div className="absolute inset-0 bg-background/60" />
         </div>
       )}
       <div className="px-4 py-3 border-b border-border flex items-center gap-3 relative z-30 bg-background">
         {charPortrait?.data_url ? (
-          <button onClick={() => setShowPortraitModal(true)} className="cursor-pointer flex-shrink-0">
-            <img src={charPortrait.data_url} alt="" className="w-9 h-9 rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
-          </button>
+          <div className="relative group flex-shrink-0">
+            <button
+              onClick={async () => {
+                const label = `portrait-${store.activeCharacter!.character_id.slice(0, 8)}`;
+                try {
+                  const existing = await WebviewWindow.getByLabel(label);
+                  if (existing) { await existing.setFocus(); return; }
+                } catch { /* not found, create new */ }
+                new WebviewWindow(label, {
+                  url: `index.html?portrait=${store.activeCharacter!.character_id}`,
+                  title: store.activeCharacter!.display_name,
+                  width: 420,
+                  height: 480,
+                  resizable: true,
+                  decorations: true,
+                  titleBarStyle: "overlay",
+                  hiddenTitle: true,
+                  alwaysOnTop: true,
+                });
+              }}
+              className="cursor-pointer"
+              title="Open portrait in window"
+            >
+              <img src={charPortrait.data_url} alt="" className="w-9 h-9 rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
+              <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-card border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <ExternalLink size={8} />
+              </span>
+            </button>
+          </div>
         ) : (
           <span
             className="w-3 h-3 rounded-full"
@@ -276,100 +251,50 @@ export function ChatView({ store }: Props) {
         )}
         <h1 className="font-semibold">{store.activeCharacter.display_name}</h1>
         {store.activeCharacter.identity && (
-          <span className="text-xs text-muted-foreground truncate flex-1">
-            {store.activeCharacter.identity.slice(0, 60)}...
-          </span>
-        )}
-        <div className="relative ml-auto flex-shrink-0">
-          <button
-            onClick={() => setShowBgPicker(!showBgPicker)}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer"
-            title="Chat background color"
-          >
-            <Paintbrush size={16} />
-          </button>
-          {showBgPicker && (
-            <div ref={bgPickerRef} className="absolute right-0 top-full mt-2 z-50 w-56 bg-card border border-border rounded-xl shadow-xl p-3 animate-in fade-in zoom-in-95 duration-150">
-              <p className="text-[10px] text-muted-foreground mb-2 font-semibold uppercase tracking-wider">Chat background</p>
-
-              <div className="space-y-3">
-                <div>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="bgtype"
-                      checked={!chatBg || chatBg.bg_type === "color"}
-                      onChange={() => saveBg({ bg_type: "color" })}
-                      className="accent-primary"
-                    />
-                    <span className="text-xs">Solid color</span>
-                  </label>
-                  {(!chatBg || chatBg.bg_type === "color") && (
-                    <div className="flex items-center gap-2 mt-1.5 ml-5">
-                      <input
-                        type="color"
-                        value={chatBg?.bg_color || "#0a0a0f"}
-                        onChange={(e) => saveBg({ bg_type: "color", bg_color: e.target.value })}
-                        className="w-7 h-7 rounded-lg border border-input cursor-pointer bg-transparent p-0.5"
-                      />
-                      <span className="text-[10px] font-mono text-muted-foreground">{chatBg?.bg_color || "default"}</span>
-                    </div>
-                  )}
-                </div>
-
-                {galleryItems.length > 0 && (
-                  <div>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="bgtype"
-                        checked={chatBg?.bg_type === "world_image"}
-                        onChange={() => {
-                          const first = galleryItems[0];
-                          saveBg({ bg_type: "world_image", bg_image_id: first?.id ?? "", bg_blur: 0 });
-                        }}
-                        className="accent-primary"
-                      />
-                      <span className="text-xs">Gallery image</span>
-                    </label>
-                    {chatBg?.bg_type === "world_image" && (
-                      <div className="mt-1.5 ml-5 space-y-2">
-                        {bgImageUrl && (
-                          <img src={bgImageUrl} alt="" className="w-full rounded-lg ring-1 ring-border" />
-                        )}
-                        <button
-                          onClick={() => setShowBgImagePicker(true)}
-                          className="text-[11px] text-primary hover:text-primary/80 transition-colors cursor-pointer"
-                        >
-                          Choose image ({galleryItems.length})
-                        </button>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-muted-foreground w-8">Blur</span>
-                          <input
-                            type="range"
-                            min={0}
-                            max={20}
-                            value={chatBg?.bg_blur ?? 0}
-                            onChange={(e) => saveBg({ bg_blur: Number(e.target.value) })}
-                            className="flex-1 accent-primary h-1"
-                          />
-                          <span className="text-[10px] font-mono text-muted-foreground w-5 text-right">{chatBg?.bg_blur ?? 0}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+          <div className="relative flex-1 min-w-0">
+            <span
+              className="text-xs text-muted-foreground truncate block cursor-default"
+              onMouseEnter={() => setShowIdentityPopover(true)}
+              onMouseLeave={() => setShowIdentityPopover(false)}
+            >
+              {store.activeCharacter.identity.slice(0, 60)}...
+            </span>
+            {showIdentityPopover && (
+              <div
+                className="absolute left-0 top-full mt-2 z-50 w-80 bg-card border border-border rounded-xl shadow-xl p-4 animate-in fade-in zoom-in-95 duration-150"
+                onMouseEnter={() => setShowIdentityPopover(true)}
+                onMouseLeave={() => setShowIdentityPopover(false)}
+              >
+                {charPortrait?.data_url && (
+                  <img src={charPortrait.data_url} alt="" className="w-full rounded-lg object-cover aspect-square mb-3" />
                 )}
-
-                <button
-                  onClick={resetBg}
-                  className="text-[11px] text-muted-foreground hover:text-foreground transition-colors cursor-pointer pt-1 border-t border-border/50 w-full text-left"
-                >
-                  Reset to default
-                </button>
+                <p className="font-semibold text-sm mb-1">{store.activeCharacter.display_name}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">{store.activeCharacter.identity}</p>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
+        <label className="ml-auto flex-shrink-0 flex items-center gap-1.5 cursor-pointer select-none" title="When on, the character responds automatically after each message">
+          <span className={`text-[10px] font-medium ${store.autoRespond ? "text-foreground/70" : "text-muted-foreground/50"}`}>Auto‑Respond</span>
+          <button
+            role="switch"
+            aria-checked={store.autoRespond}
+            onClick={() => store.setAutoRespond(!store.autoRespond)}
+            className={`relative w-8 h-[18px] rounded-full transition-colors cursor-pointer ${store.autoRespond ? "bg-primary" : "bg-muted-foreground/30"}`}
+          >
+            <span className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${store.autoRespond ? "translate-x-[14px]" : ""}`} />
+          </button>
+        </label>
+        <button
+          onClick={() => setShowNarrationSettings(true)}
+          className={`flex-shrink-0 h-8 rounded-lg flex items-center gap-1.5 px-2.5 text-xs font-medium transition-colors cursor-pointer ${
+            (narrationTone !== "Auto" || narrationInstructions) ? "text-amber-500 hover:text-amber-400 hover:bg-amber-500/10" : "text-muted-foreground hover:text-foreground hover:bg-accent"
+          }`}
+          title="Narration settings"
+        >
+          <Settings size={14} />
+          <span>Narration</span>
+        </button>
       </div>
 
       <div className="flex-1 relative overflow-hidden z-10">
@@ -405,9 +330,37 @@ export function ChatView({ store }: Props) {
         <div className="space-y-3 max-w-2xl mx-auto">
           {store.messages.map((msg) => {
             const isUser = msg.role === "user";
+            const isNarrative = msg.role === "narrative";
             const isPending = msg.message_id.startsWith("pending-");
             const reactions = store.reactions[msg.message_id] ?? [];
             const showPicker = pickerMessageId === msg.message_id;
+
+            if (isNarrative) {
+              return (
+                <div key={msg.message_id} className="flex justify-center my-2">
+                  <div className="relative group max-w-[90%] rounded-xl px-5 py-3.5 text-sm leading-relaxed bg-gradient-to-br from-amber-950/40 to-amber-900/20 border border-amber-700/30 text-amber-100/90 italic backdrop-blur-sm">
+                    <div className="flex items-center gap-1.5 mb-1.5 text-[10px] uppercase tracking-wider text-amber-500/70 font-semibold not-italic">
+                      <BookOpen size={12} />
+                      <span>Narrative</span>
+                    </div>
+                    <div className="prose prose-sm max-w-none prose-p:my-1 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-amber-100)] [--tw-prose-bold:rgb(252,211,77)]">
+                      <Markdown>{msg.content}</Markdown>
+                    </div>
+                    <p className="text-[10px] mt-1.5 text-amber-500/50 not-italic flex items-center gap-2">
+                      {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {!isPending && (
+                        <button
+                          onClick={() => setResetConfirmId(msg.message_id)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-500/40 hover:text-amber-400 cursor-pointer"
+                        >
+                          Reset to Here
+                        </button>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              );
+            }
 
             return (
               <div key={msg.message_id}>
@@ -453,21 +406,33 @@ export function ChatView({ store }: Props) {
                       </div>
                     )}
 
-                    <div className={`prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-headings:my-2 prose-pre:my-2 prose-blockquote:my-2 prose-hr:my-2 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 ${
+                    <div className={`prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-headings:my-2 prose-pre:my-2 prose-blockquote:my-2 prose-hr:my-2 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_em]:italic [&_em]:block [&_em]:border-l-2 [&_em]:border-current/20 [&_em]:pl-3 [&_em]:my-1.5 [&_em]:opacity-80 ${
                       isUser
                         ? "[--tw-prose-body:var(--color-primary-foreground)] [--tw-prose-headings:var(--color-primary-foreground)] [--tw-prose-bold:var(--color-primary-foreground)] [--tw-prose-bullets:var(--color-primary-foreground)] [--tw-prose-counters:var(--color-primary-foreground)] [--tw-prose-code:var(--color-primary-foreground)] [--tw-prose-links:var(--color-primary-foreground)] [--tw-prose-quotes:var(--color-primary-foreground)] [--tw-prose-quote-borders:rgba(255,255,255,0.3)]"
                         : "[--tw-prose-body:var(--color-secondary-foreground)] [--tw-prose-headings:var(--color-secondary-foreground)] [--tw-prose-bold:var(--color-secondary-foreground)] [--tw-prose-bullets:var(--color-secondary-foreground)] [--tw-prose-counters:var(--color-secondary-foreground)] [--tw-prose-code:var(--color-secondary-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-quotes:var(--color-secondary-foreground)] [--tw-prose-quote-borders:var(--color-border)]"
                     }`}>
                       <Markdown>{msg.content}</Markdown>
                     </div>
-                    <p className={`text-[10px] mt-1 ${
+                    <p className={`text-[10px] mt-1 flex items-center gap-2 ${
                       isUser ? "text-primary-foreground/50" : "text-muted-foreground"
                     }`}>
                       {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {!isPending && (
+                        <button
+                          onClick={() => setResetConfirmId(msg.message_id)}
+                          className={`opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer ${
+                            isUser ? "text-primary-foreground/30 hover:text-primary-foreground/70" : "text-muted-foreground/50 hover:text-muted-foreground"
+                          }`}
+                        >
+                          Reset to Here
+                        </button>
+                      )}
                     </p>
                   </div>
                   {isUser && userAvatarUrl && (
-                    <img src={userAvatarUrl} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border flex-shrink-0 mb-1" />
+                    <button onClick={() => setShowUserAvatarModal(true)} className="cursor-pointer flex-shrink-0 mb-1">
+                      <img src={userAvatarUrl} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
+                    </button>
                   )}
                 </div>
 
@@ -477,7 +442,7 @@ export function ChatView({ store }: Props) {
               </div>
             );
           })}
-          {store.sending && (
+          {store.sending && !store.generatingNarrative && (
             <div className="flex items-end gap-2 justify-start">
               {charPortrait?.data_url ? (
                 <img src={charPortrait.data_url} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border flex-shrink-0 mb-1" />
@@ -494,6 +459,17 @@ export function ChatView({ store }: Props) {
               </div>
             </div>
           )}
+          {store.generatingNarrative && (
+            <div className="flex justify-center my-2">
+              <div className="rounded-xl px-5 py-3 bg-gradient-to-br from-amber-950/40 to-amber-900/20 border border-amber-700/30 flex items-center gap-2 text-amber-500/70">
+                <BookOpen size={14} className="animate-pulse" />
+                <span className="text-xs italic">Weaving narrative...</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500/60 animate-bounce [animation-delay:0ms]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500/60 animate-bounce [animation-delay:150ms]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500/60 animate-bounce [animation-delay:300ms]" />
+              </div>
+            </div>
+          )}
         </div>
         </div>
       </ScrollArea>
@@ -504,6 +480,17 @@ export function ChatView({ store }: Props) {
           <div className="flex-1 min-w-0">
             <p className="text-xs text-destructive font-medium truncate">{store.chatError}</p>
           </div>
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(store.chatError!);
+              setCopiedError(true);
+              setTimeout(() => setCopiedError(false), 2000);
+            }}
+            className="flex-shrink-0 text-destructive/60 hover:text-destructive transition-colors cursor-pointer"
+            title="Copy full error"
+          >
+            {copiedError ? <Check size={14} /> : <Copy size={14} />}
+          </button>
           {store.lastFailedContent && (
             <Button
               size="sm"
@@ -526,6 +513,34 @@ export function ChatView({ store }: Props) {
 
       <div className="px-4 py-3 border-t border-border relative z-10 bg-background">
         <div className="flex gap-2 max-w-2xl mx-auto items-end">
+          <div className="relative group/talk flex-shrink-0">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-primary/70 hover:text-primary hover:bg-primary/10 h-10 w-10 rounded-xl"
+              onClick={() => store.promptCharacter()}
+              disabled={store.sending || !store.apiKey || store.messages.length === 0}
+            >
+              <MessageSquare size={16} />
+            </Button>
+            <span className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-0.5 px-2.5 py-1 text-[11px] font-medium text-white bg-black rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover/talk:opacity-100 pointer-events-none transition-opacity duration-150">
+              Talk to Me
+            </span>
+          </div>
+          <div className="relative group/narr flex-shrink-0">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-amber-500/70 hover:text-amber-400 hover:bg-amber-500/10 h-10 w-10 rounded-xl"
+              onClick={() => store.generateNarrative()}
+              disabled={store.sending || !store.apiKey || store.messages.length === 0}
+            >
+              <BookOpen size={16} />
+            </Button>
+            <span className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-0.5 px-2.5 py-1 text-[11px] font-medium text-white bg-black rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover/narr:opacity-100 pointer-events-none transition-opacity duration-150">
+              + Narrative
+            </span>
+          </div>
           <textarea
             ref={inputRef}
             value={input}
@@ -536,15 +551,15 @@ export function ChatView({ store }: Props) {
             }}
             onKeyDown={handleKeyDown}
             placeholder={`Message ${store.activeCharacter.display_name}...`}
-            className="flex-1 min-h-[40px] max-h-[200px] resize-none rounded-xl border border-input bg-transparent px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+            className="flex-1 min-h-[40px] max-h-[200px] resize-none rounded-xl border border-input bg-transparent px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]"
             rows={1}
-            disabled={store.sending || !store.apiKey}
+            disabled={store.sending || (store.autoRespond && !store.apiKey)}
           />
           <Button
             size="icon"
             className="rounded-xl h-10 w-10 flex-shrink-0"
             onClick={handleSend}
-            disabled={!input.trim() || store.sending || !store.apiKey}
+            disabled={!input.trim() || store.sending || (store.autoRespond && !store.apiKey)}
           >
             {store.sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
           </Button>
@@ -572,51 +587,151 @@ export function ChatView({ store }: Props) {
         </Dialog>
       )}
 
-      <Dialog open={showBgImagePicker} onClose={() => setShowBgImagePicker(false)} className="max-w-2xl">
+      {userAvatarUrl && (
+        <Dialog open={showUserAvatarModal} onClose={() => setShowUserAvatarModal(false)} className="max-w-md">
+          <div className="relative">
+            <img
+              src={userAvatarUrl}
+              alt={store.userProfile?.display_name ?? "You"}
+              className="w-full rounded-2xl shadow-2xl shadow-black/50"
+            />
+            <button
+              onClick={() => setShowUserAvatarModal(false)}
+              className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors cursor-pointer backdrop-blur-sm"
+            >
+              <X size={16} />
+            </button>
+            <div className="absolute inset-x-0 bottom-0 rounded-b-2xl bg-gradient-to-t from-black/70 to-transparent px-5 pb-4 pt-10">
+              <p className="text-white font-semibold text-lg">{store.userProfile?.display_name ?? "You"}</p>
+            </div>
+          </div>
+        </Dialog>
+      )}
+
+      <Dialog open={!!resetConfirmId} onClose={() => setResetConfirmId(null)} className="max-w-sm">
+        <div className="p-5 space-y-4">
+          <div className="flex items-center gap-2">
+            <RotateCcw size={18} className="text-destructive" />
+            <h3 className="font-semibold">Reset to Here</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            This will permanently delete all messages after this point, including their associated memories and embeddings.
+            {store.messages.find((m) => m.message_id === resetConfirmId)?.role === "user" && (
+              <span className="block mt-1.5 text-foreground/80">A new response will be generated from {store.activeCharacter?.display_name}.</span>
+            )}
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setResetConfirmId(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => {
+                if (resetConfirmId) {
+                  store.resetToMessage(resetConfirmId);
+                  setResetConfirmId(null);
+                }
+              }}
+            >
+              Reset
+            </Button>
+          </div>
+        </div>
+      </Dialog>
+
+      <Dialog open={showNarrationSettings} onClose={() => { setShowNarrationSettings(false); setNarrationDirty(false); }} className="max-w-md">
         <div className="p-5 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-lg">Choose Background Image</h3>
+            <div className="flex items-center gap-2">
+              <BookOpen size={18} className="text-amber-500" />
+              <h3 className="font-semibold">Narration Settings</h3>
+            </div>
             <button
-              onClick={() => setShowBgImagePicker(false)}
+              onClick={() => { setShowNarrationSettings(false); setNarrationDirty(false); }}
               className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors cursor-pointer"
             >
               <X size={16} />
             </button>
           </div>
-          <div className="grid grid-cols-3 gap-3 max-h-[60vh] overflow-y-auto pr-1">
-            {galleryItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  saveBg({ bg_type: "world_image", bg_image_id: item.id });
-                  setShowBgImagePicker(false);
-                }}
-                className={`relative rounded-xl overflow-hidden ring-2 transition-all cursor-pointer ${
-                  chatBg?.bg_image_id === item.id
-                    ? "ring-primary shadow-lg"
-                    : "ring-transparent hover:ring-border"
-                }`}
+
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs font-medium text-muted-foreground block mb-1.5">Tone</label>
+              <select
+                value={narrationTone}
+                onChange={(e) => { setNarrationTone(e.target.value); setNarrationDirty(true); }}
+                className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
               >
-                {item.data_url && (
-                  <img src={item.data_url} alt="" className={`w-full object-cover ${item.category === "character" || item.category === "user" ? "aspect-square" : "aspect-video"}`} />
-                )}
-                {chatBg?.bg_image_id === item.id && (
-                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                    <Check size={14} className="text-primary-foreground" />
-                  </div>
-                )}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-3 pb-2 pt-6">
-                  <p className="text-white/80 text-[10px] line-clamp-1">{item.label}</p>
-                  <p className="text-white/50 text-[9px] mt-0.5">{new Date(item.created_at).toLocaleDateString()}</p>
-                </div>
-              </button>
-            ))}
+                {[
+                  "Auto",
+                  "Humorous", "Romantic", "Action & Adventure", "Dark & Gritty",
+                  "Suspenseful", "Whimsical", "Melancholic", "Heroic",
+                  "Horror", "Noir", "Surreal", "Cozy & Warm",
+                  "Tense & Paranoid", "Poetic", "Cinematic",
+                  "Mythic", "Playful", "Bittersweet", "Ethereal", "Gritty Realism",
+                ].map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="text-xs font-medium text-muted-foreground block mb-1.5">Response Length</label>
+              <select
+                value={responseLength}
+                onChange={(e) => { setResponseLength(e.target.value); setNarrationDirty(true); }}
+                className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+              >
+                {["Auto", "Short", "Medium", "Long"].map((l) => (
+                  <option key={l} value={l}>{l}</option>
+                ))}
+              </select>
+              <p className="text-[10px] text-muted-foreground mt-1">
+                {responseLength === "Auto" && "The character decides how much to say."}
+                {responseLength === "Short" && "Brief replies, 2\u20133 sentences."}
+                {responseLength === "Medium" && "Moderate replies, 4\u20136 sentences."}
+                {responseLength === "Long" && "Detailed replies, 7+ sentences with rich detail."}
+              </p>
+            </div>
+
+            <div>
+              <label className="text-xs font-medium text-muted-foreground block mb-1.5">Custom Instructions</label>
+              <textarea
+                value={narrationInstructions}
+                onChange={(e) => { setNarrationInstructions(e.target.value); setNarrationDirty(true); }}
+                placeholder="e.g. Describe the weather shifting. Include background characters reacting. Let the scene move to a new location..."
+                className="w-full min-h-[100px] max-h-[200px] resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                rows={4}
+              />
+            </div>
           </div>
-          {galleryItems.length === 0 && (
-            <p className="text-sm text-muted-foreground text-center py-8">
-              No images yet. Generate or upload images in the Gallery.
-            </p>
-          )}
+
+          <div className="flex justify-end gap-2 pt-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => { setShowNarrationSettings(false); setNarrationDirty(false); }}
+            >
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              disabled={!narrationDirty}
+              onClick={async () => {
+                if (!charId) return;
+                await Promise.all([
+                  api.setSetting(`narration_tone.${charId}`, narrationTone),
+                  api.setSetting(`narration_instructions.${charId}`, narrationInstructions),
+                  api.setSetting(`response_length.${charId}`, responseLength),
+                ]);
+                setNarrationDirty(false);
+                setShowNarrationSettings(false);
+              }}
+            >
+              Save
+            </Button>
+          </div>
         </div>
       </Dialog>
     </div>

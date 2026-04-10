@@ -4,7 +4,6 @@ mod db;
 
 use commands::character_cmds::*;
 use commands::chat_cmds::*;
-use commands::event_cmds::*;
 use commands::memory_cmds::*;
 use commands::mood_cmds::*;
 use commands::portrait_cmds::*;
@@ -48,7 +47,7 @@ pub fn run() {
             if cfg!(debug_assertions) {
                 app.handle().plugin(
                     tauri_plugin_log::Builder::default()
-                        .level(log::LevelFilter::Info)
+                        .level(log::LevelFilter::Error)
                         .build(),
                 )?;
             }
@@ -66,13 +65,16 @@ pub fn run() {
             update_character_cmd,
             create_character_cmd,
             delete_character_cmd,
+            clear_chat_history_cmd,
             archive_character_cmd,
             unarchive_character_cmd,
             list_archived_characters_cmd,
+            save_user_message_cmd,
             send_message_cmd,
+            prompt_character_cmd,
+            generate_narrative_cmd,
+            reset_to_message_cmd,
             get_messages_cmd,
-            list_world_events_cmd,
-            retcon_last_tick_cmd,
             get_model_config_cmd,
             set_model_config_cmd,
             get_setting_cmd,
@@ -85,7 +87,9 @@ pub fn run() {
             remove_reaction_cmd,
             get_reactions_cmd,
             generate_portrait_cmd,
+            generate_portrait_variation_cmd,
             list_portraits_cmd,
+            delete_portrait_cmd,
             set_active_portrait_cmd,
             set_portrait_from_gallery_cmd,
             get_active_portrait_cmd,
@@ -112,6 +116,7 @@ pub fn run() {
             get_character_mood_cmd,
             get_mood_settings_cmd,
             set_mood_settings_cmd,
+            list_local_models_cmd,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

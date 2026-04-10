@@ -47,7 +47,7 @@ export interface CharacterState {
 export interface Message {
   message_id: string;
   thread_id: string;
-  role: "user" | "assistant" | "system";
+  role: "user" | "assistant" | "system" | "narrative";
   content: string;
   tokens_estimate: number;
   created_at: string;
@@ -58,31 +58,41 @@ export interface PaginatedMessages {
   total: number;
 }
 
-export interface WorldEvent {
-  event_id: string;
-  world_id: string;
-  day_index: number;
-  time_of_day: string;
-  summary: string;
-  involved_characters: string[];
-  hooks: string[];
-  trigger_type: string;
-  created_at: string;
-}
 
 export interface ModelConfig {
   dialogue_model: string;
   tick_model: string;
   memory_model: string;
   embedding_model: string;
+  image_model: string;
+  vision_model: string;
+  ai_provider: string;
+  lmstudio_url: string;
+}
+
+export interface LocalModelInfo {
+  id: string;
+  owned_by: string;
 }
 
 export interface SendMessageResult {
   user_message: Message;
   assistant_message: Message;
-  tick_result: { events: string[]; state_patch: Record<string, unknown>; next_hooks: string[] } | null;
-  new_events: WorldEvent[];
   ai_reactions: Reaction[];
+}
+
+export interface PromptCharacterResult {
+  assistant_message: Message;
+  ai_reactions: Reaction[];
+}
+
+export interface NarrativeResult {
+  narrative_message: Message;
+}
+
+export interface ResetToMessageResult {
+  deleted_count: number;
+  new_response: SendMessageResult | null;
 }
 
 export interface Reaction {
@@ -271,18 +281,24 @@ export const api = {
   updateCharacter: (character: Character) => invoke<void>("update_character_cmd", { character }),
   createCharacter: (worldId: string, displayName: string) => invoke<Character>("create_character_cmd", { worldId, displayName }),
   deleteCharacter: (characterId: string) => invoke<void>("delete_character_cmd", { characterId }),
+  clearChatHistory: (characterId: string) => invoke<void>("clear_chat_history_cmd", { characterId }),
   archiveCharacter: (characterId: string) => invoke<void>("archive_character_cmd", { characterId }),
   unarchiveCharacter: (characterId: string) => invoke<void>("unarchive_character_cmd", { characterId }),
   listArchivedCharacters: (worldId: string) => invoke<Character[]>("list_archived_characters_cmd", { worldId }),
 
+  saveUserMessage: (characterId: string, content: string) =>
+    invoke<Message>("save_user_message_cmd", { characterId, content }),
   sendMessage: (apiKey: string, characterId: string, content: string) =>
     invoke<SendMessageResult>("send_message_cmd", { apiKey, characterId, content }),
+  promptCharacter: (apiKey: string, characterId: string) =>
+    invoke<PromptCharacterResult>("prompt_character_cmd", { apiKey, characterId }),
+  generateNarrative: (apiKey: string, characterId: string) =>
+    invoke<NarrativeResult>("generate_narrative_cmd", { apiKey, characterId }),
+  resetToMessage: (apiKey: string, characterId: string, messageId: string) =>
+    invoke<ResetToMessageResult>("reset_to_message_cmd", { apiKey, characterId, messageId }),
   getMessages: (characterId: string, limit?: number, offset?: number) =>
     invoke<PaginatedMessages>("get_messages_cmd", { characterId, limit, offset }),
 
-  listWorldEvents: (worldId: string, limit?: number) =>
-    invoke<WorldEvent[]>("list_world_events_cmd", { worldId, limit }),
-  retconLastTick: (worldId: string) => invoke<WorldEvent | null>("retcon_last_tick_cmd", { worldId }),
 
   getModelConfig: () => invoke<ModelConfig>("get_model_config_cmd"),
   setModelConfig: (config: ModelConfig) => invoke<void>("set_model_config_cmd", { config }),
@@ -293,6 +309,7 @@ export const api = {
   migrateApiKey: () => migrateApiKeyToVault(),
   getBudgetMode: () => invoke<boolean>("get_budget_mode_cmd"),
   setBudgetMode: (enabled: boolean) => invoke<void>("set_budget_mode_cmd", { enabled }),
+  listLocalModels: (url: string) => invoke<LocalModelInfo[]>("list_local_models_cmd", { url }),
 
   getMemoryArtifacts: (subjectId: string, artifactType: string) =>
     invoke<MemoryArtifact[]>("get_memory_artifacts_cmd", { subjectId, artifactType }),
@@ -301,8 +318,12 @@ export const api = {
 
   generatePortrait: (apiKey: string, characterId: string, formHint?: { display_name?: string; identity?: string; backstory_facts?: unknown }) =>
     invoke<PortraitInfo>("generate_portrait_cmd", { apiKey, characterId, formHint: formHint ?? null }),
+  generatePortraitVariation: (apiKey: string, characterId: string) =>
+    invoke<PortraitInfo>("generate_portrait_variation_cmd", { apiKey, characterId }),
   listPortraits: (characterId: string) =>
     invoke<PortraitInfo[]>("list_portraits_cmd", { characterId }),
+  deletePortrait: (portraitId: string) =>
+    invoke<void>("delete_portrait_cmd", { portraitId }),
   setActivePortrait: (characterId: string, portraitId: string) =>
     invoke<void>("set_active_portrait_cmd", { characterId, portraitId }),
   setPortraitFromGallery: (characterId: string, sourceFile: string) =>

@@ -48,7 +48,7 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         CREATE TABLE IF NOT EXISTS messages (
             message_id TEXT PRIMARY KEY,
             thread_id TEXT NOT NULL REFERENCES threads(thread_id) ON DELETE CASCADE,
-            role TEXT NOT NULL CHECK(role IN ('user', 'assistant', 'system')),
+            role TEXT NOT NULL CHECK(role IN ('user', 'assistant', 'system', 'narrative')),
             content TEXT NOT NULL,
             tokens_estimate INTEGER NOT NULL DEFAULT 0,
             created_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -301,6 +301,61 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         conn.execute_batch("
             ALTER TABLE character_portraits ADD COLUMN is_archived INTEGER NOT NULL DEFAULT 0;
             ALTER TABLE character_portraits ADD COLUMN tags TEXT NOT NULL DEFAULT '[]';
+        ")?;
+    }
+
+    // Add character_id to chunk_metadata for per-character vector search.
+    // Existing chunks lack this data, so wipe and let them regenerate.
+    let has_chunk_char_id: bool = conn
+        .query_row(
+            "SELECT count(*) > 0 FROM pragma_table_info('chunk_metadata') WHERE name = 'character_id'",
+            [],
+            |r| r.get(0),
+        )
+        .unwrap_or(false);
+
+    if !has_chunk_char_id {
+        // Wipe existing vectors — they'll be regenerated with character_id on next chat
+        conn.execute_batch("
+            DELETE FROM vec_chunks;
+            DELETE FROM chunk_metadata;
+        ")?;
+        conn.execute_batch(
+            "ALTER TABLE chunk_metadata ADD COLUMN character_id TEXT NOT NULL DEFAULT ''"
+        )?;
+    }
+
+    // Add 'narrative' to the messages.role CHECK constraint.
+    // SQLite doesn't support ALTER CHECK, so we detect the old constraint and recreate.
+    let role_check_old: bool = conn
+        .query_row(
+            "SELECT sql LIKE '%role IN (''user'', ''assistant'', ''system'')%' FROM sqlite_master WHERE type='table' AND name='messages'",
+            [],
+            |r| r.get(0),
+        )
+        .unwrap_or(false);
+
+    if role_check_old {
+        conn.execute_batch("
+            CREATE TABLE messages_new (
+                message_id TEXT PRIMARY KEY,
+                thread_id TEXT NOT NULL REFERENCES threads(thread_id) ON DELETE CASCADE,
+                role TEXT NOT NULL CHECK(role IN ('user', 'assistant', 'system', 'narrative')),
+                content TEXT NOT NULL,
+                tokens_estimate INTEGER NOT NULL DEFAULT 0,
+                created_at TEXT NOT NULL DEFAULT (datetime('now'))
+            );
+            INSERT INTO messages_new SELECT * FROM messages;
+            DROP TABLE messages;
+            ALTER TABLE messages_new RENAME TO messages;
+            CREATE INDEX IF NOT EXISTS idx_messages_thread ON messages(thread_id, created_at);
+        ")?;
+
+        // Rebuild FTS to match
+        conn.execute_batch("
+            DELETE FROM messages_fts;
+            INSERT INTO messages_fts (message_id, thread_id, content)
+            SELECT message_id, thread_id, content FROM messages;
         ")?;
     }
 

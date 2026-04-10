@@ -1,7 +1,7 @@
-use crate::db::queries::{Character, Message, UserProfile, World, WorldEvent};
+use crate::db::queries::{Character, Message, UserProfile, World};
 use serde_json::Value;
 
-pub fn build_dialogue_system_prompt(world: &World, character: &Character, recent_events: &[WorldEvent], user_profile: Option<&UserProfile>, mood_directive: Option<&str>) -> String {
+pub fn build_dialogue_system_prompt(world: &World, character: &Character, user_profile: Option<&UserProfile>, mood_directive: Option<&str>, response_length: Option<&str>) -> String {
     let mut parts = Vec::new();
 
     parts.push(format!(
@@ -49,12 +49,6 @@ pub fn build_dialogue_system_prompt(world: &World, character: &Character, recent
         }
     }
 
-    if !recent_events.is_empty() {
-        let event_lines: Vec<String> = recent_events.iter().map(|e| {
-            format!("[Day {}, {}] {}", e.day_index, e.time_of_day, e.summary)
-        }).collect();
-        parts.push(format!("RECENT WORLD EVENTS:\n{}", event_lines.join("\n")));
-    }
 
     if let Some(profile) = user_profile {
         let mut user_parts = Vec::new();
@@ -72,6 +66,15 @@ pub fn build_dialogue_system_prompt(world: &World, character: &Character, recent
     if let Some(directive) = mood_directive {
         if !directive.is_empty() {
             parts.push(format!("MOOD:\n{directive}"));
+        }
+    }
+
+    if let Some(length) = response_length {
+        match length {
+            "Short" => parts.push("RESPONSE LENGTH:\nKeep your reply to 2–3 sentences. Be concise and punchy. Do not elaborate beyond what is essential, regardless of how long previous messages were.".to_string()),
+            "Medium" => parts.push("RESPONSE LENGTH:\nAim for 4–6 sentences. Give enough detail to be engaging and expressive, but don't ramble. This applies regardless of the length of previous messages.".to_string()),
+            "Long" => parts.push("RESPONSE LENGTH:\nWrite 7 or more sentences. Be detailed, expansive, and richly expressive. Take your time with the moment — describe, reflect, react fully. This applies regardless of the length of previous messages.".to_string()),
+            _ => {} // "Auto" or unknown — no directive
         }
     }
 
@@ -120,65 +123,18 @@ pub fn build_dialogue_messages(
 
     for m in recent_messages {
         msgs.push(crate::ai::openai::ChatMessage {
-            role: m.role.clone(),
-            content: m.content.clone(),
+            role: if m.role == "narrative" { "system".to_string() } else { m.role.clone() },
+            content: if m.role == "narrative" {
+                format!("[Narrative] {}", m.content)
+            } else {
+                m.content.clone()
+            },
         });
     }
 
     msgs
 }
 
-pub fn build_world_tick_prompt(world: &World, characters: &[Character], recent_events: &[WorldEvent], last_user_message: Option<&str>) -> Vec<crate::ai::openai::ChatMessage> {
-    let mut system_parts = Vec::new();
-
-    system_parts.push("You are a world simulation engine. Generate a world tick: short event summaries, minimal state patches, and hooks for later dialogue.".to_string());
-    system_parts.push(format!("WORLD STATE:\n{}", serde_json::to_string_pretty(&world.state).unwrap_or_default()));
-
-    for ch in characters {
-        system_parts.push(format!(
-            "CHARACTER '{}' STATE:\n{}",
-            ch.display_name,
-            serde_json::to_string_pretty(&ch.state).unwrap_or_default()
-        ));
-    }
-
-    if !recent_events.is_empty() {
-        let lines: Vec<String> = recent_events.iter().map(|e| e.summary.clone()).collect();
-        system_parts.push(format!("RECENT EVENTS:\n{}", lines.join("\n")));
-    }
-
-    system_parts.push(r#"OUTPUT STRICT JSON with these keys:
-{
-  "events": ["1-2 sentence summary", ...],   // max 3 items
-  "state_patch": {"dotpath": value, ...},      // max 12 ops, use "world.field" or "character.id.field"
-  "next_hooks": ["short searchable string", ...] // max 3 items
-}
-
-RULES:
-- Do NOT generate hidden dialogue or multi-turn conversations.
-- Prefer small consequences over big twists.
-- Keep events tied to existing arcs/goals.
-- Be conservative about new lore."#.to_string());
-
-    let mut msgs = vec![crate::ai::openai::ChatMessage {
-        role: "system".to_string(),
-        content: system_parts.join("\n\n"),
-    }];
-
-    if let Some(user_msg) = last_user_message {
-        msgs.push(crate::ai::openai::ChatMessage {
-            role: "user".to_string(),
-            content: format!("The user just said: \"{user_msg}\"\n\nGenerate the world tick now."),
-        });
-    } else {
-        msgs.push(crate::ai::openai::ChatMessage {
-            role: "user".to_string(),
-            content: "Generate the world tick now.".to_string(),
-        });
-    }
-
-    msgs
-}
 
 pub fn build_memory_update_prompt(
     character: &Character,
@@ -188,12 +144,11 @@ pub fn build_memory_update_prompt(
     let mut system = String::from("You are a memory maintenance system. Analyze the recent conversation and produce updates.\n\n");
     system.push_str(&format!("CHARACTER: {}\n", character.display_name));
     system.push_str(&format!("CURRENT THREAD SUMMARY:\n{thread_summary}\n\n"));
-    system.push_str(r#"OUTPUT STRICT JSON:
-{
-  "updated_summary": "compact new thread summary",
-  "proposed_canon_additions": [{"fact": "...", "source_message_ids": [...]}],
-  "proposed_open_loop_changes": [{"loop": "...", "action": "add|close"}]
-}"#);
+    system.push_str(r#"You MUST respond with ONLY a single JSON object, nothing else. No commentary, no markdown, no explanation. The JSON must have exactly these keys:
+
+{"updated_summary":"compact new thread summary","proposed_canon_additions":[{"fact":"...","source_message_ids":[]}],"proposed_open_loop_changes":[{"loop":"...","action":"add|close"}]}
+
+IMPORTANT: Output raw JSON only. Do NOT wrap in markdown code fences."#);
 
     let mut msgs = vec![crate::ai::openai::ChatMessage {
         role: "system".to_string(),
@@ -210,6 +165,141 @@ pub fn build_memory_update_prompt(
     });
 
     msgs
+}
+
+pub fn build_narrative_system_prompt(
+    world: &World,
+    character: &Character,
+    user_profile: Option<&UserProfile>,
+    mood_directive: Option<&str>,
+    narration_tone: Option<&str>,
+    narration_instructions: Option<&str>,
+) -> String {
+    let mut parts = Vec::new();
+
+    let user_name = user_profile
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("the human");
+
+    parts.push(format!(
+        "You are a vivid narrative voice woven into a living conversation between {user} and {char}. \
+         Your job is to write a single, immersive narrative beat — no dialogue — \
+         that deepens, expands, or advances the current moment.",
+        user = user_name,
+        char = character.display_name,
+    ));
+
+    parts.push(format!(
+        "POINT OF VIEW — THIS IS CRITICAL:\n\
+         - Write in SECOND PERSON.\n\
+         - {user} is \"you\". Always refer to {user} as \"you\" — never by name, never in third person.\n\
+         - {char} is a third-person character. Refer to {char} by name or as \"he\"/\"she\"/\"they\" — NEVER as \"you\".\n\
+         - Example: \"You notice {char} glancing away...\" — NOT \"{user} notices...\" and NOT \"You glance away\" (when meaning {char}).\n\
+         - Never write dialogue. No quotation marks. No spoken words.",
+        user = user_name,
+        char = character.display_name,
+    ));
+
+    parts.push(format!(
+        "CHARACTER — {}:\n{}",
+        character.display_name,
+        if character.identity.is_empty() {
+            "A complex, vivid character.".to_string()
+        } else {
+            character.identity.clone()
+        }
+    ));
+
+    let backstory = json_array_to_strings(&character.backstory_facts);
+    if !backstory.is_empty() {
+        parts.push(format!(
+            "CHARACTER BACKSTORY:\n{}",
+            backstory.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n")
+        ));
+    }
+
+    if let Some(profile) = user_profile {
+        let mut user_parts = vec![format!("The human's name is {}.", profile.display_name)];
+        if !profile.description.is_empty() {
+            user_parts.push(profile.description.clone());
+        }
+        let facts = json_array_to_strings(&profile.facts);
+        if !facts.is_empty() {
+            user_parts.push(format!(
+                "Facts:\n{}",
+                facts.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n")
+            ));
+        }
+        parts.push(format!("THE HUMAN (\"you\"):\n{}", user_parts.join("\n")));
+    }
+
+    if !world.description.is_empty() {
+        parts.push(format!("WORLD:\n{}", world.description));
+    }
+
+    let invariants = json_array_to_strings(&world.invariants);
+    if !invariants.is_empty() {
+        parts.push(format!(
+            "WORLD RULES:\n{}",
+            invariants.iter().map(|i| format!("- {i}")).collect::<Vec<_>>().join("\n")
+        ));
+    }
+
+    if let Some(state) = world.state.as_object() {
+        if !state.is_empty() {
+            parts.push(format!(
+                "CURRENT WORLD STATE:\n{}",
+                serde_json::to_string_pretty(&world.state).unwrap_or_default()
+            ));
+        }
+    }
+
+    if let Some(char_state) = character.state.as_object() {
+        if !char_state.is_empty() {
+            parts.push(format!(
+                "CHARACTER'S CURRENT STATE:\n{}",
+                serde_json::to_string_pretty(&character.state).unwrap_or_default()
+            ));
+        }
+    }
+
+    if let Some(directive) = mood_directive {
+        if !directive.is_empty() {
+            parts.push(format!("CHARACTER MOOD:\n{directive}"));
+        }
+    }
+
+    // Narration tone and custom instructions
+    let has_tone = narration_tone.map(|t| !t.is_empty() && t != "Auto").unwrap_or(false);
+    let has_instructions = narration_instructions.map(|i| !i.is_empty()).unwrap_or(false);
+    if has_tone || has_instructions {
+        let mut direction = Vec::new();
+        if let Some(tone) = narration_tone {
+            if !tone.is_empty() && tone != "Auto" {
+                direction.push(format!("TONE: Write in a {tone} tone. Let this flavor permeate the atmosphere, imagery, actions, and emotional texture of the narrative. Generate actions and events that fit the tone — not just descriptive atmosphere."));
+            }
+        }
+        if let Some(instructions) = narration_instructions {
+            if !instructions.is_empty() {
+                direction.push(format!("CUSTOM DIRECTION:\n{instructions}"));
+            }
+        }
+        parts.push(direction.join("\n\n"));
+    }
+
+    parts.push(
+        r#"CRAFT:
+- Write 2–5 sentences of rich, sensory prose. Be vivid, be bold.
+- You may introduce new environmental details, body language, subtle actions, atmosphere, weather, sounds, smells, textures, internal feelings.
+- You may advance the moment — shift the scene, introduce a small surprise, or reveal something about the character through action or expression.
+- Stay consistent with the world, the conversation, and both characters' established personalities.
+- Do NOT write dialogue or spoken words. No quotation marks.
+- Do NOT break the fourth wall. Do NOT reference the chat, the app, or the AI.
+- Be creative. Take risks. Make it feel alive."#
+            .to_string(),
+    );
+
+    parts.join("\n\n")
 }
 
 fn json_array_to_strings(val: &Value) -> Vec<String> {

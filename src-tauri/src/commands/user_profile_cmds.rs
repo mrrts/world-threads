@@ -1,4 +1,5 @@
 use crate::ai::openai::{self, ImageRequest};
+use crate::ai::orchestrator;
 use crate::commands::portrait_cmds::PortraitsDir;
 use crate::db::queries::*;
 use crate::db::Database;
@@ -40,9 +41,11 @@ pub async fn generate_user_avatar_cmd(
     world_id: String,
     form_hint: Option<UserFormHint>,
 ) -> Result<String, String> {
-    let profile = {
+    let (profile, mc) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        get_user_profile(&conn, &world_id).map_err(|e| e.to_string())?
+        let p = get_user_profile(&conn, &world_id).map_err(|e| e.to_string())?;
+        let mc = orchestrator::load_model_config(&conn);
+        (p, mc)
     };
 
     let display_name = form_hint.as_ref()
@@ -55,7 +58,7 @@ pub async fn generate_user_avatar_cmd(
     let mut prompt_parts = vec![
         "Hand-painted watercolor portrait of a person in a lush, realistic illustration style.".to_string(),
         "Soft edges dissolving into wet-on-wet washes, visible paper texture, warm earth tones with pops of verdant green and sky blue.".to_string(),
-        "Close-up face and bust portrait only, slight three-quarter angle, expressive eyes. Framing ends at the upper chest.".to_string(),
+        "Close-up face and bust portrait only, facing straight ahead toward the viewer, expressive eyes making direct eye contact. Framing ends at the upper chest.".to_string(),
     ];
 
     if !display_name.is_empty() && display_name != "Me" {
@@ -75,17 +78,19 @@ pub async fn generate_user_avatar_cmd(
     log::info!("[UserAvatar] Generating: {:.120}...", prompt);
 
     let request = ImageRequest {
-        model: "dall-e-3".to_string(),
+        model: mc.image_model.clone(),
         prompt,
         n: 1,
         size: "1024x1024".to_string(),
-        quality: "standard".to_string(),
-        response_format: "b64_json".to_string(),
+        quality: mc.image_quality().to_string(),
+        response_format: mc.image_response_format(),
+        output_format: mc.image_output_format(),
     };
 
-    let response = openai::generate_image(&api_key, &request).await?;
+    let prompt = request.prompt.clone();
+    let response = openai::generate_image_with_base(&mc.openai_api_base(), &api_key, &request).await?;
     let b64 = response.data.first()
-        .and_then(|d| d.b64_json.as_ref())
+        .and_then(|d| d.image_b64())
         .ok_or_else(|| "No image data in response".to_string())?;
 
     let image_bytes = base64_decode(b64)
@@ -100,6 +105,17 @@ pub async fn generate_user_avatar_cmd(
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         set_user_avatar_file(&conn, &world_id, &file_name).map_err(|e| e.to_string())?;
+
+        let img = WorldImage {
+            image_id: uuid::Uuid::new_v4().to_string(),
+            world_id: world_id.clone(),
+            prompt,
+            file_name: file_name.clone(),
+            is_active: false,
+            source: "user_avatar".to_string(),
+            created_at: chrono::Utc::now().to_rfc3339(),
+        };
+        let _ = create_world_image(&conn, &img);
     }
 
     let data_url = format!("data:image/png;base64,{}", base64_encode(&image_bytes));

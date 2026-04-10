@@ -1,3 +1,4 @@
+use crate::commands::portrait_cmds::PortraitsDir;
 use crate::db::queries::*;
 use crate::db::Database;
 use chrono::Utc;
@@ -68,9 +69,37 @@ pub fn create_character_cmd(db: State<Database>, world_id: String, display_name:
 }
 
 #[tauri::command]
-pub fn delete_character_cmd(db: State<Database>, character_id: String) -> Result<(), String> {
+pub fn delete_character_cmd(
+    db: State<Database>,
+    portraits_dir: State<PortraitsDir>,
+    character_id: String,
+) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    delete_character(&conn, &character_id).map_err(|e| e.to_string())
+
+    // Collect portrait file names before deletion
+    let portrait_files: Vec<String> = list_portraits(&conn, &character_id)
+        .unwrap_or_default()
+        .into_iter()
+        .map(|p| p.file_name)
+        .collect();
+
+    delete_character(&conn, &character_id).map_err(|e| e.to_string())?;
+
+    // Remove portrait files from disk
+    for file_name in portrait_files {
+        let path = portraits_dir.0.join(&file_name);
+        if path.exists() {
+            let _ = std::fs::remove_file(&path);
+        }
+    }
+
+    Ok(())
+}
+
+#[tauri::command]
+pub fn clear_chat_history_cmd(db: State<Database>, character_id: String) -> Result<(), String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    clear_chat_history(&conn, &character_id).map_err(|e| e.to_string())
 }
 
 #[tauri::command]

@@ -1,4 +1,5 @@
 use crate::ai::openai::{self, ImageRequest};
+use crate::ai::orchestrator;
 use crate::db::queries::*;
 use crate::db::Database;
 use crate::commands::portrait_cmds::PortraitsDir;
@@ -140,9 +141,11 @@ pub async fn generate_world_image_cmd(
     world_id: String,
     form_hint: Option<WorldFormHint>,
 ) -> Result<WorldImageInfo, String> {
-    let mut world = {
+    let (mut world, mc) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        get_world(&conn, &world_id).map_err(|e| e.to_string())?
+        let w = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
+        let mc = orchestrator::load_model_config(&conn);
+        (w, mc)
     };
 
     if let Some(hint) = form_hint {
@@ -155,17 +158,18 @@ pub async fn generate_world_image_cmd(
     log::info!("[WorldImage] Generating for '{}': {:.120}...", world.name, prompt);
 
     let request = ImageRequest {
-        model: "dall-e-3".to_string(),
+        model: mc.image_model.clone(),
         prompt: prompt.clone(),
         n: 1,
-        size: "1792x1024".to_string(),
-        quality: "standard".to_string(),
-        response_format: "b64_json".to_string(),
+        size: mc.landscape_size().to_string(),
+        quality: mc.image_quality().to_string(),
+        response_format: mc.image_response_format(),
+        output_format: mc.image_output_format(),
     };
 
-    let response = openai::generate_image(&api_key, &request).await?;
+    let response = openai::generate_image_with_base(&mc.openai_api_base(), &api_key, &request).await?;
     let b64 = response.data.first()
-        .and_then(|d| d.b64_json.as_ref())
+        .and_then(|d| d.image_b64())
         .ok_or_else(|| "No image data in response".to_string())?;
 
     let image_bytes = base64_decode(b64)
@@ -256,6 +260,11 @@ pub async fn generate_world_image_with_prompt_cmd(
     world_id: String,
     custom_prompt: String,
 ) -> Result<WorldImageInfo, String> {
+    let mc = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        orchestrator::load_model_config(&conn)
+    };
+
     let mut prompt_parts = vec![
         "Hand-painted watercolor landscape in a lush, realistic illustration style.".to_string(),
         "Soft edges dissolving into wet-on-wet washes, visible paper texture, warm earth tones with pops of verdant green and sky blue.".to_string(),
@@ -269,17 +278,18 @@ pub async fn generate_world_image_with_prompt_cmd(
     log::info!("[WorldImage] Custom prompt for '{}': {:.120}...", world_id, prompt);
 
     let request = ImageRequest {
-        model: "dall-e-3".to_string(),
+        model: mc.image_model.clone(),
         prompt: prompt.clone(),
         n: 1,
-        size: "1792x1024".to_string(),
-        quality: "standard".to_string(),
-        response_format: "b64_json".to_string(),
+        size: mc.landscape_size().to_string(),
+        quality: mc.image_quality().to_string(),
+        response_format: mc.image_response_format(),
+        output_format: mc.image_output_format(),
     };
 
-    let response = openai::generate_image(&api_key, &request).await?;
+    let response = openai::generate_image_with_base(&mc.openai_api_base(), &api_key, &request).await?;
     let b64 = response.data.first()
-        .and_then(|d| d.b64_json.as_ref())
+        .and_then(|d| d.image_b64())
         .ok_or_else(|| "No image data in response".to_string())?;
 
     let image_bytes = base64_decode(b64)

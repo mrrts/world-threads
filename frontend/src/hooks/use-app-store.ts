@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, type World, type Character, type Message, type WorldEvent, type ModelConfig, type Reaction, type PortraitInfo, type UserProfile, type WorldImageInfo } from "@/lib/tauri";
+import { api, type World, type Character, type Message, type ModelConfig, type Reaction, type PortraitInfo, type UserProfile, type WorldImageInfo } from "@/lib/tauri";
 
 export interface AppState {
   worlds: World[];
@@ -12,13 +12,14 @@ export interface AppState {
   activePortraits: Record<string, PortraitInfo>;
   activeWorldImage: WorldImageInfo | null;
   userProfile: UserProfile | null;
-  worldEvents: WorldEvent[];
   modelConfig: ModelConfig;
   apiKey: string;
   budgetMode: boolean;
   editingUserProfile: boolean;
   loading: boolean;
+  autoRespond: boolean;
   sending: boolean;
+  generatingNarrative: boolean;
   totalMessages: number;
   loadingOlder: boolean;
   chatError: string | null;
@@ -33,6 +34,10 @@ const defaultModelConfig: ModelConfig = {
   tick_model: "gpt-4o-mini",
   memory_model: "gpt-4o-mini",
   embedding_model: "text-embedding-3-small",
+  image_model: "gpt-image-1.5",
+  vision_model: "gpt-4.1",
+  ai_provider: "openai",
+  lmstudio_url: "http://127.0.0.1:1234",
 };
 
 export function useAppStore() {
@@ -47,15 +52,16 @@ export function useAppStore() {
     activePortraits: {},
     activeWorldImage: null,
     userProfile: null,
-    worldEvents: [],
     modelConfig: defaultModelConfig,
     apiKey: "",
     budgetMode: false,
     editingUserProfile: false,
     totalMessages: 0,
     loadingOlder: false,
+    autoRespond: true,
     loading: true,
     sending: false,
+    generatingNarrative: false,
     chatError: null,
     lastFailedContent: null,
     error: null,
@@ -122,7 +128,6 @@ export function useAppStore() {
       let archivedCharacters: Character[] = [];
       let activeCharacter: Character | null = null;
       let messages: Message[] = [];
-      let worldEvents: WorldEvent[] = [];
       let totalMessages = 0;
       let reactions: Record<string, Reaction[]> = {};
       let activePortraits: Record<string, PortraitInfo> = {};
@@ -132,18 +137,16 @@ export function useAppStore() {
       if (worlds.length > 0) {
         activeWorld = worlds[0];
         const wid = activeWorld.world_id;
-        const [chars, archived, wImage, uProfile, wEvents] = await Promise.all([
+        const [chars, archived, wImage, uProfile] = await Promise.all([
           api.listCharacters(wid),
           api.listArchivedCharacters(wid),
           api.getActiveWorldImage(wid),
           api.getUserProfile(wid),
-          api.listWorldEvents(wid),
         ]);
         characters = chars;
         archivedCharacters = archived;
         activeWorldImage = wImage;
         userProfile = uProfile;
-        worldEvents = wEvents;
         activePortraits = await loadActivePortraits([...characters, ...archivedCharacters]);
         if (characters.length > 0) {
           activeCharacter = characters[0];
@@ -166,13 +169,14 @@ export function useAppStore() {
         activePortraits,
         activeWorldImage,
         userProfile,
-        worldEvents,
         modelConfig,
         apiKey: apiKey ?? "",
         budgetMode,
+        autoRespond: true,
         loadingOlder: false,
         loading: false,
         sending: false,
+        generatingNarrative: false,
         error: null,
         editingUserProfile: false,
         chatError: null,
@@ -199,13 +203,11 @@ export function useAppStore() {
       activePortraits: {},
       activeWorldImage: null,
       userProfile: null,
-      worldEvents: [],
     }));
     try {
-      const [characters, archivedCharacters, worldEvents, activeWorldImage, userProfile] = await Promise.all([
+      const [characters, archivedCharacters, activeWorldImage, userProfile] = await Promise.all([
         api.listCharacters(world.world_id),
         api.listArchivedCharacters(world.world_id),
-        api.listWorldEvents(world.world_id),
         api.getActiveWorldImage(world.world_id),
         api.getUserProfile(world.world_id),
       ]);
@@ -223,7 +225,7 @@ export function useAppStore() {
       }
       setState((s) => {
         if (s.activeWorld?.world_id !== world.world_id) return s;
-        return { ...s, characters, archivedCharacters, activeCharacter, messages, totalMessages, reactions, activePortraits, activeWorldImage, userProfile, worldEvents };
+        return { ...s, characters, archivedCharacters, activeCharacter, messages, totalMessages, reactions, activePortraits, activeWorldImage, userProfile };
       });
     } catch (e) {
       setError(String(e));
@@ -260,7 +262,6 @@ export function useAppStore() {
         characters,
         activeCharacter: characters[0] ?? null,
         messages: [],
-        worldEvents: [],
       }));
     } catch (e) {
       setError(String(e));
@@ -324,6 +325,22 @@ export function useAppStore() {
     }
   }, [state.activeWorld, setError]);
 
+  const clearChatHistory = useCallback(async (characterId: string) => {
+    try {
+      await api.clearChatHistory(characterId);
+      setState((s) => ({
+        ...s,
+        messages: [],
+        totalMessages: 0,
+        reactions: {},
+        chatError: null,
+        lastFailedContent: null,
+      }));
+    } catch (e) {
+      setError(String(e));
+    }
+  }, [setError]);
+
   const archiveCharacter = useCallback(async (characterId: string) => {
     if (!state.activeWorld) return;
     try {
@@ -357,8 +374,53 @@ export function useAppStore() {
     }
   }, [state.activeWorld, setError]);
 
+  const setAutoRespond = useCallback((enabled: boolean) => {
+    setState((s) => ({ ...s, autoRespond: enabled }));
+  }, []);
+
   const sendMessage = useCallback(async (content: string) => {
-    if (!state.activeCharacter || !state.apiKey) return;
+    if (!state.activeCharacter) return;
+
+    // When auto-respond is off, just save the user message without triggering AI
+    if (!state.autoRespond) {
+      const optimisticMsg: Message = {
+        message_id: `pending-${Date.now()}`,
+        thread_id: "",
+        role: "user",
+        content,
+        tokens_estimate: 0,
+        created_at: new Date().toISOString(),
+      };
+
+      setState((s) => ({
+        ...s,
+        chatError: null,
+        lastFailedContent: null,
+        messages: [...s.messages, optimisticMsg],
+      }));
+
+      try {
+        const saved = await api.saveUserMessage(state.activeCharacter.character_id, content);
+        setState((s) => ({
+          ...s,
+          messages: [
+            ...s.messages.filter((m) => m.message_id !== optimisticMsg.message_id),
+            saved,
+          ],
+          totalMessages: s.totalMessages + 1,
+        }));
+      } catch (e) {
+        setState((s) => ({
+          ...s,
+          chatError: String(e),
+          lastFailedContent: content,
+          messages: s.messages.filter((m) => m.message_id !== optimisticMsg.message_id),
+        }));
+      }
+      return;
+    }
+
+    if (!state.apiKey) return;
 
     const optimisticMsg: Message = {
       message_id: `pending-${Date.now()}`,
@@ -379,9 +441,6 @@ export function useAppStore() {
 
     try {
       const result = await api.sendMessage(state.apiKey, state.activeCharacter.character_id, content);
-      const worldEvents = state.activeWorld
-        ? await api.listWorldEvents(state.activeWorld.world_id)
-        : [];
       const freshWorld = state.activeWorld ? await api.getWorld(state.activeWorld.world_id) : null;
       const freshCharacters = state.activeWorld ? await api.listCharacters(state.activeWorld.world_id) : [];
       setState((s) => {
@@ -399,11 +458,10 @@ export function useAppStore() {
           ],
           totalMessages: s.totalMessages + 2,
           reactions: merged,
-        worldEvents,
-        activeWorld: freshWorld,
-        characters: freshCharacters,
-        activeCharacter: freshCharacters.find(c => c.character_id === s.activeCharacter?.character_id) ?? s.activeCharacter,
-        sending: false,
+          activeWorld: freshWorld,
+          characters: freshCharacters,
+          activeCharacter: freshCharacters.find(c => c.character_id === s.activeCharacter?.character_id) ?? s.activeCharacter,
+          sending: false,
         };
       });
     } catch (e) {
@@ -415,7 +473,120 @@ export function useAppStore() {
         messages: s.messages.filter((m) => m.message_id !== optimisticMsg.message_id),
       }));
     }
-  }, [state.activeCharacter, state.apiKey, state.activeWorld]);
+  }, [state.activeCharacter, state.apiKey, state.activeWorld, state.autoRespond]);
+
+  const promptCharacter = useCallback(async () => {
+    if (!state.activeCharacter || !state.apiKey) return;
+
+    setState((s) => ({ ...s, sending: true, chatError: null }));
+
+    try {
+      const result = await api.promptCharacter(state.apiKey, state.activeCharacter.character_id);
+      setState((s) => {
+        const merged = { ...s.reactions };
+        for (const r of result.ai_reactions) {
+          if (!merged[r.message_id]) merged[r.message_id] = [];
+          merged[r.message_id].push(r);
+        }
+        return {
+          ...s,
+          messages: [...s.messages, result.assistant_message],
+          totalMessages: s.totalMessages + 1,
+          reactions: merged,
+          sending: false,
+        };
+      });
+    } catch (e) {
+      setState((s) => ({
+        ...s,
+        sending: false,
+        chatError: String(e),
+      }));
+    }
+  }, [state.activeCharacter, state.apiKey]);
+
+  const generateNarrative = useCallback(async () => {
+    if (!state.activeCharacter || !state.apiKey) return;
+
+    setState((s) => ({ ...s, sending: true, generatingNarrative: true, chatError: null }));
+
+    try {
+      const result = await api.generateNarrative(state.apiKey, state.activeCharacter.character_id);
+      setState((s) => ({
+        ...s,
+        messages: [...s.messages, result.narrative_message],
+        totalMessages: s.totalMessages + 1,
+        sending: false,
+        generatingNarrative: false,
+      }));
+    } catch (e) {
+      setState((s) => ({
+        ...s,
+        sending: false,
+        generatingNarrative: false,
+        chatError: String(e),
+      }));
+    }
+  }, [state.activeCharacter, state.apiKey]);
+
+  const resetToMessage = useCallback(async (messageId: string) => {
+    if (!state.activeCharacter || !state.apiKey) return;
+
+    const anchorMsg = state.messages.find((m) => m.message_id === messageId);
+    const isUserMsg = anchorMsg?.role === "user";
+
+    setState((s) => ({
+      ...s,
+      messages: s.messages.filter((m) => {
+        if (m.message_id === messageId) return true;
+        return m.created_at < anchorMsg!.created_at ||
+          (m.created_at === anchorMsg!.created_at && m.message_id === messageId);
+      }),
+      sending: isUserMsg,
+      chatError: null,
+    }));
+
+    try {
+      const result = await api.resetToMessage(state.apiKey, state.activeCharacter.character_id, messageId);
+
+      if (result.new_response) {
+        setState((s) => {
+          const merged = { ...s.reactions };
+          for (const r of result.new_response!.ai_reactions) {
+            if (!merged[r.message_id]) merged[r.message_id] = [];
+            merged[r.message_id].push(r);
+          }
+          return {
+            ...s,
+            messages: [...s.messages, result.new_response!.assistant_message],
+            totalMessages: s.totalMessages - result.deleted_count + 1,
+            reactions: merged,
+            sending: false,
+          };
+        });
+      } else {
+        setState((s) => ({
+          ...s,
+          totalMessages: s.totalMessages - result.deleted_count,
+          sending: false,
+        }));
+      }
+    } catch (e) {
+      // Reload messages from DB to get correct state after partial failure
+      if (state.activeCharacter) {
+        const page = await api.getMessages(state.activeCharacter.character_id, PAGE_SIZE);
+        const reactions = await loadReactions(page.messages);
+        setState((s) => ({
+          ...s,
+          messages: page.messages,
+          totalMessages: page.total,
+          reactions,
+          sending: false,
+          chatError: String(e),
+        }));
+      }
+    }
+  }, [state.activeCharacter, state.apiKey, state.messages, loadReactions]);
 
   const clearChatError = useCallback(() => {
     setState((s) => ({ ...s, chatError: null, lastFailedContent: null }));
@@ -479,16 +650,6 @@ export function useAppStore() {
     }
   }, [state.activeWorld, setError]);
 
-  const retconLastTick = useCallback(async () => {
-    if (!state.activeWorld) return;
-    try {
-      await api.retconLastTick(state.activeWorld.world_id);
-      const worldEvents = await api.listWorldEvents(state.activeWorld.world_id);
-      setState((s) => ({ ...s, worldEvents }));
-    } catch (e) {
-      setError(String(e));
-    }
-  }, [state.activeWorld, setError]);
 
   const updateUserProfile = useCallback(async (profile: UserProfile) => {
     try {
@@ -596,14 +757,18 @@ export function useAppStore() {
     updateCharacter,
     createCharacter,
     deleteCharacter,
+    clearChatHistory,
     archiveCharacter,
     unarchiveCharacter,
     sendMessage,
+    setAutoRespond,
+    promptCharacter,
+    generateNarrative,
+    resetToMessage,
     setApiKey,
     setModelConfig,
     setBudgetMode,
     updateWorldState,
-    retconLastTick,
     toggleReaction,
     refreshPortrait,
     refreshWorldImage,

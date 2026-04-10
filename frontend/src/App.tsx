@@ -7,17 +7,28 @@ import { WorldCanonEditor } from "@/components/WorldCanonEditor";
 import { CharacterEditor } from "@/components/CharacterEditor";
 import { CharacterGrid } from "@/components/CharacterGrid";
 import { UserProfileEditor } from "@/components/UserProfileEditor";
-import { WorldFeed } from "@/components/WorldFeed";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { WorldSummary } from "@/components/WorldSummary";
 import { Gallery } from "@/components/Gallery";
 import { MoodDebugPanel } from "@/components/MoodDebugPanel";
-import { MessageSquare, PenLine, Users, Settings, Sparkles, Coins, Image, BookOpen } from "lucide-react";
+import { PortraitPopout } from "@/components/PortraitPopout";
+import { MessageSquare, PenLine, Users, Settings, Coins, Image, BookOpen } from "lucide-react";
 
-type View = "chat" | "world" | "character" | "feed" | "settings" | "summary" | "gallery";
+type View = "chat" | "world" | "character" | "settings" | "summary" | "gallery";
 type CharSubView = "grid" | "editor" | "profile";
 
 export default function App() {
+  // Check if this window is a portrait popout
+  const params = new URLSearchParams(window.location.search);
+  const popoutCharacterId = params.get("portrait");
+  if (popoutCharacterId) {
+    return <PortraitPopout characterId={popoutCharacterId} />;
+  }
+
+  return <MainApp />;
+}
+
+function MainApp() {
   const store = useAppStore();
   const [view, setView] = useState<View>("chat");
   const [charSubView, setCharSubView] = useState<CharSubView>("grid");
@@ -80,7 +91,6 @@ export default function App() {
         <NavButton icon={<PenLine size={20} />} active={view === "world"} onClick={() => setViewTracked("world")} title="World Canon" description="Edit your world's name, description, tone, and rules." />
         <NavButton icon={<Users size={20} />} active={view === "character"} onClick={handleCharNav} title="Characters" description="Create, edit, and manage your cast of characters." />
         <NavButton icon={<Image size={20} />} active={view === "gallery"} onClick={() => setViewTracked("gallery")} title="Gallery" description="Browse, generate, and upload images for this world." />
-        <NavButton icon={<Sparkles size={20} />} active={view === "feed"} onClick={() => setViewTracked("feed")} title="World Feed" description="Timeline of world events and tick history." />
         <div className="flex-1" />
         <UsageBadge sending={store.sending} />
         <NavButton icon={<Settings size={20} />} active={view === "settings"} onClick={() => setViewTracked("settings")} title="Settings" description="API key, model config, and app preferences." />
@@ -138,11 +148,6 @@ export default function App() {
         {view === "gallery" && (
           <DeferredMount key="gallery">
             <Gallery store={store} />
-          </DeferredMount>
-        )}
-        {view === "feed" && (
-          <DeferredMount key="feed">
-            <WorldFeed store={store} />
           </DeferredMount>
         )}
         {view === "settings" && (

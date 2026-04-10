@@ -1,3 +1,4 @@
+use crate::ai::openai;
 use crate::ai::orchestrator::{self, ModelConfig};
 use crate::db::queries::*;
 use crate::db::Database;
@@ -38,4 +39,10 @@ pub fn get_budget_mode_cmd(db: State<Database>) -> Result<bool, String> {
 pub fn set_budget_mode_cmd(db: State<Database>, enabled: bool) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     set_setting(&conn, "budget_mode", if enabled { "true" } else { "false" }).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn list_local_models_cmd(url: String) -> Result<Vec<openai::ModelInfo>, String> {
+    let base_url = format!("{}/v1", url.trim_end_matches('/'));
+    openai::list_models(&base_url, "").await
 }

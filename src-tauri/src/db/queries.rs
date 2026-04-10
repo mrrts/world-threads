@@ -197,10 +197,157 @@ pub fn update_character(conn: &Connection, ch: &Character) -> Result<(), rusqlit
     Ok(())
 }
 
+/// Delete all chat-related data for a character's threads: messages, FTS, embeddings,
+/// memory artifacts, reactions, and message count trackers.
+/// Does NOT delete the threads themselves or the character.
+fn purge_thread_data(conn: &Connection, character_id: &str, thread_ids: &[String]) -> Result<(), rusqlite::Error> {
+    for tid in thread_ids {
+        // FTS entries
+        conn.execute("DELETE FROM messages_fts WHERE thread_id = ?1", params![tid])?;
+
+        // Reactions cascade from messages, but delete messages explicitly since
+        // we're not deleting the thread itself in the clear_chat_history case.
+        conn.execute("DELETE FROM messages WHERE thread_id = ?1", params![tid])?;
+
+        // Memory artifacts (thread summaries etc.)
+        conn.execute("DELETE FROM memory_artifacts WHERE subject_id = ?1", params![tid])?;
+
+        // Message count tracker
+        conn.execute("DELETE FROM message_count_tracker WHERE thread_id = ?1", params![tid])?;
+    }
+
+    // Delete all vector embeddings for this character's messages in one pass
+    let rowids: Vec<i64> = {
+        let mut stmt = conn.prepare(
+            "SELECT rowid FROM chunk_metadata WHERE character_id = ?1 AND source_type = 'message'"
+        )?;
+        let rows = stmt.query_map(params![character_id], |row| row.get(0))?;
+        rows.filter_map(|r| r.ok()).collect()
+    };
+    for rowid in &rowids {
+        conn.execute("DELETE FROM vec_chunks WHERE rowid = ?1", params![rowid])?;
+    }
+    if !rowids.is_empty() {
+        conn.execute(
+            "DELETE FROM chunk_metadata WHERE character_id = ?1 AND source_type = 'message'",
+            params![character_id],
+        )?;
+    }
+
+    Ok(())
+}
+
 pub fn delete_character(conn: &Connection, character_id: &str) -> Result<(), rusqlite::Error> {
+    let thread_ids: Vec<String> = {
+        let mut stmt = conn.prepare("SELECT thread_id FROM threads WHERE character_id = ?1")?;
+        let rows = stmt.query_map(params![character_id], |row| row.get(0))?;
+        rows.filter_map(|r| r.ok()).collect()
+    };
+
+    purge_thread_data(conn, character_id, &thread_ids)?;
+
+    // Delete the character — cascade handles threads, portraits (DB rows),
+    // chat_backgrounds, character_mood.
     conn.execute("DELETE FROM characters WHERE character_id = ?1", params![character_id])?;
     Ok(())
 }
+
+/// Clear all chat history for a character while preserving the character and thread.
+pub fn clear_chat_history(conn: &Connection, character_id: &str) -> Result<(), rusqlite::Error> {
+    let thread_ids: Vec<String> = {
+        let mut stmt = conn.prepare("SELECT thread_id FROM threads WHERE character_id = ?1")?;
+        let rows = stmt.query_map(params![character_id], |row| row.get(0))?;
+        rows.filter_map(|r| r.ok()).collect()
+    };
+
+    purge_thread_data(conn, character_id, &thread_ids)?;
+
+    // Reset mood history (preserve current mood values, just clear history)
+    conn.execute(
+        "UPDATE character_mood SET history = '[]' WHERE character_id = ?1",
+        params![character_id],
+    )?;
+
+
+    Ok(())
+}
+
+/// Delete all messages strictly after the given message (by created_at) in the same thread.
+/// Also cleans up FTS entries, reactions (cascaded), and vector embeddings for deleted messages.
+/// Returns the IDs and role of the deleted messages.
+pub fn delete_messages_after(conn: &Connection, thread_id: &str, character_id: &str, after_message_id: &str) -> Result<Vec<(String, String)>, rusqlite::Error> {
+    // Use rowid to get reliable insertion order — timestamps can collide
+    let anchor_rowid: i64 = conn.query_row(
+        "SELECT rowid FROM messages WHERE message_id = ?1",
+        params![after_message_id],
+        |r| r.get(0),
+    )?;
+
+    // Find all messages inserted after the anchor in this thread
+    let mut stmt = conn.prepare(
+        "SELECT message_id, role FROM messages WHERE thread_id = ?1 AND rowid > ?2 ORDER BY rowid"
+    )?;
+    let deleted: Vec<(String, String)> = stmt.query_map(params![thread_id, anchor_rowid], |row| {
+        Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+    })?.filter_map(|r| r.ok()).collect();
+
+    if deleted.is_empty() {
+        return Ok(deleted);
+    }
+
+    for (msg_id, _role) in &deleted {
+        // FTS
+        conn.execute("DELETE FROM messages_fts WHERE message_id = ?1", params![msg_id])?;
+        // Message (reactions cascade via FK)
+        conn.execute("DELETE FROM messages WHERE message_id = ?1", params![msg_id])?;
+        // Vector embeddings
+        let rowid: Option<i64> = conn.query_row(
+            "SELECT rowid FROM chunk_metadata WHERE chunk_id = ?1",
+            params![msg_id],
+            |r| r.get(0),
+        ).ok();
+        if let Some(rid) = rowid {
+            conn.execute("DELETE FROM vec_chunks WHERE rowid = ?1", params![rid])?;
+            conn.execute("DELETE FROM chunk_metadata WHERE rowid = ?1", params![rid])?;
+        }
+    }
+
+    // Sweep for any orphaned embeddings whose source messages no longer exist
+    let orphaned_rowids: Vec<i64> = {
+        let mut stmt = conn.prepare(
+            "SELECT cm.rowid FROM chunk_metadata cm
+             WHERE cm.character_id = ?1 AND cm.source_type = 'message'
+             AND NOT EXISTS (SELECT 1 FROM messages m WHERE m.message_id = cm.source_id)"
+        )?;
+        let rows = stmt.query_map(params![character_id], |row| row.get(0))?;
+        rows.filter_map(|r| r.ok()).collect()
+    };
+    for rid in &orphaned_rowids {
+        conn.execute("DELETE FROM vec_chunks WHERE rowid = ?1", params![rid])?;
+    }
+    if !orphaned_rowids.is_empty() {
+        conn.execute(
+            &format!(
+                "DELETE FROM chunk_metadata WHERE rowid IN ({})",
+                orphaned_rowids.iter().map(|r| r.to_string()).collect::<Vec<_>>().join(",")
+            ),
+            [],
+        )?;
+    }
+
+    // Reset memory maintenance counter since we've changed the history
+    conn.execute("DELETE FROM message_count_tracker WHERE thread_id = ?1", params![thread_id])?;
+
+    // Invalidate thread summary since context has changed
+    conn.execute(
+        "DELETE FROM memory_artifacts WHERE subject_id = ?1 AND artifact_type = 'thread_summary'",
+        params![thread_id],
+    )?;
+
+    Ok(deleted)
+}
+
+/// Clear all world events and their FTS entries for a world.
 
 fn row_to_character(row: &rusqlite::Row) -> Result<Character, rusqlite::Error> {
     Ok(Character {
@@ -343,73 +490,6 @@ fn row_to_message(row: &rusqlite::Row) -> Result<Message, rusqlite::Error> {
     })
 }
 
-// ─── World Events ───────────────────────────────────────────────────────────
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct WorldEvent {
-    pub event_id: String,
-    pub world_id: String,
-    pub day_index: i64,
-    pub time_of_day: String,
-    pub summary: String,
-    pub involved_characters: Value,
-    pub hooks: Value,
-    pub trigger_type: String,
-    pub created_at: String,
-}
-
-pub fn create_world_event(conn: &Connection, e: &WorldEvent) -> Result<(), rusqlite::Error> {
-    conn.execute(
-        "INSERT INTO world_events (event_id, world_id, day_index, time_of_day, summary, involved_characters, hooks, trigger_type, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
-        params![e.event_id, e.world_id, e.day_index, e.time_of_day, e.summary,
-            e.involved_characters.to_string(), e.hooks.to_string(), e.trigger_type, e.created_at],
-    )?;
-    conn.execute(
-        "INSERT INTO world_events_fts (event_id, world_id, summary) VALUES (?1, ?2, ?3)",
-        params![e.event_id, e.world_id, e.summary],
-    ).ok();
-    Ok(())
-}
-
-pub fn list_world_events(conn: &Connection, world_id: &str, limit: i64) -> Result<Vec<WorldEvent>, rusqlite::Error> {
-    let mut stmt = conn.prepare(
-        "SELECT event_id, world_id, day_index, time_of_day, summary, involved_characters, hooks, trigger_type, created_at
-         FROM world_events WHERE world_id = ?1 ORDER BY created_at DESC LIMIT ?2"
-    )?;
-    let rows = stmt.query_map(params![world_id, limit], row_to_event)?;
-    let mut evts: Vec<WorldEvent> = rows.collect::<Result<Vec<_>, _>>()?;
-    evts.reverse();
-    Ok(evts)
-}
-
-pub fn delete_last_world_event(conn: &Connection, world_id: &str) -> Result<Option<WorldEvent>, rusqlite::Error> {
-    let evt = conn.query_row(
-        "SELECT event_id, world_id, day_index, time_of_day, summary, involved_characters, hooks, trigger_type, created_at
-         FROM world_events WHERE world_id = ?1 ORDER BY created_at DESC LIMIT 1",
-        params![world_id],
-        row_to_event,
-    );
-    match evt {
-        Ok(e) => {
-            conn.execute("DELETE FROM world_events WHERE event_id = ?1", params![e.event_id])?;
-            conn.execute("DELETE FROM world_events_fts WHERE event_id = ?1", params![e.event_id]).ok();
-            Ok(Some(e))
-        }
-        Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
-        Err(e) => Err(e),
-    }
-}
-
-fn row_to_event(row: &rusqlite::Row) -> Result<WorldEvent, rusqlite::Error> {
-    Ok(WorldEvent {
-        event_id: row.get(0)?, world_id: row.get(1)?, day_index: row.get(2)?,
-        time_of_day: row.get(3)?, summary: row.get(4)?,
-        involved_characters: serde_json::from_str(&row.get::<_, String>(5)?).unwrap_or_default(),
-        hooks: serde_json::from_str(&row.get::<_, String>(6)?).unwrap_or_default(),
-        trigger_type: row.get(7)?, created_at: row.get(8)?,
-    })
-}
 
 // ─── Memory Artifacts ───────────────────────────────────────────────────────
 
@@ -508,6 +588,16 @@ pub fn set_active_portrait(conn: &Connection, character_id: &str, portrait_id: &
     conn.execute("UPDATE character_portraits SET is_active = 0 WHERE character_id = ?1", params![character_id])?;
     conn.execute("UPDATE character_portraits SET is_active = 1 WHERE portrait_id = ?1", params![portrait_id])?;
     Ok(())
+}
+
+pub fn delete_portrait(conn: &Connection, portrait_id: &str) -> Result<String, rusqlite::Error> {
+    let file_name: String = conn.query_row(
+        "SELECT file_name FROM character_portraits WHERE portrait_id = ?1",
+        params![portrait_id],
+        |r| r.get(0),
+    )?;
+    conn.execute("DELETE FROM character_portraits WHERE portrait_id = ?1", params![portrait_id])?;
+    Ok(file_name)
 }
 
 /// All portraits for all characters belonging to a given world.
@@ -710,23 +800,13 @@ pub fn search_messages_fts(conn: &Connection, thread_id: &str, query: &str, limi
     rows.collect()
 }
 
-pub fn search_events_fts(conn: &Connection, world_id: &str, query: &str, limit: i64) -> Result<Vec<String>, rusqlite::Error> {
-    let mut stmt = conn.prepare(
-        "SELECT f.summary
-         FROM world_events_fts f
-         WHERE f.world_id = ?1 AND world_events_fts MATCH ?2
-         ORDER BY rank LIMIT ?3"
-    )?;
-    let rows = stmt.query_map(params![world_id, query, limit], |row| row.get::<_, String>(0))?;
-    rows.collect()
-}
 
 // ─── Vector Search ──────────────────────────────────────────────────────────
 
-pub fn insert_vector_chunk(conn: &Connection, chunk_id: &str, source_type: &str, source_id: &str, world_id: &str, content: &str, embedding: &[f32]) -> Result<(), rusqlite::Error> {
+pub fn insert_vector_chunk(conn: &Connection, chunk_id: &str, source_type: &str, source_id: &str, world_id: &str, character_id: &str, content: &str, embedding: &[f32]) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT OR IGNORE INTO chunk_metadata (chunk_id, source_type, source_id, world_id, content) VALUES (?1, ?2, ?3, ?4, ?5)",
-        params![chunk_id, source_type, source_id, world_id, content],
+        "INSERT OR IGNORE INTO chunk_metadata (chunk_id, source_type, source_id, world_id, character_id, content) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+        params![chunk_id, source_type, source_id, world_id, character_id, content],
     )?;
     let rowid: i64 = conn.query_row(
         "SELECT rowid FROM chunk_metadata WHERE chunk_id = ?1", params![chunk_id], |r| r.get(0)
@@ -738,16 +818,18 @@ pub fn insert_vector_chunk(conn: &Connection, chunk_id: &str, source_type: &str,
     Ok(())
 }
 
-pub fn search_vectors(conn: &Connection, world_id: &str, embedding: &[f32], limit: i64) -> Result<Vec<(String, f64)>, rusqlite::Error> {
+pub fn search_vectors(conn: &Connection, world_id: &str, character_id: &str, embedding: &[f32], limit: i64) -> Result<Vec<(String, f64)>, rusqlite::Error> {
     let blob: Vec<u8> = embedding.iter().flat_map(|f| f.to_le_bytes()).collect();
     let mut stmt = conn.prepare(
         "SELECT cm.content, v.distance
          FROM vec_chunks v
          JOIN chunk_metadata cm ON cm.rowid = v.rowid
-         WHERE v.embedding MATCH ?1 AND k = ?2 AND cm.world_id = ?3
+         WHERE v.embedding MATCH ?1 AND k = ?2
+           AND cm.world_id = ?3
+           AND cm.character_id = ?4
          ORDER BY v.distance"
     )?;
-    let rows = stmt.query_map(params![blob, limit, world_id], |row| {
+    let rows = stmt.query_map(params![blob, limit, world_id, character_id], |row| {
         Ok((row.get::<_, String>(0)?, row.get::<_, f64>(1)?))
     })?;
     rows.collect()
@@ -808,20 +890,4 @@ pub fn set_setting(conn: &Connection, key: &str, value: &str) -> Result<(), rusq
     Ok(())
 }
 
-// ─── Tick Cache ─────────────────────────────────────────────────────────────
 
-pub fn get_tick_cache(conn: &Connection, cache_key: &str) -> Result<Option<String>, rusqlite::Error> {
-    match conn.query_row("SELECT result FROM tick_cache WHERE cache_key = ?1", params![cache_key], |r| r.get(0)) {
-        Ok(v) => Ok(Some(v)),
-        Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
-        Err(e) => Err(e),
-    }
-}
-
-pub fn set_tick_cache(conn: &Connection, cache_key: &str, result: &str) -> Result<(), rusqlite::Error> {
-    conn.execute(
-        "INSERT INTO tick_cache (cache_key, result) VALUES (?1, ?2) ON CONFLICT(cache_key) DO UPDATE SET result=excluded.result, created_at=datetime('now')",
-        params![cache_key, result],
-    )?;
-    Ok(())
-}

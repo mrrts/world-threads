@@ -1,4 +1,5 @@
 use crate::ai::openai::{self, ImageRequest};
+use crate::ai::orchestrator;
 use crate::db::queries::*;
 use crate::db::Database;
 use chrono::Utc;
@@ -21,7 +22,7 @@ fn build_portrait_prompt(character: &Character, world: &World) -> String {
         "Hand-painted watercolor portrait of a character in a lush, realistic illustration style.".to_string(),
         "Soft edges dissolving into wet-on-wet washes, visible paper texture, warm earth tones with pops of verdant green and sky blue.".to_string(),
         "Gentle diffused natural lighting, nostalgic and contemplative mood, as if lifted from an illustrated fairy tale.".to_string(),
-        "Close-up face and bust portrait only, slight three-quarter angle, expressive eyes. Framing ends at the upper chest.".to_string(),
+        "Close-up face and bust portrait only, facing straight ahead toward the viewer, expressive eyes making direct eye contact. Framing ends at the upper chest.".to_string(),
     ];
 
     parts.push(format!("Character name: {}", character.display_name));
@@ -135,21 +136,27 @@ pub async fn generate_portrait_cmd(
         if let Some(facts) = hint.backstory_facts { character.backstory_facts = facts; }
     }
 
+    let model_config = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        orchestrator::load_model_config(&conn)
+    };
+
     let prompt = build_portrait_prompt(&character, &world);
     log::info!("[Portrait] Generating for '{}': {:.120}...", character.display_name, prompt);
 
     let request = ImageRequest {
-        model: "dall-e-3".to_string(),
+        model: model_config.image_model.clone(),
         prompt: prompt.clone(),
         n: 1,
         size: "1024x1024".to_string(),
-        quality: "standard".to_string(),
-        response_format: "b64_json".to_string(),
+        quality: model_config.image_quality().to_string(),
+        response_format: model_config.image_response_format(),
+        output_format: model_config.image_output_format(),
     };
 
-    let response = openai::generate_image(&api_key, &request).await?;
+    let response = openai::generate_image_with_base(&model_config.openai_api_base(), &api_key, &request).await?;
     let b64 = response.data.first()
-        .and_then(|d| d.b64_json.as_ref())
+        .and_then(|d| d.image_b64())
         .ok_or_else(|| "No image data in response".to_string())?;
 
     let image_bytes = base64_decode(b64)
@@ -228,6 +235,21 @@ pub fn list_portraits_cmd(
 }
 
 #[tauri::command]
+pub fn delete_portrait_cmd(
+    db: State<Database>,
+    portraits_dir: State<PortraitsDir>,
+    portrait_id: String,
+) -> Result<(), String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let file_name = delete_portrait(&conn, &portrait_id).map_err(|e| e.to_string())?;
+    let file_path = portraits_dir.0.join(&file_name);
+    if file_path.exists() {
+        let _ = std::fs::remove_file(&file_path);
+    }
+    Ok(())
+}
+
+#[tauri::command]
 pub fn set_active_portrait_cmd(
     db: State<Database>,
     character_id: String,
@@ -245,6 +267,103 @@ pub fn get_active_portrait_cmd(
 ) -> Result<Option<PortraitInfo>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     Ok(get_active_portrait(&conn, &character_id).map(|p| portrait_to_info(&p, &portraits_dir.0)))
+}
+
+/// Generate a variation of the active portrait by sending the reference image directly to the image model.
+#[tauri::command]
+pub async fn generate_portrait_variation_cmd(
+    db: State<'_, Database>,
+    portraits_dir: State<'_, PortraitsDir>,
+    api_key: String,
+    character_id: String,
+) -> Result<PortraitInfo, String> {
+    let (character, world, active_portrait, mc) = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let ch = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
+        let w = get_world(&conn, &ch.world_id).map_err(|e| e.to_string())?;
+        let ap = get_active_portrait(&conn, &character_id)
+            .ok_or_else(|| "No active portrait to create a variation from".to_string())?;
+        let mc = orchestrator::load_model_config(&conn);
+        (ch, w, ap, mc)
+    };
+
+    let file_path = portraits_dir.0.join(&active_portrait.file_name);
+    if !file_path.exists() {
+        return Err("Active portrait file not found on disk".to_string());
+    }
+    let image_bytes = std::fs::read(&file_path)
+        .map_err(|e| format!("Failed to read portrait file: {e}"))?;
+
+    let mut prompt_parts = vec![
+        "Hand-painted watercolor portrait in a lush, realistic illustration style.".to_string(),
+        "Soft edges dissolving into wet-on-wet washes, visible paper texture, warm earth tones with pops of verdant green and sky blue.".to_string(),
+        "Gentle diffused natural lighting, nostalgic and contemplative mood.".to_string(),
+        format!("Generate a new portrait of the SAME person shown in the reference image, but in a DIFFERENT pose, angle, or situation. The character must be clearly recognizable as the same person."),
+        format!("Character name: {}", character.display_name),
+    ];
+
+    if !character.identity.is_empty() {
+        let identity = if character.identity.len() > 200 {
+            format!("{}...", &character.identity[..200])
+        } else {
+            character.identity.clone()
+        };
+        prompt_parts.push(format!("Character identity: {identity}"));
+    }
+
+    if !world.description.is_empty() {
+        let desc = if world.description.len() > 150 {
+            format!("{}...", &world.description[..150])
+        } else {
+            world.description.clone()
+        };
+        prompt_parts.push(format!("World setting: {desc}"));
+    }
+
+    prompt_parts.push("Show the character in a different pose, angle, expression, or situation than the reference image. Vary the composition while keeping them unmistakably the same person.".to_string());
+    prompt_parts.push("CRITICAL: The image must contain absolutely no text, no words, no letters, no numbers, no writing, no labels, no titles, no captions, no watermarks, no signatures, no UI elements, no names.".to_string());
+
+    let prompt = prompt_parts.join(" ");
+
+    log::info!("[PortraitVariation] Generating variation for '{}' with reference image ({} bytes)", character.display_name, image_bytes.len());
+
+    let response = openai::generate_image_edit_with_base(
+        &mc.openai_api_base(), &api_key, &mc.image_model,
+        &prompt, &image_bytes,
+        "1024x1024", mc.image_quality(),
+        mc.image_output_format().as_deref(),
+    ).await?;
+    let b64 = response.data.first()
+        .and_then(|d| d.image_b64())
+        .ok_or_else(|| "No image data in response".to_string())?;
+
+    let new_bytes = base64_decode(b64)
+        .map_err(|e| format!("Failed to decode image: {e}"))?;
+
+    let portrait_id = uuid::Uuid::new_v4().to_string();
+    let file_name = format!("{portrait_id}.png");
+    let dir = &portraits_dir.0;
+    std::fs::create_dir_all(dir).map_err(|e| format!("Failed to create portraits dir: {e}"))?;
+    std::fs::write(dir.join(&file_name), &new_bytes)
+        .map_err(|e| format!("Failed to save image: {e}"))?;
+
+    log::info!("[PortraitVariation] Saved variation {} ({} bytes)", file_name, new_bytes.len());
+
+    let portrait = Portrait {
+        portrait_id,
+        character_id: character_id.clone(),
+        prompt,
+        file_name,
+        is_active: false,
+        created_at: Utc::now().to_rfc3339(),
+    };
+
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        create_portrait(&conn, &portrait).map_err(|e| e.to_string())?;
+    }
+
+    Ok(portrait_to_info(&portrait, dir))
 }
 
 /// Set a character's active portrait from any existing image file in the portraits directory.

@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from "@/components/ui/dialog";
-import { Save, Plus, X, BookTemplate, ImagePlus, Loader2, Check, Images } from "lucide-react";
+import { Save, Plus, X, BookTemplate, ImagePlus, Loader2, Check, Images, Shuffle, Trash2, AlertTriangle, MessageSquareX, RotateCcw } from "lucide-react";
 import { CHARACTER_TEMPLATES, type CharacterTemplate } from "@/lib/character-templates";
 import { api, type Character, type PortraitInfo, type GalleryItem } from "@/lib/tauri";
 import type { useAppStore } from "@/hooks/use-app-store";
@@ -22,10 +22,14 @@ export function CharacterEditor({ store }: Props) {
   const [templateSearch, setTemplateSearch] = useState("");
   const [portraits, setPortraits] = useState<PortraitInfo[]>([]);
   const [generatingPortrait, setGeneratingPortrait] = useState(false);
+  const [generatingVariation, setGeneratingVariation] = useState(false);
+  const [variationPreview, setVariationPreview] = useState<PortraitInfo | null>(null);
   const [showGallery, setShowGallery] = useState(false);
   const [showWorldGallery, setShowWorldGallery] = useState(false);
   const [worldGalleryItems, setWorldGalleryItems] = useState<GalleryItem[]>([]);
   const [loadingWorldGallery, setLoadingWorldGallery] = useState(false);
+  const [showClearChat, setShowClearChat] = useState(false);
+  const [showDeleteChar, setShowDeleteChar] = useState(false);
 
   const loadPortraits = useCallback(async (characterId: string) => {
     try {
@@ -38,12 +42,13 @@ export function CharacterEditor({ store }: Props) {
 
   useEffect(() => {
     if (ch) {
+      const toArray = (v: unknown): string[] => Array.isArray(v) ? v : [];
       setForm({
         display_name: ch.display_name,
         identity: ch.identity,
-        voice_rules: [...(ch.voice_rules ?? [])],
-        boundaries: [...(ch.boundaries ?? [])],
-        backstory_facts: [...(ch.backstory_facts ?? [])],
+        voice_rules: toArray(ch.voice_rules),
+        boundaries: toArray(ch.boundaries),
+        backstory_facts: toArray(ch.backstory_facts),
         avatar_color: ch.avatar_color,
         state: structuredClone(ch.state),
       });
@@ -81,6 +86,35 @@ export function CharacterEditor({ store }: Props) {
     } finally {
       setGeneratingPortrait(false);
     }
+  };
+
+  const handleGenerateVariation = async () => {
+    if (!ch || !store.apiKey || !activePortrait) return;
+    setGeneratingVariation(true);
+    try {
+      const portrait = await api.generatePortraitVariation(store.apiKey, ch.character_id);
+      setVariationPreview(portrait);
+    } catch (e) {
+      store.setError?.(String(e));
+    } finally {
+      setGeneratingVariation(false);
+    }
+  };
+
+  const handleKeepVariation = () => {
+    if (!variationPreview) return;
+    setPortraits((prev) => [variationPreview, ...prev]);
+    setVariationPreview(null);
+  };
+
+  const handleDiscardVariation = async () => {
+    if (!variationPreview) return;
+    try {
+      await api.archiveGalleryItem(variationPreview.portrait_id, "character");
+    } catch {
+      // best-effort cleanup
+    }
+    setVariationPreview(null);
   };
 
   const handleSelectPortrait = async (portrait: PortraitInfo) => {
@@ -229,6 +263,20 @@ export function CharacterEditor({ store }: Props) {
                       <><ImagePlus size={14} className="mr-1.5" /> Generate Portrait</>
                     )}
                   </Button>
+                  {activePortrait && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleGenerateVariation}
+                      disabled={generatingVariation || generatingPortrait || !store.apiKey}
+                    >
+                      {generatingVariation ? (
+                        <><Loader2 size={14} className="mr-1.5 animate-spin" /> Generating...</>
+                      ) : (
+                        <><Shuffle size={14} className="mr-1.5" /> New Pose</>
+                      )}
+                    </Button>
+                  )}
                   <Button size="sm" variant="ghost" onClick={handleOpenWorldGallery}>
                     <Images size={14} className="mr-1.5" /> Choose from Gallery
                   </Button>
@@ -238,7 +286,7 @@ export function CharacterEditor({ store }: Props) {
                     </Button>
                   )}
                   <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[220px]">
-                    Generates a watercolor portrait from this character's canon using DALL-E 3. Or choose any image from this world's gallery.
+                    Generate a portrait from canon, or create a variation of the current portrait in a different pose. Choose any image from this world's gallery.
                   </p>
                 </div>
               </div>
@@ -337,21 +385,152 @@ export function CharacterEditor({ store }: Props) {
               <ArrayField
                 label="Goals"
                 hint="What this character is currently trying to do"
-                items={form.state?.goals ?? []}
+                items={Array.isArray(form.state?.goals) ? form.state.goals : []}
                 onChange={(goals) => update({ state: { ...form.state as Character["state"], goals } })}
                 placeholder="e.g. Find the missing map piece"
               />
               <ArrayField
                 label="Open Loops"
                 hint="Unresolved threads that may surface in conversation"
-                items={form.state?.open_loops ?? []}
+                items={Array.isArray(form.state?.open_loops) ? form.state.open_loops : []}
                 onChange={(open_loops) => update({ state: { ...form.state as Character["state"], open_loops } })}
                 placeholder="e.g. Ask user about the locked door"
               />
+              {(() => {
+                const knownKeys = new Set(["mood", "trust_user", "goals", "open_loops", "last_seen"]);
+                const stateObj = (form.state ?? {}) as Record<string, unknown>;
+                const extraEntries = Object.entries(stateObj).filter(([k]) => !knownKeys.has(k));
+                if (extraEntries.length === 0) return null;
+                return (
+                  <Field label="Additional State" hint="Extra fields added by world simulation">
+                    <div className="space-y-2">
+                      {extraEntries.map(([key, value]) => (
+                        <div key={key} className="flex items-start gap-2 group">
+                          <div className="flex-1 flex items-start gap-2 px-3 py-2 rounded-lg border border-border bg-card/50 font-mono text-xs">
+                            <span className="text-primary/70 flex-shrink-0">{key}:</span>
+                            <span className="text-foreground/80 break-all">
+                              {typeof value === "object" ? JSON.stringify(value) : String(value)}
+                            </span>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-9 w-9 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive flex-shrink-0"
+                            onClick={() => {
+                              const newState = { ...(form.state as Record<string, unknown>) };
+                              delete newState[key];
+                              update({ state: newState as Character["state"] });
+                            }}
+                          >
+                            <X size={14} />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </Field>
+                );
+              })()}
+              <div className="pt-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  onClick={() => {
+                    update({
+                      state: {
+                        mood: 0,
+                        trust_user: 0.5,
+                        goals: [],
+                        open_loops: [],
+                        last_seen: (form.state as Character["state"])?.last_seen ?? { day_index: 1, time_of_day: "MORNING" },
+                      },
+                    });
+                  }}
+                >
+                  <RotateCcw size={14} className="mr-1.5" /> Reset State to Defaults
+                </Button>
+              </div>
+            </FieldGroup>
+
+            <FieldGroup label="Danger Zone">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between py-2.5 px-4 rounded-lg border border-border bg-card/50">
+                  <div>
+                    <p className="text-sm font-medium">Clear Chat History</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Delete all messages, memories, and embeddings. The character and their canon are preserved.
+                    </p>
+                  </div>
+                  <Button size="sm" variant="outline" className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive flex-shrink-0" onClick={() => setShowClearChat(true)}>
+                    <MessageSquareX size={14} className="mr-1.5" /> Clear
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between py-2.5 px-4 rounded-lg border border-destructive/30 bg-destructive/5">
+                  <div>
+                    <p className="text-sm font-medium text-destructive">Delete Character</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Permanently delete this character and all their data. This cannot be undone.
+                    </p>
+                  </div>
+                  <Button size="sm" variant="outline" className="border-destructive/40 text-destructive hover:bg-destructive hover:text-destructive-foreground flex-shrink-0" onClick={() => setShowDeleteChar(true)}>
+                    <Trash2 size={14} className="mr-1.5" /> Delete
+                  </Button>
+                </div>
+              </div>
             </FieldGroup>
           </div>
         </ScrollArea>
       </div>
+
+      {/* Clear Chat Confirmation */}
+      <Dialog open={showClearChat} onClose={() => setShowClearChat(false)}>
+        <DialogContent>
+          <DialogHeader onClose={() => setShowClearChat(false)}>
+            <DialogTitle>
+              <MessageSquareX size={16} className="inline mr-2 text-destructive" />Clear Chat History
+            </DialogTitle>
+          </DialogHeader>
+          <DialogBody>
+            <p className="text-sm text-muted-foreground">
+              This will permanently delete all messages, memories, and embeddings for <strong>{ch.display_name}</strong>. The character and their canon will be preserved.
+            </p>
+            <div className="flex items-center gap-3 mt-4">
+              <Button variant="outline" className="flex-1" onClick={() => setShowClearChat(false)}>Cancel</Button>
+              <Button variant="destructive" className="flex-1" onClick={async () => {
+                setShowClearChat(false);
+                await store.clearChatHistory(ch.character_id);
+              }}>
+                Clear All Messages
+              </Button>
+            </div>
+          </DialogBody>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Character Confirmation */}
+      <Dialog open={showDeleteChar} onClose={() => setShowDeleteChar(false)}>
+        <DialogContent>
+          <DialogHeader onClose={() => setShowDeleteChar(false)}>
+            <DialogTitle>
+              <AlertTriangle size={16} className="inline mr-2 text-destructive" />Delete Character
+            </DialogTitle>
+          </DialogHeader>
+          <DialogBody>
+            <p className="text-sm text-muted-foreground">
+              This will permanently delete <strong>{ch.display_name}</strong> and all their messages, portraits, memories, and embeddings. This cannot be undone.
+            </p>
+            <div className="flex items-center gap-3 mt-4">
+              <Button variant="outline" className="flex-1" onClick={() => setShowDeleteChar(false)}>Cancel</Button>
+              <Button variant="destructive" className="flex-1" onClick={async () => {
+                setShowDeleteChar(false);
+                await store.deleteCharacter(ch.character_id);
+              }}>
+                Delete Forever
+              </Button>
+            </div>
+          </DialogBody>
+        </DialogContent>
+      </Dialog>
 
       {/* Portrait Gallery Modal */}
       <Dialog open={showGallery} onClose={() => setShowGallery(false)} className="max-w-2xl">
@@ -366,32 +545,79 @@ export function CharacterEditor({ store }: Props) {
             <ScrollArea className="max-h-[500px]">
               <div className="grid grid-cols-3 gap-3 p-4">
                 {portraits.map((p) => (
-                  <button
-                    key={p.portrait_id}
-                    onClick={() => handleSelectPortrait(p)}
-                    className={`relative rounded-xl overflow-hidden border-2 transition-all cursor-pointer aspect-square group ${
-                      p.is_active ? "border-primary ring-2 ring-primary/30" : "border-border hover:border-primary/40"
-                    }`}
-                  >
-                    {p.data_url ? (
-                      <img src={p.data_url} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground text-xs">Missing</div>
-                    )}
-                    {p.is_active && (
-                      <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                        <Check size={14} className="text-primary-foreground" />
+                  <div key={p.portrait_id} className="relative group">
+                    <button
+                      onClick={() => handleSelectPortrait(p)}
+                      className={`relative rounded-xl overflow-hidden border-2 transition-all cursor-pointer aspect-square w-full ${
+                        p.is_active ? "border-primary ring-2 ring-primary/30" : "border-border hover:border-primary/40"
+                      }`}
+                    >
+                      {p.data_url ? (
+                        <img src={p.data_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground text-xs">Missing</div>
+                      )}
+                      {p.is_active && (
+                        <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                          <Check size={14} className="text-primary-foreground" />
+                        </div>
+                      )}
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p className="text-[10px] text-white/80">
+                          {new Date(p.created_at).toLocaleDateString()}
+                        </p>
                       </div>
+                    </button>
+                    {!p.is_active && (
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          try {
+                            await api.deletePortrait(p.portrait_id);
+                            setPortraits((prev) => prev.filter((pp) => pp.portrait_id !== p.portrait_id));
+                          } catch (err) {
+                            store.setError?.(String(err));
+                          }
+                        }}
+                        className="absolute top-2 left-2 w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer hover:bg-destructive"
+                        title="Delete portrait"
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     )}
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <p className="text-[10px] text-white/80">
-                        {new Date(p.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </button>
+                  </div>
                 ))}
               </div>
             </ScrollArea>
+          </DialogBody>
+        </DialogContent>
+      </Dialog>
+
+      {/* Variation Preview Modal */}
+      <Dialog open={!!variationPreview} onClose={handleDiscardVariation} className="max-w-md">
+        <DialogContent>
+          <DialogHeader onClose={handleDiscardVariation}>
+            <DialogTitle>New Pose</DialogTitle>
+            <DialogDescription>
+              Here's a variation of your character. Keep it or discard it.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogBody>
+            {variationPreview?.data_url && (
+              <img
+                src={variationPreview.data_url}
+                alt="Portrait variation"
+                className="w-full rounded-xl border border-border"
+              />
+            )}
+            <div className="flex items-center gap-3 mt-4">
+              <Button className="flex-1" onClick={handleKeepVariation}>
+                <Check size={14} className="mr-1.5" /> Keep
+              </Button>
+              <Button variant="outline" className="flex-1" onClick={handleDiscardVariation}>
+                <Trash2 size={14} className="mr-1.5" /> Discard
+              </Button>
+            </div>
           </DialogBody>
         </DialogContent>
       </Dialog>
