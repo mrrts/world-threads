@@ -716,7 +716,6 @@ pub async fn generate_illustration_cmd(
         };
         let _ = create_world_image(&conn, &img);
 
-        // Store as an "illustration" role message
         let msg = Message {
             message_id: message_id.clone(),
             thread_id: thread.thread_id.clone(),

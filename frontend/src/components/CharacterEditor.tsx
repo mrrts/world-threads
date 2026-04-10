@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from "@/components/ui/dialog";
-import { Save, Plus, X, BookTemplate, ImagePlus, Loader2, Check, Images, Shuffle, Trash2, AlertTriangle, MessageSquareX, RotateCcw } from "lucide-react";
+import { Save, Plus, X, BookTemplate, ImagePlus, Loader2, Check, Images, Shuffle, Trash2, AlertTriangle, MessageSquareX, RotateCcw, PenLine } from "lucide-react";
 import { CHARACTER_TEMPLATES, type CharacterTemplate } from "@/lib/character-templates";
 import { api, type Character, type PortraitInfo, type GalleryItem } from "@/lib/tauri";
 import type { useAppStore } from "@/hooks/use-app-store";
@@ -28,6 +28,9 @@ export function CharacterEditor({ store }: Props) {
   const [showWorldGallery, setShowWorldGallery] = useState(false);
   const [worldGalleryItems, setWorldGalleryItems] = useState<GalleryItem[]>([]);
   const [loadingWorldGallery, setLoadingWorldGallery] = useState(false);
+  const [showPoseModal, setShowPoseModal] = useState(false);
+  const [poseDescription, setPoseDescription] = useState("");
+  const [generatingPose, setGeneratingPose] = useState(false);
   const [showClearChat, setShowClearChat] = useState(false);
   const [showDeleteChar, setShowDeleteChar] = useState(false);
 
@@ -98,6 +101,20 @@ export function CharacterEditor({ store }: Props) {
       store.setError?.(String(e));
     } finally {
       setGeneratingVariation(false);
+    }
+  };
+
+  const handleGenerateWithPose = async (pose: string) => {
+    if (!ch || !store.apiKey || !activePortrait) return;
+    setGeneratingPose(true);
+    setShowPoseModal(false);
+    try {
+      const portrait = await api.generatePortraitWithPose(store.apiKey, ch.character_id, pose);
+      setVariationPreview(portrait);
+    } catch (e) {
+      store.setError?.(String(e));
+    } finally {
+      setGeneratingPose(false);
     }
   };
 
@@ -263,7 +280,7 @@ export function CharacterEditor({ store }: Props) {
                       <><ImagePlus size={14} className="mr-1.5" /> Generate Portrait</>
                     )}
                   </Button>
-                  {activePortrait && (
+                  {activePortrait && (<>
                     <Button
                       size="sm"
                       variant="outline"
@@ -276,7 +293,19 @@ export function CharacterEditor({ store }: Props) {
                         <><Shuffle size={14} className="mr-1.5" /> New Pose</>
                       )}
                     </Button>
-                  )}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => { setPoseDescription(""); setShowPoseModal(true); }}
+                      disabled={generatingPose || generatingVariation || generatingPortrait || !store.apiKey}
+                    >
+                      {generatingPose ? (
+                        <><Loader2 size={14} className="mr-1.5 animate-spin" /> Generating...</>
+                      ) : (
+                        <><PenLine size={14} className="mr-1.5" /> Describe Pose</>
+                      )}
+                    </Button>
+                  </>)}
                   <Button size="sm" variant="ghost" onClick={handleOpenWorldGallery}>
                     <Images size={14} className="mr-1.5" /> Choose from Gallery
                   </Button>
@@ -707,6 +736,40 @@ export function CharacterEditor({ store }: Props) {
               </div>
             </ScrollArea>
           </DialogBody>
+        </DialogContent>
+      </Dialog>
+
+      {/* Describe Pose Modal */}
+      <Dialog open={showPoseModal} onClose={() => setShowPoseModal(false)} className="max-w-md">
+        <DialogContent>
+          <DialogHeader onClose={() => setShowPoseModal(false)}>
+            <DialogTitle>Describe Pose</DialogTitle>
+            <DialogDescription>
+              Describe the pose, angle, expression, or situation you'd like for this character. The existing portraits will be used as reference.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogBody>
+            <textarea
+              value={poseDescription}
+              onChange={(e) => setPoseDescription(e.target.value)}
+              placeholder="e.g. Looking over their shoulder with a slight grin, arms crossed, standing in front of a window..."
+              className="w-full min-h-[100px] max-h-[200px] resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+              rows={4}
+              autoFocus
+            />
+          </DialogBody>
+          <div className="flex justify-end gap-2 px-5 pb-5">
+            <Button variant="ghost" size="sm" onClick={() => setShowPoseModal(false)}>
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              disabled={!poseDescription.trim()}
+              onClick={() => handleGenerateWithPose(poseDescription.trim())}
+            >
+              Generate
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </>

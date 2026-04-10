@@ -301,7 +301,9 @@ pub async fn run_narrative_with_base(
     });
 
     for m in recent_messages {
-        if m.role == "illustration" { continue; }
+        if m.role == "illustration" {
+            continue;
+        }
         msgs.push(openai::ChatMessage {
             role: if m.role == "narrative" { "assistant".to_string() } else { m.role.clone() },
             content: if m.role == "narrative" {

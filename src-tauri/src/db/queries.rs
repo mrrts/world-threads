@@ -156,7 +156,12 @@ pub fn get_character(conn: &Connection, character_id: &str) -> Result<Character,
 
 pub fn list_characters(conn: &Connection, world_id: &str) -> Result<Vec<Character>, rusqlite::Error> {
     let mut stmt = conn.prepare(
-        "SELECT character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, is_archived, created_at, updated_at FROM characters WHERE world_id = ?1 AND is_archived = 0 ORDER BY created_at"
+        "SELECT c.character_id, c.world_id, c.display_name, c.identity, c.voice_rules, c.boundaries, c.backstory_facts, c.relationships, c.state, c.avatar_color, c.is_archived, c.created_at, c.updated_at
+         FROM characters c
+         LEFT JOIN threads t ON t.character_id = c.character_id
+         LEFT JOIN (SELECT thread_id, MAX(created_at) AS last_msg FROM messages GROUP BY thread_id) m ON m.thread_id = t.thread_id
+         WHERE c.world_id = ?1 AND c.is_archived = 0
+         ORDER BY m.last_msg DESC NULLS LAST, c.created_at"
     )?;
     let rows = stmt.query_map(params![world_id], row_to_character)?;
     rows.collect()

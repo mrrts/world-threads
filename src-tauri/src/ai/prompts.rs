@@ -122,7 +122,9 @@ pub fn build_dialogue_messages(
     });
 
     for m in recent_messages {
-        if m.role == "illustration" { continue; }
+        if m.role == "illustration" {
+            continue;
+        }
         msgs.push(crate::ai::openai::ChatMessage {
             role: if m.role == "narrative" { "system".to_string() } else { m.role.clone() },
             content: if m.role == "narrative" {
@@ -355,11 +357,10 @@ pub fn build_scene_description_prompt(
     }
 
     system_parts.push(r#"OUTPUT INSTRUCTIONS:
-- Describe the scene as a single illustration: environment, lighting, weather, spatial arrangement of the two characters, their poses, expressions, body language, clothing, and any notable objects or details.
+- First, write a detailed scene description as a single paragraph (4-8 sentences): environment, lighting, weather, spatial arrangement of the two characters, their poses, expressions, body language, clothing, and any notable objects or details.
 - Write in third person, present tense, as if describing a painting.
 - Be specific about spatial relationships: who is where, facing which direction, what they're doing with their hands, eyes, body.
 - Include atmosphere: time of day, colors, mood, textures.
-- Keep it to one dense paragraph (4-8 sentences).
 - Do NOT include dialogue, speech bubbles, or text.
 - Do NOT include meta-instructions like "paint this" or "in watercolor style" — just describe the scene itself.
 - Both characters must appear in the scene.

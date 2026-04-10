@@ -92,6 +92,7 @@ pub fn run() {
             get_reactions_cmd,
             generate_portrait_cmd,
             generate_portrait_variation_cmd,
+            generate_portrait_with_pose_cmd,
             list_portraits_cmd,
             delete_portrait_cmd,
             set_active_portrait_cmd,

@@ -332,6 +332,8 @@ export const api = {
     invoke<PortraitInfo>("generate_portrait_cmd", { apiKey, characterId, formHint: formHint ?? null }),
   generatePortraitVariation: (apiKey: string, characterId: string) =>
     invoke<PortraitInfo>("generate_portrait_variation_cmd", { apiKey, characterId }),
+  generatePortraitWithPose: (apiKey: string, characterId: string, poseDescription: string) =>
+    invoke<PortraitInfo>("generate_portrait_with_pose_cmd", { apiKey, characterId, poseDescription }),
   listPortraits: (characterId: string) =>
     invoke<PortraitInfo[]>("list_portraits_cmd", { characterId }),
   deletePortrait: (portraitId: string) =>

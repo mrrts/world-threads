@@ -359,5 +359,12 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         ")?;
     }
 
+    // Fix illustration messages that were stored as JSON {"data_url":"...","caption":"..."}
+    // Extract just the data_url value.
+    conn.execute_batch("
+        UPDATE messages SET content = json_extract(content, '$.data_url')
+        WHERE role = 'illustration' AND content LIKE '{%\"data_url\"%';
+    ")?;
+
     Ok(())
 }

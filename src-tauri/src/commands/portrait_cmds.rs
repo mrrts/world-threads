@@ -375,6 +375,111 @@ pub async fn generate_portrait_variation_cmd(
     Ok(portrait_to_info(&portrait, dir))
 }
 
+/// Generate a portrait variation with a user-described pose.
+#[tauri::command]
+pub async fn generate_portrait_with_pose_cmd(
+    db: State<'_, Database>,
+    portraits_dir: State<'_, PortraitsDir>,
+    api_key: String,
+    character_id: String,
+    pose_description: String,
+) -> Result<PortraitInfo, String> {
+    let (character, world, all_portraits, mc) = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let ch = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
+        let w = get_world(&conn, &ch.world_id).map_err(|e| e.to_string())?;
+        let portraits = list_portraits(&conn, &character_id).map_err(|e| e.to_string())?;
+        if portraits.is_empty() {
+            return Err("No portraits to use as reference".to_string());
+        }
+        let mc = orchestrator::load_model_config(&conn);
+        (ch, w, portraits, mc)
+    };
+
+    let mut reference_images: Vec<Vec<u8>> = Vec::new();
+    for portrait in &all_portraits {
+        let file_path = portraits_dir.0.join(&portrait.file_name);
+        if file_path.exists() {
+            if let Ok(bytes) = std::fs::read(&file_path) {
+                reference_images.push(bytes);
+            }
+        }
+    }
+    if reference_images.is_empty() {
+        return Err("No portrait files found on disk".to_string());
+    }
+
+    let mut prompt_parts = vec![
+        "Hand-painted watercolor portrait in a lush, realistic illustration style.".to_string(),
+        "Soft edges dissolving into wet-on-wet washes, visible paper texture, warm earth tones with pops of verdant green and sky blue.".to_string(),
+        "Gentle diffused natural lighting, nostalgic and contemplative mood.".to_string(),
+        format!("Generate a new portrait of the SAME person shown in the reference images. The character must be clearly recognizable as the same person across all portraits."),
+        format!("Character name: {}", character.display_name),
+    ];
+
+    if !character.identity.is_empty() {
+        let identity = if character.identity.len() > 200 {
+            format!("{}...", &character.identity[..200])
+        } else {
+            character.identity.clone()
+        };
+        prompt_parts.push(format!("Character identity: {identity}"));
+    }
+
+    if !world.description.is_empty() {
+        let desc = if world.description.len() > 150 {
+            format!("{}...", &world.description[..150])
+        } else {
+            world.description.clone()
+        };
+        prompt_parts.push(format!("World setting: {desc}"));
+    }
+
+    prompt_parts.push(format!("POSE DESCRIPTION: {pose_description}"));
+    prompt_parts.push("Follow the pose description above. Keep the character unmistakably the same person from the reference images.".to_string());
+    prompt_parts.push("CRITICAL: The image must contain absolutely no text, no words, no letters, no numbers, no writing, no labels, no titles, no captions, no watermarks, no signatures, no UI elements, no names.".to_string());
+
+    let prompt = prompt_parts.join(" ");
+
+    log::info!("[PortraitPose] Generating for '{}' with {} reference images, pose: {:.100}", character.display_name, reference_images.len(), pose_description);
+
+    let response = openai::generate_image_edit_with_base(
+        &mc.openai_api_base(), &api_key, &mc.image_model,
+        &prompt, &reference_images,
+        "1024x1024", mc.image_quality(),
+        mc.image_output_format().as_deref(),
+    ).await?;
+    let b64 = response.data.first()
+        .and_then(|d| d.image_b64())
+        .ok_or_else(|| "No image data in response".to_string())?;
+
+    let new_bytes = base64_decode(b64)
+        .map_err(|e| format!("Failed to decode image: {e}"))?;
+
+    let portrait_id = uuid::Uuid::new_v4().to_string();
+    let file_name = format!("{portrait_id}.png");
+    let dir = &portraits_dir.0;
+    std::fs::create_dir_all(dir).map_err(|e| format!("Failed to create portraits dir: {e}"))?;
+    std::fs::write(dir.join(&file_name), &new_bytes)
+        .map_err(|e| format!("Failed to save image: {e}"))?;
+
+    let portrait = Portrait {
+        portrait_id,
+        character_id: character_id.clone(),
+        prompt,
+        file_name,
+        is_active: false,
+        created_at: Utc::now().to_rfc3339(),
+    };
+
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        create_portrait(&conn, &portrait).map_err(|e| e.to_string())?;
+    }
+
+    Ok(portrait_to_info(&portrait, dir))
+}
+
 /// Set a character's active portrait from any existing image file in the portraits directory.
 #[tauri::command]
 pub fn set_portrait_from_gallery_cmd(
