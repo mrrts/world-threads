@@ -96,7 +96,13 @@ export function ChatView({ store }: Props) {
   const [showUserAvatarModal, setShowUserAvatarModal] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const isGroup = !!store.activeGroupChat;
+  const groupCharIds: string[] = isGroup && store.activeGroupChat
+    ? (Array.isArray(store.activeGroupChat.character_ids) ? store.activeGroupChat.character_ids : [])
+    : [];
+  const groupCharacters = groupCharIds.map((id) => store.characters.find((c) => c.character_id === id)).filter(Boolean) as typeof store.characters;
   const charPortrait = store.activeCharacter ? store.activePortraits[store.activeCharacter.character_id] : undefined;
+  const [showGroupTalkPicker, setShowGroupTalkPicker] = useState(false);
   const [userAvatarUrl, setUserAvatarUrl] = useState("");
   const [copiedError, setCopiedError] = useState(false);
   const [resetConfirmId, setResetConfirmId] = useState<string | null>(null);
@@ -128,6 +134,7 @@ export function ChatView({ store }: Props) {
   const [narrationDirty, setNarrationDirty] = useState(false);
 
   const charId = store.activeCharacter?.character_id;
+  const chatId = charId ?? store.activeGroupChat?.group_chat_id;
 
   useEffect(() => {
     if (!store.activeWorld) { setUserAvatarUrl(""); return; }
@@ -149,7 +156,7 @@ export function ChatView({ store }: Props) {
   }, [charId]);
 
   // Derived: is this character's chat currently loading?
-  const isSending = store.sending === charId;
+  const isSending = store.sending === chatId;
   const isGeneratingNarrative = store.generatingNarrative === charId;
   const isGeneratingIllustration = store.generatingIllustration === charId;
   const isGeneratingVideo = !!store.generatingVideo;
@@ -261,7 +268,11 @@ export function ChatView({ store }: Props) {
     store.clearChatError();
     setInput("");
     if (inputRef.current) inputRef.current.style.height = "auto";
-    await store.sendMessage(text);
+    if (isGroup) {
+      await store.sendGroupMessage(text);
+    } else {
+      await store.sendMessage(text);
+    }
     inputRef.current?.focus();
   };
 
@@ -279,7 +290,7 @@ export function ChatView({ store }: Props) {
     }
   };
 
-  if (!store.activeCharacter) {
+  if (!store.activeCharacter && !store.activeGroupChat) {
     return (
       <div className="flex-1 flex items-center justify-center text-muted-foreground">
         <p>Select or create a character to start chatting</p>
@@ -289,7 +300,19 @@ export function ChatView({ store }: Props) {
 
   return (
     <div className="flex-1 flex flex-col min-h-0 relative">
-      {charPortrait?.data_url && (
+      {isGroup ? (
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex">
+          {groupCharacters.map((ch, i) => {
+            const p = store.activePortraits[ch.character_id];
+            return p?.data_url ? (
+              <div key={ch.character_id} className="flex-1 relative">
+                <img src={p.data_url} alt="" className="w-full h-full object-cover" />
+              </div>
+            ) : <div key={ch.character_id} className="flex-1" />;
+          })}
+          <div className="absolute inset-0 bg-background/65" />
+        </div>
+      ) : charPortrait?.data_url ? (
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
           <img
             src={charPortrait.data_url}
@@ -298,8 +321,21 @@ export function ChatView({ store }: Props) {
           />
           <div className="absolute inset-0 bg-background/60" />
         </div>
-      )}
+      ) : null}
       <div className="px-4 py-3 border-b border-border flex items-center gap-3 relative z-30 bg-background">
+        {isGroup ? (<>
+          <div className="flex -space-x-2 flex-shrink-0">
+            {groupCharacters.map((ch, i) => {
+              const p = store.activePortraits[ch.character_id];
+              return p?.data_url ? (
+                <img key={ch.character_id} src={p.data_url} alt="" className="w-9 h-9 rounded-full object-cover ring-2 ring-background" style={{ zIndex: groupCharacters.length - i }} />
+              ) : (
+                <span key={ch.character_id} className="w-9 h-9 rounded-full ring-2 ring-background" style={{ backgroundColor: ch.avatar_color, zIndex: groupCharacters.length - i }} />
+              );
+            })}
+          </div>
+          <h1 className="font-semibold">{store.activeGroupChat?.display_name}</h1>
+        </>) : (<>
         {charPortrait?.data_url ? (
           <div className="relative group flex-shrink-0">
             <button
@@ -330,14 +366,15 @@ export function ChatView({ store }: Props) {
               </span>
             </button>
           </div>
-        ) : (
+        ) : store.activeCharacter ? (
           <span
             className="w-3 h-3 rounded-full"
             style={{ backgroundColor: store.activeCharacter.avatar_color }}
           />
-        )}
-        <h1 className="font-semibold">{store.activeCharacter.display_name}</h1>
-        {store.activeCharacter.identity && (
+        ) : null}
+        <h1 className="font-semibold">{store.activeCharacter?.display_name}</h1>
+        </>)}
+        {!isGroup && store.activeCharacter?.identity && (
           <div className="relative flex-1 min-w-0">
             <span
               className="text-xs text-muted-foreground truncate block cursor-default"
@@ -633,10 +670,19 @@ export function ChatView({ store }: Props) {
               );
             }
 
+            // For group chats, find the sending character's info
+            const senderChar = isGroup && msg.sender_character_id
+              ? groupCharacters.find((c) => c.character_id === msg.sender_character_id)
+              : undefined;
+            const senderPortrait = senderChar ? store.activePortraits[senderChar.character_id] : undefined;
+            const groupColorPalette = ["bg-blue-500/15", "bg-emerald-500/15", "bg-purple-500/15"];
+            const senderColorIdx = senderChar ? groupCharIds.indexOf(senderChar.character_id) : 0;
+            const senderBubbleColor = isGroup && !isUser ? groupColorPalette[senderColorIdx % groupColorPalette.length] : "";
+
             return (
               <div key={msg.message_id}>
                 <div className={`flex items-end gap-2 ${isUser ? "justify-end" : "justify-start"}`}>
-                  {!isUser && (
+                  {!isUser && !isGroup && (
                     charPortrait?.data_url ? (
                       <button onClick={() => setShowPortraitModal(true)} className="cursor-pointer flex-shrink-0 mb-1">
                         <img src={charPortrait.data_url} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
@@ -648,11 +694,27 @@ export function ChatView({ store }: Props) {
                       />
                     )
                   )}
+                  {!isUser && isGroup && (
+                    senderPortrait?.data_url ? (
+                      <img src={senderPortrait.data_url} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border flex-shrink-0 mb-1" />
+                    ) : (
+                      <span
+                        className="w-[72px] h-[72px] rounded-full flex-shrink-0 mb-1 ring-1 ring-white/10"
+                        style={{ backgroundColor: senderChar?.avatar_color ?? "#c4a882" }}
+                      />
+                    )
+                  )}
+                  <div>
+                    {isGroup && !isUser && senderChar && (
+                      <p className="text-[10px] font-semibold text-muted-foreground mb-0.5 ml-1">{senderChar.display_name}</p>
+                    )}
                   <div
                     className={`relative group rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                       isUser
                         ? "bg-primary text-primary-foreground rounded-br-md max-w-[80%]"
-                        : "bg-secondary text-secondary-foreground rounded-bl-md max-w-[80%]"
+                        : isGroup && senderBubbleColor
+                          ? `${senderBubbleColor} text-secondary-foreground rounded-bl-md max-w-[80%] border border-border/30`
+                          : "bg-secondary text-secondary-foreground rounded-bl-md max-w-[80%]"
                     }`}
                   >
                     {/* Reaction button — overlaps the top corner of the bubble */}
@@ -700,6 +762,7 @@ export function ChatView({ store }: Props) {
                       )}
                     </p>
                   </div>
+                  </div>
                   {isUser && userAvatarUrl && (
                     <button onClick={() => setShowUserAvatarModal(true)} className="cursor-pointer flex-shrink-0 mb-1">
                       <img src={userAvatarUrl} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
@@ -707,9 +770,11 @@ export function ChatView({ store }: Props) {
                   )}
                 </div>
 
+                {!isGroup && (
                 <div className={!isUser ? "pl-20" : userAvatarUrl ? "pr-20" : ""}>
                   <ReactionBubbles reactions={reactions} isUser={isUser} />
                 </div>
+                )}
               </div>
             );
           })}
@@ -824,7 +889,7 @@ export function ChatView({ store }: Props) {
               variant="ghost"
               size="icon"
               className="text-primary/70 hover:text-primary hover:bg-primary/10 h-10 w-10 rounded-xl"
-              onClick={() => store.promptCharacter()}
+              onClick={() => isGroup ? setShowGroupTalkPicker(true) : store.promptCharacter()}
               disabled={isSending || !store.apiKey || store.messages.length === 0}
             >
               <MessageSquare size={16} />
@@ -875,7 +940,7 @@ export function ChatView({ store }: Props) {
               });
             }}
             onKeyDown={handleKeyDown}
-            placeholder={`Talk to ${store.activeCharacter.display_name}...`}
+            placeholder={isGroup ? `Talk to ${store.activeGroupChat?.display_name ?? "the group"}...` : `Talk to ${store.activeCharacter?.display_name ?? "character"}...`}
             className="flex-1 min-h-[40px] max-h-[200px] resize-none rounded-xl border border-input bg-transparent px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]"
             rows={1}
             disabled={isSending || (store.autoRespond && !store.apiKey)}
@@ -1499,6 +1564,35 @@ export function ChatView({ store }: Props) {
           </Dialog>
         );
       })()}
+
+      {/* Group Talk to Me picker */}
+      <Dialog open={showGroupTalkPicker} onClose={() => setShowGroupTalkPicker(false)} className="max-w-xs">
+        <div className="p-5 space-y-3 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl shadow-black/50">
+          <h3 className="font-semibold text-sm">Who should speak?</h3>
+          <div className="space-y-1.5">
+            {groupCharacters.map((ch) => {
+              const p = store.activePortraits[ch.character_id];
+              return (
+                <button
+                  key={ch.character_id}
+                  onClick={() => {
+                    store.promptGroupCharacter(ch.character_id);
+                    setShowGroupTalkPicker(false);
+                  }}
+                  className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl border border-border hover:border-primary/40 hover:bg-primary/5 transition-all cursor-pointer"
+                >
+                  {p?.data_url ? (
+                    <img src={p.data_url} alt="" className="w-10 h-10 rounded-full object-cover" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full" style={{ backgroundColor: ch.avatar_color }} />
+                  )}
+                  <span className="text-sm font-medium">{ch.display_name}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </Dialog>
 
       <Dialog open={!!removeVideoConfirmId} onClose={() => setRemoveVideoConfirmId(null)} className="max-w-xs">
         <div className="p-5 space-y-4 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl shadow-black/50">
