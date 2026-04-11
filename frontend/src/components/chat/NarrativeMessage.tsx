@@ -1,5 +1,6 @@
 import Markdown from "react-markdown";
 import { BookOpen } from "lucide-react";
+import { formatMessage } from "./formatMessage";
 import type { Message } from "@/lib/tauri";
 
 interface NarrativeMessageProps {
@@ -17,7 +18,7 @@ export function NarrativeMessage({ message, isPending, onResetToHere }: Narrativ
           <span>Narrative</span>
         </div>
         <div className="prose prose-sm max-w-none prose-p:my-1 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-amber-100)] [--tw-prose-bold:rgb(252,211,77)]">
-          <Markdown>{message.content}</Markdown>
+          <Markdown>{formatMessage(message.content)}</Markdown>
         </div>
         <p className="text-[10px] mt-1.5 text-amber-500/50 not-italic flex items-center gap-2">
           {new Date(message.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}

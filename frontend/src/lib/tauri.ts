@@ -464,4 +464,6 @@ export const api = {
     invoke<SendGroupMessageResult>("send_group_message_cmd", { apiKey, groupChatId, content }),
   promptGroupCharacter: (apiKey: string, groupChatId: string, characterId: string) =>
     invoke<Message>("prompt_group_character_cmd", { apiKey, groupChatId, characterId }),
+  generateGroupIllustration: (apiKey: string, groupChatId: string, qualityTier?: string, customInstructions?: string, previousIllustrationId?: string, includeSceneSummary?: boolean) =>
+    invoke<IllustrationResult>("generate_group_illustration_cmd", { apiKey, groupChatId, qualityTier: qualityTier ?? null, customInstructions: customInstructions ?? null, previousIllustrationId: previousIllustrationId ?? null, includeSceneSummary: includeSceneSummary ?? true }),
 };

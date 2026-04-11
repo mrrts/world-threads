@@ -377,26 +377,35 @@ export function useAppStore() {
       created_at: new Date().toISOString(),
     };
 
+    // Save user message first
     setState((s) => ({
       ...s,
-      sending: state.activeGroupChat!.group_chat_id,
       chatError: null,
       lastFailedContent: null,
       messages: [...s.messages, optimisticMsg],
     }));
 
     try {
-      const result = await api.sendGroupMessage(state.apiKey, state.activeGroupChat.group_chat_id, content);
+      // Save user message to DB
+      const saved = await api.saveGroupUserMessage(state.activeGroupChat.group_chat_id, content);
       setState((s) => ({
         ...s,
-        messages: [
-          ...s.messages.filter((m) => m.message_id !== optimisticMsg.message_id),
-          result.user_message,
-          ...result.character_responses,
-        ],
-        totalMessages: s.totalMessages + 1 + result.character_responses.length,
-        sending: null,
+        messages: [...s.messages.filter((m) => m.message_id !== optimisticMsg.message_id), saved],
+        totalMessages: s.totalMessages + 1,
       }));
+
+      // Then prompt each character sequentially
+      const charIds: string[] = Array.isArray(state.activeGroupChat.character_ids) ? state.activeGroupChat.character_ids : [];
+      for (const cid of charIds) {
+        setState((s) => ({ ...s, sending: state.activeGroupChat!.group_chat_id }));
+        const msg = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat!.group_chat_id, cid);
+        setState((s) => ({
+          ...s,
+          messages: [...s.messages, msg],
+          totalMessages: s.totalMessages + 1,
+          sending: null,
+        }));
+      }
     } catch (e) {
       setState((s) => ({
         ...s,
@@ -762,6 +771,30 @@ export function useAppStore() {
       }));
     }
   }, [state.activeCharacter, state.apiKey]);
+
+  const generateGroupIllustration = useCallback(async (qualityTier?: string, customInstructions?: string, previousIllustrationId?: string, includeSceneSummary?: boolean) => {
+    if (!state.activeGroupChat || !state.apiKey) return;
+
+    setState((s) => ({ ...s, sending: state.activeGroupChat!.group_chat_id, generatingIllustration: state.activeGroupChat!.group_chat_id, chatError: null }));
+
+    try {
+      const result = await api.generateGroupIllustration(state.apiKey, state.activeGroupChat.group_chat_id, qualityTier, customInstructions, previousIllustrationId, includeSceneSummary);
+      setState((s) => ({
+        ...s,
+        messages: [...s.messages, result.illustration_message],
+        totalMessages: s.totalMessages + 1,
+        sending: null,
+        generatingIllustration: null,
+      }));
+    } catch (e) {
+      setState((s) => ({
+        ...s,
+        sending: null,
+        generatingIllustration: null,
+        chatError: String(e),
+      }));
+    }
+  }, [state.activeGroupChat, state.apiKey]);
 
   const deleteIllustration = useCallback(async (messageId: string) => {
     try {
@@ -1133,6 +1166,7 @@ export function useAppStore() {
     promptCharacter,
     generateNarrative,
     generateIllustration,
+    generateGroupIllustration,
     deleteIllustration,
     regenerateIllustration,
     adjustIllustration,

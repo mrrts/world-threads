@@ -155,6 +155,7 @@ pub fn run() {
             save_group_user_message_cmd,
             send_group_message_cmd,
             prompt_group_character_cmd,
+            generate_group_illustration_cmd,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

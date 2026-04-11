@@ -37,6 +37,7 @@ export function NarrationSettingsModal({
 
   return (<>
     {showClearConfirm && (
+      <div className="fixed inset-0 z-[60]">
       <Dialog open onClose={() => setShowClearConfirm(false)} className="max-w-xs">
         <div className="p-5 space-y-4">
           <div className="flex items-center gap-2">
@@ -55,6 +56,7 @@ export function NarrationSettingsModal({
           </div>
         </div>
       </Dialog>
+      </div>
     )}
     <Dialog open={open} onClose={onClose} className="max-w-md">
       <div className="p-5 space-y-4">

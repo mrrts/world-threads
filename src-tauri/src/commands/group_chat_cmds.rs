@@ -212,7 +212,7 @@ pub async fn send_group_message_cmd(
         }
 
         // Generate response
-        let (reply_text, usage) = orchestrator::run_dialogue_with_base(
+        let (raw_reply, usage) = orchestrator::run_dialogue_with_base(
             &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
             &world, character, &recent_msgs, &retrieved,
             user_profile.as_ref(),
@@ -221,6 +221,9 @@ pub async fn send_group_message_cmd(
             Some(&group_context),
             Some(&character_names),
         ).await?;
+
+        // Strip any [CharacterName]: prefix the LLM may have added
+        let reply_text = strip_character_prefix(&raw_reply, &character.display_name);
 
         if let Some(u) = &usage {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -326,7 +329,7 @@ pub async fn prompt_group_character_cmd(
             .ok().flatten()
     };
 
-    let (reply_text, usage) = orchestrator::run_dialogue_with_base(
+    let (raw_reply, usage) = orchestrator::run_dialogue_with_base(
         &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
         &world, &character, &dialogue_msgs, &retrieved,
         user_profile.as_ref(),
@@ -335,6 +338,8 @@ pub async fn prompt_group_character_cmd(
         Some(&group_context),
         Some(&character_names),
     ).await?;
+
+    let reply_text = strip_character_prefix(&raw_reply, &character.display_name);
 
     if let Some(u) = &usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -357,4 +362,184 @@ pub async fn prompt_group_character_cmd(
     }
 
     Ok(msg)
+}
+
+/// Generate an illustration for a group chat. Sends all character portraits + user avatar as references.
+#[tauri::command]
+pub async fn generate_group_illustration_cmd(
+    db: State<'_, Database>,
+    portraits_dir: State<'_, PortraitsDir>,
+    api_key: String,
+    group_chat_id: String,
+    quality_tier: Option<String>,
+    custom_instructions: Option<String>,
+    previous_illustration_id: Option<String>,
+    include_scene_summary: Option<bool>,
+) -> Result<chat_cmds::IllustrationResult, String> {
+    let (world, characters, gc, recent_msgs, model_config, user_profile) = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
+        let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
+        let model_config = orchestrator::load_model_config(&conn);
+        let recent_msgs = list_group_messages(&conn, &gc.thread_id, 30).map_err(|e| e.to_string())?;
+        let user_profile = get_user_profile(&conn, &gc.world_id).ok();
+
+        let char_ids: Vec<String> = gc.character_ids.as_array()
+            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+            .unwrap_or_default();
+        let characters: Vec<Character> = char_ids.iter()
+            .filter_map(|id| get_character(&conn, id).ok())
+            .collect();
+
+        (world, characters, gc, recent_msgs, model_config, user_profile)
+    };
+
+    let dir = &portraits_dir.0;
+    let mut reference_images: Vec<Vec<u8>> = Vec::new();
+
+    // User avatar first
+    if let Some(ref profile) = user_profile {
+        if !profile.avatar_file.is_empty() {
+            let path = dir.join(&profile.avatar_file);
+            if path.exists() {
+                if let Ok(bytes) = std::fs::read(&path) {
+                    reference_images.push(bytes);
+                }
+            }
+        }
+    }
+
+    // All character portraits
+    for character in &characters {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        if let Some(portrait) = get_active_portrait(&conn, &character.character_id) {
+            let path = dir.join(&portrait.file_name);
+            if path.exists() {
+                if let Ok(bytes) = std::fs::read(&path) {
+                    reference_images.push(bytes);
+                }
+            }
+        }
+    }
+
+    // Previous illustration
+    let has_previous = if let Some(ref prev_id) = previous_illustration_id {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        if let Ok(file_name) = conn.query_row(
+            "SELECT file_name FROM world_images WHERE image_id = ?1",
+            params![prev_id], |r| r.get::<_, String>(0),
+        ) {
+            let path = dir.join(&file_name);
+            if path.exists() {
+                if let Ok(bytes) = std::fs::read(&path) {
+                    reference_images.push(bytes);
+                    true
+                } else { false }
+            } else { false }
+        } else { false }
+    } else { false };
+
+    let tier = quality_tier.as_deref().unwrap_or("high");
+    let (img_size, img_quality) = match tier {
+        "low" => ("1024x1024", "low"),
+        "medium" => ("1024x1024", "medium"),
+        _ => ("1536x1024", "medium"),
+    };
+
+    // Use first character for the orchestrator (it needs a Character struct)
+    let primary_character = characters.first()
+        .ok_or_else(|| "No characters in group chat".to_string())?;
+
+    let (scene_description, image_bytes, chat_usage) = orchestrator::generate_illustration_with_base(
+        &model_config.chat_api_base(),
+        &model_config.openai_api_base(),
+        &api_key,
+        &model_config.dialogue_model,
+        &model_config.image_model,
+        img_quality,
+        img_size,
+        model_config.image_output_format().as_deref(),
+        &world, primary_character, &recent_msgs,
+        user_profile.as_ref(),
+        &reference_images,
+        custom_instructions.as_deref(),
+        has_previous,
+        include_scene_summary.unwrap_or(true),
+    ).await?;
+
+    if let Some(u) = &chat_usage {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let _ = record_token_usage(&conn, "illustration", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
+    }
+
+    let aspect = chat_cmds::png_aspect_ratio(&image_bytes);
+    let message_id = uuid::Uuid::new_v4().to_string();
+    let file_name = format!("illustration_{message_id}.png");
+    std::fs::create_dir_all(dir).map_err(|e| format!("Failed to create dir: {e}"))?;
+    std::fs::write(dir.join(&file_name), &image_bytes)
+        .map_err(|e| format!("Failed to save illustration: {e}"))?;
+
+    let b64 = chat_cmds::base64_encode_bytes(&image_bytes);
+    let data_url = format!("data:image/png;base64,{b64}");
+    let now = Utc::now().to_rfc3339();
+
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let img = WorldImage {
+            image_id: message_id.clone(),
+            world_id: world.world_id.clone(),
+            prompt: scene_description,
+            file_name: file_name.clone(),
+            is_active: false,
+            source: "illustration".to_string(),
+            created_at: now.clone(),
+            aspect_ratio: aspect,
+        };
+        let _ = create_world_image(&conn, &img);
+
+        let msg = Message {
+            message_id: message_id.clone(),
+            thread_id: gc.thread_id.clone(),
+            role: "illustration".to_string(),
+            content: data_url,
+            tokens_estimate: 0,
+            sender_character_id: None,
+            created_at: now,
+        };
+        create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
+    }
+
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let illustration_msg = conn.query_row(
+        "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at FROM group_messages WHERE message_id = ?1",
+        params![message_id], |row| Ok(Message {
+            message_id: row.get(0)?, thread_id: row.get(1)?, role: row.get(2)?,
+            content: row.get(3)?, tokens_estimate: row.get(4)?,
+            sender_character_id: row.get(5)?, created_at: row.get(6)?,
+        })
+    ).map_err(|e| e.to_string())?;
+
+    Ok(chat_cmds::IllustrationResult {
+        illustration_message: illustration_msg,
+    })
+}
+
+/// Strip any [CharacterName]: or CharacterName: prefix that the LLM may prepend to its response.
+fn strip_character_prefix(text: &str, character_name: &str) -> String {
+    let trimmed = text.trim();
+    // Try [Name]: format
+    let bracket_prefix = format!("[{}]:", character_name);
+    if let Some(rest) = trimmed.strip_prefix(&bracket_prefix) {
+        return rest.trim().to_string();
+    }
+    let bracket_prefix2 = format!("[{}] :", character_name);
+    if let Some(rest) = trimmed.strip_prefix(&bracket_prefix2) {
+        return rest.trim().to_string();
+    }
+    // Try Name: format
+    let name_prefix = format!("{}:", character_name);
+    if let Some(rest) = trimmed.strip_prefix(&name_prefix) {
+        return rest.trim().to_string();
+    }
+    trimmed.to_string()
 }

@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import Markdown from "react-markdown";
+import { formatMessage } from "@/components/chat/formatMessage";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
@@ -544,7 +545,7 @@ export function GroupChatView({ store }: Props) {
                         ? "[--tw-prose-body:var(--color-primary-foreground)] [--tw-prose-headings:var(--color-primary-foreground)] [--tw-prose-bold:var(--color-primary-foreground)] [--tw-prose-bullets:var(--color-primary-foreground)] [--tw-prose-counters:var(--color-primary-foreground)] [--tw-prose-code:var(--color-primary-foreground)] [--tw-prose-links:var(--color-primary-foreground)] [--tw-prose-quotes:var(--color-primary-foreground)] [--tw-prose-quote-borders:rgba(255,255,255,0.3)]"
                         : "[--tw-prose-body:var(--color-secondary-foreground)] [--tw-prose-headings:var(--color-secondary-foreground)] [--tw-prose-bold:var(--color-secondary-foreground)] [--tw-prose-bullets:var(--color-secondary-foreground)] [--tw-prose-counters:var(--color-secondary-foreground)] [--tw-prose-code:var(--color-secondary-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-quotes:var(--color-secondary-foreground)] [--tw-prose-quote-borders:var(--color-border)]"
                     }`}>
-                      <Markdown>{msg.content}</Markdown>
+                      <Markdown>{formatMessage(msg.content)}</Markdown>
                     </div>
                     <p className={`text-[10px] mt-1 flex items-center gap-2 ${
                       isUser ? "text-primary-foreground/50" : "text-muted-foreground"
@@ -785,7 +786,7 @@ export function GroupChatView({ store }: Props) {
           const lastIllus = prevIllus[prevIllus.length - 1];
           const prevId = usePreviousScene && lastIllus ? lastIllus.message_id : undefined;
           setShowIllustrationPicker(false);
-          store.generateIllustration(tier, illustrationInstructions.trim() || undefined, prevId, includeSceneSummary);
+          store.generateGroupIllustration(tier, illustrationInstructions.trim() || undefined, prevId, includeSceneSummary);
           setIllustrationInstructions("");
           setUsePreviousScene(false);
           setIncludeSceneSummary(true);

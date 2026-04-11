@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import Markdown from "react-markdown";
+import { formatMessage } from "@/components/chat/formatMessage";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
@@ -575,7 +576,7 @@ export function ChatView({ store }: Props) {
                     className={`relative group rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                       isUser
                         ? "bg-primary text-primary-foreground rounded-br-md max-w-[80%]"
-                        : "bg-secondary text-secondary-foreground rounded-bl-md max-w-[80%]"
+                        : "bg-secondary/40 text-secondary-foreground rounded-bl-md max-w-[80%] border border-border/30"
                     }`}
                   >
                     {/* Reaction button — overlaps the top corner of the bubble */}
@@ -605,7 +606,7 @@ export function ChatView({ store }: Props) {
                         ? "[--tw-prose-body:var(--color-primary-foreground)] [--tw-prose-headings:var(--color-primary-foreground)] [--tw-prose-bold:var(--color-primary-foreground)] [--tw-prose-bullets:var(--color-primary-foreground)] [--tw-prose-counters:var(--color-primary-foreground)] [--tw-prose-code:var(--color-primary-foreground)] [--tw-prose-links:var(--color-primary-foreground)] [--tw-prose-quotes:var(--color-primary-foreground)] [--tw-prose-quote-borders:rgba(255,255,255,0.3)]"
                         : "[--tw-prose-body:var(--color-secondary-foreground)] [--tw-prose-headings:var(--color-secondary-foreground)] [--tw-prose-bold:var(--color-secondary-foreground)] [--tw-prose-bullets:var(--color-secondary-foreground)] [--tw-prose-counters:var(--color-secondary-foreground)] [--tw-prose-code:var(--color-secondary-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-quotes:var(--color-secondary-foreground)] [--tw-prose-quote-borders:var(--color-border)]"
                     }`}>
-                      <Markdown>{msg.content}</Markdown>
+                      <Markdown>{formatMessage(msg.content)}</Markdown>
                     </div>
                     <p className={`text-[10px] mt-1 flex items-center gap-2 ${
                       isUser ? "text-primary-foreground/50" : "text-muted-foreground"

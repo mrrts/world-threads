@@ -631,7 +631,7 @@ pub async fn generate_illustration_cmd(
     previous_illustration_id: Option<String>,
     include_scene_summary: Option<bool>,
 ) -> Result<IllustrationResult, String> {
-    let (world, character, thread, recent_msgs, model_config, user_profile) = {
+    let (world, character, thread_id, recent_msgs, model_config, user_profile) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
         let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
@@ -639,8 +639,7 @@ pub async fn generate_illustration_cmd(
         let model_config = orchestrator::load_model_config(&conn);
         let recent_msgs = list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?;
         let user_profile = get_user_profile(&conn, &character.world_id).ok();
-
-        (world, character, thread, recent_msgs, model_config, user_profile)
+        (world, character, thread.thread_id, recent_msgs, model_config, user_profile)
     };
 
     // Load reference portraits: user avatar first, then character's active portrait
@@ -754,7 +753,7 @@ pub async fn generate_illustration_cmd(
 
         let msg = Message {
             message_id: message_id.clone(),
-            thread_id: thread.thread_id.clone(),
+            thread_id: thread_id.clone(),
             role: "illustration".to_string(),
             content: data_url,
             tokens_estimate: 0,
@@ -779,7 +778,7 @@ pub async fn generate_illustration_cmd(
 }
 
 /// Encode bytes to base64 string.
-fn base64_encode_bytes(bytes: &[u8]) -> String {
+pub fn base64_encode_bytes(bytes: &[u8]) -> String {
     const CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     let mut out = String::with_capacity((bytes.len() + 2) / 3 * 4);
     for chunk in bytes.chunks(3) {
@@ -804,7 +803,7 @@ fn base64_encode_bytes(bytes: &[u8]) -> String {
 }
 
 /// Get aspect ratio (width/height) from PNG image bytes.
-fn png_aspect_ratio(bytes: &[u8]) -> f64 {
+pub fn png_aspect_ratio(bytes: &[u8]) -> f64 {
     if bytes.len() >= 24 && &bytes[0..4] == b"\x89PNG" {
         let w = u32::from_be_bytes([bytes[16], bytes[17], bytes[18], bytes[19]]) as f64;
         let h = u32::from_be_bytes([bytes[20], bytes[21], bytes[22], bytes[23]]) as f64;
