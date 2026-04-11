@@ -2,13 +2,23 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import Markdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
 import { Send, Loader2, SmilePlus, X, Check, Copy, ExternalLink, BookOpen, RotateCcw, MessageSquare, Settings, Image, Trash2, RefreshCw, SlidersHorizontal, Video, Repeat, Square, Download, Crosshair, ChevronLeft, ChevronRight } from "lucide-react";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type { useAppStore } from "@/hooks/use-app-store";
 import { api, type Reaction } from "@/lib/tauri";
-
-const QUICK_EMOJIS = ["❤️", "😂", "😮", "😢", "🔥", "👍", "👎", "💀", "🙏", "✨", "👀", "💯"];
+import { EmojiPicker } from "@/components/chat/EmojiPicker";
+import { ReactionBubbles } from "@/components/chat/ReactionBubbles";
+import { NarrativeMessage } from "@/components/chat/NarrativeMessage";
+import { ChatErrorBar } from "@/components/chat/ChatErrorBar";
+import { AnimationReadyToast } from "@/components/chat/AnimationReadyToast";
+import { ResetConfirmModal } from "@/components/chat/ResetConfirmModal";
+import { RemoveVideoConfirmModal } from "@/components/chat/RemoveVideoConfirmModal";
+import { NarrationSettingsModal } from "@/components/chat/NarrationSettingsModal";
+import { IllustrationPickerModal } from "@/components/chat/IllustrationPickerModal";
+import { AdjustIllustrationModal } from "@/components/chat/AdjustIllustrationModal";
+import { VideoGenerationModal } from "@/components/chat/VideoGenerationModal";
+import { GroupTalkPickerModal } from "@/components/chat/GroupTalkPickerModal";
 
 
 
@@ -16,78 +26,6 @@ interface Props {
   store: ReturnType<typeof useAppStore>;
 }
 
-function ReactionBubbles({
-  reactions,
-  isUser,
-}: {
-  reactions: Reaction[];
-  isUser: boolean;
-}) {
-  if (reactions.length === 0) return null;
-
-  const grouped: Record<string, { emoji: string; reactors: string[] }> = {};
-  for (const r of reactions) {
-    if (!grouped[r.emoji]) grouped[r.emoji] = { emoji: r.emoji, reactors: [] };
-    grouped[r.emoji].reactors.push(r.reactor);
-  }
-
-  return (
-    <div className={`flex gap-1 mt-0.5 ${isUser ? "justify-end" : "justify-start"}`}>
-      {Object.values(grouped).map(({ emoji, reactors }) => (
-        <span
-          key={emoji}
-          className="inline-flex items-center gap-0.5 text-xs bg-secondary/80 border border-border rounded-full px-1.5 py-0.5 backdrop-blur-sm"
-          title={reactors.map((r) => (r === "user" ? "You" : "Character")).join(", ")}
-        >
-          <span className="text-sm leading-none">{emoji}</span>
-          {reactors.length > 1 && (
-            <span className="text-[10px] text-muted-foreground">{reactors.length}</span>
-          )}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function EmojiPicker({
-  onSelect,
-  onClose,
-}: {
-  onSelect: (emoji: string) => void;
-  onClose: () => void;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [onClose]);
-
-  return (
-    <div
-      ref={ref}
-      className="absolute z-50 bg-card border border-border rounded-xl shadow-xl p-2 grid grid-cols-6 gap-1 w-[200px] animate-in fade-in zoom-in-95 duration-150"
-    >
-      {QUICK_EMOJIS.map((emoji) => (
-        <button
-          key={emoji}
-          onClick={() => {
-            onSelect(emoji);
-            onClose();
-          }}
-          className="w-8 h-8 flex items-center justify-center text-lg rounded-lg hover:bg-accent transition-colors cursor-pointer"
-        >
-          {emoji}
-        </button>
-      ))}
-    </div>
-  );
-}
 
 export function ChatView({ store }: Props) {
   const [input, setInput] = useState("");
@@ -442,28 +380,12 @@ export function ChatView({ store }: Props) {
 
             if (isNarrative) {
               return (
-                <div key={msg.message_id} className="flex justify-center my-2">
-                  <div className="relative group max-w-[90%] rounded-xl px-5 py-3.5 text-sm leading-relaxed bg-gradient-to-br from-amber-950/40 to-amber-900/20 border border-amber-700/30 text-amber-100/90 italic backdrop-blur-sm">
-                    <div className="flex items-center gap-1.5 mb-1.5 text-[10px] uppercase tracking-wider text-amber-500/70 font-semibold not-italic">
-                      <BookOpen size={12} />
-                      <span>Narrative</span>
-                    </div>
-                    <div className="prose prose-sm max-w-none prose-p:my-1 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-amber-100)] [--tw-prose-bold:rgb(252,211,77)]">
-                      <Markdown>{msg.content}</Markdown>
-                    </div>
-                    <p className="text-[10px] mt-1.5 text-amber-500/50 not-italic flex items-center gap-2">
-                      {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                      {!isPending && (
-                        <button
-                          onClick={() => setResetConfirmId(msg.message_id)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-500/40 hover:text-amber-400 cursor-pointer"
-                        >
-                          Reset to Here
-                        </button>
-                      )}
-                    </p>
-                  </div>
-                </div>
+                <NarrativeMessage
+                  key={msg.message_id}
+                  message={msg}
+                  isPending={isPending}
+                  onResetToHere={(id) => setResetConfirmId(id)}
+                />
               );
             }
 
@@ -831,65 +753,30 @@ export function ChatView({ store }: Props) {
         </div>
         </div>
       </ScrollArea>
-      {animationReadyId && (
-        <div className="absolute bottom-4 right-4 z-20 bg-card border border-purple-500/30 rounded-xl shadow-xl shadow-black/30 px-4 py-3 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-200">
-          <Video size={16} className="text-purple-400 flex-shrink-0" />
-          <span className="text-sm font-medium">Animation is ready!</span>
-          <button
-            onClick={() => {
-              const el = document.querySelector(`[data-message-id="${animationReadyId}"]`);
-              if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-              setAnimationReadyId(null);
-            }}
-            className="px-2.5 py-1 text-xs font-medium bg-purple-600 hover:bg-purple-700 text-white rounded-lg cursor-pointer transition-colors"
-          >
-            Go
-          </button>
-          <button
-            onClick={() => setAnimationReadyId(null)}
-            className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
-          >
-            <X size={14} />
-          </button>
-        </div>
-      )}
+      <AnimationReadyToast
+        animationReadyId={animationReadyId}
+        onGo={() => {
+          const el = document.querySelector(`[data-message-id="${animationReadyId}"]`);
+          if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+          setAnimationReadyId(null);
+        }}
+        onDismiss={() => setAnimationReadyId(null)}
+      />
       </div>
 
-      {store.chatError && (
-        <div className="px-4 py-2.5 bg-background border-t border-destructive/30 flex items-center gap-3 relative z-10">
-          <div className="flex-1 min-w-0">
-            <p className="text-xs text-destructive font-medium truncate">{store.chatError}</p>
-          </div>
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(store.chatError!);
-              setCopiedError(true);
-              setTimeout(() => setCopiedError(false), 2000);
-            }}
-            className="flex-shrink-0 text-destructive/60 hover:text-destructive transition-colors cursor-pointer"
-            title="Copy full error"
-          >
-            {copiedError ? <Check size={14} /> : <Copy size={14} />}
-          </button>
-          {store.lastFailedContent && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="flex-shrink-0 border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
-              onClick={handleRetry}
-              disabled={isSending}
-            >
-              Try Again
-            </Button>
-          )}
-          <button
-            onClick={() => store.clearChatError()}
-            className="flex-shrink-0 text-destructive/60 hover:text-destructive transition-colors cursor-pointer"
-          >
-            <X size={14} />
-          </button>
-        </div>
-      )}
+      <ChatErrorBar
+        error={store.chatError}
+        lastFailedContent={store.lastFailedContent}
+        isSending={isSending}
+        onRetry={handleRetry}
+        onCopy={() => {
+          navigator.clipboard.writeText(store.chatError!);
+          setCopiedError(true);
+          setTimeout(() => setCopiedError(false), 2000);
+        }}
+        onDismiss={() => store.clearChatError()}
+        copiedError={copiedError}
+      />
 
       <div className="px-4 py-3 border-t border-border relative z-10 bg-background">
         <div className="flex gap-2 max-w-2xl mx-auto items-end">
@@ -1007,414 +894,117 @@ export function ChatView({ store }: Props) {
         </Dialog>
       )}
 
-      <Dialog open={!!resetConfirmId} onClose={() => setResetConfirmId(null)} className="max-w-sm">
-        <div className="p-5 space-y-4">
-          <div className="flex items-center gap-2">
-            <RotateCcw size={18} className="text-destructive" />
-            <h3 className="font-semibold">Reset to Here</h3>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            This will permanently delete all messages after this point, including their associated memories and embeddings.
-            {store.messages.find((m) => m.message_id === resetConfirmId)?.role === "user" && (
-              <span className="block mt-1.5 text-foreground/80">A new response will be generated from {store.activeCharacter?.display_name}.</span>
-            )}
-          </p>
-          <div className="flex justify-end gap-2">
-            <Button variant="ghost" size="sm" onClick={() => setResetConfirmId(null)}>
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={() => {
-                if (resetConfirmId) {
-                  store.resetToMessage(resetConfirmId);
-                  setResetConfirmId(null);
-                }
-              }}
-            >
-              Reset
-            </Button>
-          </div>
-        </div>
-      </Dialog>
+      <ResetConfirmModal
+        open={!!resetConfirmId}
+        onClose={() => setResetConfirmId(null)}
+        onConfirm={() => {
+          if (resetConfirmId) {
+            store.resetToMessage(resetConfirmId);
+            setResetConfirmId(null);
+          }
+        }}
+        characterName={store.activeCharacter?.display_name}
+        isUserMessage={store.messages.find((m) => m.message_id === resetConfirmId)?.role === "user" || false}
+        isGroup={isGroup}
+      />
 
-      <Dialog open={showNarrationSettings} onClose={() => { setShowNarrationSettings(false); setNarrationDirty(false); }} className="max-w-md">
-        <div className="p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <BookOpen size={18} className="text-amber-500" />
-              <h3 className="font-semibold">Narration Settings</h3>
-            </div>
-            <button
-              onClick={() => { setShowNarrationSettings(false); setNarrationDirty(false); }}
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors cursor-pointer"
-            >
-              <X size={16} />
-            </button>
-          </div>
+      <NarrationSettingsModal
+        open={showNarrationSettings}
+        onClose={() => { setShowNarrationSettings(false); setNarrationDirty(false); }}
+        charId={charId}
+        narrationTone={narrationTone}
+        setNarrationTone={setNarrationTone}
+        narrationInstructions={narrationInstructions}
+        setNarrationInstructions={setNarrationInstructions}
+        responseLength={responseLength}
+        setResponseLength={setResponseLength}
+        narrationDirty={narrationDirty}
+        setNarrationDirty={setNarrationDirty}
+        onSave={async () => {
+          if (!charId) return;
+          await Promise.all([
+            api.setSetting(`narration_tone.${charId}`, narrationTone),
+            api.setSetting(`narration_instructions.${charId}`, narrationInstructions),
+            api.setSetting(`response_length.${charId}`, responseLength),
+          ]);
+          setNarrationDirty(false);
+          setShowNarrationSettings(false);
+        }}
+      />
 
-          <div className="space-y-3">
-            <div>
-              <label className="text-xs font-medium text-muted-foreground block mb-1.5">Tone</label>
-              <select
-                value={narrationTone}
-                onChange={(e) => { setNarrationTone(e.target.value); setNarrationDirty(true); }}
-                className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-              >
-                {[
-                  "Auto",
-                  "Humorous", "Romantic", "Action & Adventure", "Dark & Gritty",
-                  "Suspenseful", "Whimsical", "Melancholic", "Heroic",
-                  "Horror", "Noir", "Surreal", "Cozy & Warm",
-                  "Tense & Paranoid", "Poetic", "Cinematic",
-                  "Mythic", "Playful", "Bittersweet", "Ethereal", "Gritty Realism",
-                ].map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
-            </div>
+      <IllustrationPickerModal
+        open={showIllustrationPicker}
+        onClose={() => setShowIllustrationPicker(false)}
+        onGenerate={(tier) => {
+          const prevIllus = store.messages.filter((m) => m.role === "illustration");
+          const lastIllus = prevIllus[prevIllus.length - 1];
+          const prevId = usePreviousScene && lastIllus ? lastIllus.message_id : undefined;
+          setShowIllustrationPicker(false);
+          store.generateIllustration(tier, illustrationInstructions.trim() || undefined, prevId, includeSceneSummary);
+          setIllustrationInstructions("");
+          setUsePreviousScene(false);
+          setIncludeSceneSummary(true);
+        }}
+        illustrationInstructions={illustrationInstructions}
+        setIllustrationInstructions={setIllustrationInstructions}
+        usePreviousScene={usePreviousScene}
+        setUsePreviousScene={setUsePreviousScene}
+        includeSceneSummary={includeSceneSummary}
+        setIncludeSceneSummary={setIncludeSceneSummary}
+        hasPreviousIllustration={store.messages.some((m) => m.role === "illustration")}
+      />
 
-            <div>
-              <label className="text-xs font-medium text-muted-foreground block mb-1.5">Response Length</label>
-              <select
-                value={responseLength}
-                onChange={(e) => { setResponseLength(e.target.value); setNarrationDirty(true); }}
-                className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-              >
-                {["Auto", "Short", "Medium", "Long"].map((l) => (
-                  <option key={l} value={l}>{l}</option>
-                ))}
-              </select>
-              <p className="text-[10px] text-muted-foreground mt-1">
-                {responseLength === "Auto" && "The character decides how much to say."}
-                {responseLength === "Short" && "Brief replies, 2\u20133 sentences."}
-                {responseLength === "Medium" && "Moderate replies, 4\u20136 sentences."}
-                {responseLength === "Long" && "Detailed replies, 7+ sentences with rich detail."}
-              </p>
-            </div>
+      <AdjustIllustrationModal
+        open={!!adjustIllustrationId}
+        onClose={() => setAdjustIllustrationId(null)}
+        onConfirm={(instructions) => {
+          if (adjustIllustrationId) {
+            store.adjustIllustration(adjustIllustrationId, instructions);
+            setAdjustIllustrationId(null);
+          }
+        }}
+        adjustInstructions={adjustInstructions}
+        setAdjustInstructions={setAdjustInstructions}
+      />
 
-            <div>
-              <label className="text-xs font-medium text-muted-foreground block mb-1.5">Custom Instructions</label>
-              <textarea
-                value={narrationInstructions}
-                onChange={(e) => { setNarrationInstructions(e.target.value); setNarrationDirty(true); }}
-                placeholder="e.g. Describe the weather shifting. Include background characters reacting. Let the scene move to a new location..."
-                className="w-full min-h-[100px] max-h-[200px] resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                rows={4}
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2 pt-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => { setShowNarrationSettings(false); setNarrationDirty(false); }}
-            >
-              Cancel
-            </Button>
-            <Button
-              size="sm"
-              disabled={!narrationDirty}
-              onClick={async () => {
-                if (!charId) return;
-                await Promise.all([
-                  api.setSetting(`narration_tone.${charId}`, narrationTone),
-                  api.setSetting(`narration_instructions.${charId}`, narrationInstructions),
-                  api.setSetting(`response_length.${charId}`, responseLength),
-                ]);
-                setNarrationDirty(false);
-                setShowNarrationSettings(false);
-              }}
-            >
-              Save
-            </Button>
-          </div>
-        </div>
-      </Dialog>
-
-      <Dialog open={showIllustrationPicker} onClose={() => setShowIllustrationPicker(false)} className="max-w-sm">
-        <div className="p-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Image size={18} className="text-emerald-500" />
-              <h3 className="font-semibold">Generate Illustration</h3>
-            </div>
-            <button
-              onClick={() => setShowIllustrationPicker(false)}
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors cursor-pointer"
-            >
-              <X size={16} />
-            </button>
-          </div>
-          <div>
-            <label className="text-xs font-medium text-muted-foreground block mb-1.5">Custom Instructions (optional)</label>
-            <textarea
-              value={illustrationInstructions}
-              onChange={(e) => setIllustrationInstructions(e.target.value)}
-              placeholder="e.g. Show them outdoors in the rain. Frame it from a low angle..."
-              className="w-full min-h-[60px] max-h-[120px] resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-              rows={2}
-            />
-          </div>
-          {(() => {
-            const prevIllus = store.messages.filter((m) => m.role === "illustration");
-            const lastIllus = prevIllus[prevIllus.length - 1];
-            if (!lastIllus) return null;
-            return (
-              <label className="flex items-center gap-2 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={usePreviousScene}
-                  onChange={(e) => setUsePreviousScene(e.target.checked)}
-                  className="accent-emerald-500 w-3.5 h-3.5"
-                />
-                <span className="text-xs text-muted-foreground">Use previous illustration for visual continuity</span>
-              </label>
-            );
-          })()}
-          <label className="flex items-center gap-2 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={includeSceneSummary}
-              onChange={(e) => setIncludeSceneSummary(e.target.checked)}
-              className="accent-emerald-500 w-3.5 h-3.5"
-            />
-            <span className="text-xs text-muted-foreground">Include current scene summary</span>
-          </label>
-          <div className="flex gap-2">
-            {([
-              { tier: "low", label: "Quick" },
-              { tier: "medium", label: "Standard" },
-              { tier: "high", label: "High Fidelity" },
-            ] as const).map(({ tier, label }) => (
-              <button
-                key={tier}
-                onClick={() => {
-                  const prevIllus = store.messages.filter((m) => m.role === "illustration");
-                  const lastIllus = prevIllus[prevIllus.length - 1];
-                  const prevId = usePreviousScene && lastIllus ? lastIllus.message_id : undefined;
-                  setShowIllustrationPicker(false);
-                  store.generateIllustration(tier, illustrationInstructions.trim() || undefined, prevId, includeSceneSummary);
-                  setIllustrationInstructions("");
-                  setUsePreviousScene(false);
-                  setIncludeSceneSummary(true);
-                }}
-                className="flex-1 rounded-lg border border-border hover:border-emerald-500/40 hover:bg-emerald-500/5 px-3 py-2 transition-all cursor-pointer text-center"
-              >
-                <span className="text-xs font-medium">{label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </Dialog>
-
-      <Dialog open={!!adjustIllustrationId} onClose={() => setAdjustIllustrationId(null)} className="max-w-md">
-        <div className="p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal size={18} className="text-emerald-500" />
-              <h3 className="font-semibold">Adjust Illustration</h3>
-            </div>
-            <button
-              onClick={() => setAdjustIllustrationId(null)}
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors cursor-pointer"
-            >
-              <X size={16} />
-            </button>
-          </div>
-
-          <p className="text-xs text-muted-foreground">
-            Describe what to change about the illustration. The current image will be used as a starting point.
-          </p>
-
-          <textarea
-            value={adjustInstructions}
-            onChange={(e) => setAdjustInstructions(e.target.value)}
-            placeholder="e.g. Make it sunset instead of daytime. Add rain. Move the characters closer together..."
-            className="w-full min-h-[100px] max-h-[200px] resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-            rows={4}
-          />
-
-          <div className="flex justify-end gap-2">
-            <Button variant="ghost" size="sm" onClick={() => setAdjustIllustrationId(null)}>
-              Cancel
-            </Button>
-            <Button
-              size="sm"
-              disabled={!adjustInstructions.trim()}
-              onClick={() => {
-                if (adjustIllustrationId && adjustInstructions.trim()) {
-                  store.adjustIllustration(adjustIllustrationId, adjustInstructions.trim());
-                  setAdjustIllustrationId(null);
-                }
-              }}
-            >
-              Adjust
-            </Button>
-          </div>
-        </div>
-      </Dialog>
-
-      <Dialog open={!!videoModalId} onClose={() => setVideoModalId(null)} className="max-w-sm">
-        <div className="p-5 space-y-4 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl shadow-black/50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Video size={18} className="text-purple-500" />
-              <h3 className="font-semibold">Animate Illustration</h3>
-            </div>
-            <button
-              onClick={() => setVideoModalId(null)}
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors cursor-pointer"
-            >
-              <X size={16} />
-            </button>
-          </div>
-
-          <div className="flex border-b border-border">
-            <button
-              onClick={() => setVideoTab("generate")}
-              className={`flex-1 pb-2 text-xs font-medium text-center border-b-2 transition-colors cursor-pointer ${
-                videoTab === "generate" ? "border-purple-500 text-purple-400" : "border-transparent text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Generate
-            </button>
-            <button
-              onClick={() => setVideoTab("upload")}
-              className={`flex-1 pb-2 text-xs font-medium text-center border-b-2 transition-colors cursor-pointer ${
-                videoTab === "upload" ? "border-purple-500 text-purple-400" : "border-transparent text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Upload
-            </button>
-          </div>
-
-          {videoTab === "generate" ? (
-            <>
-              <div>
-                <label className="text-xs font-medium text-muted-foreground block mb-1.5">Style</label>
-                <div className="grid grid-cols-2 gap-1.5">
-                  {([
-                    { value: "still", label: "Still" },
-                    { value: "dialogue", label: "Dialogue" },
-                    { value: "action-no-dialogue", label: "Action (Silent)" },
-                    { value: "action-dialogue", label: "Action + Dialogue" },
-                  ] as const).map(({ value, label }) => (
-                    <button
-                      key={value}
-                      onClick={() => setVideoStyle(value)}
-                      className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all cursor-pointer ${
-                        videoStyle === value
-                          ? "bg-purple-600 text-white"
-                          : "border border-border hover:border-purple-500/40 hover:bg-purple-500/5"
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-medium text-muted-foreground block mb-1.5">Custom Direction (optional)</label>
-                <textarea
-                  value={videoPrompt}
-                  onChange={(e) => setVideoPrompt(e.target.value)}
-                  placeholder="e.g. She turns to look out the window as rain begins to fall..."
-                  className="w-full min-h-[60px] max-h-[120px] resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                  rows={2}
-                />
-                <p className="text-[10px] text-muted-foreground mt-1">Leave blank to auto-generate from conversation context.</p>
-              </div>
-
-              <div>
-                <label className="text-xs font-medium text-muted-foreground block mb-1.5">Duration: {videoDuration}s</label>
-                <input
-                  type="range"
-                  min={4}
-                  max={8}
-                  value={videoDuration}
-                  onChange={(e) => setVideoDuration(Number(e.target.value))}
-                  className="w-full accent-purple-500"
-                />
-                <div className="flex justify-between text-[10px] text-muted-foreground/50 mt-0.5">
-                  <span>4s</span>
-                  <span>8s</span>
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-2">
-                <Button variant="ghost" size="sm" onClick={() => setVideoModalId(null)}>
-                  Cancel
-                </Button>
-                <Button
-                  size="sm"
-                  className="bg-purple-600 hover:bg-purple-700 text-white"
-                  onClick={() => {
-                    if (videoModalId) {
-                      store.generateVideo(videoModalId, videoPrompt.trim() || undefined, videoDuration, videoStyle);
-                      setVideoModalId(null);
-                    }
-                  }}
-                >
-                  Generate Video
-                </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div>
-                <p className="text-xs text-muted-foreground mb-3">Upload a video file to attach to this illustration.</p>
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-purple-500/40 hover:bg-purple-500/5 transition-all">
-                  <Video size={24} className="text-muted-foreground/50 mb-2" />
-                  <span className="text-xs text-muted-foreground">Click to select a video file</span>
-                  <span className="text-[10px] text-muted-foreground/50 mt-0.5">MP4, WebM, or MOV</span>
-                  <input
-                    type="file"
-                    accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov"
-                    className="hidden"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (!file || !videoModalId) return;
-                      setUploadingVideo(true);
-                      try {
-                        const reader = new FileReader();
-                        const dataUrl = await new Promise<string>((resolve, reject) => {
-                          reader.onload = () => resolve(reader.result as string);
-                          reader.onerror = reject;
-                          reader.readAsDataURL(file);
-                        });
-                        const videoFile = await api.uploadVideo(videoModalId, dataUrl);
-                        setVideoFiles((prev) => ({ ...prev, [videoModalId]: videoFile }));
-                        setVideoModalId(null);
-                      } catch (err) {
-                        store.setError?.(String(err));
-                      } finally {
-                        setUploadingVideo(false);
-                      }
-                    }}
-                  />
-                </label>
-              </div>
-
-              {uploadingVideo && (
-                <div className="flex items-center justify-center gap-2 text-purple-400">
-                  <Loader2 size={14} className="animate-spin" />
-                  <span className="text-xs">Uploading video...</span>
-                </div>
-              )}
-
-              <div className="flex justify-end">
-                <Button variant="ghost" size="sm" onClick={() => setVideoModalId(null)}>
-                  Cancel
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      </Dialog>
+      <VideoGenerationModal
+        open={!!videoModalId}
+        onClose={() => setVideoModalId(null)}
+        onGenerate={() => {
+          if (videoModalId) {
+            store.generateVideo(videoModalId, videoPrompt.trim() || undefined, videoDuration, videoStyle);
+            setVideoModalId(null);
+          }
+        }}
+        onUpload={async (file) => {
+          if (!videoModalId) return;
+          setUploadingVideo(true);
+          try {
+            const reader = new FileReader();
+            const dataUrl = await new Promise<string>((resolve, reject) => {
+              reader.onload = () => resolve(reader.result as string);
+              reader.onerror = reject;
+              reader.readAsDataURL(file);
+            });
+            const videoFile = await api.uploadVideo(videoModalId, dataUrl);
+            setVideoFiles((prev) => ({ ...prev, [videoModalId]: videoFile }));
+            setVideoModalId(null);
+          } catch (err) {
+            store.setError?.(String(err));
+          } finally {
+            setUploadingVideo(false);
+          }
+        }}
+        videoTab={videoTab}
+        setVideoTab={setVideoTab}
+        videoStyle={videoStyle}
+        setVideoStyle={setVideoStyle}
+        videoPrompt={videoPrompt}
+        setVideoPrompt={setVideoPrompt}
+        videoDuration={videoDuration}
+        setVideoDuration={setVideoDuration}
+        uploadingVideo={uploadingVideo}
+      />
 
       {illustrationModalId && (() => {
         const selId = modalSelectedId ?? illustrationModalId;
@@ -1575,74 +1165,39 @@ export function ChatView({ store }: Props) {
       })()}
 
       {/* Group Talk to Me picker */}
-      <Dialog open={showGroupTalkPicker} onClose={() => setShowGroupTalkPicker(false)} className="max-w-xs">
-        <div className="p-5 space-y-3 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl shadow-black/50">
-          <h3 className="font-semibold text-sm">Who should speak?</h3>
-          <div className="space-y-1.5">
-            {groupCharacters.map((ch) => {
-              const p = store.activePortraits[ch.character_id];
-              return (
-                <button
-                  key={ch.character_id}
-                  onClick={() => {
-                    store.promptGroupCharacter(ch.character_id);
-                    setShowGroupTalkPicker(false);
-                  }}
-                  className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl border border-border hover:border-primary/40 hover:bg-primary/5 transition-all cursor-pointer"
-                >
-                  {p?.data_url ? (
-                    <img src={p.data_url} alt="" className="w-10 h-10 rounded-full object-cover" />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full" style={{ backgroundColor: ch.avatar_color }} />
-                  )}
-                  <span className="text-sm font-medium">{ch.display_name}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </Dialog>
+      <GroupTalkPickerModal
+        open={showGroupTalkPicker}
+        onClose={() => setShowGroupTalkPicker(false)}
+        characters={groupCharacters}
+        portraits={store.activePortraits}
+        onSelect={(characterId) => {
+          store.promptGroupCharacter(characterId);
+          setShowGroupTalkPicker(false);
+        }}
+      />
 
-      <Dialog open={!!removeVideoConfirmId} onClose={() => setRemoveVideoConfirmId(null)} className="max-w-xs">
-        <div className="p-5 space-y-4 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl shadow-black/50">
-          <div className="flex items-center gap-2">
-            <Video size={18} className="text-destructive" />
-            <h3 className="font-semibold">Remove Video</h3>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            This will permanently delete the video attached to this illustration. The illustration itself will remain.
-          </p>
-          <div className="flex justify-end gap-2">
-            <Button variant="ghost" size="sm" onClick={() => setRemoveVideoConfirmId(null)}>
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={async () => {
-                if (!removeVideoConfirmId) return;
-                try {
-                  await api.removeVideo(removeVideoConfirmId);
-                  setVideoFiles((prev) => {
-                    const next = { ...prev };
-                    delete next[removeVideoConfirmId];
-                    return next;
-                  });
-                  setVideoDataUrls((prev) => {
-                    const next = { ...prev };
-                    delete next[removeVideoConfirmId];
-                    return next;
-                  });
-                  if (playingVideo === removeVideoConfirmId) setPlayingVideo(null);
-                } catch { /* ignore */ }
-                setRemoveVideoConfirmId(null);
-              }}
-            >
-              Remove
-            </Button>
-          </div>
-        </div>
-      </Dialog>
+      <RemoveVideoConfirmModal
+        open={!!removeVideoConfirmId}
+        onClose={() => setRemoveVideoConfirmId(null)}
+        onConfirm={async () => {
+          if (!removeVideoConfirmId) return;
+          try {
+            await api.removeVideo(removeVideoConfirmId);
+            setVideoFiles((prev) => {
+              const next = { ...prev };
+              delete next[removeVideoConfirmId];
+              return next;
+            });
+            setVideoDataUrls((prev) => {
+              const next = { ...prev };
+              delete next[removeVideoConfirmId];
+              return next;
+            });
+            if (playingVideo === removeVideoConfirmId) setPlayingVideo(null);
+          } catch { /* ignore */ }
+          setRemoveVideoConfirmId(null);
+        }}
+      />
     </div>
   );
 }
