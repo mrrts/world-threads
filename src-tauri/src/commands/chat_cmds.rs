@@ -208,6 +208,7 @@ pub async fn send_message_cmd(
         user_profile.as_ref(),
         mood_directive.as_deref(),
         response_length.as_deref(),
+        None, None,
     ).await?;
     let tokens = dialogue_usage.as_ref().map(|u| u.total_tokens).unwrap_or(0);
     if let Some(u) = &dialogue_usage {
@@ -462,6 +463,7 @@ pub async fn prompt_character_cmd(
         user_profile.as_ref(),
         mood_directive.as_deref(),
         response_length.as_deref(),
+        None, None,
     ).await?;
 
     if let Some(u) = &dialogue_usage {
@@ -1501,6 +1503,7 @@ pub async fn reset_to_message_cmd(
             user_profile.as_ref(),
             mood_directive.as_deref(),
             response_length.as_deref(),
+            None, None,
         ).await?;
 
         if let Some(u) = &dialogue_usage {

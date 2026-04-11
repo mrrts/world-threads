@@ -1,13 +1,44 @@
 use crate::db::queries::{Character, Message, UserProfile, World};
 use serde_json::Value;
+use std::collections::HashMap;
 
-pub fn build_dialogue_system_prompt(world: &World, character: &Character, user_profile: Option<&UserProfile>, mood_directive: Option<&str>, response_length: Option<&str>) -> String {
+/// Context for group chat conversations. Contains info about other participants.
+pub struct GroupContext {
+    /// Other characters in the conversation (not the one being prompted).
+    pub other_characters: Vec<OtherCharacter>,
+}
+
+pub struct OtherCharacter {
+    pub character_id: String,
+    pub display_name: String,
+    pub identity_summary: String,
+}
+
+pub fn build_dialogue_system_prompt(
+    world: &World,
+    character: &Character,
+    user_profile: Option<&UserProfile>,
+    mood_directive: Option<&str>,
+    response_length: Option<&str>,
+    group_context: Option<&GroupContext>,
+) -> String {
     let mut parts = Vec::new();
 
-    parts.push(format!(
-        "You are {}, a character in a living world. Stay fully in character at all times.",
-        character.display_name
-    ));
+    if let Some(gc) = group_context {
+        let other_names: Vec<&str> = gc.other_characters.iter().map(|c| c.display_name.as_str()).collect();
+        let user_name = user_profile.map(|p| p.display_name.as_str()).unwrap_or("the human");
+        parts.push(format!(
+            "You are {}, a character in a group conversation with {} and {}. Stay fully in character at all times.",
+            character.display_name,
+            user_name,
+            other_names.join(" and "),
+        ));
+    } else {
+        parts.push(format!(
+            "You are {}, a character in a living world. Stay fully in character at all times.",
+            character.display_name
+        ));
+    }
 
     if !character.identity.is_empty() {
         parts.push(format!("IDENTITY:\n{}", character.identity));
@@ -63,6 +94,26 @@ pub fn build_dialogue_system_prompt(world: &World, character: &Character, user_p
         parts.push(format!("THE USER:\n{}", user_parts.join("\n")));
     }
 
+    if let Some(gc) = group_context {
+        let mut others = Vec::new();
+        for oc in &gc.other_characters {
+            let identity = if oc.identity_summary.is_empty() {
+                "another character in this conversation".to_string()
+            } else if oc.identity_summary.len() > 200 {
+                format!("{}...", &oc.identity_summary[..200])
+            } else {
+                oc.identity_summary.clone()
+            };
+            others.push(format!("- {}: {}", oc.display_name, identity));
+        }
+        parts.push(format!(
+            "OTHER CHARACTERS IN THIS CONVERSATION:\n{}\n\
+             Messages from other characters appear as [CharacterName]: ... — \
+             stay in your own voice and do not impersonate any other characters except the one that you are.",
+            others.join("\n")
+        ));
+    }
+
     if let Some(directive) = mood_directive {
         if !directive.is_empty() {
             parts.push(format!("MOOD:\n{directive}"));
@@ -101,10 +152,14 @@ KNOWLEDGE LIMITS:
     parts.join("\n\n")
 }
 
+/// Build dialogue messages for the LLM.
+/// `character_names` maps sender_character_id → display_name for group chats.
+/// When provided, assistant messages are prefixed with [CharacterName]: for disambiguation.
 pub fn build_dialogue_messages(
     system_prompt: &str,
     recent_messages: &[Message],
     retrieved_snippets: &[String],
+    character_names: Option<&HashMap<String, String>>,
 ) -> Vec<crate::ai::openai::ChatMessage> {
     let mut msgs = Vec::new();
 
@@ -125,13 +180,25 @@ pub fn build_dialogue_messages(
         if m.role == "illustration" || m.role == "video" {
             continue;
         }
-        msgs.push(crate::ai::openai::ChatMessage {
-            role: if m.role == "narrative" { "system".to_string() } else { m.role.clone() },
-            content: if m.role == "narrative" {
-                format!("[Narrative] {}", m.content)
+        // In group chats, prefix assistant messages with the character name
+        let content = if m.role == "narrative" {
+            format!("[Narrative] {}", m.content)
+        } else if m.role == "assistant" {
+            if let (Some(names), Some(sender_id)) = (character_names, &m.sender_character_id) {
+                if let Some(name) = names.get(sender_id) {
+                    format!("[{}]: {}", name, m.content)
+                } else {
+                    m.content.clone()
+                }
             } else {
                 m.content.clone()
-            },
+            }
+        } else {
+            m.content.clone()
+        };
+        msgs.push(crate::ai::openai::ChatMessage {
+            role: if m.role == "narrative" { "system".to_string() } else { m.role.clone() },
+            content,
         });
     }
 
