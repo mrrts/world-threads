@@ -233,9 +233,11 @@ IMPORTANT: Output raw JSON only. Do NOT wrap in markdown code fences."#);
         content: system,
     }];
 
-    let conversation: Vec<String> = recent_messages.iter().map(|m| {
-        format!("[{}] {}: {}", m.message_id, m.role, m.content)
-    }).collect();
+    let conversation: Vec<String> = recent_messages.iter()
+        .filter(|m| m.role != "illustration" && m.role != "video")
+        .map(|m| {
+            format!("[{}] {}: {}", m.message_id, m.role, m.content)
+        }).collect();
 
     msgs.push(crate::ai::openai::ChatMessage {
         role: "user".to_string(),

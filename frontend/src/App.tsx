@@ -13,7 +13,8 @@ import { WorldSummary } from "@/components/WorldSummary";
 import { Gallery } from "@/components/Gallery";
 import { MoodDebugPanel } from "@/components/MoodDebugPanel";
 import { PortraitPopout } from "@/components/PortraitPopout";
-import { MessageSquare, PenLine, Users, Settings, Coins, Image, BookOpen, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { MessageSquare, PenLine, Users, Settings, Coins, Image, BookOpen, Download, ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import { useSlideshow } from "@/hooks/use-slideshow";
 
 type View = "chat" | "world" | "character" | "settings" | "summary" | "gallery";
 type CharSubView = "grid" | "editor" | "profile";
@@ -235,7 +236,6 @@ function IllustrationPopout({ initialMessageId, characterId }: { initialMessageI
   const [loading, setLoading] = useState(true);
   const [imageLoading, setImageLoading] = useState(true);
   const [playingVideo, setPlayingVideo] = useState(false);
-  const [videoLoading, setVideoLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -246,7 +246,6 @@ function IllustrationPopout({ initialMessageId, characterId }: { initialMessageI
           .map((m) => ({ id: m.message_id, data_url: m.content }));
         setIllustrations(illus);
 
-        // Load video files for each illustration
         const vf: Record<string, string> = {};
         for (const il of illus) {
           try {
@@ -262,6 +261,27 @@ function IllustrationPopout({ initialMessageId, characterId }: { initialMessageI
       }
     })();
   }, [characterId]);
+
+  const slideshow = useSlideshow({
+    illustrations,
+    videoDataUrls,
+    videoFiles,
+    loadVideoUrl: async (illustrationId: string, videoFile: string) => {
+      const bytes = await api.getVideoBytes(videoFile);
+      const url = URL.createObjectURL(new Blob([new Uint8Array(bytes)], { type: "video/mp4" }));
+      setVideoDataUrls((prev) => ({ ...prev, [illustrationId]: url }));
+    },
+  });
+
+  // Sync slideshow's current slide to the selected illustration
+  useEffect(() => {
+    if (slideshow.active && slideshow.currentSlide) {
+      setSelectedId(slideshow.currentSlide.illustrationId);
+      setPlayingVideo(slideshow.currentSlide.type === "video");
+      // Don't set imageLoading for slideshow — data URLs are already in memory
+      setImageLoading(false);
+    }
+  }, [slideshow.active, slideshow.slideIndex, slideshow.currentSlide]);
 
   const selected = illustrations.find((i) => i.id === selectedId);
 
@@ -285,9 +305,25 @@ function IllustrationPopout({ initialMessageId, characterId }: { initialMessageI
     <div className="h-screen bg-black flex flex-col overflow-hidden">
       <div
         data-tauri-drag-region
-        className="h-8 flex-shrink-0 flex items-center pl-[72px] pr-3 bg-card border-b border-border select-none"
+        className="h-8 flex-shrink-0 flex items-center justify-between pl-[72px] pr-3 bg-card border-b border-border select-none"
       >
         <span className="text-xs text-muted-foreground">Illustration</span>
+        {illustrations.length > 1 && (
+          <button
+            onClick={() => {
+              if (!slideshow.active) slideshow.jumpTo(selectedId);
+              slideshow.toggle();
+            }}
+            className={`flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-medium transition-colors cursor-pointer ${
+              slideshow.active
+                ? "bg-primary/20 text-primary"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {slideshow.active ? <Pause size={10} /> : <Play size={10} />}
+            Slideshow
+          </button>
+        )}
       </div>
       <div className="flex-1 min-h-0 relative flex items-center justify-center p-2 group/popout">
         {imageLoading && (
@@ -311,10 +347,15 @@ function IllustrationPopout({ initialMessageId, characterId }: { initialMessageI
             key={`video-${selectedId}`}
             src={videoDataUrls[selectedId]}
             autoPlay
-            loop
+            loop={!slideshow.active}
             playsInline
             className="max-w-full max-h-full object-contain"
             onLoadedData={() => setImageLoading(false)}
+            onTimeUpdate={slideshow.active ? (e) => {
+              const v = e.currentTarget;
+              slideshow.onVideoTimeUpdate(v.currentTime, v.duration);
+            } : undefined}
+            onEnded={slideshow.active ? slideshow.onVideoEnded : undefined}
           />
         ) : (
           <img
@@ -325,7 +366,7 @@ function IllustrationPopout({ initialMessageId, characterId }: { initialMessageI
             onLoad={() => setImageLoading(false)}
           />
         )}
-        {illustrations.length > 1 && (<>
+        {illustrations.length > 1 && !slideshow.active && (<>
           <button
             onClick={() => {
               const idx = illustrations.findIndex((i) => i.id === selectedId);
@@ -351,6 +392,15 @@ function IllustrationPopout({ initialMessageId, characterId }: { initialMessageI
             <ChevronRight size={20} />
           </button>
         </>)}
+        {/* Slideshow progress bar */}
+        {slideshow.active && (
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30">
+            <div
+              className="h-full bg-primary transition-none"
+              style={{ width: `${slideshow.progress * 100}%` }}
+            />
+          </div>
+        )}
       </div>
       {illustrations.length > 1 && (
         <div className="flex-shrink-0 border-t border-border bg-card/50 px-2 py-2">
@@ -359,16 +409,20 @@ function IllustrationPopout({ initialMessageId, characterId }: { initialMessageI
               <button
                 key={illus.id}
                 onClick={async () => {
-                  setSelectedId(illus.id);
-                  setImageLoading(true);
-                  const hasVideo = !!videoFiles[illus.id];
-                  setPlayingVideo(hasVideo);
-                  if (hasVideo && !videoDataUrls[illus.id]) {
-                    try {
-                      const bytes = await api.getVideoBytes(videoFiles[illus.id]);
-                      const url = URL.createObjectURL(new Blob([new Uint8Array(bytes)], { type: "video/mp4" }));
-                      setVideoDataUrls((prev) => ({ ...prev, [illus.id]: url }));
-                    } catch { /* ignore */ }
+                  if (slideshow.active) {
+                    slideshow.jumpTo(illus.id);
+                  } else {
+                    setSelectedId(illus.id);
+                    setImageLoading(true);
+                    const hasVideo = !!videoFiles[illus.id];
+                    setPlayingVideo(hasVideo);
+                    if (hasVideo && !videoDataUrls[illus.id]) {
+                      try {
+                        const bytes = await api.getVideoBytes(videoFiles[illus.id]);
+                        const url = URL.createObjectURL(new Blob([new Uint8Array(bytes)], { type: "video/mp4" }));
+                        setVideoDataUrls((prev) => ({ ...prev, [illus.id]: url }));
+                      } catch { /* ignore */ }
+                    }
                   }
                 }}
                 className={`relative flex-shrink-0 w-16 h-11 rounded-lg overflow-hidden transition-all cursor-pointer ${

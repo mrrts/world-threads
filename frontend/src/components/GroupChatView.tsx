@@ -4,7 +4,8 @@ import { formatMessage } from "@/components/chat/formatMessage";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
-import { Send, Loader2, X, Check, ExternalLink, BookOpen, MessageSquare, Settings, Image, Trash2, RefreshCw, SlidersHorizontal, Video, Repeat, Square, Download, Crosshair, ChevronLeft, ChevronRight } from "lucide-react";
+import { Send, Loader2, X, Check, ExternalLink, BookOpen, MessageSquare, Settings, Image, Trash2, RefreshCw, SlidersHorizontal, Video, Repeat, Square, Download, Crosshair, ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import { useSlideshow } from "@/hooks/use-slideshow";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type { useAppStore } from "@/hooks/use-app-store";
 import { api } from "@/lib/tauri";
@@ -114,6 +115,25 @@ export function GroupChatView({ store }: Props) {
     const blob = new Blob([new Uint8Array(bytes)], { type: "video/mp4" });
     return URL.createObjectURL(blob);
   }, []);
+
+  const slideshowIllustrations = modalIllustrations.map((i) => ({ id: i.id, data_url: i.content }));
+  const modalSlideshow = useSlideshow({
+    illustrations: slideshowIllustrations,
+    videoDataUrls,
+    videoFiles,
+    loadVideoUrl: async (illustrationId: string, videoFile: string) => {
+      const url = await loadVideoBlobUrl(videoFile);
+      setVideoDataUrls((prev) => ({ ...prev, [illustrationId]: url }));
+    },
+  });
+
+  useEffect(() => {
+    if (modalSlideshow.active && modalSlideshow.currentSlide) {
+      setModalSelectedId(modalSlideshow.currentSlide.illustrationId);
+      setModalPlayingVideo(modalSlideshow.currentSlide.type === "video");
+      setModalImageLoading(false);
+    }
+  }, [modalSlideshow.active, modalSlideshow.slideIndex, modalSlideshow.currentSlide]);
 
   const playVideo = useCallback(async (messageId: string) => {
     setPlayingVideo(messageId);
@@ -905,7 +925,6 @@ export function GroupChatView({ store }: Props) {
 
       {illustrationModalId && (() => {
         const selId = modalSelectedId ?? illustrationModalId;
-        // Use modalIllustrations if loaded, fall back to current messages
         const allIllustrations = modalIllustrations.length > 0
           ? modalIllustrations
           : store.messages.filter((m) => m.role === "illustration").map((m) => ({ id: m.message_id, content: m.content }));
@@ -914,7 +933,7 @@ export function GroupChatView({ store }: Props) {
         const modalVideoFile = videoFiles[selId];
         const modalVideoUrl = videoDataUrls[selId];
         return (
-          <Dialog open onClose={() => { setIllustrationModalId(null); setModalPlayingVideo(false); }} className="max-w-[90vw]">
+          <Dialog open onClose={() => { setIllustrationModalId(null); setModalPlayingVideo(false); if (modalSlideshow.active) modalSlideshow.toggle(); }} className="max-w-[90vw]">
             <div className="flex flex-col max-h-[90vh]">
               <div className="relative flex items-center justify-center min-h-0 flex-1 overflow-hidden group/modal">
                 {modalImageLoading && !modalPlayingVideo && (
@@ -927,9 +946,14 @@ export function GroupChatView({ store }: Props) {
                     key={`modal-video-${selId}`}
                     src={modalVideoUrl}
                     autoPlay
-                    loop
+                    loop={!modalSlideshow.active}
                     playsInline
                     className="max-w-full max-h-[75vh] object-contain rounded-t-2xl"
+                    onTimeUpdate={modalSlideshow.active ? (e) => {
+                      const v = e.currentTarget;
+                      modalSlideshow.onVideoTimeUpdate(v.currentTime, v.duration);
+                    } : undefined}
+                    onEnded={modalSlideshow.active ? modalSlideshow.onVideoEnded : undefined}
                   />
                 ) : (
                   <img
@@ -941,7 +965,7 @@ export function GroupChatView({ store }: Props) {
                   />
                 )}
                 <button
-                  onClick={() => { setIllustrationModalId(null); setModalPlayingVideo(false); }}
+                  onClick={() => { setIllustrationModalId(null); setModalPlayingVideo(false); if (modalSlideshow.active) modalSlideshow.toggle(); }}
                   className="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors cursor-pointer backdrop-blur-sm"
                 >
                   <X size={16} />
@@ -965,7 +989,7 @@ export function GroupChatView({ store }: Props) {
                       onClick={async () => {
                         setIllustrationModalId(null);
                         setModalPlayingVideo(false);
-                        // All messages are already loaded — just scroll to the illustration
+                        if (modalSlideshow.active) modalSlideshow.toggle();
                         await new Promise((r) => setTimeout(r, 100));
                         const el = document.querySelector(`[data-message-id="${selId}"]`);
                         if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -976,8 +1000,24 @@ export function GroupChatView({ store }: Props) {
                     </button>
                     <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/mdl-goto:opacity-100 pointer-events-none transition-opacity">Go to Image</span>
                   </div>
+                  {allIllustrations.length > 1 && (
+                    <div className="relative group/mdl-ss">
+                      <button
+                        onClick={() => {
+                          if (!modalSlideshow.active) modalSlideshow.jumpTo(selId);
+                          modalSlideshow.toggle();
+                        }}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors backdrop-blur-sm ${
+                          modalSlideshow.active ? "bg-primary/80 text-white hover:bg-primary" : "bg-black/50 text-white hover:bg-black/70"
+                        }`}
+                      >
+                        {modalSlideshow.active ? <Pause size={14} /> : <Play size={14} />}
+                      </button>
+                      <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/mdl-ss:opacity-100 pointer-events-none transition-opacity">Slideshow</span>
+                    </div>
+                  )}
                 </div>
-                {modalVideoFile && !modalPlayingVideo && (
+                {modalVideoFile && !modalPlayingVideo && !modalSlideshow.active && (
                   <button
                     onClick={async () => {
                       if (!modalVideoUrl) {
@@ -993,7 +1033,7 @@ export function GroupChatView({ store }: Props) {
                     <span className="text-xl ml-0.5">&#9654;</span>
                   </button>
                 )}
-                {modalPlayingVideo && (
+                {modalPlayingVideo && !modalSlideshow.active && (
                   <button
                     onClick={() => setModalPlayingVideo(false)}
                     className="absolute bottom-4 right-4 z-20 w-12 h-12 rounded-full bg-black/70 text-white flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors backdrop-blur-sm"
@@ -1001,7 +1041,7 @@ export function GroupChatView({ store }: Props) {
                     <Square size={16} fill="white" />
                   </button>
                 )}
-                {allIllustrations.length > 1 && (<>
+                {allIllustrations.length > 1 && !modalSlideshow.active && (<>
                   <button
                     onClick={() => {
                       const idx = allIllustrations.findIndex((i) => i.id === selId);
@@ -1027,6 +1067,14 @@ export function GroupChatView({ store }: Props) {
                     <ChevronRight size={20} />
                   </button>
                 </>)}
+                {modalSlideshow.active && (
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30">
+                    <div
+                      className="h-full bg-primary transition-none"
+                      style={{ width: `${modalSlideshow.progress * 100}%` }}
+                    />
+                  </div>
+                )}
               </div>
               {allIllustrations.length > 1 && (
                 <div className="flex-shrink-0 bg-card/80 backdrop-blur-sm rounded-b-2xl px-3 py-2 border-t border-border/30">
@@ -1035,9 +1083,13 @@ export function GroupChatView({ store }: Props) {
                       <button
                         key={illus.id}
                         onClick={() => {
-                          setModalSelectedId(illus.id);
-                          setModalImageLoading(true);
-                          setModalPlayingVideo(false);
+                          if (modalSlideshow.active) {
+                            modalSlideshow.jumpTo(illus.id);
+                          } else {
+                            setModalSelectedId(illus.id);
+                            setModalImageLoading(true);
+                            setModalPlayingVideo(false);
+                          }
                         }}
                         className={`relative flex-shrink-0 w-16 h-11 rounded-lg overflow-hidden transition-all cursor-pointer ${
                           illus.id === selId
