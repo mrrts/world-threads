@@ -18,6 +18,8 @@ export function Sidebar({ store, onNavigate }: Props) {
   const [showNewChar, setShowNewChar] = useState(false);
   const [charName, setCharName] = useState("");
   const [showArchived, setShowArchived] = useState(false);
+  const [showGroupPicker, setShowGroupPicker] = useState(false);
+  const [selectedGroupMembers, setSelectedGroupMembers] = useState<string[]>([]);
   const [userAvatarUrl, setUserAvatarUrl] = useState("");
 
   useEffect(() => {
@@ -228,6 +230,44 @@ export function Sidebar({ store, onNavigate }: Props) {
                   </div>
                   );
                 })}
+
+                {/* Group Chats */}
+                <div className="border-b border-border/50 my-1" />
+                <button
+                  onClick={() => setShowGroupPicker(true)}
+                  className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 hover:text-muted-foreground transition-colors cursor-pointer px-2.5 py-1 w-full"
+                >
+                  <Plus size={10} />
+                  Group
+                </button>
+
+                {store.groupChats.map((gc) => {
+                  const isActive = store.activeGroupChat?.group_chat_id === gc.group_chat_id;
+                  const charIds: string[] = Array.isArray(gc.character_ids) ? gc.character_ids : [];
+                  return (
+                    <button
+                      key={gc.group_chat_id}
+                      onClick={() => { store.selectGroupChat(gc); onNavigate?.("chat"); }}
+                      className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg w-full text-left transition-colors cursor-pointer ${
+                        isActive ? "bg-accent" : "hover:bg-accent/50"
+                      }`}
+                    >
+                      <div className="flex -space-x-2 flex-shrink-0">
+                        {charIds.map((cid, i) => {
+                          const p = store.activePortraits[cid];
+                          return p?.data_url ? (
+                            <img key={cid} src={p.data_url} alt="" className="w-6 h-6 rounded-full object-cover ring-1 ring-card" style={{ zIndex: charIds.length - i }} />
+                          ) : (
+                            <span key={cid} className="w-6 h-6 rounded-full ring-1 ring-card bg-muted" style={{ zIndex: charIds.length - i }} />
+                          );
+                        })}
+                      </div>
+                      <span className={`text-sm truncate ${isActive ? "text-primary font-medium" : "text-muted-foreground"}`}>
+                        {gc.display_name}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
 
               {store.archivedCharacters.length > 0 && (
@@ -364,6 +404,60 @@ export function Sidebar({ store, onNavigate }: Props) {
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowNewChar(false)}>Cancel</Button>
             <Button onClick={submitChar} disabled={!charName.trim()}>Add Character</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Group Chat Picker */}
+      <Dialog open={showGroupPicker} onClose={() => { setShowGroupPicker(false); setSelectedGroupMembers([]); }}>
+        <DialogContent>
+          <DialogHeader onClose={() => { setShowGroupPicker(false); setSelectedGroupMembers([]); }}>
+            <DialogTitle>Create Group Chat</DialogTitle>
+            <DialogDescription>Select 2-3 characters to start a group conversation.</DialogDescription>
+          </DialogHeader>
+          <DialogBody>
+            <div className="grid grid-cols-2 gap-2">
+              {store.characters.map((ch) => {
+                const portrait = store.activePortraits[ch.character_id];
+                const selected = selectedGroupMembers.includes(ch.character_id);
+                return (
+                  <button
+                    key={ch.character_id}
+                    onClick={() => {
+                      setSelectedGroupMembers((prev) =>
+                        selected
+                          ? prev.filter((id) => id !== ch.character_id)
+                          : prev.length >= 3 ? prev : [...prev, ch.character_id]
+                      );
+                    }}
+                    className={`flex items-center gap-2.5 p-2.5 rounded-xl border-2 transition-all cursor-pointer ${
+                      selected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
+                    }`}
+                  >
+                    {portrait?.data_url ? (
+                      <img src={portrait.data_url} alt="" className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full flex-shrink-0" style={{ backgroundColor: ch.avatar_color }} />
+                    )}
+                    <span className="text-sm font-medium truncate">{ch.display_name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </DialogBody>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setShowGroupPicker(false); setSelectedGroupMembers([]); }}>Cancel</Button>
+            <Button
+              disabled={selectedGroupMembers.length < 2}
+              onClick={async () => {
+                await store.createGroupChat(selectedGroupMembers);
+                setShowGroupPicker(false);
+                setSelectedGroupMembers([]);
+                onNavigate?.("chat");
+              }}
+            >
+              Create ({selectedGroupMembers.length}/3)
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
