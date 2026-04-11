@@ -4,6 +4,7 @@ mod db;
 
 use commands::character_cmds::*;
 use commands::chat_cmds::*;
+use commands::group_chat_cmds::*;
 use commands::memory_cmds::*;
 use commands::mood_cmds::*;
 use commands::portrait_cmds::*;
@@ -130,6 +131,13 @@ pub fn run() {
             get_mood_settings_cmd,
             set_mood_settings_cmd,
             list_local_models_cmd,
+            create_group_chat_cmd,
+            list_group_chats_cmd,
+            delete_group_chat_cmd,
+            get_group_messages_cmd,
+            save_group_user_message_cmd,
+            send_group_message_cmd,
+            prompt_group_character_cmd,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
