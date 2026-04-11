@@ -101,7 +101,7 @@ export function ChatView({ store }: Props) {
     ? (Array.isArray(store.activeGroupChat.character_ids) ? store.activeGroupChat.character_ids : [])
     : [];
   const groupCharacters = groupCharIds.map((id) => store.characters.find((c) => c.character_id === id)).filter(Boolean) as typeof store.characters;
-  const charPortrait = store.activeCharacter ? store.activePortraits[store.activeCharacter.character_id] : undefined;
+  const charPortrait = store.activeCharacter ? store.activePortraits[store.activeCharacter?.character_id] : undefined;
   const [showGroupTalkPicker, setShowGroupTalkPicker] = useState(false);
   const [userAvatarUrl, setUserAvatarUrl] = useState("");
   const [copiedError, setCopiedError] = useState(false);
@@ -369,7 +369,7 @@ export function ChatView({ store }: Props) {
         ) : store.activeCharacter ? (
           <span
             className="w-3 h-3 rounded-full"
-            style={{ backgroundColor: store.activeCharacter.avatar_color }}
+            style={{ backgroundColor: store.activeCharacter?.avatar_color }}
           />
         ) : null}
         <h1 className="font-semibold">{store.activeCharacter?.display_name}</h1>
@@ -381,7 +381,7 @@ export function ChatView({ store }: Props) {
               onMouseEnter={() => setShowIdentityPopover(true)}
               onMouseLeave={() => setShowIdentityPopover(false)}
             >
-              {store.activeCharacter.identity.slice(0, 60)}...
+              {store.activeCharacter?.identity.slice(0, 60)}...
             </span>
             {showIdentityPopover && (
               <div
@@ -392,8 +392,8 @@ export function ChatView({ store }: Props) {
                 {charPortrait?.data_url && (
                   <img src={charPortrait.data_url} alt="" className="w-full rounded-lg object-cover aspect-square mb-3" />
                 )}
-                <p className="font-semibold text-sm mb-1">{store.activeCharacter.display_name}</p>
-                <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">{store.activeCharacter.identity}</p>
+                <p className="font-semibold text-sm mb-1">{store.activeCharacter?.display_name}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">{store.activeCharacter?.identity}</p>
               </div>
             )}
           </div>
@@ -428,7 +428,7 @@ export function ChatView({ store }: Props) {
           <div className="text-center text-muted-foreground py-12">
             <p className="text-lg mb-1">Start a conversation</p>
             <p className="text-sm">
-              Send a message to {store.activeCharacter.display_name}
+              Send a message to {store.activeCharacter?.display_name}
             </p>
           </div>
         )}
@@ -490,7 +490,7 @@ export function ChatView({ store }: Props) {
                           // Load all illustrations for the carousel
                           if (store.activeCharacter) {
                             try {
-                              const page = await api.getMessages(store.activeCharacter.character_id);
+                              const page = await api.getMessages(store.activeCharacter?.character_id);
                               const illus = page.messages
                                 .filter((m) => m.role === "illustration")
                                 .map((m) => ({ id: m.message_id, content: m.content }));
@@ -704,10 +704,6 @@ export function ChatView({ store }: Props) {
                       />
                     )
                   )}
-                  <div>
-                    {isGroup && !isUser && senderChar && (
-                      <p className="text-[10px] font-semibold text-muted-foreground mb-0.5 ml-1">{senderChar.display_name}</p>
-                    )}
                   <div
                     className={`relative group rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                       isUser
@@ -717,6 +713,9 @@ export function ChatView({ store }: Props) {
                           : "bg-secondary text-secondary-foreground rounded-bl-md max-w-[80%]"
                     }`}
                   >
+                    {isGroup && !isUser && senderChar && (
+                      <p className="text-[10px] font-semibold text-muted-foreground/70 mb-1">{senderChar.display_name}</p>
+                    )}
                     {/* Reaction button — overlaps the top corner of the bubble */}
                     {!isPending && (
                       <button
@@ -762,7 +761,6 @@ export function ChatView({ store }: Props) {
                       )}
                     </p>
                   </div>
-                  </div>
                   {isUser && userAvatarUrl && (
                     <button onClick={() => setShowUserAvatarModal(true)} className="cursor-pointer flex-shrink-0 mb-1">
                       <img src={userAvatarUrl} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
@@ -780,7 +778,18 @@ export function ChatView({ store }: Props) {
           })}
           {isSending && !isGeneratingNarrative && !isGeneratingIllustration && !isGeneratingVideo && (
             <div className="flex items-end gap-2 justify-start">
-              {charPortrait?.data_url ? (
+              {isGroup ? (
+                <div className="flex -space-x-4 flex-shrink-0 mb-1">
+                  {groupCharacters.map((ch, i) => {
+                    const p = store.activePortraits[ch.character_id];
+                    return p?.data_url ? (
+                      <img key={ch.character_id} src={p.data_url} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-background" style={{ zIndex: groupCharacters.length - i }} />
+                    ) : (
+                      <span key={ch.character_id} className="w-[72px] h-[72px] rounded-full ring-2 ring-background" style={{ backgroundColor: ch.avatar_color, zIndex: groupCharacters.length - i }} />
+                    );
+                  })}
+                </div>
+              ) : charPortrait?.data_url ? (
                 <button onClick={() => setShowPortraitModal(true)} className="cursor-pointer flex-shrink-0 mb-1">
                   <img src={charPortrait.data_url} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
                 </button>
@@ -961,7 +970,7 @@ export function ChatView({ store }: Props) {
           <div className="relative">
             <img
               src={charPortrait.data_url}
-              alt={store.activeCharacter.display_name}
+              alt={store.activeCharacter?.display_name}
               className="w-full rounded-2xl shadow-2xl shadow-black/50"
             />
             <button
@@ -971,7 +980,7 @@ export function ChatView({ store }: Props) {
               <X size={16} />
             </button>
             <div className="absolute inset-x-0 bottom-0 rounded-b-2xl bg-gradient-to-t from-black/70 to-transparent px-5 pb-4 pt-10">
-              <p className="text-white font-semibold text-lg">{store.activeCharacter.display_name}</p>
+              <p className="text-white font-semibold text-lg">{store.activeCharacter?.display_name}</p>
             </div>
           </div>
         </Dialog>

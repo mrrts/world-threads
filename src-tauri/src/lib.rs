@@ -145,6 +145,7 @@ pub fn run() {
             set_mood_settings_cmd,
             list_local_models_cmd,
             get_latest_backup_cmd,
+            backup_now_cmd,
             restore_backup_cmd,
             create_group_chat_cmd,
             list_group_chats_cmd,

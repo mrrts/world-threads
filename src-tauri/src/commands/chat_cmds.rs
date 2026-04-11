@@ -1359,13 +1359,11 @@ pub async fn reset_to_message_cmd(
     character_id: String,
     message_id: String,
 ) -> Result<ResetToMessageResult, String> {
+    let is_group = character_id.is_empty();
+
     // Phase 1: Delete messages after the anchor
-    let (anchor_role, anchor_content, deleted_count, thread, world, character, model_config) = {
+    let (anchor_role, anchor_content, deleted_count, thread_id, world, character, model_config) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
-        let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
-        let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
-        let model_config = orchestrator::load_model_config(&conn);
 
         let anchor: Message = {
             let mut stmt = conn.prepare("SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at FROM messages WHERE message_id = ?1")
@@ -1383,10 +1381,37 @@ pub async fn reset_to_message_cmd(
             }).map_err(|e| e.to_string())?
         };
 
-        let (deleted, illustration_files) = delete_messages_after(&conn, &thread.thread_id, &character_id, &message_id)
+        let thread_id = anchor.thread_id.clone();
+        let char_id_for_cleanup = if is_group { "" } else { &character_id };
+
+        let (character, world, model_config) = if is_group {
+            // For group chats, get world from thread
+            let world_id: String = conn.query_row(
+                "SELECT world_id FROM threads WHERE thread_id = ?1",
+                params![thread_id], |r| r.get(0),
+            ).map_err(|e| e.to_string())?;
+            let world = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
+            let mc = orchestrator::load_model_config(&conn);
+            // Dummy character for group — won't be used for re-generation
+            let dummy = Character {
+                character_id: String::new(), world_id, display_name: String::new(),
+                identity: String::new(), voice_rules: serde_json::json!([]),
+                boundaries: serde_json::json!([]), backstory_facts: serde_json::json!([]),
+                relationships: serde_json::json!({}), state: serde_json::json!({}),
+                avatar_color: String::new(), is_archived: false,
+                created_at: String::new(), updated_at: String::new(),
+            };
+            (dummy, world, mc)
+        } else {
+            let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
+            let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
+            let mc = orchestrator::load_model_config(&conn);
+            (character, world, mc)
+        };
+
+        let (deleted, illustration_files) = delete_messages_after(&conn, &thread_id, char_id_for_cleanup, &message_id)
             .map_err(|e| e.to_string())?;
 
-        // Delete illustration image files from disk
         for f in &illustration_files {
             let path = portraits_dir.0.join(f);
             if path.exists() {
@@ -1394,14 +1419,14 @@ pub async fn reset_to_message_cmd(
             }
         }
 
-        (anchor.role, anchor.content, deleted.len(), thread, world, character, model_config)
+        (anchor.role, anchor.content, deleted.len(), thread_id, world, character, model_config)
     };
 
     // Phase 2: Rebuild thread summary from remaining messages so the model has accurate context
     {
         let recent_msgs = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?
+            list_messages(&conn, &thread_id, 30).map_err(|e| e.to_string())?
         };
         if recent_msgs.len() >= 4 {
             match orchestrator::run_memory_update_with_base(
@@ -1416,9 +1441,9 @@ pub async fn reset_to_message_cmd(
                     if let Some(new_summary) = update.get("updated_summary").and_then(|v| v.as_str()) {
                         let conn = db.conn.lock().map_err(|e| e.to_string())?;
                         let artifact = MemoryArtifact {
-                            artifact_id: format!("summary_{}", thread.thread_id),
+                            artifact_id: format!("summary_{}", thread_id),
                             artifact_type: "thread_summary".to_string(),
-                            subject_id: thread.thread_id.clone(),
+                            subject_id: thread_id.clone(),
                             world_id: world.world_id.clone(),
                             content: new_summary.to_string(),
                             sources: json!([]),
@@ -1434,21 +1459,22 @@ pub async fn reset_to_message_cmd(
         }
     }
 
-    // Phase 3: If the anchor is a user message, generate a new character response
-    if anchor_role == "user" {
+    // Phase 3: If the anchor is a user message in a 1-on-1 chat, generate a new character response
+    // (Skip for group chats — no automatic re-generation)
+    if anchor_role == "user" && !is_group {
         let (recent_msgs, retrieved, user_profile, current_mood, mood_enabled, response_length) = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            let recent_msgs = list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?;
+            let recent_msgs = list_messages(&conn, &thread_id, 30).map_err(|e| e.to_string())?;
 
             let mut retrieved: Vec<String> = Vec::new();
-            let summary = get_thread_summary(&conn, &thread.thread_id);
+            let summary = get_thread_summary(&conn, &thread_id);
             if !summary.is_empty() {
                 retrieved.push(format!("[Thread summary] {summary}"));
             }
 
             let fts_query = sanitize_fts_query(&anchor_content);
             if !fts_query.is_empty() {
-                if let Ok(fts_msgs) = search_messages_fts(&conn, &thread.thread_id, &fts_query, 6) {
+                if let Ok(fts_msgs) = search_messages_fts(&conn, &thread_id, &fts_query, 6) {
                     for m in fts_msgs {
                         retrieved.push(format!("[{}] {}: {}", m.created_at, m.role, m.content));
                     }
@@ -1516,7 +1542,7 @@ pub async fn reset_to_message_cmd(
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
             let msg = Message {
                 message_id: uuid::Uuid::new_v4().to_string(),
-                thread_id: thread.thread_id.clone(),
+                thread_id: thread_id.clone(),
                 role: "assistant".to_string(),
                 content: reply_text,
                 tokens_estimate: tokens as i64,
@@ -1524,10 +1550,10 @@ pub async fn reset_to_message_cmd(
                 created_at: Utc::now().to_rfc3339(),
             };
             create_message(&conn, &msg).map_err(|e| e.to_string())?;
-            increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
+            increment_message_counter(&conn, &thread_id).map_err(|e| e.to_string())?;
 
             let user_message = recent_msgs.last().cloned().unwrap_or_else(|| Message {
-                message_id: String::new(), thread_id: thread.thread_id.clone(),
+                message_id: String::new(), thread_id: thread_id.clone(),
                 role: "user".to_string(), content: anchor_content.clone(),
                 tokens_estimate: 0, created_at: Utc::now().to_rfc3339(),
             sender_character_id: None,

@@ -442,6 +442,8 @@ export const api = {
   // Backup
   getLatestBackup: () =>
     invoke<{ file_name: string; timestamp: string } | null>("get_latest_backup_cmd"),
+  backupNow: () =>
+    invoke<{ file_name: string; timestamp: string }>("backup_now_cmd"),
   restoreBackup: (backupFileName: string) =>
     invoke<void>("restore_backup_cmd", { backupFileName }),
 

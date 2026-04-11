@@ -411,16 +411,26 @@ export function useAppStore() {
   const promptGroupCharacter = useCallback(async (characterId: string) => {
     if (!state.activeGroupChat || !state.apiKey) return;
 
+    const charIds: string[] = Array.isArray(state.activeGroupChat.character_ids) ? state.activeGroupChat.character_ids : [];
+    const selectedIdx = charIds.indexOf(characterId);
+
+    // Characters that should respond: the selected one, plus all after it if auto-respond is on
+    const respondingIds = state.autoRespond
+      ? charIds.slice(selectedIdx)
+      : [characterId];
+
     setState((s) => ({ ...s, sending: state.activeGroupChat!.group_chat_id, chatError: null }));
 
     try {
-      const msg = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat.group_chat_id, characterId);
-      setState((s) => ({
-        ...s,
-        messages: [...s.messages, msg],
-        totalMessages: s.totalMessages + 1,
-        sending: null,
-      }));
+      for (const cid of respondingIds) {
+        const msg = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat!.group_chat_id, cid);
+        setState((s) => ({
+          ...s,
+          messages: [...s.messages, msg],
+          totalMessages: s.totalMessages + 1,
+        }));
+      }
+      setState((s) => ({ ...s, sending: null }));
     } catch (e) {
       setState((s) => ({
         ...s,
@@ -428,7 +438,7 @@ export function useAppStore() {
         chatError: String(e),
       }));
     }
-  }, [state.activeGroupChat, state.apiKey]);
+  }, [state.activeGroupChat, state.apiKey, state.autoRespond]);
 
   const selectUserProfile = useCallback(() => {
     setState((s) => ({ ...s, editingUserProfile: true }));
@@ -859,10 +869,11 @@ export function useAppStore() {
   }, [state.activeCharacter, state.apiKey]);
 
   const resetToMessage = useCallback(async (messageId: string) => {
-    if (!state.activeCharacter || !state.apiKey) return;
+    if ((!state.activeCharacter && !state.activeGroupChat) || !state.apiKey) return;
 
     const anchorMsg = state.messages.find((m) => m.message_id === messageId);
     const isUserMsg = anchorMsg?.role === "user";
+    const isGroupChat = !!state.activeGroupChat;
 
     setState((s) => ({
       ...s,
@@ -871,12 +882,13 @@ export function useAppStore() {
         return m.created_at < anchorMsg!.created_at ||
           (m.created_at === anchorMsg!.created_at && m.message_id === messageId);
       }),
-      sending: isUserMsg ? state.activeCharacter!.character_id : null,
+      sending: isUserMsg && !isGroupChat ? (state.activeCharacter?.character_id ?? null) : null,
       chatError: null,
     }));
 
     try {
-      const result = await api.resetToMessage(state.apiKey, state.activeCharacter.character_id, messageId);
+      const characterId = isGroupChat ? "" : (state.activeCharacter?.character_id ?? "");
+      const result = await api.resetToMessage(state.apiKey, characterId, messageId);
 
       if (result.new_response) {
         setState((s) => {
@@ -900,6 +912,23 @@ export function useAppStore() {
           sending: null,
         }));
       }
+
+      // For group chats: if auto-respond is on and anchor was user message, trigger all character responses
+      if (isGroupChat && isUserMsg && state.autoRespond && state.activeGroupChat) {
+        const charIds: string[] = Array.isArray(state.activeGroupChat.character_ids) ? state.activeGroupChat.character_ids : [];
+        setState((s) => ({ ...s, sending: state.activeGroupChat!.group_chat_id }));
+        try {
+          for (const cid of charIds) {
+            const msg = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat.group_chat_id, cid);
+            setState((s) => ({
+              ...s,
+              messages: [...s.messages, msg],
+              totalMessages: s.totalMessages + 1,
+            }));
+          }
+        } catch { /* non-fatal */ }
+        setState((s) => ({ ...s, sending: null }));
+      }
     } catch (e) {
       // Reload messages from DB to get correct state after partial failure
       if (state.activeCharacter) {
@@ -910,6 +939,15 @@ export function useAppStore() {
           messages: page.messages,
           totalMessages: page.total,
           reactions,
+          sending: null,
+          chatError: String(e),
+        }));
+      } else if (state.activeGroupChat) {
+        const page = await api.getGroupMessages(state.activeGroupChat.group_chat_id);
+        setState((s) => ({
+          ...s,
+          messages: page.messages,
+          totalMessages: page.total,
           sending: null,
           chatError: String(e),
         }));

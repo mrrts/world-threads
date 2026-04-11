@@ -71,6 +71,13 @@ pub fn get_latest_backup_cmd(db_path: State<'_, DbPath>) -> Result<Option<Backup
 }
 
 #[tauri::command]
+pub fn backup_now_cmd(db_path: State<'_, DbPath>) -> Result<BackupInfo, String> {
+    crate::db::Database::backup_database(&db_path.0);
+    // Return the latest backup info
+    get_latest_backup_cmd(db_path)?.ok_or_else(|| "Backup failed".to_string())
+}
+
+#[tauri::command]
 pub fn restore_backup_cmd(
     db_path: State<'_, DbPath>,
     backup_file_name: String,

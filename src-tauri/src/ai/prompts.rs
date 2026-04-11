@@ -109,7 +109,8 @@ pub fn build_dialogue_system_prompt(
         parts.push(format!(
             "OTHER CHARACTERS IN THIS CONVERSATION:\n{}\n\
              Messages from other characters appear as [CharacterName]: ... — \
-             stay in your own voice and do not impersonate any other characters except the one that you are.",
+             stay in your own voice and do not impersonate any other characters except the one that you are. \
+             Write ONLY your response text. Do NOT prefix your response with your name or any bracket notation.",
             others.join("\n")
         ));
     }

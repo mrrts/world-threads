@@ -27,6 +27,7 @@ export function SettingsPanel({ store }: Props) {
   const [modelError, setModelError] = useState<string | null>(null);
   const [latestBackup, setLatestBackup] = useState<{ file_name: string; timestamp: string } | null>(null);
   const [restoringBackup, setRestoringBackup] = useState(false);
+  const [backingUp, setBackingUp] = useState(false);
 
   useEffect(() => {
     setApiKey(store.apiKey);
@@ -297,33 +298,58 @@ export function SettingsPanel({ store }: Props) {
                     {latestBackup.timestamp} UTC
                   </p>
                 </div>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={restoringBackup}
-                  onClick={async () => {
-                    const confirmed = window.confirm(
-                      "Restore this backup? The app will need to restart. Any changes since the backup will be lost."
-                    );
-                    if (!confirmed) return;
-                    setRestoringBackup(true);
-                    try {
-                      await api.restoreBackup(latestBackup.file_name);
-                      window.alert("Backup restored. Please restart the app.");
-                    } catch (e) {
-                      window.alert(`Failed to restore backup: ${e}`);
-                    } finally {
-                      setRestoringBackup(false);
-                    }
-                  }}
-                >
-                  {restoringBackup ? (
-                    <Loader2 size={14} className="animate-spin mr-1.5" />
-                  ) : (
-                    <DatabaseBackup size={14} className="mr-1.5" />
-                  )}
-                  Restore
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={backingUp}
+                    onClick={async () => {
+                      setBackingUp(true);
+                      try {
+                        const info = await api.backupNow();
+                        setLatestBackup(info);
+                      } catch (e) {
+                        window.alert(`Backup failed: ${e}`);
+                      } finally {
+                        setBackingUp(false);
+                      }
+                    }}
+                  >
+                    {backingUp ? (
+                      <Loader2 size={14} className="animate-spin mr-1.5" />
+                    ) : (
+                      <Save size={14} className="mr-1.5" />
+                    )}
+                    Backup Now
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={restoringBackup}
+                    onClick={async () => {
+                      const confirmed = window.confirm(
+                        "Restore this backup? The app will need to restart. Any changes since the backup will be lost."
+                      );
+                      if (!confirmed) return;
+                      setRestoringBackup(true);
+                      try {
+                        await api.restoreBackup(latestBackup.file_name);
+                        window.alert("Backup restored. Please restart the app.");
+                      } catch (e) {
+                        window.alert(`Failed to restore backup: ${e}`);
+                      } finally {
+                        setRestoringBackup(false);
+                      }
+                    }}
+                  >
+                    {restoringBackup ? (
+                      <Loader2 size={14} className="animate-spin mr-1.5" />
+                    ) : (
+                      <DatabaseBackup size={14} className="mr-1.5" />
+                    )}
+                    Restore
+                  </Button>
+                </div>
               </div>
             ) : (
               <p className="text-xs text-muted-foreground">No backups available yet.</p>
