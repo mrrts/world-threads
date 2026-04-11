@@ -51,6 +51,7 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             role TEXT NOT NULL CHECK(role IN ('user', 'assistant', 'system', 'narrative', 'illustration')),
             content TEXT NOT NULL,
             tokens_estimate INTEGER NOT NULL DEFAULT 0,
+            sender_character_id TEXT DEFAULT NULL,
             created_at TEXT NOT NULL DEFAULT (datetime('now'))
         );
         CREATE INDEX IF NOT EXISTS idx_messages_thread ON messages(thread_id, created_at);
@@ -343,9 +344,11 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
                 role TEXT NOT NULL CHECK(role IN ('user', 'assistant', 'system', 'narrative', 'illustration')),
                 content TEXT NOT NULL,
                 tokens_estimate INTEGER NOT NULL DEFAULT 0,
+                sender_character_id TEXT DEFAULT NULL,
                 created_at TEXT NOT NULL DEFAULT (datetime('now'))
             );
-            INSERT INTO messages_new SELECT * FROM messages;
+            INSERT INTO messages_new (message_id, thread_id, role, content, tokens_estimate, created_at)
+                SELECT message_id, thread_id, role, content, tokens_estimate, created_at FROM messages;
             DROP TABLE messages;
             ALTER TABLE messages_new RENAME TO messages;
             CREATE INDEX IF NOT EXISTS idx_messages_thread ON messages(thread_id, created_at);
@@ -389,6 +392,31 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     if !has_aspect_ratio {
         conn.execute_batch("ALTER TABLE world_images ADD COLUMN aspect_ratio REAL NOT NULL DEFAULT 0.0")?;
     }
+
+    // Add sender_character_id column to messages (for group chats)
+    let has_sender: bool = conn
+        .query_row(
+            "SELECT count(*) > 0 FROM pragma_table_info('messages') WHERE name = 'sender_character_id'",
+            [],
+            |r| r.get(0),
+        )
+        .unwrap_or(false);
+    if !has_sender {
+        conn.execute_batch("ALTER TABLE messages ADD COLUMN sender_character_id TEXT DEFAULT NULL")?;
+    }
+
+    // Group chats table
+    conn.execute_batch("
+        CREATE TABLE IF NOT EXISTS group_chats (
+            group_chat_id TEXT PRIMARY KEY,
+            world_id TEXT NOT NULL REFERENCES worlds(world_id) ON DELETE CASCADE,
+            character_ids TEXT NOT NULL DEFAULT '[]',
+            thread_id TEXT NOT NULL REFERENCES threads(thread_id) ON DELETE CASCADE,
+            display_name TEXT NOT NULL DEFAULT '',
+            created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_group_chats_world ON group_chats(world_id);
+    ")?;
 
     Ok(())
 }

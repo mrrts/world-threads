@@ -35,6 +35,7 @@ pub fn save_user_message_cmd(
         role: "user".to_string(),
         content: content.clone(),
         tokens_estimate: (content.len() as i64) / 4,
+            sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
     };
     create_message(&conn, &msg).map_err(|e| e.to_string())?;
@@ -66,6 +67,7 @@ pub async fn send_message_cmd(
             role: "user".to_string(),
             content: content.clone(),
             tokens_estimate: (content.len() as i64) / 4,
+            sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
         };
         create_message(&conn, &user_msg).map_err(|e| e.to_string())?;
@@ -222,6 +224,7 @@ pub async fn send_message_cmd(
             role: "assistant".to_string(),
             content: reply_text,
             tokens_estimate: tokens as i64,
+            sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
@@ -231,6 +234,7 @@ pub async fn send_message_cmd(
             message_id: String::new(), thread_id: thread.thread_id.clone(),
             role: "user".to_string(), content: content.clone(),
             tokens_estimate: 0, created_at: Utc::now().to_rfc3339(),
+            sender_character_id: None,
         });
 
         (user_message, msg)
@@ -446,6 +450,7 @@ pub async fn prompt_character_cmd(
             role: "user".to_string(),
             content: "[The user looks at you expectantly, waiting for you to say something.]".to_string(),
             tokens_estimate: 0,
+            sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
         });
     }
@@ -473,6 +478,7 @@ pub async fn prompt_character_cmd(
             role: "assistant".to_string(),
             content: reply_text,
             tokens_estimate: tokens as i64,
+            sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
@@ -594,6 +600,7 @@ pub async fn generate_narrative_cmd(
         role: "narrative".to_string(),
         content: narrative_text,
         tokens_estimate: usage.as_ref().map(|u| u.total_tokens as i64).unwrap_or(0),
+        sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
     };
     {
@@ -749,6 +756,7 @@ pub async fn generate_illustration_cmd(
             role: "illustration".to_string(),
             content: data_url,
             tokens_estimate: 0,
+            sender_character_id: None,
             created_at: now,
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
@@ -756,10 +764,10 @@ pub async fn generate_illustration_cmd(
 
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let illustration_msg = conn.query_row(
-        "SELECT message_id, thread_id, role, content, tokens_estimate, created_at FROM messages WHERE message_id = ?1",
+        "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at FROM messages WHERE message_id = ?1",
         params![message_id], |row| Ok(Message {
             message_id: row.get(0)?, thread_id: row.get(1)?, role: row.get(2)?,
-            content: row.get(3)?, tokens_estimate: row.get(4)?, created_at: row.get(5)?,
+            content: row.get(3)?, tokens_estimate: row.get(4)?, sender_character_id: row.get(5)?, created_at: row.get(6)?,
         })
     ).map_err(|e| e.to_string())?;
 
@@ -999,6 +1007,7 @@ pub async fn adjust_illustration_cmd(
             role: "illustration".to_string(),
             content: data_url,
             tokens_estimate: 0,
+            sender_character_id: None,
             created_at: now,
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
@@ -1006,10 +1015,10 @@ pub async fn adjust_illustration_cmd(
 
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let illustration_msg = conn.query_row(
-        "SELECT message_id, thread_id, role, content, tokens_estimate, created_at FROM messages WHERE message_id = ?1",
+        "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at FROM messages WHERE message_id = ?1",
         params![new_message_id], |row| Ok(Message {
             message_id: row.get(0)?, thread_id: row.get(1)?, role: row.get(2)?,
-            content: row.get(3)?, tokens_estimate: row.get(4)?, created_at: row.get(5)?,
+            content: row.get(3)?, tokens_estimate: row.get(4)?, sender_character_id: row.get(5)?, created_at: row.get(6)?,
         })
     ).map_err(|e| e.to_string())?;
 
@@ -1048,7 +1057,7 @@ pub async fn generate_video_cmd(
 
         // Get messages up to the illustration's creation time (not the latest messages)
         let mut stmt = conn.prepare(
-            "SELECT message_id, thread_id, role, content, tokens_estimate, created_at
+            "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at
              FROM messages WHERE thread_id = ?1 AND created_at <= ?2
              ORDER BY created_at DESC LIMIT 30"
         ).map_err(|e| e.to_string())?;
@@ -1059,7 +1068,8 @@ pub async fn generate_video_cmd(
                 role: row.get(2)?,
                 content: row.get(3)?,
                 tokens_estimate: row.get(4)?,
-                created_at: row.get(5)?,
+                sender_character_id: row.get(5)?,
+                created_at: row.get(6)?,
             })
         }).map_err(|e| e.to_string())?
         .filter_map(|r| r.ok())
@@ -1356,7 +1366,7 @@ pub async fn reset_to_message_cmd(
         let model_config = orchestrator::load_model_config(&conn);
 
         let anchor: Message = {
-            let mut stmt = conn.prepare("SELECT message_id, thread_id, role, content, tokens_estimate, created_at FROM messages WHERE message_id = ?1")
+            let mut stmt = conn.prepare("SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at FROM messages WHERE message_id = ?1")
                 .map_err(|e| e.to_string())?;
             stmt.query_row(params![message_id], |row| {
                 Ok(Message {
@@ -1365,7 +1375,8 @@ pub async fn reset_to_message_cmd(
                     role: row.get(2)?,
                     content: row.get(3)?,
                     tokens_estimate: row.get(4)?,
-                    created_at: row.get(5)?,
+                    sender_character_id: row.get(5)?,
+                    created_at: row.get(6)?,
                 })
             }).map_err(|e| e.to_string())?
         };
@@ -1506,6 +1517,7 @@ pub async fn reset_to_message_cmd(
                 role: "assistant".to_string(),
                 content: reply_text,
                 tokens_estimate: tokens as i64,
+                sender_character_id: None,
                 created_at: Utc::now().to_rfc3339(),
             };
             create_message(&conn, &msg).map_err(|e| e.to_string())?;
@@ -1515,6 +1527,7 @@ pub async fn reset_to_message_cmd(
                 message_id: String::new(), thread_id: thread.thread_id.clone(),
                 role: "user".to_string(), content: anchor_content.clone(),
                 tokens_estimate: 0, created_at: Utc::now().to_rfc3339(),
+            sender_character_id: None,
             });
 
             (user_message, msg)
