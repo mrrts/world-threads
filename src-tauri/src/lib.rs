@@ -70,6 +70,20 @@ pub fn run() {
                         .build(),
                 )?;
             }
+
+            // Size window to nearly fill the screen, leaving ~120px at the bottom
+            if let Some(window) = app.get_webview_window("main") {
+                if let Some(monitor) = window.current_monitor().ok().flatten() {
+                    let screen = monitor.size();
+                    let scale = monitor.scale_factor();
+                    let sw = (screen.width as f64 / scale) as u32;
+                    let sh = (screen.height as f64 / scale) as u32;
+                    let margin_bottom: u32 = 120;
+                    let _ = window.set_size(tauri::LogicalSize::new(sw, sh.saturating_sub(margin_bottom)));
+                    let _ = window.set_position(tauri::LogicalPosition::new(0, 0));
+                }
+            }
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
