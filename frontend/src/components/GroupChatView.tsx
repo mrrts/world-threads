@@ -75,7 +75,7 @@ export function GroupChatView({ store }: Props) {
   const [showIllustrationPicker, setShowIllustrationPicker] = useState(false);
   const [illustrationInstructions, setIllustrationInstructions] = useState("");
   const [usePreviousScene, setUsePreviousScene] = useState(false);
-  const [includeSceneSummary, setIncludeSceneSummary] = useState(true);
+  const [includeSceneSummary, setIncludeSceneSummary] = useState(false);
   const [narrationTone, setNarrationTone] = useState("Cinematic");
   const [narrationInstructions, setNarrationInstructions] = useState("");
   const [responseLength, setResponseLength] = useState("Short");
@@ -1125,7 +1125,7 @@ export function GroupChatView({ store }: Props) {
           store.generateGroupIllustration(tier, illustrationInstructions.trim() || undefined, prevId, includeSceneSummary);
           setIllustrationInstructions("");
           setUsePreviousScene(false);
-          setIncludeSceneSummary(true);
+          setIncludeSceneSummary(false);
         }}
         illustrationInstructions={illustrationInstructions}
         setIllustrationInstructions={setIllustrationInstructions}
