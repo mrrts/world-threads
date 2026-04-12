@@ -12,6 +12,7 @@ interface IllustrationPickerModalProps {
   includeSceneSummary: boolean;
   setIncludeSceneSummary: (v: boolean) => void;
   hasPreviousIllustration: boolean;
+  previousIllustrationUrl?: string;
 }
 
 export function IllustrationPickerModal({
@@ -25,6 +26,7 @@ export function IllustrationPickerModal({
   includeSceneSummary,
   setIncludeSceneSummary,
   hasPreviousIllustration,
+  previousIllustrationUrl,
 }: IllustrationPickerModalProps) {
   return (
     <Dialog open={open} onClose={onClose} className="max-w-sm">
@@ -52,15 +54,24 @@ export function IllustrationPickerModal({
           />
         </div>
         {hasPreviousIllustration && (
-          <label className="flex items-center gap-2 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={usePreviousScene}
-              onChange={(e) => setUsePreviousScene(e.target.checked)}
-              className="accent-emerald-500 w-3.5 h-3.5"
-            />
-            <span className="text-xs text-muted-foreground">Use previous illustration for visual continuity</span>
-          </label>
+          <div>
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={usePreviousScene}
+                onChange={(e) => setUsePreviousScene(e.target.checked)}
+                className="accent-emerald-500 w-3.5 h-3.5"
+              />
+              <span className="text-xs text-muted-foreground">Use previous illustration for visual continuity</span>
+            </label>
+            {previousIllustrationUrl && (
+              <img
+                src={previousIllustrationUrl}
+                alt="Previous illustration"
+                className="mt-2 rounded-lg w-48 object-cover border border-border/30"
+              />
+            )}
+          </div>
         )}
         <label className="flex items-center gap-2 cursor-pointer select-none">
           <input

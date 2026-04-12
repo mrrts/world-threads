@@ -1073,6 +1073,7 @@ export function ChatView({ store }: Props) {
         includeSceneSummary={includeSceneSummary}
         setIncludeSceneSummary={setIncludeSceneSummary}
         hasPreviousIllustration={store.messages.some((m) => m.role === "illustration")}
+        previousIllustrationUrl={store.messages.filter((m) => m.role === "illustration").at(-1)?.content}
       />
 
       <AdjustIllustrationModal

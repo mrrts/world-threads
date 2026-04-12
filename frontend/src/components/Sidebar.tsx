@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Archive, ArchiveRestore, ChevronRight, Globe, Sparkles, User, MessageSquare, Settings2 } from "lucide-react";
+import { Plus, Archive, ArchiveRestore, ChevronRight, Globe, Sparkles, User, Settings2 } from "lucide-react";
 import type { useAppStore } from "@/hooks/use-app-store";
 import { api, type WorldImageInfo } from "@/lib/tauri";
 
@@ -28,6 +28,7 @@ export function Sidebar({ store, onNavigate }: Props) {
   }, [store.activeWorld?.world_id, store.userProfile?.avatar_file]);
   const [hoverWorld, setHoverWorld] = useState<string | null>(null);
   const [hoverChar, setHoverChar] = useState<string | null>(null);
+  const [hoverGroup, setHoverGroup] = useState<string | null>(null);
   const [worldImageCache, setWorldImageCache] = useState<Record<string, WorldImageInfo | null>>({});
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
@@ -54,6 +55,16 @@ export function Sidebar({ store, onNavigate }: Props) {
   const hideCharTooltip = useCallback(() => {
     clearTimeout(hoverTimerRef.current);
     setHoverChar(null);
+  }, []);
+
+  const showGroupTooltip = useCallback((groupId: string) => {
+    clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => setHoverGroup(groupId), 400);
+  }, []);
+
+  const hideGroupTooltip = useCallback(() => {
+    clearTimeout(hoverTimerRef.current);
+    setHoverGroup(null);
   }, []);
 
   const submitWorld = async () => {
@@ -168,29 +179,25 @@ export function Sidebar({ store, onNavigate }: Props) {
                   const portrait = store.activePortraits[ch.character_id];
                   const isActive = store.activeCharacter?.character_id === ch.character_id;
                   return (
-                  <div key={ch.character_id} className="relative flex items-center gap-2 px-2.5 py-1.5 rounded-lg group"
+                  <div key={ch.character_id} className="relative flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg group"
                     onMouseEnter={() => showCharTooltip(ch.character_id)}
                     onMouseLeave={hideCharTooltip}
                   >
                     {portrait?.data_url ? (
-                      <img src={portrait.data_url} alt="" className="w-6 h-6 rounded-full object-cover flex-shrink-0 ring-1 ring-border" />
+                      <img src={portrait.data_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0 ring-1 ring-border" />
                     ) : (
                       <span
-                        className="w-2.5 h-2.5 rounded-full flex-shrink-0 ring-1 ring-white/10"
+                        className="w-8 h-8 rounded-full flex-shrink-0 ring-1 ring-white/10"
                         style={{ backgroundColor: ch.avatar_color }}
                       />
                     )}
-                    <span className={`text-sm flex-1 truncate ${isActive && !store.editingUserProfile ? "text-primary font-medium" : "text-muted-foreground"}`}>
+                    <button
+                      onClick={() => { store.selectCharacter(ch); onNavigate?.("chat"); }}
+                      className={`text-sm flex-1 truncate text-left cursor-pointer hover:underline ${isActive && !store.editingUserProfile ? "text-primary font-medium" : "text-muted-foreground"}`}
+                    >
                       {ch.display_name}
-                    </span>
+                    </button>
                     <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 flex-shrink-0 transition-opacity">
-                      <button
-                        onClick={() => { store.selectCharacter(ch); onNavigate?.("chat"); }}
-                        className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer"
-                        title="Chat"
-                      >
-                        <MessageSquare size={12} />
-                      </button>
                       <button
                         onClick={() => { store.selectCharacter(ch); onNavigate?.("character"); }}
                         className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer"
@@ -220,8 +227,8 @@ export function Sidebar({ store, onNavigate }: Props) {
                         </div>
                         {ch.identity && (
                           <div className="px-3 pb-3 -mt-1">
-                            <p className="text-xs text-muted-foreground line-clamp-4 leading-relaxed">
-                              {ch.identity.slice(0, 200)}{ch.identity.length > 200 ? "..." : ""}
+                            <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                              {ch.identity}
                             </p>
                           </div>
                         )}
@@ -244,28 +251,63 @@ export function Sidebar({ store, onNavigate }: Props) {
                 {store.groupChats.map((gc) => {
                   const isActive = store.activeGroupChat?.group_chat_id === gc.group_chat_id;
                   const charIds: string[] = Array.isArray(gc.character_ids) ? gc.character_ids : [];
+                  const charNames = charIds.map((cid) => store.characters.find((c) => c.character_id === cid)?.display_name).filter(Boolean);
+                  const groupChars = charIds.map((cid) => store.characters.find((c) => c.character_id === cid)).filter(Boolean) as typeof store.characters;
                   return (
-                    <button
-                      key={gc.group_chat_id}
-                      onClick={() => { store.selectGroupChat(gc); onNavigate?.("chat"); }}
-                      className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg w-full text-left transition-colors cursor-pointer ${
-                        isActive ? "bg-accent" : "hover:bg-accent/50"
-                      }`}
+                    <div key={gc.group_chat_id} className="relative"
+                      onMouseEnter={() => showGroupTooltip(gc.group_chat_id)}
+                      onMouseLeave={hideGroupTooltip}
                     >
-                      <div className="flex -space-x-2 flex-shrink-0">
-                        {charIds.map((cid, i) => {
-                          const p = store.activePortraits[cid];
-                          return p?.data_url ? (
-                            <img key={cid} src={p.data_url} alt="" className="w-6 h-6 rounded-full object-cover ring-1 ring-card" style={{ zIndex: charIds.length - i }} />
-                          ) : (
-                            <span key={cid} className="w-6 h-6 rounded-full ring-1 ring-card bg-muted" style={{ zIndex: charIds.length - i }} />
-                          );
-                        })}
-                      </div>
-                      <span className={`text-sm truncate ${isActive ? "text-primary font-medium" : "text-muted-foreground"}`}>
-                        {gc.display_name}
-                      </span>
-                    </button>
+                      <button
+                        onClick={() => { store.selectGroupChat(gc); onNavigate?.("chat"); }}
+                        className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg w-full text-left transition-colors cursor-pointer ${
+                          isActive ? "bg-accent" : "hover:bg-accent/50"
+                        }`}
+                      >
+                        <div className="flex -space-x-2.5 flex-shrink-0">
+                          {charIds.map((cid, i) => {
+                            const p = store.activePortraits[cid];
+                            return p?.data_url ? (
+                              <img key={cid} src={p.data_url} alt="" className="w-8 h-8 rounded-full object-cover ring-2 ring-card" style={{ zIndex: charIds.length - i }} />
+                            ) : (
+                              <span key={cid} className="w-8 h-8 rounded-full ring-2 ring-card bg-muted" style={{ zIndex: charIds.length - i }} />
+                            );
+                          })}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className={`text-[10px] uppercase tracking-wider ${isActive ? "text-primary/60" : "text-muted-foreground/50"}`}>Group</span>
+                          <p className={`text-sm truncate leading-tight ${isActive ? "text-primary font-medium" : "text-muted-foreground"}`}>
+                            {charNames.join(" & ")}
+                          </p>
+                        </div>
+                      </button>
+                      {hoverGroup === gc.group_chat_id && (
+                        <div className="absolute left-full top-0 ml-2 z-50 w-[420px] bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-in fade-in zoom-in-95 duration-150 pointer-events-none">
+                          <div className="grid grid-cols-2 divide-x divide-border">
+                            {groupChars.map((ch) => {
+                              const portrait = store.activePortraits[ch.character_id];
+                              return (
+                                <div key={ch.character_id} className="p-3">
+                                  <div className="flex flex-col items-center mb-2">
+                                    {portrait?.data_url ? (
+                                      <img src={portrait.data_url} alt="" className="w-16 h-16 rounded-full object-cover ring-2 ring-border" />
+                                    ) : (
+                                      <div className="w-16 h-16 rounded-full ring-2 ring-white/10" style={{ backgroundColor: ch.avatar_color }} />
+                                    )}
+                                    <p className="font-semibold text-sm mt-2">{ch.display_name}</p>
+                                  </div>
+                                  {ch.identity && (
+                                    <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                      {ch.identity}
+                                    </p>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
               </div>
