@@ -291,13 +291,13 @@ export function GroupChatView({ store }: Props) {
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [store.activeGroupChat?.group_chat_id, store.messages.length]);
 
-  // Scroll to bottom when narrative/illustration generation starts
+  // Scroll to bottom when sending/generating starts
   useEffect(() => {
-    if (isGeneratingNarrative || isGeneratingIllustration) {
+    if (isSending || isGeneratingNarrative || isGeneratingIllustration) {
       const el = scrollRef.current;
-      if (el) el.scrollTop = el.scrollHeight;
+      if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     }
-  }, [isGeneratingNarrative, isGeneratingIllustration]);
+  }, [isSending, isGeneratingNarrative, isGeneratingIllustration]);
 
   // Auto-focus input after AI response arrives
   useEffect(() => {

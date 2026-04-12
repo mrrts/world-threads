@@ -405,11 +405,6 @@ export function Sidebar({ store, onNavigate }: Props) {
                     </select>
                   </div>
                 )}
-                {store.activeWorld.state.location && (
-                  <div className="text-xs text-muted-foreground pl-[18px]">
-                    {store.activeWorld.state.location.current_scene}
-                  </div>
-                )}
               </div>
             </ScrollArea>
           </div>

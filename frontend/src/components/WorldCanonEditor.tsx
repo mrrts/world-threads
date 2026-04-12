@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Select } from "@/components/ui/select";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from "@/components/ui/dialog";
@@ -16,7 +16,6 @@ interface Props {
   store: ReturnType<typeof useAppStore>;
 }
 
-const TIME_OPTIONS = ["DAWN", "MORNING", "NOON", "AFTERNOON", "DUSK", "NIGHT"];
 
 export function WorldCanonEditor({ store }: Props) {
   const world = store.activeWorld;
@@ -280,33 +279,6 @@ export function WorldCanonEditor({ store }: Props) {
                 </div>
               </div>
             </Field>
-
-            <FieldGroup label="World State">
-              <div className="grid grid-cols-3 gap-4">
-                <Field label="Day">
-                  <Input
-                    type="number"
-                    value={state.time?.day_index ?? 1}
-                    onChange={(e) => updateState({ time: { ...state.time, day_index: Number(e.target.value) } })}
-                  />
-                </Field>
-                <Field label="Time of Day">
-                  <Select
-                    value={state.time?.time_of_day ?? "MORNING"}
-                    onChange={(e) => updateState({ time: { ...state.time, time_of_day: e.target.value } })}
-                  >
-                    {TIME_OPTIONS.map((t) => <option key={t} value={t}>{t}</option>)}
-                  </Select>
-                </Field>
-                <Field label="Scene / Location">
-                  <Input
-                    value={state.location?.current_scene ?? ""}
-                    onChange={(e) => updateState({ location: { current_scene: e.target.value } })}
-                    placeholder="e.g. the pier"
-                  />
-                </Field>
-              </div>
-            </FieldGroup>
           </div>
         </ScrollArea>
       </div>
