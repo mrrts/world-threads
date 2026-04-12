@@ -1,5 +1,5 @@
 use crate::ai::orchestrator;
-use crate::ai::prompts::{self, GroupContext, OtherCharacter};
+use crate::ai::prompts::{GroupContext, OtherCharacter};
 use crate::commands::portrait_cmds::PortraitsDir;
 use crate::db::queries::*;
 use crate::db::Database;
@@ -141,7 +141,6 @@ pub fn save_group_user_message_cmd(
 }
 
 use crate::commands::chat_cmds;
-use crate::ai::openai;
 
 /// Send a message in a group chat. The user's message is saved, then each character
 /// responds in order. Returns the user message and all character responses.
@@ -190,7 +189,7 @@ pub async fn send_group_message_cmd(
     // Phase 2: Each character responds in order
     let mut responses: Vec<Message> = Vec::new();
 
-    for (i, character) in characters.iter().enumerate() {
+    for (_i, character) in characters.iter().enumerate() {
         // Build group context (other characters, excluding the one responding)
         let other_chars: Vec<OtherCharacter> = characters.iter()
             .filter(|c| c.character_id != character.character_id)

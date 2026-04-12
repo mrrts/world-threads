@@ -78,6 +78,7 @@ struct VeoVideo {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 struct VeoErrorResponse {
     message: Option<String>,
     code: Option<i32>,

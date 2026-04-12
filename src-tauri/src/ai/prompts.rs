@@ -9,6 +9,7 @@ pub struct GroupContext {
 }
 
 pub struct OtherCharacter {
+    #[allow(dead_code)]
     pub character_id: String,
     pub display_name: String,
     pub identity_summary: String,
@@ -562,7 +563,6 @@ Write ONLY the animation direction, nothing else."#,
 fn world_time_description(world: &World) -> Option<String> {
     let time = world.state.get("time")?;
     let time_of_day = time.get("time_of_day").and_then(|v| v.as_str()).unwrap_or("");
-    let day_index = time.get("day_index").and_then(|v| v.as_i64());
     if time_of_day.is_empty() { return None; }
     let lighting = match time_of_day.to_uppercase().as_str() {
         "DAWN" => "early dawn light, sky shifting from deep blue to warm gold at the horizon",

@@ -616,10 +616,6 @@ pub fn list_group_chats(conn: &Connection, world_id: &str) -> Result<Vec<GroupCh
 }
 
 pub fn get_group_chat(conn: &Connection, group_chat_id: &str) -> Result<GroupChat, rusqlite::Error> {
-    let ids_str: String = conn.query_row(
-        "SELECT character_ids FROM group_chats WHERE group_chat_id = ?1",
-        params![group_chat_id], |r| r.get(0),
-    )?;
     conn.query_row(
         "SELECT group_chat_id, world_id, character_ids, thread_id, display_name, created_at FROM group_chats WHERE group_chat_id = ?1",
         params![group_chat_id],
