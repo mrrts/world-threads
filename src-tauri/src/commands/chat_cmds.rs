@@ -721,6 +721,7 @@ pub async fn generate_illustration_cmd(
         custom_instructions.as_deref(),
         has_previous,
         include_scene_summary.unwrap_or(true),
+        None,
     ).await?;
 
     if let Some(u) = &chat_usage {

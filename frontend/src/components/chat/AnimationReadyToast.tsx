@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Video, X } from "lucide-react";
 
 interface AnimationReadyToastProps {
@@ -7,6 +8,12 @@ interface AnimationReadyToastProps {
 }
 
 export function AnimationReadyToast({ animationReadyId, onGo, onDismiss }: AnimationReadyToastProps) {
+  useEffect(() => {
+    if (!animationReadyId) return;
+    const timer = setTimeout(onDismiss, 5000);
+    return () => clearTimeout(timer);
+  }, [animationReadyId, onDismiss]);
+
   if (!animationReadyId) return null;
 
   return (

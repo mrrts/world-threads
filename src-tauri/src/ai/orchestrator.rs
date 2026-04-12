@@ -358,6 +358,7 @@ pub async fn generate_illustration_with_base(
     custom_instructions: Option<&str>,
     has_previous_scene: bool,
     include_scene_summary: bool,
+    all_character_names: Option<&[String]>,
 ) -> Result<(String, Vec<u8>, Option<openai::Usage>), String> {
     // Step 1: Generate scene description (if requested)
     let (scene_description, chat_usage) = if include_scene_summary {
@@ -397,25 +398,47 @@ pub async fn generate_illustration_with_base(
         "Wide cinematic composition showing two characters in a scene together.".to_string(),
     ];
 
-    if reference_images.len() >= 2 {
-        prompt_parts.push(format!(
-            "The first reference image is {user}. The second reference image is {char}. \
-             Both characters MUST appear in the illustration, recognizable from their reference images.",
-            user = user_name,
-            char = character.display_name,
-        ));
-    } else if reference_images.len() == 1 {
-        prompt_parts.push(format!(
-            "The reference image is {char}. They must appear in the illustration, recognizable from the reference.",
-            char = character.display_name,
-        ));
-    }
+    // Describe reference images in order: user avatar, character portrait(s), then optional previous scene
+    if let Some(names) = all_character_names {
+        // Group chat: user + multiple characters
+        let mut idx = 1;
+        let mut descriptions = Vec::new();
+        descriptions.push(format!("Reference image {} is {}.", idx, user_name));
+        idx += 1;
+        for name in names {
+            descriptions.push(format!("Reference image {} is {}.", idx, name));
+            idx += 1;
+        }
+        descriptions.push("ALL characters MUST appear in the illustration, recognizable from their reference images.".to_string());
+        if has_previous_scene {
+            descriptions.push(format!(
+                "Reference image {} is the PREVIOUS scene. Use it for visual continuity of setting, \
+                 character positions, and atmosphere, but advance the scene to match the new description.", idx
+            ));
+        }
+        prompt_parts.push(descriptions.join(" "));
+    } else {
+        // Individual chat: user + one character
+        if reference_images.len() >= 2 {
+            prompt_parts.push(format!(
+                "The first reference image is {user}. The second reference image is {char}. \
+                 Both characters MUST appear in the illustration, recognizable from their reference images.",
+                user = user_name,
+                char = character.display_name,
+            ));
+        } else if reference_images.len() == 1 {
+            prompt_parts.push(format!(
+                "The reference image is {char}. They must appear in the illustration, recognizable from the reference.",
+                char = character.display_name,
+            ));
+        }
 
-    if has_previous_scene && reference_images.len() >= 3 {
-        prompt_parts.push(
-            "The third reference image is the PREVIOUS scene. Use it for visual continuity of setting, \
-             character positions, and atmosphere, but advance the scene to match the new description.".to_string()
-        );
+        if has_previous_scene && reference_images.len() >= 3 {
+            prompt_parts.push(
+                "The third reference image is the PREVIOUS scene. Use it for visual continuity of setting, \
+                 character positions, and atmosphere, but advance the scene to match the new description.".to_string()
+            );
+        }
     }
 
     if !scene_description.is_empty() {

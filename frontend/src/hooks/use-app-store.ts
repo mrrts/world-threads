@@ -871,6 +871,39 @@ export function useAppStore() {
     }
   }, [state.activeCharacter, state.apiKey]);
 
+  const regenerateGroupIllustration = useCallback(async (messageId: string) => {
+    if (!state.activeGroupChat || !state.apiKey) return;
+    const gcId = state.activeGroupChat.group_chat_id;
+
+    setState((s) => ({
+      ...s,
+      sending: gcId,
+      generatingIllustration: gcId,
+      chatError: null,
+      messages: s.messages.filter((m) => m.message_id !== messageId),
+      totalMessages: s.totalMessages - 1,
+    }));
+
+    try {
+      await api.deleteIllustration(messageId);
+      const result = await api.generateGroupIllustration(state.apiKey, gcId);
+      setState((s) => ({
+        ...s,
+        messages: [...s.messages, result.illustration_message],
+        totalMessages: s.totalMessages + 1,
+        sending: false,
+        generatingIllustration: false,
+      }));
+    } catch (e) {
+      setState((s) => ({
+        ...s,
+        sending: false,
+        generatingIllustration: false,
+        chatError: String(e),
+      }));
+    }
+  }, [state.activeGroupChat, state.apiKey]);
+
   const adjustIllustration = useCallback(async (messageId: string, instructions: string) => {
     if (!state.activeCharacter || !state.apiKey) return;
 
@@ -901,6 +934,40 @@ export function useAppStore() {
       }));
     }
   }, [state.activeCharacter, state.apiKey]);
+
+  const adjustGroupIllustration = useCallback(async (messageId: string, instructions: string) => {
+    if (!state.activeGroupChat || !state.apiKey) return;
+    const gcId = state.activeGroupChat.group_chat_id;
+
+    setState((s) => ({
+      ...s,
+      sending: gcId,
+      generatingIllustration: gcId,
+      chatError: null,
+      messages: s.messages.filter((m) => m.message_id !== messageId),
+      totalMessages: s.totalMessages - 1,
+    }));
+
+    try {
+      const result = await api.generateGroupIllustration(state.apiKey, gcId, undefined, instructions, messageId);
+      // Clean up old illustration after new one is generated
+      await api.deleteIllustration(messageId).catch(() => {});
+      setState((s) => ({
+        ...s,
+        messages: [...s.messages, result.illustration_message],
+        totalMessages: s.totalMessages + 1,
+        sending: false,
+        generatingIllustration: false,
+      }));
+    } catch (e) {
+      setState((s) => ({
+        ...s,
+        sending: false,
+        generatingIllustration: false,
+        chatError: String(e),
+      }));
+    }
+  }, [state.activeGroupChat, state.apiKey]);
 
   const loadVideoFiles = useCallback(async (messages: Message[]) => {
     const illustrationIds = messages.filter((m) => m.role === "illustration").map((m) => m.message_id);
@@ -1207,6 +1274,8 @@ export function useAppStore() {
     deleteIllustration,
     regenerateIllustration,
     adjustIllustration,
+    regenerateGroupIllustration,
+    adjustGroupIllustration,
     generateVideo,
     resetToMessage,
     setApiKey,

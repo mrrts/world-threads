@@ -488,7 +488,7 @@ export function GroupChatView({ store }: Props) {
                           </div>
                           <div className="relative group/regen">
                             <button
-                              onClick={() => store.regenerateIllustration(msg.message_id)}
+                              onClick={() => store.regenerateGroupIllustration(msg.message_id)}
                               className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors backdrop-blur-sm"
                             >
                               <RefreshCw size={14} />
@@ -1015,7 +1015,7 @@ export function GroupChatView({ store }: Props) {
         onClose={() => setAdjustIllustrationId(null)}
         onConfirm={(instructions) => {
           if (adjustIllustrationId) {
-            store.adjustIllustration(adjustIllustrationId, instructions);
+            store.adjustGroupIllustration(adjustIllustrationId, instructions);
             setAdjustIllustrationId(null);
           }
         }}

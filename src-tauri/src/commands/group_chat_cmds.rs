@@ -238,8 +238,11 @@ pub async fn send_group_message_cmd(
             narration_tone.as_deref(),
         ).await?;
 
-        // Strip any [CharacterName]: prefix the LLM may have added
-        let reply_text = strip_character_prefix(&raw_reply, &character.display_name);
+        // Strip own prefix and truncate any other-character dialogue
+        let other_names: Vec<&str> = characters.iter()
+            .filter(|c| c.character_id != character.character_id)
+            .map(|c| c.display_name.as_str()).collect();
+        let reply_text = strip_character_prefix(&raw_reply, &character.display_name, &other_names);
 
         if let Some(u) = &usage {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -357,7 +360,10 @@ pub async fn prompt_group_character_cmd(
         narration_tone.as_deref(),
     ).await?;
 
-    let reply_text = strip_character_prefix(&raw_reply, &character.display_name);
+    let other_names: Vec<&str> = characters.iter()
+        .filter(|c| c.character_id != character.character_id)
+        .map(|c| c.display_name.as_str()).collect();
+    let reply_text = strip_character_prefix(&raw_reply, &character.display_name, &other_names);
 
     if let Some(u) = &usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -483,6 +489,7 @@ pub async fn generate_group_illustration_cmd(
         custom_instructions.as_deref(),
         has_previous,
         include_scene_summary.unwrap_or(true),
+        Some(&characters.iter().map(|c| c.display_name.clone()).collect::<Vec<_>>()),
     ).await?;
 
     if let Some(u) = &chat_usage {
@@ -614,21 +621,27 @@ pub async fn generate_group_narrative_cmd(
 }
 
 /// Strip any [CharacterName]: or CharacterName: prefix that the LLM may prepend to its response.
-fn strip_character_prefix(text: &str, character_name: &str) -> String {
+fn strip_character_prefix(text: &str, character_name: &str, other_names: &[&str]) -> String {
     let trimmed = text.trim();
-    // Try [Name]: format
-    let bracket_prefix = format!("[{}]:", character_name);
-    if let Some(rest) = trimmed.strip_prefix(&bracket_prefix) {
-        return rest.trim().to_string();
+    // Strip own name prefix
+    let cleaned = if let Some(rest) = trimmed.strip_prefix(&format!("[{}]:", character_name)) {
+        rest.trim()
+    } else if let Some(rest) = trimmed.strip_prefix(&format!("[{}] :", character_name)) {
+        rest.trim()
+    } else if let Some(rest) = trimmed.strip_prefix(&format!("{}:", character_name)) {
+        rest.trim()
+    } else {
+        trimmed
+    };
+
+    // Truncate at any point where another character's dialogue begins
+    let mut result = cleaned.to_string();
+    for name in other_names {
+        for pattern in [format!("\n[{}]:", name), format!("\n[{}] :", name), format!("\n{}:", name)] {
+            if let Some(pos) = result.find(&pattern) {
+                result.truncate(pos);
+            }
+        }
     }
-    let bracket_prefix2 = format!("[{}] :", character_name);
-    if let Some(rest) = trimmed.strip_prefix(&bracket_prefix2) {
-        return rest.trim().to_string();
-    }
-    // Try Name: format
-    let name_prefix = format!("{}:", character_name);
-    if let Some(rest) = trimmed.strip_prefix(&name_prefix) {
-        return rest.trim().to_string();
-    }
-    trimmed.to_string()
+    result.trim().to_string()
 }

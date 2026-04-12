@@ -108,11 +108,13 @@ pub fn build_dialogue_system_prompt(
             others.push(format!("- {}: {}", oc.display_name, identity));
         }
         parts.push(format!(
-            "OTHER CHARACTERS IN THIS CONVERSATION:\n{}\n\
+            "OTHER CHARACTERS IN THIS CONVERSATION:\n{others}\n\
              Messages from other characters appear as [CharacterName]: ... — \
-             stay in your own voice and do not impersonate any other characters except the one that you are. \
-             Write ONLY your response text. Do NOT prefix your response with your name or any bracket notation.",
-            others.join("\n")
+             You are ONLY {me}. Do NOT write dialogue, actions, or responses for any other character. \
+             Do NOT include lines like [OtherName]: ... or write what another character says or does. \
+             Respond ONLY as {me}. Write ONLY your own response text with no name prefix or bracket notation.",
+            others = others.join("\n"),
+            me = character.display_name,
         ));
     }
 
