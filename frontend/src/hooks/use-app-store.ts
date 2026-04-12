@@ -138,17 +138,19 @@ export function useAppStore() {
   const loadInitial = useCallback(async () => {
     setState((s) => ({ ...s, loading: true }));
     try {
-      const [worlds, modelConfig, apiKey, budgetMode] = await Promise.all([
+      const [worlds, modelConfig, apiKey, budgetMode, autoRespondSetting] = await Promise.all([
         api.listWorlds(),
         api.getModelConfig(),
         api.migrateApiKey(),
         api.getBudgetMode(),
+        api.getSetting("auto_respond").catch(() => null),
       ]);
 
       let activeWorld: World | null = null;
       let characters: Character[] = [];
       let archivedCharacters: Character[] = [];
       let activeCharacter: Character | null = null;
+      let activeGroupChat: GroupChat | null = null;
       let groupChats: GroupChat[] = [];
       let messages: Message[] = [];
       let totalMessages = 0;
@@ -174,7 +176,36 @@ export function useAppStore() {
         userProfile = uProfile;
         groupChats = gChats;
         activePortraits = await loadActivePortraits([...characters, ...archivedCharacters]);
-        if (characters.length > 0) {
+
+        // Restore last active chat for this world
+        const lastChat = await api.getSetting(`last_chat.${wid}`).catch(() => null);
+        if (lastChat?.startsWith("group:")) {
+          const gcId = lastChat.slice(6);
+          const gc = groupChats.find((g) => g.group_chat_id === gcId);
+          if (gc) {
+            activeGroupChat = gc;
+            const page = await api.getGroupMessages(gc.group_chat_id);
+            messages = page.messages;
+            totalMessages = page.total;
+            reactions = await loadReactions(messages);
+          }
+        } else if (lastChat?.startsWith("char:")) {
+          const charId = lastChat.slice(5);
+          const ch = characters.find((c) => c.character_id === charId);
+          if (ch) {
+            activeCharacter = ch;
+            const page = await api.getMessages(ch.character_id);
+            messages = page.messages;
+            totalMessages = page.total;
+            [reactions, aspectRatios] = await Promise.all([
+              loadReactions(messages),
+              loadAspectRatios(messages),
+            ]);
+          }
+        }
+
+        // Fallback to first character if no last chat found
+        if (!activeCharacter && !activeGroupChat && characters.length > 0) {
           activeCharacter = characters[0];
           const page = await api.getMessages(activeCharacter.character_id);
           messages = page.messages;
@@ -193,7 +224,7 @@ export function useAppStore() {
         archivedCharacters,
         activeCharacter,
         groupChats,
-        activeGroupChat: null,
+        activeGroupChat: activeGroupChat ?? null,
         messages,
         totalMessages,
         reactions,
@@ -204,8 +235,7 @@ export function useAppStore() {
         modelConfig,
         apiKey: apiKey ?? "",
         budgetMode,
-        autoRespond: true,
-        autoRespond: true,
+        autoRespond: autoRespondSetting !== "false",
         loadingOlder: false,
         loading: false,
         sending: null,
@@ -642,6 +672,7 @@ export function useAppStore() {
 
   const setAutoRespond = useCallback((enabled: boolean) => {
     setState((s) => ({ ...s, autoRespond: enabled }));
+    api.setSetting("auto_respond", enabled ? "true" : "false").catch(() => {});
   }, []);
 
   const sendMessage = useCallback(async (content: string) => {

@@ -52,10 +52,12 @@ pub async fn generate_chat_summary_cmd(
         openai::ChatMessage {
             role: "system".to_string(),
             content: format!(
-                "Summarize the recent conversation between the user and {}. \
+                "Summarize the recent conversation between you and {}. \
                  Write a concise narrative summary (3-6 sentences) covering the key events, \
-                 emotional beats, and where things currently stand. Write in past tense, third person.",
-                character.display_name,
+                 emotional beats, and where things currently stand. Write in second person — \
+                 refer to the human as \"you\", never as \"the user\". \
+                 Refer to {} by name.",
+                character.display_name, character.display_name,
             ),
         },
         openai::ChatMessage {
@@ -126,9 +128,11 @@ pub async fn generate_group_chat_summary_cmd(
         openai::ChatMessage {
             role: "system".to_string(),
             content: format!(
-                "Summarize the recent group conversation involving the user and {}. \
+                "Summarize the recent group conversation involving you and {}. \
                  Write a concise narrative summary (3-6 sentences) covering the key events, \
-                 emotional beats, and where things currently stand. Write in past tense, third person.",
+                 emotional beats, and where things currently stand. Write in second person — \
+                 refer to the human as \"you\", never as \"the user\". \
+                 Refer to each character by name.",
                 char_names.join(" and "),
             ),
         },
