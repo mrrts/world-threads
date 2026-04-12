@@ -73,7 +73,7 @@ pub async fn generate_speech_cmd(
 
     // Prepend tone bracket if not auto
     let input = match tone.as_deref() {
-        Some(t) if t != "Auto" && t != "auto" => format!("[{t}] {text}"),
+        Some(t) if t != "Auto" && t != "auto" => format!("Narration style:\n{t}\n\nText:\n{text}"),
         _ => text,
     };
 
@@ -114,7 +114,7 @@ pub async fn generate_voice_sample_cmd(
     let voice_label = format!("{}{}", &voice[..1].to_uppercase(), &voice[1..]);
     let base_text = format!("Hi, I'm {voice_label}! How are you doing today?");
     let input = match tone.as_deref() {
-        Some(t) if t != "Auto" => format!("[{t}] {base_text}"),
+        Some(t) if t != "Auto" => format!("Narration style:\n{t}\n\nText:\n{base_text}"),
         _ => base_text,
     };
 
