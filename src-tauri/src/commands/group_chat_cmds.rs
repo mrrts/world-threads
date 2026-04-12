@@ -281,6 +281,7 @@ pub async fn prompt_group_character_cmd(
     api_key: String,
     group_chat_id: String,
     character_id: String,
+    address_to: Option<String>,
 ) -> Result<Message, String> {
     let (gc, world, character, characters, model_config, user_profile) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -328,19 +329,28 @@ pub async fn prompt_group_character_cmd(
         }
     }
 
-    // Add a nudge if the last message isn't from the user
+    // Add a nudge directing who the character should address
     let mut dialogue_msgs = recent_msgs.clone();
-    if dialogue_msgs.last().map(|m| m.role != "user").unwrap_or(true) {
-        dialogue_msgs.push(Message {
-            message_id: String::new(),
-            thread_id: String::new(),
-            role: "user".to_string(),
-            content: "[Everyone looks at you expectantly, waiting for you to say something.]".to_string(),
-            tokens_estimate: 0,
-            sender_character_id: None,
-            created_at: Utc::now().to_rfc3339(),
-        });
-    }
+    let user_name = user_profile.as_ref()
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("the human");
+    let nudge = match address_to.as_deref() {
+        Some(target) if !target.is_empty() => {
+            format!("[Turn to {target} and say something to them directly. Address {target} specifically.]")
+        }
+        _ => {
+            format!("[Turn to {user_name} and say something to them directly. Address {user_name} specifically.]")
+        }
+    };
+    dialogue_msgs.push(Message {
+        message_id: String::new(),
+        thread_id: String::new(),
+        role: "user".to_string(),
+        content: nudge,
+        tokens_estimate: 0,
+        sender_character_id: None,
+        created_at: Utc::now().to_rfc3339(),
+    });
 
     let (response_length, narration_tone) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;

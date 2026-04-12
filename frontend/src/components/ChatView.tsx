@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import Markdown from "react-markdown";
-import { formatMessage } from "@/components/chat/formatMessage";
+import { formatMessage, markdownComponents } from "@/components/chat/formatMessage";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
@@ -382,20 +382,9 @@ export function ChatView({ store }: Props) {
             )}
           </div>
         )}
-        <label className="ml-auto flex-shrink-0 flex items-center gap-1.5 cursor-pointer select-none" title="When on, the character responds automatically after each message">
-          <span className={`text-[10px] font-medium ${store.autoRespond ? "text-foreground/70" : "text-muted-foreground/50"}`}>Auto‑Respond</span>
-          <button
-            role="switch"
-            aria-checked={store.autoRespond}
-            onClick={() => store.setAutoRespond(!store.autoRespond)}
-            className={`relative w-8 h-[18px] rounded-full transition-colors cursor-pointer ${store.autoRespond ? "bg-primary" : "bg-muted-foreground/30"}`}
-          >
-            <span className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${store.autoRespond ? "translate-x-[14px]" : ""}`} />
-          </button>
-        </label>
         <button
           onClick={() => setShowNarrationSettings(true)}
-          className={`flex-shrink-0 h-8 rounded-lg flex items-center gap-1.5 px-2.5 text-xs font-medium transition-colors cursor-pointer ${
+          className={`ml-auto flex-shrink-0 h-8 rounded-lg flex items-center gap-1.5 px-2.5 text-xs font-medium transition-colors cursor-pointer ${
             (narrationTone !== "Cinematic" || responseLength !== "Short" || narrationInstructions) ? "text-amber-500 hover:text-amber-400 hover:bg-amber-500/10" : "text-muted-foreground hover:text-foreground hover:bg-accent"
           }`}
           title="Narration settings"
@@ -438,7 +427,7 @@ export function ChatView({ store }: Props) {
             if (msg.role === "illustration") {
               return (
                 <div key={msg.message_id} data-message-id={msg.message_id} className="flex justify-center my-3">
-                  <div className="relative group max-w-[95%] rounded-xl bg-gradient-to-br from-emerald-950/30 to-emerald-900/10 border border-emerald-700/20 backdrop-blur-sm">
+                  <div className="relative group/illus max-w-[95%] rounded-xl bg-gradient-to-br from-emerald-950/30 to-emerald-900/10 border border-emerald-700/20 backdrop-blur-sm">
                     <div className="flex items-center gap-1.5 px-4 pt-3 pb-1.5 text-[10px] uppercase tracking-wider text-emerald-500/70 font-semibold">
                       <Image size={12} />
                       <span>Illustration</span>
@@ -487,7 +476,7 @@ export function ChatView({ store }: Props) {
                           />
                           <button
                             onClick={() => setPlayingVideo(null)}
-                            className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-black/70 text-white flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors backdrop-blur-sm opacity-0 group-hover:opacity-100"
+                            className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-black/70 text-white flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors backdrop-blur-sm opacity-0 group-hover/illus:opacity-100"
                             title="Stop"
                           >
                             <Square size={14} fill="white" />
@@ -522,7 +511,7 @@ export function ChatView({ store }: Props) {
                         </div>
                       )}
                       {!isPending && !isSending && (
-                        <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover/illus:opacity-100 transition-opacity">
                           <div className="relative group/adj">
                             <button
                               onClick={() => { setAdjustIllustrationId(msg.message_id); setAdjustInstructions(""); }}
@@ -627,7 +616,7 @@ export function ChatView({ store }: Props) {
                       {!isPending && (
                         <button
                           onClick={() => setResetConfirmId(msg.message_id)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-500/40 hover:text-emerald-400 cursor-pointer"
+                          className="opacity-0 group-hover/illus:opacity-100 transition-opacity text-emerald-500/40 hover:text-emerald-400 cursor-pointer"
                         >
                           Reset to Here
                         </button>
@@ -767,7 +756,7 @@ export function ChatView({ store }: Props) {
                         ? "[--tw-prose-body:var(--color-primary-foreground)] [--tw-prose-headings:var(--color-primary-foreground)] [--tw-prose-bold:var(--color-primary-foreground)] [--tw-prose-bullets:var(--color-primary-foreground)] [--tw-prose-counters:var(--color-primary-foreground)] [--tw-prose-code:var(--color-primary-foreground)] [--tw-prose-links:var(--color-primary-foreground)] [--tw-prose-quotes:var(--color-primary-foreground)] [--tw-prose-quote-borders:rgba(255,255,255,0.3)]"
                         : "[--tw-prose-body:var(--color-secondary-foreground)] [--tw-prose-headings:var(--color-secondary-foreground)] [--tw-prose-bold:var(--color-secondary-foreground)] [--tw-prose-bullets:var(--color-secondary-foreground)] [--tw-prose-counters:var(--color-secondary-foreground)] [--tw-prose-code:var(--color-secondary-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-quotes:var(--color-secondary-foreground)] [--tw-prose-quote-borders:var(--color-border)]"
                     }`}>
-                      <Markdown>{formatMessage(msg.content)}</Markdown>
+                      <Markdown components={markdownComponents}>{formatMessage(msg.content)}</Markdown>
                     </div>
                     <p className={`text-[10px] mt-1 flex items-center gap-2 ${
                       isUser ? "text-primary-foreground/50" : "text-muted-foreground"
@@ -868,57 +857,74 @@ export function ChatView({ store }: Props) {
       />
 
       <div className="px-4 py-3 border-t border-border relative z-10 bg-background">
-        <div className="flex gap-2 max-w-2xl mx-auto items-end">
-          <div className="relative group/talk flex-shrink-0">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-primary/70 hover:text-primary hover:bg-primary/10 h-10 w-10 rounded-xl"
-              onClick={() => store.promptCharacter()}
-              disabled={isSending || !store.apiKey || store.messages.length === 0}
-            >
-              <MessageSquare size={16} />
-            </Button>
-            <span className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-0.5 px-2.5 py-1 text-[11px] font-medium text-white bg-black rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover/talk:opacity-100 pointer-events-none transition-opacity duration-150">
-              Talk to Me
-            </span>
-          </div>
-          <div className="relative group/narr flex-shrink-0">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-amber-500/70 hover:text-amber-400 hover:bg-amber-500/10 h-10 w-10 rounded-xl"
-              onClick={() => store.generateNarrative()}
-              disabled={isSending || !store.apiKey || store.messages.length === 0}
-            >
-              <BookOpen size={16} />
-            </Button>
-            <span className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-0.5 px-2.5 py-1 text-[11px] font-medium text-white bg-black rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover/narr:opacity-100 pointer-events-none transition-opacity duration-150">
-              + Narrative
-            </span>
-          </div>
-          <div className="relative group/illus flex-shrink-0">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-emerald-500/70 hover:text-emerald-400 hover:bg-emerald-500/10 h-10 w-10 rounded-xl"
-              onClick={() => setShowIllustrationPicker(true)}
-              disabled={isSending || !store.apiKey || store.messages.length === 0}
-            >
-              <Image size={16} />
-            </Button>
-            <span className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-0.5 px-2.5 py-1 text-[11px] font-medium text-white bg-black rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover/illus:opacity-100 pointer-events-none transition-opacity duration-150">
-              Illustration
-            </span>
+        <div className="flex gap-2 max-w-2xl mx-auto items-stretch">
+          <div className="flex-shrink-0 flex flex-col items-center gap-1 justify-center">
+            <label className="flex items-center gap-1.5 cursor-pointer select-none" title="When on, the character responds automatically after each message">
+              <span className={`text-[10px] font-medium ${store.autoRespond ? "text-foreground/70" : "text-muted-foreground/50"}`}>Auto‑Respond</span>
+              <button
+                role="switch"
+                aria-checked={store.autoRespond}
+                onClick={() => store.setAutoRespond(!store.autoRespond)}
+                className={`relative w-8 h-[18px] rounded-full transition-colors cursor-pointer ${store.autoRespond ? "bg-primary" : "bg-muted-foreground/30"}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${store.autoRespond ? "translate-x-[14px]" : ""}`} />
+              </button>
+            </label>
+            <div className="flex gap-0.5">
+              <div className="relative group/talk">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-primary/70 hover:text-primary hover:bg-primary/10 h-9 w-9 rounded-lg"
+                  onClick={() => store.promptCharacter()}
+                  disabled={isSending || !store.apiKey || store.messages.length === 0}
+                >
+                  <MessageSquare size={15} />
+                </Button>
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-0.5 px-2.5 py-1 text-[11px] font-medium text-white bg-black rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover/talk:opacity-100 pointer-events-none transition-opacity duration-150">
+                  Talk to Me
+                </span>
+              </div>
+              <div className="relative group/narr">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-amber-500/70 hover:text-amber-400 hover:bg-amber-500/10 h-9 w-9 rounded-lg"
+                  onClick={() => store.generateNarrative()}
+                  disabled={isSending || !store.apiKey || store.messages.length === 0}
+                >
+                  <BookOpen size={15} />
+                </Button>
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-0.5 px-2.5 py-1 text-[11px] font-medium text-white bg-black rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover/narr:opacity-100 pointer-events-none transition-opacity duration-150">
+                  + Narrative
+                </span>
+              </div>
+              <div className="relative group/ilus">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-emerald-500/70 hover:text-emerald-400 hover:bg-emerald-500/10 h-9 w-9 rounded-lg"
+                  onClick={() => setShowIllustrationPicker(true)}
+                  disabled={isSending || !store.apiKey || store.messages.length === 0}
+                >
+                  <Image size={15} />
+                </Button>
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-0.5 px-2.5 py-1 text-[11px] font-medium text-white bg-black rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover/ilus:opacity-100 pointer-events-none transition-opacity duration-150">
+                  Illustration
+                </span>
+              </div>
+            </div>
           </div>
           <textarea
             ref={inputRef}
             value={input}
             onChange={(e) => {
               setInput(e.target.value);
-              e.target.style.height = "auto";
-              e.target.style.height = Math.min(e.target.scrollHeight, 200) + "px";
-              // Keep chat scrolled to bottom as textarea grows
+              // Reset to natural stretch height, then expand if content is taller
+              e.target.style.height = "";
+              if (e.target.scrollHeight > e.target.offsetHeight) {
+                e.target.style.height = Math.min(e.target.scrollHeight, 200) + "px";
+              }
               requestAnimationFrame(() => {
                 const el = scrollRef.current;
                 if (el) el.scrollTop = el.scrollHeight;
@@ -926,13 +932,13 @@ export function ChatView({ store }: Props) {
             }}
             onKeyDown={handleKeyDown}
             placeholder={`Talk to ${store.activeCharacter?.display_name ?? "character"}...`}
-            className="flex-1 min-h-[40px] max-h-[200px] resize-none rounded-xl border border-input bg-transparent px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]"
+            className="flex-1 self-stretch max-h-[200px] resize-none rounded-xl border border-input bg-transparent px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]"
             rows={1}
             disabled={isSending || (store.autoRespond && !store.apiKey)}
           />
           <Button
             size="icon"
-            className="rounded-xl h-10 w-10 flex-shrink-0"
+            className="rounded-xl self-stretch w-10 flex-shrink-0"
             onClick={handleSend}
             disabled={!input.trim() || isSending || (store.autoRespond && !store.apiKey)}
           >

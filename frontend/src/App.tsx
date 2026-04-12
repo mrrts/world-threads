@@ -42,6 +42,18 @@ function MainApp() {
   const lastChatCharRef = useRef<string | null>(null);
   const viewRef = useRef<View>("chat");
 
+  // Cmd+R toggles auto-respond
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.metaKey && e.key === "r") {
+        e.preventDefault();
+        store.setAutoRespond(!store.autoRespond);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [store.autoRespond]);
+
   const setViewTracked = useCallback((next: View) => {
     const prev = viewRef.current;
     if (prev === "chat" && next !== "chat" && store.activeCharacter) {

@@ -422,7 +422,7 @@ export function useAppStore() {
     }
   }, [state.activeGroupChat, state.apiKey, state.autoRespond]);
 
-  const promptGroupCharacter = useCallback(async (characterId: string) => {
+  const promptGroupCharacter = useCallback(async (characterId: string, addressTo?: string) => {
     if (!state.activeGroupChat || !state.apiKey) return;
 
     const charIds: string[] = Array.isArray(state.activeGroupChat.character_ids) ? state.activeGroupChat.character_ids : [];
@@ -438,7 +438,7 @@ export function useAppStore() {
     try {
       for (const cid of respondingIds) {
         setState((s) => ({ ...s, sendingCharacterId: cid }));
-        const msg = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat!.group_chat_id, cid);
+        const msg = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat!.group_chat_id, cid, addressTo);
         setState((s) => ({
           ...s,
           messages: [...s.messages, msg],
