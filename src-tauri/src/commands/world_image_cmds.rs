@@ -486,6 +486,95 @@ pub fn list_world_gallery_cmd(
     Ok(items)
 }
 
+/// List gallery metadata without loading image data (fast).
+#[tauri::command]
+pub fn list_world_gallery_meta_cmd(
+    db: State<Database>,
+    world_id: String,
+) -> Result<Vec<GalleryItem>, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let mut items: Vec<GalleryItem> = Vec::new();
+
+    {
+        let mut stmt = conn.prepare(
+            "SELECT image_id, file_name, prompt, source, is_active, is_archived, tags, created_at FROM world_images WHERE world_id = ?1 ORDER BY created_at DESC"
+        ).map_err(|e| e.to_string())?;
+        let wid = world_id.clone();
+        let rows = stmt.query_map(rusqlite::params![world_id], |row| {
+            let src: String = row.get(3)?;
+            let label = if src == "uploaded" { "Uploaded" } else { "Generated" };
+            Ok(GalleryItem {
+                id: row.get(0)?,
+                source_id: wid.clone(),
+                file_name: row.get(1)?,
+                data_url: String::new(),
+                prompt: row.get(2)?,
+                category: "world".to_string(),
+                label: format!("World · {label}"),
+                is_archived: row.get(5)?,
+                tags: parse_tags(&row.get::<_, String>(6)?),
+                created_at: row.get(7)?,
+            })
+        }).map_err(|e| e.to_string())?;
+        for r in rows { if let Ok(item) = r { items.push(item); } }
+    }
+
+    {
+        let mut stmt = conn.prepare(
+            "SELECT p.portrait_id, p.file_name, p.prompt, p.is_active, p.is_archived, p.tags, p.created_at, c.display_name, p.character_id
+             FROM character_portraits p
+             JOIN characters c ON c.character_id = p.character_id
+             WHERE c.world_id = ?1
+             ORDER BY p.created_at DESC"
+        ).map_err(|e| e.to_string())?;
+        let rows = stmt.query_map(rusqlite::params![world_id], |row| {
+            Ok(GalleryItem {
+                id: row.get(0)?,
+                source_id: row.get(8)?,
+                file_name: row.get(1)?,
+                data_url: String::new(),
+                prompt: row.get(2)?,
+                category: "character".to_string(),
+                label: row.get(7)?,
+                is_archived: row.get(4)?,
+                tags: parse_tags(&row.get::<_, String>(5)?),
+                created_at: row.get(6)?,
+            })
+        }).map_err(|e| e.to_string())?;
+        for r in rows { if let Ok(item) = r { items.push(item); } }
+    }
+
+    if let Ok(profile) = get_user_profile(&conn, &world_id) {
+        if !profile.avatar_file.is_empty() {
+            items.push(GalleryItem {
+                id: format!("user_{}", world_id),
+                source_id: world_id.clone(),
+                file_name: profile.avatar_file.clone(),
+                data_url: String::new(),
+                prompt: String::new(),
+                category: "user".to_string(),
+                label: profile.display_name,
+                is_archived: false,
+                tags: vec![],
+                created_at: profile.updated_at,
+            });
+        }
+    }
+
+    items.sort_by(|a, b| b.created_at.cmp(&a.created_at));
+    Ok(items)
+}
+
+/// Load a single gallery image's data URL by file_name.
+#[tauri::command]
+pub fn get_gallery_image_cmd(
+    portraits_dir: State<PortraitsDir>,
+    file_name: String,
+) -> Result<String, String> {
+    let dir = &portraits_dir.0;
+    Ok(file_to_data_url(dir, &file_name))
+}
+
 #[tauri::command]
 pub fn archive_gallery_item_cmd(
     db: State<Database>,

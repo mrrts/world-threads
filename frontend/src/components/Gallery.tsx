@@ -27,6 +27,7 @@ const CATEGORY_META: Record<string, { icon: React.ReactNode; title: string }> = 
 export function Gallery({ store }: Props) {
   const worldId = store.activeWorld?.world_id;
   const [items, setItems] = useState<GalleryItem[]>([]);
+  const [imageCache, setImageCache] = useState<Record<string, string>>({});
   const [prompt, setPrompt] = useState("");
   const [generating, setGenerating] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -35,16 +36,29 @@ export function Gallery({ store }: Props) {
   const [showArchived, setShowArchived] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Load metadata only (instant)
   const loadGallery = useCallback(async () => {
     if (!worldId) return;
     try {
-      setItems(await api.listWorldGallery(worldId));
+      const meta = await api.listWorldGalleryMeta(worldId);
+      setItems(meta);
     } catch {}
   }, [worldId]);
 
   useEffect(() => {
+    setImageCache({});
     loadGallery();
   }, [loadGallery, store.activeWorldImage?.image_id, store.activePortraits, store.userProfile?.avatar_file]);
+
+  // Lazy-load a single image
+  const loadImage = useCallback((fileName: string) => {
+    if (imageCache[fileName] || !fileName) return;
+    // Mark as loading
+    setImageCache((prev) => ({ ...prev, [fileName]: "" }));
+    api.getGalleryImage(fileName).then((dataUrl) => {
+      setImageCache((prev) => ({ ...prev, [fileName]: dataUrl }));
+    }).catch(() => {});
+  }, [imageCache]);
 
   if (!store.activeWorld) {
     return (
@@ -148,30 +162,29 @@ export function Gallery({ store }: Props) {
 
   const renderCard = (item: GalleryItem, options: { archived?: boolean }) => {
     const isArchivable = item.category === "world" || item.category === "character";
+    const cachedUrl = imageCache[item.file_name];
     return (
-      <div
-        key={item.id}
-        className="group relative rounded-xl overflow-hidden border border-border bg-card/30"
-      >
-        {item.data_url ? (
+      <LazyCard key={item.id} fileName={item.file_name} onVisible={loadImage}>
+        <div className="group relative rounded-xl overflow-hidden border border-border bg-card/30">
+        {cachedUrl ? (
           <img
-            src={item.data_url}
+            src={cachedUrl}
             alt=""
             className={`w-full object-cover ${item.category === "character" || item.category === "user" ? "aspect-square" : "aspect-video"}`}
           />
         ) : (
           <div className={`w-full bg-muted flex items-center justify-center text-muted-foreground/30 text-xs ${item.category === "character" || item.category === "user" ? "aspect-square" : "aspect-video"}`}>
-            Missing
+            <Loader2 size={16} className="animate-spin text-muted-foreground/20" />
           </div>
         )}
 
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100">
-          <Button size="sm" variant="secondary" className="h-7 text-xs px-2" onClick={() => setPreviewItem(item)}>
+          <Button size="sm" variant="secondary" className="h-7 text-xs px-2" onClick={() => setPreviewItem({ ...item, data_url: cachedUrl || "" })}>
             <Maximize2 size={11} className="mr-1" /> View
           </Button>
-          {item.data_url && (
-            <Button size="sm" variant="secondary" className="h-7 text-xs px-2" onClick={() => setCropItem(item)}>
+          {cachedUrl && (
+            <Button size="sm" variant="secondary" className="h-7 text-xs px-2" onClick={() => setCropItem({ ...item, data_url: cachedUrl })}>
               <Crop size={11} className="mr-1" /> Crop
             </Button>
           )}
@@ -214,6 +227,7 @@ export function Gallery({ store }: Props) {
           </p>
         </div>
       </div>
+      </LazyCard>
     );
   };
 
@@ -402,6 +416,21 @@ const ASPECT_PRESETS = [
   { label: "3:2", value: 3 / 2 },
   { label: "2:3", value: 2 / 3 },
 ];
+
+function LazyCard({ fileName, onVisible, children }: { fileName: string; onVisible: (fileName: string) => void; children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => { if (entries[0]?.isIntersecting) { onVisible(fileName); observer.disconnect(); } },
+      { rootMargin: "300px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [fileName, onVisible]);
+  return <div ref={ref}>{children}</div>;
+}
 
 function CropModal({ imageUrl, onSave, onClose }: { imageUrl: string; onSave: (dataUrl: string) => void; onClose: () => void }) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });

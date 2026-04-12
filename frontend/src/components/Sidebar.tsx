@@ -44,7 +44,7 @@ export function Sidebar({ store, onNavigate }: Props) {
 
   const hideWorldTooltip = useCallback(() => {
     clearTimeout(hoverTimerRef.current);
-    setHoverWorld(null);
+    hoverTimerRef.current = setTimeout(() => setHoverWorld(null), 300);
   }, []);
 
   const showCharTooltip = useCallback((charId: string) => {
@@ -118,7 +118,10 @@ export function Sidebar({ store, onNavigate }: Props) {
                   )}
                 </button>
                 {hoverWorld === w.world_id && (
-                  <div className="absolute left-full top-0 ml-2 z-50 w-64 bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                  <div
+                    onMouseEnter={() => clearTimeout(hoverTimerRef.current)}
+                    onMouseLeave={hideWorldTooltip}
+                    className="absolute left-full top-0 ml-2 z-50 w-64 bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
                     {(worldImageCache[w.world_id] ?? (w.world_id === store.activeWorld?.world_id ? store.activeWorldImage : null))?.data_url && (
                       <img
                         src={(worldImageCache[w.world_id] ?? store.activeWorldImage)!.data_url}
@@ -128,14 +131,23 @@ export function Sidebar({ store, onNavigate }: Props) {
                     )}
                     <div className="p-3">
                       <p className="font-semibold text-sm">{w.name}</p>
-                      {w.description && (
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-3 leading-relaxed">
-                          {w.description.slice(0, 200)}{w.description.length > 200 ? "..." : ""}
+                      {w.description ? (
+                        <p className="text-xs text-muted-foreground mt-1 leading-relaxed whitespace-pre-wrap">
+                          {w.description}
                         </p>
-                      )}
-                      {!w.description && (
+                      ) : (
                         <p className="text-xs text-muted-foreground/50 italic mt-1">No description</p>
                       )}
+                      <button
+                        onClick={() => {
+                          if (store.activeWorld?.world_id !== w.world_id) store.selectWorld(w);
+                          onNavigate?.("summary");
+                          setHoverWorld(null);
+                        }}
+                        className="mt-2 text-xs font-medium text-primary hover:text-primary/80 hover:underline cursor-pointer"
+                      >
+                        View World
+                      </button>
                     </div>
                   </div>
                 )}

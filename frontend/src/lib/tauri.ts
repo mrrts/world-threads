@@ -314,6 +314,8 @@ export const api = {
     invoke<string>("upload_user_avatar_cmd", { worldId, imageData }),
   getUserAvatar: (worldId: string) =>
     invoke<string>("get_user_avatar_cmd", { worldId }),
+  listAllUserAvatars: () =>
+    invoke<Array<{ world_id: string; world_name: string; avatar_file: string; data_url: string }>>("list_all_user_avatars_cmd"),
   setUserAvatarFromGallery: (worldId: string, sourceFile: string) =>
     invoke<string>("set_user_avatar_from_gallery_cmd", { worldId, sourceFile }),
 
@@ -429,6 +431,10 @@ export const api = {
     invoke<WorldImageInfo[]>("list_world_images_cmd", { worldId }),
   listWorldGallery: (worldId: string) =>
     invoke<GalleryItem[]>("list_world_gallery_cmd", { worldId }),
+  listWorldGalleryMeta: (worldId: string) =>
+    invoke<GalleryItem[]>("list_world_gallery_meta_cmd", { worldId }),
+  getGalleryImage: (fileName: string) =>
+    invoke<string>("get_gallery_image_cmd", { fileName }),
   archiveGalleryItem: (itemId: string, category: string) =>
     invoke<void>("archive_gallery_item_cmd", { itemId, category }),
   unarchiveGalleryItem: (itemId: string, category: string) =>

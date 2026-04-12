@@ -176,6 +176,38 @@ pub fn get_user_avatar_cmd(
     Ok(format!("data:image/png;base64,{}", base64_encode(&bytes)))
 }
 
+/// List all user avatars across all worlds (for cross-world avatar copying).
+#[tauri::command]
+pub fn list_all_user_avatars_cmd(
+    db: State<Database>,
+    portraits_dir: State<PortraitsDir>,
+) -> Result<Vec<serde_json::Value>, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let mut stmt = conn.prepare(
+        "SELECT up.world_id, up.avatar_file, w.name FROM user_profiles up JOIN worlds w ON w.world_id = up.world_id WHERE up.avatar_file != ''"
+    ).map_err(|e| e.to_string())?;
+    let rows: Vec<(String, String, String)> = stmt.query_map([], |r| {
+        Ok((r.get(0)?, r.get(1)?, r.get(2)?))
+    }).map_err(|e| e.to_string())?
+    .filter_map(|r| r.ok()).collect();
+
+    let mut results = Vec::new();
+    for (world_id, avatar_file, world_name) in rows {
+        let path = portraits_dir.0.join(&avatar_file);
+        if path.exists() {
+            if let Ok(bytes) = std::fs::read(&path) {
+                results.push(serde_json::json!({
+                    "world_id": world_id,
+                    "world_name": world_name,
+                    "avatar_file": avatar_file,
+                    "data_url": format!("data:image/png;base64,{}", base64_encode(&bytes)),
+                }));
+            }
+        }
+    }
+    Ok(results)
+}
+
 /// Set user avatar from any existing image file in the portraits directory.
 #[tauri::command]
 pub fn set_user_avatar_from_gallery_cmd(

@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from "@/components/ui/dialog";
-import { Save, Plus, X, User, ImagePlus, Upload, Loader2, Images } from "lucide-react";
+import { Save, Plus, X, User, ImagePlus, Upload, Loader2, Images, Copy } from "lucide-react";
 import type { useAppStore } from "@/hooks/use-app-store";
 import { api, type UserProfile, type GalleryItem } from "@/lib/tauri";
 
@@ -30,6 +30,9 @@ export function UserProfileEditor({ store }: Props) {
   const [showWorldGallery, setShowWorldGallery] = useState(false);
   const [worldGalleryItems, setWorldGalleryItems] = useState<GalleryItem[]>([]);
   const [loadingWorldGallery, setLoadingWorldGallery] = useState(false);
+  const [showCrossWorldPicker, setShowCrossWorldPicker] = useState(false);
+  const [crossWorldAvatars, setCrossWorldAvatars] = useState<Array<{ world_id: string; world_name: string; avatar_file: string; data_url: string }>>([]);
+  const [loadingCrossWorld, setLoadingCrossWorld] = useState(false);
 
   useEffect(() => {
     if (existing) {
@@ -114,6 +117,31 @@ export function UserProfileEditor({ store }: Props) {
       await store.loadUserProfile(worldId);
     } catch (e: any) {
       console.error("Failed to set avatar from gallery:", e);
+    }
+  };
+
+  const handleOpenCrossWorld = async () => {
+    setLoadingCrossWorld(true);
+    setShowCrossWorldPicker(true);
+    try {
+      const avatars = await api.listAllUserAvatars();
+      // Filter out the current world's avatar
+      setCrossWorldAvatars(avatars.filter((a) => a.world_id !== worldId));
+    } catch {
+    } finally {
+      setLoadingCrossWorld(false);
+    }
+  };
+
+  const handleSelectCrossWorld = async (avatarFile: string) => {
+    if (!worldId) return;
+    try {
+      const dataUrl = await api.setUserAvatarFromGallery(worldId, avatarFile);
+      setAvatarUrl(dataUrl);
+      setShowCrossWorldPicker(false);
+      await store.loadUserProfile(worldId);
+    } catch (e: any) {
+      console.error("Failed to copy avatar:", e);
     }
   };
 
@@ -224,7 +252,14 @@ export function UserProfileEditor({ store }: Props) {
                     size="sm"
                     onClick={handleOpenWorldGallery}
                   >
-                    <Images size={14} className="mr-1.5" /> Choose from Gallery
+                    <Images size={14} className="mr-1.5" /> World Gallery
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleOpenCrossWorld}
+                  >
+                    <Copy size={14} className="mr-1.5" /> From Other World
                   </Button>
                 </div>
               </div>
@@ -261,6 +296,48 @@ export function UserProfileEditor({ store }: Props) {
           </FieldGroup>
         </div>
       </ScrollArea>
+
+      {/* Cross-World Avatar Picker */}
+      <Dialog open={showCrossWorldPicker} onClose={() => setShowCrossWorldPicker(false)} className="max-w-md">
+        <DialogContent>
+          <DialogHeader onClose={() => setShowCrossWorldPicker(false)}>
+            <DialogTitle>Copy Avatar from Another World</DialogTitle>
+            <DialogDescription>
+              Choose one of your portraits from other worlds to use here.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogBody className="p-0">
+            <ScrollArea className="max-h-[400px]">
+              {loadingCrossWorld ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 size={24} className="animate-spin text-muted-foreground" />
+                </div>
+              ) : crossWorldAvatars.length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground text-sm">
+                  No avatars found in other worlds.
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3 p-4">
+                  {crossWorldAvatars.map((avatar) => (
+                    <button
+                      key={`${avatar.world_id}-${avatar.avatar_file}`}
+                      onClick={() => handleSelectCrossWorld(avatar.avatar_file)}
+                      className="flex flex-col items-center gap-2 p-3 rounded-xl border-2 border-border hover:border-primary/50 transition-all cursor-pointer"
+                    >
+                      <img
+                        src={avatar.data_url}
+                        alt=""
+                        className="w-20 h-20 rounded-full object-cover ring-2 ring-border"
+                      />
+                      <span className="text-xs text-muted-foreground truncate w-full text-center">{avatar.world_name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          </DialogBody>
+        </DialogContent>
+      </Dialog>
 
       {/* World Gallery Picker Modal */}
       <Dialog open={showWorldGallery} onClose={() => setShowWorldGallery(false)} className="max-w-3xl">
