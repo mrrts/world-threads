@@ -2,6 +2,7 @@ mod ai;
 mod commands;
 mod db;
 
+use commands::audio_cmds::*;
 use commands::backup_cmds::*;
 use commands::character_cmds::*;
 use commands::chat_cmds::*;
@@ -48,6 +49,10 @@ pub fn run() {
             let portraits_dir = app_dir.join("portraits");
             std::fs::create_dir_all(&portraits_dir).ok();
             app.manage(PortraitsDir(portraits_dir));
+
+            let audio_dir = app_dir.join("audio");
+            std::fs::create_dir_all(&audio_dir).ok();
+            app.manage(AudioDir(audio_dir));
 
             let salt_path = app
                 .path()
@@ -157,6 +162,11 @@ pub fn run() {
             prompt_group_character_cmd,
             generate_group_illustration_cmd,
             generate_group_narrative_cmd,
+            generate_speech_cmd,
+            generate_voice_sample_cmd,
+            get_speech_cmd,
+            list_cached_audio_cmd,
+            delete_message_audio_cmd,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

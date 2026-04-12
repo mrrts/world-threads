@@ -1388,6 +1388,7 @@ pub struct ResetToMessageResult {
 pub async fn reset_to_message_cmd(
     db: State<'_, Database>,
     portraits_dir: State<'_, PortraitsDir>,
+    audio_dir: State<'_, crate::commands::audio_cmds::AudioDir>,
     api_key: String,
     character_id: String,
     message_id: String,
@@ -1455,6 +1456,11 @@ pub async fn reset_to_message_cmd(
             if path.exists() {
                 let _ = std::fs::remove_file(&path);
             }
+        }
+
+        // Clean up audio files for deleted messages
+        for (msg_id, _) in &deleted {
+            crate::commands::audio_cmds::delete_audio_for_message(&audio_dir.0, msg_id);
         }
 
         (anchor.role, anchor.content, deleted.len(), thread_id, world, character, model_config)

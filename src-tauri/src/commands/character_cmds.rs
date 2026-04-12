@@ -72,6 +72,7 @@ pub fn create_character_cmd(db: State<Database>, world_id: String, display_name:
 pub fn delete_character_cmd(
     db: State<Database>,
     portraits_dir: State<PortraitsDir>,
+    audio_dir: State<crate::commands::audio_cmds::AudioDir>,
     character_id: String,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -83,7 +84,7 @@ pub fn delete_character_cmd(
         .map(|p| p.file_name)
         .collect();
 
-    let illustration_files = delete_character(&conn, &character_id).map_err(|e| e.to_string())?;
+    let (illustration_files, message_ids) = delete_character(&conn, &character_id).map_err(|e| e.to_string())?;
 
     // Remove portrait + illustration files from disk
     for file_name in portrait_files.iter().chain(illustration_files.iter()) {
@@ -93,6 +94,11 @@ pub fn delete_character_cmd(
         }
     }
 
+    // Remove audio files
+    for msg_id in &message_ids {
+        crate::commands::audio_cmds::delete_audio_for_message(&audio_dir.0, msg_id);
+    }
+
     Ok(())
 }
 
@@ -100,15 +106,19 @@ pub fn delete_character_cmd(
 pub fn clear_chat_history_cmd(
     db: State<Database>,
     portraits_dir: State<PortraitsDir>,
+    audio_dir: State<crate::commands::audio_cmds::AudioDir>,
     character_id: String,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    let illustration_files = clear_chat_history(&conn, &character_id).map_err(|e| e.to_string())?;
+    let (illustration_files, message_ids) = clear_chat_history(&conn, &character_id).map_err(|e| e.to_string())?;
     for f in &illustration_files {
         let path = portraits_dir.0.join(f);
         if path.exists() {
             let _ = std::fs::remove_file(&path);
         }
+    }
+    for msg_id in &message_ids {
+        crate::commands::audio_cmds::delete_audio_for_message(&audio_dir.0, msg_id);
     }
     Ok(())
 }

@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from "@/components/ui/dialog";
-import { Save, Plus, X, BookTemplate, ImagePlus, Loader2, Check, Images, Shuffle, Trash2, AlertTriangle, MessageSquareX, RotateCcw, PenLine } from "lucide-react";
+import { Save, Plus, X, BookTemplate, ImagePlus, Loader2, Check, Images, Shuffle, Trash2, AlertTriangle, MessageSquareX, RotateCcw, PenLine, Volume2, Square } from "lucide-react";
 import { CHARACTER_TEMPLATES, type CharacterTemplate } from "@/lib/character-templates";
 import { api, type Character, type PortraitInfo, type GalleryItem } from "@/lib/tauri";
 import type { useAppStore } from "@/hooks/use-app-store";
@@ -33,6 +33,12 @@ export function CharacterEditor({ store }: Props) {
   const [generatingPose, setGeneratingPose] = useState(false);
   const [showClearChat, setShowClearChat] = useState(false);
   const [showDeleteChar, setShowDeleteChar] = useState(false);
+  const [ttsVoice, setTtsVoice] = useState("nova");
+  const [showVoiceExplorer, setShowVoiceExplorer] = useState(false);
+  const [samplePlaying, setSamplePlaying] = useState<string | null>(null);
+  const [sampleLoading, setSampleLoading] = useState<string | null>(null);
+  const [sampleTone, setSampleTone] = useState("Auto");
+  const sampleAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const loadPortraits = useCallback(async (characterId: string) => {
     try {
@@ -57,6 +63,7 @@ export function CharacterEditor({ store }: Props) {
       });
       setDirty(false);
       loadPortraits(ch.character_id);
+      api.getSetting(`voice.${ch.character_id}`).then((v) => setTtsVoice(v || "nova"));
     }
   }, [ch?.character_id, loadPortraits]);
 
@@ -347,6 +354,46 @@ export function CharacterEditor({ store }: Props) {
                   onChange={(e) => update({ identity: e.target.value })}
                   placeholder="Quiet, observant, with a dark sense of humor. Speaks in half-truths..."
                 />
+              </Field>
+
+              <Field label="TTS Voice" hint="Voice used for text-to-speech playback">
+                <div className="flex gap-2">
+                  <select
+                    className="flex-1 h-9 rounded-lg border border-border bg-background px-3 text-sm"
+                    value={ttsVoice}
+                    onChange={(e) => {
+                      setTtsVoice(e.target.value);
+                      if (ch) api.setSetting(`voice.${ch.character_id}`, e.target.value);
+                    }}
+                  >
+                    <optgroup label="Feminine">
+                      <option value="alloy">Alloy</option>
+                      <option value="coral">Coral</option>
+                      <option value="nova">Nova</option>
+                      <option value="sage">Sage</option>
+                      <option value="shimmer">Shimmer</option>
+                    </optgroup>
+                    <optgroup label="Masculine">
+                      <option value="ash">Ash</option>
+                      <option value="echo">Echo</option>
+                      <option value="fable">Fable</option>
+                      <option value="onyx">Onyx</option>
+                      <option value="verse">Verse</option>
+                    </optgroup>
+                    <optgroup label="Neutral">
+                      <option value="ballad">Ballad</option>
+                    </optgroup>
+                  </select>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-9 px-3 flex-shrink-0"
+                    onClick={() => setShowVoiceExplorer(true)}
+                  >
+                    <Volume2 size={14} className="mr-1.5" />
+                    Preview
+                  </Button>
+                </div>
               </Field>
 
               <ArrayField
@@ -770,6 +817,100 @@ export function CharacterEditor({ store }: Props) {
               Generate
             </Button>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showVoiceExplorer} onClose={() => { setShowVoiceExplorer(false); sampleAudioRef.current?.pause(); setSamplePlaying(null); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Voice Preview</DialogTitle>
+            <DialogDescription>Listen to each voice to find the right fit for {form.display_name || "this character"}.</DialogDescription>
+          </DialogHeader>
+          <DialogBody>
+            <div className="mb-3">
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Tone</label>
+              <select
+                className="w-full h-8 mt-1 rounded-lg border border-border bg-background px-2.5 text-xs"
+                value={sampleTone}
+                onChange={(e) => setSampleTone(e.target.value)}
+              >
+                {["Auto", "Playful", "Happy", "Excited", "Reverent", "Serene", "Intimate", "Tender", "Sad", "Melancholy", "Angry", "Anxious"].map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-3">
+              {[
+                { label: "Feminine", voices: ["alloy", "coral", "nova", "sage", "shimmer"] },
+                { label: "Masculine", voices: ["ash", "echo", "fable", "onyx", "verse"] },
+                { label: "Neutral", voices: ["ballad"] },
+              ].map((group) => (
+                <div key={group.label}>
+                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">{group.label}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {group.voices.map((voice) => {
+                      const sampleKey = `${voice}:${sampleTone}`;
+                      const isPlaying = samplePlaying === sampleKey;
+                      const isLoading = sampleLoading === sampleKey;
+                      return (
+                        <button
+                          key={voice}
+                          onClick={async () => {
+                            if (isPlaying) {
+                              sampleAudioRef.current?.pause();
+                              setSamplePlaying(null);
+                              return;
+                            }
+                            sampleAudioRef.current?.pause();
+                            setSamplePlaying(null);
+                            setSampleLoading(sampleKey);
+                            try {
+                              const bytes = await api.generateVoiceSample(store.apiKey, voice, sampleTone === "Auto" ? undefined : sampleTone);
+                              const blob = new Blob([new Uint8Array(bytes)], { type: "audio/mpeg" });
+                              const url = URL.createObjectURL(blob);
+                              const audio = new Audio(url);
+                              sampleAudioRef.current = audio;
+                              audio.onended = () => setSamplePlaying(null);
+                              audio.play();
+                              setSamplePlaying(sampleKey);
+                            } catch (e) {
+                              store.setError?.(String(e));
+                            } finally {
+                              setSampleLoading(null);
+                            }
+                          }}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                            isPlaying
+                              ? "bg-primary text-primary-foreground"
+                              : voice === ttsVoice
+                                ? "bg-primary/15 text-primary border border-primary/30"
+                                : "bg-secondary text-secondary-foreground hover:bg-accent"
+                          }`}
+                        >
+                          {isLoading ? (
+                            <Loader2 size={12} className="animate-spin" />
+                          ) : isPlaying ? (
+                            <Square size={10} fill="currentColor" />
+                          ) : (
+                            <Volume2 size={12} />
+                          )}
+                          {voice.charAt(0).toUpperCase() + voice.slice(1)}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 pt-3 border-t border-border flex justify-between items-center">
+              <p className="text-xs text-muted-foreground">
+                Current: <span className="font-medium text-foreground">{ttsVoice.charAt(0).toUpperCase() + ttsVoice.slice(1)}</span>
+              </p>
+              <Button variant="ghost" size="sm" onClick={() => { setShowVoiceExplorer(false); sampleAudioRef.current?.pause(); setSamplePlaying(null); }}>
+                Done
+              </Button>
+            </div>
+          </DialogBody>
         </DialogContent>
       </Dialog>
     </>

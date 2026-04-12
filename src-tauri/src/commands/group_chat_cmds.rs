@@ -80,15 +80,29 @@ pub fn delete_group_chat_cmd(
 #[tauri::command]
 pub fn clear_group_chat_history_cmd(
     db: State<Database>,
+    audio_dir: State<crate::commands::audio_cmds::AudioDir>,
     group_chat_id: String,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
+
+    // Collect message IDs for audio cleanup before deletion
+    let msg_ids: Vec<String> = conn.prepare("SELECT message_id FROM group_messages WHERE thread_id = ?1")
+        .map_err(|e| e.to_string())?
+        .query_map(params![gc.thread_id], |row| row.get(0))
+        .map_err(|e| e.to_string())?
+        .filter_map(|r| r.ok()).collect();
+
     conn.execute("DELETE FROM group_messages_fts WHERE thread_id = ?1", params![gc.thread_id]).ok();
     conn.execute("DELETE FROM group_messages WHERE thread_id = ?1", params![gc.thread_id])
         .map_err(|e| e.to_string())?;
     conn.execute("DELETE FROM memory_artifacts WHERE subject_id = ?1", params![gc.thread_id]).ok();
     conn.execute("DELETE FROM message_count_tracker WHERE thread_id = ?1", params![gc.thread_id]).ok();
+
+    for msg_id in &msg_ids {
+        crate::commands::audio_cmds::delete_audio_for_message(&audio_dir.0, msg_id);
+    }
+
     Ok(())
 }
 

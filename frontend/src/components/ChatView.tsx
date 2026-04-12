@@ -4,7 +4,7 @@ import { formatMessage } from "@/components/chat/formatMessage";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
-import { Send, Loader2, SmilePlus, X, Check, Copy, ExternalLink, BookOpen, RotateCcw, MessageSquare, Settings, Image, Trash2, RefreshCw, SlidersHorizontal, Video, Repeat, Square, Download, Crosshair, ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import { Send, Loader2, SmilePlus, X, Check, Copy, ExternalLink, BookOpen, RotateCcw, MessageSquare, Settings, Image, Trash2, RefreshCw, SlidersHorizontal, Video, Repeat, Square, Download, Crosshair, ChevronLeft, ChevronRight, Play, Pause, Volume2 } from "lucide-react";
 import { useSlideshow } from "@/hooks/use-slideshow";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type { useAppStore } from "@/hooks/use-app-store";
@@ -54,6 +54,13 @@ export function ChatView({ store }: Props) {
   const [downloadedId, setDownloadedId] = useState<string | null>(null);
   const [removeVideoConfirmId, setRemoveVideoConfirmId] = useState<string | null>(null);
   const [animationReadyId, setAnimationReadyId] = useState<string | null>(null);
+  const [speakingId, setSpeakingId] = useState<string | null>(null);
+  const [loadingSpeech, setLoadingSpeech] = useState<string | null>(null);
+  const [toneMenuId, setToneMenuId] = useState<string | null>(null);
+  const [cachedTones, setCachedTones] = useState<Record<string, Set<string>>>({});
+  const [lastTones, setLastTones] = useState<Record<string, string>>({});
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const toneMenuRef = useRef<HTMLDivElement>(null);
   const [illustrationModalId, setIllustrationModalId] = useState<string | null>(null);
   const [modalSelectedId, setModalSelectedId] = useState<string | null>(null);
   const [modalPlayingVideo, setModalPlayingVideo] = useState(false);
@@ -75,6 +82,15 @@ export function ChatView({ store }: Props) {
     if (!store.activeWorld) { setUserAvatarUrl(""); return; }
     api.getUserAvatar(store.activeWorld.world_id).then((url) => setUserAvatarUrl(url || ""));
   }, [store.activeWorld?.world_id, store.userProfile?.avatar_file]);
+
+  useEffect(() => {
+    api.listCachedAudio().then(({ cached, last_tones }) => {
+      const map: Record<string, Set<string>> = {};
+      for (const [id, tones] of Object.entries(cached)) map[id] = new Set(tones);
+      setCachedTones(map);
+      setLastTones(last_tones);
+    });
+  }, [store.messages.length]);
 
   useEffect(() => {
     if (!charId) return;
@@ -105,6 +121,47 @@ export function ChatView({ store }: Props) {
     const blob = new Blob([new Uint8Array(bytes)], { type: "video/mp4" });
     return URL.createObjectURL(blob);
   }, []);
+
+  const handleSpeak = useCallback(async (messageId: string, text: string, tone?: string) => {
+    if (speakingId === messageId) {
+      audioRef.current?.pause();
+      setSpeakingId(null);
+      return;
+    }
+    audioRef.current?.pause();
+    setSpeakingId(null);
+    setLoadingSpeech(messageId);
+    try {
+      const characterId = store.activeCharacter?.character_id ?? "";
+      const bytes = await api.generateSpeech(store.apiKey, messageId, text, characterId, tone);
+      const blob = new Blob([new Uint8Array(bytes)], { type: "audio/mpeg" });
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      audio.onended = () => setSpeakingId(null);
+      audio.play();
+      setSpeakingId(messageId);
+      const toneKey = (tone ?? "auto").toLowerCase();
+      setCachedTones((prev) => ({ ...prev, [messageId]: new Set([...(prev[messageId] ?? []), toneKey]) }));
+      setLastTones((prev) => ({ ...prev, [messageId]: toneKey }));
+    } catch (e) {
+      store.setError?.(String(e));
+    } finally {
+      setLoadingSpeech(null);
+    }
+  }, [speakingId, store.activeCharacter?.character_id, store.apiKey]);
+
+  // Close tone menu on outside click
+  useEffect(() => {
+    if (!toneMenuId) return;
+    const handler = (e: MouseEvent) => {
+      if (toneMenuRef.current && !toneMenuRef.current.contains(e.target as Node)) {
+        setToneMenuId(null);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [toneMenuId]);
 
   // Map modalIllustrations for slideshow hook (content -> data_url)
   const slideshowIllustrations = modalIllustrations.map((i) => ({ id: i.id, data_url: i.content }));
@@ -603,17 +660,97 @@ export function ChatView({ store }: Props) {
                         : "bg-secondary/40 text-secondary-foreground rounded-bl-md max-w-[80%] border border-border/30"
                     }`}
                   >
-                    {/* Reaction button — overlaps the top corner of the bubble */}
-                    {!isPending && (
+                    {/* Top corner button — reaction (user) or speak (character) */}
+                    {!isPending && isUser && (
                       <button
                         onClick={() => setPickerMessageId(showPicker ? null : msg.message_id)}
-                        className={`absolute -top-2.5 z-10 w-7 h-7 flex items-center justify-center rounded-full bg-white shadow-md border border-border/50 text-muted-foreground hover:text-foreground hover:scale-110 opacity-0 group-hover:opacity-100 transition-all cursor-pointer ${
-                          isUser ? "-left-2.5" : "-right-2.5"
-                        }`}
+                        className="absolute -top-2.5 -left-2.5 z-10 w-7 h-7 flex items-center justify-center rounded-full bg-white shadow-md border border-border/50 text-muted-foreground hover:text-foreground hover:scale-110 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
                       >
                         <SmilePlus size={16} strokeWidth={2} />
                       </button>
                     )}
+                    {!isPending && !isUser && (() => {
+                      const msgCached = cachedTones[msg.message_id];
+                      const hasCached = msgCached && msgCached.size > 0;
+                      const isSpeaking = speakingId === msg.message_id;
+                      const isLoading = loadingSpeech === msg.message_id;
+                      const lastTone = lastTones[msg.message_id];
+                      const allTones = ["Auto", "Playful", "Happy", "Excited", "Reverent", "Serene", "Intimate", "Tender", "Sad", "Melancholy", "Angry", "Anxious"];
+                      return (
+                      <div className="absolute -top-2.5 -right-2.5 z-10">
+                        <button
+                          onClick={() => {
+                            if (isSpeaking) {
+                              audioRef.current?.pause();
+                              setSpeakingId(null);
+                            } else {
+                              setToneMenuId(toneMenuId === msg.message_id ? null : msg.message_id);
+                            }
+                          }}
+                          className={`w-7 h-7 flex items-center justify-center rounded-full shadow-md border border-border/50 hover:scale-110 transition-all cursor-pointer ${
+                            isSpeaking
+                              ? "bg-primary text-white opacity-100"
+                              : isLoading
+                                ? "bg-white text-primary opacity-100"
+                                : hasCached
+                                  ? "bg-white text-primary opacity-100"
+                                  : "bg-white text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100"
+                          }`}
+                        >
+                          {isLoading ? <Loader2 size={14} className="animate-spin" /> : isSpeaking ? <Square size={10} fill="white" /> : <Volume2 size={14} />}
+                        </button>
+                        {toneMenuId === msg.message_id && (
+                          <div ref={toneMenuRef} className="absolute top-full right-0 mt-1.5 bg-card border border-border rounded-lg shadow-xl shadow-black/20 p-2.5 z-50 w-[280px]">
+                            {hasCached && lastTone && (
+                              <button
+                                onClick={() => {
+                                  setToneMenuId(null);
+                                  handleSpeak(msg.message_id, msg.content, lastTone === "auto" ? "Auto" : lastTone.charAt(0).toUpperCase() + lastTone.slice(1));
+                                }}
+                                className="w-full text-left px-2.5 py-1.5 mb-2 text-xs hover:bg-accent transition-colors cursor-pointer flex items-center gap-2 font-medium rounded-md border border-border/50"
+                              >
+                                <Play size={10} fill="currentColor" className="text-primary flex-shrink-0" />
+                                Last: {lastTone === "auto" ? "Auto" : lastTone.charAt(0).toUpperCase() + lastTone.slice(1)}
+                              </button>
+                            )}
+                            <div className="grid grid-cols-3 gap-1">
+                              {allTones.map((tone) => {
+                                const isCached = msgCached?.has(tone.toLowerCase());
+                                return (
+                                  <button
+                                    key={tone}
+                                    onClick={() => {
+                                      setToneMenuId(null);
+                                      handleSpeak(msg.message_id, msg.content, tone);
+                                    }}
+                                    className="px-2 py-1.5 text-[11px] rounded-md hover:bg-accent transition-colors cursor-pointer flex items-center justify-center gap-1"
+                                  >
+                                    {tone === "Auto" ? <span className="text-muted-foreground">Auto</span> : tone}
+                                    {isCached && <Volume2 size={8} className="text-primary flex-shrink-0" />}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            {hasCached && (
+                              <button
+                                onClick={async () => {
+                                  setToneMenuId(null);
+                                  if (isSpeaking) { audioRef.current?.pause(); setSpeakingId(null); }
+                                  await api.deleteMessageAudio(msg.message_id);
+                                  setCachedTones((prev) => { const next = { ...prev }; delete next[msg.message_id]; return next; });
+                                  setLastTones((prev) => { const next = { ...prev }; delete next[msg.message_id]; return next; });
+                                }}
+                                className="w-full mt-2 pt-2 border-t border-border text-left px-2 py-1 text-[11px] hover:bg-accent transition-colors cursor-pointer flex items-center gap-1.5 text-red-400 rounded-md"
+                              >
+                                <Trash2 size={10} className="flex-shrink-0" />
+                                Delete Audio
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      );
+                    })()}
 
                     {/* Emoji picker */}
                     {showPicker && (

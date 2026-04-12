@@ -364,6 +364,18 @@ export const api = {
     invoke<PaginatedMessages>("get_messages_cmd", { characterId, limit, offset }),
 
 
+  // TTS
+  generateSpeech: (apiKey: string, messageId: string, text: string, characterId: string, tone?: string) =>
+    invoke<number[]>("generate_speech_cmd", { apiKey, messageId, text, characterId, tone: tone ?? null }),
+  generateVoiceSample: (apiKey: string, voice: string, tone?: string) =>
+    invoke<number[]>("generate_voice_sample_cmd", { apiKey, voice, tone: tone ?? null }),
+  getSpeech: (messageId: string) =>
+    invoke<number[] | null>("get_speech_cmd", { messageId }),
+  listCachedAudio: () =>
+    invoke<{ cached: Record<string, string[]>; last_tones: Record<string, string> }>("list_cached_audio_cmd"),
+  deleteMessageAudio: (messageId: string) =>
+    invoke<void>("delete_message_audio_cmd", { messageId }),
+
   getModelConfig: () => invoke<ModelConfig>("get_model_config_cmd"),
   setModelConfig: (config: ModelConfig) => invoke<void>("set_model_config_cmd", { config }),
   getSetting: (key: string) => invoke<string | null>("get_setting_cmd", { key }),

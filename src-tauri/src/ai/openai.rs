@@ -317,6 +317,35 @@ pub async fn create_embeddings_with_base(base_url: &str, api_key: &str, model: &
     Ok((parsed.data.into_iter().map(|d| d.embedding).collect(), tokens))
 }
 
+// ─── Text-to-Speech ────────────────────────────────────────────────────────
+
+#[derive(Debug, Serialize)]
+pub struct TtsRequest {
+    pub model: String,
+    pub input: String,
+    pub voice: String,
+}
+
+/// Generate speech audio via OpenAI TTS API. Returns raw MP3 bytes.
+pub async fn text_to_speech(base_url: &str, api_key: &str, request: &TtsRequest) -> Result<Vec<u8>, String> {
+    let client = Client::new();
+    let url = format!("{base_url}/audio/speech");
+    let mut builder = client.post(&url).json(request);
+    if !api_key.is_empty() {
+        builder = builder.header("Authorization", format!("Bearer {api_key}"));
+    }
+    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let status = resp.status();
+    if !status.is_success() {
+        let body = resp.text().await.unwrap_or_default();
+        if let Ok(err) = serde_json::from_str::<ApiError>(&body) {
+            return Err(format!("API error ({}): {}", status, err.error.message));
+        }
+        return Err(format!("API error ({}): {}", status, body));
+    }
+    resp.bytes().await.map(|b| b.to_vec()).map_err(|e| format!("Read error: {e}"))
+}
+
 // ─── List Models ───────────────────────────────────────────────────────────
 
 #[derive(Debug, Deserialize)]
