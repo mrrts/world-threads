@@ -6,18 +6,16 @@ import { ChatView } from "@/components/ChatView";
 import { GroupChatView } from "@/components/GroupChatView";
 import { WorldCanonEditor } from "@/components/WorldCanonEditor";
 import { CharacterEditor } from "@/components/CharacterEditor";
-import { CharacterGrid } from "@/components/CharacterGrid";
 import { UserProfileEditor } from "@/components/UserProfileEditor";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { WorldSummary } from "@/components/WorldSummary";
 import { MoodDebugPanel } from "@/components/MoodDebugPanel";
 import { PortraitPopout } from "@/components/PortraitPopout";
-import { MessageSquare, PenLine, Users, Settings, Coins, BookOpen, Download, Play, Square, Plus, Minus } from "lucide-react";
+import { PenLine, Settings, Coins, BookOpen, Download, Play, Square, Plus, Minus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 type View = "chat" | "world" | "character" | "settings" | "summary";
-type CharSubView = "grid" | "editor" | "profile";
 
 export default function App() {
   // Check if this window is a popout
@@ -37,7 +35,6 @@ export default function App() {
 function MainApp() {
   const store = useAppStore();
   const [view, setView] = useState<View>("chat");
-  const [charSubView, setCharSubView] = useState<CharSubView>("grid");
   const lastChatCharRef = useRef<string | null>(null);
   const viewRef = useRef<View>("chat");
 
@@ -107,25 +104,11 @@ function MainApp() {
 
   const handleNavigate = useCallback((v: string) => {
     setViewTracked(v as View);
-    if (v === "character" && !store.editingUserProfile) {
-      setCharSubView("editor");
-    }
-  }, [store.editingUserProfile, setViewTracked]);
-
-  const handleCharNav = useCallback(() => {
-    setViewTracked("character");
-    setCharSubView("grid");
   }, [setViewTracked]);
 
-  const handleChatNav = useCallback(() => {
-    if (lastChatCharRef.current) {
-      const ch = store.characters.find((c) => c.character_id === lastChatCharRef.current);
-      if (ch) {
-        store.selectCharacter(ch);
-      }
-    }
-    setViewTracked("chat");
-  }, [store, setViewTracked]);
+
+
+
 
   if (store.loading) {
     return (
@@ -148,9 +131,7 @@ function MainApp() {
 
       <div className="w-16 flex-shrink-0 bg-card border-r border-border flex flex-col items-center py-4 gap-2">
         <NavButton icon={<BookOpen size={20} />} active={view === "summary"} onClick={() => setViewTracked("summary")} title="Summary" description="World overview and conversation recaps for each character." />
-        <NavButton icon={<MessageSquare size={20} />} active={view === "chat"} onClick={handleChatNav} title="Chat" description="Talk with your characters in real time." />
         <NavButton icon={<PenLine size={20} />} active={view === "world"} onClick={() => setViewTracked("world")} title="World Canon" description="Edit your world's name, description, tone, and rules." />
-        <NavButton icon={<Users size={20} />} active={view === "character"} onClick={handleCharNav} title="Characters" description="Create, edit, and manage your cast of characters." />
         <div className="flex-1" />
         <UsageBadge sending={!!store.sending} />
         <NavButton icon={<Settings size={20} />} active={view === "settings"} onClick={() => setViewTracked("settings")} title="Settings" description="API key, model config, and app preferences." />
@@ -191,20 +172,7 @@ function MainApp() {
         )}
         {view === "character" && (
           <DeferredMount key="character">
-            {store.editingUserProfile ? <UserProfileEditor store={store} /> :
-            charSubView === "grid" ? (
-              <CharacterGrid
-                store={store}
-                onChat={(id) => {
-                  const ch = store.characters.find((c) => c.character_id === id);
-                  if (ch) { store.selectCharacter(ch); lastChatCharRef.current = id; setViewTracked("chat"); }
-                }}
-                onSettings={(id) => {
-                  const ch = store.characters.find((c) => c.character_id === id);
-                  if (ch) { store.selectCharacter(ch); setCharSubView("editor"); }
-                }}
-              />
-            ) : <CharacterEditor store={store} />}
+            {store.editingUserProfile ? <UserProfileEditor store={store} /> : <CharacterEditor store={store} />}
           </DeferredMount>
         )}
         {view === "settings" && (
@@ -222,7 +190,7 @@ function MainApp() {
               }}
               onSettings={(id) => {
                 const ch = store.characters.find((c) => c.character_id === id);
-                if (ch) { store.selectCharacter(ch); setViewTracked("character"); setCharSubView("editor"); }
+                if (ch) { store.selectCharacter(ch); setViewTracked("character"); }
               }}
             />
           </DeferredMount>

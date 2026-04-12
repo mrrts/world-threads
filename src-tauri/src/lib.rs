@@ -131,6 +131,8 @@ pub fn run() {
             set_budget_mode_cmd,
             get_memory_artifacts_cmd,
             get_thread_summary_cmd,
+            generate_chat_summary_cmd,
+            generate_group_chat_summary_cmd,
             add_reaction_cmd,
             remove_reaction_cmd,
             get_reactions_cmd,

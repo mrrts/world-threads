@@ -403,6 +403,10 @@ export const api = {
     invoke<MemoryArtifact[]>("get_memory_artifacts_cmd", { subjectId, artifactType }),
   getThreadSummary: (characterId: string) =>
     invoke<string>("get_thread_summary_cmd", { characterId }),
+  generateChatSummary: (apiKey: string, characterId: string) =>
+    invoke<string>("generate_chat_summary_cmd", { apiKey, characterId }),
+  generateGroupChatSummary: (apiKey: string, groupChatId: string) =>
+    invoke<string>("generate_group_chat_summary_cmd", { apiKey, groupChatId }),
 
   generatePortrait: (apiKey: string, characterId: string, formHint?: { display_name?: string; identity?: string; backstory_facts?: unknown }) =>
     invoke<PortraitInfo>("generate_portrait_cmd", { apiKey, characterId, formHint: formHint ?? null }),
