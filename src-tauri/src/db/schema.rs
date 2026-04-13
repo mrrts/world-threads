@@ -326,6 +326,18 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         )?;
     }
 
+    // Clean up leftover temp tables from prior failed migrations.
+    // Only drop if the real table has data (meaning migration was partially successful).
+    conn.execute_batch("DROP TABLE IF EXISTS messages_new;").ok();
+    let msgs_ok: i64 = conn.query_row("SELECT count(*) FROM messages", [], |r| r.get(0)).unwrap_or(0);
+    if msgs_ok > 0 {
+        conn.execute_batch("DROP TABLE IF EXISTS messages_migrating;").ok();
+    }
+    let gmsgs_ok: i64 = conn.query_row("SELECT count(*) FROM group_messages", [], |r| r.get(0)).unwrap_or(0);
+    if gmsgs_ok > 0 {
+        conn.execute_batch("DROP TABLE IF EXISTS group_messages_migrating;").ok();
+    }
+
     // Ensure messages.role CHECK constraint includes all roles.
     // SQLite doesn't support ALTER CHECK, so we detect old constraints and recreate.
     let needs_role_migration: bool = conn
