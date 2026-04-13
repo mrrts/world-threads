@@ -48,7 +48,7 @@ export function GroupChatView({ store }: Props) {
   const chatId = store.activeGroupChat?.group_chat_id;
 
   const {
-    input, setInput,
+    inputValueRef, hasInput, setHasInput,
     scrollRef,
     inputRef,
     userAvatarUrl,
@@ -633,17 +633,15 @@ export function GroupChatView({ store }: Props) {
           </div>
           <textarea
             ref={inputRef}
-            value={input}
+            defaultValue=""
             onChange={(e) => {
-              setInput(e.target.value);
+              inputValueRef.current = e.target.value;
+              const empty = !e.target.value.trim();
+              if (hasInput === empty) setHasInput(!empty);
               e.target.style.height = "";
               if (e.target.scrollHeight > e.target.offsetHeight) {
                 e.target.style.height = Math.min(e.target.scrollHeight, 200) + "px";
               }
-              requestAnimationFrame(() => {
-                const el = scrollRef.current;
-                if (el) el.scrollTop = el.scrollHeight;
-              });
             }}
             onKeyDown={handleKeyDown}
             placeholder={`Talk to ${store.activeGroupChat?.display_name ?? "the group"}...`}
@@ -655,7 +653,7 @@ export function GroupChatView({ store }: Props) {
             size="icon"
             className="rounded-xl self-stretch w-10 flex-shrink-0"
             onClick={handleSend}
-            disabled={!input.trim() || isSending || (store.autoRespond && !store.apiKey)}
+            disabled={!hasInput || isSending || (store.autoRespond && !store.apiKey)}
           >
             {isSending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
           </Button>
@@ -869,6 +867,7 @@ export function GroupChatView({ store }: Props) {
           store.characters.map((c) => [c.character_id, c.display_name])
         )}
         userAvatarUrl={userAvatarUrl}
+        backgroundPortraits={groupCharacters.map((ch) => store.activePortraits[ch.character_id]?.data_url).filter(Boolean) as string[]}
         playVideo={playVideo}
         playingVideo={playingVideo}
         setPlayingVideo={setPlayingVideo}

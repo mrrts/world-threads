@@ -47,7 +47,7 @@ export function ChatView({ store }: Props) {
   const chatState = useChatState({ store, chatId: charId, chatType: "individual" });
 
   const {
-    input, setInput,
+    inputValueRef, hasInput, setHasInput,
     scrollRef,
     inputRef,
     userAvatarUrl,
@@ -617,18 +617,15 @@ export function ChatView({ store }: Props) {
           </div>
           <textarea
             ref={inputRef}
-            value={input}
+            defaultValue=""
             onChange={(e) => {
-              setInput(e.target.value);
-              // Reset to natural stretch height, then expand if content is taller
+              inputValueRef.current = e.target.value;
+              const empty = !e.target.value.trim();
+              if (hasInput === empty) setHasInput(!empty);
               e.target.style.height = "";
               if (e.target.scrollHeight > e.target.offsetHeight) {
                 e.target.style.height = Math.min(e.target.scrollHeight, 200) + "px";
               }
-              requestAnimationFrame(() => {
-                const el = scrollRef.current;
-                if (el) el.scrollTop = el.scrollHeight;
-              });
             }}
             onKeyDown={handleKeyDown}
             placeholder={`Talk to ${store.activeCharacter?.display_name ?? "character"}...`}
@@ -640,7 +637,7 @@ export function ChatView({ store }: Props) {
             size="icon"
             className="rounded-xl self-stretch w-10 flex-shrink-0"
             onClick={handleSend}
-            disabled={!input.trim() || isSending || (store.autoRespond && !store.apiKey)}
+            disabled={!hasInput || isSending || (store.autoRespond && !store.apiKey)}
           >
             {isSending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
           </Button>
@@ -849,6 +846,7 @@ export function ChatView({ store }: Props) {
           store.characters.map((c) => [c.character_id, c.display_name])
         )}
         userAvatarUrl={userAvatarUrl}
+        backgroundPortraits={charPortrait?.data_url ? [charPortrait.data_url] : []}
         playVideo={playVideo}
         playingVideo={playingVideo}
         setPlayingVideo={setPlayingVideo}

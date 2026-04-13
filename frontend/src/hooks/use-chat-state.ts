@@ -11,7 +11,8 @@ interface UseChatStateOptions {
 
 export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
   // ── Shared state ──────────────────────────────────────────────────────
-  const [input, setInput] = useState("");
+  const inputValueRef = useRef("");
+  const [hasInput, setHasInput] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userAvatarUrl, setUserAvatarUrl] = useState("");
@@ -280,18 +281,19 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
   // ── Send / Retry / KeyDown ────────────────────────────────────────────
 
   const handleSend = useCallback(async () => {
-    const text = input.trim();
+    const text = inputValueRef.current.trim();
     if (!text || isSending) return;
     store.clearChatError();
-    setInput("");
-    if (inputRef.current) inputRef.current.style.height = "auto";
+    inputValueRef.current = "";
+    setHasInput(false);
+    if (inputRef.current) { inputRef.current.value = ""; inputRef.current.style.height = "auto"; }
     if (chatType === "group") {
       await store.sendGroupMessage(text);
     } else {
       await store.sendMessage(text);
     }
     inputRef.current?.focus();
-  }, [input, isSending, chatType, store]);
+  }, [isSending, chatType, store]);
 
   const handleRetry = useCallback(async () => {
     if (!store.lastFailedContent || isSending) return;
@@ -315,7 +317,7 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
 
   return {
     // State
-    input, setInput,
+    inputValueRef, hasInput, setHasInput,
     scrollRef,
     inputRef,
     userAvatarUrl, setUserAvatarUrl,

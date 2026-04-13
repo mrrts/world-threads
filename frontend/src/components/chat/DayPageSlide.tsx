@@ -6,6 +6,7 @@ import type { Message } from "@/lib/tauri";
 
 interface Props {
   day: number;
+  timePart: string | null;
   messages: Message[];
   /** Character portrait URLs keyed by character_id */
   portraits: Record<string, string>;
@@ -15,6 +16,8 @@ interface Props {
   characterNames: Record<string, string>;
   /** User avatar data URL */
   userAvatarUrl: string;
+  /** Portrait URLs for the background (tiled side by side) */
+  backgroundPortraits: string[];
   /** Video files keyed by message_id */
   videoFiles: Record<string, string>;
   /** Video data URLs keyed by message_id */
@@ -29,21 +32,34 @@ interface Props {
 }
 
 export function DayPageSlide({
-  day, messages, portraits, characterColors, characterNames,
-  userAvatarUrl, videoFiles, videoDataUrls, playVideo,
+  day, timePart, messages, portraits, characterColors, characterNames,
+  userAvatarUrl, backgroundPortraits, videoFiles, videoDataUrls, playVideo,
   playingVideo, setPlayingVideo, loopVideo, setLoopVideo,
 }: Props) {
   // Group consecutive time-of-day sections
   let lastTime: string | null = null;
 
   return (
-    <div className="w-full h-full flex flex-col bg-background/95 rounded-t-2xl overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-background rounded-t-2xl overflow-hidden relative">
+      {/* Portrait background */}
+      {backgroundPortraits.length > 0 && (
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex">
+          {backgroundPortraits.map((url, i) => (
+            <div key={i} className="flex-1 relative">
+              <img src={url} alt="" className="w-full h-full object-cover" />
+            </div>
+          ))}
+          <div className="absolute inset-0 bg-background/65" />
+        </div>
+      )}
       {/* Sticky header */}
-      <div className="flex-shrink-0 sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-border/30 px-6 py-3">
-        <h2 className="text-lg font-bold text-foreground tracking-tight">Day {day}</h2>
+      <div className="flex-shrink-0 sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-border/30 px-6 py-3 relative">
+        <h2 className="text-lg font-bold text-foreground tracking-tight text-center">
+          Day {day}{timePart ? ` · ${timePart.split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ")}` : ""}
+        </h2>
       </div>
       {/* Scrollable message list */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="flex-1 overflow-y-auto px-4 py-4 relative z-[1]">
         <div className="space-y-3 max-w-2xl mx-auto">
           {messages.map((msg, idx) => {
             // Time divider

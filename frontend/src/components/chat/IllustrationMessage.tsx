@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image, Square, Repeat, SlidersHorizontal, RefreshCw, Trash2, ExternalLink, Check, Download, Video } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { api, type Message } from "@/lib/tauri";
 import type { useAppStore } from "@/hooks/use-app-store";
@@ -50,7 +52,9 @@ export function IllustrationMessage({
   setRemoveVideoConfirmId, setResetConfirmId,
   downloadedId, setDownloadedId, loadIllustrations,
 }: Props) {
-  return (
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  return (<>
     <div data-message-id={msg.message_id} className="flex justify-center my-3">
       <div className="relative group/illus max-w-[95%] rounded-xl bg-gradient-to-br from-emerald-950/30 to-emerald-900/10 border border-emerald-700/20 backdrop-blur-sm">
         <div className="flex items-center gap-1.5 px-4 pt-3 pb-1.5 text-[10px] uppercase tracking-wider text-emerald-500/70 font-semibold">
@@ -140,7 +144,7 @@ export function IllustrationMessage({
               </div>
               <div className="relative group/del">
                 <button
-                  onClick={() => store.deleteIllustration(msg.message_id)}
+                  onClick={() => setShowDeleteConfirm(true)}
                   className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-destructive transition-colors backdrop-blur-sm"
                 >
                   <Trash2 size={14} />
@@ -232,5 +236,32 @@ export function IllustrationMessage({
         </p>
       </div>
     </div>
-  );
+
+    <Dialog open={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} className="max-w-xs">
+      <div className="p-5 space-y-4 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl shadow-black/50">
+        <div className="flex items-center gap-2">
+          <Trash2 size={18} className="text-destructive" />
+          <h3 className="font-semibold">Delete Illustration</h3>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          This will permanently delete this illustration and any attached video.
+        </p>
+        <div className="flex justify-end gap-2">
+          <Button variant="ghost" size="sm" onClick={() => setShowDeleteConfirm(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => {
+              setShowDeleteConfirm(false);
+              store.deleteIllustration(msg.message_id);
+            }}
+          >
+            Delete
+          </Button>
+        </div>
+      </div>
+    </Dialog>
+  </>);
 }

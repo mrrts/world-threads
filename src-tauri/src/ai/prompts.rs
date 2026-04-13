@@ -30,10 +30,16 @@ pub fn build_dialogue_system_prompt(
         let other_names: Vec<&str> = gc.other_characters.iter().map(|c| c.display_name.as_str()).collect();
         let user_name = user_profile.map(|p| p.display_name.as_str()).unwrap_or("the human");
         parts.push(format!(
-            "You are {}, a character in a group conversation with {} and {}. Stay fully in character at all times.",
+            "You are {} — and ONLY {}. You are in a group conversation with {} and {}. \
+             You must embody this character completely: their personality, speech patterns, knowledge, emotions, and worldview. \
+             Never break character. Never speak as, for, or about another character's thoughts or actions. \
+             Your entire output must be {}'s words and {}'s words alone.",
+            character.display_name,
             character.display_name,
             user_name,
             other_names.join(" and "),
+            character.display_name,
+            character.display_name,
         ));
     } else {
         parts.push(format!(
@@ -109,11 +115,16 @@ pub fn build_dialogue_system_prompt(
             others.push(format!("- {}: {}", oc.display_name, identity));
         }
         parts.push(format!(
-            "OTHER CHARACTERS IN THIS CONVERSATION:\n{others}\n\
-             Messages from other characters appear as [CharacterName]: ... — \
-             You are ONLY {me}. Do NOT write dialogue, actions, or responses for any other character. \
-             Do NOT include lines like [OtherName]: ... or write what another character says or does. \
-             Respond ONLY as {me}. Write ONLY your own response text with no name prefix or bracket notation.",
+            "OTHER CHARACTERS IN THIS CONVERSATION:\n{others}\n\n\
+             CRITICAL — SINGLE-CHARACTER RULE:\n\
+             Messages from other characters appear as [CharacterName]: ... in the conversation history. \
+             These are OTHER people — you do NOT control them.\n\
+             - You are ONLY {me}. Write ONLY what {me} says and does.\n\
+             - NEVER write dialogue, actions, thoughts, or reactions for any other character.\n\
+             - NEVER include lines like \"[OtherName]: ...\" or narrate what someone else says or does.\n\
+             - NEVER prefix your response with your own name or brackets. Just respond naturally as {me}.\n\
+             - If another character said something, you may REACT to it, but never REPEAT or CONTINUE their words.\n\
+             - Violation of this rule breaks the entire conversation. One voice only: {me}.",
             others = others.join("\n"),
             me = character.display_name,
         ));
