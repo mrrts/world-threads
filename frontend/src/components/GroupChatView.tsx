@@ -4,8 +4,7 @@ import { formatMessage, markdownComponents } from "@/components/chat/formatMessa
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
-import { Send, Loader2, X, Check, ExternalLink, BookOpen, MessageSquare, Settings, Image, Trash2, RefreshCw, SlidersHorizontal, Video, Repeat, Square, Download, Crosshair, ChevronLeft, ChevronRight, Play, Pause, Volume2, ArrowRight } from "lucide-react";
-import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { Send, Loader2, X, BookOpen, MessageSquare, Settings, Image, Trash2, SlidersHorizontal, Square, Crosshair, ChevronLeft, ChevronRight, Play, Pause, Volume2, ArrowRight } from "lucide-react";
 import type { useAppStore } from "@/hooks/use-app-store";
 import { api } from "@/lib/tauri";
 import { NarrativeMessage } from "@/components/chat/NarrativeMessage";
@@ -17,12 +16,14 @@ import { NarrationSettingsModal } from "@/components/chat/NarrationSettingsModal
 import { IllustrationPickerModal } from "@/components/chat/IllustrationPickerModal";
 import { AdjustIllustrationModal } from "@/components/chat/AdjustIllustrationModal";
 import { VideoGenerationModal } from "@/components/chat/VideoGenerationModal";
+import { IllustrationCarouselModal } from "@/components/chat/IllustrationCarouselModal";
 import { AdjustMessageModal } from "@/components/chat/AdjustMessageModal";
 import { NarrativePickerModal } from "@/components/chat/NarrativePickerModal";
 import { SummaryModal } from "@/components/chat/SummaryModal";
 import { TimeDivider } from "@/components/chat/TimeDivider";
 import { ContextMessage } from "@/components/chat/ContextMessage";
 import { PortraitModal } from "@/components/chat/PortraitModal";
+import { IllustrationMessage } from "@/components/chat/IllustrationMessage";
 import { useChatState } from "@/hooks/use-chat-state";
 
 
@@ -238,204 +239,29 @@ export function GroupChatView({ store }: Props) {
             if (msg.role === "illustration") {
               return (<React.Fragment key={msg.message_id}>
                 <TimeDivider current={msg} previous={prevMsg} />
-                <div data-message-id={msg.message_id} className="flex justify-center my-3">
-                  <div className="relative group/illus max-w-[95%] rounded-xl bg-gradient-to-br from-emerald-950/30 to-emerald-900/10 border border-emerald-700/20 backdrop-blur-sm">
-                    <div className="flex items-center gap-1.5 px-4 pt-3 pb-1.5 text-[10px] uppercase tracking-wider text-emerald-500/70 font-semibold">
-                      <Image size={12} />
-                      <span>Illustration</span>
-                    </div>
-                    <div className="px-2 pb-2 relative">
-                      <img
-                        src={msg.content}
-                        alt="Scene illustration"
-                        loading="lazy"
-                        style={store.aspectRatios[msg.message_id] ? { aspectRatio: String(store.aspectRatios[msg.message_id]) } : undefined}
-                        className={`w-full rounded-lg cursor-pointer ${playingVideo === msg.message_id && videoDataUrls[msg.message_id] ? "invisible" : ""}`}
-                        onClick={async () => {
-                          setIllustrationModalId(msg.message_id);
-                          setModalSelectedId(msg.message_id);
-                          setModalPlayingVideo(false);
-                          setModalImageLoading(false);
-                          // Load all illustrations for the carousel
-                          if (store.activeGroupChat) {
-                            try {
-                              const page = await api.getMessages(store.activeGroupChat.group_chat_id);
-                              const illus = page.messages
-                                .filter((m) => m.role === "illustration")
-                                .map((m) => ({ id: m.message_id, content: m.content }));
-                              setModalIllustrations(illus);
-                              // Also load video files for carousel indicators
-                              for (const il of illus) {
-                                if (!videoFiles[il.id]) {
-                                  api.getVideoFile(il.id).then((vf) => {
-                                    if (vf) setVideoFiles((prev) => ({ ...prev, [il.id]: vf }));
-                                  }).catch(() => {});
-                                }
-                              }
-                            } catch { /* ignore */ }
-                          }
-                        }}
-                      />
-                      {playingVideo === msg.message_id && videoDataUrls[msg.message_id] && (
-                        <>
-                          <video
-                            src={videoDataUrls[msg.message_id]}
-                            autoPlay
-                            loop={!!loopVideo[msg.message_id]}
-                            playsInline
-                            className="absolute inset-2 w-[calc(100%-16px)] h-[calc(100%-16px)] object-contain rounded-lg"
-                            onEnded={() => { if (!loopVideo[msg.message_id]) setPlayingVideo(null); }}
-                          />
-                          <button
-                            onClick={() => setPlayingVideo(null)}
-                            className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-black/70 text-white flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors backdrop-blur-sm opacity-0 group-hover/illus:opacity-100"
-                            title="Stop"
-                          >
-                            <Square size={14} fill="white" />
-                          </button>
-                        </>
-                      )}
-                      {playingVideo !== msg.message_id && videoFiles[msg.message_id] && (
-                        <div className="absolute bottom-4 right-4 flex gap-1.5">
-                          <button
-                            onClick={() => setLoopVideo((prev) => ({ ...prev, [msg.message_id]: !prev[msg.message_id] }))}
-                            className={`w-10 h-10 rounded-full backdrop-blur-sm flex items-center justify-center cursor-pointer transition-colors ${
-                              loopVideo[msg.message_id]
-                                ? "bg-purple-600 text-white"
-                                : "bg-black/70 text-white/50 hover:text-white hover:bg-black/80"
-                            }`}
-                            title={loopVideo[msg.message_id] ? "Loop on" : "Loop off"}
-                          >
-                            <Repeat size={14} />
-                          </button>
-                          <button
-                            onClick={() => playVideo(msg.message_id)}
-                            className="w-10 h-10 rounded-full bg-black/70 text-white flex items-center justify-center cursor-pointer hover:bg-purple-600 transition-colors backdrop-blur-sm"
-                            title="Play animation"
-                          >
-                            <span className="text-lg ml-0.5">&#9654;</span>
-                          </button>
-                        </div>
-                      )}
-                      {playingVideo === msg.message_id && !videoDataUrls[msg.message_id] && (
-                        <div className="absolute inset-2 flex items-center justify-center bg-black/30 rounded-lg">
-                          <div className="animate-spin w-8 h-8 border-2 border-white/20 border-t-white rounded-full" />
-                        </div>
-                      )}
-                      {!isPending && !isSending && (
-                        <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover/illus:opacity-100 transition-opacity">
-                          <div className="relative group/adj">
-                            <button
-                              onClick={() => { setAdjustIllustrationId(msg.message_id); setAdjustInstructions(""); }}
-                              className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors backdrop-blur-sm"
-                            >
-                              <SlidersHorizontal size={14} />
-                            </button>
-                            <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/adj:opacity-100 pointer-events-none transition-opacity">Adjust</span>
-                          </div>
-                          <div className="relative group/regen">
-                            <button
-                              onClick={() => store.regenerateIllustration(msg.message_id)}
-                              className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors backdrop-blur-sm"
-                            >
-                              <RefreshCw size={14} />
-                            </button>
-                            <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/regen:opacity-100 pointer-events-none transition-opacity">Regenerate</span>
-                          </div>
-                          <div className="relative group/del">
-                            <button
-                              onClick={() => store.deleteIllustration(msg.message_id)}
-                              className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-destructive transition-colors backdrop-blur-sm"
-                            >
-                              <Trash2 size={14} />
-                            </button>
-                            <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/del:opacity-100 pointer-events-none transition-opacity">Delete</span>
-                          </div>
-                          <div className="relative group/pop">
-                            <button
-                              onClick={async () => {
-                                const label = `illus-${msg.message_id.slice(0, 8)}`;
-                                try {
-                                  const existing = await WebviewWindow.getByLabel(label);
-                                  if (existing) { await existing.setFocus(); return; }
-                                } catch { /* not found */ }
-                                new WebviewWindow(label, {
-                                  url: `index.html?illustration=${msg.message_id}`,
-                                  title: "Illustration",
-                                  width: 1280,
-                                  height: 760,
-                                  resizable: true,
-                                  decorations: true,
-                                });
-                              }}
-                              className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors backdrop-blur-sm"
-                            >
-                              <ExternalLink size={14} />
-                            </button>
-                            <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/pop:opacity-100 pointer-events-none transition-opacity">Pop Out</span>
-                          </div>
-                          <div className="relative group/dl">
-                            <button
-                              onClick={async () => {
-                                await api.downloadIllustration(msg.message_id);
-                                setDownloadedId(msg.message_id);
-                                setTimeout(() => setDownloadedId(null), 1500);
-                              }}
-                              className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors backdrop-blur-sm"
-                            >
-                              {downloadedId === msg.message_id ? <Check size={14} /> : <Download size={14} />}
-                            </button>
-                            <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/dl:opacity-100 pointer-events-none transition-opacity">{downloadedId === msg.message_id ? "Saved!" : "Download"}</span>
-                          </div>
-                          <div className="relative group/vid">
-                            {videoFiles[msg.message_id] ? (
-                              <button
-                                onClick={() => setRemoveVideoConfirmId(msg.message_id)}
-                                className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-destructive transition-colors backdrop-blur-sm"
-                              >
-                                <span className="relative">
-                                  <Video size={14} />
-                                  <span className="absolute inset-0 flex items-center justify-center">
-                                    <span className="block w-[18px] h-[1.5px] bg-white rotate-45" />
-                                  </span>
-                                </span>
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => { setVideoModalId(msg.message_id); setVideoPrompt(""); setVideoDuration(8); setVideoStyle("action-no-dialogue"); setVideoTab("generate"); }}
-                                className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-purple-600 transition-colors backdrop-blur-sm"
-                                disabled={isGeneratingVideo}
-                              >
-                                <Video size={14} />
-                              </button>
-                            )}
-                            <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/vid:opacity-100 pointer-events-none transition-opacity">{videoFiles[msg.message_id] ? "Remove Video" : "Animate"}</span>
-                          </div>
-                        </div>
-                      )}
-                      {store.generatingVideo === msg.message_id && (
-                        <div className="absolute inset-x-2 bottom-2 rounded-b-lg bg-gradient-to-t from-purple-950/90 to-purple-950/40 backdrop-blur-sm px-4 py-2.5 flex items-center gap-2 text-purple-300/90">
-                          <Video size={14} className="animate-pulse" />
-                          <span className="text-xs italic">Generating animation...</span>
-                          <span className="w-1.5 h-1.5 rounded-full bg-purple-400/60 animate-bounce [animation-delay:0ms]" />
-                          <span className="w-1.5 h-1.5 rounded-full bg-purple-400/60 animate-bounce [animation-delay:150ms]" />
-                          <span className="w-1.5 h-1.5 rounded-full bg-purple-400/60 animate-bounce [animation-delay:300ms]" />
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-[10px] px-4 pb-3 text-emerald-500/50 flex items-center gap-2">
-                      {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                      {!isPending && (
-                        <button
-                          onClick={() => setResetConfirmId(msg.message_id)}
-                          className="opacity-0 group-hover/illus:opacity-100 transition-opacity text-emerald-500/40 hover:text-emerald-400 cursor-pointer"
-                        >
-                          Reset to Here
-                        </button>
-                      )}
-                    </p>
-                  </div>
-                </div>
+                <IllustrationMessage
+                  msg={msg} isPending={isPending} isSending={isSending} isGeneratingVideo={isGeneratingVideo} store={store}
+                  playingVideo={playingVideo} setPlayingVideo={setPlayingVideo} loopVideo={loopVideo} setLoopVideo={setLoopVideo}
+                  videoFiles={videoFiles} setVideoFiles={setVideoFiles} videoDataUrls={videoDataUrls} playVideoFn={playVideo}
+                  setIllustrationModalId={setIllustrationModalId} setModalSelectedId={setModalSelectedId}
+                  setModalPlayingVideo={setModalPlayingVideo} setModalImageLoading={setModalImageLoading}
+                  setModalIllustrations={setModalIllustrations} setAdjustIllustrationId={setAdjustIllustrationId}
+                  setAdjustInstructions={setAdjustInstructions} setVideoModalId={setVideoModalId}
+                  setVideoPrompt={setVideoPrompt} setVideoDuration={setVideoDuration} setVideoStyle={setVideoStyle}
+                  setVideoTab={setVideoTab} setRemoveVideoConfirmId={setRemoveVideoConfirmId}
+                  setResetConfirmId={setResetConfirmId} downloadedId={downloadedId} setDownloadedId={setDownloadedId}
+                  loadIllustrations={async () => {
+                    if (!store.activeGroupChat) return;
+                    try {
+                      const page = await api.getMessages(store.activeGroupChat.group_chat_id);
+                      const illus = page.messages.filter((m) => m.role === "illustration").map((m) => ({ id: m.message_id, content: m.content }));
+                      setModalIllustrations(illus);
+                      for (const il of illus) {
+                        if (!videoFiles[il.id]) api.getVideoFile(il.id).then((vf) => { if (vf) setVideoFiles((prev) => ({ ...prev, [il.id]: vf })); }).catch(() => {});
+                      }
+                    } catch {}
+                  }}
+                />
               </React.Fragment>);
             }
 
@@ -1010,200 +836,25 @@ export function GroupChatView({ store }: Props) {
         uploadingVideo={uploadingVideo}
       />
 
-      {illustrationModalId && (() => {
-        const selId = modalSelectedId ?? illustrationModalId;
-        const allIllustrations = modalIllustrations.length > 0
-          ? modalIllustrations
-          : store.messages.filter((m) => m.role === "illustration").map((m) => ({ id: m.message_id, content: m.content }));
-        const selectedItem = allIllustrations.find((i) => i.id === selId);
-        if (!selectedItem) return null;
-        const modalVideoFile = videoFiles[selId];
-        const modalVideoUrl = videoDataUrls[selId];
-        return (
-          <Dialog open onClose={() => { setIllustrationModalId(null); setModalPlayingVideo(false); if (modalSlideshow.active) modalSlideshow.toggle(); }} className="max-w-[90vw]">
-            <div className="flex flex-col max-h-[90vh]">
-              <div className="relative flex items-center justify-center min-h-0 flex-1 overflow-hidden group/modal">
-                {modalImageLoading && !modalPlayingVideo && (
-                  <div className="absolute inset-0 flex items-center justify-center z-10">
-                    <div className="animate-spin w-6 h-6 border-2 border-white/20 border-t-white rounded-full" />
-                  </div>
-                )}
-                {modalPlayingVideo && modalVideoUrl ? (
-                  <video
-                    key={`modal-video-${selId}`}
-                    src={modalVideoUrl}
-                    autoPlay
-                    loop={!modalSlideshow.active}
-                    playsInline
-                    className="max-w-full max-h-[75vh] object-contain rounded-t-2xl"
-                    onTimeUpdate={modalSlideshow.active ? (e) => {
-                      const v = e.currentTarget;
-                      modalSlideshow.onVideoTimeUpdate(v.currentTime, v.duration);
-                    } : undefined}
-                    onEnded={modalSlideshow.active ? modalSlideshow.onVideoEnded : undefined}
-                  />
-                ) : (
-                  <img
-                    key={`modal-img-${selId}`}
-                    src={selectedItem.content}
-                    alt="Illustration"
-                    className={`max-w-full max-h-[75vh] object-contain rounded-t-2xl ${modalImageLoading ? "opacity-0" : "opacity-100"} transition-opacity`}
-                    onLoad={() => setModalImageLoading(false)}
-                  />
-                )}
-                <button
-                  onClick={() => { setIllustrationModalId(null); setModalPlayingVideo(false); if (modalSlideshow.active) modalSlideshow.toggle(); }}
-                  className="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors cursor-pointer backdrop-blur-sm"
-                >
-                  <X size={16} />
-                </button>
-                <div className="absolute top-3 left-3 z-20 flex gap-1.5 opacity-0 group-hover/modal:opacity-100 transition-opacity">
-                  <div className="relative group/mdl-dl">
-                    <button
-                      onClick={async () => {
-                        await api.downloadIllustration(selId);
-                        setDownloadedId(selId);
-                        setTimeout(() => setDownloadedId(null), 1500);
-                      }}
-                      className="w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center cursor-pointer hover:bg-black/70 transition-colors backdrop-blur-sm"
-                    >
-                      {downloadedId === selId ? <Check size={14} /> : <Download size={14} />}
-                    </button>
-                    <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/mdl-dl:opacity-100 pointer-events-none transition-opacity">{downloadedId === selId ? "Saved!" : "Download"}</span>
-                  </div>
-                  <div className="relative group/mdl-goto">
-                    <button
-                      onClick={async () => {
-                        setIllustrationModalId(null);
-                        setModalPlayingVideo(false);
-                        if (modalSlideshow.active) modalSlideshow.toggle();
-                        await new Promise((r) => setTimeout(r, 100));
-                        const el = document.querySelector(`[data-message-id="${selId}"]`);
-                        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-                      }}
-                      className="w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center cursor-pointer hover:bg-black/70 transition-colors backdrop-blur-sm"
-                    >
-                      <Crosshair size={14} />
-                    </button>
-                    <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/mdl-goto:opacity-100 pointer-events-none transition-opacity">Go to Image</span>
-                  </div>
-                  {allIllustrations.length > 1 && (
-                    <div className="relative group/mdl-ss">
-                      <button
-                        onClick={() => {
-                          if (!modalSlideshow.active) modalSlideshow.jumpTo(selId);
-                          modalSlideshow.toggle();
-                        }}
-                        className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors backdrop-blur-sm ${
-                          modalSlideshow.active ? "bg-primary/80 text-white hover:bg-primary" : "bg-black/50 text-white hover:bg-black/70"
-                        }`}
-                      >
-                        {modalSlideshow.active ? <Pause size={14} /> : <Play size={14} />}
-                      </button>
-                      <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/mdl-ss:opacity-100 pointer-events-none transition-opacity">Slideshow</span>
-                    </div>
-                  )}
-                </div>
-                {modalVideoFile && !modalPlayingVideo && !modalSlideshow.active && (
-                  <button
-                    onClick={async () => {
-                      if (!modalVideoUrl) {
-                        try {
-                          const url = await loadVideoBlobUrl(modalVideoFile);
-                          setVideoDataUrls((prev) => ({ ...prev, [selId]: url }));
-                        } catch { return; }
-                      }
-                      setModalPlayingVideo(true);
-                    }}
-                    className="absolute bottom-4 right-4 z-20 w-12 h-12 rounded-full bg-black/70 text-white flex items-center justify-center cursor-pointer hover:bg-purple-600 transition-colors backdrop-blur-sm"
-                  >
-                    <span className="text-xl ml-0.5">&#9654;</span>
-                  </button>
-                )}
-                {modalPlayingVideo && !modalSlideshow.active && (
-                  <button
-                    onClick={() => setModalPlayingVideo(false)}
-                    className="absolute bottom-4 right-4 z-20 w-12 h-12 rounded-full bg-black/70 text-white flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors backdrop-blur-sm"
-                  >
-                    <Square size={16} fill="white" />
-                  </button>
-                )}
-                {allIllustrations.length > 1 && !modalSlideshow.active && (<>
-                  <button
-                    onClick={() => {
-                      const idx = allIllustrations.findIndex((i) => i.id === selId);
-                      const prev = idx <= 0 ? allIllustrations.length - 1 : idx - 1;
-                      setModalSelectedId(allIllustrations[prev].id);
-                      setModalImageLoading(true);
-                      setModalPlayingVideo(false);
-                    }}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center cursor-pointer hover:bg-black/70 transition-all backdrop-blur-sm opacity-0 group-hover/modal:opacity-100"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-                  <button
-                    onClick={() => {
-                      const idx = allIllustrations.findIndex((i) => i.id === selId);
-                      const next = idx >= allIllustrations.length - 1 ? 0 : idx + 1;
-                      setModalSelectedId(allIllustrations[next].id);
-                      setModalImageLoading(true);
-                      setModalPlayingVideo(false);
-                    }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center cursor-pointer hover:bg-black/70 transition-all backdrop-blur-sm opacity-0 group-hover/modal:opacity-100"
-                  >
-                    <ChevronRight size={20} />
-                  </button>
-                </>)}
-                {modalSlideshow.active && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30">
-                    <div
-                      className="h-full bg-primary transition-none"
-                      style={{ width: `${modalSlideshow.progress * 100}%` }}
-                    />
-                  </div>
-                )}
-              </div>
-              {allIllustrations.length > 1 && (
-                <div className="flex-shrink-0 bg-card/80 backdrop-blur-sm rounded-b-2xl px-3 py-2 border-t border-border/30">
-                  <div className="flex gap-1.5 overflow-x-auto scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]">
-                    {allIllustrations.map((illus) => (
-                      <button
-                        key={illus.id}
-                        ref={illus.id === selId ? (el) => {
-                          if (!el) return;
-                          const c = el.parentElement;
-                          if (c) c.scrollTo({ left: el.offsetLeft - c.offsetWidth / 2 + el.offsetWidth / 2, behavior: "smooth" });
-                        } : undefined}
-                        onClick={() => {
-                          if (modalSlideshow.active) {
-                            modalSlideshow.jumpTo(illus.id);
-                          } else {
-                            setModalSelectedId(illus.id);
-                            setModalImageLoading(true);
-                            setModalPlayingVideo(false);
-                          }
-                        }}
-                        className={`relative flex-shrink-0 w-16 h-11 rounded-lg overflow-hidden transition-all cursor-pointer ${
-                          illus.id === selId
-                            ? "ring-2 ring-primary ring-offset-1 ring-offset-card"
-                            : "ring-1 ring-border opacity-60 hover:opacity-100"
-                        }`}
-                      >
-                        <img src={illus.content} alt="" className="w-full h-full object-cover" />
-                        {videoFiles[illus.id] && (
-                          <div className="absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-purple-600 flex items-center justify-center">
-                            <span className="text-white text-[6px]">&#9654;</span>
-                          </div>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </Dialog>
-        );
-      })()}
+      <IllustrationCarouselModal
+        illustrationModalId={illustrationModalId}
+        setIllustrationModalId={setIllustrationModalId}
+        modalSelectedId={modalSelectedId}
+        setModalSelectedId={setModalSelectedId}
+        modalPlayingVideo={modalPlayingVideo}
+        setModalPlayingVideo={setModalPlayingVideo}
+        modalImageLoading={modalImageLoading}
+        setModalImageLoading={setModalImageLoading}
+        modalIllustrations={modalIllustrations}
+        videoFiles={videoFiles}
+        videoDataUrls={videoDataUrls}
+        setVideoDataUrls={setVideoDataUrls}
+        loadVideoBlobUrl={loadVideoBlobUrl}
+        downloadedId={downloadedId}
+        setDownloadedId={setDownloadedId}
+        modalSlideshow={modalSlideshow}
+        fallbackIllustrations={store.messages.filter((m) => m.role === "illustration").map((m) => ({ id: m.message_id, content: m.content }))}
+      />
 
       <RemoveVideoConfirmModal
         open={!!removeVideoConfirmId}
