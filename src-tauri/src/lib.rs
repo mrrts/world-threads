@@ -40,7 +40,7 @@ pub fn run() {
                 let path = db_path.clone();
                 std::thread::spawn(move || {
                     loop {
-                        std::thread::sleep(std::time::Duration::from_secs(20 * 60));
+                        std::thread::sleep(std::time::Duration::from_secs(60 * 60));
                         db::Database::backup_database(&path);
                     }
                 });
