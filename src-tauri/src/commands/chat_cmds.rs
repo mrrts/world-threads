@@ -13,6 +13,52 @@ use tauri::State;
 
 const MEMORY_MAINTENANCE_INTERVAL: i64 = 10;
 
+/// Compute mood drift from recent messages and persist the updated mood.
+/// Returns the mood style directive string, or None if mood is neutral or disabled.
+pub fn compute_and_persist_mood(
+    db: &Database,
+    character_id: &str,
+    world: &World,
+    character: &Character,
+    recent_msgs: &[Message],
+    current_mood: Option<&CharacterMood>,
+    mood_enabled: bool,
+    mood_drift_rate: Option<f64>,
+) -> Result<Option<String>, String> {
+    if !mood_enabled { return Ok(None); }
+
+    let current = current_mood
+        .map(mood::MoodVector::from)
+        .unwrap_or_else(mood::MoodVector::neutral);
+    let target = mood::compute_mood_target(world, character, recent_msgs);
+    let drifted = mood::drift_mood(&current, &target, mood_drift_rate);
+    let directive = mood::mood_to_style_directive(&drifted);
+
+    let history = current_mood
+        .map(|m| m.history.clone())
+        .unwrap_or_else(|| serde_json::Value::Array(vec![]));
+    let new_history = mood::append_mood_history(&history, &drifted);
+
+    let updated = CharacterMood {
+        character_id: character_id.to_string(),
+        valence: drifted.valence,
+        energy: drifted.energy,
+        tension: drifted.tension,
+        history: new_history,
+        updated_at: Utc::now().to_rfc3339(),
+    };
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let _ = upsert_character_mood(&conn, &updated);
+    }
+
+    log::info!("[Mood] {} → v={:.2} e={:.2} t={:.2} | directive: {:.60}",
+        character.display_name, drifted.valence, drifted.energy, drifted.tension,
+        if directive.is_empty() { "(neutral)" } else { &directive });
+
+    Ok(if directive.is_empty() { None } else { Some(directive) })
+}
+
 pub fn world_time_fields(world: &World) -> (Option<i64>, Option<String>) {
     let time = world.state.get("time");
     let day = time.and_then(|t| t.get("day_index")).and_then(|v| v.as_i64());
@@ -232,39 +278,10 @@ pub async fn send_message_cmd(
     log::info!("[Memory] Total retrieval context: {} items passed to dialogue", full_retrieved.len());
 
     // Phase 3: Mood drift
-    let mood_directive = if mood_enabled {
-        let current = current_mood.as_ref()
-            .map(mood::MoodVector::from)
-            .unwrap_or_else(mood::MoodVector::neutral);
-        let target = mood::compute_mood_target(&world, &character, &recent_msgs);
-        let drifted = mood::drift_mood(&current, &target, mood_drift_rate);
-        let directive = mood::mood_to_style_directive(&drifted);
-
-        let history = current_mood.as_ref()
-            .map(|m| m.history.clone())
-            .unwrap_or_else(|| serde_json::Value::Array(vec![]));
-        let new_history = mood::append_mood_history(&history, &drifted);
-
-        let updated = CharacterMood {
-            character_id: character_id.clone(),
-            valence: drifted.valence,
-            energy: drifted.energy,
-            tension: drifted.tension,
-            history: new_history,
-            updated_at: Utc::now().to_rfc3339(),
-        };
-        {
-            let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            let _ = upsert_character_mood(&conn, &updated);
-        }
-        log::info!("[Mood] {} → v={:.2} e={:.2} t={:.2} | directive: {:.60}",
-            character.display_name, drifted.valence, drifted.energy, drifted.tension,
-            if directive.is_empty() { "(neutral)" } else { &directive });
-
-        if directive.is_empty() { None } else { Some(directive) }
-    } else {
-        None
-    };
+    let mood_directive = compute_and_persist_mood(
+        &db, &character_id, &world, &character, &recent_msgs,
+        current_mood.as_ref(), mood_enabled, mood_drift_rate,
+    )?;
 
     // Phase 4: Run dialogue (async, no DB lock)
     let (reply_text, dialogue_usage) = orchestrator::run_dialogue_with_base(
@@ -512,35 +529,10 @@ pub async fn prompt_character_cmd(
     };
 
     // Mood
-    let mood_directive = if mood_enabled {
-        let current = current_mood.as_ref()
-            .map(crate::ai::mood::MoodVector::from)
-            .unwrap_or_else(crate::ai::mood::MoodVector::neutral);
-        let target = crate::ai::mood::compute_mood_target(&world, &character, &recent_msgs);
-        let drifted = crate::ai::mood::drift_mood(&current, &target, None);
-        let directive = crate::ai::mood::mood_to_style_directive(&drifted);
-
-        let history = current_mood.as_ref()
-            .map(|m| m.history.clone())
-            .unwrap_or_else(|| serde_json::Value::Array(vec![]));
-        let new_history = crate::ai::mood::append_mood_history(&history, &drifted);
-
-        let updated = CharacterMood {
-            character_id: character_id.clone(),
-            valence: drifted.valence,
-            energy: drifted.energy,
-            tension: drifted.tension,
-            history: new_history,
-            updated_at: Utc::now().to_rfc3339(),
-        };
-        {
-            let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            let _ = upsert_character_mood(&conn, &updated);
-        }
-        if directive.is_empty() { None } else { Some(directive) }
-    } else {
-        None
-    };
+    let mood_directive = compute_and_persist_mood(
+        &db, &character_id, &world, &character, &recent_msgs,
+        current_mood.as_ref(), mood_enabled, None,
+    )?;
 
     // If the last message is from the assistant, add a nudge so the model knows to speak again
     let mut dialogue_msgs = recent_msgs.clone();
@@ -1854,35 +1846,10 @@ pub async fn reset_to_message_cmd(
         };
 
         // Mood directive
-        let mood_directive = if mood_enabled {
-            let current = current_mood.as_ref()
-                .map(crate::ai::mood::MoodVector::from)
-                .unwrap_or_else(crate::ai::mood::MoodVector::neutral);
-            let target = crate::ai::mood::compute_mood_target(&world, &character, &recent_msgs);
-            let drifted = crate::ai::mood::drift_mood(&current, &target, None);
-            let directive = crate::ai::mood::mood_to_style_directive(&drifted);
-
-            let history = current_mood.as_ref()
-                .map(|m| m.history.clone())
-                .unwrap_or_else(|| serde_json::Value::Array(vec![]));
-            let new_history = crate::ai::mood::append_mood_history(&history, &drifted);
-
-            let updated = CharacterMood {
-                character_id: character_id.clone(),
-                valence: drifted.valence,
-                energy: drifted.energy,
-                tension: drifted.tension,
-                history: new_history,
-                updated_at: Utc::now().to_rfc3339(),
-            };
-            {
-                let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                let _ = upsert_character_mood(&conn, &updated);
-            }
-            if directive.is_empty() { None } else { Some(directive) }
-        } else {
-            None
-        };
+        let mood_directive = compute_and_persist_mood(
+            &db, &character_id, &world, &character, &recent_msgs,
+            current_mood.as_ref(), mood_enabled, None,
+        )?;
 
         // Generate dialogue
         let (reply_text, dialogue_usage) = orchestrator::run_dialogue_with_base(
