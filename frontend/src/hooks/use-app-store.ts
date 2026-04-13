@@ -806,100 +806,36 @@ export function useAppStore() {
   }, [state.activeCharacter, state.apiKey]);
 
   const generateNarrative = useCallback(async (customInstructions?: string) => {
-    if (!state.activeCharacter || !state.apiKey) return;
+    const isGroup = !!state.activeGroupChat && !state.activeCharacter;
+    const entityId = isGroup ? state.activeGroupChat?.group_chat_id : state.activeCharacter?.character_id;
+    if (!entityId || !state.apiKey) return;
 
-    setState((s) => ({ ...s, sending: state.activeCharacter!.character_id, generatingNarrative: state.activeCharacter!.character_id, chatError: null }));
-
+    setState((s) => ({ ...s, sending: entityId, generatingNarrative: entityId, chatError: null }));
     try {
-      const result = await api.generateNarrative(state.apiKey, state.activeCharacter.character_id, customInstructions);
-      setState((s) => ({
-        ...s,
-        messages: [...s.messages, result.narrative_message],
-        totalMessages: s.totalMessages + 1,
-        sending: false,
-        generatingNarrative: false,
-      }));
+      const result = isGroup
+        ? await api.generateGroupNarrative(state.apiKey, entityId, customInstructions)
+        : await api.generateNarrative(state.apiKey, entityId, customInstructions);
+      setState((s) => ({ ...s, messages: [...s.messages, result.narrative_message], totalMessages: s.totalMessages + 1, sending: null, generatingNarrative: null }));
     } catch (e) {
-      setState((s) => ({
-        ...s,
-        sending: false,
-        generatingNarrative: false,
-        chatError: String(e),
-      }));
+      setState((s) => ({ ...s, sending: null, generatingNarrative: null, chatError: String(e) }));
     }
-  }, [state.activeCharacter, state.apiKey]);
+  }, [state.activeCharacter, state.activeGroupChat, state.apiKey]);
 
   const generateIllustration = useCallback(async (qualityTier?: string, customInstructions?: string, previousIllustrationId?: string, includeSceneSummary?: boolean) => {
-    if (!state.activeCharacter || !state.apiKey) return;
+    const isGroup = !!state.activeGroupChat && !state.activeCharacter;
+    const entityId = isGroup ? state.activeGroupChat?.group_chat_id : state.activeCharacter?.character_id;
+    if (!entityId || !state.apiKey) return;
 
-    setState((s) => ({ ...s, sending: state.activeCharacter!.character_id, generatingIllustration: state.activeCharacter!.character_id, chatError: null }));
-
+    setState((s) => ({ ...s, sending: entityId, generatingIllustration: entityId, chatError: null }));
     try {
-      const result = await api.generateIllustration(state.apiKey, state.activeCharacter.character_id, qualityTier, customInstructions, previousIllustrationId, includeSceneSummary);
-      setState((s) => ({
-        ...s,
-        messages: [...s.messages, result.illustration_message],
-        totalMessages: s.totalMessages + 1,
-        sending: false,
-        generatingIllustration: false,
-      }));
+      const result = isGroup
+        ? await api.generateGroupIllustration(state.apiKey, entityId, qualityTier, customInstructions, previousIllustrationId, includeSceneSummary)
+        : await api.generateIllustration(state.apiKey, entityId, qualityTier, customInstructions, previousIllustrationId, includeSceneSummary);
+      setState((s) => ({ ...s, messages: [...s.messages, result.illustration_message], totalMessages: s.totalMessages + 1, sending: null, generatingIllustration: null }));
     } catch (e) {
-      setState((s) => ({
-        ...s,
-        sending: false,
-        generatingIllustration: false,
-        chatError: String(e),
-      }));
+      setState((s) => ({ ...s, sending: null, generatingIllustration: null, chatError: String(e) }));
     }
-  }, [state.activeCharacter, state.apiKey]);
-
-  const generateGroupNarrative = useCallback(async (customInstructions?: string) => {
-    if (!state.activeGroupChat || !state.apiKey) return;
-
-    setState((s) => ({ ...s, sending: state.activeGroupChat!.group_chat_id, generatingNarrative: state.activeGroupChat!.group_chat_id, chatError: null }));
-
-    try {
-      const result = await api.generateGroupNarrative(state.apiKey, state.activeGroupChat.group_chat_id, customInstructions);
-      setState((s) => ({
-        ...s,
-        messages: [...s.messages, result.narrative_message],
-        totalMessages: s.totalMessages + 1,
-        sending: null,
-        generatingNarrative: null,
-      }));
-    } catch (e) {
-      setState((s) => ({
-        ...s,
-        sending: null,
-        generatingNarrative: null,
-        chatError: String(e),
-      }));
-    }
-  }, [state.activeGroupChat, state.apiKey]);
-
-  const generateGroupIllustration = useCallback(async (qualityTier?: string, customInstructions?: string, previousIllustrationId?: string, includeSceneSummary?: boolean) => {
-    if (!state.activeGroupChat || !state.apiKey) return;
-
-    setState((s) => ({ ...s, sending: state.activeGroupChat!.group_chat_id, generatingIllustration: state.activeGroupChat!.group_chat_id, chatError: null }));
-
-    try {
-      const result = await api.generateGroupIllustration(state.apiKey, state.activeGroupChat.group_chat_id, qualityTier, customInstructions, previousIllustrationId, includeSceneSummary);
-      setState((s) => ({
-        ...s,
-        messages: [...s.messages, result.illustration_message],
-        totalMessages: s.totalMessages + 1,
-        sending: null,
-        generatingIllustration: null,
-      }));
-    } catch (e) {
-      setState((s) => ({
-        ...s,
-        sending: null,
-        generatingIllustration: null,
-        chatError: String(e),
-      }));
-    }
-  }, [state.activeGroupChat, state.apiKey]);
+  }, [state.activeCharacter, state.activeGroupChat, state.apiKey]);
 
   const adjustMessage = useCallback(async (messageId: string, instructions: string) => {
     if (!state.apiKey) return;
@@ -937,133 +873,44 @@ export function useAppStore() {
   }, []);
 
   const regenerateIllustration = useCallback(async (messageId: string) => {
-    if (!state.activeCharacter || !state.apiKey) return;
+    const isGroup = !!state.activeGroupChat && !state.activeCharacter;
+    const entityId = isGroup ? state.activeGroupChat?.group_chat_id : state.activeCharacter?.character_id;
+    if (!entityId || !state.apiKey) return;
 
-    setState((s) => ({
-      ...s,
-      sending: state.activeCharacter!.character_id,
-      generatingIllustration: state.activeCharacter!.character_id,
-      chatError: null,
-      messages: s.messages.filter((m) => m.message_id !== messageId),
-      totalMessages: s.totalMessages - 1,
-    }));
-
+    setState((s) => ({ ...s, sending: entityId, generatingIllustration: entityId, chatError: null, messages: s.messages.filter((m) => m.message_id !== messageId), totalMessages: s.totalMessages - 1 }));
     try {
-      const result = await api.regenerateIllustration(state.apiKey, state.activeCharacter.character_id, messageId);
-      setState((s) => ({
-        ...s,
-        messages: [...s.messages, result.illustration_message],
-        totalMessages: s.totalMessages + 1,
-        sending: false,
-        generatingIllustration: false,
-      }));
+      let result;
+      if (isGroup) {
+        await api.deleteIllustration(messageId);
+        result = await api.generateGroupIllustration(state.apiKey, entityId);
+      } else {
+        result = await api.regenerateIllustration(state.apiKey, entityId, messageId);
+      }
+      setState((s) => ({ ...s, messages: [...s.messages, result.illustration_message], totalMessages: s.totalMessages + 1, sending: null, generatingIllustration: null }));
     } catch (e) {
-      setState((s) => ({
-        ...s,
-        sending: false,
-        generatingIllustration: false,
-        chatError: String(e),
-      }));
+      setState((s) => ({ ...s, sending: null, generatingIllustration: null, chatError: String(e) }));
     }
-  }, [state.activeCharacter, state.apiKey]);
-
-  const regenerateGroupIllustration = useCallback(async (messageId: string) => {
-    if (!state.activeGroupChat || !state.apiKey) return;
-    const gcId = state.activeGroupChat.group_chat_id;
-
-    setState((s) => ({
-      ...s,
-      sending: gcId,
-      generatingIllustration: gcId,
-      chatError: null,
-      messages: s.messages.filter((m) => m.message_id !== messageId),
-      totalMessages: s.totalMessages - 1,
-    }));
-
-    try {
-      await api.deleteIllustration(messageId);
-      const result = await api.generateGroupIllustration(state.apiKey, gcId);
-      setState((s) => ({
-        ...s,
-        messages: [...s.messages, result.illustration_message],
-        totalMessages: s.totalMessages + 1,
-        sending: false,
-        generatingIllustration: false,
-      }));
-    } catch (e) {
-      setState((s) => ({
-        ...s,
-        sending: false,
-        generatingIllustration: false,
-        chatError: String(e),
-      }));
-    }
-  }, [state.activeGroupChat, state.apiKey]);
+  }, [state.activeCharacter, state.activeGroupChat, state.apiKey]);
 
   const adjustIllustration = useCallback(async (messageId: string, instructions: string) => {
-    if (!state.activeCharacter || !state.apiKey) return;
+    const isGroup = !!state.activeGroupChat && !state.activeCharacter;
+    const entityId = isGroup ? state.activeGroupChat?.group_chat_id : state.activeCharacter?.character_id;
+    if (!entityId || !state.apiKey) return;
 
-    setState((s) => ({
-      ...s,
-      sending: state.activeCharacter!.character_id,
-      generatingIllustration: state.activeCharacter!.character_id,
-      chatError: null,
-      messages: s.messages.filter((m) => m.message_id !== messageId),
-      totalMessages: s.totalMessages - 1,
-    }));
-
+    setState((s) => ({ ...s, sending: entityId, generatingIllustration: entityId, chatError: null, messages: s.messages.filter((m) => m.message_id !== messageId), totalMessages: s.totalMessages - 1 }));
     try {
-      const result = await api.adjustIllustration(state.apiKey, state.activeCharacter.character_id, messageId, instructions);
-      setState((s) => ({
-        ...s,
-        messages: [...s.messages, result.illustration_message],
-        totalMessages: s.totalMessages + 1,
-        sending: false,
-        generatingIllustration: false,
-      }));
+      let result;
+      if (isGroup) {
+        result = await api.generateGroupIllustration(state.apiKey, entityId, undefined, instructions, messageId);
+        await api.deleteIllustration(messageId).catch(() => {});
+      } else {
+        result = await api.adjustIllustration(state.apiKey, entityId, messageId, instructions);
+      }
+      setState((s) => ({ ...s, messages: [...s.messages, result.illustration_message], totalMessages: s.totalMessages + 1, sending: null, generatingIllustration: null }));
     } catch (e) {
-      setState((s) => ({
-        ...s,
-        sending: false,
-        generatingIllustration: false,
-        chatError: String(e),
-      }));
+      setState((s) => ({ ...s, sending: null, generatingIllustration: null, chatError: String(e) }));
     }
-  }, [state.activeCharacter, state.apiKey]);
-
-  const adjustGroupIllustration = useCallback(async (messageId: string, instructions: string) => {
-    if (!state.activeGroupChat || !state.apiKey) return;
-    const gcId = state.activeGroupChat.group_chat_id;
-
-    setState((s) => ({
-      ...s,
-      sending: gcId,
-      generatingIllustration: gcId,
-      chatError: null,
-      messages: s.messages.filter((m) => m.message_id !== messageId),
-      totalMessages: s.totalMessages - 1,
-    }));
-
-    try {
-      const result = await api.generateGroupIllustration(state.apiKey, gcId, undefined, instructions, messageId);
-      // Clean up old illustration after new one is generated
-      await api.deleteIllustration(messageId).catch(() => {});
-      setState((s) => ({
-        ...s,
-        messages: [...s.messages, result.illustration_message],
-        totalMessages: s.totalMessages + 1,
-        sending: false,
-        generatingIllustration: false,
-      }));
-    } catch (e) {
-      setState((s) => ({
-        ...s,
-        sending: false,
-        generatingIllustration: false,
-        chatError: String(e),
-      }));
-    }
-  }, [state.activeGroupChat, state.apiKey]);
+  }, [state.activeCharacter, state.activeGroupChat, state.apiKey]);
 
   const loadVideoFiles = useCallback(async (messages: Message[]) => {
     const illustrationIds = messages.filter((m) => m.role === "illustration").map((m) => m.message_id);
@@ -1364,15 +1211,11 @@ export function useAppStore() {
     setAutoRespond,
     promptCharacter,
     generateNarrative,
-    generateGroupNarrative,
     generateIllustration,
-    generateGroupIllustration,
     adjustMessage,
     deleteIllustration,
     regenerateIllustration,
     adjustIllustration,
-    regenerateGroupIllustration,
-    adjustGroupIllustration,
     generateVideo,
     resetToMessage,
     setApiKey,

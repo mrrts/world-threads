@@ -335,7 +335,7 @@ export function GroupChatView({ store }: Props) {
                           </div>
                           <div className="relative group/regen">
                             <button
-                              onClick={() => store.regenerateGroupIllustration(msg.message_id)}
+                              onClick={() => store.regenerateIllustration(msg.message_id)}
                               className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors backdrop-blur-sm"
                             >
                               <RefreshCw size={14} />
@@ -930,7 +930,7 @@ export function GroupChatView({ store }: Props) {
       <NarrativePickerModal
         open={showNarrativePicker}
         onClose={() => setShowNarrativePicker(false)}
-        onGenerate={(instructions) => store.generateGroupNarrative(instructions)}
+        onGenerate={(instructions) => store.generateNarrative(instructions)}
       />
 
       <IllustrationPickerModal
@@ -941,7 +941,7 @@ export function GroupChatView({ store }: Props) {
           const lastIllus = prevIllus[prevIllus.length - 1];
           const prevId = usePreviousScene && lastIllus ? lastIllus.message_id : undefined;
           setShowIllustrationPicker(false);
-          store.generateGroupIllustration(tier, illustrationInstructions.trim() || undefined, prevId, includeSceneSummary);
+          store.generateIllustration(tier, illustrationInstructions.trim() || undefined, prevId, includeSceneSummary);
           setIllustrationInstructions("");
           setUsePreviousScene(false);
           setIncludeSceneSummary(false);
@@ -961,7 +961,7 @@ export function GroupChatView({ store }: Props) {
         onClose={() => setAdjustIllustrationId(null)}
         onConfirm={(instructions) => {
           if (adjustIllustrationId) {
-            store.adjustGroupIllustration(adjustIllustrationId, instructions);
+            store.adjustIllustration(adjustIllustrationId, instructions);
             setAdjustIllustrationId(null);
           }
         }}
