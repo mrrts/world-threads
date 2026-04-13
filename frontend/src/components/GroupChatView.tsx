@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import Markdown from "react-markdown";
 import { formatMessage, markdownComponents } from "@/components/chat/formatMessage";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import { VideoGenerationModal } from "@/components/chat/VideoGenerationModal";
 import { AdjustMessageModal } from "@/components/chat/AdjustMessageModal";
 import { NarrativePickerModal } from "@/components/chat/NarrativePickerModal";
 import { SummaryModal } from "@/components/chat/SummaryModal";
+import { TimeDivider } from "@/components/chat/TimeDivider";
 import { PortraitModal } from "@/components/chat/PortraitModal";
 
 
@@ -397,15 +398,16 @@ export function GroupChatView({ store }: Props) {
           </div>
         )}
         <div className="space-y-3 max-w-2xl mx-auto">
-          {store.messages.map((msg) => {
+          {store.messages.map((msg, msgIdx) => {
             const isUser = msg.role === "user";
             const isNarrative = msg.role === "narrative";
             const isPending = msg.message_id.startsWith("pending-");
+            const prevMsg = msgIdx > 0 ? store.messages[msgIdx - 1] : undefined;
 
             if (isNarrative) {
-              return (
+              return (<React.Fragment key={msg.message_id}>
+                <TimeDivider current={msg} previous={prevMsg} />
                 <NarrativeMessage
-                  key={msg.message_id}
                   message={msg}
                   isPending={isPending}
                   onResetToHere={(id) => setResetConfirmId(id)}
@@ -422,12 +424,13 @@ export function GroupChatView({ store }: Props) {
                   adjustingMessageId={store.adjustingMessageId}
                   onAdjust={(id) => setAdjustMessageId(id)}
                 />
-              );
+              </React.Fragment>);
             }
 
             if (msg.role === "illustration") {
-              return (
-                <div key={msg.message_id} data-message-id={msg.message_id} className="flex justify-center my-3">
+              return (<React.Fragment key={msg.message_id}>
+                <TimeDivider current={msg} previous={prevMsg} />
+                <div data-message-id={msg.message_id} className="flex justify-center my-3">
                   <div className="relative group/illus max-w-[95%] rounded-xl bg-gradient-to-br from-emerald-950/30 to-emerald-900/10 border border-emerald-700/20 backdrop-blur-sm">
                     <div className="flex items-center gap-1.5 px-4 pt-3 pb-1.5 text-[10px] uppercase tracking-wider text-emerald-500/70 font-semibold">
                       <Image size={12} />
@@ -625,7 +628,7 @@ export function GroupChatView({ store }: Props) {
                     </p>
                   </div>
                 </div>
-              );
+              </React.Fragment>);
             }
 
             // Find the sending character's info for group messages
@@ -638,7 +641,9 @@ export function GroupChatView({ store }: Props) {
             const senderBubbleColor = !isUser ? groupColorPalette[senderColorIdx % groupColorPalette.length] : "";
 
             return (
-              <div key={msg.message_id}>
+              <React.Fragment key={msg.message_id}>
+              <TimeDivider current={msg} previous={prevMsg} />
+              <div>
                 <div className={`flex items-end gap-2 ${isUser ? "justify-end" : "justify-start"}`}>
                   {!isUser && (
                     senderPortrait?.data_url ? (
@@ -798,6 +803,7 @@ export function GroupChatView({ store }: Props) {
                   )}
                 </div>
               </div>
+              </React.Fragment>
             );
           })}
           {isSending && !isGeneratingNarrative && !isGeneratingIllustration && !isGeneratingVideo && (() => {

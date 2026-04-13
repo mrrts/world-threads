@@ -503,5 +503,19 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
     ").ok();
 
+    // Add world_day and world_time columns to messages tables
+    let has_world_day: bool = conn.prepare("SELECT world_day FROM messages LIMIT 0")
+        .is_ok();
+    if !has_world_day {
+        conn.execute_batch("
+            ALTER TABLE messages ADD COLUMN world_day INTEGER DEFAULT NULL;
+            ALTER TABLE messages ADD COLUMN world_time TEXT DEFAULT NULL;
+        ").ok();
+        conn.execute_batch("
+            ALTER TABLE group_messages ADD COLUMN world_day INTEGER DEFAULT NULL;
+            ALTER TABLE group_messages ADD COLUMN world_time TEXT DEFAULT NULL;
+        ").ok();
+    }
+
     Ok(())
 }

@@ -43,43 +43,50 @@ function MainApp() {
   const [timeDay, setTimeDay] = useState(1);
   const [timeOfDay, setTimeOfDay] = useState("MORNING");
   const [baseDayIndex, setBaseDayIndex] = useState(1);
-  const timeCheckRef = useRef<string | null>(null); // tracks which world we last checked
+  const timeCheckRef = useRef<string | null>(null);
 
-  // Check if last message was from a prior real-life day
-  useEffect(() => {
+  const checkWorldTime = useCallback(() => {
     const worldId = store.activeWorld?.world_id;
     if (!worldId || !store.activeWorld?.state?.time) return;
-    // Only check once per world selection
     if (timeCheckRef.current === worldId) return;
     timeCheckRef.current = worldId;
 
-    api.getLastMessageTime(worldId).then((ts) => {
-      if (!ts) return;
-      const lastDate = new Date(ts);
-      const today = new Date();
-      // Compare dates (ignore time)
-      const lastDay = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate());
-      const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-      if (lastDay < todayDay) {
-        const currentDay = store.activeWorld?.state?.time?.day_index ?? 1;
-        const currentTime = store.activeWorld?.state?.time?.time_of_day ?? "MORNING";
-        setBaseDayIndex(currentDay);
-        setTimeDay(currentDay + 1);
-        setTimeOfDay(currentTime);
-        setShowTimeModal(true);
-      }
-    });
-  }, [store.activeWorld?.world_id]);
+    const todayStr = new Date().toDateString();
 
-  // Also check on window focus
+    // Check if we already showed the modal today for this world
+    api.getSetting(`time_modal_shown.${worldId}`).then((lastShown) => {
+      if (lastShown === todayStr) return;
+
+      api.getLastMessageTime(worldId).then((ts) => {
+        if (!ts) return;
+        const lastDay = new Date(new Date(ts).toDateString());
+        const todayDay = new Date(todayStr);
+        if (lastDay < todayDay) {
+          const currentDay = store.activeWorld?.state?.time?.day_index ?? 1;
+          const currentTime = store.activeWorld?.state?.time?.time_of_day ?? "MORNING";
+          setBaseDayIndex(currentDay);
+          setTimeDay(currentDay + 1);
+          setTimeOfDay(currentTime);
+          setShowTimeModal(true);
+          // Mark as shown today
+          api.setSetting(`time_modal_shown.${worldId}`, todayStr).catch(() => {});
+        }
+      });
+    });
+  }, [store.activeWorld]);
+
+  // Check on world change
+  useEffect(() => { checkWorldTime(); }, [checkWorldTime]);
+
+  // Re-check on window focus
   useEffect(() => {
     const handler = () => {
-      // Reset the check ref so next focus re-checks
       timeCheckRef.current = null;
+      checkWorldTime();
     };
     window.addEventListener("focus", handler);
     return () => window.removeEventListener("focus", handler);
-  }, []);
+  }, [checkWorldTime]);
 
   // Cmd+R toggles auto-respond
   useEffect(() => {

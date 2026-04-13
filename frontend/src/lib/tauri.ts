@@ -52,6 +52,8 @@ export interface Message {
   tokens_estimate: number;
   sender_character_id: string | null;
   created_at: string;
+  world_day: number | null;
+  world_time: string | null;
 }
 
 export interface GroupChat {

@@ -13,6 +13,13 @@ use tauri::State;
 
 const MEMORY_MAINTENANCE_INTERVAL: i64 = 10;
 
+pub fn world_time_fields(world: &World) -> (Option<i64>, Option<String>) {
+    let time = world.state.get("time");
+    let day = time.and_then(|t| t.get("day_index")).and_then(|v| v.as_i64());
+    let tod = time.and_then(|t| t.get("time_of_day")).and_then(|v| v.as_str()).map(|s| s.to_string());
+    (day, tod)
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SendMessageResult {
     pub user_message: Message,
@@ -37,6 +44,7 @@ pub fn save_user_message_cmd(
         tokens_estimate: (content.len() as i64) / 4,
             sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
     };
     create_message(&conn, &msg).map_err(|e| e.to_string())?;
     increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
@@ -61,6 +69,7 @@ pub async fn send_message_cmd(
         let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
         let model_config = orchestrator::load_model_config(&conn);
 
+        let (wd, wt) = world_time_fields(&world);
         let user_msg = Message {
             message_id: uuid::Uuid::new_v4().to_string(),
             thread_id: thread.thread_id.clone(),
@@ -69,6 +78,7 @@ pub async fn send_message_cmd(
             tokens_estimate: (content.len() as i64) / 4,
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
+            world_day: wd, world_time: wt.clone(),
         };
         create_message(&conn, &user_msg).map_err(|e| e.to_string())?;
         increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
@@ -232,6 +242,7 @@ pub async fn send_message_cmd(
             tokens_estimate: tokens as i64,
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
         increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
@@ -240,6 +251,7 @@ pub async fn send_message_cmd(
             message_id: String::new(), thread_id: thread.thread_id.clone(),
             role: "user".to_string(), content: content.clone(),
             tokens_estimate: 0, created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
             sender_character_id: None,
         });
 
@@ -492,6 +504,7 @@ pub async fn prompt_character_cmd(
             tokens_estimate: 0,
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
         });
     }
 
@@ -521,6 +534,7 @@ pub async fn prompt_character_cmd(
             tokens_estimate: tokens as i64,
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
         increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
@@ -652,6 +666,7 @@ pub async fn generate_narrative_cmd(
         tokens_estimate: usage.as_ref().map(|u| u.total_tokens as i64).unwrap_or(0),
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
     };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -800,6 +815,7 @@ pub async fn generate_illustration_cmd(
         };
         let _ = create_world_image(&conn, &img);
 
+        let (wd_ill, wt_ill) = world_time_fields(&world);
         let msg = Message {
             message_id: message_id.clone(),
             thread_id: thread_id.clone(),
@@ -808,16 +824,17 @@ pub async fn generate_illustration_cmd(
             tokens_estimate: 0,
             sender_character_id: None,
             created_at: now,
+            world_day: wd_ill, world_time: wt_ill,
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
     }
 
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let illustration_msg = conn.query_row(
-        "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at FROM messages WHERE message_id = ?1",
+        "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time FROM messages WHERE message_id = ?1",
         params![message_id], |row| Ok(Message {
             message_id: row.get(0)?, thread_id: row.get(1)?, role: row.get(2)?,
-            content: row.get(3)?, tokens_estimate: row.get(4)?, sender_character_id: row.get(5)?, created_at: row.get(6)?,
+            content: row.get(3)?, tokens_estimate: row.get(4)?, sender_character_id: row.get(5)?, created_at: row.get(6)?, world_day: row.get(7).ok(), world_time: row.get(8).ok(),
         })
     ).map_err(|e| e.to_string())?;
 
@@ -915,21 +932,23 @@ pub async fn adjust_message_cmd(
 
         let (msg, table) = if is_group {
             let m: Message = conn.query_row(
-                "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at FROM group_messages WHERE message_id = ?1",
+                "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time FROM group_messages WHERE message_id = ?1",
                 params![message_id], |r| Ok(Message {
                     message_id: r.get(0)?, thread_id: r.get(1)?, role: r.get(2)?,
                     content: r.get(3)?, tokens_estimate: r.get(4)?,
                     sender_character_id: r.get(5)?, created_at: r.get(6)?,
+                    world_day: r.get(7).ok(), world_time: r.get(8).ok(),
                 }),
             ).map_err(|e| format!("Message not found: {e}"))?;
             (m, "group")
         } else {
             let m: Message = conn.query_row(
-                "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at FROM messages WHERE message_id = ?1",
+                "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time FROM messages WHERE message_id = ?1",
                 params![message_id], |r| Ok(Message {
                     message_id: r.get(0)?, thread_id: r.get(1)?, role: r.get(2)?,
                     content: r.get(3)?, tokens_estimate: r.get(4)?,
                     sender_character_id: r.get(5)?, created_at: r.get(6)?,
+                    world_day: r.get(7).ok(), world_time: r.get(8).ok(),
                 }),
             ).map_err(|e| format!("Message not found: {e}"))?;
             (m, "indiv")
@@ -1044,6 +1063,8 @@ pub async fn adjust_message_cmd(
         tokens_estimate: tokens as i64,
         sender_character_id: original_msg.sender_character_id,
         created_at: original_msg.created_at,
+        world_day: original_msg.world_day,
+        world_time: original_msg.world_time,
     })
 }
 
@@ -1241,6 +1262,7 @@ pub async fn adjust_illustration_cmd(
         };
         let _ = create_world_image(&conn, &img);
 
+        let (wd_adj, wt_adj) = world_time_fields(&world);
         let msg = Message {
             message_id: new_message_id.clone(),
             thread_id: thread.thread_id.clone(),
@@ -1249,16 +1271,17 @@ pub async fn adjust_illustration_cmd(
             tokens_estimate: 0,
             sender_character_id: None,
             created_at: now,
+            world_day: wd_adj, world_time: wt_adj,
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
     }
 
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let illustration_msg = conn.query_row(
-        "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at FROM messages WHERE message_id = ?1",
+        "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time FROM messages WHERE message_id = ?1",
         params![new_message_id], |row| Ok(Message {
             message_id: row.get(0)?, thread_id: row.get(1)?, role: row.get(2)?,
-            content: row.get(3)?, tokens_estimate: row.get(4)?, sender_character_id: row.get(5)?, created_at: row.get(6)?,
+            content: row.get(3)?, tokens_estimate: row.get(4)?, sender_character_id: row.get(5)?, created_at: row.get(6)?, world_day: row.get(7).ok(), world_time: row.get(8).ok(),
         })
     ).map_err(|e| e.to_string())?;
 
@@ -1325,20 +1348,16 @@ pub async fn generate_video_cmd(
         // Get messages up to the illustration's creation time
         let msg_table = if is_group { "group_messages" } else { "messages" };
         let sql = format!(
-            "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at
-             FROM {} WHERE thread_id = ?1 AND created_at <= ?2
+            "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time FROM {} WHERE thread_id = ?1 AND created_at <= ?2
              ORDER BY created_at DESC LIMIT 30", msg_table
         );
         let mut stmt = conn.prepare(&sql).map_err(|e| e.to_string())?;
         let mut recent_msgs: Vec<Message> = stmt.query_map(params![thread_id, illus_created_at], |row| {
             Ok(Message {
-                message_id: row.get(0)?,
-                thread_id: row.get(1)?,
-                role: row.get(2)?,
-                content: row.get(3)?,
-                tokens_estimate: row.get(4)?,
-                sender_character_id: row.get(5)?,
-                created_at: row.get(6)?,
+                message_id: row.get(0)?, thread_id: row.get(1)?, role: row.get(2)?,
+                content: row.get(3)?, tokens_estimate: row.get(4)?,
+                sender_character_id: row.get(5)?, created_at: row.get(6)?,
+                world_day: row.get(7).ok(), world_time: row.get(8).ok(),
             })
         }).map_err(|e| e.to_string())?
         .filter_map(|r| r.ok())
@@ -1640,7 +1659,7 @@ pub async fn reset_to_message_cmd(
 
         let anchor: Message = {
             let table = if is_group { "group_messages" } else { "messages" };
-            let sql = format!("SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at FROM {} WHERE message_id = ?1", table);
+            let sql = format!("SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time FROM {} WHERE message_id = ?1", table);
             let mut stmt = conn.prepare(&sql).map_err(|e| e.to_string())?;
             stmt.query_row(params![message_id], |row| {
                 Ok(Message {
@@ -1651,6 +1670,8 @@ pub async fn reset_to_message_cmd(
                     tokens_estimate: row.get(4)?,
                     sender_character_id: row.get(5)?,
                     created_at: row.get(6)?,
+                    world_day: row.get(7).ok(),
+                    world_time: row.get(8).ok(),
                 })
             }).map_err(|e| e.to_string())?
         };
@@ -1837,6 +1858,7 @@ pub async fn reset_to_message_cmd(
                 tokens_estimate: tokens as i64,
                 sender_character_id: None,
                 created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
             };
             create_message(&conn, &msg).map_err(|e| e.to_string())?;
             increment_message_counter(&conn, &thread_id).map_err(|e| e.to_string())?;
@@ -1845,6 +1867,7 @@ pub async fn reset_to_message_cmd(
                 message_id: String::new(), thread_id: thread_id.clone(),
                 role: "user".to_string(), content: anchor_content.clone(),
                 tokens_estimate: 0, created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
             sender_character_id: None,
             });
 

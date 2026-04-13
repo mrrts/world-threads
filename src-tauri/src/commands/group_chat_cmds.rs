@@ -135,6 +135,7 @@ pub fn save_group_user_message_cmd(
         tokens_estimate: 0,
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
     };
     create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
     Ok(msg)
@@ -175,6 +176,7 @@ pub async fn send_group_message_cmd(
             tokens_estimate: (content.len() as i64) / 4,
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
         };
         create_group_message(&conn, &user_msg).map_err(|e| e.to_string())?;
 
@@ -258,6 +260,7 @@ pub async fn send_group_message_cmd(
             tokens_estimate: tokens as i64,
             sender_character_id: Some(character.character_id.clone()),
             created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
         };
         {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -349,6 +352,7 @@ pub async fn prompt_group_character_cmd(
         tokens_estimate: 0,
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
     });
 
     let (response_length, narration_tone) = {
@@ -388,6 +392,7 @@ pub async fn prompt_group_character_cmd(
         tokens_estimate: tokens as i64,
         sender_character_id: Some(character_id),
         created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
     };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -531,6 +536,7 @@ pub async fn generate_group_illustration_cmd(
         };
         let _ = create_world_image(&conn, &img);
 
+        let (wd, wt) = chat_cmds::world_time_fields(&world);
         let msg = Message {
             message_id: message_id.clone(),
             thread_id: gc.thread_id.clone(),
@@ -539,17 +545,19 @@ pub async fn generate_group_illustration_cmd(
             tokens_estimate: 0,
             sender_character_id: None,
             created_at: now,
+            world_day: wd, world_time: wt,
         };
         create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
     }
 
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let illustration_msg = conn.query_row(
-        "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at FROM group_messages WHERE message_id = ?1",
+        "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time FROM group_messages WHERE message_id = ?1",
         params![message_id], |row| Ok(Message {
             message_id: row.get(0)?, thread_id: row.get(1)?, role: row.get(2)?,
             content: row.get(3)?, tokens_estimate: row.get(4)?,
             sender_character_id: row.get(5)?, created_at: row.get(6)?,
+            world_day: row.get(7).ok(), world_time: row.get(8).ok(),
         })
     ).map_err(|e| e.to_string())?;
 
@@ -626,6 +634,7 @@ pub async fn generate_group_narrative_cmd(
         tokens_estimate: usage.as_ref().map(|u| u.total_tokens as i64).unwrap_or(0),
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
+            world_day: None, world_time: None,
     };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
