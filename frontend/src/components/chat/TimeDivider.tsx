@@ -27,11 +27,11 @@ export function TimeDivider({ current, previous }: Props) {
 
   return (
     <div className="flex items-center gap-5 my-8 px-4">
-      <div className="flex-1 h-[2px] bg-border" />
-      <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest px-5 py-2 rounded-full bg-muted border border-border">
+      <div className="flex-1 h-[2px] bg-zinc-600" />
+      <span className="text-sm font-bold text-zinc-700 uppercase tracking-widest px-5 py-2 rounded-full bg-zinc-100 border-4 border-zinc-600">
         {parts.join(" · ")}
       </span>
-      <div className="flex-1 h-[2px] bg-border" />
+      <div className="flex-1 h-[2px] bg-zinc-600" />
     </div>
   );
 }

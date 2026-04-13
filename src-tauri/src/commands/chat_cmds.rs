@@ -1076,7 +1076,7 @@ pub async fn adjust_message_cmd(
         messages,
         temperature: Some(0.9),
         max_completion_tokens: Some(1024),
-        response_format: None,
+        response_format: None, max_tokens: None,
     };
 
     let response = openai::chat_completion_with_base(
@@ -1676,7 +1676,7 @@ async fn generate_animation_prompt(
         messages,
         temperature: Some(0.9),
         max_completion_tokens: Some(200),
-        response_format: None,
+        response_format: None, max_tokens: None,
     };
     let response = openai::chat_completion_with_base(
         &model_config.chat_api_base(), api_key, &request,

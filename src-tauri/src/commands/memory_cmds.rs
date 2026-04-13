@@ -74,7 +74,7 @@ pub async fn generate_chat_summary_cmd(
         messages,
         temperature: Some(0.5),
         max_completion_tokens: Some(400),
-        response_format: None,
+        response_format: None, max_tokens: None,
     };
 
     let response = openai::chat_completion_with_base(
@@ -153,7 +153,7 @@ pub async fn generate_group_chat_summary_cmd(
         messages,
         temperature: Some(0.5),
         max_completion_tokens: Some(400),
-        response_format: None,
+        response_format: None, max_tokens: None,
     };
 
     let response = openai::chat_completion_with_base(

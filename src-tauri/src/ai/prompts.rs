@@ -127,9 +127,9 @@ pub fn build_dialogue_system_prompt(
 
     if let Some(length) = response_length {
         match length {
-            "Short" => parts.push("RESPONSE LENGTH:\nKeep your reply to 2–3 sentences. Be concise and punchy. Do not elaborate beyond what is essential, regardless of how long previous messages were.".to_string()),
-            "Medium" => parts.push("RESPONSE LENGTH:\nAim for 4–6 sentences. Give enough detail to be engaging and expressive, but don't ramble. This applies regardless of the length of previous messages.".to_string()),
-            "Long" => parts.push("RESPONSE LENGTH:\nWrite 7 or more sentences. Be detailed, expansive, and richly expressive. Take your time with the moment — describe, reflect, react fully. This applies regardless of the length of previous messages.".to_string()),
+            "Short" => parts.push("IMPORTANT — RESPONSE LENGTH:\nKeep your reply to 2–3 sentences MAX, regardless of how long previous messages were. Be concise and punchy. Do not elaborate beyond what is essential. This is a HARD LIMIT — do not exceed 3 sentences under any circumstances.".to_string()),
+            "Medium" => parts.push("IMPORTANT — RESPONSE LENGTH:\nAim for 4–6 sentences, regardless of how long previous messages were. Give enough detail to be engaging and expressive, but don't ramble. Do not exceed 6 sentences.".to_string()),
+            "Long" => parts.push("IMPORTANT — RESPONSE LENGTH:\nWrite 7 or more sentences, regardless of how long previous messages were. Be detailed, expansive, and richly expressive. Take your time with the moment — describe, reflect, react fully.".to_string()),
             _ => {} // "Auto" or unknown — no directive
         }
     }
