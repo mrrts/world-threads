@@ -36,6 +36,7 @@ export interface AppState {
   aspectRatios: Record<string, number>;
   totalMessages: number;
   loadingOlder: boolean;
+  loadingChat: boolean;
   chatError: string | null;
   lastFailedContent: string | null;
   error: string | null;
@@ -74,6 +75,7 @@ export function useAppStore() {
     editingUserProfile: false,
     totalMessages: 0,
     loadingOlder: false,
+    loadingChat: false,
     autoRespond: true,
     loading: true,
     sending: null,
@@ -237,6 +239,7 @@ export function useAppStore() {
         budgetMode,
         autoRespond: autoRespondSetting !== "false",
         loadingOlder: false,
+    loadingChat: false,
         loading: false,
         sending: null,
         generatingNarrative: null,
@@ -346,8 +349,7 @@ export function useAppStore() {
   }, []);
 
   const selectCharacter = useCallback(async (character: Character) => {
-    setState((s) => ({ ...s, activeCharacter: character, activeGroupChat: null, messages: [], totalMessages: 0, reactions: {}, editingUserProfile: false, chatError: null, lastFailedContent: null }));
-    // Remember last active chat for this world
+    setState((s) => ({ ...s, activeCharacter: character, activeGroupChat: null, messages: [], totalMessages: 0, reactions: {}, editingUserProfile: false, chatError: null, lastFailedContent: null, loadingChat: true }));
     if (state.activeWorld) {
       api.setSetting(`last_chat.${state.activeWorld.world_id}`, `char:${character.character_id}`).catch(() => {});
     }
@@ -359,16 +361,16 @@ export function useAppStore() {
       ]);
       setState((s) => {
         if (s.activeCharacter?.character_id !== character.character_id) return s;
-        return { ...s, messages: page.messages, totalMessages: page.total, reactions, aspectRatios };
+        return { ...s, messages: page.messages, totalMessages: page.total, reactions, aspectRatios, loadingChat: false };
       });
     } catch (e) {
       setError(String(e));
+      setState((s) => ({ ...s, loadingChat: false }));
     }
   }, [setError, loadReactions]);
 
   const selectGroupChat = useCallback(async (groupChat: GroupChat) => {
-    setState((s) => ({ ...s, activeGroupChat: groupChat, activeCharacter: null, messages: [], totalMessages: 0, reactions: {}, editingUserProfile: false, chatError: null, lastFailedContent: null }));
-    // Remember last active chat for this world
+    setState((s) => ({ ...s, activeGroupChat: groupChat, activeCharacter: null, messages: [], totalMessages: 0, reactions: {}, editingUserProfile: false, chatError: null, lastFailedContent: null, loadingChat: true }));
     if (state.activeWorld) {
       api.setSetting(`last_chat.${state.activeWorld.world_id}`, `group:${groupChat.group_chat_id}`).catch(() => {});
     }
@@ -377,10 +379,11 @@ export function useAppStore() {
       const reactions = await loadReactions(page.messages);
       setState((s) => {
         if (s.activeGroupChat?.group_chat_id !== groupChat.group_chat_id) return s;
-        return { ...s, messages: page.messages, totalMessages: page.total, reactions };
+        return { ...s, messages: page.messages, totalMessages: page.total, reactions, loadingChat: false };
       });
     } catch (e) {
       setError(String(e));
+      setState((s) => ({ ...s, loadingChat: false }));
     }
   }, [setError, loadReactions]);
 

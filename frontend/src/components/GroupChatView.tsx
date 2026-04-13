@@ -391,12 +391,18 @@ export function GroupChatView({ store }: Props) {
         <ScrollArea ref={scrollRef} className="h-full px-4 py-3">
         <div>
         {store.messages.length === 0 && (
-          <div className="text-center text-muted-foreground py-12">
-            <p className="text-lg mb-1">Start a conversation</p>
-            <p className="text-sm">
-              Send a message to {store.activeGroupChat?.display_name}
-            </p>
-          </div>
+          store.loadingChat ? (
+            <div className="flex items-center justify-center py-16">
+              <Loader2 size={24} className="animate-spin text-muted-foreground" />
+            </div>
+          ) : (
+            <div className="text-center text-muted-foreground py-12">
+              <p className="text-lg mb-1">Start a conversation</p>
+              <p className="text-sm">
+                Send a message to {store.activeGroupChat?.display_name}
+              </p>
+            </div>
+          )
         )}
         <div className="space-y-3 max-w-2xl mx-auto">
           {store.messages.map((msg, msgIdx) => {
