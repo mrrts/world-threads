@@ -126,6 +126,8 @@ pub fn save_group_user_message_cmd(
 ) -> Result<Message, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
+    let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
+    let (wd, wt) = chat_cmds::world_time_fields(&world);
 
     let msg = Message {
         message_id: uuid::Uuid::new_v4().to_string(),
@@ -135,7 +137,7 @@ pub fn save_group_user_message_cmd(
         tokens_estimate: 0,
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
-            world_day: None, world_time: None,
+        world_day: wd, world_time: wt,
     };
     create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
     Ok(msg)
@@ -168,6 +170,7 @@ pub async fn send_group_message_cmd(
             .collect();
 
         // Save user message
+        let (wd, wt) = chat_cmds::world_time_fields(&world);
         let user_msg = Message {
             message_id: uuid::Uuid::new_v4().to_string(),
             thread_id: gc.thread_id.clone(),
@@ -176,12 +179,14 @@ pub async fn send_group_message_cmd(
             tokens_estimate: (content.len() as i64) / 4,
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
-            world_day: None, world_time: None,
+            world_day: wd, world_time: wt.clone(),
         };
         create_group_message(&conn, &user_msg).map_err(|e| e.to_string())?;
 
         (gc, world, characters, model_config, user_profile, user_msg)
     };
+
+    let (wd, wt) = chat_cmds::world_time_fields(&world);
 
     // Build character name map for message formatting
     let character_names: HashMap<String, String> = characters.iter()
@@ -260,7 +265,7 @@ pub async fn send_group_message_cmd(
             tokens_estimate: tokens as i64,
             sender_character_id: Some(character.character_id.clone()),
             created_at: Utc::now().to_rfc3339(),
-            world_day: None, world_time: None,
+            world_day: wd, world_time: wt.clone(),
         };
         {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -384,6 +389,7 @@ pub async fn prompt_group_character_cmd(
     }
 
     let tokens = usage.as_ref().map(|u| u.total_tokens).unwrap_or(0);
+    let (wd_p, wt_p) = chat_cmds::world_time_fields(&world);
     let msg = Message {
         message_id: uuid::Uuid::new_v4().to_string(),
         thread_id: gc.thread_id.clone(),
@@ -392,7 +398,7 @@ pub async fn prompt_group_character_cmd(
         tokens_estimate: tokens as i64,
         sender_character_id: Some(character_id),
         created_at: Utc::now().to_rfc3339(),
-            world_day: None, world_time: None,
+        world_day: wd_p, world_time: wt_p,
     };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -626,6 +632,7 @@ pub async fn generate_group_narrative_cmd(
         let _ = record_token_usage(&conn, "narrative", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
     }
 
+    let (wd, wt) = chat_cmds::world_time_fields(&world);
     let narrative_msg = Message {
         message_id: uuid::Uuid::new_v4().to_string(),
         thread_id: gc.thread_id.clone(),
@@ -634,7 +641,7 @@ pub async fn generate_group_narrative_cmd(
         tokens_estimate: usage.as_ref().map(|u| u.total_tokens as i64).unwrap_or(0),
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
-            world_day: None, world_time: None,
+        world_day: wd, world_time: wt,
     };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;

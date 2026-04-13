@@ -22,6 +22,7 @@ import { AdjustMessageModal } from "@/components/chat/AdjustMessageModal";
 import { NarrativePickerModal } from "@/components/chat/NarrativePickerModal";
 import { SummaryModal } from "@/components/chat/SummaryModal";
 import { TimeDivider } from "@/components/chat/TimeDivider";
+import { ContextMessage } from "@/components/chat/ContextMessage";
 import { PortraitModal } from "@/components/chat/PortraitModal";
 
 
@@ -421,6 +422,19 @@ export function GroupChatView({ store }: Props) {
                   onStopSpeaking={() => { audioRef.current?.pause(); setSpeakingId(null); }}
                   onDeleteAudio={async (id) => { await api.deleteMessageAudio(id); setCachedTones((prev) => { const next = { ...prev }; delete next[id]; return next; }); setLastTones((prev) => { const next = { ...prev }; delete next[id]; return next; }); }}
                   toneMenuRef={toneMenuRef}
+                  adjustingMessageId={store.adjustingMessageId}
+                  onAdjust={(id) => setAdjustMessageId(id)}
+                />
+              </React.Fragment>);
+            }
+
+            if (msg.role === "context") {
+              return (<React.Fragment key={msg.message_id}>
+                <TimeDivider current={msg} previous={prevMsg} />
+                <ContextMessage
+                  message={msg}
+                  isPending={isPending}
+                  onResetToHere={(id) => setResetConfirmId(id)}
                   adjustingMessageId={store.adjustingMessageId}
                   onAdjust={(id) => setAdjustMessageId(id)}
                 />
@@ -1100,6 +1114,10 @@ export function GroupChatView({ store }: Props) {
         onClose={() => setShowSummary(false)}
         title={`Summary: ${groupCharacters.map((c) => c.display_name).join(" & ")}`}
         generateSummary={() => api.generateGroupChatSummary(store.apiKey, store.activeGroupChat?.group_chat_id ?? "")}
+        characters={store.characters}
+        groupChats={store.groupChats}
+        activePortraits={store.activePortraits}
+        currentGroupChatId={store.activeGroupChat?.group_chat_id}
       />
 
       <AdjustMessageModal

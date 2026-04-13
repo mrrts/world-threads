@@ -386,6 +386,11 @@ export function WorldSummary({ store, onChat, onSettings }: Props) {
             return api.generateGroupChatSummary(store.apiKey, summaryTarget.id);
           }
         }}
+        characters={store.characters}
+        groupChats={store.groupChats}
+        activePortraits={store.activePortraits}
+        currentCharacterId={summaryTarget?.type === "char" ? summaryTarget.id : undefined}
+        currentGroupChatId={summaryTarget?.type === "group" ? summaryTarget.id : undefined}
       />
 
       {/* Carousel Modal */}

@@ -47,7 +47,7 @@ export interface CharacterState {
 export interface Message {
   message_id: string;
   thread_id: string;
-  role: "user" | "assistant" | "system" | "narrative" | "illustration";
+  role: "user" | "assistant" | "system" | "narrative" | "illustration" | "context";
   content: string;
   tokens_estimate: number;
   sender_character_id: string | null;
@@ -337,6 +337,8 @@ export const api = {
     invoke<SendMessageResult>("send_message_cmd", { apiKey, characterId, content }),
   promptCharacter: (apiKey: string, characterId: string) =>
     invoke<PromptCharacterResult>("prompt_character_cmd", { apiKey, characterId }),
+  createContextMessage: (characterId?: string, groupChatId?: string, content?: string) =>
+    invoke<Message>("create_context_message_cmd", { characterId: characterId ?? null, groupChatId: groupChatId ?? null, content: content ?? "" }),
   adjustMessage: (apiKey: string, messageId: string, instructions: string, isGroup: boolean) =>
     invoke<Message>("adjust_message_cmd", { apiKey, messageId, instructions, isGroup }),
   generateNarrative: (apiKey: string, characterId: string, customInstructions?: string) =>

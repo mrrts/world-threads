@@ -6,8 +6,11 @@ interface Props {
 }
 
 export function TimeDivider({ current, previous }: Props) {
-  if (!current.world_day && !current.world_time) return null;
-  if (previous && current.world_day === previous.world_day && current.world_time === previous.world_time) return null;
+  // Don't show if current message has no time info
+  if (current.world_day == null && !current.world_time) return null;
+  // Show if no previous message, or previous has no time info, or time differs
+  if (previous && previous.world_day != null && previous.world_time
+    && current.world_day === previous.world_day && current.world_time === previous.world_time) return null;
 
   const parts: string[] = [];
   if (current.world_day != null) parts.push(`Day ${current.world_day}`);
@@ -23,12 +26,12 @@ export function TimeDivider({ current, previous }: Props) {
   if (parts.length === 0) return null;
 
   return (
-    <div className="flex items-center gap-3 my-4 px-4">
-      <div className="flex-1 h-px bg-border/50" />
-      <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">
+    <div className="flex items-center gap-5 my-8 px-4">
+      <div className="flex-1 h-[2px] bg-border" />
+      <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest px-5 py-2 rounded-full bg-muted border border-border">
         {parts.join(" · ")}
       </span>
-      <div className="flex-1 h-px bg-border/50" />
+      <div className="flex-1 h-[2px] bg-border" />
     </div>
   );
 }

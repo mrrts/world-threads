@@ -503,6 +503,50 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
     ").ok();
 
+    // Add 'context' role to messages CHECK constraint
+    let needs_context_role: bool = conn.query_row(
+        "SELECT sql NOT LIKE '%context%' FROM sqlite_master WHERE type='table' AND name='messages'",
+        [], |r| r.get(0),
+    ).unwrap_or(false);
+    if needs_context_role {
+        // Drop and recreate without CHECK constraint (SQLite limitation)
+        // We'll rely on application-level validation instead
+        conn.execute_batch("
+            ALTER TABLE messages RENAME TO messages_old;
+            CREATE TABLE messages (
+                message_id TEXT PRIMARY KEY,
+                thread_id TEXT NOT NULL REFERENCES threads(thread_id) ON DELETE CASCADE,
+                role TEXT NOT NULL,
+                content TEXT NOT NULL,
+                tokens_estimate INTEGER NOT NULL DEFAULT 0,
+                sender_character_id TEXT DEFAULT NULL,
+                created_at TEXT NOT NULL DEFAULT (datetime('now')),
+                world_day INTEGER DEFAULT NULL,
+                world_time TEXT DEFAULT NULL
+            );
+            INSERT INTO messages SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time FROM messages_old;
+            DROP TABLE messages_old;
+            CREATE INDEX IF NOT EXISTS idx_messages_thread ON messages(thread_id, created_at);
+        ").ok();
+        conn.execute_batch("
+            ALTER TABLE group_messages RENAME TO group_messages_old;
+            CREATE TABLE group_messages (
+                message_id TEXT PRIMARY KEY,
+                thread_id TEXT NOT NULL,
+                role TEXT NOT NULL,
+                content TEXT NOT NULL,
+                tokens_estimate INTEGER NOT NULL DEFAULT 0,
+                sender_character_id TEXT DEFAULT NULL,
+                created_at TEXT NOT NULL DEFAULT (datetime('now')),
+                world_day INTEGER DEFAULT NULL,
+                world_time TEXT DEFAULT NULL
+            );
+            INSERT INTO group_messages SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time FROM group_messages_old;
+            DROP TABLE group_messages_old;
+            CREATE INDEX IF NOT EXISTS idx_group_messages_thread ON group_messages(thread_id, created_at);
+        ").ok();
+    }
+
     // Add world_day and world_time columns to messages tables
     let has_world_day: bool = conn.prepare("SELECT world_day FROM messages LIMIT 0")
         .is_ok();

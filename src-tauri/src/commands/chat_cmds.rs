@@ -35,6 +35,9 @@ pub fn save_user_message_cmd(
 ) -> Result<Message, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
+    let ch = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
+    let w = get_world(&conn, &ch.world_id).map_err(|e| e.to_string())?;
+    let (wd_s, wt_s) = world_time_fields(&w);
 
     let msg = Message {
         message_id: uuid::Uuid::new_v4().to_string(),
@@ -42,12 +45,57 @@ pub fn save_user_message_cmd(
         role: "user".to_string(),
         content: content.clone(),
         tokens_estimate: (content.len() as i64) / 4,
-            sender_character_id: None,
+        sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
-            world_day: None, world_time: None,
+        world_day: wd_s, world_time: wt_s,
     };
     create_message(&conn, &msg).map_err(|e| e.to_string())?;
     increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
+
+    Ok(msg)
+}
+
+/// Create a cross-chat context message in an individual or group chat.
+#[tauri::command]
+pub fn create_context_message_cmd(
+    db: State<Database>,
+    character_id: Option<String>,
+    group_chat_id: Option<String>,
+    content: String,
+) -> Result<Message, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+
+    let (thread_id, world) = if let Some(gc_id) = &group_chat_id {
+        let gc = get_group_chat(&conn, gc_id).map_err(|e| e.to_string())?;
+        let w = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
+        (gc.thread_id, w)
+    } else if let Some(char_id) = &character_id {
+        let thread = get_thread_for_character(&conn, char_id).map_err(|e| e.to_string())?;
+        let ch = get_character(&conn, char_id).map_err(|e| e.to_string())?;
+        let w = get_world(&conn, &ch.world_id).map_err(|e| e.to_string())?;
+        (thread.thread_id, w)
+    } else {
+        return Err("Either character_id or group_chat_id must be provided".to_string());
+    };
+
+    let (wd, wt) = world_time_fields(&world);
+    let msg = Message {
+        message_id: uuid::Uuid::new_v4().to_string(),
+        thread_id,
+        role: "context".to_string(),
+        content,
+        tokens_estimate: 0,
+        sender_character_id: None,
+        created_at: Utc::now().to_rfc3339(),
+        world_day: wd,
+        world_time: wt,
+    };
+
+    if group_chat_id.is_some() {
+        create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
+    } else {
+        create_message(&conn, &msg).map_err(|e| e.to_string())?;
+    }
 
     Ok(msg)
 }
@@ -69,7 +117,7 @@ pub async fn send_message_cmd(
         let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
         let model_config = orchestrator::load_model_config(&conn);
 
-        let (wd, wt) = world_time_fields(&world);
+        let (wd_u, wt_u) = world_time_fields(&world);
         let user_msg = Message {
             message_id: uuid::Uuid::new_v4().to_string(),
             thread_id: thread.thread_id.clone(),
@@ -78,7 +126,7 @@ pub async fn send_message_cmd(
             tokens_estimate: (content.len() as i64) / 4,
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
-            world_day: wd, world_time: wt.clone(),
+            world_day: wd_u, world_time: wt_u,
         };
         create_message(&conn, &user_msg).map_err(|e| e.to_string())?;
         increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
@@ -134,6 +182,8 @@ pub async fn send_message_cmd(
          retrieved, should_run_maintenance, user_profile,
          current_mood, mood_enabled, mood_drift_rate, response_length, narration_tone)
     };
+
+    let (wd, wt) = world_time_fields(&world);
 
     // Phase 2: Vector search (if embeddings exist) — requires OpenAI, skip for LM Studio
     let mut full_retrieved = retrieved;
@@ -242,7 +292,7 @@ pub async fn send_message_cmd(
             tokens_estimate: tokens as i64,
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
-            world_day: None, world_time: None,
+            world_day: wd, world_time: wt.clone(),
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
         increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
@@ -524,6 +574,7 @@ pub async fn prompt_character_cmd(
     }
 
     let tokens = dialogue_usage.as_ref().map(|u| u.total_tokens).unwrap_or(0);
+    let (wd, wt) = world_time_fields(&world);
     let assistant_msg = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let msg = Message {
@@ -534,7 +585,7 @@ pub async fn prompt_character_cmd(
             tokens_estimate: tokens as i64,
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
-            world_day: None, world_time: None,
+            world_day: wd, world_time: wt.clone(),
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
         increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
@@ -658,6 +709,7 @@ pub async fn generate_narrative_cmd(
     }
 
     // Store as a "narrative" role message
+    let (wd, wt) = world_time_fields(&world);
     let narrative_msg = Message {
         message_id: uuid::Uuid::new_v4().to_string(),
         thread_id: thread.thread_id.clone(),
@@ -666,7 +718,7 @@ pub async fn generate_narrative_cmd(
         tokens_estimate: usage.as_ref().map(|u| u.total_tokens as i64).unwrap_or(0),
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
-            world_day: None, world_time: None,
+            world_day: wd, world_time: wt.clone(),
     };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -1848,6 +1900,7 @@ pub async fn reset_to_message_cmd(
         }
 
         let tokens = dialogue_usage.as_ref().map(|u| u.total_tokens).unwrap_or(0);
+        let (wd, wt) = world_time_fields(&world);
         let (user_message, assistant_msg) = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
             let msg = Message {
@@ -1858,7 +1911,7 @@ pub async fn reset_to_message_cmd(
                 tokens_estimate: tokens as i64,
                 sender_character_id: None,
                 created_at: Utc::now().to_rfc3339(),
-            world_day: None, world_time: None,
+            world_day: wd, world_time: wt.clone(),
             };
             create_message(&conn, &msg).map_err(|e| e.to_string())?;
             increment_message_counter(&conn, &thread_id).map_err(|e| e.to_string())?;

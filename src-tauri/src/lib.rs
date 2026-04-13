@@ -102,6 +102,7 @@ pub fn run() {
             archive_character_cmd,
             unarchive_character_cmd,
             list_archived_characters_cmd,
+            create_context_message_cmd,
             save_user_message_cmd,
             send_message_cmd,
             prompt_character_cmd,

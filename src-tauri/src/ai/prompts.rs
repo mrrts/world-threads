@@ -192,7 +192,9 @@ pub fn build_dialogue_messages(
             continue;
         }
         // In group chats, prefix assistant messages with the character name
-        let content = if m.role == "narrative" {
+        let content = if m.role == "context" {
+            format!("[Additional Context from Another Chat] {}", m.content)
+        } else if m.role == "narrative" {
             format!("[Narrative] {}", m.content)
         } else if m.role == "assistant" {
             if let (Some(names), Some(sender_id)) = (character_names, &m.sender_character_id) {
@@ -208,7 +210,7 @@ pub fn build_dialogue_messages(
             m.content.clone()
         };
         msgs.push(crate::ai::openai::ChatMessage {
-            role: if m.role == "narrative" { "system".to_string() } else { m.role.clone() },
+            role: if m.role == "narrative" || m.role == "context" { "system".to_string() } else { m.role.clone() },
             content,
         });
     }

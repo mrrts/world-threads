@@ -308,8 +308,10 @@ pub async fn run_narrative_with_base(
             continue;
         }
         msgs.push(openai::ChatMessage {
-            role: if m.role == "narrative" { "assistant".to_string() } else { m.role.clone() },
-            content: if m.role == "narrative" {
+            role: if m.role == "narrative" || m.role == "context" { "assistant".to_string() } else { m.role.clone() },
+            content: if m.role == "context" {
+                format!("[Additional Context from Another Chat] {}", m.content)
+            } else if m.role == "narrative" {
                 format!("[Narrative] {}", m.content)
             } else {
                 m.content.clone()

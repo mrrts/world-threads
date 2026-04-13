@@ -30,13 +30,15 @@ pub async fn generate_chat_summary_cmd(
     api_key: String,
     character_id: String,
 ) -> Result<String, String> {
-    let (character, recent_msgs, model_config) = {
+    let (character, recent_msgs, model_config, user_name) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
         let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
         let model_config = orchestrator::load_model_config(&conn);
         let recent_msgs = list_messages(&conn, &thread.thread_id, 50).map_err(|e| e.to_string())?;
-        (character, recent_msgs, model_config)
+        let user_name = get_user_profile(&conn, &character.world_id)
+            .ok().map(|p| p.display_name).unwrap_or_else(|| "the protagonist".to_string());
+        (character, recent_msgs, model_config, user_name)
     };
 
     if recent_msgs.is_empty() {
@@ -52,13 +54,13 @@ pub async fn generate_chat_summary_cmd(
         openai::ChatMessage {
             role: "system".to_string(),
             content: format!(
-                "Summarize the recent conversation between you and {}. \
+                "Summarize the recent conversation between {user} and {char}. \
                  Write a concise narrative summary (3-6 sentences) covering the key events, \
                  emotional beats, and where things currently stand. Include a few key specific details — \
                  names, places, actions, or things said that capture the texture of the conversation. \
-                 Write in second person — refer to the human as \"you\", never as \"the user\". \
-                 Refer to {} by name.",
-                character.display_name, character.display_name,
+                 Write in third person. Refer to the human as \"{user}\", never as \"the user\" or \"you\". \
+                 Refer to {char} by name.",
+                user = user_name, char = character.display_name,
             ),
         },
         openai::ChatMessage {
@@ -91,11 +93,13 @@ pub async fn generate_group_chat_summary_cmd(
     api_key: String,
     group_chat_id: String,
 ) -> Result<String, String> {
-    let (characters, recent_msgs, model_config) = {
+    let (characters, recent_msgs, model_config, user_name) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
         let model_config = orchestrator::load_model_config(&conn);
         let recent_msgs = list_group_messages(&conn, &gc.thread_id, 50).map_err(|e| e.to_string())?;
+        let user_name = get_user_profile(&conn, &gc.world_id)
+            .ok().map(|p| p.display_name).unwrap_or_else(|| "the protagonist".to_string());
 
         let char_ids: Vec<String> = gc.character_ids.as_array()
             .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
@@ -104,7 +108,7 @@ pub async fn generate_group_chat_summary_cmd(
             .filter_map(|id| get_character(&conn, id).ok())
             .collect();
 
-        (characters, recent_msgs, model_config)
+        (characters, recent_msgs, model_config, user_name)
     };
 
     if recent_msgs.is_empty() {
@@ -129,13 +133,13 @@ pub async fn generate_group_chat_summary_cmd(
         openai::ChatMessage {
             role: "system".to_string(),
             content: format!(
-                "Summarize the recent group conversation involving you and {}. \
+                "Summarize the recent group conversation involving {user} and {chars}. \
                  Write a concise narrative summary (3-6 sentences) covering the key events, \
                  emotional beats, and where things currently stand. Include a few key specific details — \
                  names, places, actions, or things said that capture the texture of the conversation. \
-                 Write in second person — refer to the human as \"you\", never as \"the user\". \
+                 Write in third person. Refer to the human as \"{user}\", never as \"the user\" or \"you\". \
                  Refer to each character by name.",
-                char_names.join(" and "),
+                user = user_name, chars = char_names.join(" and "),
             ),
         },
         openai::ChatMessage {

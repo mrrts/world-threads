@@ -23,6 +23,7 @@ import { VideoGenerationModal } from "@/components/chat/VideoGenerationModal";
 import { AdjustMessageModal } from "@/components/chat/AdjustMessageModal";
 import { SummaryModal } from "@/components/chat/SummaryModal";
 import { TimeDivider } from "@/components/chat/TimeDivider";
+import { ContextMessage } from "@/components/chat/ContextMessage";
 import { NarrativePickerModal } from "@/components/chat/NarrativePickerModal";
 import { PortraitModal } from "@/components/chat/PortraitModal";
 
@@ -467,6 +468,19 @@ export function ChatView({ store }: Props) {
                   onStopSpeaking={() => { audioRef.current?.pause(); setSpeakingId(null); }}
                   onDeleteAudio={async (id) => { await api.deleteMessageAudio(id); setCachedTones((prev) => { const next = { ...prev }; delete next[id]; return next; }); setLastTones((prev) => { const next = { ...prev }; delete next[id]; return next; }); }}
                   toneMenuRef={toneMenuRef}
+                  adjustingMessageId={store.adjustingMessageId}
+                  onAdjust={(id) => setAdjustMessageId(id)}
+                />
+              </React.Fragment>);
+            }
+
+            if (msg.role === "context") {
+              return (<React.Fragment key={msg.message_id}>
+                <TimeDivider current={msg} previous={prevMsg} />
+                <ContextMessage
+                  message={msg}
+                  isPending={isPending}
+                  onResetToHere={(id) => setResetConfirmId(id)}
                   adjustingMessageId={store.adjustingMessageId}
                   onAdjust={(id) => setAdjustMessageId(id)}
                 />
@@ -1092,6 +1106,10 @@ export function ChatView({ store }: Props) {
         onClose={() => setShowSummary(false)}
         title={`Summary: ${store.activeCharacter?.display_name ?? "Chat"}`}
         generateSummary={() => api.generateChatSummary(store.apiKey, store.activeCharacter?.character_id ?? "")}
+        characters={store.characters}
+        groupChats={store.groupChats}
+        activePortraits={store.activePortraits}
+        currentCharacterId={store.activeCharacter?.character_id}
       />
 
       <AdjustMessageModal
