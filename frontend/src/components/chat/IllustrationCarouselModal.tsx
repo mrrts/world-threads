@@ -9,7 +9,7 @@ import { DayPageSlide } from "./DayPageSlide";
 
 export type CarouselSlide =
   | { type: "illustration"; id: string; content: string }
-  | { type: "day-page"; day: number; timePart: string | null; messages: Message[] };
+  | { type: "day-page"; day: number; messages: Message[] };
 
 // ─── Props ──────────────────────────────────────────────────────────────────
 
@@ -53,67 +53,50 @@ export interface IllustrationCarouselModalProps {
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-/** Composite key for day + time-of-day grouping */
-function dayTimeKey(day: number, time: string | null): string {
-  return `${day}::${time ?? ""}`;
-}
-
-/** Build interleaved slide list: day-part page before first illustration of each day-part.
- *  Every day-part gets a page regardless of whether it has illustrations. */
+/** Build interleaved slide list: day page before first illustration of each day.
+ *  Every day gets a page regardless of whether it has illustrations. */
 function buildSlides(
   illustrations: Array<{ id: string; content: string }>,
   allMessages: Message[],
 ): CarouselSlide[] {
-  // Group messages by day+time composite key, preserving insertion order
-  const partMap = new Map<string, { day: number; time: string | null; messages: Message[] }>();
-  const illustrationParts = new Map<string, string>(); // message_id → dayTimeKey
+  const dayMap = new Map<number, Message[]>();
+  const illustrationDays = new Map<string, number>(); // message_id → day
 
   for (const msg of allMessages) {
     if (msg.world_day == null) continue;
-    const key = dayTimeKey(msg.world_day, msg.world_time ?? null);
-    if (!partMap.has(key)) partMap.set(key, { day: msg.world_day, time: msg.world_time ?? null, messages: [] });
-    partMap.get(key)!.messages.push(msg);
+    if (!dayMap.has(msg.world_day)) dayMap.set(msg.world_day, []);
+    dayMap.get(msg.world_day)!.push(msg);
     if (msg.role === "illustration") {
-      illustrationParts.set(msg.message_id, key);
+      illustrationDays.set(msg.message_id, msg.world_day);
     }
   }
 
-  // Sort parts by day, then by chronological order of first message
-  const sortedParts = [...partMap.entries()].sort((a, b) => {
-    if (a[1].day !== b[1].day) return a[1].day - b[1].day;
-    const aFirst = a[1].messages[0]?.created_at ?? "";
-    const bFirst = b[1].messages[0]?.created_at ?? "";
-    return aFirst.localeCompare(bFirst);
-  });
+  const sortedDays = [...dayMap.keys()].sort((a, b) => a - b);
 
-  // Track which illustrations belong to which day-part
-  const illusByPart = new Map<string, Array<{ id: string; content: string }>>();
+  const illusByDay = new Map<number, Array<{ id: string; content: string }>>();
   for (const illus of illustrations) {
-    const key = illustrationParts.get(illus.id);
-    if (key != null) {
-      if (!illusByPart.has(key)) illusByPart.set(key, []);
-      illusByPart.get(key)!.push(illus);
+    const day = illustrationDays.get(illus.id);
+    if (day != null) {
+      if (!illusByDay.has(day)) illusByDay.set(day, []);
+      illusByDay.get(day)!.push(illus);
     }
   }
 
   // Illustrations with no day assigned (predate the day system) — come before day pages
   const orphanIllustrations = illustrations.filter(
-    (i) => !illustrationParts.has(i.id),
+    (i) => !illustrationDays.has(i.id),
   );
 
   const slides: CarouselSlide[] = [];
 
-  // Orphan illustrations first (they precede the day system)
   for (const illus of orphanIllustrations) {
     slides.push({ type: "illustration", id: illus.id, content: illus.content });
   }
 
-  for (const [key, part] of sortedParts) {
-    // Day-part page
-    slides.push({ type: "day-page", day: part.day, timePart: part.time, messages: part.messages });
-    // Illustrations for this day-part
-    const partIllus = illusByPart.get(key) ?? [];
-    for (const illus of partIllus) {
+  for (const day of sortedDays) {
+    slides.push({ type: "day-page", day, messages: dayMap.get(day)! });
+    const dayIllus = illusByDay.get(day) ?? [];
+    for (const illus of dayIllus) {
       slides.push({ type: "illustration", id: illus.id, content: illus.content });
     }
   }
@@ -207,7 +190,7 @@ export function IllustrationCarouselModal({
       setModalImageLoading(true);
     } else {
       // For day pages, set a synthetic id so we know which slide we're on
-      setModalSelectedId(`__daypart_${target.day}_${target.timePart ?? ""}`);
+      setModalSelectedId(`__day_${target.day}`);
       setModalImageLoading(false);
     }
     setModalPlayingVideo(false);
@@ -217,18 +200,15 @@ export function IllustrationCarouselModal({
   const goPrev = () => navigateTo(currentSlideIdx <= 0 ? slides.length - 1 : currentSlideIdx - 1);
 
   // Override slide index finding for day pages (synthetic IDs)
-  if (isDayPage && modalSelectedId?.startsWith("__daypart_")) {
+  if (isDayPage && modalSelectedId?.startsWith("__day_")) {
     // Already on the right slide via the slides array lookup
   }
 
   // Recalculate index for day-page synthetic IDs
   const resolvedIdx = (() => {
-    if (modalSelectedId?.startsWith("__daypart_")) {
-      const rest = modalSelectedId.replace("__daypart_", "");
-      const underIdx = rest.indexOf("_");
-      const dayNum = parseInt(rest.slice(0, underIdx), 10);
-      const timePart = rest.slice(underIdx + 1) || null;
-      return slides.findIndex((s) => s.type === "day-page" && s.day === dayNum && s.timePart === timePart);
+    if (modalSelectedId?.startsWith("__day_")) {
+      const dayNum = parseInt(modalSelectedId.replace("__day_", ""), 10);
+      return slides.findIndex((s) => s.type === "day-page" && s.day === dayNum);
     }
     return currentSlideIdx;
   })();
@@ -244,7 +224,6 @@ export function IllustrationCarouselModal({
             <div className="w-full" style={{ height: "75vh" }}>
               <DayPageSlide
                 day={activeSlide.day}
-                timePart={activeSlide.timePart}
                 messages={activeSlide.messages}
                 portraits={portraits}
                 characterColors={characterColors}
@@ -445,11 +424,9 @@ export function IllustrationCarouselModal({
               {slides.map((slide, idx) => {
                 const isActive = idx === activeIdx;
                 if (slide.type === "day-page") {
-                  if (!slide.timePart) return null;
-                  const timeLabel = slide.timePart.split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ");
                   return (
                     <button
-                      key={`day-${slide.day}-${slide.timePart}`}
+                      key={`day-${slide.day}`}
                       ref={isActive ? (el) => {
                         if (!el) return;
                         const c = el.parentElement;
@@ -465,10 +442,7 @@ export function IllustrationCarouselModal({
                           : "ring-1 ring-border opacity-60 hover:opacity-100 bg-card/60"
                       }`}
                     >
-                      <div className="text-center px-0.5">
-                        <span className="text-[9px] font-bold text-muted-foreground leading-tight block">Day {slide.day}</span>
-                        <span className="text-[8px] text-muted-foreground/70 leading-tight block">{timeLabel}</span>
-                      </div>
+                      <span className="text-[9px] font-bold text-muted-foreground">Day {slide.day}</span>
                     </button>
                   );
                 }

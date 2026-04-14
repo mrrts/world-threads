@@ -2,11 +2,11 @@ import React from "react";
 import Markdown from "react-markdown";
 import { BookOpen, Link2, Image } from "lucide-react";
 import { formatMessage, markdownComponents } from "./formatMessage";
+import { TimeDivider } from "./TimeDivider";
 import type { Message } from "@/lib/tauri";
 
 interface Props {
   day: number;
-  timePart: string | null;
   messages: Message[];
   /** Character portrait URLs keyed by character_id */
   portraits: Record<string, string>;
@@ -32,13 +32,10 @@ interface Props {
 }
 
 export function DayPageSlide({
-  day, timePart, messages, portraits, characterColors, characterNames,
+  day, messages, portraits, characterColors, characterNames,
   userAvatarUrl, backgroundPortraits, videoFiles, videoDataUrls, playVideo,
   playingVideo, setPlayingVideo, loopVideo, setLoopVideo,
 }: Props) {
-  // Group consecutive time-of-day sections
-  let lastTime: string | null = null;
-
   return (
     <div className="w-full h-full flex flex-col bg-background rounded-t-2xl overflow-hidden relative">
       {/* Portrait background */}
@@ -54,32 +51,14 @@ export function DayPageSlide({
       )}
       {/* Sticky header */}
       <div className="flex-shrink-0 sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-border/30 px-6 py-3 relative">
-        <h2 className="text-lg font-bold text-foreground tracking-tight text-center">
-          Day {day}{timePart ? ` · ${timePart.split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ")}` : ""}
-        </h2>
+        <h2 className="text-lg font-bold text-foreground tracking-tight text-center">Day {day}</h2>
       </div>
       {/* Scrollable message list */}
       <div className="flex-1 overflow-y-auto px-4 py-4 relative z-[1]">
         <div className="space-y-3 max-w-2xl mx-auto">
           {messages.map((msg, idx) => {
-            // Time divider
-            let timeDivider: React.ReactNode = null;
-            if (msg.world_time && msg.world_time !== lastTime) {
-              const formatted = msg.world_time
-                .split(" ")
-                .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-                .join(" ");
-              timeDivider = (
-                <div className="flex items-center gap-4 my-5 px-2">
-                  <div className="flex-1 h-[1.5px] bg-zinc-700/50" />
-                  <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider px-3 py-1 rounded-full bg-zinc-800/60 border border-zinc-700/40">
-                    {formatted}
-                  </span>
-                  <div className="flex-1 h-[1.5px] bg-zinc-700/50" />
-                </div>
-              );
-              lastTime = msg.world_time;
-            }
+            const prevMsg = idx > 0 ? messages[idx - 1] : undefined;
+            const timeDivider = <TimeDivider current={msg} previous={prevMsg} />;
 
             if (msg.role === "narrative") {
               return (
