@@ -272,6 +272,21 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     }
   }, [isSending, isGeneratingNarrative, isGeneratingIllustration]);
 
+  // Scroll to bottom when illustration finishes (image needs time to load)
+  const prevGeneratingIllustration = useRef(false);
+  useEffect(() => {
+    if (prevGeneratingIllustration.current && !isGeneratingIllustration) {
+      const el = scrollRef.current;
+      if (el) {
+        const scroll = () => el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+        scroll();
+        setTimeout(scroll, 300);
+        setTimeout(scroll, 800);
+      }
+    }
+    prevGeneratingIllustration.current = isGeneratingIllustration;
+  }, [isGeneratingIllustration]);
+
   // Auto-focus input after AI response arrives
   useEffect(() => {
     if (!isSending) {

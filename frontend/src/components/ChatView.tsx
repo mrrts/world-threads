@@ -362,15 +362,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                         : "bg-secondary/40 text-secondary-foreground rounded-bl-md max-w-[80%] border border-border/30"
                     }`}
                   >
-                    {/* Top corner button — reaction (user) or speak (character) */}
-                    {!isPending && isUser && (
-                      <button
-                        onClick={() => setPickerMessageId(showPicker ? null : msg.message_id)}
-                        className="absolute -top-2.5 -left-2.5 z-10 w-7 h-7 flex items-center justify-center rounded-full bg-white shadow-md border border-border/50 text-muted-foreground hover:text-foreground hover:scale-110 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
-                      >
-                        <SmilePlus size={16} strokeWidth={2} />
-                      </button>
-                    )}
+                    {/* Top corner button — speak (character messages only) */}
                     {!isPending && !isUser && (() => {
                       const msgCached = cachedTones[msg.message_id];
                       const hasCached = msgCached && msgCached.size > 0;
@@ -453,16 +445,6 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                       </div>
                       );
                     })()}
-
-                    {/* Emoji picker */}
-                    {showPicker && (
-                      <div className={`absolute top-0 z-50 ${isUser ? "right-full mr-2" : "left-full ml-2"}`}>
-                        <EmojiPicker
-                          onSelect={(emoji) => store.toggleReaction(msg.message_id, emoji)}
-                          onClose={() => setPickerMessageId(null)}
-                        />
-                      </div>
-                    )}
 
                     <div className={`prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-headings:my-2 prose-pre:my-2 prose-blockquote:my-2 prose-hr:my-2 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_em]:italic [&_em]:block [&_em]:border-l-2 [&_em]:border-current/20 [&_em]:pl-3 [&_em]:my-1.5 [&_em]:opacity-80 ${
                       isUser
