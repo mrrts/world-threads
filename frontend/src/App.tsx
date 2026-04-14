@@ -168,8 +168,8 @@ function MainApp() {
         {view === "chat" && (
           <DeferredMount key="chat">
             {store.activeGroupChat
-              ? <GroupChatView store={store} />
-              : <ChatView store={store} />}
+              ? <GroupChatView store={store} onNavigateToCharacter={(id) => { store.selectCharacter(store.characters.find((c) => c.character_id === id)!); setViewTracked("character"); }} />
+              : <ChatView store={store} onNavigateToCharacter={(id) => { store.selectCharacter(store.characters.find((c) => c.character_id === id)!); setViewTracked("character"); }} />}
           </DeferredMount>
         )}
         {view === "world" && (

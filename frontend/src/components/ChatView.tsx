@@ -34,10 +34,11 @@ import { useChatState } from "@/hooks/use-chat-state";
 
 interface Props {
   store: ReturnType<typeof useAppStore>;
+  onNavigateToCharacter?: (characterId: string) => void;
 }
 
 
-export function ChatView({ store }: Props) {
+export function ChatView({ store, onNavigateToCharacter }: Props) {
   const [pickerMessageId, setPickerMessageId] = useState<string | null>(null);
   const [showPortraitModal, setShowPortraitModal] = useState(false);
   const [showIdentityPopover, setShowIdentityPopover] = useState(false);
@@ -194,24 +195,54 @@ export function ChatView({ store }: Props) {
             )}
           </div>
         )}
-        <button
-          onClick={() => setShowNarrationSettings(true)}
-          className={`ml-auto flex-shrink-0 h-8 rounded-lg flex items-center gap-1.5 px-2.5 text-xs font-medium transition-colors cursor-pointer ${
-            (narrationTone !== "Cinematic" || responseLength !== "Short" || narrationInstructions) ? "text-amber-500 hover:text-amber-400 hover:bg-amber-500/10" : "text-muted-foreground hover:text-foreground hover:bg-accent"
-          }`}
-          title="Narration settings"
-        >
-          <Settings size={14} />
-          <span>Narration</span>
-        </button>
-        <button
-          onClick={() => setShowSummary(true)}
-          className="flex-shrink-0 h-8 rounded-lg flex items-center gap-1.5 px-2.5 text-xs font-medium transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
-          title="Generate a summary of this conversation"
-        >
-          <BookOpen size={14} />
-          <span>Summary</span>
-        </button>
+        <div className="ml-auto relative group/gallery">
+          <button
+            onClick={async () => {
+              const lastIllus = store.messages.filter((m) => m.role === "illustration").at(-1);
+              if (!lastIllus) return;
+              setIllustrationModalId(lastIllus.message_id);
+              setModalSelectedId(lastIllus.message_id);
+              setModalPlayingVideo(false);
+              setModalImageLoading(false);
+              if (store.activeCharacter) {
+                try {
+                  const page = await api.getMessages(store.activeCharacter.character_id);
+                  const illus = page.messages.filter((m) => m.role === "illustration").map((m) => ({ id: m.message_id, content: m.content }));
+                  setModalIllustrations(illus);
+                  setCarouselAllMessages(page.messages);
+                  for (const il of illus) {
+                    if (!videoFiles[il.id]) api.getVideoFile(il.id).then((vf) => { if (vf) setVideoFiles((prev) => ({ ...prev, [il.id]: vf })); }).catch(() => {});
+                  }
+                } catch {}
+              }
+            }}
+            className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed"
+            disabled={!store.messages.some((m) => m.role === "illustration")}
+          >
+            <Image size={15} />
+          </button>
+          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/gallery:opacity-100 pointer-events-none transition-opacity">Gallery</span>
+        </div>
+        <div className="relative group/summary">
+          <button
+            onClick={() => setShowSummary(true)}
+            className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
+          >
+            <BookOpen size={15} />
+          </button>
+          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/summary:opacity-100 pointer-events-none transition-opacity">Summary</span>
+        </div>
+        <div className="relative group/settings">
+          <button
+            onClick={() => setShowNarrationSettings(true)}
+            className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer ${
+              (narrationTone !== "Cinematic" || responseLength !== "Short" || narrationInstructions) ? "text-amber-500 hover:text-amber-400 hover:bg-amber-500/10" : "text-muted-foreground hover:text-foreground hover:bg-accent"
+            }`}
+          >
+            <Settings size={15} />
+          </button>
+          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/settings:opacity-100 pointer-events-none transition-opacity">Settings</span>
+        </div>
       </div>
 
       <div className="flex-1 relative overflow-hidden z-10">
@@ -725,6 +756,13 @@ export function ChatView({ store }: Props) {
           store.clearChatHistory(store.activeCharacter!.character_id);
           setShowNarrationSettings(false);
         } : undefined}
+        characters={store.activeCharacter ? [{
+          character_id: store.activeCharacter.character_id,
+          display_name: store.activeCharacter.display_name,
+          avatar_color: store.activeCharacter.avatar_color,
+          portrait_url: store.activePortraits[store.activeCharacter.character_id]?.data_url,
+        }] : []}
+        onNavigateToCharacter={onNavigateToCharacter}
       />
 
       <SummaryModal

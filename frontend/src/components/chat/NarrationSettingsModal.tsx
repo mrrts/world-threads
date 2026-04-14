@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
-import { BookOpen, X, Trash2 } from "lucide-react";
+import { BookOpen, X, Trash2, ChevronRight } from "lucide-react";
+
+interface CharacterInfo {
+  character_id: string;
+  display_name: string;
+  avatar_color: string;
+  portrait_url?: string;
+}
 
 interface NarrationSettingsModalProps {
   open: boolean;
@@ -17,6 +24,10 @@ interface NarrationSettingsModalProps {
   setNarrationDirty: (v: boolean) => void;
   onSave: () => void;
   onClearHistory?: () => void;
+  /** Characters in this chat */
+  characters?: CharacterInfo[];
+  /** Navigate to a character's settings page */
+  onNavigateToCharacter?: (characterId: string) => void;
 }
 
 export function NarrationSettingsModal({
@@ -32,6 +43,8 @@ export function NarrationSettingsModal({
   setNarrationDirty,
   onSave,
   onClearHistory,
+  characters,
+  onNavigateToCharacter,
 }: NarrationSettingsModalProps) {
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
@@ -63,7 +76,7 @@ export function NarrationSettingsModal({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BookOpen size={18} className="text-amber-500" />
-            <h3 className="font-semibold">Narration Settings</h3>
+            <h3 className="font-semibold">Chat Settings</h3>
           </div>
           <button
             onClick={onClose}
@@ -124,6 +137,32 @@ export function NarrationSettingsModal({
             />
           </div>
         </div>
+
+        {characters && characters.length > 0 && onNavigateToCharacter && (
+          <div className="pt-2 border-t border-border">
+            <label className="text-xs font-medium text-muted-foreground block mb-2">Character Settings</label>
+            <div className="space-y-1.5">
+              {characters.map((ch) => (
+                <button
+                  key={ch.character_id}
+                  onClick={() => {
+                    onClose();
+                    onNavigateToCharacter(ch.character_id);
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors cursor-pointer group"
+                >
+                  {ch.portrait_url ? (
+                    <img src={ch.portrait_url} alt="" className="w-8 h-8 rounded-full object-cover ring-1 ring-border flex-shrink-0" />
+                  ) : (
+                    <span className="w-8 h-8 rounded-full flex-shrink-0 ring-1 ring-white/10" style={{ backgroundColor: ch.avatar_color }} />
+                  )}
+                  <span className="text-sm font-medium text-foreground">{ch.display_name}</span>
+                  <ChevronRight size={14} className="ml-auto text-muted-foreground/50 group-hover:text-muted-foreground transition-colors" />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="flex items-center justify-between pt-1">
           {onClearHistory ? (
