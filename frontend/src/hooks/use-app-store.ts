@@ -247,7 +247,6 @@ export function useAppStore() {
         generatingVideo: null,
     sendingCharacterId: null,
         videoFiles: {},
-    aspectRatios: {},
         error: null,
         editingUserProfile: false,
         chatError: null,
