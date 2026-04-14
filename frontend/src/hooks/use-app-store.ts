@@ -418,6 +418,7 @@ export function useAppStore() {
 
   const sendGroupMessage = useCallback(async (content: string) => {
     if (!state.activeGroupChat || !state.apiKey) return;
+    if (state.activeWorld) api.setSetting(`last_chat.${state.activeWorld.world_id}`, `group:${state.activeGroupChat.group_chat_id}`).catch(() => {});
 
     if (!state.autoRespond) {
       // Just save user message without triggering responses
@@ -680,6 +681,7 @@ export function useAppStore() {
 
   const sendMessage = useCallback(async (content: string) => {
     if (!state.activeCharacter) return;
+    if (state.activeWorld) api.setSetting(`last_chat.${state.activeWorld.world_id}`, `char:${state.activeCharacter.character_id}`).catch(() => {});
 
     // When auto-respond is off, just save the user message without triggering AI
     if (!state.autoRespond) {
@@ -777,7 +779,7 @@ export function useAppStore() {
 
   const promptCharacter = useCallback(async () => {
     if (!state.activeCharacter || !state.apiKey) return;
-
+    if (state.activeWorld) api.setSetting(`last_chat.${state.activeWorld.world_id}`, `char:${state.activeCharacter.character_id}`).catch(() => {});
     setState((s) => ({ ...s, sending: state.activeCharacter!.character_id, chatError: null }));
 
     try {
@@ -858,6 +860,19 @@ export function useAppStore() {
       }));
     }
   }, [state.apiKey, state.activeGroupChat, state.activeCharacter]);
+
+  const editMessageContent = useCallback(async (messageId: string, content: string) => {
+    const isGroup = !!state.activeGroupChat && !state.activeCharacter;
+    try {
+      await api.editMessageContent(messageId, content, isGroup);
+      setState((s) => ({
+        ...s,
+        messages: s.messages.map((m) => m.message_id === messageId ? { ...m, content } : m),
+      }));
+    } catch (e) {
+      setState((s) => ({ ...s, chatError: String(e) }));
+    }
+  }, [state.activeGroupChat, state.activeCharacter]);
 
   const deleteIllustration = useCallback(async (messageId: string) => {
     try {
@@ -1213,6 +1228,7 @@ export function useAppStore() {
     generateNarrative,
     generateIllustration,
     adjustMessage,
+    editMessageContent,
     deleteIllustration,
     regenerateIllustration,
     adjustIllustration,

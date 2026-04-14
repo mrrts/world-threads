@@ -4,7 +4,8 @@ import React from "react";
 export function formatMessage(content: string): string {
   return content
     .replace(/\[[^\]]*\]:?\s*/g, "")
-    .replace(/\(([^)]+)\)/g, "*$1*");
+    .replace(/\(([^)]+)\)/g, "*$1*")
+    .replace(/\n\s*[-*]\s*$/, "");
 }
 
 /** Extract plain text from React children (handles strings, arrays, nested elements). */

@@ -123,6 +123,7 @@ pub fn run() {
             get_video_bytes_cmd,
             get_media_dir_cmd,
             adjust_message_cmd,
+            edit_message_content_cmd,
             reset_to_message_cmd,
             get_last_message_time_cmd,
             get_messages_cmd,

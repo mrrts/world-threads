@@ -324,36 +324,12 @@ pub async fn send_message_cmd(
         (user_message, msg)
     };
 
-    // Phase 6: AI reaction to user's message
-    let mut ai_reactions: Vec<Reaction> = Vec::new();
-    match orchestrator::generate_reaction_with_base(
-        &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
-        &character, &content, &assistant_msg.content,
-    ).await {
-        Ok((Some(emoji), usage)) => {
-            if let Some(u) = usage {
-                let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                let _ = record_token_usage(&conn, "reaction", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
-            }
-            let reaction = Reaction {
-                reaction_id: uuid::Uuid::new_v4().to_string(),
-                message_id: user_message.message_id.clone(),
-                emoji,
-                reactor: "assistant".to_string(),
-                created_at: Utc::now().to_rfc3339(),
-            };
-            let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            let _ = add_reaction(&conn, &reaction);
-            ai_reactions.push(reaction);
-        }
-        Ok((None, usage)) => {
-            if let Some(u) = usage {
-                let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                let _ = record_token_usage(&conn, "reaction", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
-            }
-        }
-        Err(e) => log::warn!("Reaction generation failed (non-fatal): {e}"),
-    }
+    // Phase 6: AI reaction to user's message (disabled — re-enable by uncommenting)
+    let ai_reactions: Vec<Reaction> = Vec::new();
+    // match orchestrator::generate_reaction_with_base(
+    //     &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
+    //     &character, &content, &assistant_msg.content,
+    // ).await { ... }
 
     // Phase 7: Generate embeddings for new messages — requires OpenAI, skip for LM Studio
     if !is_local {
@@ -493,6 +469,23 @@ pub struct PromptCharacterResult {
     pub ai_reactions: Vec<Reaction>,
 }
 
+/// Directly edit a message's text content (no LLM call).
+#[tauri::command]
+pub fn edit_message_content_cmd(
+    db: State<'_, Database>,
+    message_id: String,
+    content: String,
+    is_group: bool,
+) -> Result<(), String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let tokens = (content.len() / 4) as i64;
+    if is_group {
+        update_group_message_content(&conn, &message_id, &content, tokens).map_err(|e| e.to_string())
+    } else {
+        update_message_content(&conn, &message_id, &content, tokens).map_err(|e| e.to_string())
+    }
+}
+
 #[tauri::command]
 pub async fn prompt_character_cmd(
     db: State<'_, Database>,
@@ -583,38 +576,8 @@ pub async fn prompt_character_cmd(
         msg
     };
 
-    // Reaction on the last user message (if any)
-    let mut ai_reactions: Vec<Reaction> = Vec::new();
-    if let Some(last_user) = recent_msgs.iter().rev().find(|m| m.role == "user") {
-        match orchestrator::generate_reaction_with_base(
-            &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
-            &character, &last_user.content, &assistant_msg.content,
-        ).await {
-            Ok((Some(emoji), usage)) => {
-                if let Some(u) = usage {
-                    let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                    let _ = record_token_usage(&conn, "reaction", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
-                }
-                let reaction = Reaction {
-                    reaction_id: uuid::Uuid::new_v4().to_string(),
-                    message_id: last_user.message_id.clone(),
-                    emoji,
-                    reactor: "assistant".to_string(),
-                    created_at: Utc::now().to_rfc3339(),
-                };
-                let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                let _ = add_reaction(&conn, &reaction);
-                ai_reactions.push(reaction);
-            }
-            Ok((None, usage)) => {
-                if let Some(u) = usage {
-                    let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                    let _ = record_token_usage(&conn, "reaction", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
-                }
-            }
-            Err(e) => log::warn!("Reaction generation failed (non-fatal): {e}"),
-        }
-    }
+    // Reaction on the last user message (disabled — re-enable by uncommenting)
+    let ai_reactions: Vec<Reaction> = Vec::new();
 
     Ok(PromptCharacterResult {
         assistant_message: assistant_msg,
@@ -830,9 +793,9 @@ pub async fn adjust_message_cmd(
     let request = openai::ChatRequest {
         model: model_config.dialogue_model.clone(),
         messages,
-        temperature: Some(0.9),
+        temperature: Some(0.95),
         max_completion_tokens: Some(1024),
-        response_format: None, max_output_tokens: None,
+        response_format: None,
     };
 
     let response = openai::chat_completion_with_base(
@@ -1094,36 +1057,8 @@ pub async fn reset_to_message_cmd(
             (user_message, msg)
         };
 
-        // Reaction
-        let mut ai_reactions: Vec<Reaction> = Vec::new();
-        match orchestrator::generate_reaction_with_base(
-            &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
-            &character, &anchor_content, &assistant_msg.content,
-        ).await {
-            Ok((Some(emoji), usage)) => {
-                if let Some(u) = usage {
-                    let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                    let _ = record_token_usage(&conn, "reaction", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
-                }
-                let reaction = Reaction {
-                    reaction_id: uuid::Uuid::new_v4().to_string(),
-                    message_id: user_message.message_id.clone(),
-                    emoji,
-                    reactor: "assistant".to_string(),
-                    created_at: Utc::now().to_rfc3339(),
-                };
-                let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                let _ = add_reaction(&conn, &reaction);
-                ai_reactions.push(reaction);
-            }
-            Ok((None, usage)) => {
-                if let Some(u) = usage {
-                    let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                    let _ = record_token_usage(&conn, "reaction", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
-                }
-            }
-            Err(e) => log::warn!("Reaction generation failed (non-fatal): {e}"),
-        }
+        // Reaction (disabled — re-enable by uncommenting)
+        let ai_reactions: Vec<Reaction> = Vec::new();
 
         return Ok(ResetToMessageResult {
             deleted_count,

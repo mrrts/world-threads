@@ -281,9 +281,9 @@ async fn generate_animation_prompt(
     let request = ChatRequest {
         model: model_config.dialogue_model.clone(),
         messages,
-        temperature: Some(0.9),
+        temperature: Some(0.95),
         max_completion_tokens: Some(200),
-        response_format: None, max_output_tokens: None,
+        response_format: None,
     };
     let response = openai::chat_completion_with_base(
         &model_config.chat_api_base(), api_key, &request,

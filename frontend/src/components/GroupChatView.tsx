@@ -4,7 +4,7 @@ import { formatMessage, markdownComponents } from "@/components/chat/formatMessa
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
-import { Send, Loader2, X, BookOpen, MessageSquare, Settings, Image, Trash2, SlidersHorizontal, Square, Crosshair, ChevronLeft, ChevronRight, Play, Pause, Volume2, ArrowRight } from "lucide-react";
+import { Send, Loader2, X, BookOpen, MessageSquare, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, Crosshair, ChevronLeft, ChevronRight, Play, Pause, Volume2, ArrowRight } from "lucide-react";
 import type { useAppStore } from "@/hooks/use-app-store";
 import { api } from "@/lib/tauri";
 import { NarrativeMessage } from "@/components/chat/NarrativeMessage";
@@ -81,7 +81,7 @@ export function GroupChatView({ store }: Props) {
     modalIllustrations, setModalIllustrations,
     showNarrativePicker, setShowNarrativePicker,
     showSummary, setShowSummary,
-    adjustMessageId, setAdjustMessageId,
+    adjustMessageId, setAdjustMessageId, adjustEditOnly, setAdjustEditOnly,
     showIllustrationPicker, setShowIllustrationPicker,
     illustrationInstructions, setIllustrationInstructions,
     usePreviousScene, setUsePreviousScene,
@@ -284,11 +284,11 @@ export function GroupChatView({ store }: Props) {
                   {!isUser && (
                     senderPortrait?.data_url ? (
                       <button onClick={() => senderChar && setPortraitModalCharId(senderChar.character_id)} className="cursor-pointer flex-shrink-0 mb-1">
-                        <img src={senderPortrait.data_url} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
+                        <img src={senderPortrait.data_url} alt="" className="w-[90px] h-[90px] rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
                       </button>
                     ) : (
                       <span
-                        className="w-[72px] h-[72px] rounded-full flex-shrink-0 mb-1 ring-1 ring-white/10"
+                        className="w-[90px] h-[90px] rounded-full flex-shrink-0 mb-1 ring-1 ring-white/10"
                         style={{ backgroundColor: senderChar?.avatar_color ?? "#c4a882" }}
                       />
                     )
@@ -412,11 +412,24 @@ export function GroupChatView({ store }: Props) {
                         </button>
                       )}
                     </p>
+                    {!isPending && isUser && (
+                      <div className="absolute top-2 right-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="relative group/uedit">
+                          <button
+                            onClick={() => { setAdjustMessageId(msg.message_id); setAdjustEditOnly(true); }}
+                            className="w-7 h-7 rounded-full bg-black/50 text-white flex items-center justify-center cursor-pointer hover:bg-black/70 transition-colors backdrop-blur-sm"
+                          >
+                            <Pencil size={12} />
+                          </button>
+                          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/uedit:opacity-100 pointer-events-none transition-opacity">Edit</span>
+                        </div>
+                      </div>
+                    )}
                     {!isUser && !isPending && (
                       <div className="absolute top-2 right-8 opacity-0 group-hover:opacity-100 transition-opacity">
                         <div className="relative group/madj">
                           <button
-                            onClick={() => setAdjustMessageId(msg.message_id)}
+                            onClick={() => { setAdjustMessageId(msg.message_id); setAdjustEditOnly(false); }}
                             className="w-7 h-7 rounded-full bg-black/50 text-white flex items-center justify-center cursor-pointer hover:bg-black/70 transition-colors backdrop-blur-sm"
                           >
                             <SlidersHorizontal size={12} />
@@ -434,7 +447,7 @@ export function GroupChatView({ store }: Props) {
                   </div>
                   {isUser && userAvatarUrl && (
                     <button onClick={() => setShowUserAvatarModal(true)} className="cursor-pointer flex-shrink-0 mb-1">
-                      <img src={userAvatarUrl} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
+                      <img src={userAvatarUrl} alt="" className="w-[90px] h-[90px] rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
                     </button>
                   )}
                 </div>
@@ -450,10 +463,10 @@ export function GroupChatView({ store }: Props) {
             return (
             <div className="flex items-end gap-2 justify-start">
               {sendingPortrait?.data_url ? (
-                <img src={sendingPortrait.data_url} alt="" className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-border flex-shrink-0 mb-1" />
+                <img src={sendingPortrait.data_url} alt="" className="w-[90px] h-[90px] rounded-full object-cover ring-2 ring-border flex-shrink-0 mb-1" />
               ) : (
                 <span
-                  className="w-[72px] h-[72px] rounded-full flex-shrink-0 mb-1 ring-1 ring-white/10"
+                  className="w-[90px] h-[90px] rounded-full flex-shrink-0 mb-1 ring-1 ring-white/10"
                   style={{ backgroundColor: sendingChar?.avatar_color ?? "#c4a882" }}
                 />
               )}
@@ -746,11 +759,16 @@ export function GroupChatView({ store }: Props) {
         onAdjust={(instructions) => {
           if (adjustMessageId) store.adjustMessage(adjustMessageId, instructions);
         }}
+        onEdit={(content) => {
+          if (adjustMessageId) store.editMessageContent(adjustMessageId, content);
+        }}
         characterName={adjustMessageId ? (() => {
           const msg = store.messages.find((m) => m.message_id === adjustMessageId);
           const ch = msg?.sender_character_id ? groupCharacters.find((c) => c.character_id === msg.sender_character_id) : undefined;
           return ch?.display_name;
         })() : undefined}
+        messageContent={adjustMessageId ? store.messages.find((m) => m.message_id === adjustMessageId)?.content : undefined}
+        editOnly={adjustEditOnly}
       />
 
       <NarrativePickerModal

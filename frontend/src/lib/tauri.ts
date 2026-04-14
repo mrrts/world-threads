@@ -341,6 +341,8 @@ export const api = {
     invoke<Message>("create_context_message_cmd", { characterId: characterId ?? null, groupChatId: groupChatId ?? null, content: content ?? "" }),
   adjustMessage: (apiKey: string, messageId: string, instructions: string, isGroup: boolean) =>
     invoke<Message>("adjust_message_cmd", { apiKey, messageId, instructions, isGroup }),
+  editMessageContent: (messageId: string, content: string, isGroup: boolean) =>
+    invoke<void>("edit_message_content_cmd", { messageId, content, isGroup }),
   generateNarrative: (apiKey: string, characterId: string, customInstructions?: string) =>
     invoke<NarrativeResult>("generate_narrative_cmd", { apiKey, characterId, customInstructions: customInstructions ?? null }),
   generateIllustration: (apiKey: string, characterId: string, qualityTier?: string, customInstructions?: string, previousIllustrationId?: string, includeSceneSummary?: boolean) =>

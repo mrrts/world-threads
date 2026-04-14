@@ -55,7 +55,7 @@ pub async fn generate_chat_summary_cmd(
             role: "system".to_string(),
             content: format!(
                 "Summarize the recent conversation between {user} and {char}. \
-                 Write a concise narrative summary (3-6 sentences) covering the key events, \
+                 Write a narrative summary (6-12 sentences) covering the key events, \
                  emotional beats, and where things currently stand. Include a few key specific details — \
                  names, places, actions, or things said that capture the texture of the conversation. \
                  Write in third person. Refer to the human as \"{user}\", never as \"the user\" or \"you\". \
@@ -73,8 +73,8 @@ pub async fn generate_chat_summary_cmd(
         model: model_config.dialogue_model.clone(),
         messages,
         temperature: Some(0.5),
-        max_completion_tokens: Some(400),
-        response_format: None, max_output_tokens: None,
+        max_completion_tokens: Some(800),
+        response_format: None,
     };
 
     let response = openai::chat_completion_with_base(
@@ -134,7 +134,7 @@ pub async fn generate_group_chat_summary_cmd(
             role: "system".to_string(),
             content: format!(
                 "Summarize the recent group conversation involving {user} and {chars}. \
-                 Write a concise narrative summary (3-6 sentences) covering the key events, \
+                 Write a narrative summary (6-12 sentences) covering the key events, \
                  emotional beats, and where things currently stand. Include a few key specific details — \
                  names, places, actions, or things said that capture the texture of the conversation. \
                  Write in third person. Refer to the human as \"{user}\", never as \"the user\" or \"you\". \
@@ -152,8 +152,8 @@ pub async fn generate_group_chat_summary_cmd(
         model: model_config.dialogue_model.clone(),
         messages,
         temperature: Some(0.5),
-        max_completion_tokens: Some(400),
-        response_format: None, max_output_tokens: None,
+        max_completion_tokens: Some(800),
+        response_format: None,
     };
 
     let response = openai::chat_completion_with_base(

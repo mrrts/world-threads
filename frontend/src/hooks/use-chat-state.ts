@@ -46,6 +46,7 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
   const [showNarrativePicker, setShowNarrativePicker] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [adjustMessageId, setAdjustMessageId] = useState<string | null>(null);
+  const [adjustEditOnly, setAdjustEditOnly] = useState(false);
   const [showIllustrationPicker, setShowIllustrationPicker] = useState(false);
   const [illustrationInstructions, setIllustrationInstructions] = useState("");
   const [usePreviousScene, setUsePreviousScene] = useState(false);
@@ -350,7 +351,7 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     modalIllustrations, setModalIllustrations,
     showNarrativePicker, setShowNarrativePicker,
     showSummary, setShowSummary,
-    adjustMessageId, setAdjustMessageId,
+    adjustMessageId, setAdjustMessageId, adjustEditOnly, setAdjustEditOnly,
     showIllustrationPicker, setShowIllustrationPicker,
     illustrationInstructions, setIllustrationInstructions,
     usePreviousScene, setUsePreviousScene,
