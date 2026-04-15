@@ -31,41 +31,41 @@ interface PromptCategory {
 function buildCategories(names: string[]): PromptCategory[] {
   return [
     {
-      name: "Direction",
+      name: "What's Next",
       prompts: [
-        { label: "Where could this go next?", prompt: "Where could this story go next? What are the most interesting possibilities from here?" },
-        { label: "What should I do next?", prompt: "What should I do next? Give me a few options for how I could steer things from here." },
-        { label: "Something unexpected could happen", prompt: "Suggest something unexpected that could happen — a complication, a surprise, a shift." },
-        { label: "What direction haven't I considered?", prompt: "What's the most interesting direction this could take that I haven't considered?" },
-        { label: "What story is unfolding here?", prompt: "Step back — what story is actually unfolding here, whether anyone intended it or not?" },
-      ],
-    },
-    {
-      name: "Character",
-      prompts: [
-        ...names.map((n) => ({ label: `What's going on with ${n}?`, prompt: `What's going on with ${n} right now? What are they feeling, and what aren't they saying?` })),
-        ...names.map((n) => ({ label: `What am I missing about ${n}?`, prompt: `What am I not seeing in what ${n} just said or did?` })),
-        { label: "Where does the relationship stand?", prompt: "Where does the relationship stand right now? What's shifted recently?" },
-        ...names.map((n) => ({ label: `How might ${n} surprise me?`, prompt: `How might ${n} surprise me here? What would be in character but unexpected?` })),
-      ],
-    },
-    {
-      name: "Reflection",
-      prompts: [
-        { label: "What themes are emerging?", prompt: "What themes or patterns are emerging from what's been happening?" },
-        { label: "How did that last stretch feel?", prompt: "How did that last stretch feel? What landed, what fell flat?" },
-        { label: "What feels off or underdeveloped?", prompt: "Is anything feeling off or underdeveloped right now? What could use more attention?" },
-        { label: "Pick a moment — why did it matter?", prompt: "Pick a single moment from recently and tell me why it mattered." },
-        { label: "What's the subtext right now?", prompt: "What's the subtext of what just happened? What's going on beneath the surface?" },
-      ],
-    },
-    {
-      name: "In the Moment",
-      prompts: [
+        { label: "What should I do?", prompt: "What should I do next? Give me a few options." },
         { label: "How should I respond to that?", prompt: "How should I respond to what just happened? Give me a few options." },
-        { label: "What could I say here?", prompt: "Help me think of what to say next. What would be interesting, true to character, or move things forward?" },
-        { label: "How can I raise the stakes?", prompt: "How can I raise the stakes or escalate the tension right now?" },
-        { label: "How can I bring things down?", prompt: "How can I defuse things or bring a quieter energy to this moment?" },
+        { label: "What could I say here?", prompt: "Help me think of what to say. What would feel right given everything that's happened?" },
+        { label: "Something feels like it's about to shift", prompt: "Something feels like it's about to shift. What do you think is coming?" },
+        { label: "What haven't I thought of?", prompt: "What's an angle here I haven't considered?" },
+      ],
+    },
+    {
+      name: "The People",
+      prompts: [
+        ...names.map((n) => ({ label: `What's going on with ${n}?`, prompt: `What's going on with ${n} right now? What do you think they're feeling?` })),
+        ...names.map((n) => ({ label: `What am I missing about ${n}?`, prompt: `Am I missing something about ${n}? About what they just said or did?` })),
+        { label: "Where do things stand between us?", prompt: "Where do things stand between us right now? What's changed recently?" },
+        ...names.map((n) => ({ label: `What might ${n} do next?`, prompt: `What do you think ${n} might do next? What would you expect from them here?` })),
+      ],
+    },
+    {
+      name: "Stepping Back",
+      prompts: [
+        { label: "What's really going on here?", prompt: "Step back with me — what's really going on here? What's the bigger picture?" },
+        { label: "What's the subtext right now?", prompt: "What's the subtext of what just happened? What's going on beneath the surface?" },
+        { label: "What moment mattered most recently?", prompt: "Pick a moment from recently and tell me why it mattered." },
+        { label: "What should I be paying more attention to?", prompt: "Is there something I should be paying more attention to? Something I'm glossing over?" },
+        { label: "What would you do in my position?", prompt: "Honestly — what would you do if you were me right now?" },
+      ],
+    },
+    {
+      name: "The Tension",
+      prompts: [
+        { label: "How can I push this further?", prompt: "How can I push this further? Raise the stakes a little?" },
+        { label: "How can I ease things?", prompt: "How can I ease things? Bring some warmth or calm to this?" },
+        { label: "Is there something unresolved?", prompt: "Is there something unresolved hanging in the air between us that I should address?" },
+        { label: "What am I avoiding?", prompt: "Am I avoiding something? Something I should probably say or do but haven't?" },
         { label: "What should I be asking you?", prompt: "What question should I be asking you right now?" },
       ],
     },
