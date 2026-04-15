@@ -137,11 +137,11 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
     if (el) setIsAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight < 40);
   }, [messages]);
 
-  // Scroll to bottom on new messages
+  // Scroll to bottom only when switching chats or loading history
   useEffect(() => {
     const el = scrollRef.current;
     if (el) setTimeout(() => { el.scrollTop = el.scrollHeight; setIsAtBottom(true); }, 50);
-  }, [messages.length, loading, activeChatId]);
+  }, [activeChatId]);
 
   // Focus input
   useEffect(() => {
@@ -173,6 +173,8 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
     setMessages((prev) => [...prev, { role: "user", content: trimmed }, { role: "assistant", content: "" }]);
     setInput("");
     setLoading(true);
+    // Scroll to show the user's message
+    setTimeout(() => { const el = scrollRef.current; if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" }); }, 50);
     if (inputRef.current) inputRef.current.style.height = "auto";
 
     // Listen for streaming tokens
