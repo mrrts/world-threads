@@ -48,9 +48,10 @@ export function DayPageSlide({
   const [novelTab, setNovelTab] = useState<"read" | "edit">("read");
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
 
-  // Reset novel view when entry is deleted
+  // Sync novel view with entry existence
   useEffect(() => {
-    if (!novelEntry) setShowNovelView(false);
+    if (novelEntry) setShowNovelView(true);
+    else setShowNovelView(false);
   }, [novelEntry]);
 
   const handleNovelize = async () => {
