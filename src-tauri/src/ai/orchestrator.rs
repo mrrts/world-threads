@@ -153,6 +153,108 @@ pub async fn run_dialogue_with_base(
     Ok((reply, response.usage))
 }
 
+/// Streaming variant of run_dialogue_with_base — emits tokens via Tauri events.
+pub async fn run_dialogue_streaming(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    world: &World,
+    character: &Character,
+    recent_messages: &[Message],
+    retrieved_snippets: &[String],
+    user_profile: Option<&UserProfile>,
+    mood_directive: Option<&str>,
+    response_length: Option<&str>,
+    group_context: Option<&prompts::GroupContext>,
+    character_names: Option<&std::collections::HashMap<String, String>>,
+    tone: Option<&str>,
+    app_handle: &tauri::AppHandle,
+    event_name: &str,
+) -> Result<String, String> {
+    let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone);
+    let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names);
+
+    let token_limit = match response_length {
+        Some("Short") => 80,
+        Some("Medium") => 250,
+        Some("Long") => 1024,
+        _ => 200,
+    };
+    let request = openai::StreamingRequest {
+        model: model.to_string(),
+        messages,
+        temperature: Some(0.95),
+        max_completion_tokens: Some(token_limit),
+        stream: true,
+    };
+
+    openai::chat_completion_stream(base_url, api_key, &request, app_handle, event_name).await
+}
+
+/// Streaming variant of run_narrative_with_base — emits tokens via Tauri events.
+pub async fn run_narrative_streaming(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    world: &World,
+    character: &Character,
+    recent_messages: &[Message],
+    retrieved_snippets: &[String],
+    user_profile: Option<&UserProfile>,
+    mood_directive: Option<&str>,
+    narration_tone: Option<&str>,
+    narration_instructions: Option<&str>,
+    app_handle: &tauri::AppHandle,
+    event_name: &str,
+) -> Result<String, String> {
+    let system = prompts::build_narrative_system_prompt(world, character, user_profile, mood_directive, narration_tone, narration_instructions);
+
+    let mut msgs = Vec::new();
+    let mut system_content = system.clone();
+    if !retrieved_snippets.is_empty() {
+        system_content.push_str("\n\nRELEVANT MEMORIES:\n");
+        for s in retrieved_snippets {
+            system_content.push_str(&format!("- {s}\n"));
+        }
+    }
+    msgs.push(openai::ChatMessage { role: "system".to_string(), content: system_content });
+
+    for m in recent_messages {
+        if m.role == "illustration" || m.role == "video" { continue; }
+        msgs.push(openai::ChatMessage {
+            role: if m.role == "narrative" || m.role == "context" { "assistant".to_string() } else { m.role.clone() },
+            content: if m.role == "context" {
+                format!("[Additional Context from Another Chat] {}", m.content)
+            } else if m.role == "narrative" {
+                format!("[Narrative] {}", m.content)
+            } else {
+                m.content.clone()
+            },
+        });
+    }
+
+    let user_prompt = if let Some(instructions) = narration_instructions {
+        if !instructions.is_empty() {
+            format!("Write a narrative beat for this moment.\n\nIMPORTANT DIRECTION — you MUST follow this:\n{instructions}")
+        } else {
+            "Write a narrative beat for this moment.".to_string()
+        }
+    } else {
+        "Write a narrative beat for this moment.".to_string()
+    };
+    msgs.push(openai::ChatMessage { role: "user".to_string(), content: user_prompt });
+
+    let request = openai::StreamingRequest {
+        model: model.to_string(),
+        messages: msgs,
+        temperature: Some(0.95),
+        max_completion_tokens: Some(1024),
+        stream: true,
+    };
+
+    openai::chat_completion_stream(base_url, api_key, &request, app_handle, event_name).await
+}
+
 /// Try to extract a JSON object from a response that may contain surrounding text.
 fn extract_json_object(raw: &str) -> Option<&str> {
     let start = raw.find('{')?;

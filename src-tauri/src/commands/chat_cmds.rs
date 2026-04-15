@@ -148,6 +148,7 @@ pub fn create_context_message_cmd(
 #[tauri::command]
 pub async fn send_message_cmd(
     db: State<'_, Database>,
+    app_handle: tauri::AppHandle,
     api_key: String,
     character_id: String,
     content: String,
@@ -282,20 +283,17 @@ pub async fn send_message_cmd(
         current_mood.as_ref(), mood_enabled, mood_drift_rate,
     )?;
 
-    // Phase 4: Run dialogue (async, no DB lock)
-    let (reply_text, dialogue_usage) = orchestrator::run_dialogue_with_base(
+    // Phase 4: Run dialogue with streaming
+    let reply_text = orchestrator::run_dialogue_streaming(
         &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
         &world, &character, &recent_msgs, &full_retrieved,
         user_profile.as_ref(),
         mood_directive.as_deref(),
         response_length.as_deref(),
         None, None, narration_tone.as_deref(),
+        &app_handle, "chat-token",
     ).await?;
-    let tokens = dialogue_usage.as_ref().map(|u| u.total_tokens).unwrap_or(0);
-    if let Some(u) = &dialogue_usage {
-        let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "dialogue", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
-    }
+    let tokens = (reply_text.len() / 4) as u32; // approximate
 
     // Phase 5: Store assistant message
     let (user_message, assistant_msg) = {
@@ -505,6 +503,7 @@ pub fn delete_message_cmd(
 #[tauri::command]
 pub async fn prompt_character_cmd(
     db: State<'_, Database>,
+    app_handle: tauri::AppHandle,
     api_key: String,
     character_id: String,
 ) -> Result<PromptCharacterResult, String> {
@@ -558,22 +557,18 @@ pub async fn prompt_character_cmd(
         });
     }
 
-    // Dialogue
-    let (reply_text, dialogue_usage) = orchestrator::run_dialogue_with_base(
+    // Dialogue with streaming
+    let reply_text = orchestrator::run_dialogue_streaming(
         &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
         &world, &character, &dialogue_msgs, &retrieved,
         user_profile.as_ref(),
         mood_directive.as_deref(),
         response_length.as_deref(),
         None, None, narration_tone.as_deref(),
+        &app_handle, "chat-token",
     ).await?;
 
-    if let Some(u) = &dialogue_usage {
-        let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "dialogue", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
-    }
-
-    let tokens = dialogue_usage.as_ref().map(|u| u.total_tokens).unwrap_or(0);
+    let tokens = (reply_text.len() / 4) as u32;
     let (wd, wt) = world_time_fields(&world);
     let assistant_msg = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -609,6 +604,7 @@ pub struct NarrativeResult {
 #[tauri::command]
 pub async fn generate_narrative_cmd(
     db: State<'_, Database>,
+    app_handle: tauri::AppHandle,
     api_key: String,
     character_id: String,
     custom_instructions: Option<String>,
@@ -672,28 +668,25 @@ pub async fn generate_narrative_cmd(
     let merged_instructions = if all_instructions.is_empty() { None } else { Some(all_instructions.join("\n")) };
 
     // Generate narrative
-    let (narrative_text, usage) = orchestrator::run_narrative_with_base(
+    let narrative_text = orchestrator::run_narrative_streaming(
         &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
         &world, &character, &recent_msgs, &retrieved,
         user_profile.as_ref(),
         mood_directive.as_deref(),
         narration_tone.as_deref(),
         merged_instructions.as_deref(),
+        &app_handle, "narrative-token",
     ).await?;
-
-    if let Some(u) = &usage {
-        let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "narrative", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
-    }
 
     // Store as a "narrative" role message
     let (wd, wt) = world_time_fields(&world);
+    let tokens_est = (narrative_text.len() / 4) as i64;
     let narrative_msg = Message {
         message_id: uuid::Uuid::new_v4().to_string(),
         thread_id: thread.thread_id.clone(),
         role: "narrative".to_string(),
         content: narrative_text,
-        tokens_estimate: usage.as_ref().map(|u| u.total_tokens as i64).unwrap_or(0),
+        tokens_estimate: tokens_est,
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
             world_day: wd, world_time: wt.clone(),
