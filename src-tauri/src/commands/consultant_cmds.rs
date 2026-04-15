@@ -204,10 +204,11 @@ pub fn import_chat_messages_cmd(
             let idx = all_msgs.iter().position(|m| m.message_id == *seen_id);
             match idx {
                 Some(i) => all_msgs[i + 1..].to_vec(),
-                None => all_msgs,
+                None => all_msgs.into_iter().rev().take(30).collect::<Vec<_>>().into_iter().rev().collect(),
             }
         } else {
-            all_msgs
+            // No last_seen — take the most recent 30
+            all_msgs.into_iter().rev().take(30).collect::<Vec<_>>().into_iter().rev().collect()
         };
         (msgs, characters, user_name, gc.thread_id)
     } else {
@@ -221,10 +222,10 @@ pub fn import_chat_messages_cmd(
             let idx = all_msgs.iter().position(|m| m.message_id == *seen_id);
             match idx {
                 Some(i) => all_msgs[i + 1..].to_vec(),
-                None => all_msgs,
+                None => all_msgs.into_iter().rev().take(30).collect::<Vec<_>>().into_iter().rev().collect(),
             }
         } else {
-            all_msgs
+            all_msgs.into_iter().rev().take(30).collect::<Vec<_>>().into_iter().rev().collect()
         };
         (msgs, vec![character], user_name, thread.thread_id)
     };

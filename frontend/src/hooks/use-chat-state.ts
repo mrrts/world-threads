@@ -15,6 +15,7 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
   const [hasInput, setHasInput] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [isAtBottom, setIsAtBottom] = useState(true);
   const [userAvatarUrl, setUserAvatarUrl] = useState("");
   const [copiedError, setCopiedError] = useState(false);
   const [resetConfirmId, setResetConfirmId] = useState<string | null>(null);
@@ -100,6 +101,21 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
       setNarrationDirty(false);
     });
   }, [chatId]);
+
+  // Scroll-at-bottom tracking
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const check = () => setIsAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight < 40);
+    el.addEventListener("scroll", check);
+    check();
+    return () => el.removeEventListener("scroll", check);
+  }, [chatId]);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) setIsAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight < 40);
+  }, [store.messages]);
 
   // ── Callbacks ─────────────────────────────────────────────────────────
 
@@ -381,6 +397,7 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     videoDataUrls, setVideoDataUrls,
     showUserAvatarModal, setShowUserAvatarModal,
     carouselAllMessages, setCarouselAllMessages,
+    isAtBottom,
 
     // Derived
     isSending,

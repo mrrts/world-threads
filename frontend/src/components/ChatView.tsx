@@ -4,7 +4,7 @@ import { formatMessage, markdownComponents, remarkPlugins, rehypePlugins } from 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
-import { Send, Loader2, SmilePlus, X, Copy, ExternalLink, BookOpen, RotateCcw, MessageSquare, Compass, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, Play, Volume2 } from "lucide-react";
+import { Send, Loader2, SmilePlus, X, Copy, ExternalLink, BookOpen, RotateCcw, MessageSquare, Compass, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, Play, Volume2, ChevronDown } from "lucide-react";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type { useAppStore } from "@/hooks/use-app-store";
 import { api, type Reaction } from "@/lib/tauri";
@@ -99,6 +99,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
     videoDataUrls, setVideoDataUrls,
     showUserAvatarModal, setShowUserAvatarModal,
     carouselAllMessages, setCarouselAllMessages,
+    isAtBottom,
 
     isSending,
     isGeneratingNarrative,
@@ -589,6 +590,14 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         </div>
         </div>
       </ScrollArea>
+      {!isAtBottom && (
+        <button
+          onClick={() => { const el = scrollRef.current; if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" }); }}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-8 h-8 rounded-full bg-card/80 backdrop-blur-sm shadow-lg shadow-black/20 border border-border/30 flex items-center justify-center cursor-pointer hover:bg-card transition-colors text-muted-foreground hover:text-foreground"
+        >
+          <ChevronDown size={16} />
+        </button>
+      )}
       <AnimationReadyToast
         animationReadyId={animationReadyId}
         onGo={() => {
