@@ -1,14 +1,15 @@
-use crate::ai::openai::{self, ChatRequest};
+use crate::ai::openai::{self, StreamingRequest};
 use crate::ai::orchestrator;
 use crate::db::queries::*;
 use crate::db::Database;
 use chrono::Utc;
-use tauri::State;
+use tauri::{AppHandle, State};
 
 /// Generate a novel chapter from a day's messages via LLM.
 #[tauri::command]
 pub async fn generate_novel_entry_cmd(
     db: State<'_, Database>,
+    app_handle: AppHandle,
     api_key: String,
     thread_id: String,
     world_day: i64,
@@ -137,26 +138,17 @@ INSTRUCTIONS:
         },
     ];
 
-    let request = ChatRequest {
+    let request = StreamingRequest {
         model: model_config.dialogue_model.clone(),
         messages: api_messages,
         temperature: Some(0.95),
         max_completion_tokens: Some(4096),
-        response_format: None,
+        stream: true,
     };
 
-    let response = openai::chat_completion_with_base(
-        &model_config.chat_api_base(), &api_key, &request,
-    ).await?;
-
-    if let Some(u) = &response.usage {
-        let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "novel", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
-    }
-
-    response.choices.first()
-        .map(|c| c.message.content.clone())
-        .ok_or_else(|| "No response from model".to_string())
+    openai::chat_completion_stream(
+        &model_config.chat_api_base(), &api_key, &request, &app_handle, "novel-token",
+    ).await
 }
 
 /// Save (or update) a novel entry.

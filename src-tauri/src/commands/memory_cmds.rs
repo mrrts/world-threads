@@ -1,7 +1,7 @@
-use crate::ai::{openai::{self, ChatRequest}, orchestrator};
+use crate::ai::{openai::{self, StreamingRequest}, orchestrator};
 use crate::db::queries::*;
 use crate::db::Database;
-use tauri::State;
+use tauri::{AppHandle, State};
 
 #[tauri::command]
 pub fn get_memory_artifacts_cmd(
@@ -27,6 +27,7 @@ pub fn get_thread_summary_cmd(
 #[tauri::command]
 pub async fn generate_chat_summary_cmd(
     db: State<'_, Database>,
+    app_handle: AppHandle,
     api_key: String,
     character_id: String,
 ) -> Result<String, String> {
@@ -69,27 +70,24 @@ pub async fn generate_chat_summary_cmd(
         },
     ];
 
-    let request = ChatRequest {
+    let request = StreamingRequest {
         model: model_config.dialogue_model.clone(),
         messages,
         temperature: Some(0.5),
         max_completion_tokens: Some(800),
-        response_format: None,
+        stream: true,
     };
 
-    let response = openai::chat_completion_with_base(
-        &model_config.chat_api_base(), &api_key, &request,
-    ).await?;
-
-    response.choices.first()
-        .map(|c| c.message.content.clone())
-        .ok_or_else(|| "No response from model".to_string())
+    openai::chat_completion_stream(
+        &model_config.chat_api_base(), &api_key, &request, &app_handle, "summary-token",
+    ).await
 }
 
 /// Generate a fresh on-demand summary for a group chat thread.
 #[tauri::command]
 pub async fn generate_group_chat_summary_cmd(
     db: State<'_, Database>,
+    app_handle: AppHandle,
     api_key: String,
     group_chat_id: String,
 ) -> Result<String, String> {
@@ -148,19 +146,15 @@ pub async fn generate_group_chat_summary_cmd(
         },
     ];
 
-    let request = ChatRequest {
+    let request = StreamingRequest {
         model: model_config.dialogue_model.clone(),
         messages,
         temperature: Some(0.5),
         max_completion_tokens: Some(800),
-        response_format: None,
+        stream: true,
     };
 
-    let response = openai::chat_completion_with_base(
-        &model_config.chat_api_base(), &api_key, &request,
-    ).await?;
-
-    response.choices.first()
-        .map(|c| c.message.content.clone())
-        .ok_or_else(|| "No response from model".to_string())
+    openai::chat_completion_stream(
+        &model_config.chat_api_base(), &api_key, &request, &app_handle, "summary-token",
+    ).await
 }

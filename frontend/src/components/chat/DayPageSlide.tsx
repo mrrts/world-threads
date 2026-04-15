@@ -5,6 +5,7 @@ import { formatMessage, markdownComponents } from "./formatMessage";
 import { TimeDivider } from "./TimeDivider";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from "@/components/ui/dialog";
+import { listen } from "@tauri-apps/api/event";
 import { api, type Message, type NovelEntry } from "@/lib/tauri";
 
 interface Props {
@@ -55,13 +56,20 @@ export function DayPageSlide({
   const handleNovelize = async () => {
     setNovelModalOpen(true);
     setNovelGenerating(true);
+    setNovelDraft("");
     setNovelTab("read");
+
+    const unlisten = await listen<string>("novel-token", (event) => {
+      setNovelDraft((prev) => prev + event.payload);
+    });
+
     try {
       const content = await api.generateNovelEntry(apiKey, threadId, day, isGroup);
       setNovelDraft(content);
     } catch (e) {
       setNovelDraft(`Error generating chapter: ${e}`);
     } finally {
+      unlisten();
       setNovelGenerating(false);
     }
   };
@@ -349,15 +357,16 @@ export function DayPageSlide({
             </div>
           )}
           <DialogBody className="!p-0">
-            {novelGenerating ? (
+            {novelGenerating && !novelDraft ? (
               <div className="flex flex-col items-center justify-center py-20 gap-3">
                 <Loader2 size={28} className="animate-spin text-primary" />
                 <p className="text-sm text-muted-foreground">Writing chapter...</p>
               </div>
-            ) : novelTab === "read" ? (
+            ) : novelTab === "read" || novelGenerating ? (
               <div className="max-h-[60vh] overflow-y-auto px-6 py-5">
                 <article className="prose prose-sm prose-invert max-w-none leading-relaxed [--tw-prose-body:var(--color-foreground)] [--tw-prose-bold:var(--color-foreground)] first-letter:text-4xl first-letter:font-serif first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:leading-none first-letter:text-amber-400">
                   <Markdown components={markdownComponents}>{novelDraft}</Markdown>
+                  {novelGenerating && <span className="inline-block w-1.5 h-4 bg-primary/60 animate-pulse ml-0.5 align-text-bottom" />}
                 </article>
               </div>
             ) : (

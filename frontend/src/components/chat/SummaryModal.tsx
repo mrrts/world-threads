@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Loader2, Send, Check } from "lucide-react";
+import { listen } from "@tauri-apps/api/event";
 import { api, type Character, type GroupChat, type PortraitInfo } from "@/lib/tauri";
 
 interface ChatTarget {
@@ -41,15 +42,30 @@ export function SummaryModal({
 
   useEffect(() => {
     if (!open) return;
-    setSummary(null);
+    setSummary("");
     setError(null);
     setSelectedTargets(new Set());
     setSent(false);
     setLoading(true);
-    generateSummary()
-      .then((s) => setSummary(s))
-      .catch((e) => setError(String(e)))
-      .finally(() => setLoading(false));
+
+    let unlisten: (() => void) | null = null;
+
+    (async () => {
+      unlisten = await listen<string>("summary-token", (event) => {
+        setSummary((prev) => (prev ?? "") + event.payload);
+      });
+      try {
+        const result = await generateSummary();
+        setSummary(result);
+      } catch (e) {
+        setError(String(e));
+      } finally {
+        setLoading(false);
+        unlisten?.();
+      }
+    })();
+
+    return () => { unlisten?.(); };
   }, [open]);
 
   // Build target list excluding current chat
@@ -120,7 +136,7 @@ export function SummaryModal({
           <DialogDescription>On-demand summary of the current conversation.</DialogDescription>
         </DialogHeader>
         <DialogBody>
-          {loading ? (
+          {loading && !summary ? (
             <div className="flex items-center justify-center py-8 gap-3">
               <Loader2 size={18} className="animate-spin text-muted-foreground" />
               <span className="text-sm text-muted-foreground">Generating summary...</span>
@@ -129,7 +145,7 @@ export function SummaryModal({
             <div className="text-sm text-destructive py-4">{error}</div>
           ) : summary ? (
             <>
-              <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{summary}</p>
+              <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{summary}{loading ? <span className="inline-block w-1.5 h-4 bg-primary/60 animate-pulse ml-0.5 align-text-bottom" /> : null}</p>
 
               {targets.length > 0 && (
                 <div className="mt-4 pt-4 border-t border-border">
