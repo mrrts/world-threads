@@ -33,40 +33,40 @@ function buildCategories(names: string[]): PromptCategory[] {
     {
       name: "Direction",
       prompts: [
-        { label: "Where should the story go next?", prompt: "Where should the story go next?" },
-        { label: "Suggest a plot twist or complication", prompt: "Suggest a plot twist or complication." },
-        { label: "What would be dramatically interesting here?", prompt: "What would be dramatically interesting here?" },
-        { label: "Most interesting direction I haven't considered?", prompt: "What's the most interesting direction this could take that I haven't considered?" },
-        { label: "What story am I actually telling?", prompt: "What's the story I'm actually telling, whether I meant to or not?" },
+        { label: "Where could this go next?", prompt: "Where could this story go next? What are the most interesting possibilities from here?" },
+        { label: "What should I do next?", prompt: "What should I do next? Give me a few options for how I could steer things from here." },
+        { label: "Something unexpected could happen", prompt: "Suggest something unexpected that could happen — a complication, a surprise, a shift." },
+        { label: "What direction haven't I considered?", prompt: "What's the most interesting direction this could take that I haven't considered?" },
+        { label: "What story is unfolding here?", prompt: "Step back — what story is actually unfolding here, whether anyone intended it or not?" },
       ],
     },
     {
       name: "Character",
       prompts: [
-        ...names.map((n) => ({ label: `What's motivating ${n} right now?`, prompt: `What's motivating ${n} right now? What are they not saying?` })),
-        ...names.map((n) => ({ label: `What would ${n} be thinking but not showing?`, prompt: `What would ${n} be thinking but not showing?` })),
-        ...names.map((n) => ({ label: `What am I not seeing in what ${n} just said?`, prompt: `What am I not seeing in what ${n} just said?` })),
-        { label: "Analyze the relationship dynamic", prompt: "Analyze the relationship dynamic — where are we?" },
+        ...names.map((n) => ({ label: `What's going on with ${n}?`, prompt: `What's going on with ${n} right now? What are they feeling, and what aren't they saying?` })),
+        ...names.map((n) => ({ label: `What am I missing about ${n}?`, prompt: `What am I not seeing in what ${n} just said or did?` })),
+        { label: "Where does the relationship stand?", prompt: "Where does the relationship stand right now? What's shifted recently?" },
+        ...names.map((n) => ({ label: `How might ${n} surprise me?`, prompt: `How might ${n} surprise me here? What would be in character but unexpected?` })),
       ],
     },
     {
-      name: "Craft",
+      name: "Reflection",
       prompts: [
-        { label: "What themes are emerging?", prompt: "What themes are emerging from this conversation?" },
-        { label: "Rate the last few exchanges", prompt: "Rate the last few exchanges — what's working, what's flat?" },
-        { label: "What would a good editor flag?", prompt: "If this were a novel, what would a good editor flag?" },
-        { label: "Pick a moment and tell me why it mattered", prompt: "Pick a single moment from the last session and tell me why it mattered." },
-        { label: "What's the subtext of this last exchange?", prompt: "What's the subtext of this last exchange?" },
+        { label: "What themes are emerging?", prompt: "What themes or patterns are emerging from what's been happening?" },
+        { label: "How did that last stretch feel?", prompt: "How did that last stretch feel? What landed, what fell flat?" },
+        { label: "What feels off or underdeveloped?", prompt: "Is anything feeling off or underdeveloped right now? What could use more attention?" },
+        { label: "Pick a moment — why did it matter?", prompt: "Pick a single moment from recently and tell me why it mattered." },
+        { label: "What's the subtext right now?", prompt: "What's the subtext of what just happened? What's going on beneath the surface?" },
       ],
     },
     {
       name: "In the Moment",
       prompts: [
-        { label: "How should I respond to what they just said?", prompt: "How should I respond to what they just said?" },
-        { label: "Help me think of what to say next", prompt: "Help me think of what to say next." },
-        { label: "How can I escalate the tension?", prompt: "How can I escalate the tension?" },
-        { label: "How can I defuse the tension?", prompt: "How can I defuse the tension?" },
-        { label: "What question should I be asking you right now?", prompt: "What question should I be asking you right now?" },
+        { label: "How should I respond to that?", prompt: "How should I respond to what just happened? Give me a few options." },
+        { label: "What could I say here?", prompt: "Help me think of what to say next. What would be interesting, true to character, or move things forward?" },
+        { label: "How can I raise the stakes?", prompt: "How can I raise the stakes or escalate the tension right now?" },
+        { label: "How can I bring things down?", prompt: "How can I defuse things or bring a quieter energy to this moment?" },
+        { label: "What should I be asking you?", prompt: "What question should I be asking you right now?" },
       ],
     },
   ];
@@ -402,9 +402,16 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                       )}
                       <button
                         onClick={async () => {
-                          if (!activeChatId) return;
-                          await api.truncateConsultantChat(activeChatId, i + 1);
-                          setMessages((prev) => prev.slice(0, i + 1));
+                          if (!activeChatId || loading) return;
+                          if (msg.role === "user") {
+                            // Truncate to before this message, then re-send it
+                            await api.truncateConsultantChat(activeChatId, i);
+                            setMessages(messages.slice(0, i));
+                            send(msg.content);
+                          } else {
+                            await api.truncateConsultantChat(activeChatId, i + 1);
+                            setMessages(messages.slice(0, i + 1));
+                          }
                         }}
                         className={`text-[10px] mt-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer ${
                           msg.role === "user"
