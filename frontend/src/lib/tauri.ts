@@ -395,6 +395,8 @@ export const api = {
     invoke<void>("truncate_consultant_chat_cmd", { chatId, keepCount }),
   saveConsultantMessages: (chatId: string, messages: Array<{ role: string; content: string }>) =>
     invoke<void>("save_consultant_messages_cmd", { chatId, messages }),
+  importChatMessages: (chatId: string, characterId: string | null, groupChatId: string | null) =>
+    invoke<{ role: string; content: string }>("import_chat_messages_cmd", { chatId, characterId, groupChatId }),
   generateNarrative: (apiKey: string, characterId: string, customInstructions?: string) =>
     invoke<NarrativeResult>("generate_narrative_cmd", { apiKey, characterId, customInstructions: customInstructions ?? null }),
   generateIllustration: (apiKey: string, characterId: string, qualityTier?: string, customInstructions?: string, previousIllustrationId?: string, includeSceneSummary?: boolean) =>

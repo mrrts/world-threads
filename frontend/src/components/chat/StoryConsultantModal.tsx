@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Markdown from "react-markdown";
 import { Dialog } from "@/components/ui/dialog";
-import { X, Loader2, Send, Lightbulb, Sparkles, Trash2, ChevronDown, Pencil, Plus, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { X, Loader2, Send, Lightbulb, Sparkles, Trash2, ChevronDown, Pencil, Plus, PanelLeftClose, PanelLeftOpen, Download } from "lucide-react";
 import { formatMessage, markdownComponents, remarkPlugins, rehypePlugins } from "./formatMessage";
 import { listen } from "@tauri-apps/api/event";
 import { api, type ConsultantChat } from "@/lib/tauri";
@@ -218,6 +218,19 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
     }
   }, [apiKey, characterId, groupChatId, loading, activeChatId, threadId, chats]);
 
+  const handleImport = useCallback(async () => {
+    let chatId = activeChatId;
+    if (!chatId) {
+      const chat = await api.createConsultantChat(threadId);
+      setChats((prev) => [chat, ...prev]);
+      chatId = chat.chat_id;
+      setActiveChatId(chatId);
+    }
+    const msg = await api.importChatMessages(chatId, characterId, groupChatId);
+    setMessages((prev) => [...prev, msg as ConsultantMessage]);
+    setTimeout(() => { const el = scrollRef.current; if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" }); }, 50);
+  }, [activeChatId, threadId, characterId, groupChatId]);
+
   const handleEditSave = async () => {
     if (editingIdx == null || !activeChatId) return;
     const updated = [...messages];
@@ -379,6 +392,18 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                 {messages.map((msg, i) => {
                   // Hide empty assistant message (typing indicator covers this state)
                   if (msg.role === "assistant" && !msg.content) return null;
+                  // Import messages render as a collapsed bar
+                  if (msg.role === "import") {
+                    const label = msg.content.split("\n---\n")[0] || "Imported latest messages";
+                    return (
+                      <div key={i} className="flex justify-center my-2">
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs">
+                          <Download size={12} />
+                          <span>{label}</span>
+                        </div>
+                      </div>
+                    );
+                  }
                   return (
                   <div key={i} className={`group flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                     <div className={`relative max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
@@ -497,6 +522,16 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
               >
                 {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
               </button>
+              <div className="relative group/import">
+                <button
+                  onClick={handleImport}
+                  disabled={loading}
+                  className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-sky-400 hover:bg-sky-500/10 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Download size={16} />
+                </button>
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/import:opacity-100 pointer-events-none transition-opacity">Import Latest Messages</span>
+              </div>
             </div>
           </div>
         </div>

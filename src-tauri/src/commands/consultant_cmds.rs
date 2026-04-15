@@ -159,6 +159,76 @@ pub fn save_consultant_messages_cmd(
 
 // ─── Story consultant LLM call ─────────────────────────────────────────────
 
+/// Import latest chat messages into a consultant chat as context.
+/// Returns the formatted import summary line for UI display.
+#[tauri::command]
+pub fn import_chat_messages_cmd(
+    db: State<'_, Database>,
+    chat_id: String,
+    character_id: Option<String>,
+    group_chat_id: Option<String>,
+) -> Result<ConsultantMessage, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let is_group = group_chat_id.is_some();
+
+    let (recent_msgs, characters, user_name) = if is_group {
+        let gc = get_group_chat(&conn, group_chat_id.as_deref().unwrap()).map_err(|e| e.to_string())?;
+        let msgs = list_group_messages(&conn, &gc.thread_id, 30).map_err(|e| e.to_string())?;
+        let user_name = get_user_profile(&conn, &gc.world_id)
+            .ok().map(|p| p.display_name).unwrap_or_else(|| "the user".to_string());
+        let char_ids: Vec<String> = gc.character_ids.as_array()
+            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+            .unwrap_or_default();
+        let characters: Vec<Character> = char_ids.iter()
+            .filter_map(|id| get_character(&conn, id).ok())
+            .collect();
+        (msgs, characters, user_name)
+    } else {
+        let char_id = character_id.as_deref().ok_or("No character specified")?;
+        let character = get_character(&conn, char_id).map_err(|e| e.to_string())?;
+        let thread = get_thread_for_character(&conn, char_id).map_err(|e| e.to_string())?;
+        let msgs = list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?;
+        let user_name = get_user_profile(&conn, &character.world_id)
+            .ok().map(|p| p.display_name).unwrap_or_else(|| "the user".to_string());
+        (msgs, vec![character], user_name)
+    };
+
+    // Format messages
+    let conversation: Vec<String> = recent_msgs.iter()
+        .filter(|m| m.role != "illustration" && m.role != "video")
+        .map(|m| {
+            let speaker = match m.role.as_str() {
+                "user" => user_name.clone(),
+                "narrative" => "[Narrative]".to_string(),
+                "context" => "[Context]".to_string(),
+                "assistant" => {
+                    m.sender_character_id.as_ref()
+                        .and_then(|id| characters.iter().find(|c| c.character_id == *id))
+                        .map(|c| c.display_name.clone())
+                        .unwrap_or_else(|| "Character".to_string())
+                }
+                _ => m.role.clone(),
+            };
+            format!("{}: {}", speaker, m.content)
+        })
+        .collect();
+
+    let char_names: Vec<String> = characters.iter().map(|c| c.display_name.clone()).collect();
+    let label = format!("Imported latest messages with {}", char_names.join(" & "));
+    let content = format!("{}\n---\n{}", label, conversation.join("\n"));
+
+    // Persist as import message
+    conn.execute(
+        "INSERT INTO consultant_messages (chat_id, role, content) VALUES (?1, 'import', ?2)",
+        params![chat_id, content],
+    ).map_err(|e| e.to_string())?;
+
+    Ok(ConsultantMessage {
+        role: "import".to_string(),
+        content,
+    })
+}
+
 /// Generate a short title for a consultant chat based on the first message.
 #[tauri::command]
 pub async fn generate_consultant_title_cmd(
@@ -243,7 +313,16 @@ pub async fn story_consultant_cmd(
             "SELECT role, content FROM consultant_messages WHERE chat_id = ?1 ORDER BY id ASC"
         ).map_err(|e| e.to_string())?;
         let rows = stmt.query_map(params![chat_id], |row| {
-            Ok(ChatMessage { role: row.get(0)?, content: row.get(1)? })
+            let role: String = row.get(0)?;
+            let content: String = row.get(1)?;
+            // Map import messages to user role with context framing
+            let mapped_role = if role == "import" { "user".to_string() } else { role };
+            let mapped_content = if mapped_role == "user" && content.contains("\n---\n") {
+                format!("[Here's what happened recently in the conversation:]\n{}", content.split("\n---\n").nth(1).unwrap_or(&content))
+            } else {
+                content
+            };
+            Ok(ChatMessage { role: mapped_role, content: mapped_content })
         }).map_err(|e| e.to_string())?;
         rows.collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())?
     };
