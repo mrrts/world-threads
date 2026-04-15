@@ -332,7 +332,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
             {/* Ideas overlay */}
             {showPrompts && (
               <div className="absolute inset-0 z-10 bg-card overflow-y-auto px-5 py-4">
-                <div className="grid grid-cols-2 gap-4 max-w-xl mx-auto">
+                <div className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
                   {categories.map((cat) => (
                     <div key={cat.name}>
                       <h4 className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground/60 mb-2 px-1">{cat.name}</h4>
@@ -359,7 +359,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
               className="h-full overflow-y-auto px-5 py-4"
               style={!isAtBottom ? { maskImage: "linear-gradient(to bottom, black 92%, transparent 100%)", WebkitMaskImage: "linear-gradient(to bottom, black 92%, transparent 100%)" } : undefined}
             >
-              <div className="max-w-xl mx-auto space-y-4">
+              <div className="max-w-3xl mx-auto space-y-4">
                 {messages.length === 0 && !loading && !showPrompts && (
                   <div className="text-center py-12">
                     <Sparkles size={28} className="mx-auto text-muted-foreground/30 mb-3" />
@@ -443,7 +443,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
 
           {/* Input area */}
           <div className="flex-shrink-0 border-t border-border px-4 py-3 relative z-[1]">
-            <div className="max-w-xl mx-auto flex items-end gap-2">
+            <div className="max-w-3xl mx-auto flex items-end gap-2">
               <button
                 onClick={() => setShowPrompts(!showPrompts)}
                 className={`flex-shrink-0 h-9 rounded-lg flex items-center gap-1.5 px-3 text-sm font-medium transition-colors cursor-pointer ${
