@@ -287,6 +287,7 @@ pub struct LastSeenPreview {
     pub role: String,
     pub content: String,
     pub speaker_name: String,
+    pub avatar_color: Option<String>,
     pub created_at: String,
 }
 
@@ -316,24 +317,35 @@ pub fn get_last_seen_message_cmd(
     let Some(m) = msg else { return Ok(None) };
     if m.role == "illustration" || m.role == "video" { return Ok(None); }
 
-    let speaker_name = match m.role.as_str() {
+    // Look up the character — try sender_character_id first, then thread's character_id
+    let character = m.sender_character_id.as_ref()
+        .and_then(|id| get_character(&conn, id).ok())
+        .or_else(|| {
+            // For individual chats, get the character from the thread
+            conn.query_row(
+                "SELECT character_id FROM threads WHERE thread_id = ?1",
+                params![m.thread_id], |r| r.get::<_, Option<String>>(0),
+            ).ok().flatten().and_then(|id| get_character(&conn, &id).ok())
+        });
+
+    let (speaker_name, avatar_color) = match m.role.as_str() {
         "user" => {
             let world_id: Option<String> = conn.query_row(
                 "SELECT world_id FROM threads WHERE thread_id = ?1",
                 params![m.thread_id], |r| r.get(0),
             ).ok();
-            world_id.and_then(|wid| get_user_profile(&conn, &wid).ok().map(|p| p.display_name))
-                .unwrap_or_else(|| "You".to_string())
+            let name = world_id.and_then(|wid| get_user_profile(&conn, &wid).ok().map(|p| p.display_name))
+                .unwrap_or_else(|| "You".to_string());
+            (name, None)
         }
         "assistant" => {
-            m.sender_character_id.as_ref()
-                .and_then(|id| get_character(&conn, id).ok())
-                .map(|c| c.display_name)
-                .unwrap_or_else(|| "Character".to_string())
+            let name = character.as_ref().map(|c| c.display_name.clone()).unwrap_or_else(|| "Character".to_string());
+            let color = character.as_ref().map(|c| c.avatar_color.clone());
+            (name, color)
         }
-        "narrative" => "Narrative".to_string(),
-        "context" => "Context".to_string(),
-        _ => m.role.clone(),
+        "narrative" => ("Narrative".to_string(), None),
+        "context" => ("Context".to_string(), None),
+        _ => (m.role.clone(), None),
     };
 
     Ok(Some(LastSeenPreview {
@@ -341,6 +353,7 @@ pub fn get_last_seen_message_cmd(
         role: m.role,
         content: m.content,
         speaker_name,
+        avatar_color,
         created_at: m.created_at,
     }))
 }

@@ -86,7 +86,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
   const [deleteIdx, setDeleteIdx] = useState<number | null>(null);
   const [deleteChatId, setDeleteChatId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [importPreview, setImportPreview] = useState<{ role: string; content: string; speaker_name: string } | null>(null);
+  const [importPreview, setImportPreview] = useState<{ role: string; content: string; speaker_name: string; avatar_color: string | null } | null>(null);
   const [showImportPreview, setShowImportPreview] = useState(false);
   const importHoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -577,7 +577,12 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                               ? "bg-primary/20 text-primary-foreground/80"
                               : "bg-secondary/40 text-secondary-foreground/80 border border-border/20"
                           }`}>
-                            <p className="text-[9px] font-semibold text-muted-foreground/60 mb-0.5">{importPreview.speaker_name}</p>
+                            <div className="flex items-center gap-1.5 mb-1">
+                              {importPreview.avatar_color && (
+                                <span className="w-4 h-4 rounded-full flex-shrink-0 ring-1 ring-white/10" style={{ backgroundColor: importPreview.avatar_color }} />
+                              )}
+                              <p className="text-[9px] font-semibold text-muted-foreground/60">{importPreview.speaker_name}</p>
+                            </div>
                             <p className="line-clamp-3">{importPreview.content}</p>
                           </div>
                         )}
