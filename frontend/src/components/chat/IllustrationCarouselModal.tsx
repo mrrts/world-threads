@@ -224,6 +224,17 @@ export function IllustrationCarouselModal({
   const goNext = () => navigateTo(currentSlideIdx >= slides.length - 1 ? 0 : currentSlideIdx + 1);
   const goPrev = () => navigateTo(currentSlideIdx <= 0 ? slides.length - 1 : currentSlideIdx - 1);
 
+  // Arrow key navigation
+  useEffect(() => {
+    if (!illustrationModalId || modalSlideshow.active) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") goNext();
+      else if (e.key === "ArrowLeft") goPrev();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  });
+
   // Override slide index finding for day pages (synthetic IDs)
   if (isDayPage && modalSelectedId?.startsWith("__day_")) {
     // Already on the right slide via the slides array lookup
