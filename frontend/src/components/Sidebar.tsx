@@ -18,6 +18,7 @@ export function Sidebar({ store, onNavigate }: Props) {
   const [showNewChar, setShowNewChar] = useState(false);
   const [charName, setCharName] = useState("");
   const [showArchived, setShowArchived] = useState(false);
+  const [archiveConfirm, setArchiveConfirm] = useState<{ id: string; name: string } | null>(null);
   const [showGroupPicker, setShowGroupPicker] = useState(false);
   const [selectedGroupMembers, setSelectedGroupMembers] = useState<string[]>([]);
   const [userAvatarUrl, setUserAvatarUrl] = useState("");
@@ -218,7 +219,7 @@ export function Sidebar({ store, onNavigate }: Props) {
                         <Settings2 size={12} />
                       </button>
                       <button
-                        onClick={() => store.archiveCharacter(ch.character_id)}
+                        onClick={() => setArchiveConfirm({ id: ch.character_id, name: ch.display_name })}
                         className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-amber-500 hover:bg-accent/50 transition-colors cursor-pointer"
                         title="Archive"
                       >
@@ -511,6 +512,21 @@ export function Sidebar({ store, onNavigate }: Props) {
         </DialogContent>
       </Dialog>
 
+      <Dialog open={!!archiveConfirm} onClose={() => setArchiveConfirm(null)} className="max-w-xs">
+        <div className="p-5 space-y-4 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl shadow-black/50">
+          <div className="flex items-center gap-2">
+            <Archive size={18} className="text-amber-500" />
+            <h3 className="font-semibold">Archive {archiveConfirm?.name} for now?</h3>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setArchiveConfirm(null)}>Cancel</Button>
+            <Button size="sm" onClick={() => {
+              if (archiveConfirm) store.archiveCharacter(archiveConfirm.id);
+              setArchiveConfirm(null);
+            }}>Archive</Button>
+          </div>
+        </div>
+      </Dialog>
     </>
   );
 }
