@@ -261,31 +261,6 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
             const prevMsg = msgIdx > 0 ? store.messages[msgIdx - 1] : undefined;
 
             if (isNarrative) {
-              if (msg.message_id.startsWith("streaming-")) {
-                return (<React.Fragment key={msg.message_id}>
-                  <TimeDivider current={msg} previous={prevMsg} />
-                  <div className="flex justify-center my-2">
-                    <div className="max-w-[90%] rounded-xl px-5 py-3.5 text-sm leading-relaxed bg-gradient-to-br from-amber-950/40 to-amber-900/20 border border-amber-700/30 text-amber-100/90 italic backdrop-blur-sm">
-                      <div className="flex items-center gap-1.5 mb-1.5 text-[10px] uppercase tracking-wider text-amber-500/70 font-semibold not-italic">
-                        <BookOpen size={12} />
-                        <span>Narrative</span>
-                      </div>
-                      {!msg.content ? (
-                        <div className="flex items-center gap-2 text-amber-500/70 py-0.5">
-                          <span className="text-xs italic">Weaving narrative...</span>
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500/60 animate-bounce [animation-delay:0ms]" />
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500/60 animate-bounce [animation-delay:150ms]" />
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500/60 animate-bounce [animation-delay:300ms]" />
-                        </div>
-                      ) : (
-                        <div className="prose prose-sm max-w-none prose-p:my-1 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-amber-100)] [--tw-prose-bold:rgb(252,211,77)]">
-                          <Markdown components={markdownComponents}>{formatMessage(msg.content)}</Markdown>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </React.Fragment>);
-              }
               return (<React.Fragment key={msg.message_id}>
                 <TimeDivider current={msg} previous={prevMsg} />
                 <NarrativeMessage
@@ -379,9 +354,9 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                     )
                   )}
                   <div
-                    className={`relative group rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                    className={`relative group rounded-2xl px-4 py-2.5 text-base leading-relaxed ${
                       isUser
-                        ? "bg-primary text-primary-foreground rounded-br-md max-w-[80%]"
+                        ? "bg-primary/60 backdrop-blur-sm text-primary-foreground rounded-br-md max-w-[80%]"
                         : senderBubbleColor
                           ? `${senderBubbleColor} text-secondary-foreground rounded-bl-md max-w-[80%] border border-border/30`
                           : "bg-secondary text-secondary-foreground rounded-bl-md max-w-[80%]"
@@ -480,17 +455,8 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                         ? "[--tw-prose-body:var(--color-primary-foreground)] [--tw-prose-headings:var(--color-primary-foreground)] [--tw-prose-bold:var(--color-primary-foreground)] [--tw-prose-bullets:var(--color-primary-foreground)] [--tw-prose-counters:var(--color-primary-foreground)] [--tw-prose-code:var(--color-primary-foreground)] [--tw-prose-links:var(--color-primary-foreground)] [--tw-prose-quotes:var(--color-primary-foreground)] [--tw-prose-quote-borders:rgba(255,255,255,0.3)]"
                         : "[--tw-prose-body:var(--color-secondary-foreground)] [--tw-prose-headings:var(--color-secondary-foreground)] [--tw-prose-bold:var(--color-secondary-foreground)] [--tw-prose-bullets:var(--color-secondary-foreground)] [--tw-prose-counters:var(--color-secondary-foreground)] [--tw-prose-code:var(--color-secondary-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-quotes:var(--color-secondary-foreground)] [--tw-prose-quote-borders:var(--color-border)]"
                     }`}>
-                      {msg.message_id.startsWith("streaming-") && !msg.content ? (
-                        <div className="flex items-center gap-1 py-0.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60 animate-bounce [animation-delay:0ms]" />
-                          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60 animate-bounce [animation-delay:150ms]" />
-                          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60 animate-bounce [animation-delay:300ms]" />
-                        </div>
-                      ) : (
-                        <Markdown components={markdownComponents}>{formatMessage(msg.content)}</Markdown>
-                      )}
+                      <Markdown components={markdownComponents}>{formatMessage(msg.content)}</Markdown>
                     </div>
-                    {!msg.message_id.startsWith("streaming-") && (
                     <p className={`text-[10px] mt-1 flex items-center gap-2 ${
                       isUser ? "text-primary-foreground/50" : "text-muted-foreground"
                     }`}>
@@ -506,7 +472,6 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                         </button>
                       )}
                     </p>
-                    )}
                     {!isPending && isUser && (
                       <div className="absolute top-2 right-8 opacity-0 group-hover:opacity-100 transition-opacity">
                         <div className="relative group/uedit">
@@ -550,7 +515,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
               </React.Fragment>
             );
           })}
-          {isSending && !isGeneratingNarrative && !isGeneratingIllustration && !isGeneratingVideo && !store.messages.some((m) => m.message_id.startsWith("streaming-")) && (() => {
+          {isSending && !isGeneratingNarrative && !isGeneratingIllustration && !isGeneratingVideo && (() => {
             const sendingChar = store.sendingCharacterId
               ? groupCharacters.find((c) => c.character_id === store.sendingCharacterId)
               : groupCharacters[0];
@@ -573,7 +538,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
             </div>
             );
           })()}
-          {isGeneratingNarrative && !store.messages.some((m) => m.message_id.startsWith("streaming-")) && (
+          {isGeneratingNarrative && (
             <div className="flex justify-center my-2">
               <div className="rounded-xl px-5 py-3 bg-gradient-to-br from-amber-950/40 to-amber-900/20 border border-amber-700/30 flex items-center gap-2 text-amber-500/70">
                 <BookOpen size={14} className="animate-pulse" />

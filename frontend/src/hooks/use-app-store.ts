@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { listen } from "@tauri-apps/api/event";
 import { api, type World, type Character, type Message, type ModelConfig, type Reaction, type PortraitInfo, type UserProfile, type WorldImageInfo, type GroupChat } from "@/lib/tauri";
 
 export interface AppState {
@@ -743,36 +742,16 @@ export function useAppStore() {
       ...worldTimeFields(),
     };
 
-    const streamingId = `streaming-${Date.now()}`;
-    const streamingMsg: Message = {
-      message_id: streamingId,
-      thread_id: "",
-      role: "assistant",
-      content: "",
-      tokens_estimate: 0,
-      created_at: new Date().toISOString(),
-    };
-
     setState((s) => ({
       ...s,
       sending: state.activeCharacter!.character_id,
       chatError: null,
       lastFailedContent: null,
-      messages: [...s.messages, optimisticMsg, streamingMsg],
+      messages: [...s.messages, optimisticMsg],
     }));
-
-    const unlisten = await listen<string>("chat-token", (event) => {
-      setState((s) => ({
-        ...s,
-        messages: s.messages.map((m) =>
-          m.message_id === streamingId ? { ...m, content: m.content + event.payload } : m
-        ),
-      }));
-    });
 
     try {
       const result = await api.sendMessage(state.apiKey, state.activeCharacter.character_id, content);
-      unlisten();
       const freshWorld = state.activeWorld ? await api.getWorld(state.activeWorld.world_id) : null;
       const freshCharacters = state.activeWorld ? await api.listCharacters(state.activeWorld.world_id) : [];
       setState((s) => {
@@ -784,7 +763,7 @@ export function useAppStore() {
         return {
           ...s,
           messages: [
-            ...s.messages.filter((m) => m.message_id !== optimisticMsg.message_id && m.message_id !== streamingId),
+            ...s.messages.filter((m) => m.message_id !== optimisticMsg.message_id),
             result.user_message,
             result.assistant_message,
           ],
@@ -797,13 +776,12 @@ export function useAppStore() {
         };
       });
     } catch (e) {
-      unlisten();
       setState((s) => ({
         ...s,
         sending: false,
         chatError: String(e),
         lastFailedContent: content,
-        messages: s.messages.filter((m) => m.message_id !== optimisticMsg.message_id && m.message_id !== streamingId),
+        messages: s.messages.filter((m) => m.message_id !== optimisticMsg.message_id),
       }));
     }
   }, [state.activeCharacter, state.apiKey, state.activeWorld, state.autoRespond]);
@@ -811,37 +789,21 @@ export function useAppStore() {
   const promptCharacter = useCallback(async () => {
     if (!state.activeCharacter || !state.apiKey) return;
     if (state.activeWorld) api.setSetting(`last_chat.${state.activeWorld.world_id}`, `char:${state.activeCharacter.character_id}`).catch(() => {});
-
-    const streamingId = `streaming-${Date.now()}`;
-    const streamingMsg: Message = {
-      message_id: streamingId, thread_id: "", role: "assistant",
-      content: "", tokens_estimate: 0, created_at: new Date().toISOString(),
-    };
-    setState((s) => ({ ...s, sending: state.activeCharacter!.character_id, chatError: null, messages: [...s.messages, streamingMsg] }));
-
-    const unlisten = await listen<string>("chat-token", (event) => {
-      setState((s) => ({
-        ...s,
-        messages: s.messages.map((m) => m.message_id === streamingId ? { ...m, content: m.content + event.payload } : m),
-      }));
-    });
+    setState((s) => ({ ...s, sending: state.activeCharacter!.character_id, chatError: null }));
 
     try {
       const result = await api.promptCharacter(state.apiKey, state.activeCharacter.character_id);
-      unlisten();
       setState((s) => ({
         ...s,
-        messages: [...s.messages.filter((m) => m.message_id !== streamingId), result.assistant_message],
+        messages: [...s.messages, result.assistant_message],
         totalMessages: s.totalMessages + 1,
         sending: null,
       }));
     } catch (e) {
-      unlisten();
       setState((s) => ({
         ...s,
         sending: false,
         chatError: String(e),
-        messages: s.messages.filter((m) => m.message_id !== streamingId),
       }));
     }
   }, [state.activeCharacter, state.apiKey]);
@@ -851,34 +813,14 @@ export function useAppStore() {
     const entityId = isGroup ? state.activeGroupChat?.group_chat_id : state.activeCharacter?.character_id;
     if (!entityId || !state.apiKey) return;
 
-    const streamingId = `streaming-${Date.now()}`;
-    const streamingMsg: Message = {
-      message_id: streamingId, thread_id: "", role: "narrative",
-      content: "", tokens_estimate: 0, created_at: new Date().toISOString(),
-      ...worldTimeFields(),
-    };
-    setState((s) => ({ ...s, sending: entityId, generatingNarrative: entityId, chatError: null, messages: [...s.messages, streamingMsg] }));
-
-    const unlisten = await listen<string>("narrative-token", (event) => {
-      setState((s) => ({
-        ...s,
-        messages: s.messages.map((m) => m.message_id === streamingId ? { ...m, content: m.content + event.payload } : m),
-      }));
-    });
-
+    setState((s) => ({ ...s, sending: entityId, generatingNarrative: entityId, chatError: null }));
     try {
       const result = isGroup
         ? await api.generateGroupNarrative(state.apiKey, entityId, customInstructions)
         : await api.generateNarrative(state.apiKey, entityId, customInstructions);
-      unlisten();
-      setState((s) => ({
-        ...s,
-        messages: [...s.messages.filter((m) => m.message_id !== streamingId), result.narrative_message],
-        totalMessages: s.totalMessages + 1, sending: null, generatingNarrative: null,
-      }));
+      setState((s) => ({ ...s, messages: [...s.messages, result.narrative_message], totalMessages: s.totalMessages + 1, sending: null, generatingNarrative: null }));
     } catch (e) {
-      unlisten();
-      setState((s) => ({ ...s, sending: null, generatingNarrative: null, chatError: String(e), messages: s.messages.filter((m) => m.message_id !== streamingId) }));
+      setState((s) => ({ ...s, sending: null, generatingNarrative: null, chatError: String(e) }));
     }
   }, [state.activeCharacter, state.activeGroupChat, state.apiKey]);
 
