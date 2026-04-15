@@ -1,11 +1,11 @@
-use crate::ai::openai::{self, ChatRequest, ChatMessage};
+use crate::ai::openai::{self, ChatRequest, ChatMessage, StreamingRequest};
 use crate::ai::orchestrator;
 use crate::db::queries::*;
 use crate::db::Database;
 use chrono::Utc;
 use rusqlite::params;
 use serde::{Deserialize, Serialize};
-use tauri::State;
+use tauri::{AppHandle, State};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ConsultantChat {
@@ -193,10 +193,12 @@ pub async fn generate_consultant_title_cmd(
         .unwrap_or_else(|| "Story Chat".to_string()))
 }
 
-/// Send a message to the story consultant and get a response.
+/// Send a message to the story consultant and get a streamed response.
+/// Emits "consultant-token" events with each token chunk.
 #[tauri::command]
 pub async fn story_consultant_cmd(
     db: State<'_, Database>,
+    app_handle: AppHandle,
     api_key: String,
     chat_id: String,
     character_id: Option<String>,
@@ -308,26 +310,17 @@ YOUR ROLE:
     messages.extend(consultant_history);
     messages.push(ChatMessage { role: "user".to_string(), content: user_message.clone() });
 
-    let request = ChatRequest {
+    let request = StreamingRequest {
         model: model_config.dialogue_model.clone(),
         messages,
         temperature: Some(0.95),
         max_completion_tokens: Some(800),
-        response_format: None,
+        stream: true,
     };
 
-    let response = openai::chat_completion_with_base(
-        &model_config.chat_api_base(), &api_key, &request,
+    let reply = openai::chat_completion_stream(
+        &model_config.chat_api_base(), &api_key, &request, &app_handle, "consultant-token",
     ).await?;
-
-    if let Some(u) = &response.usage {
-        let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "consultant", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
-    }
-
-    let reply = response.choices.first()
-        .map(|c| c.message.content.clone())
-        .ok_or_else(|| "No response from model".to_string())?;
 
     // Persist both messages
     {

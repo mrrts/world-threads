@@ -29,7 +29,8 @@ sqlite-vec = "0.1"
 uuid = { version = "1", features = ["v4"] }
 chrono = { version = "0.4", features = ["serde"] }
 tokio = { version = "1", features = ["full"] }
-reqwest = { version = "0.12", features = ["json", "rustls-tls", "multipart"], default-features = false }
+reqwest = { version = "0.12", features = ["json", "rustls-tls", "multipart", "stream"], default-features = false }
+futures-util = "0.3"
 sha2 = "0.10"
 hex = "0.4"
 thiserror = "2"

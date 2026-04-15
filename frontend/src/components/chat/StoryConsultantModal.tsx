@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Markdown from "react-markdown";
 import { Dialog } from "@/components/ui/dialog";
-import { X, Loader2, Send, Lightbulb, Sparkles, Trash2, ChevronDown, Pencil, Plus, MessageSquareDashed } from "lucide-react";
+import { X, Loader2, Send, Lightbulb, Sparkles, Trash2, ChevronDown, Pencil, Plus, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { formatMessage, markdownComponents } from "./formatMessage";
+import { listen } from "@tauri-apps/api/event";
 import { api, type ConsultantChat } from "@/lib/tauri";
 import { Button } from "@/components/ui/button";
 
@@ -84,6 +85,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
   const [editContent, setEditContent] = useState("");
   const [deleteIdx, setDeleteIdx] = useState<number | null>(null);
   const [deleteChatId, setDeleteChatId] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -110,8 +112,9 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
     }
   }, [open, threadId]);
 
-  // Load messages when active chat changes
+  // Load messages when active chat changes (skip if currently sending — send manages state itself)
   useEffect(() => {
+    if (loading) return;
     if (!activeChatId) { setMessages([]); return; }
     api.loadConsultantChat(activeChatId).then((msgs) => {
       setMessages(msgs as ConsultantMessage[]);
@@ -124,8 +127,9 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
     if (!el) return;
     const checkBottom = () => setIsAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight < 40);
     el.addEventListener("scroll", checkBottom);
+    checkBottom();
     return () => el.removeEventListener("scroll", checkBottom);
-  }, []);
+  }, [open, activeChatId]);
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -160,14 +164,25 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
       setActiveChatId(chatId);
     }
 
-    setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
+    setMessages((prev) => [...prev, { role: "user", content: trimmed }, { role: "assistant", content: "" }]);
     setInput("");
     setLoading(true);
     if (inputRef.current) inputRef.current.style.height = "auto";
 
+    // Listen for streaming tokens
+    const unlisten = await listen<string>("consultant-token", (event) => {
+      setMessages((prev) => {
+        const updated = [...prev];
+        const last = updated[updated.length - 1];
+        if (last?.role === "assistant") {
+          updated[updated.length - 1] = { ...last, content: last.content + event.payload };
+        }
+        return updated;
+      });
+    });
+
     try {
-      const response = await api.storyConsultant(apiKey, chatId, characterId, groupChatId, trimmed);
-      setMessages((prev) => [...prev, { role: "assistant", content: response }]);
+      await api.storyConsultant(apiKey, chatId, characterId, groupChatId, trimmed);
 
       // Generate title if this is the first message
       const currentChat = chats.find((c) => c.chat_id === chatId);
@@ -178,8 +193,18 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
         }).catch(() => {});
       }
     } catch (e) {
-      setMessages((prev) => [...prev, { role: "assistant", content: `Error: ${e}` }]);
+      setMessages((prev) => {
+        const updated = [...prev];
+        const last = updated[updated.length - 1];
+        if (last?.role === "assistant" && !last.content) {
+          updated[updated.length - 1] = { ...last, content: `Error: ${e}` };
+        } else {
+          updated.push({ role: "assistant", content: `Error: ${e}` });
+        }
+        return updated;
+      });
     } finally {
+      unlisten();
       setLoading(false);
     }
   }, [apiKey, characterId, groupChatId, loading, activeChatId, threadId, chats]);
@@ -213,8 +238,8 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
   };
 
   return (<>
-    <Dialog open={open} onClose={onClose} className="max-w-6xl">
-      <div className="flex h-[75vh] bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden relative">
+    <Dialog open={open} onClose={onClose} className="max-w-[90vw]">
+      <div className="flex h-[88vh] bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden relative">
         {worldImageUrl && (
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
             <img src={worldImageUrl} alt="" className="w-full h-full object-cover" />
@@ -223,53 +248,74 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
         )}
 
         {/* Sidebar */}
-        <div className="w-56 flex-shrink-0 border-r border-border/30 bg-card/90 backdrop-blur-sm flex flex-col relative z-[1]">
-          <div className="px-3 py-3 border-b border-border/30 flex items-center justify-between">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Chats</h3>
-            <button
-              onClick={createNewChat}
-              className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer"
-              title="New chat"
-            >
-              <Plus size={14} />
-            </button>
-          </div>
-          <div className="flex-1 overflow-y-auto py-1">
-            {chats.map((chat) => (
-              <div
-                key={chat.chat_id}
-                className={`group/chat flex items-center px-3 py-2 cursor-pointer transition-colors ${
-                  chat.chat_id === activeChatId ? "bg-accent" : "hover:bg-accent/50"
-                }`}
-                onClick={() => { setActiveChatId(chat.chat_id); setShowPrompts(false); }}
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium truncate">{chat.title}</p>
-                  <p className="text-[10px] text-muted-foreground/60">
-                    {new Date(chat.created_at).toLocaleDateString([], { month: "short", day: "numeric" })}
-                    {" · "}
-                    {new Date(chat.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                  </p>
-                </div>
+        {sidebarOpen && (
+          <div className="w-56 flex-shrink-0 border-r border-border/30 bg-card/90 backdrop-blur-sm flex flex-col relative z-[1]">
+            <div className="px-3 py-3 border-b border-border/30 flex items-center justify-between">
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Chats</h3>
+              <div className="flex items-center gap-0.5">
                 <button
-                  onClick={(e) => { e.stopPropagation(); setDeleteChatId(chat.chat_id); }}
-                  className="flex-shrink-0 w-5 h-5 rounded flex items-center justify-center opacity-0 group-hover/chat:opacity-100 transition-opacity text-muted-foreground hover:text-destructive cursor-pointer"
+                  onClick={createNewChat}
+                  className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer"
+                  title="New chat"
                 >
-                  <Trash2 size={10} />
+                  <Plus size={14} />
+                </button>
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer"
+                  title="Collapse sidebar"
+                >
+                  <PanelLeftClose size={14} />
                 </button>
               </div>
-            ))}
-            {chats.length === 0 && (
-              <p className="text-xs text-muted-foreground/40 px-3 py-4 text-center">No chats yet</p>
-            )}
+            </div>
+            <div className="flex-1 overflow-y-auto py-1">
+              {chats.map((chat) => (
+                <div
+                  key={chat.chat_id}
+                  className={`group/chat relative flex items-center px-3 py-2 cursor-pointer transition-colors ${
+                    chat.chat_id === activeChatId ? "bg-accent" : "hover:bg-accent/50"
+                  }`}
+                  onClick={() => { setActiveChatId(chat.chat_id); setShowPrompts(false); }}
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium truncate">{chat.title}</p>
+                    <p className="text-[10px] font-medium text-foreground/70 hidden group-hover/chat:block whitespace-normal leading-snug mt-0.5">{chat.title}</p>
+                    <p className="text-[10px] text-muted-foreground/60">
+                      {new Date(chat.created_at).toLocaleDateString([], { month: "short", day: "numeric" })}
+                      {" · "}
+                      {new Date(chat.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </p>
+                  </div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setDeleteChatId(chat.chat_id); }}
+                    className="flex-shrink-0 w-5 h-5 rounded flex items-center justify-center opacity-0 group-hover/chat:opacity-100 transition-opacity text-muted-foreground hover:text-destructive cursor-pointer"
+                  >
+                    <Trash2 size={10} />
+                  </button>
+                </div>
+              ))}
+              {chats.length === 0 && (
+                <p className="text-xs text-muted-foreground/40 px-3 py-4 text-center">No chats yet</p>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Main chat area */}
         <div className="flex-1 flex flex-col relative z-[1]">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-card/95 relative z-[1]">
             <div className="flex items-center gap-2">
+              {!sidebarOpen && (
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className="w-7 h-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer mr-1"
+                  title="Show sidebar"
+                >
+                  <PanelLeftOpen size={15} />
+                </button>
+              )}
               <Sparkles size={16} className="text-primary" />
               <h3 className="font-semibold text-sm">Story Consultant</h3>
             </div>
@@ -321,7 +367,10 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                     <p className="text-xs text-muted-foreground/40 mt-1">Click Ideas for inspiration, or type your own question.</p>
                   </div>
                 )}
-                {messages.map((msg, i) => (
+                {messages.map((msg, i) => {
+                  // Hide empty assistant message (typing indicator covers this state)
+                  if (msg.role === "assistant" && !msg.content) return null;
+                  return (
                   <div key={i} className={`group flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                     <div className={`relative max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                       msg.role === "user"
@@ -345,7 +394,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                         </div>
                       )}
                       {msg.role === "assistant" ? (
-                        <div className="prose prose-sm max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-secondary-foreground)] [--tw-prose-bold:var(--color-secondary-foreground)] [--tw-prose-links:var(--color-primary)]">
+                        <div className="prose prose-sm max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-secondary-foreground)] [--tw-prose-headings:var(--color-secondary-foreground)] [--tw-prose-bold:var(--color-secondary-foreground)] [--tw-prose-bullets:var(--color-secondary-foreground)] [--tw-prose-counters:var(--color-secondary-foreground)] [--tw-prose-links:var(--color-primary)]">
                           <Markdown components={markdownComponents}>{formatMessage(msg.content)}</Markdown>
                         </div>
                       ) : (
@@ -367,9 +416,11 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                       </button>
                     </div>
                   </div>
-                ))}
-                {loading && (
-                  <div className="flex justify-start">
+                  );
+                })}
+                {/* Typing indicator shows only before first token arrives */}
+                {loading && messages.length > 0 && messages[messages.length - 1]?.role === "assistant" && !messages[messages.length - 1]?.content && (
+                  <div className="flex justify-start -mt-4">
                     <div className="bg-secondary/60 rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1.5 border border-border/30 backdrop-blur-sm">
                       <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60 animate-bounce [animation-delay:0ms]" />
                       <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60 animate-bounce [animation-delay:150ms]" />

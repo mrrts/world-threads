@@ -97,6 +97,96 @@ pub async fn chat_completion_with_base(base_url: &str, api_key: &str, request: &
     serde_json::from_str(&body).map_err(|e| format!("Parse error: {e}"))
 }
 
+// ─── Streaming Chat Completion ──────────────────────────────────────────────
+
+#[derive(Debug, Serialize, Clone)]
+pub struct StreamingRequest {
+    pub model: String,
+    pub messages: Vec<ChatMessage>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub temperature: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_completion_tokens: Option<u32>,
+    pub stream: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct StreamChunk {
+    choices: Vec<StreamChoice>,
+}
+
+#[derive(Debug, Deserialize)]
+struct StreamChoice {
+    delta: StreamDelta,
+    finish_reason: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct StreamDelta {
+    content: Option<String>,
+}
+
+/// Stream a chat completion, emitting each token chunk as a Tauri event.
+/// Returns the full assembled response text.
+pub async fn chat_completion_stream(
+    base_url: &str,
+    api_key: &str,
+    request: &StreamingRequest,
+    app_handle: &tauri::AppHandle,
+    event_name: &str,
+) -> Result<String, String> {
+    use futures_util::StreamExt;
+
+    let client = Client::new();
+    let url = format!("{base_url}/chat/completions");
+    let mut builder = client.post(&url).json(request);
+    if !api_key.is_empty() {
+        builder = builder.header("Authorization", format!("Bearer {api_key}"));
+    }
+
+    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let status = resp.status();
+    if !status.is_success() {
+        let body = resp.text().await.unwrap_or_default();
+        if let Ok(err) = serde_json::from_str::<ApiError>(&body) {
+            return Err(format!("API error ({}): {}", status, err.error.message));
+        }
+        return Err(format!("API error ({}): {}", status, body));
+    }
+
+    let mut full_text = String::new();
+    let mut stream = resp.bytes_stream();
+
+    let mut buffer = String::new();
+
+    while let Some(chunk_result) = stream.next().await {
+        let chunk = chunk_result.map_err(|e| format!("Stream error: {e}"))?;
+        buffer.push_str(&String::from_utf8_lossy(&chunk));
+
+        // Process complete SSE lines
+        while let Some(line_end) = buffer.find('\n') {
+            let line = buffer[..line_end].trim().to_string();
+            buffer = buffer[line_end + 1..].to_string();
+
+            if line.is_empty() || line == "data: [DONE]" {
+                continue;
+            }
+            if let Some(json_str) = line.strip_prefix("data: ") {
+                if let Ok(parsed) = serde_json::from_str::<StreamChunk>(json_str) {
+                    for choice in &parsed.choices {
+                        if let Some(content) = &choice.delta.content {
+                            full_text.push_str(content);
+                            let _ = tauri::Emitter::emit(app_handle, event_name, content.clone());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Ok(full_text)
+}
+
 // ─── Image Generation ───────────────────────────────────────────────────────
 
 #[derive(Debug, Serialize)]
