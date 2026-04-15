@@ -53,6 +53,7 @@ export function IllustrationMessage({
   downloadedId, setDownloadedId, loadIllustrations,
 }: Props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showRegenConfirm, setShowRegenConfirm] = useState(false);
 
   return (<>
     <div data-message-id={msg.message_id} className="flex justify-center my-3">
@@ -135,7 +136,7 @@ export function IllustrationMessage({
               </div>
               <div className="relative group/regen">
                 <button
-                  onClick={() => store.regenerateIllustration(msg.message_id)}
+                  onClick={() => setShowRegenConfirm(true)}
                   className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors backdrop-blur-sm"
                 >
                   <RefreshCw size={14} />
@@ -259,6 +260,32 @@ export function IllustrationMessage({
             }}
           >
             Delete
+          </Button>
+        </div>
+      </div>
+    </Dialog>
+
+    <Dialog open={showRegenConfirm} onClose={() => setShowRegenConfirm(false)} className="max-w-xs">
+      <div className="p-5 space-y-4 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl shadow-black/50">
+        <div className="flex items-center gap-2">
+          <RefreshCw size={18} className="text-primary" />
+          <h3 className="font-semibold">Regenerate Illustration</h3>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          This will replace the current illustration with a new one. The original cannot be recovered.
+        </p>
+        <div className="flex justify-end gap-2">
+          <Button variant="ghost" size="sm" onClick={() => setShowRegenConfirm(false)}>
+            Cancel
+          </Button>
+          <Button
+            size="sm"
+            onClick={() => {
+              setShowRegenConfirm(false);
+              store.regenerateIllustration(msg.message_id);
+            }}
+          >
+            Regenerate
           </Button>
         </div>
       </div>

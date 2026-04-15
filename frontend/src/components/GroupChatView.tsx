@@ -294,11 +294,11 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
           )
         )}
         <div className="space-y-3 max-w-2xl mx-auto">
-          {store.messages.filter((m) => m.content || m.role === "illustration").map((msg, msgIdx) => {
+          {store.messages.filter((m) => m.content || m.role === "illustration").map((msg, msgIdx, filteredMsgs) => {
             const isUser = msg.role === "user";
             const isNarrative = msg.role === "narrative";
             const isPending = msg.message_id.startsWith("pending-");
-            const prevMsg = msgIdx > 0 ? store.messages[msgIdx - 1] : undefined;
+            const prevMsg = msgIdx > 0 ? filteredMsgs[msgIdx - 1] : undefined;
 
             if (isNarrative) {
               return (<React.Fragment key={msg.message_id}>

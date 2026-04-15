@@ -219,8 +219,25 @@ pub async fn run_narrative_streaming(
     }
     msgs.push(openai::ChatMessage { role: "system".to_string(), content: system_content });
 
+    let mut last_time: Option<String> = None;
     for m in recent_messages {
         if m.role == "illustration" || m.role == "video" { continue; }
+        if let Some(ref wt) = m.world_time {
+            if last_time.as_deref() != Some(wt) {
+                let formatted = wt.split(' ').map(|w| {
+                    let mut c = w.chars();
+                    match c.next() {
+                        Some(first) => first.to_uppercase().to_string() + &c.as_str().to_lowercase(),
+                        None => String::new(),
+                    }
+                }).collect::<Vec<_>>().join(" ");
+                msgs.push(openai::ChatMessage {
+                    role: "system".to_string(),
+                    content: format!("[It is now {formatted}.]"),
+                });
+                last_time = Some(wt.clone());
+            }
+        }
         msgs.push(openai::ChatMessage {
             role: if m.role == "narrative" || m.role == "context" { "assistant".to_string() } else { m.role.clone() },
             content: if m.role == "context" {
@@ -411,9 +428,26 @@ pub async fn run_narrative_with_base(
         content: system_content,
     });
 
+    let mut last_time: Option<String> = None;
     for m in recent_messages {
         if m.role == "illustration" || m.role == "video" {
             continue;
+        }
+        if let Some(ref wt) = m.world_time {
+            if last_time.as_deref() != Some(wt) {
+                let formatted = wt.split(' ').map(|w| {
+                    let mut c = w.chars();
+                    match c.next() {
+                        Some(first) => first.to_uppercase().to_string() + &c.as_str().to_lowercase(),
+                        None => String::new(),
+                    }
+                }).collect::<Vec<_>>().join(" ");
+                msgs.push(openai::ChatMessage {
+                    role: "system".to_string(),
+                    content: format!("[It is now {formatted}.]"),
+                });
+                last_time = Some(wt.clone());
+            }
         }
         msgs.push(openai::ChatMessage {
             role: if m.role == "narrative" || m.role == "context" { "assistant".to_string() } else { m.role.clone() },
