@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Markdown from "react-markdown";
 import { Dialog } from "@/components/ui/dialog";
-import { X, Loader2, Send, Lightbulb, Sparkles, Trash2, ChevronDown, Pencil, Plus, PanelLeftClose, PanelLeftOpen, Download } from "lucide-react";
+import { X, Loader2, Send, Lightbulb, Sparkles, Trash2, ChevronDown, Pencil, Plus, PanelLeftClose, PanelLeftOpen, Download, BookOpen } from "lucide-react";
 import { formatMessage, markdownComponents, remarkPlugins, rehypePlugins } from "./formatMessage";
 import { listen } from "@tauri-apps/api/event";
 import { api, type ConsultantChat } from "@/lib/tauri";
@@ -86,6 +86,9 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
   const [deleteIdx, setDeleteIdx] = useState<number | null>(null);
   const [deleteChatId, setDeleteChatId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [importPreview, setImportPreview] = useState<{ role: string; content: string; speaker_name: string } | null>(null);
+  const [showImportPreview, setShowImportPreview] = useState(false);
+  const importHoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -115,6 +118,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
   // Load messages when active chat changes (skip if currently sending — send manages state itself)
   useEffect(() => {
     if (loading) return;
+    setImportPreview(null);
     if (!activeChatId) { setMessages([]); return; }
     api.loadConsultantChat(activeChatId).then((msgs) => {
       setMessages(msgs as ConsultantMessage[]);
@@ -229,6 +233,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
     try {
       const msg = await api.importChatMessages(chatId, characterId, groupChatId);
       setMessages((prev) => [...prev, msg as ConsultantMessage]);
+      setImportPreview(null); // Clear cache so next hover fetches updated last seen
       setTimeout(() => { const el = scrollRef.current; if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" }); }, 50);
     } catch (e) {
       // Show "no new messages" inline rather than as an error
@@ -530,7 +535,18 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
               >
                 {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
               </button>
-              <div className="relative group/import">
+              <div className="relative"
+                onMouseEnter={() => {
+                  if (importHoverTimer.current) clearTimeout(importHoverTimer.current);
+                  setShowImportPreview(true);
+                  if (activeChatId && !importPreview) {
+                    api.getLastSeenMessage(activeChatId).then((p) => setImportPreview(p));
+                  }
+                }}
+                onMouseLeave={() => {
+                  importHoverTimer.current = setTimeout(() => setShowImportPreview(false), 200);
+                }}
+              >
                 <button
                   onClick={handleImport}
                   disabled={loading}
@@ -538,7 +554,38 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                 >
                   <Download size={16} />
                 </button>
-                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/import:opacity-100 pointer-events-none transition-opacity">Import Latest Messages</span>
+                {showImportPreview && (
+                  <div className="absolute bottom-full right-0 mb-2 w-80 bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                    <div className="px-3 py-2 border-b border-border/50">
+                      <p className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground/60">Import Latest Messages</p>
+                      <p className="text-[10px] text-muted-foreground/40 mt-0.5">Last seen:</p>
+                    </div>
+                    {importPreview ? (
+                      <div className="p-3">
+                        {importPreview.role === "narrative" ? (
+                          <div className="rounded-lg px-3 py-2 bg-amber-950/30 border border-amber-700/20 text-amber-100/80 text-xs italic leading-relaxed">
+                            <div className="flex items-center gap-1 mb-1 text-[9px] uppercase tracking-wider text-amber-500/60 font-semibold not-italic">
+                              <BookOpen size={9} />
+                              <span>Narrative</span>
+                            </div>
+                            <p className="line-clamp-3">{importPreview.content}</p>
+                          </div>
+                        ) : (
+                          <div className={`rounded-lg px-3 py-2 text-xs leading-relaxed ${
+                            importPreview.role === "user"
+                              ? "bg-primary/20 text-primary-foreground/80"
+                              : "bg-secondary/40 text-secondary-foreground/80 border border-border/20"
+                          }`}>
+                            <p className="text-[9px] font-semibold text-muted-foreground/60 mb-0.5">{importPreview.speaker_name}</p>
+                            <p className="line-clamp-3">{importPreview.content}</p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="p-3 text-xs text-muted-foreground/50 text-center">No previous context</div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>

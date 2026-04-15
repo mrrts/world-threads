@@ -279,6 +279,71 @@ pub fn import_chat_messages_cmd(
     })
 }
 
+/// Get the last seen message for a consultant chat (for preview on hover).
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LastSeenPreview {
+    pub message_id: String,
+    pub role: String,
+    pub content: String,
+    pub speaker_name: String,
+    pub created_at: String,
+}
+
+#[tauri::command]
+pub fn get_last_seen_message_cmd(
+    db: State<'_, Database>,
+    chat_id: String,
+) -> Result<Option<LastSeenPreview>, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+
+    let last_seen_id: Option<String> = conn.query_row(
+        "SELECT last_seen_message_id FROM consultant_chats WHERE chat_id = ?1",
+        params![chat_id], |r| r.get(0),
+    ).ok().flatten();
+
+    let Some(msg_id) = last_seen_id else { return Ok(None) };
+
+    // Try individual messages first, then group messages
+    let msg: Option<Message> = conn.query_row(
+        &format!("SELECT {} FROM messages WHERE message_id = ?1", crate::db::queries::MSG_COLS),
+        params![msg_id], crate::db::queries::row_to_message,
+    ).ok().or_else(|| conn.query_row(
+        &format!("SELECT {} FROM group_messages WHERE message_id = ?1", crate::db::queries::MSG_COLS),
+        params![msg_id], crate::db::queries::row_to_message,
+    ).ok());
+
+    let Some(m) = msg else { return Ok(None) };
+    if m.role == "illustration" || m.role == "video" { return Ok(None); }
+
+    let speaker_name = match m.role.as_str() {
+        "user" => {
+            let world_id: Option<String> = conn.query_row(
+                "SELECT world_id FROM threads WHERE thread_id = ?1",
+                params![m.thread_id], |r| r.get(0),
+            ).ok();
+            world_id.and_then(|wid| get_user_profile(&conn, &wid).ok().map(|p| p.display_name))
+                .unwrap_or_else(|| "You".to_string())
+        }
+        "assistant" => {
+            m.sender_character_id.as_ref()
+                .and_then(|id| get_character(&conn, id).ok())
+                .map(|c| c.display_name)
+                .unwrap_or_else(|| "Character".to_string())
+        }
+        "narrative" => "Narrative".to_string(),
+        "context" => "Context".to_string(),
+        _ => m.role.clone(),
+    };
+
+    Ok(Some(LastSeenPreview {
+        message_id: m.message_id,
+        role: m.role,
+        content: m.content,
+        speaker_name,
+        created_at: m.created_at,
+    }))
+}
+
 /// Generate a short title for a consultant chat based on the first message.
 #[tauri::command]
 pub async fn generate_consultant_title_cmd(

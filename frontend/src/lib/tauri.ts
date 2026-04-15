@@ -398,6 +398,8 @@ export const api = {
     invoke<void>("save_consultant_messages_cmd", { chatId, messages }),
   importChatMessages: (chatId: string, characterId: string | null, groupChatId: string | null) =>
     invoke<{ role: string; content: string }>("import_chat_messages_cmd", { chatId, characterId, groupChatId }),
+  getLastSeenMessage: (chatId: string) =>
+    invoke<{ message_id: string; role: string; content: string; speaker_name: string; created_at: string } | null>("get_last_seen_message_cmd", { chatId }),
   generateNarrative: (apiKey: string, characterId: string, customInstructions?: string) =>
     invoke<NarrativeResult>("generate_narrative_cmd", { apiKey, characterId, customInstructions: customInstructions ?? null }),
   generateIllustration: (apiKey: string, characterId: string, qualityTier?: string, customInstructions?: string, previousIllustrationId?: string, includeSceneSummary?: boolean) =>

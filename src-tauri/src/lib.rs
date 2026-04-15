@@ -143,6 +143,7 @@ pub fn run() {
             truncate_consultant_chat_cmd,
             save_consultant_messages_cmd,
             import_chat_messages_cmd,
+            get_last_seen_message_cmd,
             reset_to_message_cmd,
             get_last_message_time_cmd,
             get_messages_cmd,
