@@ -179,6 +179,35 @@ export function IllustrationCarouselModal({
     return allIllustrations.map((i) => ({ type: "illustration" as const, ...i }));
   }, [showDayPages, mixedSlides, allIllustrations, allMessages.length]);
 
+  // Arrow key navigation (must be before early returns to respect Rules of Hooks)
+  useEffect(() => {
+    if (!illustrationModalId || modalSlideshow.active) return;
+    const handler = (e: KeyboardEvent) => {
+      const selId = modalSelectedId ?? illustrationModalId;
+      let idx = slides.findIndex((s) => s.type === "illustration" && s.id === selId);
+      if (idx < 0 && modalSelectedId?.startsWith("__day_")) {
+        const dayNum = parseInt(modalSelectedId.replace("__day_", ""), 10);
+        idx = slides.findIndex((s) => s.type === "day-page" && s.day === dayNum);
+      }
+      if (idx < 0) idx = 0;
+      if (e.key === "ArrowRight") {
+        const next = idx >= slides.length - 1 ? 0 : idx + 1;
+        const target = slides[next];
+        if (target?.type === "illustration") { setModalSelectedId(target.id); setModalImageLoading(true); }
+        else if (target?.type === "day-page") { setModalSelectedId(`__day_${target.day}`); setModalImageLoading(false); }
+        setModalPlayingVideo(false);
+      } else if (e.key === "ArrowLeft") {
+        const prev = idx <= 0 ? slides.length - 1 : idx - 1;
+        const target = slides[prev];
+        if (target?.type === "illustration") { setModalSelectedId(target.id); setModalImageLoading(true); }
+        else if (target?.type === "day-page") { setModalSelectedId(`__day_${target.day}`); setModalImageLoading(false); }
+        setModalPlayingVideo(false);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [illustrationModalId, modalSlideshow.active, slides, modalSelectedId]);
+
   if (!illustrationModalId) return null;
 
   // Find the current slide index based on modalSelectedId
@@ -223,17 +252,6 @@ export function IllustrationCarouselModal({
 
   const goNext = () => navigateTo(currentSlideIdx >= slides.length - 1 ? 0 : currentSlideIdx + 1);
   const goPrev = () => navigateTo(currentSlideIdx <= 0 ? slides.length - 1 : currentSlideIdx - 1);
-
-  // Arrow key navigation
-  useEffect(() => {
-    if (!illustrationModalId || modalSlideshow.active) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") goNext();
-      else if (e.key === "ArrowLeft") goPrev();
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  });
 
   // Override slide index finding for day pages (synthetic IDs)
   if (isDayPage && modalSelectedId?.startsWith("__day_")) {
