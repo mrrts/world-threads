@@ -91,10 +91,10 @@ export function IllustrationPickerModal({
                   <div className="relative mt-1.5">
                     <button
                       onClick={() => setShowPicker(!showPicker)}
-                      className="text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors cursor-pointer flex items-center gap-0.5"
+                      className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors cursor-pointer flex items-center gap-1"
                     >
-                      Change reference
-                      <ChevronDown size={10} className={`transition-transform ${showPicker ? "rotate-180" : ""}`} />
+                      Change reference image
+                      <ChevronDown size={12} className={`transition-transform ${showPicker ? "rotate-180" : ""}`} />
                     </button>
                     {showPicker && (
                       <div className="absolute left-0 top-full mt-1 z-10 flex gap-1.5 bg-card border border-border rounded-lg p-2 shadow-xl shadow-black/30 animate-in fade-in zoom-in-95 duration-150">
@@ -106,7 +106,7 @@ export function IllustrationPickerModal({
                               setUsePreviousScene(true);
                               setShowPicker(false);
                             }}
-                            className={`flex-shrink-0 w-16 h-11 rounded-md overflow-hidden cursor-pointer transition-all ${
+                            className={`flex-shrink-0 w-32 h-22 rounded-md overflow-hidden cursor-pointer transition-all ${
                               (selectedRef?.id ?? recentIllustrations[0]?.id) === illus.id
                                 ? "ring-2 ring-emerald-500 ring-offset-1 ring-offset-card"
                                 : "ring-1 ring-border opacity-70 hover:opacity-100"

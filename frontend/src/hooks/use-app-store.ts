@@ -867,6 +867,7 @@ export function useAppStore() {
         adjustingMessageId: null,
         messages: s.messages.map((m) => m.message_id === messageId ? updated : m),
       }));
+      if (state.notifyOnMessage) playChime();
     } catch (e) {
       setState((s) => ({
         ...s,
