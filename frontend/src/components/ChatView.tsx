@@ -642,7 +642,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
       />
 
       <div className="px-4 py-3 border-t border-border relative z-10 bg-background">
-        <div className="flex gap-2 max-w-2xl mx-auto items-stretch">
+        <div className="flex gap-2 mx-auto items-stretch" style={{ maxWidth: "747px" }}>
           <div className="flex-shrink-0 flex flex-col items-center gap-1 justify-center">
             <label className="flex items-center gap-1.5 cursor-pointer select-none" title="When on, the character responds automatically after each message">
               <span className={`text-[10px] font-medium ${store.autoRespond ? "text-foreground/70" : "text-muted-foreground/50"}`}>Auto‑Respond</span>

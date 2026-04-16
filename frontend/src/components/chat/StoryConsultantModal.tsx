@@ -193,6 +193,9 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
         if (last?.role === "assistant") {
           updated[updated.length - 1] = { ...last, content: last.content + event.payload };
         }
+        // Auto-scroll while streaming
+        const el = scrollRef.current;
+        if (el) requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; });
         return updated;
       });
     });
