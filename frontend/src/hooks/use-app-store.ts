@@ -496,6 +496,7 @@ export function useAppStore() {
           sending: null,
           sendingCharacterId: null,
         }));
+        if (state.notifyOnMessage) playChime();
       }
     } catch (e) {
       setState((s) => ({
@@ -506,7 +507,7 @@ export function useAppStore() {
         messages: s.messages.filter((m) => m.message_id !== optimisticMsg.message_id),
       }));
     }
-  }, [state.activeGroupChat, state.apiKey, state.autoRespond]);
+  }, [state.activeGroupChat, state.apiKey, state.autoRespond, state.notifyOnMessage]);
 
   const promptGroupCharacter = useCallback(async (characterId: string, addressTo?: string) => {
     if (!state.activeGroupChat || !state.apiKey) return;
@@ -531,6 +532,7 @@ export function useAppStore() {
           totalMessages: s.totalMessages + 1,
           sendingCharacterId: null,
         }));
+        if (state.notifyOnMessage) playChime();
       }
       setState((s) => ({ ...s, sending: null }));
     } catch (e) {
@@ -540,7 +542,7 @@ export function useAppStore() {
         chatError: String(e),
       }));
     }
-  }, [state.activeGroupChat, state.apiKey, state.autoRespond]);
+  }, [state.activeGroupChat, state.apiKey, state.autoRespond, state.notifyOnMessage]);
 
   const selectUserProfile = useCallback(() => {
     setState((s) => ({ ...s, editingUserProfile: true }));
@@ -835,7 +837,7 @@ export function useAppStore() {
     } catch (e) {
       setState((s) => ({ ...s, sending: null, generatingNarrative: null, chatError: String(e) }));
     }
-  }, [state.activeCharacter, state.activeGroupChat, state.apiKey]);
+  }, [state.activeCharacter, state.activeGroupChat, state.apiKey, state.notifyOnMessage]);
 
   const generateIllustration = useCallback(async (qualityTier?: string, customInstructions?: string, previousIllustrationId?: string, includeSceneSummary?: boolean) => {
     const isGroup = !!state.activeGroupChat && !state.activeCharacter;
@@ -875,7 +877,7 @@ export function useAppStore() {
         chatError: String(e),
       }));
     }
-  }, [state.apiKey, state.activeGroupChat, state.activeCharacter]);
+  }, [state.apiKey, state.activeGroupChat, state.activeCharacter, state.notifyOnMessage]);
 
   const editMessageContent = useCallback(async (messageId: string, content: string) => {
     const isGroup = !!state.activeGroupChat && !state.activeCharacter;
@@ -932,10 +934,11 @@ export function useAppStore() {
         result = await api.regenerateIllustration(state.apiKey, entityId, messageId);
       }
       setState((s) => ({ ...s, messages: [...s.messages, result.illustration_message], totalMessages: s.totalMessages + 1, sending: null, generatingIllustration: null }));
+      if (state.notifyOnMessage) playChime();
     } catch (e) {
       setState((s) => ({ ...s, sending: null, generatingIllustration: null, chatError: String(e) }));
     }
-  }, [state.activeCharacter, state.activeGroupChat, state.apiKey]);
+  }, [state.activeCharacter, state.activeGroupChat, state.apiKey, state.notifyOnMessage]);
 
   const adjustIllustration = useCallback(async (messageId: string, instructions: string) => {
     const isGroup = !!state.activeGroupChat && !state.activeCharacter;
@@ -952,10 +955,11 @@ export function useAppStore() {
         result = await api.adjustIllustration(state.apiKey, entityId, messageId, instructions);
       }
       setState((s) => ({ ...s, messages: [...s.messages, result.illustration_message], totalMessages: s.totalMessages + 1, sending: null, generatingIllustration: null }));
+      if (state.notifyOnMessage) playChime();
     } catch (e) {
       setState((s) => ({ ...s, sending: null, generatingIllustration: null, chatError: String(e) }));
     }
-  }, [state.activeCharacter, state.activeGroupChat, state.apiKey]);
+  }, [state.activeCharacter, state.activeGroupChat, state.apiKey, state.notifyOnMessage]);
 
   const loadVideoFiles = useCallback(async (messages: Message[]) => {
     const illustrationIds = messages.filter((m) => m.role === "illustration").map((m) => m.message_id);
