@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
-import { Image, X, ChevronDown } from "lucide-react";
+import { Image, X, ChevronDown, Lightbulb } from "lucide-react";
 
 interface RecentIllustration {
   id: string;
@@ -68,6 +68,10 @@ export function IllustrationPickerModal({
             className="w-full min-h-[60px] max-h-[120px] resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
             rows={2}
           />
+          <div className="mt-1.5 flex items-start gap-1.5 text-[10px] text-muted-foreground/70 leading-snug">
+            <Lightbulb size={11} className="flex-shrink-0 mt-px text-amber-500/80" />
+            <span>Named character portraits will be sent as references, so you can refer to the characters by their names in third person.</span>
+          </div>
         </div>
         {hasPreviousIllustration && (
           <div>

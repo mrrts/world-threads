@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
-import { Video, X, Loader2 } from "lucide-react";
+import { Video, X, Loader2, Lightbulb } from "lucide-react";
 
 interface VideoGenerationModalProps {
   open: boolean;
@@ -108,6 +108,10 @@ export function VideoGenerationModal({
                 rows={2}
               />
               <p className="text-[10px] text-muted-foreground mt-1">Leave blank for a purely visual animation of the illustration.</p>
+              <div className="mt-1.5 flex items-start gap-1.5 text-[10px] text-muted-foreground/70 leading-snug">
+                <Lightbulb size={11} className="flex-shrink-0 mt-px text-amber-500/80" />
+                <span>Names and portraits are not sent along as references; refer to the subjects generically (for example, "The man on the left" or "The blonde woman in the foreground").</span>
+              </div>
             </div>
 
             <label className="flex items-center gap-2 cursor-pointer select-none">
