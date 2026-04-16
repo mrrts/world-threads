@@ -848,10 +848,11 @@ export function useAppStore() {
         ? await api.generateGroupIllustration(state.apiKey, entityId, qualityTier, customInstructions, previousIllustrationId, includeSceneSummary)
         : await api.generateIllustration(state.apiKey, entityId, qualityTier, customInstructions, previousIllustrationId, includeSceneSummary);
       setState((s) => ({ ...s, messages: [...s.messages, result.illustration_message], totalMessages: s.totalMessages + 1, sending: null, generatingIllustration: null }));
+      if (state.notifyOnMessage) playChime();
     } catch (e) {
       setState((s) => ({ ...s, sending: null, generatingIllustration: null, chatError: String(e) }));
     }
-  }, [state.activeCharacter, state.activeGroupChat, state.apiKey]);
+  }, [state.activeCharacter, state.activeGroupChat, state.apiKey, state.notifyOnMessage]);
 
   const adjustMessage = useCallback(async (messageId: string, instructions: string) => {
     if (!state.apiKey) return;
@@ -988,6 +989,7 @@ export function useAppStore() {
     sendingCharacterId: null,
         videoFiles: { ...s.videoFiles, [illustrationMessageId]: videoFile },
       }));
+      if (state.notifyOnMessage) playChime();
     } catch (e) {
       const err = String(e);
       const userMsg = err.includes("DAILY_LIMIT_REACHED")
