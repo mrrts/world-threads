@@ -130,7 +130,7 @@ pub async fn run_dialogue_with_base(
     let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names);
 
     let token_limit = match response_length {
-        Some("Short") => 80,
+        Some("Short") => 150,
         Some("Medium") => 250,
         Some("Long") => 1024,
         _ => 200, // Auto
@@ -175,7 +175,7 @@ pub async fn run_dialogue_streaming(
     let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names);
 
     let token_limit = match response_length {
-        Some("Short") => 80,
+        Some("Short") => 150,
         Some("Medium") => 250,
         Some("Long") => 1024,
         _ => 200,
