@@ -60,6 +60,7 @@ export function CharacterEditor({ store }: Props) {
         boundaries: toArray(ch.boundaries),
         backstory_facts: toArray(ch.backstory_facts),
         avatar_color: ch.avatar_color,
+        sex: ch.sex ?? "male",
         state: structuredClone(ch.state),
       });
       setDirty(false);
