@@ -924,12 +924,9 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
       <IllustrationPickerModal
         open={showIllustrationPicker}
         onClose={() => setShowIllustrationPicker(false)}
-        onGenerate={(tier) => {
-          const prevIllus = store.messages.filter((m) => m.role === "illustration");
-          const lastIllus = prevIllus[prevIllus.length - 1];
-          const prevId = usePreviousScene && lastIllus ? lastIllus.message_id : undefined;
+        onGenerate={(tier, selectedId) => {
           setShowIllustrationPicker(false);
-          store.generateIllustration(tier, illustrationInstructions.trim() || undefined, prevId, includeSceneSummary);
+          store.generateIllustration(tier, illustrationInstructions.trim() || undefined, selectedId, includeSceneSummary);
           setIllustrationInstructions("");
           setUsePreviousScene(false);
           setIncludeSceneSummary(false);
@@ -942,6 +939,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         setIncludeSceneSummary={setIncludeSceneSummary}
         hasPreviousIllustration={store.messages.some((m) => m.role === "illustration")}
         previousIllustrationUrl={store.messages.filter((m) => m.role === "illustration").at(-1)?.content}
+        recentIllustrations={store.messages.filter((m) => m.role === "illustration").slice(-5).reverse().map((m) => ({ id: m.message_id, content: m.content }))}
       />
 
       <AdjustIllustrationModal

@@ -1,10 +1,16 @@
+import { useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
-import { Image, X } from "lucide-react";
+import { Image, X, ChevronDown } from "lucide-react";
+
+interface RecentIllustration {
+  id: string;
+  content: string;
+}
 
 interface IllustrationPickerModalProps {
   open: boolean;
   onClose: () => void;
-  onGenerate: (tier: string) => void;
+  onGenerate: (tier: string, selectedIllusId?: string) => void;
   illustrationInstructions: string;
   setIllustrationInstructions: (v: string) => void;
   usePreviousScene: boolean;
@@ -13,6 +19,8 @@ interface IllustrationPickerModalProps {
   setIncludeSceneSummary: (v: boolean) => void;
   hasPreviousIllustration: boolean;
   previousIllustrationUrl?: string;
+  /** Last 5 illustrations for reference picker */
+  recentIllustrations: RecentIllustration[];
 }
 
 export function IllustrationPickerModal({
@@ -27,9 +35,17 @@ export function IllustrationPickerModal({
   setIncludeSceneSummary,
   hasPreviousIllustration,
   previousIllustrationUrl,
+  recentIllustrations,
 }: IllustrationPickerModalProps) {
+  const [showPicker, setShowPicker] = useState(false);
+  const [selectedRef, setSelectedRef] = useState<RecentIllustration | null>(null);
+
+  // The displayed reference image: selected override or the default latest
+  const displayedUrl = selectedRef?.content ?? previousIllustrationUrl;
+  const displayedId = selectedRef?.id ?? recentIllustrations[0]?.id;
+
   return (
-    <Dialog open={open} onClose={onClose} className="max-w-sm">
+    <Dialog open={open} onClose={() => { onClose(); setSelectedRef(null); setShowPicker(false); }} className="max-w-sm">
       <div className="p-5 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -37,7 +53,7 @@ export function IllustrationPickerModal({
             <h3 className="font-semibold">Generate Illustration</h3>
           </div>
           <button
-            onClick={onClose}
+            onClick={() => { onClose(); setSelectedRef(null); setShowPicker(false); }}
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors cursor-pointer"
           >
             <X size={16} />
@@ -62,14 +78,48 @@ export function IllustrationPickerModal({
                 onChange={(e) => setUsePreviousScene(e.target.checked)}
                 className="accent-emerald-500 w-3.5 h-3.5"
               />
-              <span className="text-xs text-muted-foreground">Use previous illustration for visual continuity</span>
+              <span className="text-xs text-muted-foreground">Use reference image for visual continuity</span>
             </label>
-            {previousIllustrationUrl && (
-              <img
-                src={previousIllustrationUrl}
-                alt="Previous illustration"
-                className="mt-2 rounded-lg w-48 object-cover border border-border/30"
-              />
+            {displayedUrl && (
+              <div className="mt-2 relative">
+                <img
+                  src={displayedUrl}
+                  alt="Reference illustration"
+                  className="rounded-lg w-48 object-cover border border-border/30"
+                />
+                {recentIllustrations.length > 1 && (
+                  <div className="relative mt-1.5">
+                    <button
+                      onClick={() => setShowPicker(!showPicker)}
+                      className="text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors cursor-pointer flex items-center gap-0.5"
+                    >
+                      Change reference
+                      <ChevronDown size={10} className={`transition-transform ${showPicker ? "rotate-180" : ""}`} />
+                    </button>
+                    {showPicker && (
+                      <div className="absolute left-0 top-full mt-1 z-10 flex gap-1.5 bg-card border border-border rounded-lg p-2 shadow-xl shadow-black/30 animate-in fade-in zoom-in-95 duration-150">
+                        {recentIllustrations.map((illus) => (
+                          <button
+                            key={illus.id}
+                            onClick={() => {
+                              setSelectedRef(illus);
+                              setUsePreviousScene(true);
+                              setShowPicker(false);
+                            }}
+                            className={`flex-shrink-0 w-16 h-11 rounded-md overflow-hidden cursor-pointer transition-all ${
+                              (selectedRef?.id ?? recentIllustrations[0]?.id) === illus.id
+                                ? "ring-2 ring-emerald-500 ring-offset-1 ring-offset-card"
+                                : "ring-1 ring-border opacity-70 hover:opacity-100"
+                            }`}
+                          >
+                            <img src={illus.content} alt="" className="w-full h-full object-cover" />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
           </div>
         )}
@@ -90,7 +140,12 @@ export function IllustrationPickerModal({
           ] as const).map(({ tier, label }) => (
             <button
               key={tier}
-              onClick={() => onGenerate(tier)}
+              onClick={() => {
+                const refId = usePreviousScene ? displayedId : undefined;
+                onGenerate(tier, refId);
+                setSelectedRef(null);
+                setShowPicker(false);
+              }}
               className="flex-1 rounded-lg border border-border hover:border-emerald-500/40 hover:bg-emerald-500/5 px-3 py-2 transition-all cursor-pointer text-center"
             >
               <span className="text-xs font-medium">{label}</span>
