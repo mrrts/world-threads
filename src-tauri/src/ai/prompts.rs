@@ -49,7 +49,8 @@ pub fn build_dialogue_system_prompt(
     }
 
     if !character.identity.is_empty() {
-        parts.push(format!("IDENTITY:\n{}", character.identity));
+        let sex_prefix = if character.sex == "female" { "A woman." } else { "A man." };
+        parts.push(format!("IDENTITY:\n{sex_prefix} {}", character.identity));
     }
 
     let voice_rules = json_array_to_strings(&character.voice_rules);
@@ -322,10 +323,11 @@ pub fn build_narrative_system_prompt(
         }
     } else {
         pov.push_str(&format!(
-            "\n- {char} is a third-person character. Refer to {char} by name or as \"he\"/\"she\" — NEVER as \"you\", \"I\", or \"me\".\n\
+            "\n- {char} is a third-person character. Refer to {char} by name or as \"{pronoun}\" — NEVER as \"you\", \"I\", or \"me\".\n\
              - Example: \"You notice {char} glancing away...\" — NOT \"{user} notices...\" and NOT \"You glance away\" (when meaning {char}).\n\
              - NEVER write from {char}'s first-person perspective. No \"I felt\" or \"I noticed\" from {char}.",
             char = character.display_name,
+            pronoun = if character.sex == "female" { "she/her" } else { "he/him" },
             user = user_name,
         ));
     }
@@ -334,8 +336,9 @@ pub fn build_narrative_system_prompt(
     parts.push(pov);
 
     parts.push(format!(
-        "CHARACTER — {}:\n{}",
+        "CHARACTER — {}:\n{} {}",
         character.display_name,
+        if character.sex == "female" { "A woman." } else { "A man." },
         if character.identity.is_empty() {
             "A complex, vivid character.".to_string()
         } else {

@@ -342,6 +342,22 @@ export function CharacterEditor({ store }: Props) {
                     <Input className="flex-1 font-mono text-xs" value={form.avatar_color ?? ""} onChange={(e) => update({ avatar_color: e.target.value })} />
                   </div>
                 </Field>
+                <Field label="Sex">
+                  <div className="flex rounded-lg overflow-hidden border border-input">
+                    <button
+                      onClick={() => update({ sex: "male" })}
+                      className={`flex-1 px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer ${
+                        (form.sex ?? "male") === "male" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >Male</button>
+                    <button
+                      onClick={() => update({ sex: "female" })}
+                      className={`flex-1 px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer ${
+                        form.sex === "female" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >Female</button>
+                  </div>
+                </Field>
               </div>
             </FieldGroup>
 

@@ -634,6 +634,15 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         CREATE INDEX IF NOT EXISTS idx_consultant_messages_chat ON consultant_messages(chat_id);
     ")?;
 
+    // Add sex column to characters if missing, default to 'male'
+    let has_sex: bool = conn.query_row(
+        "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'sex'",
+        [], |r| r.get::<_, i64>(0),
+    ).unwrap_or(0) > 0;
+    if !has_sex {
+        conn.execute("ALTER TABLE characters ADD COLUMN sex TEXT NOT NULL DEFAULT 'male'", []).ok();
+    }
+
     // Add last_seen_message_id to consultant_chats if missing
     let has_last_seen: bool = conn.query_row(
         "SELECT COUNT(*) FROM pragma_table_info('consultant_chats') WHERE name = 'last_seen_message_id'",

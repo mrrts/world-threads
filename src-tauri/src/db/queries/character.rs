@@ -16,6 +16,7 @@ pub struct Character {
     pub relationships: Value,
     pub state: Value,
     pub avatar_color: String,
+    pub sex: String,
     pub is_archived: bool,
     pub created_at: String,
     pub updated_at: String,
@@ -23,19 +24,19 @@ pub struct Character {
 
 pub fn create_character(conn: &Connection, ch: &Character) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO characters (character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, is_archived, created_at, updated_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+        "INSERT INTO characters (character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)",
         params![ch.character_id, ch.world_id, ch.display_name, ch.identity,
             ch.voice_rules.to_string(), ch.boundaries.to_string(),
             ch.backstory_facts.to_string(), ch.relationships.to_string(),
-            ch.state.to_string(), ch.avatar_color, ch.is_archived, ch.created_at, ch.updated_at],
+            ch.state.to_string(), ch.avatar_color, ch.sex, ch.is_archived, ch.created_at, ch.updated_at],
     )?;
     Ok(())
 }
 
 pub fn get_character(conn: &Connection, character_id: &str) -> Result<Character, rusqlite::Error> {
     conn.query_row(
-        "SELECT character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, is_archived, created_at, updated_at FROM characters WHERE character_id = ?1",
+        "SELECT character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at FROM characters WHERE character_id = ?1",
         params![character_id],
         row_to_character,
     )
@@ -43,7 +44,7 @@ pub fn get_character(conn: &Connection, character_id: &str) -> Result<Character,
 
 pub fn list_characters(conn: &Connection, world_id: &str) -> Result<Vec<Character>, rusqlite::Error> {
     let mut stmt = conn.prepare(
-        "SELECT c.character_id, c.world_id, c.display_name, c.identity, c.voice_rules, c.boundaries, c.backstory_facts, c.relationships, c.state, c.avatar_color, c.is_archived, c.created_at, c.updated_at
+        "SELECT c.character_id, c.world_id, c.display_name, c.identity, c.voice_rules, c.boundaries, c.backstory_facts, c.relationships, c.state, c.avatar_color, c.sex, c.is_archived, c.created_at, c.updated_at
          FROM characters c
          LEFT JOIN threads t ON t.character_id = c.character_id
          LEFT JOIN (SELECT thread_id, MAX(created_at) AS last_msg FROM messages GROUP BY thread_id) m ON m.thread_id = t.thread_id
@@ -56,7 +57,7 @@ pub fn list_characters(conn: &Connection, world_id: &str) -> Result<Vec<Characte
 
 pub fn list_archived_characters(conn: &Connection, world_id: &str) -> Result<Vec<Character>, rusqlite::Error> {
     let mut stmt = conn.prepare(
-        "SELECT character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, is_archived, created_at, updated_at FROM characters WHERE world_id = ?1 AND is_archived = 1 ORDER BY updated_at DESC"
+        "SELECT character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at FROM characters WHERE world_id = ?1 AND is_archived = 1 ORDER BY updated_at DESC"
     )?;
     let rows = stmt.query_map(params![world_id], row_to_character)?;
     rows.collect()
@@ -80,11 +81,11 @@ pub fn unarchive_character(conn: &Connection, character_id: &str) -> Result<(), 
 
 pub fn update_character(conn: &Connection, ch: &Character) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "UPDATE characters SET display_name=?2, identity=?3, voice_rules=?4, boundaries=?5, backstory_facts=?6, relationships=?7, state=?8, avatar_color=?9, updated_at=datetime('now') WHERE character_id=?1",
+        "UPDATE characters SET display_name=?2, identity=?3, voice_rules=?4, boundaries=?5, backstory_facts=?6, relationships=?7, state=?8, avatar_color=?9, sex=?10, updated_at=datetime('now') WHERE character_id=?1",
         params![ch.character_id, ch.display_name, ch.identity,
             ch.voice_rules.to_string(), ch.boundaries.to_string(),
             ch.backstory_facts.to_string(), ch.relationships.to_string(),
-            ch.state.to_string(), ch.avatar_color],
+            ch.state.to_string(), ch.avatar_color, ch.sex],
     )?;
     Ok(())
 }
@@ -297,9 +298,10 @@ fn row_to_character(row: &rusqlite::Row) -> Result<Character, rusqlite::Error> {
         relationships: serde_json::from_str(&row.get::<_, String>(7)?).unwrap_or_default(),
         state: serde_json::from_str(&row.get::<_, String>(8)?).unwrap_or_default(),
         avatar_color: row.get(9)?,
-        is_archived: row.get(10)?,
-        created_at: row.get(11)?,
-        updated_at: row.get(12)?,
+        sex: row.get::<_, Option<String>>(10)?.unwrap_or_else(|| "male".to_string()),
+        is_archived: row.get(11)?,
+        created_at: row.get(12)?,
+        updated_at: row.get(13)?,
     })
 }
 

@@ -31,6 +31,7 @@ export interface Character {
   relationships: Record<string, unknown>;
   state: CharacterState;
   avatar_color: string;
+  sex: string;
   is_archived: boolean;
   created_at: string;
   updated_at: string;

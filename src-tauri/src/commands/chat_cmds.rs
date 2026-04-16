@@ -912,7 +912,7 @@ pub async fn reset_to_message_cmd(
                 identity: String::new(), voice_rules: serde_json::json!([]),
                 boundaries: serde_json::json!([]), backstory_facts: serde_json::json!([]),
                 relationships: serde_json::json!({}), state: serde_json::json!({}),
-                avatar_color: String::new(), is_archived: false,
+                avatar_color: String::new(), sex: "male".to_string(), is_archived: false,
                 created_at: String::new(), updated_at: String::new(),
             };
             (dummy, world, mc)

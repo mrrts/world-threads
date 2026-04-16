@@ -53,6 +53,7 @@ pub fn create_character_cmd(db: State<Database>, world_id: String, display_name:
             "last_seen": { "day_index": 1, "time_of_day": "MORNING" }
         }),
         avatar_color: "#a8c482".to_string(),
+        sex: "male".to_string(),
         is_archived: false,
         created_at: now.clone(),
         updated_at: now.clone(),

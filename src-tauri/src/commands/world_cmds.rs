@@ -52,6 +52,7 @@ pub fn create_world_cmd(db: State<Database>, name: String) -> Result<World, Stri
                 "last_seen": { "day_index": 1, "time_of_day": "MORNING" }
             }),
             avatar_color: colors[i].to_string(),
+            sex: "male".to_string(),
             is_archived: false,
             created_at: ch_now.clone(),
             updated_at: ch_now.clone(),
