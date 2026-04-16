@@ -634,6 +634,11 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         CREATE INDEX IF NOT EXISTS idx_consultant_messages_chat ON consultant_messages(chat_id);
     ")?;
 
+    // Remove location from world state JSON (was causing characters to mention town square)
+    conn.execute_batch("
+        UPDATE worlds SET state = json_remove(state, '$.location') WHERE json_extract(state, '$.location') IS NOT NULL;
+    ").ok();
+
     // Add sex column to characters if missing, default to 'male'
     let has_sex: bool = conn.query_row(
         "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'sex'",

@@ -12,7 +12,6 @@ pub fn create_world_cmd(db: State<Database>, name: String) -> Result<World, Stri
 
     let default_state = json!({
         "time": { "day_index": 1, "time_of_day": "MORNING" },
-        "location": { "current_scene": "town square" },
         "global_arcs": [],
         "facts": []
     });

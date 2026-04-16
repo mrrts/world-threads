@@ -15,7 +15,6 @@ export interface World {
 
 export interface WorldState {
   time: { day_index: number; time_of_day: string };
-  location: { current_scene: string };
   global_arcs: Array<{ arc_id: string; status: string; notes: string }>;
   facts: Array<{ fact_id: string; text: string; confidence: string }>;
 }

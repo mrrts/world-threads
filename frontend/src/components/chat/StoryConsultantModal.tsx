@@ -111,14 +111,9 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
 
   useEffect(() => {
     if (open && threadId) {
-      loadChats().then((list) => {
-        if (list && list.length > 0) {
-          setActiveChatId(list[0].chat_id);
-        } else {
-          setActiveChatId(null);
-          setMessages([]);
-        }
-      });
+      loadChats();
+      setActiveChatId(null);
+      setMessages([]);
     }
   }, [open, threadId]);
 

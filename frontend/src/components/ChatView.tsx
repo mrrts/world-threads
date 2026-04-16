@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Markdown from "react-markdown";
 import { formatMessage, markdownComponents, remarkPlugins, rehypePlugins } from "@/components/chat/formatMessage";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
-import { Send, Loader2, SmilePlus, X, Copy, ExternalLink, BookOpen, RotateCcw, MessageSquare, Compass, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, Play, Volume2, ChevronDown } from "lucide-react";
+import { Send, Loader2, SmilePlus, X, Copy, ExternalLink, BookOpen, RotateCcw, MessageSquare, Compass, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, Play, Volume2, ChevronDown, ChevronRight } from "lucide-react";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type { useAppStore } from "@/hooks/use-app-store";
 import { api, type Reaction } from "@/lib/tauri";
@@ -15,7 +15,6 @@ import { ChatErrorBar } from "@/components/chat/ChatErrorBar";
 import { AnimationReadyToast } from "@/components/chat/AnimationReadyToast";
 import { ResetConfirmModal } from "@/components/chat/ResetConfirmModal";
 import { RemoveVideoConfirmModal } from "@/components/chat/RemoveVideoConfirmModal";
-import { NarrationSettingsModal } from "@/components/chat/NarrationSettingsModal";
 import { IllustrationPickerModal } from "@/components/chat/IllustrationPickerModal";
 import { AdjustIllustrationModal } from "@/components/chat/AdjustIllustrationModal";
 import { VideoGenerationModal } from "@/components/chat/VideoGenerationModal";
@@ -44,6 +43,8 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
   const [showPortraitModal, setShowPortraitModal] = useState(false);
   const [showIdentityPopover, setShowIdentityPopover] = useState(false);
   const [showConsultant, setShowConsultant] = useState(false);
+  const [showSettingsPopover, setShowSettingsPopover] = useState(false);
+  const settingsPopoverRef = useRef<HTMLDivElement>(null);
 
   const charId = store.activeCharacter?.character_id;
   const charPortrait = store.activeCharacter ? store.activePortraits[store.activeCharacter?.character_id] : undefined;
@@ -116,6 +117,32 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
     playVideo,
   } = chatState;
 
+  // Close settings popover on outside click
+  useEffect(() => {
+    if (!showSettingsPopover) return;
+    const handler = (e: MouseEvent) => {
+      if (settingsPopoverRef.current && !settingsPopoverRef.current.contains(e.target as Node)) {
+        setShowSettingsPopover(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [showSettingsPopover]);
+
+  // Auto-save chat settings
+  useEffect(() => {
+    if (!charId || !narrationDirty) return;
+    const timer = setTimeout(async () => {
+      await Promise.all([
+        api.setSetting(`narration_tone.${charId}`, narrationTone),
+        api.setSetting(`narration_instructions.${charId}`, narrationInstructions),
+        api.setSetting(`response_length.${charId}`, responseLength),
+      ]);
+      setNarrationDirty(false);
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [narrationTone, narrationInstructions, responseLength, narrationDirty, charId]);
+
   const openGallery = useCallback(async () => {
     const lastIllus = store.messages.filter((m) => m.role === "illustration").at(-1);
     if (!lastIllus || !store.activeCharacter) return;
@@ -138,7 +165,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
     const onGallery = () => openGallery();
     const onConsultant = () => setShowConsultant(true);
     const onSummary = () => setShowSummary(true);
-    const onSettings = () => setShowNarrationSettings(true);
+    const onSettings = () => setShowSettingsPopover(true);
     window.addEventListener("wt:open-gallery", onGallery);
     window.addEventListener("wt:open-consultant", onConsultant);
     window.addEventListener("wt:open-summary", onSummary);
@@ -262,17 +289,6 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
             <Compass size={15} />
           </button>
           <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/consultant:opacity-100 pointer-events-none transition-opacity">Story Consultant</span>
-        </div>
-        <div className="relative group/settings">
-          <button
-            onClick={() => setShowNarrationSettings(true)}
-            className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer ${
-              (narrationTone !== "Cinematic" || responseLength !== "Short" || narrationInstructions) ? "text-amber-500 hover:text-amber-400 hover:bg-amber-500/10" : "text-muted-foreground hover:text-foreground hover:bg-accent"
-            }`}
-          >
-            <Settings size={15} />
-          </button>
-          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/settings:opacity-100 pointer-events-none transition-opacity">Settings</span>
         </div>
       </div>
 
@@ -708,6 +724,80 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
           >
             {isSending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
           </Button>
+          <div className="relative flex-shrink-0" ref={settingsPopoverRef}>
+            <button
+              onClick={() => setShowSettingsPopover(!showSettingsPopover)}
+              className={`w-10 self-stretch rounded-xl flex items-center justify-center transition-colors cursor-pointer ${
+                showSettingsPopover ? "bg-accent text-foreground" :
+                (narrationTone !== "Cinematic" || responseLength !== "Auto" || narrationInstructions) ? "text-amber-500 hover:text-amber-400 hover:bg-amber-500/10" : "text-muted-foreground hover:text-foreground hover:bg-accent"
+              }`}
+            >
+              <Settings size={16} />
+            </button>
+            {showSettingsPopover && (
+              <div className="absolute bottom-full right-0 mb-2 w-80 bg-card border border-border rounded-xl shadow-2xl shadow-black/40 p-4 space-y-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground block mb-1.5">Tone</label>
+                  <select
+                    value={narrationTone}
+                    onChange={(e) => { setNarrationTone(e.target.value); setNarrationDirty(true); }}
+                    className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+                  >
+                    {["Auto", "Humorous", "Romantic", "Action & Adventure", "Dark & Gritty", "Suspenseful", "Whimsical", "Melancholic", "Heroic", "Horror", "Noir", "Surreal", "Cozy & Warm", "Tense & Paranoid", "Poetic", "Cinematic", "Mythic", "Playful", "Bittersweet", "Ethereal", "Gritty Realism"].map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground block mb-1.5">Response Length</label>
+                  <div className="flex rounded-lg overflow-hidden border border-input">
+                    {["Auto", "Short", "Medium", "Long"].map((l) => (
+                      <button
+                        key={l}
+                        onClick={() => { setResponseLength(l); setNarrationDirty(true); }}
+                        className={`flex-1 px-2 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                          responseLength === l ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                        }`}
+                      >{l}</button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground block mb-1.5">Custom Instructions</label>
+                  <textarea
+                    value={narrationInstructions}
+                    onChange={(e) => { setNarrationInstructions(e.target.value); setNarrationDirty(true); }}
+                    placeholder="e.g. Describe the weather shifting..."
+                    className="w-full min-h-[60px] max-h-[120px] resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                    rows={2}
+                  />
+                </div>
+                {store.activeCharacter && onNavigateToCharacter && (
+                  <div className="pt-2 border-t border-border">
+                    <button
+                      onClick={() => { setShowSettingsPopover(false); onNavigateToCharacter(store.activeCharacter!.character_id); }}
+                      className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-accent transition-colors cursor-pointer text-xs text-muted-foreground hover:text-foreground"
+                    >
+                      {store.activePortraits[store.activeCharacter.character_id]?.data_url ? (
+                        <img src={store.activePortraits[store.activeCharacter.character_id].data_url} alt="" className="w-5 h-5 rounded-full object-cover ring-1 ring-border" />
+                      ) : (
+                        <span className="w-5 h-5 rounded-full ring-1 ring-white/10" style={{ backgroundColor: store.activeCharacter.avatar_color }} />
+                      )}
+                      <span className="font-medium">{store.activeCharacter.display_name} Settings</span>
+                      <ChevronRight size={12} className="ml-auto text-muted-foreground/50" />
+                    </button>
+                  </div>
+                )}
+                <button
+                  onClick={() => { setShowSettingsPopover(false); store.clearChatHistory(store.activeCharacter!.character_id); }}
+                  className="w-full flex items-center gap-1.5 px-2 py-1.5 text-xs text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors cursor-pointer"
+                >
+                  <Trash2 size={10} />
+                  Clear Chat History
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -765,41 +855,6 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         }}
         characterName={store.activeCharacter?.display_name}
         isUserMessage={store.messages.find((m) => m.message_id === resetConfirmId)?.role === "user" || false}
-      />
-
-      <NarrationSettingsModal
-        open={showNarrationSettings}
-        onClose={() => { setShowNarrationSettings(false); setNarrationDirty(false); }}
-        charId={charId}
-        narrationTone={narrationTone}
-        setNarrationTone={setNarrationTone}
-        narrationInstructions={narrationInstructions}
-        setNarrationInstructions={setNarrationInstructions}
-        responseLength={responseLength}
-        setResponseLength={setResponseLength}
-        narrationDirty={narrationDirty}
-        setNarrationDirty={setNarrationDirty}
-        onSave={async () => {
-          if (!charId) return;
-          await Promise.all([
-            api.setSetting(`narration_tone.${charId}`, narrationTone),
-            api.setSetting(`narration_instructions.${charId}`, narrationInstructions),
-            api.setSetting(`response_length.${charId}`, responseLength),
-          ]);
-          setNarrationDirty(false);
-          setShowNarrationSettings(false);
-        }}
-        onClearHistory={store.activeCharacter ? () => {
-          store.clearChatHistory(store.activeCharacter!.character_id);
-          setShowNarrationSettings(false);
-        } : undefined}
-        characters={store.activeCharacter ? [{
-          character_id: store.activeCharacter.character_id,
-          display_name: store.activeCharacter.display_name,
-          avatar_color: store.activeCharacter.avatar_color,
-          portrait_url: store.activePortraits[store.activeCharacter.character_id]?.data_url,
-        }] : []}
-        onNavigateToCharacter={onNavigateToCharacter}
       />
 
       <SummaryModal

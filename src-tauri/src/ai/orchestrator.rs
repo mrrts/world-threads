@@ -130,16 +130,16 @@ pub async fn run_dialogue_with_base(
     let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names);
 
     let token_limit = match response_length {
-        Some("Short") => 150,
-        Some("Medium") => 250,
-        Some("Long") => 1024,
-        _ => 200, // Auto
+        Some("Short") => Some(150),
+        Some("Medium") => Some(250),
+        Some("Long") => Some(1024),
+        _ => None, // Auto — no limit, let the model decide
     };
     let request = ChatRequest {
         model: model.to_string(),
         messages,
         temperature: Some(0.95),
-        max_completion_tokens: Some(token_limit),
+        max_completion_tokens: token_limit,
         response_format: None,
     };
 
@@ -175,16 +175,16 @@ pub async fn run_dialogue_streaming(
     let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names);
 
     let token_limit = match response_length {
-        Some("Short") => 150,
-        Some("Medium") => 250,
-        Some("Long") => 1024,
-        _ => 200,
+        Some("Short") => Some(150),
+        Some("Medium") => Some(250),
+        Some("Long") => Some(1024),
+        _ => None,
     };
     let request = openai::StreamingRequest {
         model: model.to_string(),
         messages,
         temperature: Some(0.95),
-        max_completion_tokens: Some(token_limit),
+        max_completion_tokens: token_limit,
         stream: true,
     };
 
