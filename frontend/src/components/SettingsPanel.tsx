@@ -25,7 +25,8 @@ export function SettingsPanel({ store }: Props) {
   const [localModels, setLocalModels] = useState<LocalModelInfo[]>([]);
   const [loadingModels, setLoadingModels] = useState(false);
   const [modelError, setModelError] = useState<string | null>(null);
-  const [latestBackup, setLatestBackup] = useState<{ file_name: string; timestamp: string } | null>(null);
+  const [backups, setBackups] = useState<Array<{ file_name: string; timestamp: string }>>([]);
+  const [selectedBackup, setSelectedBackup] = useState<string>("");
   const [restoringBackup, setRestoringBackup] = useState(false);
   const [backingUp, setBackingUp] = useState(false);
 
@@ -36,7 +37,7 @@ export function SettingsPanel({ store }: Props) {
 
   useEffect(() => {
     api.getGoogleApiKey().then(setGoogleApiKey);
-    api.getLatestBackup().then(setLatestBackup);
+    api.listBackups().then((list) => { setBackups(list); if (list.length > 0) setSelectedBackup(list[0].file_name); });
   }, []);
 
   const fetchLocalModels = useCallback(async (url: string) => {
@@ -301,74 +302,77 @@ export function SettingsPanel({ store }: Props) {
             </div>
           </FieldGroup>
 
-          <FieldGroup label="Restore Backup">
+          <FieldGroup label="Backups">
             <p className="text-xs text-muted-foreground/60 -mt-2">
-              Backups are created automatically every 20 minutes and on each app launch.
+              Backups are created automatically every hour and on each app launch.
             </p>
-            {latestBackup ? (
-              <div className="flex items-center justify-between py-2 px-4 rounded-lg border border-border bg-card/50">
+            <div className="space-y-3">
+              {backups.length > 0 ? (
                 <div>
-                  <p className="text-sm font-medium">Latest backup</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {latestBackup.timestamp} UTC
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={backingUp}
-                    onClick={async () => {
-                      setBackingUp(true);
-                      try {
-                        const info = await api.backupNow();
-                        setLatestBackup(info);
-                      } catch (e) {
-                        window.alert(`Backup failed: ${e}`);
-                      } finally {
-                        setBackingUp(false);
-                      }
-                    }}
+                  <label className="text-xs font-medium text-muted-foreground block mb-1.5">Select Backup</label>
+                  <select
+                    value={selectedBackup}
+                    onChange={(e) => setSelectedBackup(e.target.value)}
+                    className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
                   >
-                    {backingUp ? (
-                      <Loader2 size={14} className="animate-spin mr-1.5" />
-                    ) : (
-                      <Save size={14} className="mr-1.5" />
-                    )}
-                    Backup Now
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={restoringBackup}
-                    onClick={async () => {
-                      const confirmed = window.confirm(
-                        "Restore this backup? The app will need to restart. Any changes since the backup will be lost."
-                      );
-                      if (!confirmed) return;
-                      setRestoringBackup(true);
-                      try {
-                        await api.restoreBackup(latestBackup.file_name);
-                        window.alert("Backup restored. Please restart the app.");
-                      } catch (e) {
-                        window.alert(`Failed to restore backup: ${e}`);
-                      } finally {
-                        setRestoringBackup(false);
-                      }
-                    }}
-                  >
-                    {restoringBackup ? (
-                      <Loader2 size={14} className="animate-spin mr-1.5" />
-                    ) : (
-                      <DatabaseBackup size={14} className="mr-1.5" />
-                    )}
-                    Restore
-                  </Button>
+                    {backups.map((b, i) => (
+                      <option key={b.file_name} value={b.file_name}>
+                        {b.timestamp} UTC{i === 0 ? " (latest)" : ""}
+                      </option>
+                    ))}
+                  </select>
                 </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">No backups available yet.</p>
+              )}
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={backingUp}
+                  onClick={async () => {
+                    setBackingUp(true);
+                    try {
+                      await api.backupNow();
+                      const list = await api.listBackups();
+                      setBackups(list);
+                      if (list.length > 0) setSelectedBackup(list[0].file_name);
+                    } catch (e) {
+                      window.alert(`Backup failed: ${e}`);
+                    } finally {
+                      setBackingUp(false);
+                    }
+                  }}
+                >
+                  {backingUp ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <Save size={14} className="mr-1.5" />}
+                  Backup Now
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={restoringBackup || !selectedBackup}
+                  onClick={async () => {
+                    const backup = backups.find((b) => b.file_name === selectedBackup);
+                    const confirmed = window.confirm(
+                      `Restore backup from ${backup?.timestamp ?? "unknown"}? The app will need to restart. Any changes since this backup will be lost.`
+                    );
+                    if (!confirmed) return;
+                    setRestoringBackup(true);
+                    try {
+                      await api.restoreBackup(selectedBackup);
+                      window.alert("Backup restored. Please restart the app.");
+                    } catch (e) {
+                      window.alert(`Failed to restore backup: ${e}`);
+                    } finally {
+                      setRestoringBackup(false);
+                    }
+                  }}
+                >
+                  {restoringBackup ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <DatabaseBackup size={14} className="mr-1.5" />}
+                  Restore Selected
+                </Button>
               </div>
-            ) : (
-              <p className="text-xs text-muted-foreground">No backups available yet.</p>
-            )}
+            </div>
           </FieldGroup>
         </div>
       </ScrollArea>

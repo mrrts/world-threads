@@ -9,7 +9,6 @@ import { CharacterEditor } from "@/components/CharacterEditor";
 import { UserProfileEditor } from "@/components/UserProfileEditor";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { WorldSummary } from "@/components/WorldSummary";
-import { MoodDebugPanel } from "@/components/MoodDebugPanel";
 import { PortraitPopout } from "@/components/PortraitPopout";
 import { PenLine, Settings, Coins, BookOpen, Download, Play, Square, Plus, Minus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from "@/components/ui/dialog";
@@ -223,7 +222,6 @@ function MainApp() {
         )}
       </main>
 
-      <MoodDebugPanel characterId={store.activeCharacter?.character_id} />
 
       <Dialog open={showTimeModal} onClose={() => setShowTimeModal(false)}>
         <DialogContent>

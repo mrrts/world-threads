@@ -71,6 +71,41 @@ pub fn get_latest_backup_cmd(db_path: State<'_, DbPath>) -> Result<Option<Backup
 }
 
 #[tauri::command]
+pub fn list_backups_cmd(db_path: State<'_, DbPath>) -> Result<Vec<BackupInfo>, String> {
+    let backup_dir = db_path.0.parent().unwrap_or(std::path::Path::new(".")).join("backups");
+    if !backup_dir.exists() { return Ok(vec![]); }
+
+    let db_name = db_path.0.file_name().unwrap_or_default().to_string_lossy();
+    let prefix = format!("{}_", db_name);
+
+    let mut backups: Vec<_> = std::fs::read_dir(&backup_dir)
+        .map_err(|e| e.to_string())?
+        .filter_map(|e| e.ok())
+        .filter(|e| {
+            let name = e.file_name().to_string_lossy().to_string();
+            name.starts_with(&prefix) && name.ends_with(".bak")
+        })
+        .collect();
+
+    backups.sort_by_key(|e| e.file_name());
+    backups.reverse();
+
+    Ok(backups.into_iter().map(|entry| {
+        let file_name = entry.file_name().to_string_lossy().to_string();
+        let timestamp = file_name
+            .strip_prefix(&prefix)
+            .and_then(|s| s.strip_suffix(".bak"))
+            .map(|ts| {
+                if ts.len() == 15 {
+                    format!("{}-{}-{} {}:{}:{}", &ts[0..4], &ts[4..6], &ts[6..8], &ts[9..11], &ts[11..13], &ts[13..15])
+                } else { ts.to_string() }
+            })
+            .unwrap_or_default();
+        BackupInfo { file_name, timestamp }
+    }).collect())
+}
+
+#[tauri::command]
 pub fn backup_now_cmd(db_path: State<'_, DbPath>) -> Result<BackupInfo, String> {
     crate::db::Database::backup_database(&db_path.0);
     // Return the latest backup info

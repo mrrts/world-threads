@@ -41,6 +41,8 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
   const [portraitModalCharId, setPortraitModalCharId] = useState<string | null>(null);
   const [showConsultant, setShowConsultant] = useState(false);
   const [showSettingsPopover, setShowSettingsPopover] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const settingsPopoverRef = useRef<HTMLDivElement>(null);
   const [showGroupPopover, setShowGroupPopover] = useState(false);
   const groupPopoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -289,7 +291,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
           >
             <Compass size={15} />
           </button>
-          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/consultant:opacity-100 pointer-events-none transition-opacity">Story Consultant</span>
+          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/consultant:opacity-100 pointer-events-none transition-opacity">Consultant</span>
         </div>
       </div>
 
@@ -796,15 +798,14 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
             {isSending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
           </Button>
           <div className="relative flex-shrink-0" ref={settingsPopoverRef}>
-            <button
+            <Button
+              size="icon"
+              variant={showSettingsPopover ? "default" : "secondary"}
+              className={`rounded-xl self-stretch w-10 flex-shrink-0 ${showSettingsPopover ? "" : "hover:bg-secondary/70"}`}
               onClick={() => setShowSettingsPopover(!showSettingsPopover)}
-              className={`w-10 self-stretch rounded-xl flex items-center justify-center transition-colors cursor-pointer ${
-                showSettingsPopover ? "bg-accent text-foreground" :
-                (narrationTone !== "Cinematic" || responseLength !== "Auto" || narrationInstructions) ? "text-amber-500 hover:text-amber-400 hover:bg-amber-500/10" : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              }`}
             >
               <Settings size={16} />
-            </button>
+            </Button>
             {showSettingsPopover && (
               <div className="absolute bottom-full right-0 mb-2 w-80 bg-card border border-border rounded-xl shadow-2xl shadow-black/40 p-4 space-y-3 z-50 animate-in fade-in zoom-in-95 duration-150">
                 <div>
@@ -862,20 +863,49 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                     ))}
                   </div>
                 )}
-                {store.activeGroupChat && (
+                <div className="border-t border-border pt-2">
                   <button
-                    onClick={() => { setShowSettingsPopover(false); store.clearGroupChatHistory(store.activeGroupChat!.group_chat_id); }}
-                    className="w-full flex items-center gap-1.5 px-2 py-1.5 text-xs text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors cursor-pointer"
+                    onClick={() => setShowAdvanced(!showAdvanced)}
+                    className="flex items-center gap-1 text-[10px] text-muted-foreground/50 hover:text-muted-foreground transition-colors cursor-pointer"
                   >
-                    <Trash2 size={10} />
-                    Clear Chat History
+                    <ChevronRight size={10} className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`} />
+                    Advanced
                   </button>
-                )}
+                  {showAdvanced && (
+                    <button
+                      onClick={() => setShowClearConfirm(true)}
+                      className="w-full flex items-center gap-1.5 px-2 py-1.5 mt-1 text-xs text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <Trash2 size={10} />
+                      Clear Chat History
+                    </button>
+                  )}
+                </div>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      <Dialog open={showClearConfirm} onClose={() => setShowClearConfirm(false)} className="max-w-xs">
+        <div className="p-5 space-y-4 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl shadow-black/50">
+          <div className="flex items-center gap-2">
+            <Trash2 size={18} className="text-destructive" />
+            <h3 className="font-semibold">Clear Chat History</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            This will permanently delete all messages, narratives, and illustrations in this conversation. This cannot be undone.
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setShowClearConfirm(false)}>Cancel</Button>
+            <Button variant="destructive" size="sm" onClick={() => {
+              setShowClearConfirm(false);
+              setShowSettingsPopover(false);
+              if (store.activeGroupChat) store.clearGroupChatHistory(store.activeGroupChat.group_chat_id);
+            }}>Clear</Button>
+          </div>
+        </div>
+      </Dialog>
 
       <PortraitModal
         characterId={portraitModalCharId}
