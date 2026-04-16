@@ -194,13 +194,13 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
         if (last?.role === "assistant") {
           updated[updated.length - 1] = { ...last, content: last.content + event.payload };
         }
-        // Auto-scroll while streaming — but only until ~200px of the assistant
+        // Auto-scroll while streaming — but only until ~300px of the assistant
         // message has entered view, so the reader can keep their eyes on the
         // first paragraph while the rest streams in below the fold.
         const el = scrollRef.current;
         if (el) requestAnimationFrame(() => {
           const msgHeight = lastAssistantRef.current?.offsetHeight ?? 0;
-          if (msgHeight < 200) el.scrollTop = el.scrollHeight;
+          if (msgHeight < 300) el.scrollTop = el.scrollHeight;
         });
         return updated;
       });
