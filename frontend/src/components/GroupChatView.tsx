@@ -789,15 +789,17 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
             rows={1}
             disabled={isSending || (store.autoRespond && !store.apiKey)}
           />
-          <Button
-            size="icon"
-            className="rounded-xl self-stretch w-10 flex-shrink-0"
-            onClick={handleSend}
-            disabled={!hasInput || isSending || (store.autoRespond && !store.apiKey)}
-          >
-            {isSending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-          </Button>
-          <div className="relative flex-shrink-0" ref={settingsPopoverRef}>
+          <div className="flex-shrink-0 flex flex-col gap-1">
+            <div className="flex gap-2 flex-1">
+              <Button
+                size="icon"
+                className="rounded-xl self-stretch w-10 flex-shrink-0"
+                onClick={handleSend}
+                disabled={!hasInput || isSending || (store.autoRespond && !store.apiKey)}
+              >
+                {isSending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+              </Button>
+              <div className="relative flex-shrink-0" ref={settingsPopoverRef}>
             <Button
               size="icon"
               variant={showSettingsPopover ? "default" : "secondary"}
@@ -883,6 +885,9 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                 </div>
               </div>
             )}
+          </div>
+            </div>
+            <span className="text-muted-foreground/50 text-right" style={{ fontSize: "12px" }}>Responses: {responseLength}</span>
           </div>
         </div>
       </div>
