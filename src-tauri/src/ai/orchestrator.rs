@@ -152,13 +152,52 @@ pub async fn run_dialogue_with_base(
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let reply = response
-        .choices
-        .first()
-        .map(|c| c.message.content.clone())
+    let choice = response.choices.first()
         .ok_or_else(|| "No response from model".to_string())?;
+    let raw = choice.message.content.clone();
+
+    // Salvage mid-sentence cutoffs. When the model's reply is terminated by
+    // max_completion_tokens (finish_reason == "length"), trim back to the
+    // last complete sentence so the user never sees a half-finished word.
+    // Only triggers on the length stop — natural stops are returned as-is.
+    let reply = if choice.finish_reason.as_deref() == Some("length") {
+        let trimmed = trim_to_last_complete_sentence(&raw);
+        if trimmed.is_empty() { raw } else { trimmed }
+    } else {
+        raw
+    };
 
     Ok((reply, response.usage))
+}
+
+/// Walk backward through `s` and return the substring ending at the last
+/// sentence-terminating punctuation (., !, ?, …), inclusive of any trailing
+/// closing quotes or brackets. Returns an empty string if no terminator is
+/// found — callers should fall back to the original text in that case.
+fn trim_to_last_complete_sentence(s: &str) -> String {
+    let trimmed = s.trim_end();
+    if trimmed.is_empty() { return String::new(); }
+
+    let chars: Vec<(usize, char)> = trimmed.char_indices().collect();
+    for i in (0..chars.len()).rev() {
+        let (byte_idx, c) = chars[i];
+        if matches!(c, '.' | '!' | '?' | '…') {
+            let mut end = byte_idx + c.len_utf8();
+            // Include trailing closing quotes / brackets ("Fine." not "Fine.)
+            let mut j = i + 1;
+            while j < chars.len() {
+                let (_, nc) = chars[j];
+                if matches!(nc, '"' | '\'' | '»' | '”' | '’' | ')' | ']' | '}') {
+                    end += nc.len_utf8();
+                    j += 1;
+                } else {
+                    break;
+                }
+            }
+            return trimmed[..end].to_string();
+        }
+    }
+    String::new()
 }
 
 /// Streaming variant of run_dialogue_with_base — emits tokens via Tauri events.
