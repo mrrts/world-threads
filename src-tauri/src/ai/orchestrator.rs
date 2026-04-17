@@ -137,10 +137,14 @@ pub async fn run_dialogue_with_base(
     let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model);
     let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names);
 
+    // Token caps sit ~25% above the sentence counts we instruct (see
+    // prompts::response_length_block). Disobedient local models get some
+    // extra room before they trip the cap, and trim_to_last_complete_sentence
+    // cleans up anything that still runs over.
     let token_limit = match response_length {
-        Some("Short") => Some(150),
-        Some("Medium") => Some(250),
-        Some("Long") => Some(1024),
+        Some("Short") => Some(190),
+        Some("Medium") => Some(320),
+        Some("Long") => Some(1300),
         _ => None, // Auto — no limit, let the model decide
     };
     let request = ChatRequest {
@@ -172,8 +176,15 @@ pub async fn run_dialogue_with_base(
 
 /// Walk backward through `s` and return the substring ending at the last
 /// sentence-terminating punctuation (., !, ?, …), inclusive of any trailing
-/// closing quotes or brackets. Returns an empty string if no terminator is
-/// found — callers should fall back to the original text in that case.
+/// closing quotes, brackets, and asterisks (which are commonly used for
+/// dialogue and action beats like `*she smiles*` or `(quietly)`).
+///
+/// The returned prefix is guaranteed to have balanced `*...*` pairs and
+/// balanced parentheses — if including the trailing closers would leave a
+/// dangling opener (e.g. the model was cut off mid-action block), we fall
+/// back to an earlier sentence that *is* balanced. Returns an empty string
+/// if no terminator is found anywhere; callers should fall back to the
+/// original text in that case.
 fn trim_to_last_complete_sentence(s: &str) -> String {
     let trimmed = s.trim_end();
     if trimmed.is_empty() { return String::new(); }
@@ -181,23 +192,46 @@ fn trim_to_last_complete_sentence(s: &str) -> String {
     let chars: Vec<(usize, char)> = trimmed.char_indices().collect();
     for i in (0..chars.len()).rev() {
         let (byte_idx, c) = chars[i];
-        if matches!(c, '.' | '!' | '?' | '…') {
-            let mut end = byte_idx + c.len_utf8();
-            // Include trailing closing quotes / brackets ("Fine." not "Fine.)
-            let mut j = i + 1;
-            while j < chars.len() {
-                let (_, nc) = chars[j];
-                if matches!(nc, '"' | '\'' | '»' | '”' | '’' | ')' | ']' | '}') {
-                    end += nc.len_utf8();
-                    j += 1;
-                } else {
-                    break;
-                }
+        if !matches!(c, '.' | '!' | '?' | '…') { continue; }
+        let mut end = byte_idx + c.len_utf8();
+        // Pull in trailing closing punctuation that belongs to this sentence
+        // (closing quotes, brackets, markdown-italics asterisks).
+        let mut j = i + 1;
+        while j < chars.len() {
+            let (_, nc) = chars[j];
+            if matches!(nc, '"' | '\'' | '»' | '”' | '’' | ')' | ']' | '}' | '*') {
+                end += nc.len_utf8();
+                j += 1;
+            } else {
+                break;
             }
-            return trimmed[..end].to_string();
+        }
+        let candidate = &trimmed[..end];
+        // Skip this candidate if the kept text has an unmatched `*` or `(`
+        // (e.g. the model opened an action block but got cut off before
+        // closing it). Keep walking back until we find a balanced prefix.
+        if is_balanced_for_actions(candidate) {
+            return candidate.to_string();
         }
     }
     String::new()
+}
+
+/// Returns true when `s` has balanced `*...*` pairs (even asterisk count) and
+/// balanced parentheses (open == close). Keeps it simple — doesn't try to
+/// understand markdown nesting or quote context.
+fn is_balanced_for_actions(s: &str) -> bool {
+    let mut stars: usize = 0;
+    let mut parens: i32 = 0;
+    for c in s.chars() {
+        match c {
+            '*' => stars += 1,
+            '(' => parens += 1,
+            ')' => parens -= 1,
+            _ => {}
+        }
+    }
+    stars % 2 == 0 && parens == 0
 }
 
 /// Streaming variant of run_dialogue_with_base — emits tokens via Tauri events.

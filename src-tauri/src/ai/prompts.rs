@@ -315,7 +315,7 @@ fn sex_descriptor(sex: &str) -> &'static str {
 
 fn response_length_block(length: &str) -> Option<String> {
     // Sentence targets here sit below the max_completion_tokens caps in
-    // orchestrator.rs (Short=150, Medium=250, Long=1024). We deliberately
+    // orchestrator.rs (Short=190, Medium=320, Long=1300). We deliberately
     // aim shorter than the token budget so a chatty model that overshoots
     // its sentence target still lands inside the cap instead of getting
     // truncated mid-sentence. Don't raise these numbers without also
