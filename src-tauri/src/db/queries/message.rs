@@ -41,6 +41,11 @@ pub struct Message {
     pub created_at: String,
     pub world_day: Option<i64>,
     pub world_time: Option<String>,
+    /// Who the speaker is addressing. NULL = unknown. "user" = the human.
+    /// Otherwise a character_id. Used by group-chat flows to make addressee
+    /// explicit in the history rendered to the model.
+    #[serde(default)]
+    pub address_to: Option<String>,
 }
 
 pub fn update_message_content(conn: &Connection, message_id: &str, content: &str, tokens_estimate: i64) -> Result<(), rusqlite::Error> {
@@ -72,8 +77,8 @@ pub fn update_group_message_content(conn: &Connection, message_id: &str, content
 
 pub fn create_message(conn: &Connection, m: &Message) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO messages (message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
-        params![m.message_id, m.thread_id, m.role, m.content, m.tokens_estimate, m.sender_character_id, m.created_at, m.world_day, m.world_time],
+        "INSERT INTO messages (message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time, address_to) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        params![m.message_id, m.thread_id, m.role, m.content, m.tokens_estimate, m.sender_character_id, m.created_at, m.world_day, m.world_time, m.address_to],
     )?;
     // Don't index illustration/video content in FTS — they contain binary data (base64)
     if m.role != "illustration" && m.role != "video" {
@@ -156,10 +161,11 @@ pub fn row_to_message(row: &rusqlite::Row) -> Result<Message, rusqlite::Error> {
         created_at: row.get(6)?,
         world_day: row.get(7).ok(),
         world_time: row.get(8).ok(),
+        address_to: row.get(9).ok(),
     })
 }
 
-pub const MSG_COLS: &str = "message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time";
+pub const MSG_COLS: &str = "message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time, address_to";
 
 
 // ─── FTS Search ─────────────────────────────────────────────────────────────

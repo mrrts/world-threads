@@ -183,7 +183,8 @@ pub fn save_group_user_message_cmd(
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
         world_day: wd, world_time: wt,
-    };
+            address_to: None,
+        };
     create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
     Ok(msg)
 }
@@ -225,6 +226,7 @@ pub async fn send_group_message_cmd(
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
             world_day: wd, world_time: wt.clone(),
+            address_to: None,
         };
         create_group_message(&conn, &user_msg).map_err(|e| e.to_string())?;
 
@@ -279,10 +281,34 @@ pub async fn send_group_message_cmd(
             }
         }
 
+        // Just-before-turn system hint: re-affirm whose voice this is, now
+        // that the conversation history may have drifted a speaker or two.
+        // Reinforces the "# THE TURN" section of the system prompt at the
+        // moment it matters most — right before generation.
+        let user_name = user_profile.as_ref()
+            .map(|p| p.display_name.as_str())
+            .unwrap_or("the human");
+        let mut dialogue_msgs = recent_msgs.clone();
+        dialogue_msgs.push(Message {
+            message_id: String::new(),
+            thread_id: String::new(),
+            role: "user".to_string(),
+            content: format!(
+                "[It is now {name}'s turn to speak. Reply ONLY as {name}, addressing {user_name}. Do not prefix your reply with your name.]",
+                name = character.display_name,
+            ),
+            tokens_estimate: 0,
+            sender_character_id: None,
+            created_at: Utc::now().to_rfc3339(),
+            world_day: None,
+            world_time: None,
+            address_to: None,
+        });
+
         // Generate response
         let (raw_reply, usage) = orchestrator::run_dialogue_with_base(
             &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
-            &world, character, &recent_msgs, &retrieved,
+            &world, character, &dialogue_msgs, &retrieved,
             user_profile.as_ref(),
             None, // no mood directive for group chats (keep it simpler)
             response_length.as_deref(),
@@ -302,7 +328,8 @@ pub async fn send_group_message_cmd(
             let _ = record_token_usage(&conn, "group_dialogue", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
         }
 
-        // Save response
+        // Save response — in auto-respond chain triggered by a user message,
+        // the character's reply is (by default) addressed to the user.
         let tokens = usage.as_ref().map(|u| u.total_tokens).unwrap_or(0);
         let response_msg = Message {
             message_id: uuid::Uuid::new_v4().to_string(),
@@ -313,6 +340,7 @@ pub async fn send_group_message_cmd(
             sender_character_id: Some(character.character_id.clone()),
             created_at: Utc::now().to_rfc3339(),
             world_day: wd, world_time: wt.clone(),
+            address_to: Some("user".to_string()),
         };
         {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -407,7 +435,8 @@ pub async fn prompt_group_character_cmd(
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
             world_day: None, world_time: None,
-    });
+            address_to: None,
+        });
 
     let (response_length, narration_tone) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -439,6 +468,24 @@ pub async fn prompt_group_character_cmd(
 
     let tokens = usage.as_ref().map(|u| u.total_tokens).unwrap_or(0);
     let (wd_p, wt_p) = chat_cmds::world_time_fields(&world);
+
+    // Canonicalize the address_to param for storage: "user" by default,
+    // otherwise resolve the display-name target to a character_id if it
+    // matches another character in this group.
+    let canonical_address: Option<String> = match address_to.as_deref() {
+        None | Some("") => Some("user".to_string()),
+        Some(name) => {
+            if user_profile.as_ref().map(|p| p.display_name.eq_ignore_ascii_case(name)).unwrap_or(false) {
+                Some("user".to_string())
+            } else {
+                characters.iter()
+                    .find(|c| c.character_id != character_id && c.display_name.eq_ignore_ascii_case(name))
+                    .map(|c| c.character_id.clone())
+                    .or_else(|| Some("user".to_string()))
+            }
+        }
+    };
+
     let msg = Message {
         message_id: uuid::Uuid::new_v4().to_string(),
         thread_id: gc.thread_id.clone(),
@@ -448,6 +495,7 @@ pub async fn prompt_group_character_cmd(
         sender_character_id: Some(character_id),
         created_at: Utc::now().to_rfc3339(),
         world_day: wd_p, world_time: wt_p,
+        address_to: canonical_address,
     };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -601,6 +649,7 @@ pub async fn generate_group_illustration_cmd(
             sender_character_id: None,
             created_at: now,
             world_day: wd, world_time: wt,
+            address_to: None,
         };
         create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
     }
@@ -613,6 +662,7 @@ pub async fn generate_group_illustration_cmd(
             content: row.get(3)?, tokens_estimate: row.get(4)?,
             sender_character_id: row.get(5)?, created_at: row.get(6)?,
             world_day: row.get(7).ok(), world_time: row.get(8).ok(),
+            address_to: None,
         })
     ).map_err(|e| e.to_string())?;
 
@@ -700,7 +750,8 @@ pub async fn generate_group_narrative_cmd(
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
         world_day: wd, world_time: wt,
-    };
+            address_to: None,
+        };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         create_group_message(&conn, &narrative_msg).map_err(|e| e.to_string())?;

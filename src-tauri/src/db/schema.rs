@@ -584,6 +584,18 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         ").ok();
     }
 
+    // Addressing: who the speaker is talking to (NULL = unknown; "user" = the
+    // human; otherwise a character_id). Additive, nullable — safe on existing
+    // rows, which all backfill as NULL.
+    let has_address_to: bool = conn.prepare("SELECT address_to FROM messages LIMIT 0").is_ok();
+    if !has_address_to {
+        conn.execute_batch("ALTER TABLE messages ADD COLUMN address_to TEXT DEFAULT NULL;").ok();
+    }
+    let has_address_to_group: bool = conn.prepare("SELECT address_to FROM group_messages LIMIT 0").is_ok();
+    if !has_address_to_group {
+        conn.execute_batch("ALTER TABLE group_messages ADD COLUMN address_to TEXT DEFAULT NULL;").ok();
+    }
+
     // ── Novel entries table ──────────────────────────────────────────────
     conn.execute_batch("
         CREATE TABLE IF NOT EXISTS novel_entries (

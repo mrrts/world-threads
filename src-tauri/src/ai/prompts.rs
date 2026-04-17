@@ -291,6 +291,17 @@ fn build_group_dialogue_system_prompt(
     parts.join("\n\n")
 }
 
+/// Translate a stored `address_to` value to the label used in history rendering.
+/// "user" → "you" (from the model's 1st-person perspective); a character_id in
+/// `names` → that character's display name; None/unknown/empty → None (omit).
+fn format_addressee_label(address_to: Option<&str>, names: &HashMap<String, String>) -> Option<String> {
+    match address_to {
+        Some("user") => Some("you".to_string()),
+        Some(id) if !id.is_empty() => names.get(id).cloned(),
+        _ => None,
+    }
+}
+
 fn sex_descriptor(sex: &str) -> &'static str {
     match sex {
         "female" => "A woman",
@@ -378,7 +389,10 @@ pub fn build_dialogue_messages(
                 last_time = Some(wt.clone());
             }
         }
-        // In group chats, prefix assistant messages with the character name
+        // In group chats, prefix assistant messages with the character name.
+        // When we know who they were addressing (m.address_to), bake it into
+        // the prefix so the model sees "[Alex → you]: ..." instead of having
+        // to infer. See Phase 1.5 of the group-chat prompt plan.
         let content = if m.role == "context" {
             format!("[Additional Context from Another Chat] {}", m.content)
         } else if m.role == "narrative" {
@@ -386,7 +400,26 @@ pub fn build_dialogue_messages(
         } else if m.role == "assistant" {
             if let (Some(names), Some(sender_id)) = (character_names, &m.sender_character_id) {
                 if let Some(name) = names.get(sender_id) {
-                    format!("[{}]: {}", name, m.content)
+                    let addr_label = format_addressee_label(m.address_to.as_deref(), names);
+                    match addr_label {
+                        Some(label) => format!("[{name} → {label}]: {content}", content = m.content),
+                        None => format!("[{name}]: {}", m.content),
+                    }
+                } else {
+                    m.content.clone()
+                }
+            } else {
+                m.content.clone()
+            }
+        } else if m.role == "user" {
+            // Only annotate when an explicit addressee is stored. Leaving
+            // ambient user messages (the common case) unmarked avoids drowning
+            // the model in noise for our most frequent path.
+            if let (Some(names), Some(target)) = (character_names, m.address_to.as_deref()) {
+                if target == "user" || target.is_empty() {
+                    m.content.clone()
+                } else if let Some(target_name) = names.get(target) {
+                    format!("[to {target_name}] {}", m.content)
                 } else {
                     m.content.clone()
                 }

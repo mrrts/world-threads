@@ -93,7 +93,8 @@ pub fn save_user_message_cmd(
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
         world_day: wd_s, world_time: wt_s,
-    };
+            address_to: None,
+        };
     create_message(&conn, &msg).map_err(|e| e.to_string())?;
     increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
 
@@ -134,7 +135,8 @@ pub fn create_context_message_cmd(
         created_at: Utc::now().to_rfc3339(),
         world_day: wd,
         world_time: wt,
-    };
+            address_to: None,
+        };
 
     if group_chat_id.is_some() {
         create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
@@ -172,6 +174,7 @@ pub async fn send_message_cmd(
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
             world_day: wd_u, world_time: wt_u,
+            address_to: None,
         };
         create_message(&conn, &user_msg).map_err(|e| e.to_string())?;
         increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
@@ -305,6 +308,7 @@ pub async fn send_message_cmd(
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
             world_day: wd, world_time: wt.clone(),
+            address_to: None,
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
         increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
@@ -315,6 +319,7 @@ pub async fn send_message_cmd(
             tokens_estimate: 0, created_at: Utc::now().to_rfc3339(),
             world_day: None, world_time: None,
             sender_character_id: None,
+            address_to: None,
         });
 
         (user_message, msg)
@@ -551,6 +556,7 @@ pub async fn prompt_character_cmd(
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
             world_day: None, world_time: None,
+            address_to: None,
         });
     }
 
@@ -577,6 +583,7 @@ pub async fn prompt_character_cmd(
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
             world_day: wd, world_time: wt.clone(),
+            address_to: None,
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
         increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
@@ -685,7 +692,8 @@ pub async fn generate_narrative_cmd(
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
             world_day: wd, world_time: wt.clone(),
-    };
+            address_to: None,
+        };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         create_message(&conn, &narrative_msg).map_err(|e| e.to_string())?;
@@ -721,7 +729,8 @@ pub async fn adjust_message_cmd(
                     content: r.get(3)?, tokens_estimate: r.get(4)?,
                     sender_character_id: r.get(5)?, created_at: r.get(6)?,
                     world_day: r.get(7).ok(), world_time: r.get(8).ok(),
-                }),
+            address_to: None,
+        }),
             ).map_err(|e| format!("Message not found: {e}"))?;
             (m, "group")
         } else {
@@ -732,7 +741,8 @@ pub async fn adjust_message_cmd(
                     content: r.get(3)?, tokens_estimate: r.get(4)?,
                     sender_character_id: r.get(5)?, created_at: r.get(6)?,
                     world_day: r.get(7).ok(), world_time: r.get(8).ok(),
-                }),
+            address_to: None,
+        }),
             ).map_err(|e| format!("Message not found: {e}"))?;
             (m, "indiv")
         };
@@ -848,7 +858,8 @@ pub async fn adjust_message_cmd(
         created_at: original_msg.created_at,
         world_day: original_msg.world_day,
         world_time: original_msg.world_time,
-    })
+            address_to: None,
+        })
 }
 
 // Illustration commands are in illustration_cmds.rs
@@ -891,7 +902,8 @@ pub async fn reset_to_message_cmd(
                     created_at: row.get(6)?,
                     world_day: row.get(7).ok(),
                     world_time: row.get(8).ok(),
-                })
+            address_to: None,
+        })
             }).map_err(|e| e.to_string())?
         };
 
@@ -1054,7 +1066,8 @@ pub async fn reset_to_message_cmd(
                 sender_character_id: None,
                 created_at: Utc::now().to_rfc3339(),
             world_day: wd, world_time: wt.clone(),
-            };
+            address_to: None,
+        };
             create_message(&conn, &msg).map_err(|e| e.to_string())?;
             increment_message_counter(&conn, &thread_id).map_err(|e| e.to_string())?;
 
@@ -1064,7 +1077,8 @@ pub async fn reset_to_message_cmd(
                 tokens_estimate: 0, created_at: Utc::now().to_rfc3339(),
             world_day: None, world_time: None,
             sender_character_id: None,
-            });
+            address_to: None,
+        });
 
             (user_message, msg)
         };

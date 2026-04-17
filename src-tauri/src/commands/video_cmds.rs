@@ -76,7 +76,8 @@ pub async fn generate_video_cmd(
                 content: row.get(3)?, tokens_estimate: row.get(4)?,
                 sender_character_id: row.get(5)?, created_at: row.get(6)?,
                 world_day: row.get(7).ok(), world_time: row.get(8).ok(),
-            })
+            address_to: None,
+        })
         }).map_err(|e| e.to_string())?
         .filter_map(|r| r.ok())
         .collect();
