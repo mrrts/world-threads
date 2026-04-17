@@ -13,7 +13,7 @@ interface Props {
 
 export function ContextMessage({ message, isPending, onResetToHere, adjustingMessageId, onAdjust }: Props) {
   return (
-    <div key={message.message_id} className="flex justify-center my-2">
+    <div key={message.message_id} data-message-id={message.message_id} className="flex justify-center my-2">
       <div className="relative group max-w-[90%] rounded-xl px-5 py-3.5 text-sm leading-relaxed bg-gradient-to-br from-sky-950/40 to-sky-900/20 border border-sky-700/30 text-sky-100/90 backdrop-blur-sm">
         <div className="flex items-center gap-1.5 mb-1.5 text-[10px] uppercase tracking-wider text-sky-500/70 font-semibold">
           <Link2 size={12} />

@@ -604,7 +604,7 @@ export function CharacterEditor({ store }: Props) {
               <Button variant="outline" className="flex-1" onClick={() => setShowClearChat(false)}>Cancel</Button>
               <Button variant="destructive" className="flex-1" onClick={async () => {
                 setShowClearChat(false);
-                await store.clearChatHistory(ch.character_id);
+                await store.clearChatHistory(ch.character_id, false);
               }}>
                 Clear All Messages
               </Button>

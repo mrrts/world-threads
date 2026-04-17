@@ -43,6 +43,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
   const [showSettingsPopover, setShowSettingsPopover] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [clearKeepMedia, setClearKeepMedia] = useState(true);
   const settingsPopoverRef = useRef<HTMLDivElement>(null);
   const [showGroupPopover, setShowGroupPopover] = useState(false);
   const groupPopoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -398,7 +399,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
             return (
               <React.Fragment key={msg.message_id}>
               <TimeDivider current={msg} previous={prevMsg} />
-              <div>
+              <div data-message-id={msg.message_id}>
                 <div className={`flex items-end gap-2 ${isUser ? "justify-end" : "justify-start"}`}>
                   {!isUser && (
                     senderPortrait?.data_url ? (
@@ -531,7 +532,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                         </button>
                       )}
                     </p>
-                    {!isPending && isUser && (
+                    {isUser && (
                       <div className="absolute top-2 right-8 opacity-0 group-hover:opacity-100 transition-opacity">
                         <div className="relative group/uedit">
                           <button
@@ -899,14 +900,25 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
             <h3 className="font-semibold">Clear Chat History</h3>
           </div>
           <p className="text-sm text-muted-foreground">
-            This will permanently delete all messages, narratives, and illustrations in this conversation. This cannot be undone.
+            {clearKeepMedia
+              ? "This will permanently delete the text messages and narratives in this conversation. Illustrations, videos, and any saved novelizations will remain as a gallery of memories."
+              : "This will permanently delete all messages, narratives, illustrations, videos, and novelizations in this conversation. This cannot be undone."}
           </p>
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={clearKeepMedia}
+              onChange={(e) => setClearKeepMedia(e.target.checked)}
+              className="accent-emerald-500 w-3.5 h-3.5"
+            />
+            <span className="text-xs text-muted-foreground">Keep Illustrations and Videos</span>
+          </label>
           <div className="flex justify-end gap-2">
             <Button variant="ghost" size="sm" onClick={() => setShowClearConfirm(false)}>Cancel</Button>
             <Button variant="destructive" size="sm" onClick={() => {
               setShowClearConfirm(false);
               setShowSettingsPopover(false);
-              if (store.activeGroupChat) store.clearGroupChatHistory(store.activeGroupChat.group_chat_id);
+              if (store.activeGroupChat) store.clearGroupChatHistory(store.activeGroupChat.group_chat_id, clearKeepMedia);
             }}>Clear</Button>
           </div>
         </div>

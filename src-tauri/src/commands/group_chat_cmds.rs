@@ -81,26 +81,71 @@ pub fn delete_group_chat_cmd(
 pub fn clear_group_chat_history_cmd(
     db: State<Database>,
     audio_dir: State<crate::commands::audio_cmds::AudioDir>,
+    portraits_dir: State<PortraitsDir>,
     group_chat_id: String,
+    keep_media: bool,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
 
-    // Collect message IDs for audio cleanup before deletion
-    let msg_ids: Vec<String> = conn.prepare("SELECT message_id FROM group_messages WHERE thread_id = ?1")
+    // Collect deletable (non-illustration if keeping media) message IDs for audio cleanup.
+    let deletable_sql = if keep_media {
+        "SELECT message_id FROM group_messages WHERE thread_id = ?1 AND role != 'illustration'"
+    } else {
+        "SELECT message_id FROM group_messages WHERE thread_id = ?1"
+    };
+    let msg_ids: Vec<String> = conn.prepare(deletable_sql)
         .map_err(|e| e.to_string())?
         .query_map(params![gc.thread_id], |row| row.get(0))
         .map_err(|e| e.to_string())?
         .filter_map(|r| r.ok()).collect();
 
+    // Illustrations (only clean up when not keeping media)
+    let mut illustration_files: Vec<String> = Vec::new();
+    if !keep_media {
+        let illus_ids: Vec<String> = conn.prepare(
+            "SELECT message_id FROM group_messages WHERE thread_id = ?1 AND role = 'illustration'"
+        ).map_err(|e| e.to_string())?
+            .query_map(params![gc.thread_id], |row| row.get(0))
+            .map_err(|e| e.to_string())?
+            .filter_map(|r| r.ok()).collect();
+        for illus_id in &illus_ids {
+            let file_name: Option<String> = conn.query_row(
+                "SELECT file_name FROM world_images WHERE image_id = ?1",
+                params![illus_id], |r| r.get(0),
+            ).ok();
+            conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![illus_id]).ok();
+            if let Some(f) = file_name {
+                illustration_files.push(f);
+            }
+        }
+    }
+
+    // FTS — group_messages_fts is only populated for text messages, safe to blanket-delete.
     conn.execute("DELETE FROM group_messages_fts WHERE thread_id = ?1", params![gc.thread_id]).ok();
-    conn.execute("DELETE FROM group_messages WHERE thread_id = ?1", params![gc.thread_id])
-        .map_err(|e| e.to_string())?;
+
+    if keep_media {
+        conn.execute(
+            "DELETE FROM group_messages WHERE thread_id = ?1 AND role != 'illustration'",
+            params![gc.thread_id],
+        ).map_err(|e| e.to_string())?;
+    } else {
+        conn.execute("DELETE FROM group_messages WHERE thread_id = ?1", params![gc.thread_id])
+            .map_err(|e| e.to_string())?;
+        conn.execute("DELETE FROM novel_entries WHERE thread_id = ?1", params![gc.thread_id]).ok();
+    }
+
     conn.execute("DELETE FROM memory_artifacts WHERE subject_id = ?1", params![gc.thread_id]).ok();
     conn.execute("DELETE FROM message_count_tracker WHERE thread_id = ?1", params![gc.thread_id]).ok();
 
     for msg_id in &msg_ids {
         crate::commands::audio_cmds::delete_audio_for_message(&audio_dir.0, msg_id);
+    }
+    for f in &illustration_files {
+        let path = portraits_dir.0.join(f);
+        if path.exists() {
+            let _ = std::fs::remove_file(&path);
+        }
     }
 
     Ok(())
@@ -204,6 +249,8 @@ pub async fn send_group_message_cmd(
                 character_id: c.character_id.clone(),
                 display_name: c.display_name.clone(),
                 identity_summary: c.identity.clone(),
+                sex: c.sex.clone(),
+                voice_rules: crate::ai::prompts::json_array_to_strings(&c.voice_rules),
             })
             .collect();
         let group_context = GroupContext { other_characters: other_chars };
@@ -318,6 +365,8 @@ pub async fn prompt_group_character_cmd(
             character_id: c.character_id.clone(),
             display_name: c.display_name.clone(),
             identity_summary: c.identity.clone(),
+            sex: c.sex.clone(),
+            voice_rules: crate::ai::prompts::json_array_to_strings(&c.voice_rules),
         })
         .collect();
     let group_context = GroupContext { other_characters: other_chars };

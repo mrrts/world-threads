@@ -343,7 +343,7 @@ export const api = {
   updateCharacter: (character: Character) => invoke<void>("update_character_cmd", { character }),
   createCharacter: (worldId: string, displayName: string) => invoke<Character>("create_character_cmd", { worldId, displayName }),
   deleteCharacter: (characterId: string) => invoke<void>("delete_character_cmd", { characterId }),
-  clearChatHistory: (characterId: string) => invoke<void>("clear_chat_history_cmd", { characterId }),
+  clearChatHistory: (characterId: string, keepMedia: boolean) => invoke<void>("clear_chat_history_cmd", { characterId, keepMedia }),
   archiveCharacter: (characterId: string) => invoke<void>("archive_character_cmd", { characterId }),
   unarchiveCharacter: (characterId: string) => invoke<void>("unarchive_character_cmd", { characterId }),
   listArchivedCharacters: (worldId: string) => invoke<Character[]>("list_archived_characters_cmd", { worldId }),
@@ -549,8 +549,8 @@ export const api = {
     invoke<GroupChat[]>("list_group_chats_cmd", { worldId }),
   deleteGroupChat: (groupChatId: string) =>
     invoke<void>("delete_group_chat_cmd", { groupChatId }),
-  clearGroupChatHistory: (groupChatId: string) =>
-    invoke<void>("clear_group_chat_history_cmd", { groupChatId }),
+  clearGroupChatHistory: (groupChatId: string, keepMedia: boolean) =>
+    invoke<void>("clear_group_chat_history_cmd", { groupChatId, keepMedia }),
   getGroupMessages: (groupChatId: string) =>
     invoke<PaginatedMessages>("get_group_messages_cmd", { groupChatId }),
   saveGroupUserMessage: (groupChatId: string, content: string) =>

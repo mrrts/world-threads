@@ -109,9 +109,10 @@ pub fn clear_chat_history_cmd(
     portraits_dir: State<PortraitsDir>,
     audio_dir: State<crate::commands::audio_cmds::AudioDir>,
     character_id: String,
+    keep_media: bool,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    let (illustration_files, message_ids) = clear_chat_history(&conn, &character_id).map_err(|e| e.to_string())?;
+    let (illustration_files, message_ids) = clear_chat_history(&conn, &character_id, keep_media).map_err(|e| e.to_string())?;
     for f in &illustration_files {
         let path = portraits_dir.0.join(f);
         if path.exists() {

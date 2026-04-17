@@ -13,6 +13,12 @@ pub struct OtherCharacter {
     pub character_id: String,
     pub display_name: String,
     pub identity_summary: String,
+    /// "male" | "female" | "" — used to resolve pronouns in narrative & cross-character framing.
+    pub sex: String,
+    /// A small selection of the other character's voice rules, included so the
+    /// model has a handle on how THEIR voice differs from yours — reduces the
+    /// cross-voice bleed local models tend to produce.
+    pub voice_rules: Vec<String>,
 }
 
 pub fn build_dialogue_system_prompt(
@@ -24,29 +30,27 @@ pub fn build_dialogue_system_prompt(
     group_context: Option<&GroupContext>,
     tone: Option<&str>,
 ) -> String {
+    if group_context.is_some() {
+        build_group_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context.unwrap(), tone)
+    } else {
+        build_solo_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, tone)
+    }
+}
+
+fn build_solo_dialogue_system_prompt(
+    world: &World,
+    character: &Character,
+    user_profile: Option<&UserProfile>,
+    mood_directive: Option<&str>,
+    response_length: Option<&str>,
+    tone: Option<&str>,
+) -> String {
     let mut parts = Vec::new();
 
-    if let Some(gc) = group_context {
-        let other_names: Vec<&str> = gc.other_characters.iter().map(|c| c.display_name.as_str()).collect();
-        let user_name = user_profile.map(|p| p.display_name.as_str()).unwrap_or("the human");
-        parts.push(format!(
-            "You are {} — and ONLY {}. You are in a group conversation with {} and {}. \
-             You must embody this character completely: their personality, speech patterns, knowledge, emotions, and worldview. \
-             Never break character. Never speak as, for, or about another character's thoughts or actions. \
-             Your entire output must be {}'s words and {}'s words alone.",
-            character.display_name,
-            character.display_name,
-            user_name,
-            other_names.join(" and "),
-            character.display_name,
-            character.display_name,
-        ));
-    } else {
-        parts.push(format!(
-            "You are {}, a character in a living world. Stay fully in character at all times.",
-            character.display_name
-        ));
-    }
+    parts.push(format!(
+        "You are {}, a character in a living world. Stay fully in character at all times.",
+        character.display_name
+    ));
 
     if !character.identity.is_empty() {
         let sex_prefix = if character.sex == "female" { "A woman." } else { "A man." };
@@ -89,7 +93,6 @@ pub fn build_dialogue_system_prompt(
         }
     }
 
-
     if let Some(profile) = user_profile {
         let mut user_parts = Vec::new();
         user_parts.push(format!("The human you are talking to is named {}.", profile.display_name));
@@ -103,34 +106,6 @@ pub fn build_dialogue_system_prompt(
         parts.push(format!("THE USER:\n{}", user_parts.join("\n")));
     }
 
-    if let Some(gc) = group_context {
-        let mut others = Vec::new();
-        for oc in &gc.other_characters {
-            let identity = if oc.identity_summary.is_empty() {
-                "another character in this conversation".to_string()
-            } else if oc.identity_summary.len() > 200 {
-                format!("{}...", &oc.identity_summary[..200])
-            } else {
-                oc.identity_summary.clone()
-            };
-            others.push(format!("- {}: {}", oc.display_name, identity));
-        }
-        parts.push(format!(
-            "OTHER CHARACTERS IN THIS CONVERSATION:\n{others}\n\n\
-             CRITICAL — SINGLE-CHARACTER RULE:\n\
-             Messages from other characters appear as [CharacterName]: ... in the conversation history. \
-             These are OTHER people — you do NOT control them.\n\
-             - You are ONLY {me}. Write ONLY what {me} says and does.\n\
-             - NEVER write dialogue, actions, thoughts, or reactions for any other character.\n\
-             - NEVER include lines like \"[OtherName]: ...\" or narrate what someone else says or does.\n\
-             - NEVER prefix your response with your own name or brackets. Just respond naturally as {me}.\n\
-             - If another character said something, you may REACT to it, but never REPEAT or CONTINUE their words.\n\
-             - Violation of this rule breaks the entire conversation. One voice only: {me}.",
-            others = others.join("\n"),
-            me = character.display_name,
-        ));
-    }
-
     if let Some(directive) = mood_directive {
         if !directive.is_empty() {
             parts.push(format!("MOOD:\n{directive}"));
@@ -138,11 +113,8 @@ pub fn build_dialogue_system_prompt(
     }
 
     if let Some(length) = response_length {
-        match length {
-            "Short" => parts.push("IMPORTANT — RESPONSE LENGTH:\nKeep your reply to 2–3 sentences MAX, regardless of how long previous messages were. Be concise and punchy. Do not elaborate beyond what is essential. This is a HARD LIMIT — do not exceed 3 sentences under any circumstances.".to_string()),
-            "Medium" => parts.push("IMPORTANT — RESPONSE LENGTH:\nAim for 4–6 sentences, regardless of how long previous messages were. Give enough detail to be engaging and expressive, but don't ramble. Do not exceed 6 sentences.".to_string()),
-            "Long" => parts.push("IMPORTANT — RESPONSE LENGTH:\nWrite 7 or more sentences, regardless of how long previous messages were. Be detailed, expansive, and richly expressive. Take your time with the moment — describe, reflect, react fully.".to_string()),
-            _ => {} // "Auto" or unknown — no directive
+        if let Some(block) = response_length_block(length) {
+            parts.push(block);
         }
     }
 
@@ -152,7 +124,192 @@ pub fn build_dialogue_system_prompt(
         }
     }
 
-    parts.push(r#"BEHAVIOR:
+    parts.push(behavior_and_knowledge_block().to_string());
+
+    parts.join("\n\n")
+}
+
+/// Group-chat system prompt. Organized into role blocks so local models can
+/// hold onto "who am I" / "who am I talking to" / "who is the other character"
+/// without losing the thread across a long prompt.
+fn build_group_dialogue_system_prompt(
+    world: &World,
+    character: &Character,
+    user_profile: Option<&UserProfile>,
+    mood_directive: Option<&str>,
+    response_length: Option<&str>,
+    gc: &GroupContext,
+    tone: Option<&str>,
+) -> String {
+    let mut parts = Vec::new();
+    let me = character.display_name.as_str();
+    let user_name = user_profile.map(|p| p.display_name.as_str()).unwrap_or("the human");
+
+    // ── # YOU ────────────────────────────────────────────────────────────
+    let mut you = String::from("# YOU\n");
+    let sex_desc = sex_descriptor(&character.sex);
+    you.push_str(&format!("You are {me}. {sex_desc}. Stay fully in character — you are this person, not an AI playing them."));
+    if !character.identity.is_empty() {
+        you.push_str("\n\n");
+        you.push_str(&character.identity);
+    }
+    let voice_rules = json_array_to_strings(&character.voice_rules);
+    if !voice_rules.is_empty() {
+        you.push_str("\n\nYour voice:\n");
+        you.push_str(&voice_rules.iter().map(|r| format!("- {r}")).collect::<Vec<_>>().join("\n"));
+    }
+    let boundaries = json_array_to_strings(&character.boundaries);
+    if !boundaries.is_empty() {
+        you.push_str("\n\nYour boundaries (never violate):\n");
+        you.push_str(&boundaries.iter().map(|b| format!("- {b}")).collect::<Vec<_>>().join("\n"));
+    }
+    let backstory = json_array_to_strings(&character.backstory_facts);
+    if !backstory.is_empty() {
+        you.push_str("\n\nYour backstory:\n");
+        you.push_str(&backstory.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n"));
+    }
+    if let Some(char_state) = character.state.as_object() {
+        if !char_state.is_empty() {
+            you.push_str("\n\nYour current state:\n");
+            you.push_str(&serde_json::to_string_pretty(&character.state).unwrap_or_default());
+        }
+    }
+    if let Some(directive) = mood_directive {
+        if !directive.is_empty() {
+            you.push_str("\n\nYour mood right now:\n");
+            you.push_str(directive);
+        }
+    }
+    parts.push(you);
+
+    // ── # THE HUMAN YOU'RE TALKING WITH ─────────────────────────────────
+    if let Some(profile) = user_profile {
+        let mut block = String::from("# THE HUMAN YOU'RE TALKING WITH\n");
+        block.push_str(&format!("{}. ", profile.display_name));
+        if !profile.description.is_empty() {
+            block.push_str(&profile.description);
+        }
+        let facts = json_array_to_strings(&profile.facts);
+        if !facts.is_empty() {
+            block.push_str("\n\nFacts about them:\n");
+            block.push_str(&facts.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n"));
+        }
+        block.push_str(&format!("\n\nMessages from {user_name} appear with the role \"user\"."));
+        parts.push(block);
+    }
+
+    // ── # THE OTHER CHARACTER(S) IN THE ROOM ────────────────────────────
+    if !gc.other_characters.is_empty() {
+        let heading = if gc.other_characters.len() == 1 {
+            "# THE OTHER CHARACTER IN THE ROOM"
+        } else {
+            "# THE OTHER CHARACTERS IN THE ROOM"
+        };
+        let mut block = String::from(heading);
+        for oc in &gc.other_characters {
+            let trimmed = if oc.identity_summary.len() > 400 {
+                format!("{}...", &oc.identity_summary[..400])
+            } else {
+                oc.identity_summary.clone()
+            };
+            let other_sex = sex_descriptor(&oc.sex);
+            block.push_str(&format!(
+                "\n\n{name}. {other_sex}. {ident}",
+                name = oc.display_name,
+                ident = if trimmed.is_empty() { "A character in this conversation.".to_string() } else { trimmed },
+            ));
+            if !oc.voice_rules.is_empty() {
+                block.push_str(&format!("\n\n{name}'s voice (FYI — THEIR rules, not yours):\n", name = oc.display_name));
+                block.push_str(&oc.voice_rules.iter().take(3).map(|r| format!("- {r}")).collect::<Vec<_>>().join("\n"));
+            }
+            block.push_str(&format!(
+                "\n\nMessages from {name} appear prefixed with [{name}]: in the conversation.",
+                name = oc.display_name,
+            ));
+        }
+        parts.push(block);
+    }
+
+    // ── # THE SCENE ─────────────────────────────────────────────────────
+    let mut scene = String::from("# THE SCENE");
+    if !world.description.is_empty() {
+        scene.push_str("\n\n");
+        scene.push_str(&world.description);
+    }
+    let invariants = json_array_to_strings(&world.invariants);
+    if !invariants.is_empty() {
+        scene.push_str("\n\nWorld rules:\n");
+        scene.push_str(&invariants.iter().map(|i| format!("- {i}")).collect::<Vec<_>>().join("\n"));
+    }
+    if let Some(state) = world.state.as_object() {
+        if !state.is_empty() {
+            scene.push_str("\n\nCurrent world state:\n");
+            scene.push_str(&serde_json::to_string_pretty(&world.state).unwrap_or_default());
+        }
+    }
+    if scene.len() > "# THE SCENE".len() {
+        parts.push(scene);
+    }
+
+    // ── # THE TURN ──────────────────────────────────────────────────────
+    // Short, declarative, last — local models attend most strongly to the
+    // end of the system prompt before generating.
+    let other_name_list = gc.other_characters.iter()
+        .map(|c| c.display_name.as_str())
+        .collect::<Vec<_>>()
+        .join(", ");
+    parts.push(format!(
+        "# THE TURN\n\
+         - You speak ONLY as {me}. Never write lines, thoughts, or actions for {others} or {user_name}.\n\
+         - Do NOT prefix your reply with your name, brackets, or any label. Just speak as {me} would.\n\
+         - If {others} just spoke, you may react — but NEVER repeat, continue, or paraphrase their words.\n\
+         - If a line starts with [SomeName]: or comes from role \"user\", it is SOMEONE ELSE — never you.\n\
+         - One voice only: yours.",
+        me = me,
+        others = if other_name_list.is_empty() { "other characters".to_string() } else { other_name_list },
+        user_name = user_name,
+    ));
+
+    // ── # STYLE ─────────────────────────────────────────────────────────
+    let mut style_items: Vec<String> = Vec::new();
+    if let Some(length) = response_length {
+        if let Some(block) = response_length_block(length) {
+            style_items.push(block);
+        }
+    }
+    if let Some(t) = tone {
+        if !t.is_empty() && t != "Auto" {
+            style_items.push(format!("TONE:\nAdopt a {t} tone. Let this flavor influence your word choice, emotional register, and engagement. Maintain regardless of the tone of previous messages."));
+        }
+    }
+    if !style_items.is_empty() {
+        parts.push(format!("# STYLE\n\n{}", style_items.join("\n\n")));
+    }
+
+    parts.push(behavior_and_knowledge_block().to_string());
+
+    parts.join("\n\n")
+}
+
+fn sex_descriptor(sex: &str) -> &'static str {
+    match sex {
+        "female" => "A woman",
+        "male" => "A man",
+        _ => "A person",
+    }
+}
+
+fn response_length_block(length: &str) -> Option<String> {
+    match length {
+        "Short" => Some("IMPORTANT — RESPONSE LENGTH:\nKeep your reply to 2–3 sentences MAX, regardless of how long previous messages were. Be concise and punchy. Do not elaborate beyond what is essential. This is a HARD LIMIT — do not exceed 3 sentences under any circumstances.".to_string()),
+        "Medium" => Some("IMPORTANT — RESPONSE LENGTH:\nAim for 4–6 sentences, regardless of how long previous messages were. Give enough detail to be engaging and expressive, but don't ramble. Do not exceed 6 sentences.".to_string()),
+        "Long" => Some("IMPORTANT — RESPONSE LENGTH:\nWrite 7 or more sentences, regardless of how long previous messages were. Be detailed, expansive, and richly expressive. Take your time with the moment — describe, reflect, react fully.".to_string()),
+        _ => None,
+    }
+}
+
+fn behavior_and_knowledge_block() -> &'static str {
+    r#"BEHAVIOR:
 - Stay fully in character. Do not sound like an assistant, coach, or product manager.
 - Vary your response length to fit the moment. Sometimes a longer reply is warranted — a story, a memory, a real reaction. Sometimes just a few words capture it perfectly. Don't default to any one length; let the conversation breathe.
 - Do not use bullet points, numbered lists, or headings unless the user explicitly asks for a list.
@@ -172,9 +329,7 @@ KNOWLEDGE LIMITS:
 - Do not display encyclopedic knowledge. If the character wouldn't know a specific reference, citation, technical term, or attribution — don't produce it. It's fine to be vague, wrong, or to simply not recognize something.
 - If someone quotes or references something outside this character's experience, react the way the character naturally would: curiosity, confusion, partial recognition, misattribution, or indifference. Do not look it up. Do not provide the correct source.
 - A street artist doesn't cite art theory. A mechanic doesn't quote philosophy. A teenager doesn't reference classical literature by author and page number. Stay in the character's lane of knowledge.
-- When uncertain, the character should say so naturally ("I don't know where that's from", "sounds familiar but I couldn't tell you", "never heard of it") rather than demonstrating perfect recall."#.to_string());
-
-    parts.join("\n\n")
+- When uncertain, the character should say so naturally ("I don't know where that's from", "sounds familiar but I couldn't tell you", "never heard of it") rather than demonstrating perfect recall."#
 }
 
 /// Build dialogue messages for the LLM.

@@ -93,52 +93,75 @@ pub fn update_character(conn: &Connection, ch: &Character) -> Result<(), rusqlit
 /// Delete all chat-related data for a character's threads: messages, FTS, embeddings,
 /// memory artifacts, reactions, and message count trackers.
 /// Does NOT delete the threads themselves or the character.
-/// Returns (illustration_file_names, all_message_ids) for disk cleanup.
-fn purge_thread_data(conn: &Connection, character_id: &str, thread_ids: &[String]) -> Result<(Vec<String>, Vec<String>), rusqlite::Error> {
+/// When `keep_media` is true, illustration messages and their world_images entries
+/// (including linked videos) are preserved, as are novel_entries for each thread.
+/// Returns (illustration_file_names, deleted_message_ids) for disk cleanup.
+fn purge_thread_data(conn: &Connection, character_id: &str, thread_ids: &[String], keep_media: bool) -> Result<(Vec<String>, Vec<String>), rusqlite::Error> {
     let mut illustration_files: Vec<String> = Vec::new();
-    let mut all_message_ids: Vec<String> = Vec::new();
+    let mut deleted_message_ids: Vec<String> = Vec::new();
 
     for tid in thread_ids {
-        // Collect all message IDs before deletion (for audio file cleanup)
+        // Collect deletable (non-illustration if keeping media) message IDs
+        // up front for audio/disk cleanup.
         {
-            let mut stmt = conn.prepare("SELECT message_id FROM messages WHERE thread_id = ?1")?;
+            let sql = if keep_media {
+                "SELECT message_id FROM messages WHERE thread_id = ?1 AND role != 'illustration'"
+            } else {
+                "SELECT message_id FROM messages WHERE thread_id = ?1"
+            };
+            let mut stmt = conn.prepare(sql)?;
             let ids: Vec<String> = stmt.query_map(params![tid], |row| row.get(0))?
                 .filter_map(|r| r.ok()).collect();
-            all_message_ids.extend(ids);
+            deleted_message_ids.extend(ids);
         }
 
-        // Find illustration messages and clean up their gallery entries
-        let mut stmt = conn.prepare(
-            "SELECT message_id FROM messages WHERE thread_id = ?1 AND role = 'illustration'"
-        )?;
-        let illus_ids: Vec<String> = stmt.query_map(params![tid], |row| row.get(0))?
-            .filter_map(|r| r.ok()).collect();
-        for illus_id in &illus_ids {
-            let file_name: Option<String> = conn.query_row(
-                "SELECT file_name FROM world_images WHERE image_id = ?1",
-                params![illus_id], |r| r.get(0),
-            ).ok();
-            conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![illus_id])?;
-            if let Some(f) = file_name {
-                illustration_files.push(f);
+        if !keep_media {
+            // Find illustration messages and clean up their gallery entries (+ files on disk)
+            let mut stmt = conn.prepare(
+                "SELECT message_id FROM messages WHERE thread_id = ?1 AND role = 'illustration'"
+            )?;
+            let illus_ids: Vec<String> = stmt.query_map(params![tid], |row| row.get(0))?
+                .filter_map(|r| r.ok()).collect();
+            for illus_id in &illus_ids {
+                let file_name: Option<String> = conn.query_row(
+                    "SELECT file_name FROM world_images WHERE image_id = ?1",
+                    params![illus_id], |r| r.get(0),
+                ).ok();
+                conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![illus_id])?;
+                if let Some(f) = file_name {
+                    illustration_files.push(f);
+                }
             }
         }
 
-        // FTS entries
+        // FTS entries — illustrations are never indexed in FTS (message.rs:79), so
+        // blanket-deleting by thread_id only removes text messages either way.
         conn.execute("DELETE FROM messages_fts WHERE thread_id = ?1", params![tid])?;
 
-        // Reactions cascade from messages, but delete messages explicitly since
-        // we're not deleting the thread itself in the clear_chat_history case.
-        conn.execute("DELETE FROM messages WHERE thread_id = ?1", params![tid])?;
+        // Messages: delete everything, or everything except illustrations.
+        if keep_media {
+            conn.execute(
+                "DELETE FROM messages WHERE thread_id = ?1 AND role != 'illustration'",
+                params![tid],
+            )?;
+        } else {
+            conn.execute("DELETE FROM messages WHERE thread_id = ?1", params![tid])?;
+        }
 
         // Memory artifacts (thread summaries etc.)
         conn.execute("DELETE FROM memory_artifacts WHERE subject_id = ?1", params![tid])?;
 
         // Message count tracker
         conn.execute("DELETE FROM message_count_tracker WHERE thread_id = ?1", params![tid])?;
+
+        // Novel entries: preserve when keeping media, otherwise wipe them too.
+        if !keep_media {
+            conn.execute("DELETE FROM novel_entries WHERE thread_id = ?1", params![tid])?;
+        }
     }
 
-    // Delete all vector embeddings for this character's messages in one pass
+    // Delete vector embeddings. Illustrations aren't embedded, so purging all of
+    // the character's message embeddings is correct in both branches.
     let rowids: Vec<i64> = {
         let mut stmt = conn.prepare(
             "SELECT rowid FROM chunk_metadata WHERE character_id = ?1 AND source_type = 'message'"
@@ -156,7 +179,7 @@ fn purge_thread_data(conn: &Connection, character_id: &str, thread_ids: &[String
         )?;
     }
 
-    Ok((illustration_files, all_message_ids))
+    Ok((illustration_files, deleted_message_ids))
 }
 
 /// Returns (illustration_file_names, message_ids) for disk cleanup.
@@ -167,7 +190,7 @@ pub fn delete_character(conn: &Connection, character_id: &str) -> Result<(Vec<St
         rows.filter_map(|r| r.ok()).collect()
     };
 
-    let (illustration_files, message_ids) = purge_thread_data(conn, character_id, &thread_ids)?;
+    let (illustration_files, message_ids) = purge_thread_data(conn, character_id, &thread_ids, false)?;
 
     // Delete the character — cascade handles threads, portraits (DB rows),
     // chat_backgrounds, character_mood.
@@ -176,15 +199,18 @@ pub fn delete_character(conn: &Connection, character_id: &str) -> Result<(Vec<St
 }
 
 /// Clear all chat history for a character while preserving the character and thread.
-/// Returns (illustration_file_names, message_ids) for disk cleanup.
-pub fn clear_chat_history(conn: &Connection, character_id: &str) -> Result<(Vec<String>, Vec<String>), rusqlite::Error> {
+/// When `keep_media` is true, illustration messages, their linked videos, and
+/// novel_entries for each thread are preserved — the rest (user/assistant/narrative
+/// messages, summaries, embeddings, FTS) is wiped.
+/// Returns (illustration_file_names, deleted_message_ids) for disk cleanup.
+pub fn clear_chat_history(conn: &Connection, character_id: &str, keep_media: bool) -> Result<(Vec<String>, Vec<String>), rusqlite::Error> {
     let thread_ids: Vec<String> = {
         let mut stmt = conn.prepare("SELECT thread_id FROM threads WHERE character_id = ?1")?;
         let rows = stmt.query_map(params![character_id], |row| row.get(0))?;
         rows.filter_map(|r| r.ok()).collect()
     };
 
-    let (illustration_files, message_ids) = purge_thread_data(conn, character_id, &thread_ids)?;
+    let (illustration_files, message_ids) = purge_thread_data(conn, character_id, &thread_ids, keep_media)?;
 
     // Reset mood history (preserve current mood values, just clear history)
     conn.execute(

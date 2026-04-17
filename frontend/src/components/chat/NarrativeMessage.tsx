@@ -40,7 +40,7 @@ export function NarrativeMessage({
   const allTones = ["Auto", "Playful", "Happy", "Excited", "Reverent", "Serene", "Intimate", "Tender", "Sad", "Melancholy", "Angry", "Anxious"];
 
   return (<>
-    <div key={message.message_id} className="flex justify-center my-2">
+    <div key={message.message_id} data-message-id={message.message_id} className="flex justify-center my-2">
       <div className="relative group max-w-[90%] rounded-xl px-5 py-3.5 text-sm leading-relaxed bg-gradient-to-br from-amber-950/40 to-amber-900/20 border border-amber-700/30 text-amber-100/90 italic backdrop-blur-sm">
         <div className="flex items-center gap-1.5 mb-1.5 text-[10px] uppercase tracking-wider text-amber-500/70 font-semibold not-italic">
           <BookOpen size={12} />

@@ -61,7 +61,7 @@ export function IllustrationPickerModal({
 
   return (
     <Dialog open={open} onClose={closeAndSync} className="max-w-sm">
-      <div className="p-5 space-y-3">
+      <div className="p-5 space-y-3 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl shadow-black/50">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Image size={18} className="text-emerald-500" />

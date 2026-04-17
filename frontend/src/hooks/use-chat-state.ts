@@ -9,6 +9,28 @@ interface UseChatStateOptions {
   chatType: "individual" | "group";
 }
 
+// Scroll `scrollEl` toward the bottom, but never so far that the top of the
+// message identified by `messageId` is pushed out of view. For short messages
+// this behaves like a plain bottom-scroll; for tall ones it pins the message's
+// top ~TOP_PADDING from the top of the viewport so the first lines stay
+// readable while the rest extends below the fold.
+const TOP_PADDING = 16;
+function scrollToBottomCapped(scrollEl: HTMLElement, messageId: string | null, smooth: boolean) {
+  const maxScroll = scrollEl.scrollHeight - scrollEl.clientHeight;
+  let target = maxScroll;
+  if (messageId) {
+    const msgEl = scrollEl.querySelector(`[data-message-id="${messageId}"]`) as HTMLElement | null;
+    if (msgEl) {
+      const scrollRect = scrollEl.getBoundingClientRect();
+      const msgRect = msgEl.getBoundingClientRect();
+      const msgTopInContent = scrollEl.scrollTop + (msgRect.top - scrollRect.top);
+      target = Math.max(0, Math.min(maxScroll, msgTopInContent - TOP_PADDING));
+    }
+  }
+  if (smooth) scrollEl.scrollTo({ top: target, behavior: "smooth" });
+  else scrollEl.scrollTop = target;
+}
+
 export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
   // ── Shared state ──────────────────────────────────────────────────────
   const inputValueRef = useRef("");
@@ -243,7 +265,10 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     prevGeneratingVideoRef.current = store.generatingVideo;
   }, [store.videoFiles, store.generatingVideo]);
 
-  // Scroll to bottom when new messages are appended
+  // Scroll to bottom when new messages are appended — but cap the scroll so
+  // the TOP of the arriving message stays in view. For short messages this is
+  // indistinguishable from a full bottom-scroll; for long ones it avoids the
+  // jarring "read from the middle" feel by keeping the first lines visible.
   const lastMessageIdRef = useRef<string | null>(null);
   useEffect(() => {
     const el = scrollRef.current;
@@ -254,7 +279,7 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     const prevLastId = lastMessageIdRef.current;
 
     if (lastId !== prevLastId && lastId !== null) {
-      el.scrollTop = el.scrollHeight;
+      scrollToBottomCapped(el, lastId, false);
     }
 
     lastMessageIdRef.current = lastId;
@@ -284,7 +309,10 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
   useEffect(() => {
     if (isSending || isGeneratingNarrative || isGeneratingIllustration) {
       const el = scrollRef.current;
-      if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+      if (el) {
+        const lastId = store.messages[store.messages.length - 1]?.message_id ?? null;
+        scrollToBottomCapped(el, lastId, true);
+      }
     }
   }, [isSending, isGeneratingNarrative, isGeneratingIllustration]);
 
@@ -294,7 +322,9 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     if (prevGeneratingIllustration.current && !isGeneratingIllustration) {
       const el = scrollRef.current;
       if (el) {
-        const scroll = () => el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+        const lastMsg = store.messages[store.messages.length - 1];
+        const lastId = lastMsg?.message_id ?? null;
+        const scroll = () => scrollToBottomCapped(el, lastId, true);
         scroll();
         setTimeout(scroll, 300);
         setTimeout(scroll, 800);

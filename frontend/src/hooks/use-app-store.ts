@@ -623,13 +623,15 @@ export function useAppStore() {
     }
   }, [state.activeWorld, setError]);
 
-  const clearGroupChatHistory = useCallback(async (groupChatId: string) => {
+  const clearGroupChatHistory = useCallback(async (groupChatId: string, keepMedia: boolean) => {
     try {
-      await api.clearGroupChatHistory(groupChatId);
+      await api.clearGroupChatHistory(groupChatId, keepMedia);
+      // When keeping media, illustrations remain — reload from the DB so they stay visible.
+      const page = keepMedia ? await api.getGroupMessages(groupChatId) : { messages: [], total: 0 };
       setState((s) => ({
         ...s,
-        messages: [],
-        totalMessages: 0,
+        messages: page.messages,
+        totalMessages: page.total,
         reactions: {},
         chatError: null,
         lastFailedContent: null,
@@ -639,13 +641,14 @@ export function useAppStore() {
     }
   }, [setError]);
 
-  const clearChatHistory = useCallback(async (characterId: string) => {
+  const clearChatHistory = useCallback(async (characterId: string, keepMedia: boolean) => {
     try {
-      await api.clearChatHistory(characterId);
+      await api.clearChatHistory(characterId, keepMedia);
+      const page = keepMedia ? await api.getMessages(characterId) : { messages: [], total: 0 };
       setState((s) => ({
         ...s,
-        messages: [],
-        totalMessages: 0,
+        messages: page.messages,
+        totalMessages: page.total,
         reactions: {},
         chatError: null,
         lastFailedContent: null,
@@ -767,6 +770,17 @@ export function useAppStore() {
       const freshWorld = state.activeWorld ? await api.getWorld(state.activeWorld.world_id) : null;
       const freshCharacters = state.activeWorld ? await api.listCharacters(state.activeWorld.world_id) : [];
       setState((s) => {
+        // If the user edited their message while the response was in flight, the
+        // optimistic message in state has diverged from what the backend saved.
+        // Use the edited content locally and persist it to the real message.
+        const pending = s.messages.find((m) => m.message_id === optimisticMsg.message_id);
+        const editedDuringWait = pending && pending.content !== content;
+        const finalUserMsg = editedDuringWait
+          ? { ...result.user_message, content: pending!.content }
+          : result.user_message;
+        if (editedDuringWait) {
+          api.editMessageContent(finalUserMsg.message_id, finalUserMsg.content, false).catch(() => {});
+        }
         const merged = { ...s.reactions };
         for (const r of result.ai_reactions) {
           if (!merged[r.message_id]) merged[r.message_id] = [];
@@ -776,7 +790,7 @@ export function useAppStore() {
           ...s,
           messages: [
             ...s.messages.filter((m) => m.message_id !== optimisticMsg.message_id),
-            result.user_message,
+            finalUserMsg,
             result.assistant_message,
           ],
           totalMessages: s.totalMessages + 2,
@@ -793,7 +807,7 @@ export function useAppStore() {
         ...s,
         sending: false,
         chatError: String(e),
-        lastFailedContent: content,
+        lastFailedContent: s.messages.find((m) => m.message_id === optimisticMsg.message_id)?.content ?? content,
         messages: s.messages.filter((m) => m.message_id !== optimisticMsg.message_id),
       }));
     }
@@ -880,6 +894,16 @@ export function useAppStore() {
   }, [state.apiKey, state.activeGroupChat, state.activeCharacter, state.notifyOnMessage]);
 
   const editMessageContent = useCallback(async (messageId: string, content: string) => {
+    // Pending (optimistic) messages have no DB row yet — just update state locally.
+    // sendMessage's success path will detect the diverged content and persist it
+    // with an editMessageContent call once the real message_id is known.
+    if (messageId.startsWith("pending-")) {
+      setState((s) => ({
+        ...s,
+        messages: s.messages.map((m) => m.message_id === messageId ? { ...m, content } : m),
+      }));
+      return;
+    }
     const isGroup = !!state.activeGroupChat && !state.activeCharacter;
     try {
       await api.editMessageContent(messageId, content, isGroup);
