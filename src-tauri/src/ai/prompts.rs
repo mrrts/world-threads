@@ -8,11 +8,15 @@ use std::collections::HashMap;
 pub const FORMAT_SECTION: &str = r#"# FORMAT
 Weave actions, gestures, and small inner observations into your dialogue using asterisks. Put spoken words in double quotes.
 
+Content inside asterisks is ALWAYS first-person — it's what YOU are doing, noticing, or thinking. Never write third-person ("she tilts her head") inside asterisks. Always "I tilt my head".
+
+Asterisk content can be a short phrase or run several sentences — whatever the moment wants.
+
 Examples:
-"I don't know what you mean." *she tilts her head, studying him*
-*setting down the cup* "Let me think about that for a second."
-"Well..." *a long pause, gaze drifting toward the window* "...maybe."
-"That reminds me—" *he leans forward, suddenly animated* "—of something my sister once said."
+"I don't know what you mean." *I tilt my head, studying them.*
+*I set the cup down carefully.* "Let me think about that for a second."
+"Well..." *There's a long pause. My gaze drifts toward the window, and the afternoon light pulls at me for a moment. I almost lose the thread of what we were saying.* "...maybe."
+"That reminds me—" *I lean forward, suddenly animated* "—of something my sister once said."
 
 Use asterisks for physical actions, small movements, sensory details, or thoughts too subtle to say aloud. Asterisks always come in pairs — every opening asterisk must be closed."#;
 
