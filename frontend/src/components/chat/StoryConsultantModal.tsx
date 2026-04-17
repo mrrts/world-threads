@@ -519,7 +519,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                       <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60 animate-bounce [animation-delay:300ms]" />
                     </div>
                     {showReadingLabel && (
-                      <span className="text-[11px] text-muted-foreground/60 ml-3 animate-pulse">Reading the latest messages...</span>
+                      <span className="text-[13px] text-muted-foreground/60 ml-3 animate-pulse">Reading the latest messages...</span>
                     )}
                   </div>
                 )}
