@@ -163,10 +163,12 @@ pub async fn run_dialogue_with_base(
     // Salvage mid-sentence cutoffs. When the model's reply is terminated by
     // max_completion_tokens (finish_reason == "length"), trim back to the
     // last complete sentence so the user never sees a half-finished word.
-    // Only triggers on the length stop — natural stops are returned as-is.
+    // Then balance any unclosed openers (", *, or () so dialogue/action
+    // markup never dangles. Natural stops are returned as-is.
     let reply = if choice.finish_reason.as_deref() == Some("length") {
         let trimmed = trim_to_last_complete_sentence(&raw);
-        if trimmed.is_empty() { raw } else { trimmed }
+        let base = if trimmed.is_empty() { raw.as_str() } else { trimmed.as_str() };
+        balance_trailing_openers(base)
     } else {
         raw
     };
@@ -176,15 +178,11 @@ pub async fn run_dialogue_with_base(
 
 /// Walk backward through `s` and return the substring ending at the last
 /// sentence-terminating punctuation (., !, ?, …), inclusive of any trailing
-/// closing quotes, brackets, and asterisks (which are commonly used for
-/// dialogue and action beats like `*she smiles*` or `(quietly)`).
+/// closing quotes, brackets, and asterisks.
 ///
-/// The returned prefix is guaranteed to have balanced `*...*` pairs and
-/// balanced parentheses — if including the trailing closers would leave a
-/// dangling opener (e.g. the model was cut off mid-action block), we fall
-/// back to an earlier sentence that *is* balanced. Returns an empty string
-/// if no terminator is found anywhere; callers should fall back to the
-/// original text in that case.
+/// Returns an empty string if no terminator is found — callers should fall
+/// back to the original text (still passed through `balance_trailing_openers`)
+/// in that case.
 fn trim_to_last_complete_sentence(s: &str) -> String {
     let trimmed = s.trim_end();
     if trimmed.is_empty() { return String::new(); }
@@ -206,32 +204,39 @@ fn trim_to_last_complete_sentence(s: &str) -> String {
                 break;
             }
         }
-        let candidate = &trimmed[..end];
-        // Skip this candidate if the kept text has an unmatched `*` or `(`
-        // (e.g. the model opened an action block but got cut off before
-        // closing it). Keep walking back until we find a balanced prefix.
-        if is_balanced_for_actions(candidate) {
-            return candidate.to_string();
-        }
+        return trimmed[..end].to_string();
     }
     String::new()
 }
 
-/// Returns true when `s` has balanced `*...*` pairs (even asterisk count) and
-/// balanced parentheses (open == close). Keeps it simple — doesn't try to
-/// understand markdown nesting or quote context.
-fn is_balanced_for_actions(s: &str) -> bool {
+/// Append closing characters for any unclosed openers in `s`. Handles double
+/// quotes, asterisk pairs (used for action beats like `*smiles*`), and
+/// parentheses. The LLM may end mid-way through `"some dialogue` or
+/// `*she turned` and we'd rather render `"some dialogue."` / `*she turned.*`
+/// than leave the markup dangling.
+fn balance_trailing_openers(s: &str) -> String {
     let mut stars: usize = 0;
-    let mut parens: i32 = 0;
+    let mut paren_depth: i32 = 0;
+    let mut dquotes: usize = 0;
     for c in s.chars() {
         match c {
             '*' => stars += 1,
-            '(' => parens += 1,
-            ')' => parens -= 1,
+            '(' => paren_depth += 1,
+            ')' => { if paren_depth > 0 { paren_depth -= 1; } }
+            '"' => dquotes += 1,
             _ => {}
         }
     }
-    stars % 2 == 0 && parens == 0
+    let mut out = s.to_string();
+    // Close parens first (they're typically the innermost markup), then
+    // asterisks (action tags), then quotes (outermost dialogue wrap).
+    while paren_depth > 0 {
+        out.push(')');
+        paren_depth -= 1;
+    }
+    if stars % 2 == 1 { out.push('*'); }
+    if dquotes % 2 == 1 { out.push('"'); }
+    out
 }
 
 /// Streaming variant of run_dialogue_with_base — emits tokens via Tauri events.
