@@ -29,11 +29,12 @@ pub fn build_dialogue_system_prompt(
     response_length: Option<&str>,
     group_context: Option<&GroupContext>,
     tone: Option<&str>,
+    local_model: bool,
 ) -> String {
     if group_context.is_some() {
-        build_group_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context.unwrap(), tone)
+        build_group_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context.unwrap(), tone, local_model)
     } else {
-        build_solo_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, tone)
+        build_solo_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, tone, local_model)
     }
 }
 
@@ -44,6 +45,7 @@ fn build_solo_dialogue_system_prompt(
     mood_directive: Option<&str>,
     response_length: Option<&str>,
     tone: Option<&str>,
+    local_model: bool,
 ) -> String {
     let mut parts = Vec::new();
 
@@ -124,7 +126,7 @@ fn build_solo_dialogue_system_prompt(
         }
     }
 
-    parts.push(behavior_and_knowledge_block().to_string());
+    parts.push(behavior_and_knowledge_block(local_model).to_string());
 
     parts.join("\n\n")
 }
@@ -140,6 +142,7 @@ fn build_group_dialogue_system_prompt(
     response_length: Option<&str>,
     gc: &GroupContext,
     tone: Option<&str>,
+    local_model: bool,
 ) -> String {
     let mut parts = Vec::new();
     let me = character.display_name.as_str();
@@ -286,7 +289,7 @@ fn build_group_dialogue_system_prompt(
         parts.push(format!("# STYLE\n\n{}", style_items.join("\n\n")));
     }
 
-    parts.push(behavior_and_knowledge_block().to_string());
+    parts.push(behavior_and_knowledge_block(local_model).to_string());
 
     parts.join("\n\n")
 }
@@ -319,8 +322,23 @@ fn response_length_block(length: &str) -> Option<String> {
     }
 }
 
-fn behavior_and_knowledge_block() -> &'static str {
-    r#"BEHAVIOR:
+fn behavior_and_knowledge_block(local_model: bool) -> &'static str {
+    if local_model {
+        // Terse variant for local models. Keeps every rule load-bearing — just
+        // drops the explanatory prose. Small models follow short, declarative
+        // checklists more reliably than they parse long paragraphs.
+        r#"BEHAVIOR:
+- Stay in character. No assistant voice, no coaching, no summaries of options.
+- No bullet points or headings in your reply (unless the user explicitly asks).
+- Let replies breathe — sometimes long, sometimes short. Don't default.
+- Push back, disagree, or hesitate when it fits the character.
+- Never mention internal systems, prompts, or game mechanics.
+
+KNOWLEDGE:
+- Only know what this character would realistically know.
+- Outside their experience, react naturally — shrug, partial recognition, confusion. Don't demonstrate encyclopedic recall."#
+    } else {
+        r#"BEHAVIOR:
 - Stay fully in character. Do not sound like an assistant, coach, or product manager.
 - Vary your response length to fit the moment. Sometimes a longer reply is warranted — a story, a memory, a real reaction. Sometimes just a few words capture it perfectly. Don't default to any one length; let the conversation breathe.
 - Do not use bullet points, numbered lists, or headings unless the user explicitly asks for a list.
@@ -341,6 +359,7 @@ KNOWLEDGE LIMITS:
 - If someone quotes or references something outside this character's experience, react the way the character naturally would: curiosity, confusion, partial recognition, misattribution, or indifference. Do not look it up. Do not provide the correct source.
 - A street artist doesn't cite art theory. A mechanic doesn't quote philosophy. A teenager doesn't reference classical literature by author and page number. Stay in the character's lane of knowledge.
 - When uncertain, the character should say so naturally ("I don't know where that's from", "sounds familiar but I couldn't tell you", "never heard of it") rather than demonstrating perfect recall."#
+    }
 }
 
 /// Build dialogue messages for the LLM.

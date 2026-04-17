@@ -293,6 +293,7 @@ pub async fn send_message_cmd(
         mood_directive.as_deref(),
         response_length.as_deref(),
         None, None, narration_tone.as_deref(),
+        model_config.is_local(),
     ).await?;
     let tokens = dialogue_usage.as_ref().map(|u| u.total_tokens).unwrap_or(0);
 
@@ -568,6 +569,7 @@ pub async fn prompt_character_cmd(
         mood_directive.as_deref(),
         response_length.as_deref(),
         None, None, narration_tone.as_deref(),
+        model_config.is_local(),
     ).await?;
 
     let tokens = dialogue_usage.as_ref().map(|u| u.total_tokens).unwrap_or(0);
@@ -1045,6 +1047,7 @@ pub async fn reset_to_message_cmd(
             mood_directive.as_deref(),
             response_length.as_deref(),
             None, None, narration_tone.as_deref(),
+            model_config.is_local(),
         ).await?;
 
         if let Some(u) = &dialogue_usage {

@@ -37,6 +37,13 @@ impl Default for ModelConfig {
 }
 
 impl ModelConfig {
+    /// True when the configured chat provider is a local backend (LMStudio,
+    /// and later llama.cpp / ollama / etc.). Small local models benefit from
+    /// tighter, more declarative prompts than frontier models do.
+    pub fn is_local(&self) -> bool {
+        self.ai_provider == "lmstudio"
+    }
+
     /// Base URL for chat completions — follows the provider toggle.
     pub fn chat_api_base(&self) -> String {
         if self.ai_provider == "lmstudio" {
@@ -125,8 +132,9 @@ pub async fn run_dialogue_with_base(
     group_context: Option<&prompts::GroupContext>,
     character_names: Option<&std::collections::HashMap<String, String>>,
     tone: Option<&str>,
+    local_model: bool,
 ) -> Result<(String, Option<openai::Usage>), String> {
-    let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone);
+    let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model);
     let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names);
 
     let token_limit = match response_length {
@@ -168,10 +176,11 @@ pub async fn run_dialogue_streaming(
     group_context: Option<&prompts::GroupContext>,
     character_names: Option<&std::collections::HashMap<String, String>>,
     tone: Option<&str>,
+    local_model: bool,
     app_handle: &tauri::AppHandle,
     event_name: &str,
 ) -> Result<String, String> {
-    let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone);
+    let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model);
     let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names);
 
     let token_limit = match response_length {

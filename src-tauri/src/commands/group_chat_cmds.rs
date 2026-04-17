@@ -315,6 +315,7 @@ pub async fn send_group_message_cmd(
             Some(&group_context),
             Some(&character_names),
             narration_tone.as_deref(),
+            model_config.is_local(),
         ).await?;
 
         // Strip own prefix and truncate any other-character dialogue
@@ -454,6 +455,7 @@ pub async fn prompt_group_character_cmd(
         Some(&group_context),
         Some(&character_names),
         narration_tone.as_deref(),
+        model_config.is_local(),
     ).await?;
 
     let other_names: Vec<&str> = characters.iter()
