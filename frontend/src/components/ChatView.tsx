@@ -707,18 +707,17 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
           <textarea
             ref={inputRef}
             defaultValue=""
+            style={{ fontSize: `${chatFontPx(store.chatFontSize)}px` }}
             onChange={(e) => {
               inputValueRef.current = e.target.value;
               const empty = !e.target.value.trim();
               if (hasInput === empty) setHasInput(!empty);
-              e.target.style.height = "";
-              if (e.target.scrollHeight > e.target.offsetHeight) {
-                e.target.style.height = Math.min(e.target.scrollHeight, 200) + "px";
-              }
+              e.target.style.height = "auto";
+              e.target.style.height = `${e.target.scrollHeight}px`;
             }}
             onKeyDown={handleKeyDown}
             placeholder={`Talk to ${store.activeCharacter?.display_name ?? "character"}...`}
-            className="flex-1 self-stretch max-h-[200px] resize-none rounded-xl border border-input bg-transparent px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]"
+            className="flex-1 self-stretch resize-none overflow-hidden rounded-xl border border-input bg-transparent px-4 py-2.5 placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
             rows={1}
             disabled={isSending || (store.autoRespond && !store.apiKey)}
           />
