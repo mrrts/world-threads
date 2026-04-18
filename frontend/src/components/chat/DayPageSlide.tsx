@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Markdown from "react-markdown";
-import { BookOpen, Link2, Image, Loader2, Trash2, BookText, Sparkles } from "lucide-react";
+import { BookOpen, Link2, Image, Loader2, Trash2, BookText, Sparkles, RotateCw } from "lucide-react";
 import { formatMessage, markdownComponents, remarkPlugins, rehypePlugins } from "./formatMessage";
 import { TimeDivider } from "./TimeDivider";
 import { Button } from "@/components/ui/button";
@@ -107,6 +107,7 @@ export function DayPageSlide({
   const [novelDraft, setNovelDraft] = useState("");
   const [novelTab, setNovelTab] = useState<"read" | "edit">("read");
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
+  const [regenerateConfirmOpen, setRegenerateConfirmOpen] = useState(false);
 
   // Sync novel view with entry existence
   useEffect(() => {
@@ -150,6 +151,13 @@ export function DayPageSlide({
     onNovelChange();
   };
 
+  const handleRegenerate = async () => {
+    setRegenerateConfirmOpen(false);
+    await api.deleteNovelEntry(threadId, day);
+    onNovelChange();
+    await handleNovelize();
+  };
+
   // Collect illustrations for the day
   const dayIllustrations = messages.filter((m) => m.role === "illustration");
 
@@ -171,17 +179,27 @@ export function DayPageSlide({
       <div className="flex-shrink-0 sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-border/30 px-6 py-3 relative flex items-center justify-center gap-3">
         <h2 className="text-lg font-bold text-foreground tracking-tight">Day {day}</h2>
         {novelEntry ? (
-          <button
-            onClick={() => setShowNovelView(!showNovelView)}
-            className={`px-3 py-1 text-xs font-medium rounded-full transition-colors cursor-pointer flex items-center gap-1.5 ${
-              showNovelView
-                ? "bg-amber-600 text-white"
-                : "bg-amber-600/20 text-amber-400 hover:bg-amber-600/30"
-            }`}
-          >
-            <BookText size={12} />
-            Novel
-          </button>
+          <>
+            <button
+              onClick={() => setShowNovelView(!showNovelView)}
+              className={`px-3 py-1 text-xs font-medium rounded-full transition-colors cursor-pointer flex items-center gap-1.5 ${
+                showNovelView
+                  ? "bg-amber-600 text-white"
+                  : "bg-amber-600/20 text-amber-400 hover:bg-amber-600/30"
+              }`}
+            >
+              <BookText size={12} />
+              Novel
+            </button>
+            <button
+              onClick={() => setRegenerateConfirmOpen(true)}
+              disabled={!apiKey || novelGenerating}
+              title="Regenerate chapter"
+              className="px-2 py-1 text-xs font-medium rounded-full bg-amber-600/10 text-amber-400/80 hover:bg-amber-600/20 hover:text-amber-400 transition-colors cursor-pointer flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <RotateCw size={12} />
+            </button>
+          </>
         ) : (
           <button
             onClick={handleNovelize}
@@ -473,6 +491,27 @@ export function DayPageSlide({
             </Button>
             <Button variant="destructive" size="sm" onClick={handleClear}>
               Clear
+            </Button>
+          </div>
+        </div>
+      </Dialog>
+
+      {/* ── Regenerate confirmation ── */}
+      <Dialog open={regenerateConfirmOpen} onClose={() => setRegenerateConfirmOpen(false)}>
+        <div className="p-5 space-y-4 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl shadow-black/50 max-w-xs mx-auto">
+          <div className="flex items-center gap-2">
+            <RotateCw size={18} className="text-amber-500" />
+            <h3 className="font-semibold">Regenerate Chapter</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            This will clear the current chapter for Day {day} and write a new one from the day's messages.
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setRegenerateConfirmOpen(false)}>
+              Cancel
+            </Button>
+            <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white" onClick={handleRegenerate}>
+              Regenerate
             </Button>
           </div>
         </div>
