@@ -29,10 +29,17 @@ export function NarrativePickerModal({ open, onClose, onGenerate }: Props) {
           </ul>
           <textarea
             value={instructions}
-            onChange={(e) => setInstructions(e.target.value)}
+            onChange={(e) => {
+              setInstructions(e.target.value);
+              e.target.style.height = "auto";
+              e.target.style.height = `${e.target.scrollHeight}px`;
+            }}
+            ref={(el) => {
+              if (el) { el.style.height = "auto"; el.style.height = `${el.scrollHeight}px`; }
+            }}
             placeholder="Custom directions for this narrative..."
-            className="w-full min-h-[80px] max-h-[160px] resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-            rows={3}
+            className="w-full resize-none overflow-hidden rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+            rows={4}
             autoFocus
           />
           <div className="flex justify-end gap-2 mt-3">
