@@ -57,15 +57,71 @@ const NOVELIST_LOADING_MESSAGES = [
 ];
 
 // Markdown components for the novel text. Extends the default formatter
-// with a decorative `<hr>` that renders as a centered ornament — the
-// backend emits "* * *" between daypart sections, which markdown parses
-// as a horizontal rule and we render as a fleuron.
+// with a decorative `<hr>` that renders as a large centered ornament —
+// kept as a fallback in case the model emits a horizontal rule mid-section.
+// Primary section dividers are handled by splitting novel content at the
+// "\n\n* * *\n\n" divider string and rendering each section in its own
+// <article> (so each section's first letter gets its own drop-cap).
 const novelMarkdownComponents = {
   ...markdownComponents,
-  hr: () => (
-    <div className="text-center my-8 text-3xl text-amber-400/70 select-none" aria-hidden="true">❧</div>
-  ),
+  hr: () => <NovelDivider />,
 };
+
+function NovelDivider() {
+  return (
+    <div
+      className="text-center my-10 text-[5.625rem] leading-none text-amber-400/70 select-none"
+      aria-hidden="true"
+    >
+      ❧
+    </div>
+  );
+}
+
+// Split novel prose on the backend's section divider and render each section
+// in its own <article>. Passing cursor renders it at the end of the last
+// section (during active streaming). endsWithDivider means the backend has
+// emitted a divider but the next section hasn't started yet — we render an
+// extra divider at the end so the parent can show the "preparing next
+// section" spinner below it.
+function NovelSections({
+  content,
+  articleClassName,
+  cursor,
+}: {
+  content: string;
+  articleClassName: string;
+  cursor?: React.ReactNode;
+}) {
+  const parts = content.split("\n\n* * *\n\n");
+  const endsWithDivider = parts.length > 0 && parts[parts.length - 1] === "";
+  const sections = endsWithDivider ? parts.slice(0, -1) : parts;
+  return (
+    <>
+      {sections.map((section, i) => {
+        const isLast = i === sections.length - 1;
+        return (
+          <React.Fragment key={i}>
+            {i > 0 && <NovelDivider />}
+            <article className={articleClassName}>
+              <Markdown components={novelMarkdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
+                {section}
+              </Markdown>
+              {cursor && isLast && !endsWithDivider && cursor}
+            </article>
+          </React.Fragment>
+        );
+      })}
+      {endsWithDivider && <NovelDivider />}
+    </>
+  );
+}
+
+const NOVEL_ARTICLE_CLASS_LG =
+  "prose prose-lg prose-invert max-w-none leading-[1.9] [--tw-prose-body:var(--color-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-links:var(--color-primary)] first-letter:text-5xl first-letter:font-serif first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:leading-none first-letter:text-amber-400";
+
+const NOVEL_ARTICLE_CLASS_SM =
+  "prose prose-sm prose-invert max-w-none leading-relaxed [--tw-prose-body:var(--color-foreground)] [--tw-prose-bold:var(--color-foreground)] first-letter:text-4xl first-letter:font-serif first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:leading-none first-letter:text-amber-400";
 
 interface Props {
   day: number;
@@ -292,14 +348,15 @@ export function DayPageSlide({
                 </div>
               ) : (
                 <>
-                  <article className="prose prose-lg prose-invert max-w-none leading-[1.9] [--tw-prose-body:var(--color-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-links:var(--color-primary)] first-letter:text-5xl first-letter:font-serif first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:leading-none first-letter:text-amber-400">
-                    <Markdown components={novelMarkdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
-                      {novelGenerating ? novelDraft : (novelEntry?.content ?? "")}
-                    </Markdown>
-                    {novelGenerating && !preparingSection && novelDraft && (
-                      <span className="inline-block w-1.5 h-5 bg-primary/60 animate-pulse ml-0.5 align-text-bottom" />
-                    )}
-                  </article>
+                  <NovelSections
+                    content={novelGenerating ? novelDraft : (novelEntry?.content ?? "")}
+                    articleClassName={NOVEL_ARTICLE_CLASS_LG}
+                    cursor={
+                      novelGenerating && !preparingSection && novelDraft ? (
+                        <span className="inline-block w-1.5 h-5 bg-primary/60 animate-pulse ml-0.5 align-text-bottom" />
+                      ) : null
+                    }
+                  />
                   {novelGenerating && preparingSection && (
                     // Between-section gap: backend is extracting beats or
                     // about to start the next section. Show the spinner +
@@ -544,10 +601,15 @@ export function DayPageSlide({
               </div>
             ) : novelTab === "read" || novelGenerating ? (
               <div className="max-h-[60vh] overflow-y-auto px-6 py-5">
-                <article className="prose prose-sm prose-invert max-w-none leading-relaxed [--tw-prose-body:var(--color-foreground)] [--tw-prose-bold:var(--color-foreground)] first-letter:text-4xl first-letter:font-serif first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:leading-none first-letter:text-amber-400">
-                  <Markdown components={novelMarkdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{novelDraft}</Markdown>
-                  {novelGenerating && <span className="inline-block w-1.5 h-4 bg-primary/60 animate-pulse ml-0.5 align-text-bottom" />}
-                </article>
+                <NovelSections
+                  content={novelDraft}
+                  articleClassName={NOVEL_ARTICLE_CLASS_SM}
+                  cursor={
+                    novelGenerating ? (
+                      <span className="inline-block w-1.5 h-4 bg-primary/60 animate-pulse ml-0.5 align-text-bottom" />
+                    ) : null
+                  }
+                />
               </div>
             ) : (
               <div className="px-6 py-4">
