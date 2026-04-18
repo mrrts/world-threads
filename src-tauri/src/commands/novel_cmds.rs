@@ -162,14 +162,17 @@ INSTRUCTIONS:
 
     let conversation_text = conversation.join("\n");
 
-    // If the local model's context window can't comfortably hold the whole
-    // day in one shot, fall back to a two-phase "beats → chapter" novelization
-    // (see the "phased novelization" plan). Otherwise keep the original
-    // single-shot streaming path.
+    // Phased "beats → chapter" is the default for local models regardless of
+    // day size. Local models produce more coherent chapter shape when given
+    // a numbered-beats skeleton than when handed a raw transcript — even on
+    // shorter days that would fit in one shot. OpenAI keeps single-shot: it
+    // handles long transcripts cleanly and we'd rather save the round-trips.
+    //
+    // Exception: for absurdly small days (a handful of lines) beat extraction
+    // adds no signal, so fall through to single-shot even on local.
     let is_local = model_config.is_local();
     let est_prompt_tokens = approx_tokens(&system_prompt) + approx_tokens(&conversation_text) + 200;
-    let budget = model_config.safe_local_prompt_budget() as usize;
-    let needs_chunking = is_local && est_prompt_tokens > budget;
+    let needs_chunking = is_local && conversation.len() >= 4 && est_prompt_tokens >= 800;
 
     if !needs_chunking {
         let api_messages = vec![
@@ -230,6 +233,7 @@ Rules:
     // Reserve room for up to ~1500 tokens of beat output per chunk so the
     // model isn't forced to compress; a rich chunk can easily produce 20
     // beats at ~50-80 tokens each.
+    let budget = model_config.safe_local_prompt_budget() as usize;
     let chunk_budget = budget.saturating_sub(approx_tokens(beats_system) + 1_600);
     let chunk_budget = chunk_budget.max(2_000); // don't go absurdly small
 
