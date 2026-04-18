@@ -56,6 +56,10 @@ export interface IllustrationCarouselModalProps {
   /** Whether this is a group chat */
   isGroup: boolean;
   notifyOnMessage?: boolean;
+  /** In 1:1 chats, assistant messages save with sender_character_id = null;
+   *  pass the active character's id here so the day-page chat view can
+   *  still render their portrait. Omit for group chats. */
+  defaultCharacterId?: string;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -146,6 +150,7 @@ export function IllustrationCarouselModal({
   apiKey,
   isGroup,
   notifyOnMessage,
+  defaultCharacterId,
 }: IllustrationCarouselModalProps) {
   const [showDayPages, setShowDayPages] = useState(true);
   const [novelEntries, setNovelEntries] = useState<Record<number, NovelEntry>>({});
@@ -299,6 +304,7 @@ export function IllustrationCarouselModal({
                 novelEntry={novelEntries[activeSlide.day] ?? null}
                 onNovelChange={loadNovelEntries}
                 notifyOnMessage={notifyOnMessage}
+                defaultCharacterId={defaultCharacterId}
               />
             </div>
           ) : (

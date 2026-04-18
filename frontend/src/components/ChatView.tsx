@@ -1054,6 +1054,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         apiKey={store.apiKey}
         isGroup={false}
         notifyOnMessage={store.notifyOnMessage}
+        defaultCharacterId={store.activeCharacter?.character_id}
       />
 
       <RemoveVideoConfirmModal

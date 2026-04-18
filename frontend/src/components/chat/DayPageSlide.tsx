@@ -93,12 +93,17 @@ interface Props {
   /** Callback when novel entry is saved or deleted */
   onNovelChange: () => void;
   notifyOnMessage?: boolean;
+  /** In a 1:1 chat, assistant messages are saved with
+   *  sender_character_id = null. Pass the active character's id here so the
+   *  chat view can still resolve a portrait for them. Leave undefined for
+   *  group chats (which populate sender_character_id per-message). */
+  defaultCharacterId?: string;
 }
 
 export function DayPageSlide({
   day, messages, portraits, characterColors, characterNames,
   userAvatarUrl, backgroundPortraits, videoFiles, videoDataUrls, playVideo,
-  playingVideo, setPlayingVideo, loopVideo, setLoopVideo,
+  playingVideo, setPlayingVideo, loopVideo, setLoopVideo, defaultCharacterId,
   threadId, apiKey, isGroup, novelEntry, onNovelChange, notifyOnMessage,
 }: Props) {
   const [showNovelView, setShowNovelView] = useState(!!novelEntry);
@@ -447,7 +452,10 @@ export function DayPageSlide({
               }
 
               const isUser = msg.role === "user";
-              const charId = msg.sender_character_id;
+              // 1:1 chats don't set sender_character_id on assistant rows —
+              // fall back to the chat's default character so we can still
+              // look up a portrait / color / name for them.
+              const charId = msg.sender_character_id ?? defaultCharacterId ?? null;
               const portraitUrl = charId ? portraits[charId] : undefined;
               const avatarColor = charId ? characterColors[charId] : "#c4a882";
               const charName = charId ? characterNames[charId] : undefined;
