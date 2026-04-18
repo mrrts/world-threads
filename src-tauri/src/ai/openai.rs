@@ -190,6 +190,12 @@ pub async fn chat_completion_stream(
             }
             if let Some(json_str) = line.strip_prefix("data: ") {
                 sse_events_seen += 1;
+                // LM Studio (and some other OpenAI-compatible servers) emit
+                // error events mid-stream as `data: {"error":{"message":"..."}}`.
+                // Detect those first and bail with the server's own message.
+                if let Ok(err) = serde_json::from_str::<ApiError>(json_str) {
+                    return Err(format!("Model error: {}", err.error.message));
+                }
                 if let Ok(parsed) = serde_json::from_str::<StreamChunk>(json_str) {
                     for choice in &parsed.choices {
                         if let Some(content) = &choice.delta.content {
@@ -283,6 +289,9 @@ pub async fn chat_completion_stream_silent(
             if line.is_empty() || line == "data: [DONE]" { continue; }
             if let Some(json_str) = line.strip_prefix("data: ") {
                 sse_events_seen += 1;
+                if let Ok(err) = serde_json::from_str::<ApiError>(json_str) {
+                    return Err(format!("Model error: {}", err.error.message));
+                }
                 if let Ok(parsed) = serde_json::from_str::<StreamChunk>(json_str) {
                     for choice in &parsed.choices {
                         if let Some(content) = &choice.delta.content {
