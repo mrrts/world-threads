@@ -151,12 +151,14 @@ export function IllustrationPickerModal({
             )}
           </div>
         )}
-        <div className="flex gap-2">
-          {([
-            { tier: "low", label: "Quick" },
-            { tier: "medium", label: "Standard" },
-            { tier: "high", label: "High Fidelity" },
-          ] as const).map(({ tier, label }) => (
+        <div>
+          <label className="text-xs font-medium text-muted-foreground block mb-1.5">Generate Image:</label>
+          <div className="flex gap-2">
+            {([
+              { tier: "low", label: "Quick" },
+              { tier: "medium", label: "Standard" },
+              { tier: "high", label: "High Fidelity" },
+            ] as const).map(({ tier, label }) => (
             <button
               key={tier}
               onClick={() => {
@@ -170,6 +172,7 @@ export function IllustrationPickerModal({
               <span className="text-xs font-medium">{label}</span>
             </button>
           ))}
+          </div>
         </div>
       </div>
     </Dialog>
