@@ -48,6 +48,9 @@ export interface AppState {
 }
 
 const PAGE_SIZE = 20;
+/** Initial + per-page size for chat message loading. Long histories
+ *  were starting to cause noticeable render lag. */
+const CHAT_PAGE_SIZE = 100;
 
 const defaultModelConfig: ModelConfig = {
   dialogue_model: "gpt-4o",
@@ -195,7 +198,7 @@ export function useAppStore() {
           const gc = groupChats.find((g) => g.group_chat_id === gcId);
           if (gc) {
             activeGroupChat = gc;
-            const page = await api.getGroupMessages(gc.group_chat_id);
+            const page = await api.getGroupMessages(gc.group_chat_id, CHAT_PAGE_SIZE, 0);
             messages = page.messages;
             totalMessages = page.total;
             reactions = await loadReactions(messages);
@@ -205,7 +208,7 @@ export function useAppStore() {
           const ch = characters.find((c) => c.character_id === charId);
           if (ch) {
             activeCharacter = ch;
-            const page = await api.getMessages(ch.character_id);
+            const page = await api.getMessages(ch.character_id, CHAT_PAGE_SIZE, 0);
             messages = page.messages;
             totalMessages = page.total;
             [reactions, aspectRatios] = await Promise.all([
@@ -218,7 +221,7 @@ export function useAppStore() {
         // Fallback to first character if no last chat found
         if (!activeCharacter && !activeGroupChat && characters.length > 0) {
           activeCharacter = characters[0];
-          const page = await api.getMessages(activeCharacter.character_id);
+          const page = await api.getMessages(activeCharacter.character_id, CHAT_PAGE_SIZE, 0);
           messages = page.messages;
           totalMessages = page.total;
           [reactions, aspectRatios] = await Promise.all([
@@ -313,7 +316,7 @@ export function useAppStore() {
         const gc = groupChats.find((g) => g.group_chat_id === gcId);
         if (gc) {
           activeGroupChat = gc;
-          const page = await api.getGroupMessages(gc.group_chat_id);
+          const page = await api.getGroupMessages(gc.group_chat_id, CHAT_PAGE_SIZE, 0);
           messages = page.messages;
           totalMessages = page.total;
           reactions = await loadReactions(messages);
@@ -323,7 +326,7 @@ export function useAppStore() {
         const ch = characters.find((c) => c.character_id === charId);
         if (ch) {
           activeCharacter = ch;
-          const page = await api.getMessages(ch.character_id);
+          const page = await api.getMessages(ch.character_id, CHAT_PAGE_SIZE, 0);
           messages = page.messages;
           totalMessages = page.total;
           reactions = await loadReactions(messages);
@@ -333,7 +336,7 @@ export function useAppStore() {
       // Fallback to first character if no last chat found
       if (!activeCharacter && !activeGroupChat && characters.length > 0) {
         activeCharacter = characters[0];
-        const page = await api.getMessages(activeCharacter.character_id);
+        const page = await api.getMessages(activeCharacter.character_id, CHAT_PAGE_SIZE, 0);
         messages = page.messages;
         totalMessages = page.total;
         reactions = await loadReactions(messages);
@@ -367,7 +370,7 @@ export function useAppStore() {
       api.setSetting(`last_chat.${state.activeWorld.world_id}`, `char:${character.character_id}`).catch(() => {});
     }
     try {
-      const page = await api.getMessages(character.character_id);
+      const page = await api.getMessages(character.character_id, CHAT_PAGE_SIZE, 0);
       const [reactions, aspectRatios] = await Promise.all([
         loadReactions(page.messages),
         loadAspectRatios(page.messages),
@@ -388,7 +391,7 @@ export function useAppStore() {
       api.setSetting(`last_chat.${state.activeWorld.world_id}`, `group:${groupChat.group_chat_id}`).catch(() => {});
     }
     try {
-      const page = await api.getGroupMessages(groupChat.group_chat_id);
+      const page = await api.getGroupMessages(groupChat.group_chat_id, CHAT_PAGE_SIZE, 0);
       const reactions = await loadReactions(page.messages);
       setState((s) => {
         if (s.activeGroupChat?.group_chat_id !== groupChat.group_chat_id) return s;
@@ -625,7 +628,7 @@ export function useAppStore() {
       await api.deleteCharacter(characterId);
       const characters = await api.listCharacters(state.activeWorld.world_id);
       const activeCharacter = characters[0] ?? null;
-      const page = activeCharacter ? await api.getMessages(activeCharacter.character_id) : { messages: [], total: 0 };
+      const page = activeCharacter ? await api.getMessages(activeCharacter.character_id, CHAT_PAGE_SIZE, 0) : { messages: [], total: 0 };
       setState((s) => ({ ...s, characters, activeCharacter, messages: page.messages, totalMessages: page.total }));
     } catch (e) {
       setError(String(e));
@@ -636,7 +639,7 @@ export function useAppStore() {
     try {
       await api.clearGroupChatHistory(groupChatId, keepMedia);
       // When keeping media, illustrations remain — reload from the DB so they stay visible.
-      const page = keepMedia ? await api.getGroupMessages(groupChatId) : { messages: [], total: 0 };
+      const page = keepMedia ? await api.getGroupMessages(groupChatId, CHAT_PAGE_SIZE, 0) : { messages: [], total: 0 };
       setState((s) => ({
         ...s,
         messages: page.messages,
@@ -653,7 +656,7 @@ export function useAppStore() {
   const clearChatHistory = useCallback(async (characterId: string, keepMedia: boolean) => {
     try {
       await api.clearChatHistory(characterId, keepMedia);
-      const page = keepMedia ? await api.getMessages(characterId) : { messages: [], total: 0 };
+      const page = keepMedia ? await api.getMessages(characterId, CHAT_PAGE_SIZE, 0) : { messages: [], total: 0 };
       setState((s) => ({
         ...s,
         messages: page.messages,
@@ -678,7 +681,7 @@ export function useAppStore() {
       let messages = wasActive ? [] as Message[] : state.messages;
       let totalMessages = wasActive ? 0 : state.totalMessages;
       if (wasActive && activeCharacter) {
-        const page = await api.getMessages(activeCharacter.character_id);
+        const page = await api.getMessages(activeCharacter.character_id, CHAT_PAGE_SIZE, 0);
         messages = page.messages;
         totalMessages = page.total;
       }
@@ -1116,7 +1119,7 @@ export function useAppStore() {
     } catch (e) {
       // Reload messages from DB to get correct state after partial failure
       if (state.activeCharacter) {
-        const page = await api.getMessages(state.activeCharacter.character_id);
+        const page = await api.getMessages(state.activeCharacter.character_id, CHAT_PAGE_SIZE, 0);
         const reactions = await loadReactions(page.messages);
         setState((s) => ({
           ...s,
@@ -1127,7 +1130,7 @@ export function useAppStore() {
           chatError: String(e),
         }));
       } else if (state.activeGroupChat) {
-        const page = await api.getGroupMessages(state.activeGroupChat.group_chat_id);
+        const page = await api.getGroupMessages(state.activeGroupChat.group_chat_id, CHAT_PAGE_SIZE, 0);
         setState((s) => ({
           ...s,
           messages: page.messages,
@@ -1143,7 +1146,39 @@ export function useAppStore() {
     setState((s) => ({ ...s, chatError: null, lastFailedContent: null }));
   }, []);
 
-  // loadOlderMessages is no longer needed — all messages are loaded at once
+  // Load the next page of older messages on demand. Prepends to the
+  // existing list. No-op if we're already showing all or another load is
+  // in flight.
+  const loadEarlierMessages = useCallback(async () => {
+    setState((s) => {
+      if (s.loadingOlder) return s;
+      if (s.messages.length >= s.totalMessages) return s;
+      return { ...s, loadingOlder: true };
+    });
+    try {
+      const activeCharacter = state.activeCharacter;
+      const activeGroup = state.activeGroupChat;
+      const offset = state.messages.length;
+      let older: Message[] = [];
+      if (activeCharacter) {
+        const page = await api.getMessages(activeCharacter.character_id, CHAT_PAGE_SIZE, offset);
+        older = page.messages;
+      } else if (activeGroup) {
+        const page = await api.getGroupMessages(activeGroup.group_chat_id, CHAT_PAGE_SIZE, offset);
+        older = page.messages;
+      }
+      const extraReactions = await loadReactions(older);
+      setState((s) => ({
+        ...s,
+        messages: [...older, ...s.messages],
+        reactions: { ...s.reactions, ...extraReactions },
+        loadingOlder: false,
+      }));
+    } catch (e) {
+      setState((s) => ({ ...s, loadingOlder: false }));
+      setError(String(e));
+    }
+  }, [state.activeCharacter, state.activeGroupChat, state.messages.length, loadReactions, setError]);
 
   const setApiKey = useCallback(async (key: string) => {
     try {
@@ -1300,6 +1335,7 @@ export function useAppStore() {
     setAutoRespond,
     setNotifyOnMessage,
     setChatFontSize,
+    loadEarlierMessages,
     promptCharacter,
     generateNarrative,
     generateIllustration,

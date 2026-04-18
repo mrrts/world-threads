@@ -315,6 +315,17 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
           )
         )}
         <div className="space-y-3 max-w-2xl mx-auto">
+          {store.messages.length > 0 && store.messages.length < store.totalMessages && (
+            <div className="flex justify-center pb-2">
+              <button
+                onClick={() => store.loadEarlierMessages()}
+                disabled={store.loadingOlder}
+                className="px-3 py-1.5 text-xs rounded-full bg-card/80 border border-border hover:bg-accent transition-colors cursor-pointer text-muted-foreground hover:text-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {store.loadingOlder ? "Loading..." : `Load earlier messages (${store.totalMessages - store.messages.length} more)`}
+              </button>
+            </div>
+          )}
           {store.messages.filter((m) => m.content || m.role === "illustration").map((msg, msgIdx, filteredMsgs) => {
             const isUser = msg.role === "user";
             const isNarrative = msg.role === "narrative";

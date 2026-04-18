@@ -155,11 +155,17 @@ pub fn clear_group_chat_history_cmd(
 pub fn get_group_messages_cmd(
     db: State<Database>,
     group_chat_id: String,
+    limit: Option<i64>,
+    offset: Option<i64>,
 ) -> Result<chat_cmds::PaginatedMessages, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
     let total = count_group_messages(&conn, &gc.thread_id).map_err(|e| e.to_string())?;
-    let messages = get_all_group_messages(&conn, &gc.thread_id).map_err(|e| e.to_string())?;
+    let messages = match limit {
+        Some(lim) => list_group_messages_paginated(&conn, &gc.thread_id, lim, offset.unwrap_or(0))
+            .map_err(|e| e.to_string())?,
+        None => get_all_group_messages(&conn, &gc.thread_id).map_err(|e| e.to_string())?,
+    };
     Ok(chat_cmds::PaginatedMessages { messages, total })
 }
 

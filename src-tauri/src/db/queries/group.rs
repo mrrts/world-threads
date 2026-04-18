@@ -132,6 +132,18 @@ pub fn get_all_group_messages(conn: &Connection, thread_id: &str) -> Result<Vec<
     rows.collect()
 }
 
+/// Returns the most recent `limit` group messages, skipping the newest
+/// `offset`. Result is in chronological order (oldest first).
+pub fn list_group_messages_paginated(conn: &Connection, thread_id: &str, limit: i64, offset: i64) -> Result<Vec<Message>, rusqlite::Error> {
+    let mut stmt = conn.prepare(
+        &format!("SELECT {MSG_COLS} FROM group_messages WHERE thread_id = ?1 ORDER BY created_at DESC LIMIT ?2 OFFSET ?3")
+    )?;
+    let rows = stmt.query_map(params![thread_id, limit, offset], row_to_message)?;
+    let mut msgs: Vec<Message> = rows.collect::<Result<Vec<_>, _>>()?;
+    msgs.reverse();
+    Ok(msgs)
+}
+
 pub fn count_group_messages(conn: &Connection, thread_id: &str) -> Result<i64, rusqlite::Error> {
     conn.query_row(
         "SELECT count(*) FROM group_messages WHERE thread_id = ?1",

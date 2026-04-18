@@ -560,8 +560,8 @@ export const api = {
     invoke<void>("delete_group_chat_cmd", { groupChatId }),
   clearGroupChatHistory: (groupChatId: string, keepMedia: boolean) =>
     invoke<void>("clear_group_chat_history_cmd", { groupChatId, keepMedia }),
-  getGroupMessages: (groupChatId: string) =>
-    invoke<PaginatedMessages>("get_group_messages_cmd", { groupChatId }),
+  getGroupMessages: (groupChatId: string, limit?: number, offset?: number) =>
+    invoke<PaginatedMessages>("get_group_messages_cmd", { groupChatId, limit, offset }),
   saveGroupUserMessage: (groupChatId: string, content: string) =>
     invoke<Message>("save_group_user_message_cmd", { groupChatId, content }),
   sendGroupMessage: (apiKey: string, groupChatId: string, content: string) =>
