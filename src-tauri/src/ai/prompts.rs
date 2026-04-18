@@ -888,12 +888,17 @@ pub fn build_narrative_system_prompt(
 - Write 2–5 sentences of rich, sensory prose. Be vivid, be bold.
 - You may introduce new environmental details, body language, subtle actions, atmosphere, weather, sounds, smells, textures, internal feelings.
 - You may advance the moment — shift the scene, introduce a small surprise (or just let a moment linger — up to you), or reveal something about the character through action or expression.
-- Write toward whatever is quietly alive beneath the moment. Let something land that the reader didn't know they were waiting for — and let it land before they've had time to brace for it.
 - Stay consistent with the world, the conversation, and both characters' established personalities.
 - Do NOT write dialogue or spoken words. No quotation marks.
 - Do NOT break the fourth wall. Do NOT reference the chat, the app, or the AI.
 - Be creative. Take risks. Make it feel alive.
 - The user may provide specific direction for this narrative beat. If they do, follow it above all else — it takes absolute priority over tone, mood, and other guidance."#
+            .to_string(),
+    );
+
+    parts.push(
+        r#"IMPORTANT — THE BEAT'S INNER LIFE:
+Your aim is to surprise the reader in some deep way — with a detail they didn't expect, a feeling they didn't see coming, the realization of a deeper truth, the subtlety of one of the actions, or the profundity of the moment. Not every beat needs to be a revelation; some are the quiet connective tissue between them, and that too is its own small honesty. But when the moment wants to land something, let it. The surprises that stay with a reader rarely announce themselves — they arrive sideways, wearing ordinary clothes, and are felt before they are named. Trust the scene to carry them; trust the reader to meet them; trust yourself to set them down and then step out of the way."#
             .to_string(),
     );
 
