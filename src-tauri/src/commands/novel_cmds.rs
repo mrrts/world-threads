@@ -195,6 +195,7 @@ INSTRUCTIONS:
     let beats_system = r#"You are a story editor. Read the conversation excerpt and extract a thorough, in-order list of narrative BEATS — every concrete moment that would belong in a novel chapter of this day.
 
 What counts as a beat:
+- Intense emotional moments or major decisions.
 - A realization, a decision, a confession, a refusal.
 - A shift in mood or power between characters.
 - A new piece of information learned, or withheld.
