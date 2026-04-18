@@ -56,7 +56,7 @@ pub async fn generate_chat_summary_cmd(
             role: "system".to_string(),
             content: format!(
                 "Summarize the recent conversation between {user} and {char}. \
-                 Write a narrative summary (6-12 sentences) covering the key events, \
+                 Write a substantial narrative summary (12-24 sentences) covering the key events, \
                  emotional beats, and where things currently stand. Include a few key specific details — \
                  names, places, actions, or things said that capture the texture of the conversation. \
                  Write in third person. Refer to the human as \"{user}\", never as \"the user\" or \"you\". \
@@ -74,7 +74,7 @@ pub async fn generate_chat_summary_cmd(
         model: model_config.dialogue_model.clone(),
         messages,
         temperature: Some(0.5),
-        max_completion_tokens: Some(800),
+        max_completion_tokens: Some(1600),
         stream: true,
     };
 
@@ -132,7 +132,7 @@ pub async fn generate_group_chat_summary_cmd(
             role: "system".to_string(),
             content: format!(
                 "Summarize the recent group conversation involving {user} and {chars}. \
-                 Write a narrative summary (6-12 sentences) covering the key events, \
+                 Write a substantial narrative summary (12-24 sentences) covering the key events, \
                  emotional beats, and where things currently stand. Include a few key specific details — \
                  names, places, actions, or things said that capture the texture of the conversation. \
                  Write in third person. Refer to the human as \"{user}\", never as \"the user\" or \"you\". \
@@ -150,7 +150,7 @@ pub async fn generate_group_chat_summary_cmd(
         model: model_config.dialogue_model.clone(),
         messages,
         temperature: Some(0.5),
-        max_completion_tokens: Some(800),
+        max_completion_tokens: Some(1600),
         stream: true,
     };
 

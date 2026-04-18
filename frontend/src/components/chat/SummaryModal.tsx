@@ -5,6 +5,32 @@ import { Loader2, Send, Check } from "lucide-react";
 import { listen } from "@tauri-apps/api/event";
 import { api, type Character, type GroupChat, type PortraitInfo } from "@/lib/tauri";
 import { playChime } from "@/lib/chime";
+import { CyclingLoadingMessages } from "@/components/ui/cycling-loading-messages";
+
+// Playful flavor for the summary loading state (local-model prompt ingest).
+// First entry is what the reader sees first.
+const SUMMARY_LOADING_MESSAGES = [
+  "Skimming the conversation...",
+  "Finding the through-line...",
+  "Piecing it together...",
+  "Catching up...",
+  "Noticing what mattered...",
+  "Tracing the arc...",
+  "Gathering the threads...",
+  "Sorting the beats...",
+  "Pulling it into focus...",
+  "Highlighting the key moments...",
+  "Listening for the subtext...",
+  "Mapping what happened...",
+  "Revisiting the highlights...",
+  "Finding the shape of it...",
+  "Settling on what matters...",
+  "Re-reading one more time...",
+  "Jotting notes in the margin...",
+  "Cross-referencing the moments...",
+  "Remembering how it started...",
+  "Putting it into plain words...",
+];
 
 interface ChatTarget {
   type: "char" | "group";
@@ -141,9 +167,11 @@ export function SummaryModal({
         </DialogHeader>
         <DialogBody>
           {loading && !summary ? (
-            <div className="flex items-center justify-center py-8 gap-3">
-              <Loader2 size={18} className="animate-spin text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Generating summary...</span>
+            <div className="flex flex-col items-center justify-center py-8 gap-3">
+              <Loader2 size={20} className="animate-spin text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">
+                <CyclingLoadingMessages messages={SUMMARY_LOADING_MESSAGES} />
+              </span>
             </div>
           ) : error ? (
             <div className="text-sm text-destructive py-4">{error}</div>
