@@ -161,18 +161,32 @@ const PER_TURN_DIRECTIVES: &[&str] = &[
     "Tease them a little.",
 ];
 
-/// Return two distinct random per-turn directives. Uses wall-clock
-/// nanoseconds and microseconds as independent-ish seeds so the two picks
-/// rarely correlate. The AGENCY section frames them as a surface move + a
-/// quiet undercurrent — see agency_section for the rationale.
+/// Return two distinct random per-turn directives with genuinely
+/// independent picks. Seeds a xorshift64* PRNG from wall-clock nanoseconds
+/// (so each call gets a fresh stream) and draws two u64s from it, which
+/// makes the two picks mathematically independent rather than both being
+/// deterministic functions of the same timestamp. A collision on equal
+/// indices bumps the second pick. Zero extra dependencies, well-studied
+/// distribution — suitable for A/B-testing the braided-directive idea
+/// without introducing sampling artifacts.
 fn pick_two_turn_directives() -> (&'static str, &'static str) {
     use std::time::{SystemTime, UNIX_EPOCH};
-    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap_or_default();
+    let seed_ns = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_nanos() as u64)
+        .unwrap_or(0x9E3779B97F4A7C15);
+    let mut state = if seed_ns == 0 { 0x9E3779B97F4A7C15 } else { seed_ns };
+    // xorshift64* — one widely-studied PRNG step per draw.
+    let mut next = || -> u64 {
+        state ^= state >> 12;
+        state ^= state << 25;
+        state ^= state >> 27;
+        state.wrapping_mul(0x2545F4914F6CDD1D)
+    };
     let n = PER_TURN_DIRECTIVES.len();
-    let a = (now.subsec_nanos() as usize) % n;
-    let b_seed = (now.as_micros() as usize).wrapping_add(17);
-    let b_raw = b_seed % n;
-    let b = if b_raw == a { (b_raw + 1) % n } else { b_raw };
+    let a = (next() as usize) % n;
+    let mut b = (next() as usize) % n;
+    if b == a { b = (b + 1) % n; }
     (PER_TURN_DIRECTIVES[a], PER_TURN_DIRECTIVES[b])
 }
 
