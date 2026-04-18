@@ -467,10 +467,10 @@ export function DayPageSlide({
                     <div className={`flex items-end gap-2 ${isUser ? "justify-end" : "justify-start"}`}>
                       {!isUser && (
                         portraitUrl ? (
-                          <img src={portraitUrl} alt="" className="w-10 h-10 rounded-full object-cover ring-1 ring-border flex-shrink-0 mb-1" />
+                          <img src={portraitUrl} alt="" className="w-20 h-20 rounded-full object-cover ring-1 ring-border flex-shrink-0 mb-1" />
                         ) : (
                           <span
-                            className="w-10 h-10 rounded-full flex-shrink-0 mb-1 ring-1 ring-white/10"
+                            className="w-20 h-20 rounded-full flex-shrink-0 mb-1 ring-1 ring-white/10"
                             style={{ backgroundColor: avatarColor }}
                           />
                         )
@@ -497,7 +497,7 @@ export function DayPageSlide({
                         </p>
                       </div>
                       {isUser && userAvatarUrl && (
-                        <img src={userAvatarUrl} alt="" className="w-10 h-10 rounded-full object-cover ring-1 ring-border flex-shrink-0 mb-1" />
+                        <img src={userAvatarUrl} alt="" className="w-20 h-20 rounded-full object-cover ring-1 ring-border flex-shrink-0 mb-1" />
                       )}
                     </div>
                   </div>
