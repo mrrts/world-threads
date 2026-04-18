@@ -22,6 +22,9 @@ export interface AppState {
   loading: boolean;
   autoRespond: boolean;
   notifyOnMessage: boolean;
+  /** 0-5 index into a fixed font-size ladder for chat message bubbles.
+   *  2 = default. Persisted as the "chat_font_size" setting. */
+  chatFontSize: number;
   /** Character ID currently awaiting a response, or null */
   sending: string | null;
   /** Character ID currently generating a narrative, or null */
@@ -80,6 +83,7 @@ export function useAppStore() {
     loadingChat: false,
     autoRespond: true,
     notifyOnMessage: true,
+    chatFontSize: 2,
     loading: true,
     sending: null,
     generatingNarrative: null,
@@ -143,13 +147,14 @@ export function useAppStore() {
   const loadInitial = useCallback(async () => {
     setState((s) => ({ ...s, loading: true }));
     try {
-      const [worlds, modelConfig, apiKey, budgetMode, autoRespondSetting, notifySetting] = await Promise.all([
+      const [worlds, modelConfig, apiKey, budgetMode, autoRespondSetting, notifySetting, fontSizeSetting] = await Promise.all([
         api.listWorlds(),
         api.getModelConfig(),
         api.migrateApiKey(),
         api.getBudgetMode(),
         api.getSetting("auto_respond").catch(() => null),
         api.getSetting("notify_on_message").catch(() => null),
+        api.getSetting("chat_font_size").catch(() => null),
       ]);
 
       let activeWorld: World | null = null;
@@ -243,6 +248,10 @@ export function useAppStore() {
         budgetMode,
         autoRespond: autoRespondSetting !== "false",
         notifyOnMessage: notifySetting !== "false",
+        chatFontSize: (() => {
+          const n = fontSizeSetting ? parseInt(fontSizeSetting, 10) : 2;
+          return Number.isFinite(n) ? Math.max(0, Math.min(5, n)) : 2;
+        })(),
         loadingOlder: false,
     loadingChat: false,
         loading: false,
@@ -699,6 +708,12 @@ export function useAppStore() {
   const setNotifyOnMessage = useCallback((enabled: boolean) => {
     setState((s) => ({ ...s, notifyOnMessage: enabled }));
     api.setSetting("notify_on_message", enabled ? "true" : "false").catch(() => {});
+  }, []);
+
+  const setChatFontSize = useCallback((level: number) => {
+    const clamped = Math.max(0, Math.min(5, Math.round(level)));
+    setState((s) => ({ ...s, chatFontSize: clamped }));
+    api.setSetting("chat_font_size", String(clamped)).catch(() => {});
   }, []);
 
   const sendMessage = useCallback(async (content: string) => {
@@ -1284,6 +1299,7 @@ export function useAppStore() {
     sendMessage,
     setAutoRespond,
     setNotifyOnMessage,
+    setChatFontSize,
     promptCharacter,
     generateNarrative,
     generateIllustration,

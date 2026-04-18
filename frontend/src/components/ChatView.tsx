@@ -22,6 +22,8 @@ import { IllustrationMessage } from "@/components/chat/IllustrationMessage";
 import { IllustrationCarouselModal } from "@/components/chat/IllustrationCarouselModal";
 import { AdjustMessageModal } from "@/components/chat/AdjustMessageModal";
 import { SummaryModal } from "@/components/chat/SummaryModal";
+import { FontSizeAdjuster } from "@/components/chat/FontSizeAdjuster";
+import { chatFontPx } from "@/lib/chat-font";
 import { TimeDivider } from "@/components/chat/TimeDivider";
 import { ContextMessage } from "@/components/chat/ContextMessage";
 import { NarrativePickerModal } from "@/components/chat/NarrativePickerModal";
@@ -406,7 +408,8 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                     )
                   )}
                   <div
-                    className={`relative group rounded-2xl px-4 py-2.5 text-base leading-relaxed ${
+                    style={{ fontSize: `${chatFontPx(store.chatFontSize)}px` }}
+                    className={`relative group rounded-2xl px-4 py-2.5 leading-relaxed ${
                       isUser
                         ? "bg-primary text-primary-foreground rounded-br-md max-w-[80%]"
                         : "bg-secondary/40 text-secondary-foreground rounded-bl-md max-w-[80%] border border-border/30"
@@ -751,6 +754,10 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                       <option key={t} value={t}>{t}</option>
                     ))}
                   </select>
+                </div>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-medium text-muted-foreground">Font Size</label>
+                  <FontSizeAdjuster value={store.chatFontSize} onChange={store.setChatFontSize} />
                 </div>
                 <div>
                   <label className="text-xs font-medium text-muted-foreground block mb-1.5">Response Length</label>

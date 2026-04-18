@@ -19,6 +19,8 @@ import { IllustrationCarouselModal } from "@/components/chat/IllustrationCarouse
 import { AdjustMessageModal } from "@/components/chat/AdjustMessageModal";
 import { NarrativePickerModal } from "@/components/chat/NarrativePickerModal";
 import { SummaryModal } from "@/components/chat/SummaryModal";
+import { FontSizeAdjuster } from "@/components/chat/FontSizeAdjuster";
+import { chatFontPx } from "@/lib/chat-font";
 import { TimeDivider } from "@/components/chat/TimeDivider";
 import { ContextMessage } from "@/components/chat/ContextMessage";
 import { PortraitModal } from "@/components/chat/PortraitModal";
@@ -414,7 +416,8 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                     )
                   )}
                   <div
-                    className={`relative group rounded-2xl px-4 py-2.5 text-base leading-relaxed ${
+                    style={{ fontSize: `${chatFontPx(store.chatFontSize)}px` }}
+                    className={`relative group rounded-2xl px-4 py-2.5 leading-relaxed ${
                       isUser
                         ? "bg-primary text-primary-foreground rounded-br-md max-w-[80%]"
                         : senderBubbleColor
@@ -822,6 +825,10 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                       <option key={t} value={t}>{t}</option>
                     ))}
                   </select>
+                </div>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-medium text-muted-foreground">Font Size</label>
+                  <FontSizeAdjuster value={store.chatFontSize} onChange={store.setChatFontSize} />
                 </div>
                 <div>
                   <label className="text-xs font-medium text-muted-foreground block mb-1.5">Response Length</label>
