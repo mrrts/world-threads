@@ -35,6 +35,47 @@ function MainApp() {
   const store = useAppStore();
   const [view, setView] = useState<View>("chat");
   const lastChatCharRef = useRef<string | null>(null);
+
+  // Background novelization: fires after 20 minutes of idle time (no user
+  // activity and no window focus), iterates through un-novelized days, and
+  // writes chapters silently. Any user activity or window focus aborts the
+  // in-flight sweep immediately — the backend drops the HTTP streams so
+  // LM Studio halts generation within a token batch and foreground chat
+  // responses aren't blocked. Backend no-ops for non-local providers.
+  useEffect(() => {
+    if (!store.apiKey) return;
+    const IDLE_MS = 20 * 60 * 1000;
+    let idleTimer: number | null = null;
+    let running = false;
+
+    const start = () => {
+      if (running) return;
+      running = true;
+      api.runBackgroundNovelization(store.apiKey).catch(() => { running = false; });
+    };
+    const cancel = () => {
+      if (!running) return;
+      running = false;
+      api.cancelBackgroundNovelization().catch(() => {});
+    };
+    const reset = () => {
+      if (idleTimer !== null) window.clearTimeout(idleTimer);
+      cancel();
+      idleTimer = window.setTimeout(start, IDLE_MS);
+    };
+
+    const events: (keyof WindowEventMap)[] = [
+      "mousedown", "mousemove", "keydown", "scroll", "touchstart", "focus",
+    ];
+    events.forEach((e) => window.addEventListener(e, reset, { passive: true }));
+    reset();
+
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, reset));
+      if (idleTimer !== null) window.clearTimeout(idleTimer);
+      cancel();
+    };
+  }, [store.apiKey]);
   const viewRef = useRef<View>("chat");
 
   // Time-of-day check modal

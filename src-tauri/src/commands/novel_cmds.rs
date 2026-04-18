@@ -1,10 +1,25 @@
-use crate::ai::openai::{self, ChatRequest, StreamingRequest};
+use crate::ai::openai::{self, StreamingRequest};
 use crate::ai::orchestrator::{self, ModelConfig};
 use crate::db::queries::*;
 use crate::db::Database;
 use chrono::Utc;
 use std::collections::HashMap;
-use tauri::{AppHandle, Emitter, State};
+use std::sync::Arc;
+use tauri::{AppHandle, Emitter, Manager, State};
+use tokio::sync::Mutex as AsyncMutex;
+use tokio::task::JoinHandle;
+
+/// Holds the JoinHandle for the currently-running background novelization
+/// task, if any. Used so we can abort() it on window focus — aborting the
+/// task drops every in-flight future, which closes the HTTP connection and
+/// halts the local model's generation within ~a token batch.
+pub struct BgNovelHandle(pub Arc<AsyncMutex<Option<JoinHandle<()>>>>);
+
+impl Default for BgNovelHandle {
+    fn default() -> Self {
+        Self(Arc::new(AsyncMutex::new(None)))
+    }
+}
 
 /// Emitted between rendered sections as a literal novel-token event. Renders
 /// to a horizontal rule in markdown; the UI can decorate `<hr>` if desired.
@@ -110,7 +125,9 @@ Rules:
 
 /// Extract numbered beats from `lines`, chunking as needed so each chunk
 /// fits the local model's safe prompt budget. Emits `novel-phase` progress
-/// events between chunks.
+/// events between chunks (skipped when silent). Uses streaming for the
+/// request itself so that dropping this future cancels generation cleanly.
+#[allow(clippy::too_many_arguments)]
 async fn extract_beats(
     app_handle: &AppHandle,
     model_config: &ModelConfig,
@@ -118,6 +135,7 @@ async fn extract_beats(
     lines: &[String],
     label: &str,
     world_day: i64,
+    silent: bool,
 ) -> Result<Vec<String>, String> {
     let budget = model_config.safe_local_prompt_budget() as usize;
     // Reserve space for system prompt + up to 1500 tokens of beat output.
@@ -141,30 +159,33 @@ async fn extract_beats(
 
     let mut all_beats: Vec<String> = Vec::new();
     for (i, chunk) in chunks.iter().enumerate() {
-        let beats_request = ChatRequest {
+        let user_msg = openai::ChatMessage {
+            role: "user".to_string(),
+            content: format!(
+                "Conversation excerpt (part {} of {}) from Day {} — {} section:\n\n{}\n\nReturn the beat list.",
+                i + 1, chunks.len(), world_day,
+                if label.is_empty() { "untagged".to_string() } else { label.to_string() },
+                chunk.join("\n"),
+            ),
+        };
+        // Always use streaming for the beats request so that dropping the
+        // task (on focus / cancel) closes the HTTP connection and the local
+        // model halts generation promptly. For the foreground flow we use
+        // the silent variant too — the beats phase has never emitted
+        // per-token events.
+        let streaming_req = StreamingRequest {
             model: model_config.dialogue_model.clone(),
             messages: vec![
                 openai::ChatMessage { role: "system".to_string(), content: BEATS_SYSTEM.to_string() },
-                openai::ChatMessage {
-                    role: "user".to_string(),
-                    content: format!(
-                        "Conversation excerpt (part {} of {}) from Day {} — {} section:\n\n{}\n\nReturn the beat list.",
-                        i + 1, chunks.len(), world_day,
-                        if label.is_empty() { "untagged".to_string() } else { label.to_string() },
-                        chunk.join("\n"),
-                    ),
-                },
+                user_msg,
             ],
             temperature: Some(0.5),
             max_completion_tokens: Some(1_500),
-            response_format: None,
+            stream: true,
         };
-        let beats_response = openai::chat_completion_with_base(
-            &model_config.chat_api_base(), api_key, &beats_request,
+        let beats_text = openai::chat_completion_stream_silent(
+            &model_config.chat_api_base(), api_key, &streaming_req,
         ).await?;
-        let beats_text = beats_response.choices.first()
-            .map(|c| c.message.content.clone())
-            .unwrap_or_default();
         for line in beats_text.lines() {
             let trimmed = line.trim();
             if trimmed.is_empty() { continue; }
@@ -177,12 +198,14 @@ async fn extract_beats(
                 all_beats.push(cleaned);
             }
         }
-        let _ = app_handle.emit("novel-phase", serde_json::json!({
-            "phase": "beats",
-            "section": label,
-            "chunks_total": chunks.len(),
-            "chunk_index": i + 1,
-        }));
+        if !silent {
+            let _ = app_handle.emit("novel-phase", serde_json::json!({
+                "phase": "beats",
+                "section": label,
+                "chunks_total": chunks.len(),
+                "chunk_index": i + 1,
+            }));
+        }
     }
     Ok(all_beats)
 }
@@ -195,6 +218,9 @@ async fn extract_beats(
 // section's share of the day's content. The model is told to treat this as
 // a guide to pacing, not a strict limit. No corresponding
 // max_completion_tokens clamp — we prefer natural endings over hard cutoffs.
+// `silent`: when true, bypass novel-token / novel-phase events and use the
+// silent streaming variant so no UI updates fire (used by the background
+// idle-time novelization path).
 #[allow(clippy::too_many_arguments)]
 async fn stream_section(
     app_handle: &AppHandle,
@@ -206,6 +232,7 @@ async fn stream_section(
     total_sections: usize,
     world_day: i64,
     target_words: usize,
+    silent: bool,
 ) -> Result<String, String> {
     let section_text = section.lines.join("\n");
     let section_tokens = approx_tokens(&section_text);
@@ -242,11 +269,13 @@ async fn stream_section(
             weight = weight_line,
         )
     } else {
-        let _ = app_handle.emit("novel-phase", serde_json::json!({
-            "phase": "beats",
-            "section": section.label,
-        }));
-        let beats = extract_beats(app_handle, model_config, api_key, &section.lines, &section.label, world_day).await?;
+        if !silent {
+            let _ = app_handle.emit("novel-phase", serde_json::json!({
+                "phase": "beats",
+                "section": section.label,
+            }));
+        }
+        let beats = extract_beats(app_handle, model_config, api_key, &section.lines, &section.label, world_day, silent).await?;
         let beat_count = beats.len();
         let beats_joined = beats.iter()
             .enumerate()
@@ -274,12 +303,14 @@ async fn stream_section(
         )
     };
 
-    let _ = app_handle.emit("novel-phase", serde_json::json!({
-        "phase": "section",
-        "section": section.label,
-        "section_index": section_index,
-        "total_sections": total_sections,
-    }));
+    if !silent {
+        let _ = app_handle.emit("novel-phase", serde_json::json!({
+            "phase": "section",
+            "section": section.label,
+            "section_index": section_index,
+            "total_sections": total_sections,
+        }));
+    }
 
     let request = StreamingRequest {
         model: model_config.dialogue_model.clone(),
@@ -291,9 +322,13 @@ async fn stream_section(
         max_completion_tokens: Some(4_096),
         stream: true,
     };
-    let raw = openai::chat_completion_stream(
-        &model_config.chat_api_base(), api_key, &request, app_handle, "novel-token",
-    ).await?;
+    let raw = if silent {
+        openai::chat_completion_stream_silent(&model_config.chat_api_base(), api_key, &request).await?
+    } else {
+        openai::chat_completion_stream(
+            &model_config.chat_api_base(), api_key, &request, app_handle, "novel-token",
+        ).await?
+    };
     // Same tail cleanup we use for chat replies — a section that runs out of
     // completion tokens mid-sentence or leaves a dangling quote/paren/asterisk
     // would be jarring at a section boundary right before the divider. The
@@ -515,6 +550,7 @@ INSTRUCTIONS:
             total,
             world_day,
             target_words,
+            false, // silent = false — foreground, emit events to UI
         ).await?;
         full_chapter.push_str(&section_text);
 
@@ -585,4 +621,246 @@ pub fn delete_novel_entry_cmd(
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     delete_novel_entry(&conn, &thread_id, world_day).map_err(|e| e.to_string())
+}
+
+// ─── Background novelization ─────────────────────────────────────────────
+
+/// Return every (thread_id, world_day, is_group) triple that has at least
+/// one message but no novel_entries row yet. Deterministic order (by
+/// thread, then day).
+fn list_unnovelized_days(conn: &rusqlite::Connection) -> Result<Vec<(String, i64, bool)>, rusqlite::Error> {
+    let mut out = Vec::new();
+
+    let mut stmt = conn.prepare(
+        "SELECT DISTINCT m.thread_id, m.world_day
+         FROM messages m
+         LEFT JOIN novel_entries n ON n.thread_id = m.thread_id AND n.world_day = m.world_day
+         WHERE m.world_day IS NOT NULL AND n.novel_id IS NULL
+         ORDER BY m.thread_id, m.world_day"
+    )?;
+    let rows = stmt.query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, i64>(1)?, false)))?;
+    for r in rows.flatten() { out.push(r); }
+
+    let mut stmt = conn.prepare(
+        "SELECT DISTINCT gm.thread_id, gm.world_day
+         FROM group_messages gm
+         LEFT JOIN novel_entries n ON n.thread_id = gm.thread_id AND n.world_day = gm.world_day
+         WHERE gm.world_day IS NOT NULL AND n.novel_id IS NULL
+         ORDER BY gm.thread_id, gm.world_day"
+    )?;
+    let rows = stmt.query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, i64>(1)?, true)))?;
+    for r in rows.flatten() { out.push(r); }
+
+    Ok(out)
+}
+
+/// Silent novelization for a single day — mirrors generate_novel_entry_cmd's
+/// setup but uses stream_section in silent mode so no Tauri events fire.
+/// Returns the full chapter text. Safe to call from a spawned background
+/// task; dropping the future (via task abort) closes the HTTP streams and
+/// stops local-model generation within ~a token batch.
+async fn run_day_novel_silent(
+    app_handle: &AppHandle,
+    api_key: &str,
+    thread_id: &str,
+    world_day: i64,
+    is_group: bool,
+) -> Result<String, String> {
+    let db = app_handle.state::<Database>();
+    let (messages, world, characters, character_names, user_name, user_profile, model_config) = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let model_config = orchestrator::load_model_config(&conn);
+        let all_msgs = if is_group {
+            get_all_group_messages(&conn, thread_id).map_err(|e| e.to_string())?
+        } else {
+            get_all_messages(&conn, thread_id).map_err(|e| e.to_string())?
+        };
+        let day_msgs: Vec<Message> = all_msgs.into_iter()
+            .filter(|m| m.world_day == Some(world_day) && m.role != "illustration" && m.role != "video")
+            .collect();
+        if day_msgs.is_empty() { return Err("No messages for this day.".to_string()); }
+        let world_id: String = conn.query_row(
+            "SELECT world_id FROM threads WHERE thread_id = ?1",
+            rusqlite::params![thread_id], |r| r.get(0),
+        ).or_else(|_| conn.query_row(
+            "SELECT world_id FROM group_chats WHERE thread_id = ?1",
+            rusqlite::params![thread_id], |r| r.get(0),
+        )).map_err(|e| e.to_string())?;
+        let world = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
+        let user_name = get_user_profile(&conn, &world_id)
+            .ok().map(|p| p.display_name).unwrap_or_else(|| "the protagonist".to_string());
+        let characters = list_characters(&conn, &world_id).unwrap_or_default();
+        let char_names: HashMap<String, String> = characters.iter()
+            .map(|c| (c.character_id.clone(), c.display_name.clone()))
+            .collect();
+        let user_profile = get_user_profile(&conn, &world_id).ok();
+        (day_msgs, world, characters, char_names, user_name, user_profile, model_config)
+    };
+
+    let sections = group_into_sections(&messages, &user_name, &character_names);
+    if sections.is_empty() { return Err("No content to novelize.".to_string()); }
+
+    let char_descriptions: Vec<String> = characters.iter().map(|c| {
+        let mut desc = format!("- {}", c.display_name);
+        if !c.identity.is_empty() {
+            desc.push_str(&format!(": {}", c.identity));
+        }
+        let voice_rules = crate::ai::prompts::json_array_to_strings(&c.voice_rules);
+        if !voice_rules.is_empty() {
+            desc.push_str(&format!("\n  Voice: {}", voice_rules.join("; ")));
+        }
+        desc
+    }).collect();
+    let user_desc = user_profile.as_ref().map(|p| {
+        let mut d = format!("- {} (the protagonist, written in second person — \"you\")", p.display_name);
+        if !p.description.is_empty() {
+            d.push_str(&format!(": {}", p.description));
+        }
+        d
+    }).unwrap_or_else(|| format!("- {} (the protagonist, written in second person — \"you\")", user_name));
+    let system_prompt = format!(
+        r#"You are a gifted literary novelist. Your task is to transform a day's conversation and narrative beats into a vivid, immersive chapter of a novel.
+
+SETTING: {world_desc}
+
+CHARACTERS:
+{user_desc}
+{char_list}
+
+INSTRUCTIONS:
+- A chapter has shape: it opens on a specific image, builds through its middle, and lands on a moment of resonance — an image, a line, a small revelation. Find that shape in the day's events.
+- Transform the conversation into rich, flowing prose — a full chapter of a novel.
+- Write in SECOND PERSON present tense. {user_name} is always "you."
+- Other characters are referred to by name in third person.
+- Weave dialogue, action, internal thought, and sensory detail together seamlessly.
+- Invent freely, but with restraint. Choose one or two precise sensory details per beat rather than cataloguing everything.
+- Expand brief exchanges into full scenes with atmosphere and pacing.
+- Include all the key beats from the conversation but enhance them with novelistic craft.
+- Make it feel like one vivid, cohesive chapter — not a transcript.
+- Do NOT include chapter titles, headers, or meta-commentary. Just the prose."#,
+        world_desc = if world.description.is_empty() { "A richly detailed world." } else { &world.description },
+        user_desc = user_desc,
+        char_list = char_descriptions.join("\n"),
+    );
+
+    let section_content_tokens: Vec<usize> = sections.iter()
+        .map(|s| approx_tokens(&s.lines.join("\n")))
+        .collect();
+    let total_content_tokens: usize = section_content_tokens.iter().sum();
+    let total_chapter_words: usize = (total_content_tokens * 3 / 4).clamp(1_500, 5_000);
+    let total = sections.len();
+    let mut full_chapter = String::new();
+    for (i, section) in sections.iter().enumerate() {
+        let ratio = if total_content_tokens > 0 {
+            section_content_tokens[i] as f64 / total_content_tokens as f64
+        } else {
+            1.0 / (total as f64).max(1.0)
+        };
+        let target_words = ((ratio * total_chapter_words as f64).round() as usize).max(150);
+        let section_text = stream_section(
+            app_handle, &model_config, api_key, &system_prompt,
+            section, i, total, world_day, target_words,
+            true, // silent
+        ).await?;
+        full_chapter.push_str(&section_text);
+        if i + 1 < total {
+            full_chapter.push_str(SECTION_DIVIDER);
+        }
+    }
+
+    Ok(full_chapter)
+}
+
+/// Kick off a background sweep that novelizes every un-novelized day in
+/// order. No-op when the provider isn't local (OpenAI cost guard) or no
+/// days need work. Aborts any prior sweep still running.
+#[tauri::command]
+pub async fn run_background_novelization_cmd(
+    app_handle: AppHandle,
+    bg: State<'_, BgNovelHandle>,
+    api_key: String,
+) -> Result<(), String> {
+    // Abort any prior handle before launching a new sweep.
+    {
+        let mut guard = bg.0.lock().await;
+        if let Some(h) = guard.take() { h.abort(); }
+    }
+
+    let db_state = app_handle.state::<Database>();
+    let is_local = {
+        let conn = db_state.conn.lock().map_err(|e| e.to_string())?;
+        orchestrator::load_model_config(&conn).is_local()
+    };
+    if !is_local {
+        return Ok(());
+    }
+
+    let todo = {
+        let conn = db_state.conn.lock().map_err(|e| e.to_string())?;
+        list_unnovelized_days(&conn).map_err(|e| e.to_string())?
+    };
+    if todo.is_empty() { return Ok(()); }
+
+    let ah = app_handle.clone();
+    let _ = ah.emit("bg-novelize", serde_json::json!({ "status": "started", "pending": todo.len() }));
+    let handle = tokio::spawn(async move {
+        for (thread_id, world_day, is_group) in todo {
+            let _ = ah.emit("bg-novelize", serde_json::json!({
+                "status": "working",
+                "thread_id": thread_id,
+                "world_day": world_day,
+            }));
+            match run_day_novel_silent(&ah, &api_key, &thread_id, world_day, is_group).await {
+                Ok(content) => {
+                    let db = ah.state::<Database>();
+                    let now = Utc::now().to_rfc3339();
+                    let entry = NovelEntry {
+                        novel_id: uuid::Uuid::new_v4().to_string(),
+                        thread_id: thread_id.clone(),
+                        world_day,
+                        content,
+                        created_at: now.clone(),
+                        updated_at: now,
+                    };
+                    if let Ok(conn) = db.conn.lock() {
+                        let _ = upsert_novel_entry(&conn, &entry);
+                    }
+                    let _ = ah.emit("bg-novelize", serde_json::json!({
+                        "status": "saved",
+                        "thread_id": thread_id,
+                        "world_day": world_day,
+                    }));
+                }
+                Err(e) => {
+                    let _ = ah.emit("bg-novelize", serde_json::json!({
+                        "status": "error",
+                        "thread_id": thread_id,
+                        "world_day": world_day,
+                        "error": e,
+                    }));
+                }
+            }
+        }
+        let _ = ah.emit("bg-novelize", serde_json::json!({ "status": "done" }));
+    });
+
+    let mut guard = bg.0.lock().await;
+    *guard = Some(handle);
+    Ok(())
+}
+
+/// Abort the currently-running background novelization sweep, if any.
+/// Dropping the task future closes all in-flight HTTP streams, which the
+/// local model detects and halts generation for promptly.
+#[tauri::command]
+pub async fn cancel_background_novelization_cmd(
+    app_handle: AppHandle,
+    bg: State<'_, BgNovelHandle>,
+) -> Result<(), String> {
+    let mut guard = bg.0.lock().await;
+    if let Some(h) = guard.take() {
+        h.abort();
+        let _ = app_handle.emit("bg-novelize", serde_json::json!({ "status": "canceled" }));
+    }
+    Ok(())
 }

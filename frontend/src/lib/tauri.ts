@@ -454,6 +454,12 @@ export const api = {
 
   getModelConfig: () => invoke<ModelConfig>("get_model_config_cmd"),
   setModelConfig: (config: ModelConfig) => invoke<void>("set_model_config_cmd", { config }),
+
+  // Background novelization (local-model idle work).
+  runBackgroundNovelization: (apiKey: string) =>
+    invoke<void>("run_background_novelization_cmd", { apiKey }),
+  cancelBackgroundNovelization: () =>
+    invoke<void>("cancel_background_novelization_cmd"),
   getSetting: (key: string) => invoke<string | null>("get_setting_cmd", { key }),
   setSetting: (key: string, value: string) => invoke<void>("set_setting_cmd", { key, value }),
   getApiKey: () => getApiKeyFromVault(),

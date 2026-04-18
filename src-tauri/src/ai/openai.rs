@@ -189,6 +189,58 @@ pub async fn chat_completion_stream(
     Ok(full_text)
 }
 
+/// Streaming chat completion that does NOT emit Tauri events — the returned
+/// String is the full assembled response. Use when you need streaming so
+/// that cancelling the future closes the HTTP connection (halting the local
+/// model's generation), but don't want any UI tokens to fire. Intended for
+/// background work that shouldn't leak into the foreground chat UI.
+pub async fn chat_completion_stream_silent(
+    base_url: &str,
+    api_key: &str,
+    request: &StreamingRequest,
+) -> Result<String, String> {
+    use futures_util::StreamExt;
+
+    let client = Client::new();
+    let url = format!("{base_url}/chat/completions");
+    let mut builder = client.post(&url).json(request);
+    if !api_key.is_empty() {
+        builder = builder.header("Authorization", format!("Bearer {api_key}"));
+    }
+    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let status = resp.status();
+    if !status.is_success() {
+        let body = resp.text().await.unwrap_or_default();
+        if let Ok(err) = serde_json::from_str::<ApiError>(&body) {
+            return Err(format!("API error ({}): {}", status, err.error.message));
+        }
+        return Err(format!("API error ({}): {}", status, body));
+    }
+
+    let mut full_text = String::new();
+    let mut stream = resp.bytes_stream();
+    let mut buffer = String::new();
+    while let Some(chunk_result) = stream.next().await {
+        let chunk = chunk_result.map_err(|e| format!("Stream error: {e}"))?;
+        buffer.push_str(&String::from_utf8_lossy(&chunk));
+        while let Some(line_end) = buffer.find('\n') {
+            let line = buffer[..line_end].trim().to_string();
+            buffer = buffer[line_end + 1..].to_string();
+            if line.is_empty() || line == "data: [DONE]" { continue; }
+            if let Some(json_str) = line.strip_prefix("data: ") {
+                if let Ok(parsed) = serde_json::from_str::<StreamChunk>(json_str) {
+                    for choice in &parsed.choices {
+                        if let Some(content) = &choice.delta.content {
+                            full_text.push_str(content);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Ok(full_text)
+}
+
 // ─── Image Generation ───────────────────────────────────────────────────────
 
 #[derive(Debug, Serialize)]

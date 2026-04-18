@@ -58,6 +58,8 @@ pub fn run() {
             std::fs::create_dir_all(&audio_dir).ok();
             app.manage(AudioDir(audio_dir));
 
+            app.manage(commands::novel_cmds::BgNovelHandle::default());
+
             let salt_path = app
                 .path()
                 .app_local_data_dir()
@@ -132,6 +134,8 @@ pub fn run() {
             get_novel_entry_cmd,
             list_novel_entries_cmd,
             delete_novel_entry_cmd,
+            run_background_novelization_cmd,
+            cancel_background_novelization_cmd,
             story_consultant_cmd,
             generate_consultant_title_cmd,
             create_consultant_chat_cmd,
