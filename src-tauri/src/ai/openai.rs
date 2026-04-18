@@ -171,10 +171,14 @@ pub async fn chat_completion_stream(
     let mut stream = resp.bytes_stream();
 
     let mut buffer = String::new();
+    let mut raw_body = String::new();
+    let mut sse_events_seen = 0usize;
 
     while let Some(chunk_result) = stream.next().await {
         let chunk = chunk_result.map_err(|e| format!("Stream error: {e}"))?;
-        buffer.push_str(&String::from_utf8_lossy(&chunk));
+        let chunk_str = String::from_utf8_lossy(&chunk);
+        raw_body.push_str(&chunk_str);
+        buffer.push_str(&chunk_str);
 
         // Process complete SSE lines
         while let Some(line_end) = buffer.find('\n') {
@@ -185,6 +189,7 @@ pub async fn chat_completion_stream(
                 continue;
             }
             if let Some(json_str) = line.strip_prefix("data: ") {
+                sse_events_seen += 1;
                 if let Ok(parsed) = serde_json::from_str::<StreamChunk>(json_str) {
                     for choice in &parsed.choices {
                         if let Some(content) = &choice.delta.content {
@@ -201,12 +206,34 @@ pub async fn chat_completion_stream(
         }
     }
 
-    // Emergency fallback: if the model emitted zero content tokens but did
-    // produce reasoning (e.g. filled its budget thinking), use the reasoning
-    // so the caller gets SOMETHING instead of an empty string.
+    // Reasoning-model fallback (chain-of-thought only, no content).
     if full_text.is_empty() && !reasoning_text.is_empty() {
         let _ = tauri::Emitter::emit(app_handle, event_name, reasoning_text.clone());
         return Ok(reasoning_text);
+    }
+    // Non-SSE fallback: some servers (or certain request configurations) return
+    // a normal JSON chat-completion payload even when stream=true. Try parsing
+    // the full accumulated body as a ChatResponse and pull message.content.
+    if full_text.is_empty() {
+        if let Ok(parsed) = serde_json::from_str::<ChatResponse>(raw_body.trim()) {
+            if let Some(content) = parsed.choices.first().map(|c| c.message.content.clone()) {
+                if !content.is_empty() {
+                    let _ = tauri::Emitter::emit(app_handle, event_name, content.clone());
+                    return Ok(content);
+                }
+            }
+        }
+    }
+    // Fully empty response — surface a diagnostic error instead of silently
+    // returning "". Include a short snippet of the raw body so the cause is
+    // at least inspectable from the UI.
+    if full_text.is_empty() {
+        let snippet: String = raw_body.chars().take(400).collect();
+        return Err(format!(
+            "Empty response from model (parsed {sse_events_seen} SSE events, {} bytes received). First bytes: {}",
+            raw_body.len(),
+            if snippet.is_empty() { "(none)".to_string() } else { snippet },
+        ));
     }
     Ok(full_text)
 }
@@ -243,14 +270,19 @@ pub async fn chat_completion_stream_silent(
     let mut reasoning_text = String::new();
     let mut stream = resp.bytes_stream();
     let mut buffer = String::new();
+    let mut raw_body = String::new();
+    let mut sse_events_seen = 0usize;
     while let Some(chunk_result) = stream.next().await {
         let chunk = chunk_result.map_err(|e| format!("Stream error: {e}"))?;
-        buffer.push_str(&String::from_utf8_lossy(&chunk));
+        let chunk_str = String::from_utf8_lossy(&chunk);
+        raw_body.push_str(&chunk_str);
+        buffer.push_str(&chunk_str);
         while let Some(line_end) = buffer.find('\n') {
             let line = buffer[..line_end].trim().to_string();
             buffer = buffer[line_end + 1..].to_string();
             if line.is_empty() || line == "data: [DONE]" { continue; }
             if let Some(json_str) = line.strip_prefix("data: ") {
+                sse_events_seen += 1;
                 if let Ok(parsed) = serde_json::from_str::<StreamChunk>(json_str) {
                     for choice in &parsed.choices {
                         if let Some(content) = &choice.delta.content {
@@ -266,6 +298,21 @@ pub async fn chat_completion_stream_silent(
     }
     if full_text.is_empty() && !reasoning_text.is_empty() {
         return Ok(reasoning_text);
+    }
+    if full_text.is_empty() {
+        if let Ok(parsed) = serde_json::from_str::<ChatResponse>(raw_body.trim()) {
+            if let Some(content) = parsed.choices.first().map(|c| c.message.content.clone()) {
+                if !content.is_empty() { return Ok(content); }
+            }
+        }
+    }
+    if full_text.is_empty() {
+        let snippet: String = raw_body.chars().take(400).collect();
+        return Err(format!(
+            "Empty response from model (parsed {sse_events_seen} SSE events, {} bytes received). First bytes: {}",
+            raw_body.len(),
+            if snippet.is_empty() { "(none)".to_string() } else { snippet },
+        ));
     }
     Ok(full_text)
 }
