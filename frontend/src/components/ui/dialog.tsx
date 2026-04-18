@@ -8,9 +8,12 @@ interface DialogProps {
   onClose: () => void;
   children: ReactNode;
   className?: string;
+  /** Override the backdrop class. Defaults to a 60%-black blurred overlay;
+   *  pass e.g. "bg-background" for a fully opaque blackout (gallery). */
+  overlayClassName?: string;
 }
 
-export function Dialog({ open, onClose, children, className }: DialogProps) {
+export function Dialog({ open, onClose, children, className, overlayClassName }: DialogProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,7 +35,7 @@ export function Dialog({ open, onClose, children, className }: DialogProps) {
       className="fixed inset-0 z-50 flex items-center justify-center"
       onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
     >
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className={cn("absolute inset-0", overlayClassName ?? "bg-black/60 backdrop-blur-sm")} />
       <div className={cn("relative z-10 w-full mx-4", className ?? "max-w-lg")}>
         {children}
       </div>

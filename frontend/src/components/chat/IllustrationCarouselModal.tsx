@@ -272,7 +272,7 @@ export function IllustrationCarouselModal({
   const activeSlide = slides[activeIdx] ?? currentSlide;
 
   return (
-    <Dialog open onClose={closeModal} className="max-w-[90vw]">
+    <Dialog open onClose={closeModal} className="max-w-[90vw]" overlayClassName="bg-background">
       <div className="flex flex-col max-h-[90vh]">
         <div className="relative flex items-center justify-center min-h-0 flex-1 overflow-hidden group/modal">
           {/* Day Page view */}
@@ -344,7 +344,7 @@ export function IllustrationCarouselModal({
           </button>
 
           {/* Top-left controls: download, go-to, slideshow, day pages toggle */}
-          <div className="absolute top-3 left-3 z-20 flex gap-1.5 opacity-0 group-hover/modal:opacity-100 transition-opacity">
+          <div className="absolute top-3 left-3 z-20 flex gap-1.5">
             {/* Download (illustrations only) */}
             {activeSlide.type === "illustration" && (
               <div className="relative group/mdl-dl">
