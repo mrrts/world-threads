@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import { useEffect, useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 interface DialogProps {
   open: boolean;
@@ -21,17 +22,22 @@ export function Dialog({ open, onClose, children, className }: DialogProps) {
 
   if (!open) return null;
 
-  return (
+  // Portal to body so every Dialog is a top-level child of <body>. Avoids
+  // stacking context traps when Dialogs are nested in the React tree — each
+  // opened Dialog mounts DOM-later and naturally stacks above the previous
+  // one's overlay + content.
+  return createPortal(
     <div
       ref={overlayRef}
       className="fixed inset-0 z-50 flex items-center justify-center"
       onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
     >
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
-      <div className={cn("relative z-10 w-full mx-4 animate-in zoom-in-95 slide-in-from-bottom-2 duration-200", className ?? "max-w-lg")}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className={cn("relative z-10 w-full mx-4", className ?? "max-w-lg")}>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
