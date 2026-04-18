@@ -343,6 +343,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                   adjustingMessageId={store.adjustingMessageId}
                   onAdjust={(id) => setAdjustMessageId(id)}
                   onDelete={(id) => store.deleteMessage(id)}
+                  chatFontSize={store.chatFontSize}
                 />
               </React.Fragment>);
             }

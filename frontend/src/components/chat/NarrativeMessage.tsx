@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { formatMessage, markdownComponents, remarkPlugins, rehypePlugins } from "./formatMessage";
 import type { Message } from "@/lib/tauri";
+import { chatFontPx } from "@/lib/chat-font";
 
 interface NarrativeMessageProps {
   message: Message;
@@ -25,6 +26,9 @@ interface NarrativeMessageProps {
   adjustingMessageId: string | null;
   onAdjust: (messageId: string) => void;
   onDelete: (messageId: string) => void;
+  /** Level from the chat font-size preference (0..5). Applied to the
+   *  narrative prose so it tracks message bubbles. */
+  chatFontSize?: number;
 }
 
 export function NarrativeMessage({
@@ -32,6 +36,7 @@ export function NarrativeMessage({
   cachedTones, lastTone, speakingId, loadingSpeech, toneMenuId, setToneMenuId,
   onSpeak, onStopSpeaking, onDeleteAudio, toneMenuRef,
   adjustingMessageId, onAdjust, onDelete,
+  chatFontSize = 2,
 }: NarrativeMessageProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const hasCached = cachedTones && cachedTones.size > 0;
@@ -152,7 +157,7 @@ export function NarrativeMessage({
           </div>
         )}
 
-        <div className="prose prose-sm max-w-none prose-p:my-1 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-amber-100)] [--tw-prose-bold:rgb(252,211,77)]">
+        <div style={{ fontSize: `${chatFontPx(chatFontSize)}px` }} className="prose prose-sm max-w-none prose-p:my-1 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-amber-100)] [--tw-prose-bold:rgb(252,211,77)]">
           <Markdown components={markdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{formatMessage(message.content)}</Markdown>
         </div>
         <p className="text-[10px] mt-1.5 text-amber-500/50 not-italic flex items-center gap-2">
