@@ -776,10 +776,18 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                   <label className="text-xs font-medium text-muted-foreground block mb-1.5">Custom Instructions</label>
                   <textarea
                     value={narrationInstructions}
-                    onChange={(e) => { setNarrationInstructions(e.target.value); setNarrationDirty(true); }}
+                    onChange={(e) => {
+                      setNarrationInstructions(e.target.value);
+                      setNarrationDirty(true);
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                    ref={(el) => {
+                      if (el) { el.style.height = "auto"; el.style.height = `${el.scrollHeight}px`; }
+                    }}
                     placeholder="e.g. Describe the weather shifting..."
-                    className="w-full min-h-[60px] max-h-[120px] resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                    rows={2}
+                    className="w-full resize-none overflow-hidden rounded-lg border border-input bg-transparent px-3 py-2 text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                    rows={4}
                   />
                 </div>
                 {store.activeCharacter && onNavigateToCharacter && (
