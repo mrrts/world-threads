@@ -1,5 +1,5 @@
 import { Minus, Plus } from "lucide-react";
-import { CHAT_FONT_SIZES_PX } from "@/lib/chat-font";
+import { CHAT_FONT_SIZES_PX, chatFontPx } from "@/lib/chat-font";
 
 interface Props {
   /** Current size level (0..CHAT_FONT_SIZES_PX.length - 1). */
@@ -8,15 +8,15 @@ interface Props {
 }
 
 /**
- * Three-segment control: [−] [AA] [+]. Minus/plus step the `value`
- * through CHAT_FONT_SIZES_PX and disable at the ends. The center AA icon
- * is non-clickable — it just communicates "font size" visually (small A
- * next to bigger A).
+ * Three-segment control: [−] [16px] [+]. Minus/plus step the `value`
+ * through CHAT_FONT_SIZES_PX and disable at the ends. The center segment
+ * shows the current pixel size and isn't clickable.
  */
 export function FontSizeAdjuster({ value, onChange }: Props) {
   const max = CHAT_FONT_SIZES_PX.length - 1;
   const atMin = value <= 0;
   const atMax = value >= max;
+  const px = chatFontPx(value);
   return (
     <div className="inline-flex rounded-lg overflow-hidden border border-input">
       <button
@@ -29,11 +29,10 @@ export function FontSizeAdjuster({ value, onChange }: Props) {
         <Minus size={14} />
       </button>
       <div
-        className="px-3 py-1.5 flex items-baseline gap-0.5 text-muted-foreground border-l border-r border-input select-none"
-        aria-hidden="true"
+        className="px-3 py-1.5 text-xs font-mono text-muted-foreground border-l border-r border-input select-none min-w-[44px] text-center"
+        aria-label={`Chat font size ${px} pixels`}
       >
-        <span className="text-[11px] font-semibold leading-none">A</span>
-        <span className="text-[16px] font-semibold leading-none">A</span>
+        {px}px
       </div>
       <button
         type="button"
