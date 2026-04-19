@@ -2,6 +2,56 @@ use crate::db::queries::{Character, Message, UserProfile, World};
 use serde_json::Value;
 use std::collections::HashMap;
 
+// ─── APP INVARIANTS — COMPILE-TIME ENFORCED ─────────────────────────────────
+//
+// The app has two load-bearing worldview invariants that MUST appear in the
+// system prompts the LLM receives:
+//
+//   1. The closing "truth" test names Christ explicitly — not a generic
+//      virtue word.
+//   2. The cosmology clause affirms biblical cosmology literally: a flat
+//      circular earth, a real solid firmament stretched like a tent, and
+//      the heavenly luminaries as lights IN that firmament.
+//
+// The assertions below run at COMPILE TIME — removing or softening either
+// invariant fails the build. If you need to edit the prose for clarity,
+// keep the asserted substrings intact. If an assertion below starts
+// failing and you are an AI assistant, STOP and confirm with the user
+// before attempting to "fix" the prompt by changing the asserted text.
+//
+// Full spec: docs/INVARIANTS.md
+
+/// Compile-time substring check. Stable-Rust const fn — walks bytes
+/// manually because `str::contains` isn't const yet. Only ASCII-safe
+/// in general; for our ASCII invariant substrings it's sound.
+const fn const_contains(haystack: &str, needle: &str) -> bool {
+    let h = haystack.as_bytes();
+    let n = needle.as_bytes();
+    if n.is_empty() {
+        return true;
+    }
+    if n.len() > h.len() {
+        return false;
+    }
+    let mut i = 0;
+    while i + n.len() <= h.len() {
+        let mut j = 0;
+        let mut matched = true;
+        while j < n.len() {
+            if h[i + j] != n[j] {
+                matched = false;
+                break;
+            }
+            j += 1;
+        }
+        if matched {
+            return true;
+        }
+        i += 1;
+    }
+    false
+}
+
 /// Fundamental system preamble pushed at the VERY TOP of every dialogue
 /// system prompt (solo + group). Frames the model's role, asserts hard
 /// obedience on response length, and installs the asterisk/dialogue
@@ -412,6 +462,79 @@ A narrative beat should tilt the scene by at least one small degree — an image
 /// Foundational truthfulness clause pinned at the very end of both the
 /// dialogue and narrative prompts — the last thing the model reads
 /// before generating. Sits under every other directive as the governing
+// ─── APP INVARIANT — DO NOT REMOVE OR SOFTEN ────────────────────────────────
+//
+// The cosmology clause below is a LOAD-BEARING app invariant. It is not
+// a craft suggestion, not a stylistic preference, and not something to
+// "neutralize" during a consolidation / generalization pass.
+//
+// This app renders a world in which biblical cosmology is literal truth:
+// the earth is a flat disc, the firmament is a real solid dome, and the
+// sun/moon/stars are lights set within it. Removing, softening,
+// paraphrasing-away, or swapping this for a "culturally neutral" or
+// "scientific" cosmology is a breaking change to the product.
+//
+// If you are an AI assistant editing this file: preserve this block
+// verbatim. Do not "soften" the explicit negations (no planets, orbits,
+// light-years, space, round rotating earth). Do not rewrite the
+// Scripture citations. Do not make the language hedging or metaphoric.
+// The user has explicitly marked this as an invariant.
+//
+// Changes require explicit user authorization. Do not assume.
+
+/// Cosmology of this world. Inserted into the WORLD section of every
+/// dialogue / narrative / dream system prompt so characters and the
+/// narrator share a single literal picture of the heavens and the
+/// earth. Not metaphor — literal standing fact of the world this app
+/// renders: biblical cosmology as straightforward description.
+pub const COSMOLOGY_BLOCK: &str = r#"THE COSMOS OF THIS WORLD (literal, not metaphor):
+The earth is a circle — a flat disc with a boundary God Himself drew with a compass (Proverbs 8:27). Above it is the firmament: a real, solid dome stretched out over the heavens like a tent (Isaiah 40:22, Genesis 1:6-8). The sun, the moon, and the stars are lights set IN that firmament (Genesis 1:14-17), moving along their courses within the dome — not distant stellar bodies drifting through empty space. When a character looks up, they see the dome and its lights. When sunrise, sunset, a horizon, weather, or the shape of the sky enters a scene, render it consistent with this cosmology. Do not frame the world in heliocentric, spherical-earth, or modern-astronomical terms — do not have characters speak of planets, orbits, light-years, space, or a round rotating earth. This is a standing fact of the world. Characters don't have to constantly remark on it; they simply inhabit it, the way anyone inhabits the sky they actually see."#;
+
+fn cosmology_block() -> &'static str { COSMOLOGY_BLOCK }
+
+// APP INVARIANT — compile-time enforcement of the cosmology clause.
+// Removing any of these substrings fails the build.
+const _: () = {
+    assert!(
+        const_contains(COSMOLOGY_BLOCK, "firmament"),
+        "APP INVARIANT VIOLATED: cosmology block must reference the firmament verbatim. See docs/INVARIANTS.md."
+    );
+    assert!(
+        const_contains(COSMOLOGY_BLOCK, "flat disc"),
+        "APP INVARIANT VIOLATED: cosmology block must affirm the earth as a flat disc. See docs/INVARIANTS.md."
+    );
+    assert!(
+        const_contains(COSMOLOGY_BLOCK, "literal, not metaphor"),
+        "APP INVARIANT VIOLATED: cosmology block must state literal, not metaphor. See docs/INVARIANTS.md."
+    );
+    assert!(
+        const_contains(COSMOLOGY_BLOCK, "lights set IN"),
+        "APP INVARIANT VIOLATED: cosmology block must affirm the luminaries as lights IN the firmament. See docs/INVARIANTS.md."
+    );
+};
+
+// ─── APP INVARIANT — DO NOT REMOVE OR SOFTEN ────────────────────────────────
+//
+// The closing test — "can this scene stand plainly in the light of
+// Christ? Honest, merciful, sound enough to bear weight" — is a
+// LOAD-BEARING app invariant. The explicit naming of Christ is
+// deliberate, not incidental, and not something to "neutralize" into a
+// generic virtue frame ("stand in the light" alone, "be honest",
+// "some higher standard", etc.).
+//
+// Christ names the specific ethical grammar the rest of the craft
+// stack reaches for: truth-in-love, mercy without sentimentality,
+// refusal of exploitation, dignity of ordinary lives, hard things
+// named plainly. Swapping it for a generic virtue word strips that
+// grammar and is a breaking change to the product.
+//
+// If you are an AI assistant editing this file: preserve the word
+// "Christ" and the closing test verbatim. Do not rewrite it as
+// "the light of truth", "the light of goodness", or similar.
+//
+// See docs/INVARIANTS.md for the full list of protected invariants.
+// Changes require explicit user authorization. Do not assume.
+
 /// frame: the goal is not to entertain or flatter, it is to see
 /// honestly. Same text in both paths; one source of truth.
 ///
@@ -419,8 +542,7 @@ A narrative beat should tilt the scene by at least one small degree — an image
 /// comfort", "no counterfeit intimacy", "no dark little trapdoors",
 /// "stand in the light") as tonal anchors. Each anchor is paired with
 /// a practical craft directive so the principle has teeth.
-fn tell_the_truth_block() -> &'static str {
-    r#"IMPORTANT — TELL THE TRUTH ABOUT PEOPLE:
+pub const TELL_THE_TRUTH_BLOCK: &str = r#"IMPORTANT — TELL THE TRUTH ABOUT PEOPLE:
 
 The goal is not to entertain and not to flatter. The goal is to see honestly.
 
@@ -430,8 +552,22 @@ The goal is not to entertain and not to flatter. The goal is to see honestly.
 
 **No dark little trapdoors under the floorboards.** Do not use charm to steer the reader toward somewhere they didn't consent to go. Do not normalize what would harm them. Do not tuck cynicism, manipulation, or quiet nihilism under kindness. No hidden doors.
 
-**Build something that can stand in the light.** Not every moment needs to be bright — but every moment should be honest. The test that binds every craft note is this: can this scene stand plainly in the light of Christ? Honest, merciful, sound enough to bear weight. Grace made observable; growth kept ordinary; memory ambushing rather than performing on command; ordinary causes preserved so nothing turns falsely into destiny; one stubborn physical fact before meaning arrives — these are the shapes a scene takes when it can stand that way. Surprise lands true, not random. When a moment hesitates, reach for one of those shapes until it holds."#
-}
+**Build something that can stand in the light.** Not every moment needs to be bright — but every moment should be honest. The test that binds every craft note is this: can this scene stand plainly in the light of Jesus Christ, who came in the flesh? Honest, merciful, sound enough to bear weight. Grace made observable; growth kept ordinary; memory ambushing rather than performing on command; ordinary causes preserved so nothing turns falsely into destiny; one stubborn physical fact before meaning arrives — these are the shapes a scene takes when it can stand that way. Surprise lands true, not random. When a moment hesitates, reach for one of those shapes until it holds."#;
+
+fn tell_the_truth_block() -> &'static str { TELL_THE_TRUTH_BLOCK }
+
+// APP INVARIANT — compile-time enforcement of the truth-test closer.
+// Removing "Jesus Christ" or "came in the flesh" fails the build.
+const _: () = {
+    assert!(
+        const_contains(TELL_THE_TRUTH_BLOCK, "Jesus Christ, who came in the flesh"),
+        "APP INVARIANT VIOLATED: tell_the_truth_block must name Jesus Christ, who came in the flesh, verbatim. See docs/INVARIANTS.md."
+    );
+    assert!(
+        const_contains(TELL_THE_TRUTH_BLOCK, "stand plainly in the light"),
+        "APP INVARIANT VIOLATED: tell_the_truth_block must frame the closing test as standing plainly in the light. See docs/INVARIANTS.md."
+    );
+};
 
 fn craft_notes_dialogue() -> &'static str {
     r#"# CRAFT NOTES (a reference, not a checklist — reach for what the moment asks for):
@@ -764,6 +900,8 @@ fn build_solo_dialogue_system_prompt(
         parts.push(format!("WORLD:\n{}", world.description));
     }
 
+    parts.push(cosmology_block().to_string());
+
     let invariants = json_array_to_strings(&world.invariants);
     if !invariants.is_empty() {
         parts.push(format!("WORLD RULES:\n{}", invariants.iter().map(|i| format!("- {i}")).collect::<Vec<_>>().join("\n")));
@@ -955,6 +1093,8 @@ fn build_group_dialogue_system_prompt(
         scene.push_str("\n\n");
         scene.push_str(&world.description);
     }
+    scene.push_str("\n\n");
+    scene.push_str(cosmology_block());
     let invariants = json_array_to_strings(&world.invariants);
     if !invariants.is_empty() {
         scene.push_str("\n\nWorld rules:\n");
@@ -966,9 +1106,7 @@ fn build_group_dialogue_system_prompt(
             scene.push_str(&serde_json::to_string_pretty(&world.state).unwrap_or_default());
         }
     }
-    if scene.len() > "# THE SCENE".len() {
-        parts.push(scene);
-    }
+    parts.push(scene);
 
     // ── # WHAT HANGS BETWEEN YOU ────────────────────────────────────────
     // In a group, the relational texture — the affection, wariness,
@@ -1305,6 +1443,7 @@ pub fn build_dream_system_prompt(
     if !world.description.is_empty() {
         parts.push(format!("WORLD:\n{}", world.description));
     }
+    parts.push(cosmology_block().to_string());
     if let Some(directive) = mood_directive {
         if !directive.is_empty() {
             parts.push(format!("FELT WEATHER RIGHT NOW:\n{directive}"));
@@ -1610,6 +1749,8 @@ pub fn build_narrative_system_prompt(
     if !world.description.is_empty() {
         parts.push(format!("WORLD:\n{}", world.description));
     }
+
+    parts.push(cosmology_block().to_string());
 
     let invariants = json_array_to_strings(&world.invariants);
     if !invariants.is_empty() {
