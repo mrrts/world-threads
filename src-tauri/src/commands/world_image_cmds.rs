@@ -193,6 +193,7 @@ pub async fn generate_world_image_cmd(
         source: "generated".to_string(),
         created_at: Utc::now().to_rfc3339(),
         aspect_ratio: 0.0,
+        caption: String::new(),
     };
 
     {
@@ -312,6 +313,7 @@ pub async fn generate_world_image_with_prompt_cmd(
         source: "generated".to_string(),
         created_at: Utc::now().to_rfc3339(),
         aspect_ratio: 0.0,
+        caption: String::new(),
     };
 
     {
@@ -355,6 +357,7 @@ pub fn upload_world_image_cmd(
         source: "uploaded".to_string(),
         created_at: Utc::now().to_rfc3339(),
         aspect_ratio: 0.0,
+        caption: String::new(),
     };
 
     {

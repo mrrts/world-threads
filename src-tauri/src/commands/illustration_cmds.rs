@@ -87,6 +87,34 @@ pub(crate) fn delete_illustration_inner(conn: &rusqlite::Connection, portraits_d
 }
 
 #[tauri::command]
+pub fn get_illustration_captions_cmd(
+    db: State<Database>,
+    message_ids: Vec<String>,
+) -> Result<std::collections::HashMap<String, String>, String> {
+    if message_ids.is_empty() {
+        return Ok(std::collections::HashMap::new());
+    }
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let placeholders: Vec<String> = (1..=message_ids.len()).map(|i| format!("?{i}")).collect();
+    let sql = format!(
+        "SELECT image_id, caption FROM world_images WHERE image_id IN ({}) AND caption != ''",
+        placeholders.join(", ")
+    );
+    let mut stmt = conn.prepare(&sql).map_err(|e| e.to_string())?;
+    let params_vec: Vec<&dyn rusqlite::types::ToSql> = message_ids.iter()
+        .map(|id| id as &dyn rusqlite::types::ToSql)
+        .collect();
+    let rows = stmt.query_map(params_vec.as_slice(), |row| {
+        Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+    }).map_err(|e| e.to_string())?;
+    let mut out = std::collections::HashMap::new();
+    for r in rows.flatten() {
+        out.insert(r.0, r.1);
+    }
+    Ok(out)
+}
+
+#[tauri::command]
 pub async fn generate_illustration_cmd(
     db: State<'_, Database>,
     portraits_dir: State<'_, PortraitsDir>,
@@ -165,6 +193,32 @@ pub async fn generate_illustration_cmd(
     log::info!("[Illustration] Generating for '{}' with {} reference images (tier={}, size={}, quality={})",
         character.display_name, reference_images.len(), tier, img_size, img_quality);
 
+    // When no user instructions are provided, do a quick LLM call to pick
+    // a memorable moment from recent scene messages. The picked sentence
+    // serves double duty: guides the image generation AND becomes the
+    // stored caption/alt-text for the illustration.
+    let user_display_name = user_profile.as_ref()
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("The human");
+    let resolved_instructions: Option<String> = match custom_instructions.as_deref() {
+        Some(s) if !s.trim().is_empty() => Some(s.to_string()),
+        _ => {
+            match orchestrator::pick_memorable_moment_caption(
+                &model_config.chat_api_base(),
+                &api_key,
+                &model_config.dialogue_model,
+                &recent_msgs,
+                user_display_name,
+            ).await {
+                Ok(moment) => Some(moment),
+                Err(e) => {
+                    log::warn!("[Illustration] memorable-moment pick failed: {e}; proceeding without");
+                    None
+                }
+            }
+        }
+    };
+
     let (scene_description, image_bytes, chat_usage) = orchestrator::generate_illustration_with_base(
         &model_config.chat_api_base(),
         &model_config.openai_api_base(),
@@ -177,12 +231,17 @@ pub async fn generate_illustration_cmd(
         &world, &character, None, &recent_msgs,
         user_profile.as_ref(),
         &reference_images,
-        custom_instructions.as_deref(),
+        resolved_instructions.as_deref(),
         has_previous,
         include_scene_summary.unwrap_or(true),
         None,
         None,
     ).await?;
+
+    // Caption: user's own instructions verbatim when provided, otherwise
+    // the LLM-picked moment. Empty string if both the user skipped and
+    // the fallback call failed — the illustration still saves.
+    let caption = resolved_instructions.clone().unwrap_or_default();
 
     if let Some(u) = &chat_usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -216,6 +275,7 @@ pub async fn generate_illustration_cmd(
             source: "illustration".to_string(),
             created_at: now.clone(),
             aspect_ratio: aspect,
+            caption: caption.clone(),
         };
         let _ = create_world_image(&conn, &img);
 
@@ -442,6 +502,7 @@ pub async fn adjust_illustration_cmd(
             source: "illustration".to_string(),
             created_at: now.clone(),
             aspect_ratio: aspect,
+            caption: String::new(),
         };
         let _ = create_world_image(&conn, &img);
 

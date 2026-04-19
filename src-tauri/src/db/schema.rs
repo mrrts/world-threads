@@ -669,6 +669,19 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         conn.execute("ALTER TABLE consultant_chats ADD COLUMN last_seen_message_id TEXT DEFAULT NULL", []).ok();
     }
 
+    // Illustration caption column — stores the human-readable text that
+    // describes the illustration's subject. Source is either the user's
+    // custom_instructions (verbatim) or a "memorable moment" caption that
+    // an LLM call picks from recent scene messages when instructions are
+    // left blank. Used as alt text + a visible caption in chat views.
+    let has_wi_caption: bool = conn.query_row(
+        "SELECT COUNT(*) FROM pragma_table_info('world_images') WHERE name = 'caption'",
+        [], |r| r.get::<_, i64>(0),
+    ).unwrap_or(0) > 0;
+    if !has_wi_caption {
+        conn.execute("ALTER TABLE world_images ADD COLUMN caption TEXT NOT NULL DEFAULT ''", []).ok();
+    }
+
     // ── Canon entries ─────────────────────────────────────────────────────
     //
     // Records the user's deliberate promotion of a specific message moment

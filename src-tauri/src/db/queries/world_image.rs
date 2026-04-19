@@ -13,25 +13,32 @@ pub struct WorldImage {
     pub source: String,
     pub created_at: String,
     pub aspect_ratio: f64,
+    /// Human-readable caption shown alongside the illustration (and used
+    /// as alt text). Source is either the user's custom instructions or
+    /// an LLM-picked "memorable moment" description. Empty string for
+    /// legacy rows that predate the column.
+    #[serde(default)]
+    pub caption: String,
 }
 
 pub fn create_world_image(conn: &Connection, img: &WorldImage) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO world_images (image_id, world_id, prompt, file_name, is_active, source, created_at, aspect_ratio) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
-        params![img.image_id, img.world_id, img.prompt, img.file_name, img.is_active, img.source, img.created_at, img.aspect_ratio],
+        "INSERT INTO world_images (image_id, world_id, prompt, file_name, is_active, source, created_at, aspect_ratio, caption) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+        params![img.image_id, img.world_id, img.prompt, img.file_name, img.is_active, img.source, img.created_at, img.aspect_ratio, img.caption],
     )?;
     Ok(())
 }
 
 pub fn list_world_images(conn: &Connection, world_id: &str) -> Result<Vec<WorldImage>, rusqlite::Error> {
     let mut stmt = conn.prepare(
-        "SELECT image_id, world_id, prompt, file_name, is_active, source, created_at, aspect_ratio FROM world_images WHERE world_id = ?1 ORDER BY created_at DESC"
+        "SELECT image_id, world_id, prompt, file_name, is_active, source, created_at, aspect_ratio, caption FROM world_images WHERE world_id = ?1 ORDER BY created_at DESC"
     )?;
     let rows = stmt.query_map(params![world_id], |row| {
         Ok(WorldImage {
             image_id: row.get(0)?, world_id: row.get(1)?, prompt: row.get(2)?,
             file_name: row.get(3)?, is_active: row.get(4)?, source: row.get(5)?,
             created_at: row.get(6)?, aspect_ratio: row.get(7)?,
+            caption: row.get(8).unwrap_or_default(),
         })
     })?;
     rows.collect()
@@ -39,15 +46,17 @@ pub fn list_world_images(conn: &Connection, world_id: &str) -> Result<Vec<WorldI
 
 pub fn get_active_world_image(conn: &Connection, world_id: &str) -> Option<WorldImage> {
     conn.query_row(
-        "SELECT image_id, world_id, prompt, file_name, is_active, source, created_at, aspect_ratio FROM world_images WHERE world_id = ?1 AND is_active = 1",
+        "SELECT image_id, world_id, prompt, file_name, is_active, source, created_at, aspect_ratio, caption FROM world_images WHERE world_id = ?1 AND is_active = 1",
         params![world_id],
         |row| Ok(WorldImage {
             image_id: row.get(0)?, world_id: row.get(1)?, prompt: row.get(2)?,
             file_name: row.get(3)?, is_active: row.get(4)?, source: row.get(5)?,
             created_at: row.get(6)?, aspect_ratio: row.get(7)?,
+            caption: row.get(8).unwrap_or_default(),
         }),
     ).ok()
 }
+
 
 pub fn set_active_world_image(conn: &Connection, world_id: &str, image_id: &str) -> Result<(), rusqlite::Error> {
     conn.execute("UPDATE world_images SET is_active = 0 WHERE world_id = ?1", params![world_id])?;

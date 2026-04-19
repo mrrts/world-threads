@@ -521,6 +521,76 @@ pub async fn run_memory_update_with_base(
 
 /// Generate a short emoji-like reaction from a character to a just-exchanged
 /// message pair. Not currently wired up — reactions were disabled in
+/// When the user asks for an illustration without providing their own
+/// instructions, pick a single memorable moment from recent messages
+/// that would make a landing illustration — one evocative sentence. The
+/// returned text then serves two purposes: it's fed as the illustration
+/// directive AND stored as the caption/alt-text on the illustration.
+///
+/// Short call (~60 output tokens) so the latency cost on top of the
+/// already-expensive image-gen is negligible.
+pub async fn pick_memorable_moment_caption(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    recent_messages: &[Message],
+    user_display_name: &str,
+) -> Result<String, String> {
+    // Render the last ~8 messages as a compact scene snippet for the model
+    // to pick a moment from.
+    let scene: Vec<String> = recent_messages.iter()
+        .rev().take(8).rev()
+        .filter(|m| m.role == "user" || m.role == "assistant" || m.role == "narrative")
+        .map(|m| {
+            let role = match m.role.as_str() {
+                "user" => user_display_name,
+                "narrative" => "Narrator",
+                _ => "Character",
+            };
+            let clipped: String = m.content.chars().take(280).collect();
+            format!("{role}: {clipped}")
+        })
+        .collect();
+
+    if scene.is_empty() {
+        return Err("no recent messages to pick a moment from".to_string());
+    }
+
+    let system = r#"From the recent scene below, pick ONE memorable moment that would make a landing illustration — a beat that's visual, specific, and felt. Describe it in a single evocative sentence that could guide an illustrator.
+
+Rules:
+- Output ONE sentence. No preamble, no commentary, no quotes, no list.
+- The sentence should be vivid and specific — a moment, not a summary.
+- Prefer visual detail, body, light, gesture. Avoid abstractions.
+- 15-30 words."#.to_string();
+
+    let user = format!("Recent scene:\n\n{}\n\nThe memorable moment:", scene.join("\n\n"));
+
+    let request = ChatRequest {
+        model: model.to_string(),
+        messages: vec![
+            openai::ChatMessage { role: "system".to_string(), content: system },
+            openai::ChatMessage { role: "user".to_string(), content: user },
+        ],
+        temperature: Some(0.8),
+        max_completion_tokens: Some(120),
+        response_format: None,
+    };
+
+    let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
+    let text = response.choices.first()
+        .map(|c| c.message.content.trim().to_string())
+        .unwrap_or_default();
+
+    if text.is_empty() {
+        return Err("empty moment-caption response".to_string());
+    }
+
+    // Strip enclosing quotes if the model added them.
+    let text = text.trim_matches('"').trim_matches('\'').trim().to_string();
+    Ok(text)
+}
+
 /// Ask the model for the single emoji the character would *feel* toward
 /// this user message — a read of the atmosphere, not a rating of the
 /// message's aptness.

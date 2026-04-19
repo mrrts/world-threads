@@ -48,6 +48,18 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
   const [pickerMessageId, setPickerMessageId] = useState<string | null>(null);
   const [canonMessageId, setCanonMessageId] = useState<string | null>(null);
   const [canonizedIds, setCanonizedIds] = useState<Set<string>>(new Set());
+  // Captions for illustration messages — loaded once per chat from the
+  // world_images.caption column. Empty entries omitted from the map.
+  const [illustrationCaptions, setIllustrationCaptions] = useState<Record<string, string>>({});
+  useEffect(() => {
+    const illusIds = store.messages.filter((m) => m.role === "illustration").map((m) => m.message_id);
+    if (illusIds.length === 0) { setIllustrationCaptions({}); return; }
+    let cancelled = false;
+    api.getIllustrationCaptions(illusIds).then((map) => {
+      if (!cancelled) setIllustrationCaptions(map);
+    }).catch(() => { if (!cancelled) setIllustrationCaptions({}); });
+    return () => { cancelled = true; };
+  }, [store.messages]);
   const [canonToast, setCanonToast] = useState<{ entry: CanonEntry; subjectLabel: string } | null>(null);
   const canonThreadId = store.messages.find((m) => m.thread_id)?.thread_id ?? null;
   const reloadCanonized = useCallback(async () => {
@@ -447,6 +459,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                 <TimeDivider current={msg} previous={prevMsg} />
                 <IllustrationMessage
                   msg={msg} isPending={isPending} isSending={isSending} isGeneratingVideo={isGeneratingVideo} store={store}
+                  caption={illustrationCaptions[msg.message_id]}
                   playingVideo={playingVideo} setPlayingVideo={setPlayingVideo} loopVideo={loopVideo} setLoopVideo={setLoopVideo}
                   videoFiles={videoFiles} setVideoFiles={setVideoFiles} videoDataUrls={videoDataUrls} playVideoFn={playVideo}
                   setIllustrationModalId={setIllustrationModalId} setModalSelectedId={setModalSelectedId}

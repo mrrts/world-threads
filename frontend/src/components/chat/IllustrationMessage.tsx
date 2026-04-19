@@ -12,6 +12,10 @@ interface Props {
   isSending: boolean;
   isGeneratingVideo: boolean;
   store: ReturnType<typeof useAppStore>;
+  /** Caption text stored with the illustration — either the user's own
+   *  instructions verbatim or an LLM-picked "memorable moment" sentence.
+   *  Rendered as a visible caption below the image AND as the alt attr. */
+  caption?: string;
   // Video state
   playingVideo: string | null;
   setPlayingVideo: (v: string | null) => void;
@@ -51,6 +55,7 @@ export function IllustrationMessage({
   setVideoModalId, setVideoPrompt, setVideoDuration, setVideoStyle, setVideoTab,
   setRemoveVideoConfirmId, setResetConfirmId,
   downloadedId, setDownloadedId, loadIllustrations,
+  caption,
 }: Props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRegenConfirm, setShowRegenConfirm] = useState(false);
@@ -65,7 +70,7 @@ export function IllustrationMessage({
         <div className="px-2 pb-2 relative">
           <img
             src={msg.content}
-            alt="Scene illustration"
+            alt={caption && caption.trim() !== "" ? caption : "Scene illustration"}
             loading="lazy"
             style={store.aspectRatios[msg.message_id] ? { aspectRatio: String(store.aspectRatios[msg.message_id]) } : undefined}
             className={`w-full rounded-lg cursor-pointer ${playingVideo === msg.message_id && videoDataUrls[msg.message_id] ? "invisible" : ""}`}
@@ -224,6 +229,11 @@ export function IllustrationMessage({
             </div>
           )}
         </div>
+        {caption && caption.trim() !== "" && (
+          <p className="px-4 pt-0.5 pb-2 text-xs text-emerald-100/80 italic leading-snug">
+            {caption}
+          </p>
+        )}
         <p className="text-[10px] px-4 pb-3 text-emerald-500/50 flex items-center gap-2">
           {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           {!isPending && (

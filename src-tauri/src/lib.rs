@@ -115,6 +115,7 @@ pub fn run() {
             prompt_character_cmd,
             generate_narrative_cmd,
             generate_illustration_cmd,
+            get_illustration_captions_cmd,
             delete_illustration_cmd,
             regenerate_illustration_cmd,
             adjust_illustration_cmd,

@@ -739,6 +739,31 @@ pub async fn generate_group_illustration_cmd(
         .map(|c| (c.character_id.clone(), c.display_name.clone()))
         .collect();
 
+    // Resolve instructions: if the user left them blank, ask the model to
+    // pick a memorable moment from recent messages. That sentence then
+    // becomes both the illustration directive and the stored caption/alt.
+    let user_display_name = user_profile.as_ref()
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("The human");
+    let resolved_instructions: Option<String> = match custom_instructions.as_deref() {
+        Some(s) if !s.trim().is_empty() => Some(s.to_string()),
+        _ => {
+            match orchestrator::pick_memorable_moment_caption(
+                &model_config.chat_api_base(),
+                &api_key,
+                &model_config.dialogue_model,
+                &recent_msgs,
+                user_display_name,
+            ).await {
+                Ok(moment) => Some(moment),
+                Err(e) => {
+                    log::warn!("[GroupIllustration] memorable-moment pick failed: {e}; proceeding without");
+                    None
+                }
+            }
+        }
+    };
+
     let (scene_description, image_bytes, chat_usage) = orchestrator::generate_illustration_with_base(
         &model_config.chat_api_base(),
         &model_config.openai_api_base(),
@@ -751,12 +776,13 @@ pub async fn generate_group_illustration_cmd(
         &world, primary_character, additional_cast_opt, &recent_msgs,
         user_profile.as_ref(),
         &reference_images,
-        custom_instructions.as_deref(),
+        resolved_instructions.as_deref(),
         has_previous,
         include_scene_summary.unwrap_or(true),
         Some(&characters.iter().map(|c| c.display_name.clone()).collect::<Vec<_>>()),
         Some(&names_map),
     ).await?;
+    let caption = resolved_instructions.clone().unwrap_or_default();
 
     if let Some(u) = &chat_usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -785,6 +811,7 @@ pub async fn generate_group_illustration_cmd(
             source: "illustration".to_string(),
             created_at: now.clone(),
             aspect_ratio: aspect,
+            caption: caption.clone(),
         };
         let _ = create_world_image(&conn, &img);
 
