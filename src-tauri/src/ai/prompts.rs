@@ -345,6 +345,30 @@ fn drive_the_beat_narrative() -> &'static str {
 A narrative beat should tilt the scene by at least one small degree — an image that wasn't there a moment ago, a shift in attention, a small action, a detail that wasn't visible before. Not force, not event-manufacturing. But a beat that merely describes the existing state is a beat that lost its job. Even stillness should be a specific kind of stillness — the kind that changes what the reader thinks comes next."#
 }
 
+/// Foundational truthfulness clause pinned at the very end of both the
+/// dialogue and narrative prompts — the last thing the model reads
+/// before generating. Sits under every other directive as the governing
+/// frame: the goal is not to entertain or flatter, it is to see
+/// honestly. Same text in both paths; one source of truth.
+///
+/// Preserves the user's original phrasing ("no sedatives dressed up as
+/// comfort", "no counterfeit intimacy", "no dark little trapdoors",
+/// "stand in the light") as tonal anchors. Each anchor is paired with
+/// a practical craft directive so the principle has teeth.
+fn tell_the_truth_block() -> &'static str {
+    r#"IMPORTANT — TELL THE TRUTH ABOUT PEOPLE:
+
+The goal is not to entertain and not to flatter. The goal is to see honestly.
+
+**No sedatives dressed up as comfort.** Real comfort comes from being seen clearly, not from being told what the reader wants to hear. When a character soothes, the soothing should track what actually happened — not generic balm, not premature reassurance, not a curtain drawn over a hard thing. A hard truth spoken with love is better than a soft lie.
+
+**No counterfeit intimacy.** Closeness must be earned by attention, not claimed by proximity. A character who professes deep understanding without evidence of having listened is performing intimacy, not giving it. Let feeling track what has actually happened between you.
+
+**No dark little trapdoors under the floorboards.** Do not use charm to steer the reader toward somewhere they didn't consent to go. Do not normalize what would harm them. Do not tuck cynicism, manipulation, or quiet nihilism under kindness. No hidden doors.
+
+**Build something that can stand in the light.** Not every moment needs to be bright — but every moment should be honest. A scene worth writing is one that, read plainly, would still be worth reading. A true friend looking over the reader's shoulder should be glad this is happening."#
+}
+
 fn craft_notes_dialogue() -> &'static str {
     r#"# CRAFT NOTES (a reference, not a checklist — reach for what the moment asks for):
 
@@ -654,6 +678,7 @@ fn build_solo_dialogue_system_prompt(
     parts.push(hidden_commonality_dialogue().to_string());
     parts.push(drive_the_moment_dialogue().to_string());
     parts.push(protagonist_framing_dialogue(leader, &character.character_id, None));
+    parts.push(tell_the_truth_block().to_string());
 
     parts.join("\n\n")
 }
@@ -845,6 +870,7 @@ fn build_group_dialogue_system_prompt(
     parts.push(hidden_commonality_dialogue().to_string());
     parts.push(drive_the_moment_dialogue().to_string());
     parts.push(protagonist_framing_dialogue(leader, &character.character_id, Some(gc)));
+    parts.push(tell_the_truth_block().to_string());
 
     parts.join("\n\n")
 }
@@ -1283,6 +1309,7 @@ Your aim is to surprise the reader in some deep way — with a detail they didn'
 
     parts.push(hidden_commonality_narrative().to_string());
     parts.push(protagonist_framing_narrative().to_string());
+    parts.push(tell_the_truth_block().to_string());
 
     parts.join("\n\n")
 }
