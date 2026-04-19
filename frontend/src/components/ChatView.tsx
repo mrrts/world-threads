@@ -476,7 +476,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                         : "bg-secondary/40 text-secondary-foreground rounded-bl-md max-w-[80%] border border-border/30"
                     } ${
                       canonizedIds.has(msg.message_id)
-                        ? "ring-1 ring-amber-400/60 shadow-[0_0_24px_rgba(251,191,36,0.22)] [&>*]:relative [&>*]:z-10 before:content-[''] before:absolute before:inset-0 before:rounded-[inherit] before:pointer-events-none before:bg-gradient-to-br before:from-amber-200/30 before:via-amber-400/20 before:to-yellow-300/30 before:mix-blend-overlay before:blur-xl before:bg-[length:200%_200%] before:animate-[canonized-shimmer_9s_ease-in-out_infinite]"
+                        ? "ring-2 ring-amber-300 shadow-[0_0_0_4px_rgba(251,191,36,0.45),0_0_32px_10px_rgba(251,191,36,0.75),0_0_80px_20px_rgba(245,158,11,0.55),0_0_160px_40px_rgba(251,191,36,0.30)] [&>*]:relative [&>*]:z-10 before:content-[''] before:absolute before:inset-0 before:rounded-[inherit] before:pointer-events-none before:bg-gradient-to-br before:from-amber-200/50 before:via-amber-300/40 before:to-yellow-300/50 before:mix-blend-overlay before:blur-xl before:bg-[length:200%_200%] before:animate-[canonized-shimmer_9s_ease-in-out_infinite]"
                         : ""
                     }`}
                   >

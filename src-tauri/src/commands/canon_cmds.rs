@@ -109,6 +109,7 @@ fn speaker_label_for(
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct WeaveRequest {
     pub source_message_id: String,
     pub subject_type: String,
@@ -194,6 +195,7 @@ pub async fn canonize_weave_description_cmd(
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SaveCanonRequest {
     pub source_message_id: Option<String>,
     pub subject_type: String,      // "character" | "user" | "world" | "relationship"
