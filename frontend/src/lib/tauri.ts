@@ -553,6 +553,8 @@ export const api = {
     invoke<PortraitInfo>("set_portrait_from_gallery_cmd", { characterId, sourceFile }),
   getActivePortrait: (characterId: string) =>
     invoke<PortraitInfo | null>("get_active_portrait_cmd", { characterId }),
+  backfillEmbeddings: (apiKey: string) =>
+    invoke<{ embedded: number; skipped: number; errors: number }>("backfill_embeddings_cmd", { apiKey }),
   generateCharacterVisualDescription: (apiKey: string, characterId: string, force?: boolean) =>
     invoke<Character>("generate_character_visual_description_cmd", { apiKey, characterId, force: force ?? null }),
   listCharactersNeedingVisualDescription: (worldId: string) =>

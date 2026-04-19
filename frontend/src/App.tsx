@@ -152,6 +152,25 @@ function MainApp() {
     return () => window.clearTimeout(t);
   }, [store.apiKey, store.activeWorld?.world_id, backfillVisuals]);
 
+  // Backfill semantic embeddings for any messages (solo + group) that
+  // don't yet have chunk coverage for the characters who should remember
+  // them. Safe to run on every mount — the backend short-circuits on
+  // already-covered rows and is a no-op in LM Studio mode. Delayed so
+  // initial app load settles first.
+  useEffect(() => {
+    if (!store.apiKey) return;
+    const t = window.setTimeout(() => {
+      api.backfillEmbeddings(store.apiKey)
+        .then((s) => {
+          if (s.embedded > 0 || s.errors > 0) {
+            console.info(`[Backfill] embedded=${s.embedded} skipped=${s.skipped} errors=${s.errors}`);
+          }
+        })
+        .catch(() => { /* non-fatal */ });
+    }, 5000);
+    return () => window.clearTimeout(t);
+  }, [store.apiKey]);
+
   // Re-check on window focus
   useEffect(() => {
     const handler = () => {

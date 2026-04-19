@@ -59,6 +59,110 @@ pub fn compute_and_persist_mood(
     Ok(if directive.is_empty() { None } else { Some(directive) })
 }
 
+/// Embed a message once and store vector-chunk rows for every character
+/// listed in `member_character_ids`. Used for group messages so any
+/// member of the group can semantically recall the exchange from their
+/// own solo or other chats.
+///
+/// `chunk_metadata.chunk_id` has a UNIQUE constraint, so we use
+/// synthetic keys `{message_id}::{character_id}` — one row per character
+/// for the same underlying message. The `content` stored includes a
+/// speaker-label prefix so the retrieved snippet reads as a real line
+/// rather than disembodied text.
+///
+/// Returns the embedding vector of the content so callers who are about
+/// to run vector searches can reuse it without re-embedding.
+pub async fn embed_and_store_for_members(
+    db: &Database,
+    api_key: &str,
+    model_config: &orchestrator::ModelConfig,
+    world_id: &str,
+    member_character_ids: &[String],
+    message_id: &str,
+    formatted_content: &str,
+) -> Option<Vec<f32>> {
+    if member_character_ids.is_empty() { return None; }
+    let (embeddings, tokens) = orchestrator::generate_embeddings_with_base(
+        &model_config.openai_api_base(),
+        api_key,
+        &model_config.embedding_model,
+        vec![formatted_content.to_string()],
+    ).await.ok()?;
+    let embedding = embeddings.into_iter().next()?;
+    {
+        let Ok(conn) = db.conn.lock() else { return Some(embedding); };
+        let _ = record_token_usage(&conn, "embedding", &model_config.embedding_model, tokens, 0);
+        for cid in member_character_ids {
+            let chunk_id = format!("{message_id}::{cid}");
+            if let Err(e) = insert_vector_chunk(
+                &conn, &chunk_id, "message", message_id,
+                world_id, cid, formatted_content, &embedding,
+            ) {
+                log::warn!("[Memory] Failed to store group chunk {chunk_id}: {e}");
+            }
+        }
+    }
+    Some(embedding)
+}
+
+/// Run a vector search against an already-computed embedding and return
+/// formatted `[Memory]` snippets ready to push into a retrieval list.
+/// Helper used by both solo and group dialogue paths.
+pub fn vector_search_memories(
+    db: &Database,
+    world_id: &str,
+    character_id: &str,
+    embedding: &[f32],
+    k: i64,
+) -> Vec<String> {
+    let Ok(conn) = db.conn.lock() else { return Vec::new(); };
+    match search_vectors(&conn, world_id, character_id, embedding, k) {
+        Ok(results) => {
+            let mut out = Vec::with_capacity(results.len());
+            for (chunk_content, distance) in results {
+                log::info!("[Memory]   - dist={:.3}: {:.80}", distance, chunk_content);
+                out.push(format!("[Memory] {chunk_content}"));
+            }
+            out
+        }
+        Err(e) => {
+            log::warn!("[Memory] Vector search failed: {e}");
+            Vec::new()
+        }
+    }
+}
+
+/// Build the "MEMORY FROM YOUR OTHER CHATS" retrieval snippet for a
+/// character — pulls their most-recent activity from each OTHER thread
+/// they're in (solo if we're in group, groups if we're in solo) and
+/// formats it as a single labeled block ready to push into the
+/// dialogue-retrieval context. Returns None when the character has no
+/// other threads or no activity in them.
+pub fn build_cross_thread_snippet(
+    db: &Database,
+    character_id: &str,
+    current_thread_id: &str,
+    user_profile: Option<&UserProfile>,
+) -> Option<String> {
+    let conn = db.conn.lock().ok()?;
+    let user_name = user_profile.map(|p| p.display_name.as_str()).unwrap_or("the human");
+    let blocks = list_cross_thread_recent_for_character(
+        &conn,
+        character_id,
+        current_thread_id,
+        6,   // per-thread limit
+        2,   // max other-threads pulled
+        user_name,
+    );
+    if blocks.is_empty() {
+        return None;
+    }
+    Some(format!(
+        "MEMORY FROM YOUR OTHER CHATS (things you've actually lived through, elsewhere — carry them; don't retell unless the moment asks):\n\n{}",
+        blocks.iter().map(|b| b.rendered.clone()).collect::<Vec<_>>().join("\n\n"),
+    ))
+}
+
 /// Collect caption text for any illustration messages present in the slice.
 /// Used at the top of every orchestrator-calling command so the dialogue /
 /// narrative / dream / proactive-ping builders can render illustration
@@ -366,6 +470,10 @@ pub async fn send_message_cmd(
         }
     } else {
         log::info!("[Memory] Skipping vector search (LM Studio mode)");
+    }
+
+    if let Some(ct) = build_cross_thread_snippet(&db, &character_id, &thread.thread_id, user_profile.as_ref()) {
+        full_retrieved.push(ct);
     }
 
     log::info!("[Memory] Total retrieval context: {} items passed to dialogue", full_retrieved.len());
@@ -713,6 +821,10 @@ pub async fn prompt_character_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         list_kept_message_ids_for_thread(&conn, &thread.thread_id).unwrap_or_default()
     };
+    let mut retrieved = retrieved;
+    if let Some(ct) = build_cross_thread_snippet(&db, &character_id, &thread.thread_id, user_profile.as_ref()) {
+        retrieved.push(ct);
+    }
     let illustration_captions = collect_illustration_captions(&db, &dialogue_msgs);
     let (reply_text, dialogue_usage) = orchestrator::run_dialogue_with_base(
         &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
@@ -1613,6 +1725,10 @@ pub async fn reset_to_message_cmd(
             list_kept_message_ids_for_thread(&conn, &thread_id).unwrap_or_default()
         };
         let illustration_captions = collect_illustration_captions(&db, &recent_msgs);
+        let mut retrieved = retrieved;
+        if let Some(ct) = build_cross_thread_snippet(&db, &character.character_id, &thread_id, user_profile.as_ref()) {
+            retrieved.push(ct);
+        }
         let dialogue_fut = orchestrator::run_dialogue_with_base(
             &base, &api_key, &model_config.dialogue_model,
             &world, &character, &recent_msgs, &retrieved,

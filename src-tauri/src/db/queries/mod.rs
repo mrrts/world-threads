@@ -9,6 +9,7 @@ mod world_image;
 mod misc;
 mod novel;
 mod canon;
+mod cross_thread;
 
 pub use world::*;
 pub use user_profile::*;
@@ -21,3 +22,4 @@ pub use world_image::*;
 pub use misc::*;
 pub use novel::*;
 pub use canon::*;
+pub use cross_thread::*;

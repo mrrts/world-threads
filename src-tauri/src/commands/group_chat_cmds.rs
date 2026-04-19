@@ -6,6 +6,24 @@ use crate::db::Database;
 use chrono::Utc;
 use rusqlite::params;
 use serde::{Deserialize, Serialize};
+
+/// Append a length reminder to just-before-turn system hints in group
+/// chats. Group prompts are long (many characters, scene context, craft
+/// notes, invariants), and the mid-prompt response-length block loses
+/// attention against that weight. Repeating the length directive at
+/// late position — inside the turn hint right before generation —
+/// keeps short replies actually short. Empty string for Auto / unknown.
+///
+/// Phrased firmly because group chats specifically tend to drift long:
+/// more context, more characters, more pressure to perform.
+fn length_reminder_for_turn(response_length: Option<&str>) -> &'static str {
+    match response_length {
+        Some("Short") => " HARD LENGTH LIMIT: 1–2 sentences. Never 3. Stop before you'd need a third. A two-sentence reply is the target; one sentence is often better. If you feel the urge to keep going, that urge is the mistake.",
+        Some("Medium") => " LENGTH LIMIT: 3–4 sentences. Never more than 5. Stop before you'd need a sixth.",
+        Some("Long") => " LENGTH: 5–8 sentences, 10 maximum. Stop before you'd need more.",
+        _ => "",
+    }
+}
 use std::collections::HashMap;
 use tauri::State;
 
@@ -261,6 +279,25 @@ pub async fn send_group_message_cmd(
         .map(|c| (c.character_id.clone(), c.display_name.clone()))
         .collect();
 
+    // Phase 1b: Embed the user message once and store under every group
+    // member's character_id so each character can later recall this
+    // exchange via semantic search — including from their solo chats.
+    // Skipped in local-provider mode (no embedding endpoint). Returns
+    // the vector so we can reuse it as the query in per-character
+    // retrieval below without re-embedding.
+    let member_ids: Vec<String> = characters.iter().map(|c| c.character_id.clone()).collect();
+    let user_name = user_profile.as_ref().map(|p| p.display_name.as_str()).unwrap_or("the human");
+    let user_chunk_text = format!("{user_name}: {}", content);
+    let query_embedding: Option<Vec<f32>> = if !model_config.is_local() {
+        chat_cmds::embed_and_store_for_members(
+            &db, &api_key, &model_config,
+            &world.world_id, &member_ids,
+            &user_msg.message_id, &user_chunk_text,
+        ).await
+    } else {
+        None
+    };
+
     // Kick off the character-reaction emoji pick NOW, in parallel with the
     // entire character-response loop below. The pick only needs user
     // content + mood_reduction + recent-scene context, none of which
@@ -340,12 +377,13 @@ pub async fn send_group_message_cmd(
             .map(|p| p.display_name.as_str())
             .unwrap_or("the human");
         let mut dialogue_msgs = recent_msgs.clone();
+        let length_tail = length_reminder_for_turn(response_length.as_deref());
         dialogue_msgs.push(Message {
             message_id: String::new(),
             thread_id: String::new(),
             role: "user".to_string(),
             content: format!(
-                "[It is now {name}'s turn to speak. Reply ONLY as {name}, addressing {user_name}. Do not prefix your reply with your name.]",
+                "[It is now {name}'s turn to speak. Reply ONLY as {name}, speaking to {user_name} — but do NOT open your line with their name (no \"{user_name},\" or \"{user_name}.\" at the top). Do not prefix your reply with your own name either.{length_tail}]",
                 name = character.display_name,
             ),
             tokens_estimate: 0,
@@ -371,6 +409,22 @@ pub async fn send_group_message_cmd(
             list_kept_message_ids_for_thread(&conn, &gc.thread_id).unwrap_or_default()
         };
         let illustration_captions = crate::commands::chat_cmds::collect_illustration_captions(&db, &dialogue_msgs);
+        let mut retrieved = retrieved.clone();
+        if let Some(ct) = crate::commands::chat_cmds::build_cross_thread_snippet(
+            &db, &character.character_id, &gc.thread_id, user_profile.as_ref(),
+        ) {
+            retrieved.push(ct);
+        }
+        // Semantic memory: search this character's embeddings (spanning
+        // their solo + all groups they're in) using the query vector we
+        // computed from the user message. Matches [Memory] snippets to
+        // surface long-tail recall the recent window can't cover.
+        if let Some(emb) = query_embedding.as_ref() {
+            let mems = crate::commands::chat_cmds::vector_search_memories(
+                &db, &world.world_id, &character.character_id, emb, 4,
+            );
+            retrieved.extend(mems);
+        }
         let (raw_reply, usage) = orchestrator::run_dialogue_with_base(
             &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
             &world, character, &dialogue_msgs, &retrieved,
@@ -417,6 +471,18 @@ pub async fn send_group_message_cmd(
         {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
             create_group_message(&conn, &response_msg).map_err(|e| e.to_string())?;
+        }
+
+        // Embed the reply for every group member so it lands in their
+        // semantic memory — letting any of them recall this exchange
+        // from their solo or other chats later.
+        if !model_config.is_local() {
+            let reply_chunk_text = format!("{}: {}", character.display_name, response_msg.content);
+            let _ = crate::commands::chat_cmds::embed_and_store_for_members(
+                &db, &api_key, &model_config,
+                &world.world_id, &member_ids,
+                &response_msg.message_id, &reply_chunk_text,
+            ).await;
         }
 
         responses.push(response_msg);
@@ -505,17 +571,28 @@ pub async fn prompt_group_character_cmd(
         }
     }
 
+    // Load settings first so the just-before-turn nudge can include the
+    // length reminder as a late-position reaffirmation.
+    let (response_length, narration_tone, leader) = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let rl = get_setting(&conn, &format!("response_length.{}", gc.group_chat_id)).ok().flatten();
+        let nt = get_setting(&conn, &format!("narration_tone.{}", gc.group_chat_id)).ok().flatten();
+        let leader = get_setting(&conn, &format!("leader.{}", gc.group_chat_id)).ok().flatten();
+        (rl, nt, leader)
+    };
+
     // Add a nudge directing who the character should address
     let mut dialogue_msgs = recent_msgs.clone();
     let user_name = user_profile.as_ref()
         .map(|p| p.display_name.as_str())
         .unwrap_or("the human");
+    let length_tail = length_reminder_for_turn(response_length.as_deref());
     let nudge = match address_to.as_deref() {
         Some(target) if !target.is_empty() => {
-            format!("[Turn to {target} and say something to them directly. Address {target} specifically.]")
+            format!("[Turn toward {target} and speak directly to them — but do NOT open your line with their name. No \"{target},\" or \"{target}.\" at the top. Just speak.{length_tail}]")
         }
         _ => {
-            format!("[Turn to {user_name} and say something to them directly. Address {user_name} specifically.]")
+            format!("[Turn toward {user_name} and speak directly to them — but do NOT open your line with their name. No \"{user_name},\" or \"{user_name}.\" at the top. Just speak.{length_tail}]")
         }
     };
     dialogue_msgs.push(Message {
@@ -531,14 +608,6 @@ pub async fn prompt_group_character_cmd(
         mood_chain: None,
         is_proactive: false,
         });
-
-    let (response_length, narration_tone, leader) = {
-        let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let rl = get_setting(&conn, &format!("response_length.{}", gc.group_chat_id)).ok().flatten();
-        let nt = get_setting(&conn, &format!("narration_tone.{}", gc.group_chat_id)).ok().flatten();
-        let leader = get_setting(&conn, &format!("leader.{}", gc.group_chat_id)).ok().flatten();
-        (rl, nt, leader)
-    };
 
     let mood_reduction2 = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -566,6 +635,32 @@ pub async fn prompt_group_character_cmd(
         list_kept_message_ids_for_thread(&conn, &gc.thread_id).unwrap_or_default()
     };
     let illustration_captions = crate::commands::chat_cmds::collect_illustration_captions(&db, &dialogue_msgs);
+    let mut retrieved = retrieved;
+    if let Some(ct) = crate::commands::chat_cmds::build_cross_thread_snippet(
+        &db, &character.character_id, &gc.thread_id, user_profile.as_ref(),
+    ) {
+        retrieved.push(ct);
+    }
+    // Semantic memory: embed the last user message (what this character
+    // is responding to) and search this character's vectors. Spans
+    // their solo chat + all groups they're in because we store group
+    // chunks under each member's character_id.
+    let member_ids: Vec<String> = characters.iter().map(|c| c.character_id.clone()).collect();
+    let query_embedding: Option<Vec<f32>> = if !model_config.is_local() && !reaction_user_content.is_empty() {
+        orchestrator::generate_embeddings_with_base(
+            &model_config.openai_api_base(), &api_key,
+            &model_config.embedding_model, vec![reaction_user_content.clone()],
+        ).await.ok().and_then(|(v, tokens)| {
+            let _ = db.conn.lock().ok().map(|conn| record_token_usage(&conn, "embedding", &model_config.embedding_model, tokens, 0));
+            v.into_iter().next()
+        })
+    } else { None };
+    if let Some(emb) = query_embedding.as_ref() {
+        let mems = crate::commands::chat_cmds::vector_search_memories(
+            &db, &world.world_id, &character.character_id, emb, 4,
+        );
+        retrieved.extend(mems);
+    }
     let dialogue_fut = orchestrator::run_dialogue_with_base(
         &base, &api_key, &model_config.dialogue_model,
         &world, &character, &dialogue_msgs, &retrieved,
@@ -634,6 +729,17 @@ pub async fn prompt_group_character_cmd(
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
+    }
+
+    // Embed the reply for every group member so any of them can recall
+    // this exchange later from their solo or other chats.
+    if !model_config.is_local() {
+        let reply_chunk_text = format!("{}: {}", character.display_name, msg.content);
+        let _ = crate::commands::chat_cmds::embed_and_store_for_members(
+            &db, &api_key, &model_config,
+            &world.world_id, &member_ids,
+            &msg.message_id, &reply_chunk_text,
+        ).await;
     }
 
     // Emit the character's reaction on the triggering user message. Each

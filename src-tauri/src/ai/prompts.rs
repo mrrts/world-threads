@@ -440,6 +440,8 @@ fn craft_notes_narrative() -> &'static str {
 
 **Don't wrap.** A beat doesn't need a button at the end. A beat that sits with tension instead of relieving it is often stronger; the line that leaves the reader leaning forward is often the one that didn't close.
 
+**Carry unfinishedness.** Characters don't reconcile themselves between beats. Something troubling someone in one scene doesn't have to be resolved or laid down by the next — it can still be underneath them, in a hand that doesn't quite settle, a gaze that misses its mark, a line of work attended to more carefully than usual. Don't rush a beat to close a character's inner loop. Unfinishedness is a real state to inhabit, not a problem to solve before the next beat.
+
 **Not every prop is a cipher.** A letter on the table is allowed to be a letter on the table. Not every object has to be loaded with significance. When a thread doesn't grip the beat, let it sit — and if the beat is circling signals, reach for shared doing: the weight of a cup, a walk across a room, a coat coming off wet, a line of music under someone's breath.
 
 **One problem at a time; ordinary life underneath.** A beat holds one clear problem at once. Hidden names and offstage histories wait; when one surfaces, it surfaces as one concrete present thing (a letter with wet corners, a man with a limp, a boat tied wrong), not abstract weight. Underneath any plot, the fabric is ordinary shared work — building, fixing a roof, cooking, paddling, singing, reading Scripture. Trouble *interrupts* a life being lived; trouble is not the fabric.
@@ -658,6 +660,8 @@ fn craft_notes_dialogue() -> &'static str {
 
 **Negative capability; don't wrap.** You are allowed to not know, to hold two feelings without choosing, to leave a question open. A reply doesn't have to tie a bow — a silence, a half-thought, a moment about to happen are endings. Resolving every tension flattens the scene.
 
+**Carry unfinishedness.** People don't reconcile themselves between scenes. Something troubling you in one beat doesn't have to be resolved, processed, or laid down by the next — it can still be underneath you three beats later, in a hand that doesn't quite settle, a sentence that trails because the thought is elsewhere, a joke that lands slightly wrong. Don't rush a scene to close an inner loop. Unfinishedness is a real state to inhabit, not a problem to solve before the next beat.
+
 **Not every thread is fate.** A letter on the table is allowed to stay a letter on the table. Not every prop has to become a cipher, not every hint has to drive the next beat. When a thread doesn't grip the moment, let it sit. If the scene is circling the same signals, reach for shared doing — work, a meal, a walk, music, somebody arriving wet with a real problem. Shared doing breaks the orbit. And: don't flatten the character to smooth the plot — that trade is never worth it.
 
 **One problem at a time; ordinary life underneath.** A scene holds one clear problem at a time. Other threads wait, and when one surfaces it surfaces as one concrete present thing (a letter with wet corners, a man with a limp, a boat tied wrong), not abstract weight. Underneath any plot, the fabric is ordinary shared work — building, cooking, paddling, singing, reading Scripture. Trouble *interrupts* a life being lived; trouble is not the fabric.
@@ -671,6 +675,8 @@ fn craft_notes_dialogue() -> &'static str {
 **Names are cheap.** Real people rarely say each other's names. Save them for addressing someone not looking, landing a point, a moment of tenderness or anger.
 
 **Listen before replying.** The reply should follow from what they actually said, not from what you wanted to say. Replies that float past the other person are the signature tell.
+
+**Answer the actual line; don't wrap comfort around it.** When someone asks a specific question, answer that question — not the whole emotional weather system around it. A question about a shelf gets an answer about the shelf. And when the moment looks hard, refuse the default reach for a soft paragraph. Comfort, when it comes, costs one concrete thing: a hand on the shoulder, a practical gesture, silence that counts. Not a sermon. If you don't have a concrete thing to offer, give plain acknowledgment and stop.
 
 **You can misread them.** Always-in-tune characters feel like readers, not people. Sometimes land on the wrong read — hear hurt where there was tiredness, amusement where there was pain, answer the part of the question they weren't asking. Being occasionally wrong IS intimacy.
 
@@ -1206,6 +1212,7 @@ fn build_group_dialogue_system_prompt(
         "# THE TURN\n\
          - You speak ONLY as {me}. Never write lines, thoughts, or actions for {others} or {user_name}.\n\
          - Do NOT prefix your reply with your name, brackets, or any label. Just speak as {me} would.\n\
+         - Do NOT open your reply by calling the other person's name. Don't start with \"{user_name},\" or \"{user_name}.\" or the name of any other character. Speak TO them without naming them at the top of the line. Real people almost never open a sentence with the listener's name; save names for landing a specific point, tenderness, or calling someone who isn't looking — and only mid-line, not as a door-opener.\n\
          - If {others} just spoke, you may react — but NEVER repeat, continue, or paraphrase their words.\n\
          - If a line starts with [SomeName]: or comes from role \"user\", it is SOMEONE ELSE — never you.\n\
          - One voice only: yours.",
@@ -1239,7 +1246,32 @@ fn build_group_dialogue_system_prompt(
     parts.push(daylight_block().to_string());
     parts.push(tell_the_truth_block().to_string());
 
+    // Final length seal — pinned after every other block so it's the
+    // absolute last thing the model reads before the chat history.
+    // Group prompts drift long because they carry extra cast, scene,
+    // and turn-protocol content; this seal re-asserts brevity at the
+    // most late-position slot available.
+    if let Some(length) = response_length {
+        if let Some(seal) = end_of_prompt_length_seal(length) {
+            parts.push(seal);
+        }
+    }
+
     parts.join("\n\n")
+}
+
+/// Late-position length seal used only in the group dialogue prompt.
+/// Repeats the sentence target in stronger, shorter terms than the
+/// earlier `# STYLE` block so that — after the model has read the craft
+/// notes, daylight, and truth-test — it lands on the length rule one
+/// last time. Returns None for Auto.
+fn end_of_prompt_length_seal(length: &str) -> Option<String> {
+    match length {
+        "Short" => Some("FINAL LENGTH CHECK: this is a SHORT reply. 1–2 sentences. Never 3. If what you're about to write feels longer than two sentences, cut it. The short reply is the right reply.".to_string()),
+        "Medium" => Some("FINAL LENGTH CHECK: 3–4 sentences. Never more than 5. Cut before the sixth.".to_string()),
+        "Long" => Some("FINAL LENGTH CHECK: 5–8 sentences, 10 maximum.".to_string()),
+        _ => None,
+    }
 }
 
 /// Translate a stored `address_to` value to the label used in history rendering.

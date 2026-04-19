@@ -164,6 +164,7 @@ pub fn run() {
             get_budget_mode_cmd,
             set_budget_mode_cmd,
             get_memory_artifacts_cmd,
+            backfill_embeddings_cmd,
             get_thread_summary_cmd,
             generate_chat_summary_cmd,
             generate_group_chat_summary_cmd,
