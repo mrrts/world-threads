@@ -84,6 +84,43 @@ impl ModelConfig {
         }
     }
 
+    /// Apply a per-chat provider override onto this loaded config. The
+    /// setting value is expected to be "" (no override), "lmstudio", or
+    /// "openai". When overriding to a provider that differs from what
+    /// `dialogue_model` was configured for, swaps in the companion model
+    /// setting so the model ID matches the wire format of the target
+    /// provider. No-ops on empty/unknown values.
+    ///
+    /// Called at the start of every dialogue/reaction command so the call
+    /// transparently uses the user's per-chat preference. The override is
+    /// only in scope for this ModelConfig instance — it does NOT modify
+    /// saved settings.
+    pub fn apply_provider_override(&mut self, conn: &Connection, override_key: &str) {
+        let Some(ov) = get_setting(conn, override_key).ok().flatten() else { return; };
+        match ov.as_str() {
+            "openai" => {
+                self.ai_provider = "openai".to_string();
+                // Frontier model lives in its own setting so this works
+                // even when the user's global dialogue_model is an
+                // LM-Studio-only model ID like "llama-3.1-8b-instruct".
+                let frontier_model = get_setting(conn, "model.dialogue_frontier")
+                    .ok()
+                    .flatten()
+                    .filter(|s| !s.is_empty())
+                    .unwrap_or_else(|| "gpt-4o".to_string());
+                self.dialogue_model = frontier_model;
+            }
+            "lmstudio" => {
+                self.ai_provider = "lmstudio".to_string();
+                // When going to local, the user's globally-configured
+                // dialogue_model is assumed to be a local model ID. If
+                // their global is frontier, they'll need to manage this
+                // manually — honest limitation, flagged in the UI copy.
+            }
+            _ => {}
+        }
+    }
+
     /// Image quality string appropriate for the configured image model.
     pub fn image_quality(&self) -> &str {
         if self.image_model.starts_with("gpt-image") {

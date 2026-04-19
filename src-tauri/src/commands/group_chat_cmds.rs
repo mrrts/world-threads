@@ -222,7 +222,8 @@ pub async fn send_group_message_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
         let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
-        let model_config = orchestrator::load_model_config(&conn);
+        let mut model_config = orchestrator::load_model_config(&conn);
+        model_config.apply_provider_override(&conn, &format!("provider_override.{}", group_chat_id));
         let user_profile = get_user_profile(&conn, &gc.world_id).ok();
 
         let char_ids: Vec<String> = gc.character_ids.as_array()
@@ -447,7 +448,8 @@ pub async fn prompt_group_character_cmd(
         let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
         let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
         let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
-        let model_config = orchestrator::load_model_config(&conn);
+        let mut model_config = orchestrator::load_model_config(&conn);
+        model_config.apply_provider_override(&conn, &format!("provider_override.{}", group_chat_id));
         let user_profile = get_user_profile(&conn, &gc.world_id).ok();
 
         let char_ids: Vec<String> = gc.character_ids.as_array()
@@ -648,7 +650,8 @@ pub async fn generate_group_illustration_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
         let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
-        let model_config = orchestrator::load_model_config(&conn);
+        let mut model_config = orchestrator::load_model_config(&conn);
+        model_config.apply_provider_override(&conn, &format!("provider_override.{}", group_chat_id));
         let recent_msgs = list_group_messages_within_budget(&conn, &gc.thread_id, model_config.safe_history_budget() as i64, 30).map_err(|e| e.to_string())?;
         let user_profile = get_user_profile(&conn, &gc.world_id).ok();
 

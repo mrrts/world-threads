@@ -225,7 +225,8 @@ pub async fn send_message_cmd(
         let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
         let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
         let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
-        let model_config = orchestrator::load_model_config(&conn);
+        let mut model_config = orchestrator::load_model_config(&conn);
+        model_config.apply_provider_override(&conn, &format!("provider_override.{}", character_id));
 
         let (wd_u, wt_u) = world_time_fields(&world);
         let user_msg = Message {
@@ -617,7 +618,8 @@ pub async fn prompt_character_cmd(
         let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
         let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
         let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
-        let model_config = orchestrator::load_model_config(&conn);
+        let mut model_config = orchestrator::load_model_config(&conn);
+        model_config.apply_provider_override(&conn, &format!("provider_override.{}", character_id));
         let recent_msgs = list_messages_within_budget(&conn, &thread.thread_id, model_config.safe_history_budget() as i64, 30).map_err(|e| e.to_string())?;
 
         let mut retrieved: Vec<String> = Vec::new();
@@ -733,7 +735,8 @@ pub async fn generate_narrative_cmd(
         let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
         let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
         let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
-        let model_config = orchestrator::load_model_config(&conn);
+        let mut model_config = orchestrator::load_model_config(&conn);
+        model_config.apply_provider_override(&conn, &format!("provider_override.{}", character_id));
 
         let recent_msgs = list_messages_within_budget(&conn, &thread.thread_id, model_config.safe_history_budget() as i64, 30).map_err(|e| e.to_string())?;
 

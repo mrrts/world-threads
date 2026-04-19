@@ -166,6 +166,24 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
     return () => { cancelled = true; };
   }, [showSettingsPopover, charId, store.messages.length]);
 
+  // Per-chat provider override: "" (use global) | "lmstudio" | "openai".
+  // Lets the user send a specific chat to a different provider than the
+  // one configured globally — e.g. a local-default user can route one
+  // thread to a frontier model when they want the best quality.
+  const [providerOverride, setProviderOverride] = useState<string>("");
+  useEffect(() => {
+    if (!charId) return;
+    let cancelled = false;
+    api.getSetting(`provider_override.${charId}`).then((v) => {
+      if (!cancelled) setProviderOverride(v ?? "");
+    }).catch(() => { if (!cancelled) setProviderOverride(""); });
+    return () => { cancelled = true; };
+  }, [charId]);
+  const setProviderOverridePersist = useCallback((next: string) => {
+    setProviderOverride(next);
+    if (charId) api.setSetting(`provider_override.${charId}`, next).catch(() => {});
+  }, [charId]);
+
   // Leader setting: "user" (default) or the character_id. Controls whose
   // story the scene is framed around in the dialogue prompt.
   const [leader, setLeader] = useState<string>("user");
@@ -862,6 +880,24 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
             </Button>
             {showSettingsPopover && (
               <div className="absolute bottom-full right-0 mb-2 w-80 bg-card border border-border rounded-xl shadow-2xl shadow-black/40 p-4 space-y-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground block mb-1.5">Model</label>
+                  <div className="flex rounded-lg overflow-hidden border border-input">
+                    {[
+                      { id: "", label: "Default" },
+                      { id: "lmstudio", label: "Local" },
+                      { id: "openai", label: "Frontier" },
+                    ].map((opt) => (
+                      <button
+                        key={opt.id || "default"}
+                        onClick={() => setProviderOverridePersist(opt.id)}
+                        className={`flex-1 px-2 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                          providerOverride === opt.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                        }`}
+                      >{opt.label}</button>
+                    ))}
+                  </div>
+                </div>
                 <div>
                   <label className="text-xs font-medium text-muted-foreground block mb-1.5">Who is leading</label>
                   <div className="flex rounded-lg overflow-hidden border border-input">
