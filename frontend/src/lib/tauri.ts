@@ -70,6 +70,11 @@ export interface SendGroupMessageResult {
   character_responses: Message[];
 }
 
+export interface PromptGroupCharacterResult {
+  assistant_message: Message;
+  ai_reactions: Reaction[];
+}
+
 export interface PaginatedMessages {
   messages: Message[];
   total: number;
@@ -601,7 +606,7 @@ export const api = {
   sendGroupMessage: (apiKey: string, groupChatId: string, content: string) =>
     invoke<SendGroupMessageResult>("send_group_message_cmd", { apiKey, groupChatId, content }),
   promptGroupCharacter: (apiKey: string, groupChatId: string, characterId: string, addressTo?: string) =>
-    invoke<Message>("prompt_group_character_cmd", { apiKey, groupChatId, characterId, addressTo: addressTo ?? null }),
+    invoke<PromptGroupCharacterResult>("prompt_group_character_cmd", { apiKey, groupChatId, characterId, addressTo: addressTo ?? null }),
   generateGroupNarrative: (apiKey: string, groupChatId: string, customInstructions?: string) =>
     invoke<NarrativeResult>("generate_group_narrative_cmd", { apiKey, groupChatId, customInstructions: customInstructions ?? null }),
   generateGroupIllustration: (apiKey: string, groupChatId: string, qualityTier?: string, customInstructions?: string, previousIllustrationId?: string, includeSceneSummary?: boolean) =>

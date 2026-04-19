@@ -15,6 +15,16 @@ pub struct SendGroupMessageResult {
     pub character_responses: Vec<Message>,
 }
 
+/// Return type for prompt_group_character_cmd. Mirrors the solo flow's
+/// PromptCharacterResult — carries both the generated assistant message
+/// and any reactions the character emitted this turn, so the frontend
+/// can merge reactions into state without a separate round-trip.
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PromptGroupCharacterResult {
+    pub assistant_message: Message,
+    pub ai_reactions: Vec<Reaction>,
+}
+
 #[tauri::command]
 pub fn create_group_chat_cmd(
     db: State<Database>,
@@ -427,7 +437,7 @@ pub async fn prompt_group_character_cmd(
     group_chat_id: String,
     character_id: String,
     address_to: Option<String>,
-) -> Result<Message, String> {
+) -> Result<PromptGroupCharacterResult, String> {
     let (gc, world, character, characters, model_config, user_profile) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
@@ -517,8 +527,22 @@ pub async fn prompt_group_character_cmd(
     let mood_chain2 = prompts::pick_mood_chain(Some(&mood_reduction2));
     let mood_chain_json2 = serde_json::to_string(&mood_chain2).ok();
 
-    let (raw_reply, usage) = orchestrator::run_dialogue_with_base(
-        &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
+    // Target + content for the per-character reaction emit. We reach for
+    // the most recent USER message in this thread — the one this
+    // character is felt-responding to. In auto-respond chains where this
+    // character is the 2nd or 3rd to go, that message is still the
+    // triggering user turn, not the intermediate assistant messages.
+    let (reaction_target_id, reaction_user_content): (Option<String>, String) = recent_msgs.iter()
+        .rev()
+        .find(|m| m.role == "user")
+        .map(|m| (Some(m.message_id.clone()), m.content.clone()))
+        .unwrap_or_else(|| (None, String::new()));
+    let reaction_context: Vec<Message> = recent_msgs.iter()
+        .rev().skip(1).take(4).rev().cloned().collect();
+
+    let base = model_config.chat_api_base();
+    let dialogue_fut = orchestrator::run_dialogue_with_base(
+        &base, &api_key, &model_config.dialogue_model,
         &world, &character, &dialogue_msgs, &retrieved,
         user_profile.as_ref(),
         None,
@@ -529,7 +553,13 @@ pub async fn prompt_group_character_cmd(
         model_config.is_local(),
         &mood_chain2,
         leader.as_deref(),
-    ).await?;
+    );
+    let reaction_fut = orchestrator::pick_character_reaction_via_llm(
+        &base, &api_key, &model_config.dialogue_model,
+        &reaction_user_content, &mood_reduction2, &reaction_context,
+    );
+    let (dialogue_res, reaction_res) = tokio::join!(dialogue_fut, reaction_fut);
+    let (raw_reply, usage) = dialogue_res?;
 
     let other_names: Vec<&str> = characters.iter()
         .filter(|c| c.character_id != character.character_id)
@@ -578,7 +608,24 @@ pub async fn prompt_group_character_cmd(
         create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
     }
 
-    Ok(msg)
+    // Emit the character's reaction on the triggering user message. Each
+    // responding character gets their own pick (parallel above), so a
+    // group turn accumulates multiple emoji reactions on the user's
+    // message — one per responder. Different emojis render as distinct
+    // bubbles; same emoji dedupes via the (msg, emoji, 'assistant') key.
+    let ai_reactions: Vec<Reaction> = match reaction_target_id {
+        Some(target_id) => {
+            let reaction_emoji = reaction_res
+                .unwrap_or_else(|_| prompts::pick_character_reaction_emoji(&mood_chain2));
+            chat_cmds::emit_character_reaction(&db, &target_id, &reaction_emoji)
+        }
+        None => Vec::new(),
+    };
+
+    Ok(PromptGroupCharacterResult {
+        assistant_message: msg,
+        ai_reactions,
+    })
 }
 
 /// Generate an illustration for a group chat. Sends all character portraits + user avatar as references.

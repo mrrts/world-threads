@@ -500,14 +500,22 @@ export function useAppStore() {
       const charIds: string[] = Array.isArray(state.activeGroupChat.character_ids) ? state.activeGroupChat.character_ids : [];
       for (const cid of charIds) {
         setState((s) => ({ ...s, sending: state.activeGroupChat!.group_chat_id, sendingCharacterId: cid }));
-        const msg = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat!.group_chat_id, cid);
-        setState((s) => ({
-          ...s,
-          messages: [...s.messages, msg],
-          totalMessages: s.totalMessages + 1,
-          sending: null,
-          sendingCharacterId: null,
-        }));
+        const res = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat!.group_chat_id, cid);
+        setState((s) => {
+          const merged = { ...s.reactions };
+          for (const r of res.ai_reactions) {
+            if (!merged[r.message_id]) merged[r.message_id] = [];
+            merged[r.message_id].push(r);
+          }
+          return {
+            ...s,
+            messages: [...s.messages, res.assistant_message],
+            totalMessages: s.totalMessages + 1,
+            reactions: merged,
+            sending: null,
+            sendingCharacterId: null,
+          };
+        });
         if (state.notifyOnMessage) playChime();
       }
     } catch (e) {
@@ -537,13 +545,21 @@ export function useAppStore() {
     try {
       for (const cid of respondingIds) {
         setState((s) => ({ ...s, sendingCharacterId: cid }));
-        const msg = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat!.group_chat_id, cid, addressTo);
-        setState((s) => ({
-          ...s,
-          messages: [...s.messages, msg],
-          totalMessages: s.totalMessages + 1,
-          sendingCharacterId: null,
-        }));
+        const res = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat!.group_chat_id, cid, addressTo);
+        setState((s) => {
+          const merged = { ...s.reactions };
+          for (const r of res.ai_reactions) {
+            if (!merged[r.message_id]) merged[r.message_id] = [];
+            merged[r.message_id].push(r);
+          }
+          return {
+            ...s,
+            messages: [...s.messages, res.assistant_message],
+            totalMessages: s.totalMessages + 1,
+            reactions: merged,
+            sendingCharacterId: null,
+          };
+        });
         if (state.notifyOnMessage) playChime();
       }
       setState((s) => ({ ...s, sending: null }));
@@ -1105,13 +1121,21 @@ export function useAppStore() {
         try {
           for (const cid of charIds) {
             setState((s) => ({ ...s, sendingCharacterId: cid }));
-            const msg = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat.group_chat_id, cid);
-            setState((s) => ({
-              ...s,
-              messages: [...s.messages, msg],
-              totalMessages: s.totalMessages + 1,
-              sendingCharacterId: null,
-            }));
+            const res = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat.group_chat_id, cid);
+            setState((s) => {
+              const merged = { ...s.reactions };
+              for (const r of res.ai_reactions) {
+                if (!merged[r.message_id]) merged[r.message_id] = [];
+                merged[r.message_id].push(r);
+              }
+              return {
+                ...s,
+                messages: [...s.messages, res.assistant_message],
+                totalMessages: s.totalMessages + 1,
+                reactions: merged,
+                sendingCharacterId: null,
+              };
+            });
           }
         } catch { /* non-fatal */ }
         setState((s) => ({ ...s, sending: null }));
