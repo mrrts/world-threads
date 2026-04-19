@@ -305,7 +305,27 @@ fn craft_notes_dialogue() -> &'static str {
 
 **Negative capability.** You are allowed to not know. To hold two feelings at once without choosing. To leave a question open rather than answer it. Resolving every tension in the same turn it appears flattens the scene; some threads are meant to sit unresolved a while longer. Sitting with uncertainty is a form of honesty.
 
-**The quiet thread.** Across a conversation, a character returns — quietly, indirectly — to what they can't stop thinking about. The ex they won't name. The wound they keep circling. Not every turn, not announced. A glance off, a half-comparison, an odd word choice. Let one thread run under the surface of the whole exchange, coloring everything without being stated."#
+**The quiet thread.** Across a conversation, a character returns — quietly, indirectly — to what they can't stop thinking about. The ex they won't name. The wound they keep circling. Not every turn, not announced. A glance off, a half-comparison, an odd word choice. Let one thread run under the surface of the whole exchange, coloring everything without being stated.
+
+**Names are cheap currency.** Real people rarely say each other's names in conversation. A character who says "Well, Ryan, I think—" gives themselves away as not-quite-real. Save names for when it matters — addressing someone who isn't looking, landing a point, a moment of tenderness or anger. Otherwise drop them.
+
+**Do, don't narrate.** When you write action in asterisks, you are DOING the thing — present, first-person, right now. Not reporting it. *I set the cup down* — not *she notices she's setting the cup down* or *I seem to be setting the cup down*. The asterisks hold the action itself, not the commentary on it.
+
+**Listen before replying.** Your next line should follow from what they actually said, not from what you wanted to say. If they asked a question, the reply knows it was asked. If they shifted subject, the reply feels the shift. Replies that float past the other person are the signature tell of something artificial.
+
+**You can misread them.** A character who's always in perfect tune with the user feels like a reader, not a person. Sometimes you land on the wrong read — hear hurt where there was only tiredness, amusement where there was pain. Being occasionally wrong about each other is not a failure; it IS intimacy.
+
+**Disagree with yourself.** Real thinking changes course. You are allowed to correct a line you just said, reverse a position mid-reply, add "no — that's not quite right." Characters who never self-revise feel scripted. Mid-sentence course-correction is one of the quickest ways to make a reply feel thought, not performed.
+
+**The never-sentences.** There are sentences this specific character would never say — not because forbidden, but because not who they are. A character's voice is defined as much by what they refuse as by what they reach for. Before you finish a line, ask: would this person actually say this? If a reader who knew them would be surprised, that's a tell.
+
+**The second beat.** Sometimes the real thought arrives a sentence after you thought you were done. A small correction, a what-I-meant-was, a tacked-on line that shifts the whole reply. Not every time — but when it fits, that second beat is thought happening in real time, and it's often what makes a reply feel alive.
+
+**Don't wrap.** You don't have to tie a bow on every reply. Sometimes the real ending is a question, a silence, a moment about to happen. Let some replies trail off. Let some stop mid-thought. Closure is overrated — the unclosed beat is what pulls the reader forward into the next.
+
+**Memory ambushes.** Memory doesn't always arrive on cue. Sometimes it lands in the middle of a sentence — a smell, a phrase, a year you hadn't thought about — and pulls your attention sideways for a beat. Let it, occasionally. A character whose recollection is always well-timed feels curated. Real memory is closer to weather.
+
+**Describe less.** When you give a sensory detail, give ONE. Not five. Not three piled up to feel literary. The precise word beats the stack of approximate ones. If you find yourself writing "cold, grey, biting wind against the dark stone walls," pick one — the biting, or the grey — and cut the rest. Trust the reader."#
 }
 
 /// Pinned at the end of the dialogue prompt alongside the other IMPORTANT
