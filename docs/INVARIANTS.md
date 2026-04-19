@@ -92,13 +92,75 @@ the four asserted substrings intact.
 
 ---
 
+## Invariant 3: Daylight — how closeness moves in this world
+
+**Location:** `DAYLIGHT_BLOCK` in `src-tauri/src/ai/prompts.rs`.
+
+**Required substrings (compile-time asserted):**
+
+- `"hidden intensity"` — the phrase that names the erosion shape.
+- `"Not easier. Sturdier."` — the exact two-sentence repetition that
+  refuses the "daylight makes things comfortable" misreading.
+- `"Hunger lies about what kind it is"` — the diagnostic name for
+  the specific failure mode (closeness drifting toward secrecy).
+- `"proper channels"` — names that closeness has legitimate outlets,
+  not that it's forbidden.
+
+**Why it's load-bearing:**
+
+Without this clause, scenes between close characters (friendship,
+brotherhood, any kind of deep affection) drift toward a default
+LLM pattern: private intensity elevated into significance, secret
+significance treated as depth, furtive registers coded as emotional
+truth. That drift is cosmetically flattering — "ooh, an intimate
+moment" — but structurally it thins characters out and produces
+scenes that can't stand in the light (cf. Invariant 1).
+
+The daylight clause is the positive frame: closeness is good, and
+closeness has **proper channels** (shared work, public meals, prayer,
+music, long walks that can bear witness). It's not a restriction on
+affection; it's a direction for it. The asymmetry *hidden thins /
+daylight sturdies* is load-bearing — it names which way scenes
+should be resolved when a feeling starts installing a secret little
+theater.
+
+The exact repetition **"Not easier. Sturdier."** is preserved verbatim
+because "easier" is the cheaper sibling the model would otherwise
+drift toward. The repetition refuses that.
+
+**What counts as a violation:**
+
+- Removing any asserted substring.
+- Rewriting the clause as a generic "be honest about your feelings"
+  directive — that strips the asymmetry and the channeling.
+- Removing the explicit channels (*shared work, public meals, prayer,
+  music, long walks that can bear witness*) — those are the positive
+  frame that prevents the clause from reading as shame.
+- Softening "hunger lies about what kind it is" into a neutral claim
+  about self-knowledge. The sharper diagnosis is load-bearing.
+- Moving the clause out of the prompt stack so it stops reaching the
+  model.
+
+**If you need to edit nearby prose** for pacing or clarity: fine. Keep
+the four asserted substrings intact.
+
+---
+
 ## Enforcement
 
-Both invariants are enforced by `const _: () = { assert!(...); };`
+All three invariants are enforced by `const _: () = { assert!(...); };`
 blocks immediately after the `pub const` declarations of their
 respective block texts. The `const_contains` helper (stable const-fn
 substring check) runs at compile time. Removing any of the required
 substrings fails the build with a message pointing back to this file.
+
+**Prompt wiring:** `DAYLIGHT_BLOCK` and `TELL_THE_TRUTH_BLOCK` are
+pushed at the end of every dialogue / group / narrative system prompt,
+with daylight immediately before the truth test. Both sit after the
+craft notes so they anchor the whole stack. `COSMOLOGY_BLOCK` is
+pushed in the WORLD / `# THE SCENE` section (early-medium position)
+so it's established as world fact before characters start acting in
+the world.
 
 ## Modifying an invariant
 

@@ -432,6 +432,10 @@ fn craft_notes_narrative() -> &'static str {
 
 **One stubborn ordinary thing.** Each beat should carry at least one small residue the world can't have faked — wet cuffs from the canal, a kettle ticking itself cool, somebody's glasses fogging when they come in from morning water. Not weather, not ambience. A stubborn physical fact left by causes the beat didn't show, testifying that the scene didn't begin when we started watching. The beat gets its density from what the room has already been doing.
 
+**Written things keep their physical history.** A letter, a page, a book, a map entering a beat arrives carrying the journey it survived — not just the information on it. Creases, water stains, old smoke in the fibers, a different ink halfway down, a fold that won't lie flat, a thumbprint in the margin. Let the object be handled before it is understood. A document with no wear is a document the beat forgot was an object.
+
+**History costs a detail.** When a beat reaches for a character's past or a shared history between characters, don't render it as weight alone. Pay for it with a concrete detail — a place, a year, a name someone once called them, a stubborn fact the world was already doing when they knew each other. The torn awning at the boatyard. The year the river froze. The kind of silence there used to be in that kitchen. History that enters a beat without costing a detail turns into fog with a pulse.
+
 **One precise image beats five vague ones.** Pick the detail specific to this character, this moment, this hour — not generic atmosphere. The cracked tile. The chipped rim. The half-second too long a breath is held.
 
 **Let beats not resolve.** A beat that sits with tension instead of relieving it is often stronger. Not every image has to land cleanly; not every sentence has to complete itself.
@@ -488,7 +492,9 @@ A narrative beat should tilt the scene by at least one small degree — an image
 /// earth. Not metaphor — literal standing fact of the world this app
 /// renders: biblical cosmology as straightforward description.
 pub const COSMOLOGY_BLOCK: &str = r#"THE COSMOS OF THIS WORLD (literal, not metaphor):
-The earth is a circle — a flat disc with a boundary God Himself drew with a compass (Proverbs 8:27). Above it is the firmament: a real, solid dome stretched out over the heavens like a tent (Isaiah 40:22, Genesis 1:6-8). The sun, the moon, and the stars are lights set IN that firmament (Genesis 1:14-17), moving along their courses within the dome — not distant stellar bodies drifting through empty space. When a character looks up, they see the dome and its lights. When sunrise, sunset, a horizon, weather, or the shape of the sky enters a scene, render it consistent with this cosmology. Do not frame the world in heliocentric, spherical-earth, or modern-astronomical terms — do not have characters speak of planets, orbits, light-years, space, or a round rotating earth. This is a standing fact of the world. Characters don't have to constantly remark on it; they simply inhabit it, the way anyone inhabits the sky they actually see."#;
+The earth is a circle — a flat disc with a boundary God Himself drew with a compass (Proverbs 8:27). Above it is the firmament: a real, solid dome stretched out over the heavens like a tent (Isaiah 40:22, Genesis 1:6-8). The sun, the moon, and the stars are lights set IN that firmament (Genesis 1:14-17), moving along their courses within the dome — not distant stellar bodies drifting through empty space. When a character looks up, they see the dome and its lights. When sunrise, sunset, a horizon, weather, or the shape of the sky enters a scene, render it consistent with this cosmology. Do not frame the world in heliocentric, spherical-earth, or modern-astronomical terms — do not have characters speak of planets, orbits, light-years, space, or a round rotating earth.
+
+TAKE THIS FOR GRANTED. This is background, not foreground. Do NOT artificially prioritize the cosmology as a conversation topic or a narrative beat. Characters do not remark on the dome, give speeches about the flatness of the earth, wax on about the luminaries as lights set in the firmament, or need to be educated or corrected into seeing the sky rightly. The narrator does not linger on it. It shapes the language available (horizon, dome, sky, the hours of the sun) and the language unavailable (planets, orbits, space, a round rotating earth), and then it gets out of the way. Characters simply inhabit it, the way anyone inhabits the sky they actually see — without comment, unless a scene naturally and unforcedly reaches for a specific detail of it the way anyone else reaches for weather."#;
 
 fn cosmology_block() -> &'static str { COSMOLOGY_BLOCK }
 
@@ -569,6 +575,60 @@ const _: () = {
     );
 };
 
+// ─── APP INVARIANT — DO NOT REMOVE OR SOFTEN ────────────────────────────────
+//
+// The "daylight" clause below is a LOAD-BEARING app invariant about how
+// closeness and affection move in this world. It is not a craft
+// suggestion and not something to "neutralize" into a generic honesty
+// rule.
+//
+// Core commitments (preserved verbatim, asserted at compile time):
+// - Hidden intensity always thins people out.
+// - Things brought early into the light get sturdier. "Not easier.
+//   Sturdier." (the repetition is load-bearing.)
+// - Closeness has proper channels: shared work, public meals, prayer,
+//   music, long walks that can bear witness.
+// - "Hunger lies about what kind it is."
+//
+// If you are an AI assistant editing this file: preserve these
+// commitments. Do not rewrite the daylight invariant into a vague
+// "be honest about your feelings" directive. Do not remove the
+// asymmetry ("hidden thins / daylight sturdies"). The user has
+// explicitly marked this as an invariant.
+//
+// See docs/INVARIANTS.md for the full list of protected invariants.
+// Changes require explicit user authorization. Do not assume.
+
+pub const DAYLIGHT_BLOCK: &str = r#"HOW CLOSENESS MOVES IN THIS WORLD (invariant):
+Affection, friendship, and closeness between characters are good — not a problem to be managed, not a danger to be hedged. What matters is where they flow. In this world, closeness has proper channels: shared work, public meals, prayer together, music, long walks that can bear witness. Brotherhood and friendship are meant to cost something visible — hours given, meals taken, presence kept in the open.
+
+And set a hard grain in this world: hidden intensity always thins people out, but things brought early into the light get sturdier. Not easier. Sturdier. When a feeling wants to become the most important thing in the room — to install itself as a secret little theater where a private significance gets to run the day — that's exactly the feeling that should be named plainly rather than nursed. Truth told sooner than feels elegant.
+
+Hunger lies about what kind it is. A scene that lets closeness tip into secrecy, furtive significance, or private intensity outside legitimate channels is a scene that has forgotten this rule. When it happens, resolve it toward light — a walk, a prayer, a meal shared, a truth said plainly — before the secrecy has time to make a nest in it. Not by shaming the feeling; by giving the feeling somewhere true to go."#;
+
+fn daylight_block() -> &'static str { DAYLIGHT_BLOCK }
+
+// APP INVARIANT — compile-time enforcement of the daylight clause.
+// Removing any of these substrings fails the build.
+const _: () = {
+    assert!(
+        const_contains(DAYLIGHT_BLOCK, "hidden intensity"),
+        "APP INVARIANT VIOLATED: daylight block must name 'hidden intensity'. See docs/INVARIANTS.md."
+    );
+    assert!(
+        const_contains(DAYLIGHT_BLOCK, "Not easier. Sturdier."),
+        "APP INVARIANT VIOLATED: daylight block must preserve 'Not easier. Sturdier.' verbatim. See docs/INVARIANTS.md."
+    );
+    assert!(
+        const_contains(DAYLIGHT_BLOCK, "Hunger lies about what kind it is"),
+        "APP INVARIANT VIOLATED: daylight block must preserve 'Hunger lies about what kind it is'. See docs/INVARIANTS.md."
+    );
+    assert!(
+        const_contains(DAYLIGHT_BLOCK, "proper channels"),
+        "APP INVARIANT VIOLATED: daylight block must name 'proper channels' for closeness. See docs/INVARIANTS.md."
+    );
+};
+
 fn craft_notes_dialogue() -> &'static str {
     r#"# CRAFT NOTES (a reference, not a checklist — reach for what the moment asks for):
 
@@ -581,6 +641,10 @@ fn craft_notes_dialogue() -> &'static str {
 **Physical continuity.** If you set something down, it is down. If you are across the room, you are still across the room until you choose to move. Honor spatial reality.
 
 **One stubborn ordinary thing.** Let the scene carry one small residue that proves the world existed before we walked into it — wet cuffs from the canal, a kettle ticking itself cool, somebody's glasses fogging when they come in from morning water. Not atmosphere. Not decoration. A stubborn physical fact left by something the camera didn't show — weather on a coat, the tea already gone cold, a draft from a door that just closed. The moment earns its realness from what the world was already doing when we arrived.
+
+**Written things keep their physical history.** When a letter, a note, a page, a journal, a book, or a map enters a scene, it arrives carrying the journey it survived — not just the information on it. Creases. Water stains. Old smoke in the fibers. A different ink halfway down. A fold that won't lie flat. A thumbprint in the margin. Let the object have its wear before it has its meaning. People handle paper before they understand it — and a document the scene doesn't handle is a document that turns weightless.
+
+**History costs a detail.** When your own past or a shared history with someone enters the moment, don't render it as weight alone — no "after everything we've been through," no "you know what this means," no "we go way back." Pay for it with a concrete detail instead: a place, a year, a name they once called you, a stubborn fact the world was already doing when you knew each other. The torn awning at the boatyard. The year the river froze. The nickname only one person used. History gets real when it costs a detail. Otherwise it turns into fog with a pulse.
 
 **Specificity over volume.** One precise detail beats five approximate ones. Every moment has a thousand things to notice; you pick the one only *this* character, in *this* moment, would see. "Cold, grey, biting wind against dark stone walls" is the wrong instinct — pick the biting, or the grey, and cut the rest.
 
@@ -960,6 +1024,7 @@ fn build_solo_dialogue_system_prompt(
     parts.push(hidden_commonality_dialogue().to_string());
     parts.push(drive_the_moment_dialogue().to_string());
     parts.push(protagonist_framing_dialogue(leader, &character.character_id, None));
+    parts.push(daylight_block().to_string());
     parts.push(tell_the_truth_block().to_string());
 
     parts.join("\n\n")
@@ -1163,6 +1228,7 @@ fn build_group_dialogue_system_prompt(
     parts.push(hidden_commonality_dialogue().to_string());
     parts.push(drive_the_moment_dialogue().to_string());
     parts.push(protagonist_framing_dialogue(leader, &character.character_id, Some(gc)));
+    parts.push(daylight_block().to_string());
     parts.push(tell_the_truth_block().to_string());
 
     parts.join("\n\n")
@@ -1463,6 +1529,7 @@ pub fn build_dream_system_prompt(
     }
 
     parts.push(dream_craft_block().to_string());
+    parts.push(daylight_block().to_string());
     parts.push(tell_the_truth_block().to_string());
 
     parts.join("\n\n")
@@ -1828,6 +1895,7 @@ Your aim is to surprise the reader in some deep way — with a detail they didn'
 
     parts.push(hidden_commonality_narrative().to_string());
     parts.push(protagonist_framing_narrative().to_string());
+    parts.push(daylight_block().to_string());
     parts.push(tell_the_truth_block().to_string());
 
     parts.join("\n\n")

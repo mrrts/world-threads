@@ -45,14 +45,16 @@ export function formatMessage(content: string): string {
  * quote). Split the em at that boundary so the quote becomes plain text
  * between two smaller ems.
  *
- * Conservative: only triggers on quotes that end with `.`, `!`, `?`, or
- * `…` — inline quoted words like `*he said "stop"*` (no terminator) are
- * left alone.
+ * Conservative: only triggers on quotes that end with sentence-terminating
+ * punctuation (`.`, `!`, `?`, `…`) OR a trailing em/en-dash (`—`, `–`) —
+ * the latter handles dialogue that trails off into resumed action
+ * (`"...And here—" I touch the margin.`). Inline quoted words like
+ * `*he said "stop"*` (no terminator) are left alone.
  */
 function splitSpokenLinesOutOfEm(s: string): string {
   return s.replace(/\*([^*]+)\*/g, (full, inner: string) => {
     // Split inner on spoken-line quotes. Alternating: non-quote, quote, non-quote, ...
-    const parts = inner.split(/("[^"\n]*[.!?…][ \t]*")/g);
+    const parts = inner.split(/("[^"\n]*[.!?…—–][ \t]*")/g);
     if (parts.length <= 1) return full; // no spoken-line quotes embedded
     const out: string[] = [];
     for (let i = 0; i < parts.length; i++) {
