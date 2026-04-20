@@ -31,19 +31,30 @@ pub struct Character {
     /// description is still fresh and we skip the vision call.
     #[serde(default)]
     pub visual_description_portrait_id: Option<String>,
+    /// Current kept-in-hand inventory for this character. Stored as a
+    /// JSON array of { name, description } objects. Max 3 entries.
+    /// Refreshed by a memory-tier LLM call on world-day rollover.
+    #[serde(default)]
+    pub inventory: Value,
+    /// World-day index (World.state.time.day_index) the inventory was
+    /// last refreshed against. NULL = never seeded — next focus on the
+    /// character triggers an initial seed pass.
+    #[serde(default)]
+    pub last_inventory_day: Option<i64>,
 }
 
-const CHAR_COLS: &str = "character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at, visual_description, visual_description_portrait_id";
+const CHAR_COLS: &str = "character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at, visual_description, visual_description_portrait_id, inventory, last_inventory_day";
 
 pub fn create_character(conn: &Connection, ch: &Character) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO characters (character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at, visual_description, visual_description_portrait_id)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)",
+        "INSERT INTO characters (character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at, visual_description, visual_description_portrait_id, inventory, last_inventory_day)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18)",
         params![ch.character_id, ch.world_id, ch.display_name, ch.identity,
             ch.voice_rules.to_string(), ch.boundaries.to_string(),
             ch.backstory_facts.to_string(), ch.relationships.to_string(),
             ch.state.to_string(), ch.avatar_color, ch.sex, ch.is_archived, ch.created_at, ch.updated_at,
-            ch.visual_description, ch.visual_description_portrait_id],
+            ch.visual_description, ch.visual_description_portrait_id,
+            ch.inventory.to_string(), ch.last_inventory_day],
     )?;
     Ok(())
 }
@@ -58,7 +69,7 @@ pub fn get_character(conn: &Connection, character_id: &str) -> Result<Character,
 
 pub fn list_characters(conn: &Connection, world_id: &str) -> Result<Vec<Character>, rusqlite::Error> {
     let mut stmt = conn.prepare(
-        "SELECT c.character_id, c.world_id, c.display_name, c.identity, c.voice_rules, c.boundaries, c.backstory_facts, c.relationships, c.state, c.avatar_color, c.sex, c.is_archived, c.created_at, c.updated_at, c.visual_description, c.visual_description_portrait_id
+        "SELECT c.character_id, c.world_id, c.display_name, c.identity, c.voice_rules, c.boundaries, c.backstory_facts, c.relationships, c.state, c.avatar_color, c.sex, c.is_archived, c.created_at, c.updated_at, c.visual_description, c.visual_description_portrait_id, c.inventory, c.last_inventory_day
          FROM characters c
          LEFT JOIN threads t ON t.character_id = c.character_id
          LEFT JOIN (SELECT thread_id, MAX(created_at) AS last_msg FROM messages GROUP BY thread_id) m ON m.thread_id = t.thread_id
@@ -350,6 +361,12 @@ fn row_to_character(row: &rusqlite::Row) -> Result<Character, rusqlite::Error> {
         updated_at: row.get(13)?,
         visual_description: row.get::<_, Option<String>>(14)?.unwrap_or_default(),
         visual_description_portrait_id: row.get(15).ok(),
+        inventory: row.get::<_, Option<String>>(16)
+            .ok()
+            .flatten()
+            .and_then(|s| serde_json::from_str(&s).ok())
+            .unwrap_or_else(|| Value::Array(vec![])),
+        last_inventory_day: row.get(17).ok(),
     })
 }
 
@@ -366,6 +383,24 @@ pub fn set_visual_description(
     conn.execute(
         "UPDATE characters SET visual_description = ?2, visual_description_portrait_id = ?3, updated_at = datetime('now') WHERE character_id = ?1",
         params![character_id, description, source_portrait_id],
+    )?;
+    Ok(())
+}
+
+/// Replace the character's inventory array. Caller is responsible for
+/// capping to max 3 items; this blindly writes whatever is passed (the
+/// JSON column holds arbitrary structure). `world_day_stamp` records
+/// which world-day index this inventory is current as of, so the next
+/// focus-trigger can decide whether a refresh is due.
+pub fn set_character_inventory(
+    conn: &Connection,
+    character_id: &str,
+    inventory: &Value,
+    world_day_stamp: Option<i64>,
+) -> Result<(), rusqlite::Error> {
+    conn.execute(
+        "UPDATE characters SET inventory = ?2, last_inventory_day = ?3, updated_at = datetime('now') WHERE character_id = ?1",
+        params![character_id, inventory.to_string(), world_day_stamp],
     )?;
     Ok(())
 }

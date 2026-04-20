@@ -42,6 +42,29 @@ export interface Character {
    *  Cache key — if it matches the currently-active portrait, no
    *  re-generation is needed. */
   visual_description_portrait_id?: string | null;
+  /** Up to 3 "still in their keeping" items. Refreshed on world-day
+   *  rollover by a memory-tier LLM call; user-editable in settings. */
+  inventory?: InventoryItem[];
+  /** World-day index the inventory was last refreshed against. NULL =
+   *  never seeded. */
+  last_inventory_day?: number | null;
+}
+
+export interface InventoryItem {
+  name: string;
+  description: string;
+  /** "physical" (thing they carry) or "interior" (the one non-physical
+   *  thing they're carrying inside — memory, core truth, profound
+   *  feeling of the day). Defaults to "physical" if omitted. */
+  kind?: "physical" | "interior";
+}
+
+export interface InventoryRefreshResult {
+  character_id: string;
+  inventory: InventoryItem[];
+  refreshed: boolean;
+  /** "seed" | "refresh" | "noop" */
+  mode: string;
 }
 
 export interface CharacterState {
@@ -657,4 +680,10 @@ export const api = {
     invoke<NarrativeResult>("generate_group_narrative_cmd", { apiKey, groupChatId, customInstructions: customInstructions ?? null }),
   generateGroupIllustration: (apiKey: string, groupChatId: string, qualityTier?: string, customInstructions?: string, previousIllustrationId?: string, includeSceneSummary?: boolean) =>
     invoke<IllustrationResult>("generate_group_illustration_cmd", { apiKey, groupChatId, qualityTier: qualityTier ?? null, customInstructions: customInstructions ?? null, previousIllustrationId: previousIllustrationId ?? null, includeSceneSummary: includeSceneSummary ?? true }),
+  refreshCharacterInventory: (apiKey: string, characterId: string) =>
+    invoke<InventoryRefreshResult>("refresh_character_inventory_cmd", { apiKey, characterId }),
+  refreshGroupInventories: (apiKey: string, groupChatId: string) =>
+    invoke<InventoryRefreshResult[]>("refresh_group_inventories_cmd", { apiKey, groupChatId }),
+  setCharacterInventory: (characterId: string, inventory: InventoryItem[]) =>
+    invoke<InventoryItem[]>("set_character_inventory_cmd", { characterId, inventory }),
 };

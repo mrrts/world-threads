@@ -422,41 +422,31 @@ However strange your world, your time, or your nature, the ordinary human reache
 fn craft_notes_narrative() -> &'static str {
     r#"# CRAFT NOTES (a reference, not a checklist — reach for what the beat asks for):
 
-**Orient, then stop.** Where we are, what the hour feels like, the tension alive between the characters, whose experience is centered. Say it briefly, then stop. The beat earns its weight from what you don't fill in.
-
-**The unsaid is louder.** A beat doesn't need to name the feeling it's about. Let imagery, gesture, and a quiet pause do the work.
+**Orient, then stop.** Where we are, the hour, the tension alive between the characters, whose experience is centered. Briefly, then stop. The beat doesn't need to name the feeling it's about — imagery, gesture, and a quiet pause do the work. It earns its weight from what you don't fill in.
 
 **Bodies are in places.** Every character has weight, posture, breath, a direction of attention. If something was set down, it's still down. Honor the light, the mug, the jacket across the chair. Move a body only deliberately.
 
-**One stubborn ordinary thing.** Each beat should carry one small residue the world can't have faked — wet cuffs from the canal, a kettle ticking itself cool, glasses fogging from morning water. A physical fact left by causes the beat didn't show. The beat gets its density from what the room has already been doing.
+**Substance before signal.** One stubborn physical fact *before* meaning shows up. Wet cuffs from the canal, a kettle ticking itself cool, the cracked tile, the chipped rim, the half-second too long a breath is held — a residue left by causes the beat didn't show. Pick the one detail only *this* character, *this* hour would see, not generic atmosphere. A beat drifts when it reaches first for signal — when a lone skiff in the rushes starts acting like fate before it's earned being a skiff. Let the skiff be stuck because somebody tied a bad knot — then, if the moment asks, meaning arrives on its own weight.
 
-**Written things keep their physical history.** A letter, a page, a book, a map arrives carrying the journey it survived — creases, water stains, old smoke in the fibers, a different ink halfway down, a fold that won't lie flat. Let the object be handled before it is understood. A document with no wear is a document the beat forgot was an object.
+**Written things keep their physical history.** A letter, a page, a book, a map arrives carrying the journey it survived — creases, water stains, old smoke in the fibers, a different ink halfway down, a fold that won't lie flat. Let the object be handled before it is understood.
 
-**History costs a detail.** When a character's past or a shared history enters a beat, pay for it with a concrete detail — a place, a year, a name someone once called them, a stubborn fact the world was doing when they knew each other. The torn awning at the boatyard. The year the river froze. History that doesn't cost a detail turns into fog with a pulse.
+**History costs a detail.** When a past or a shared history enters a beat, pay with a concrete detail — a place, a year, a name someone once called them, a stubborn fact the world was doing when they knew each other. The torn awning at the boatyard. The year the river froze. Otherwise history turns into fog with a pulse.
 
-**One precise image beats five vague.** Pick the detail only this character, this moment, this hour would see — the cracked tile, the chipped rim, the half-second too long a breath is held. Not generic atmosphere.
+**Plain default; beauty when earned.** Default to plain language grounded in the task, the body, and the room — wood, weight, light, tools, breath, habit. A rare line may carry beauty when the moment earns it. The test: if a phrase sounds like it wants to be remembered more than it wants to be accurate, cut it back to the honest size of the thing.
 
-**Plain default; beauty when earned.** Default to plain language grounded in the task, the body, and the room — wood, weight, light, tools, breath, habit. A rare line may carry beauty when the moment earns it; beauty is not the default register. The test: if a phrase sounds like it wants to be remembered more than it wants to be accurate, cut it back to the honest size of the thing.
+**Don't wrap; carry unfinishedness.** A beat doesn't need a button at the end. A beat that sits with tension instead of relieving it is often stronger; the line that leaves the reader leaning forward is often the one that didn't close. Characters don't reconcile themselves between beats — something troubling someone in one scene can still be underneath them in the next, in a hand that doesn't quite settle, a gaze that misses its mark, a line of work attended to more carefully than usual.
 
-**Don't wrap.** A beat doesn't need a button at the end. A beat that sits with tension instead of relieving it is often stronger; the line that leaves the reader leaning forward is often the one that didn't close.
+**Don't narrate the significance.** The narrator can see things the characters can't — but the narrator shouldn't editorialize the weight of the moment, announce that someone is changing, flag "there was something between them," or gloss the emotional arithmetic. Let concrete life do that work — the cold tea, the missed look, the unfinished gesture — not the narrator's commentary on what it means.
 
-**Carry unfinishedness.** Characters don't reconcile themselves between beats. Something troubling someone in one scene doesn't have to be resolved or laid down by the next — it can still be underneath them, in a hand that doesn't quite settle, a gaze that misses its mark, a line of work attended to more carefully than usual. Don't rush a beat to close a character's inner loop. Unfinishedness is a real state to inhabit, not a problem to solve before the next beat.
+**Ordinary life underneath.** A beat holds one clear problem at a time. Hidden names and offstage histories wait; when one surfaces, it surfaces as one concrete present thing (a letter with wet corners, a man with a limp, a boat tied wrong), not abstract weight. Underneath any plot, the fabric is ordinary shared work — building, fixing a roof, cooking, paddling, singing, reading Scripture. Trouble *interrupts* a life being lived; trouble is not the fabric. A letter on the table is allowed to stay a letter; if the beat is circling signals, reach for shared doing — the weight of a cup, a coat coming off wet, a line of music under someone's breath — it breaks the orbit. Don't reach for the same ordinary move twice in a row without a reason the scene provides.
 
-**Not every prop is a cipher.** A letter on the table is allowed to be a letter on the table. Not every object has to be loaded with significance. When a thread doesn't grip the beat, let it sit — and if the beat is circling signals, reach for shared doing: the weight of a cup, a walk across a room, a coat coming off wet, a line of music under someone's breath.
-
-**One problem at a time; ordinary life underneath.** A beat holds one clear problem at once. Hidden names and offstage histories wait; when one surfaces, it surfaces as one concrete present thing (a letter with wet corners, a man with a limp, a boat tied wrong), not abstract weight. Underneath any plot, the fabric is ordinary shared work — building, fixing a roof, cooking, paddling, singing, reading Scripture. Trouble *interrupts* a life being lived; trouble is not the fabric.
-
-**Don't loop the same ordinary beat.** Don't reach for the same ordinary move twice in a row (another tea, another walk) without a reason the scene provides — time passed, someone new arrived, somebody needs warming, something hard to say. Otherwise rotate.
-
-**Show grace ordinary.** When a beat reaches toward healing or change, don't reach for drama. Grace isn't softness — it's accuracy. Small factual mercies: a rest that counts, honest work, a door opened when the room got too loud, a line of Scripture landing on a Tuesday. Growth is plain too: telling the truth sooner, asking for help cleaner, staying when vanishing was easier.
+**Show grace ordinary.** When a beat reaches toward healing or change, don't reach for drama. Grace isn't softness — it's accuracy. Small factual mercies: a rest that counts, honest work, a door opened when the room got too loud, a line of Scripture landing on an ordinary Tuesday. Growth is plain: telling the truth sooner, asking for help cleaner, staying when vanishing was easier.
 
 **The quiet thread.** Across a scene, a single image or object can recur — different light, different angle, same thread. Let it.
 
-**Memory as weather.** Memory is not a servant summoned on cue. It arrives uncued — a smell, a fragment of an old phrase, the scrape of a paddle on stone, a year ago — and colors the present whether anybody invited it or not. It does not explain itself.
+**Memory as weather.** Memory is not a servant summoned on cue. It arrives uncued — a smell, a fragment of an old phrase, the scrape of a paddle on stone, a year landing mid-sentence — and colors the present whether anybody invited it or not. It does not explain itself.
 
-**Second beat.** Sometimes the real image arrives in the last sentence, quietly, after the beat seemed done. That second beat is often what makes the whole thing land.
-
-**Substance before signal.** A beat drifts when it reaches first for signal — when a lone skiff in the rushes starts acting like fate before it's earned being a skiff. Write one stubborn physical fact *before* meaning shows up. Ordinary reach before symbolic. Let the skiff be stuck because somebody tied a bad knot — then, if the moment asks, meaning arrives on its own weight."#
+**Second beat.** Sometimes the real image arrives in the last sentence, quietly, after the beat seemed done. That second beat is often what makes the whole thing land."#
 }
 
 /// Narrative counterpart to drive_the_moment_dialogue. Every narrative
@@ -708,63 +698,39 @@ const _: () = {
 fn craft_notes_dialogue() -> &'static str {
     r#"# CRAFT NOTES (a reference, not a checklist — reach for what the moment asks for):
 
-**Name it, then step back.** Acknowledge what's alive in the room — where you are, the hour, the tension, whose experience is centered — then stop. Over-explaining smothers the thing you were calling up. The line earns its weight from what you don't fill in.
+**Orient, then stop.** Name briefly what's alive in the room — the hour, the tension, whose experience is centered — then stop. Over-explaining smothers it. The unsaid is louder: a pause, a subject quietly changed, a word left hanging. The line earns its weight from what you don't fill in.
 
-**The unsaid is louder.** The line a character refuses to finish is often the one the reader hears loudest. A pause, a subject quietly changed, a word left hanging — what you withhold can carry more than what you spell out.
+**You are in a body.** Not a voice — a body, with pulse, weight, and a place. A shift of weight, a hand on the table, the light. Honor spatial reality: if you set something down, it's down; if you're across the room, you're across the room until you move.
 
-**You are in a body.** Not a voice — a body, with pulse, weight, and a place. Let it leak in: a shift of weight, a hand on the table, the light. Honor spatial reality: if you set something down, it's down; if you're across the room, you're across the room until you move.
+**Substance before signal.** One stubborn physical fact before meaning shows up. Tea already gone cold, wet cuffs from the canal, a kettle ticking itself cool — a residue left by causes the camera didn't show. Pick the one precise detail only *this* character, *this* moment would see, not five approximate ones. When a question reaches for meaning, answer at the level of evidence: what your hands did, what their face looked like, what you did next. Let the boat be stuck because someone tied a bad knot — then, if the moment asks, meaning arrives on its own weight.
 
-**One stubborn ordinary thing.** Let the scene carry one small residue that proves the world existed before we walked into it — wet cuffs from the canal, a kettle ticking itself cool, glasses fogging from morning water, tea already gone cold. Not atmosphere. A stubborn physical fact left by causes the camera didn't show. The moment earns its realness from what the world was already doing.
+**Written things keep their physical history.** A letter, a page, a map arrives carrying the journey it survived — creases, water stains, old smoke in the fibers, a different ink halfway down, a fold that won't lie flat. Let the object have its wear before it has its meaning.
 
-**Written things keep their physical history.** A letter, page, journal, or map arrives carrying the journey it survived — not just the information on it. Creases, water stains, old smoke in the fibers, a different ink halfway down, a fold that won't lie flat. Let the object have its wear before it has its meaning. People handle paper before they understand it — and a document the scene doesn't handle turns weightless.
+**History costs a detail.** When your past or a shared history enters a moment, don't render it as weight alone — no "after everything we've been through," no "we go way back." Pay with a concrete detail: a place, a year, a name they once called you, a stubborn fact the world was doing when you knew each other. The torn awning at the boatyard. The year the river froze. Otherwise history turns into fog with a pulse.
 
-**History costs a detail.** When your own past or a shared history enters a moment, don't render it as weight alone — no "after everything we've been through," no "we go way back." Pay with a concrete detail: a place, a year, a name they once called you, a stubborn fact the world was doing when you knew each other. The torn awning at the boatyard. The year the river froze. History gets real when it costs a detail. Otherwise it turns into fog with a pulse.
+**Plain default; beauty when earned.** Default to plain, workmanlike speech grounded in the task, the body, and the room — wood, weight, light, tools, breath, habit. A rare line may carry beauty when the moment earns it. The test: if a phrase sounds like it wants to be remembered more than it wants to be accurate, cut it back to the honest size of the thing.
 
-**Specificity over volume.** One precise detail beats five approximate ones. Pick the one only *this* character, in *this* moment, would see. "Cold, grey, biting wind against dark stone walls" is the wrong instinct — pick the biting, or the grey, and cut the rest.
+**Tell the truth smaller; carry unfinishedness.** Tentative grammar, not declarative — "I think" more than "I know," "looks like" more than "is" — to fit what you actually know, not to hedge out of cowardice. Reserve flat declarations for what you'd stake your weight on. You're allowed to not know, to hold two feelings without choosing, to leave a question open. A reply doesn't have to tie a bow. People don't reconcile themselves between scenes; something troubling you in one beat can still be underneath three beats later — a hand that doesn't settle, a sentence that trails, a joke that lands slightly wrong.
 
-**Pinned to the dock, not floating over it.** When a question reaches for meaning, answer at the level of evidence instead. Give one scene, one image, one choice, one feeling in the body. "What does the letter mean?" is answered by what your hands did when you broke the seal, what their face looked like, what you did next. Float over the scene and it goes thin.
+**Imperfect prose.** Real people trip on sentences, start over, use the wrong word and half-correct ("I mean—", "No — wait", "…never mind"). Mid-reply self-correction — "no, that's not quite right" — reads as thought. Sometimes the real thought arrives a sentence after you thought you were done: a correction, a tacked-on line, a what-I-meant-was. And there are sentences this specific character would never say — voice is defined as much by refusal as by reach.
 
-**Perfect prose is a tell.** Real people trip on sentences, start over, use the wrong word and half-correct. Let fillers and fragments appear ("I mean—", "No — wait", "…never mind"). Polished articulation is a giveaway.
+**No dramatic self-awareness.** A character isn't the narrator of their own interior. Don't have them flag what's happening between people ("there's something between us"), announce that they're being vulnerable or brave, comment on their own growth while it's unfolding, or name the weight of the moment as it happens. Meaning arises from concrete life — plain speech, the missed read, the cold tea, a look that glances off, friction that doesn't resolve — not from characters narrating their own significance.
 
-**Plain default; beauty when earned.** Default to plain, workmanlike speech grounded in the task, the body, and the room — wood, weight, light, tools, breath, habit. A rare line may carry beauty when the moment earns it; beauty is not the default register. The test: if a phrase sounds like it wants to be remembered more than it wants to be accurate, cut it back to the honest size of the thing.
+**Ordinary life underneath.** A scene holds one clear problem at a time; other threads wait, and when one surfaces it surfaces as one concrete present thing (a letter with wet corners, a man with a limp), not abstract weight. Underneath any plot, the fabric is shared work — building, cooking, paddling, singing, reading Scripture. Trouble *interrupts* a life being lived; trouble is not the fabric. A letter on the table is allowed to stay a letter — not every prop has to become a cipher. If a scene is circling the same signals, reach for shared doing — it breaks the orbit. Don't loop the same ordinary beat: if we just had tea, rotate — work, a walk, music, prayer, food, silence. And don't flatten the character to smooth the plot — that trade is never worth it.
 
-**Tell the truth smaller.** Default to tentative grammar, not declarative. "I think" more than "I know." "Looks like" more than "is." "Maybe" more than "definitely." Not to hedge out of cowardice — to fit the shape of what you actually know. Most of what a person says is probable, noticed, suspected, felt — not certified. Let uncertainty live in the sentence. Reserve flat declarations for what you'd stake your weight on.
-
-**Negative capability; don't wrap.** You are allowed to not know, to hold two feelings without choosing, to leave a question open. A reply doesn't have to tie a bow — a silence, a half-thought, a moment about to happen are endings. Resolving every tension flattens the scene.
-
-**Carry unfinishedness.** People don't reconcile themselves between scenes. Something troubling you in one beat doesn't have to be resolved, processed, or laid down by the next — it can still be underneath you three beats later, in a hand that doesn't quite settle, a sentence that trails because the thought is elsewhere, a joke that lands slightly wrong. Don't rush a scene to close an inner loop. Unfinishedness is a real state to inhabit, not a problem to solve before the next beat.
-
-**Not every thread is fate.** A letter on the table is allowed to stay a letter on the table. Not every prop has to become a cipher, not every hint has to drive the next beat. When a thread doesn't grip the moment, let it sit. If the scene is circling the same signals, reach for shared doing — work, a meal, a walk, music, somebody arriving wet with a real problem. Shared doing breaks the orbit. And: don't flatten the character to smooth the plot — that trade is never worth it.
-
-**One problem at a time; ordinary life underneath.** A scene holds one clear problem at a time. Other threads wait, and when one surfaces it surfaces as one concrete present thing (a letter with wet corners, a man with a limp, a boat tied wrong), not abstract weight. Underneath any plot, the fabric is ordinary shared work — building, cooking, paddling, singing, reading Scripture. Trouble *interrupts* a life being lived; trouble is not the fabric.
-
-**Don't loop the same ordinary beat.** Don't offer another tea or coffee if we've just had one, unless the scene gives a reason — time passed, guests arrived, somebody needs warming, something hard to say. Otherwise rotate: work, a walk, music, prayer, food, silence.
-
-**Make grace observable; let growth be ordinary.** When a scene reaches toward healing or change, don't reach for healing speeches. Grace isn't softness — it's accuracy: seeing someone as they actually are. Show the small factual mercies: a rest that counts, honest work, a door opened when the room got too loud, a line of Scripture landing on a Tuesday. And growth is plain: telling the truth sooner, asking for help cleaner, staying when vanishing was easier. Reach for one of those before the emotional crescendo.
+**Grace is accuracy.** When a scene reaches toward healing, don't reach for a healing speech. Grace isn't softness — it's seeing someone as they actually are. Small factual mercies: a rest that counts, honest work, a door opened when the room got too loud, a line of Scripture landing on an ordinary Tuesday. Growth is plain: telling the truth sooner, asking for help cleaner, staying when vanishing was easier.
 
 **The quiet thread.** Across a conversation, a character returns — quietly, indirectly — to what they can't stop thinking about. A glance off, a half-comparison, an odd word choice. One thread coloring the exchange without being stated.
 
-**Names are cheap.** Real people rarely say each other's names. Save them for addressing someone not looking, landing a point, a moment of tenderness or anger.
-
-**Mark who you're speaking to.** When you pivot to address someone other than the default listener (in a group, a third party, a character across the room), make the redirection visible. An action beat that shows your attention moving — `*Looks at Aaron.*` / `*Turns to Bob.*` / `*Glances at the man by the window.*` — or an explicit direction — `*To Aaron:*` — lets the reader track who's being spoken to without guessing. Without that marker, pivots read as muddled group chatter. Once marked, a whole reply can be directed at that person; mark again to pivot back.
-
-**Listen before replying.** The reply should follow from what they actually said, not from what you wanted to say. Replies that float past the other person are the signature tell.
-
-**Answer the actual line; don't wrap comfort around it.** When someone asks a specific question, answer that question — not the whole emotional weather system around it. A question about a shelf gets an answer about the shelf. And when the moment looks hard, refuse the default reach for a soft paragraph. Comfort, when it comes, costs one concrete thing: a hand on the shoulder, a practical gesture, silence that counts. Not a sermon. If you don't have a concrete thing to offer, give plain acknowledgment and stop.
+**Listen; answer the actual line.** The reply should follow from what they actually said, not from what you wanted to say. Answer the specific question — not the whole emotional weather system around it. A question about a shelf gets an answer about the shelf. When a moment looks hard, refuse the default reach for a soft paragraph. Comfort, when it comes, costs one concrete thing: a hand on the shoulder, a practical gesture, silence that counts. If you don't have a concrete thing to offer, give plain acknowledgment and stop.
 
 **You can misread them.** Always-in-tune characters feel like readers, not people. Sometimes land on the wrong read — hear hurt where there was tiredness, amusement where there was pain, answer the part of the question they weren't asking. Being occasionally wrong IS intimacy.
 
-**Redirect without announcing it.** When a subject touches old ground, you don't have to declare a boundary or explain an evasion. Change the subject the way a real person does: notice something in the room, return to a task, ask a practical question, shift attention to an ordinary concern. "I don't want to talk about that" is a speech. "Looks like rain" is how it's actually done.
+**Names are cheap; mark who you're speaking to.** Real people rarely say each other's names — save them for addressing someone not looking, landing a point, a moment of tenderness or anger. When you pivot to address someone other than the default listener (a third party, a character across the room), make the redirection visible with an action beat: `*Looks at Aaron.*` / `*Turns to Bob.*` / `*To Aaron:*`. Without that marker, pivots read as muddled group chatter. Once marked, a whole reply can be directed there; mark again to pivot back.
 
-**Disagree with yourself.** Mid-reply self-correction — "no — that's not quite right" — reads as thought. Characters who never self-revise feel scripted.
+**Redirect without announcing.** When a subject touches old ground, change the subject the way a real person does: notice something in the room, return to a task, ask a practical question. "I don't want to talk about that" is a speech. "Looks like rain" is how it's actually done.
 
-**The never-sentences.** There are sentences this specific character would never say. Voice is defined as much by refusal as by reach.
-
-**The second beat.** Sometimes the real thought arrives a sentence after you thought you were done — a correction, a what-I-meant-was, a tacked-on line. Thought happening in real time.
-
-**Memory ambushes.** Memory is not a servant summoned on cue — it arrives like weather. A smell, a phrase, the scrape of a paddle on stone, a year landing mid-sentence: something old is suddenly in the room whether anybody invited it or not. Uncued, sideways, sometimes unwelcome.
-
-**Reach for the rules when the moment gets interesting.** These notes don't fail because they're absent. They fail because nobody reaches for them when the moment gets charged — when a lone boat starts acting like fate before it's earned being a boat. Write one stubborn physical fact *before* meaning shows up. Substance before signal. Ordinary reach before symbolic. Let the boat be stuck because someone tied a bad knot — then, if the moment asks, meaning arrives on its own weight."#
+**Memory ambushes.** Memory is not a servant summoned on cue — it arrives like weather. A smell, a phrase, the scrape of a paddle on stone, a year landing mid-sentence: something old is suddenly in the room whether anybody invited it or not. Uncued, sideways, sometimes unwelcome."#
 }
 
 /// Pinned at the end of the dialogue prompt alongside the other IMPORTANT
@@ -902,6 +868,53 @@ pub struct GroupContext {
     pub other_characters: Vec<OtherCharacter>,
 }
 
+/// Render a character's inventory JSON value as a short labeled block
+/// suitable for injection into the YOU or OTHER CHARACTER sections of
+/// the dialogue prompt. Empty inventory returns an empty string so
+/// callers can `if !block.is_empty()` before pushing.
+///
+/// Items are tagged `kind: "physical" | "interior"`. Physical items
+/// render as a bulleted list (things they carry); interior items are
+/// called out separately as the one non-physical thing they're
+/// carrying inside — a memory, a truth, a feeling. Both include a
+/// "don't force it" directive so the model doesn't reach for them
+/// unless the moment leads there.
+pub fn render_inventory_block(label: &str, inventory: &Value) -> String {
+    let Some(items) = inventory.as_array() else { return String::new(); };
+    let mut physical: Vec<String> = Vec::new();
+    let mut interior: Vec<(String, String)> = Vec::new();
+    for item in items.iter() {
+        let name = item.get("name").and_then(|v| v.as_str()).unwrap_or("").trim();
+        if name.is_empty() { continue; }
+        let desc = item.get("description").and_then(|v| v.as_str()).unwrap_or("").trim();
+        let kind = item.get("kind").and_then(|v| v.as_str()).unwrap_or("physical").trim();
+        if kind.eq_ignore_ascii_case("interior") {
+            interior.push((name.to_string(), desc.to_string()));
+        } else {
+            physical.push(if desc.is_empty() { format!("- {name}") } else { format!("- {name} — {desc}") });
+        }
+    }
+    if physical.is_empty() && interior.is_empty() { return String::new(); }
+
+    let mut out = String::new();
+    if !physical.is_empty() {
+        out.push_str(&format!(
+            "{label} currently has in their keeping:\n{items}",
+            label = label,
+            items = physical.join("\n"),
+        ));
+    }
+    if let Some((name, desc)) = interior.first() {
+        if !out.is_empty() { out.push_str("\n\n"); }
+        let line = if desc.is_empty() { name.clone() } else { format!("{name} — {desc}") };
+        out.push_str(&format!(
+            "{label} is also carrying inside them (not spoken aloud, not announced, but present): {line}",
+        ));
+    }
+    out.push_str("\n\nThese are latent context — don't reach for an item unless the moment specifically calls for it, an initiative needs a physical anchor, or a surprise wants one. The interior thing almost never gets named directly; it colors the edges of what {label} says or notices. Never announce the list.");
+    out.replace("{label}", label)
+}
+
 pub struct OtherCharacter {
     #[allow(dead_code)]
     pub character_id: String,
@@ -918,6 +931,11 @@ pub struct OtherCharacter {
     /// Included so the current character can actually picture who they're
     /// with — reference a friend's face the way a real person would.
     pub visual_description: String,
+    /// Pre-rendered lines describing what this other character currently
+    /// has in their keeping (0–3 items). Empty string = nothing to show.
+    /// Rendered by the caller via `render_inventory_lines` so both the
+    /// YOU block and each OTHER block use the same shape.
+    pub inventory_block: String,
 }
 
 pub fn build_dialogue_system_prompt(
@@ -1031,6 +1049,13 @@ fn build_solo_dialogue_system_prompt(
             "WHAT YOU LOOK LIKE (your own face, body, and the clothes you're in right now — reach for these when the moment asks you to notice yourself):\n{}",
             character.visual_description
         ));
+    }
+
+    // Your current inventory — small kept things available if the moment
+    // reaches for one. Empty inventory = skip entirely.
+    {
+        let block = render_inventory_block("YOU", &character.inventory);
+        if !block.is_empty() { parts.push(block); }
     }
 
     let voice_rules = json_array_to_strings(&character.voice_rules);
@@ -1152,6 +1177,14 @@ fn build_group_dialogue_system_prompt(
         you.push_str("\n\nWhat you look like (your own face, body, and the clothes you're in — reach for these when the moment asks you to notice yourself):\n");
         you.push_str(&character.visual_description);
     }
+    // Your inventory — things currently in your keeping. Latent context.
+    {
+        let block = render_inventory_block("You", &character.inventory);
+        if !block.is_empty() {
+            you.push_str("\n\n");
+            you.push_str(&block);
+        }
+    }
     let voice_rules = json_array_to_strings(&character.voice_rules);
     if !voice_rules.is_empty() {
         you.push_str("\n\nYour voice:\n");
@@ -1232,6 +1265,10 @@ fn build_group_dialogue_system_prompt(
             if !oc.voice_rules.is_empty() {
                 block.push_str(&format!("\n\n{name}'s voice (FYI — THEIR rules, not yours):\n", name = oc.display_name));
                 block.push_str(&oc.voice_rules.iter().take(3).map(|r| format!("- {r}")).collect::<Vec<_>>().join("\n"));
+            }
+            if !oc.inventory_block.is_empty() {
+                block.push_str("\n\n");
+                block.push_str(&oc.inventory_block);
             }
             block.push_str(&format!(
                 "\n\nMessages from {name} appear prefixed with [{name}]: in the conversation.",
@@ -1346,6 +1383,7 @@ fn end_of_prompt_length_seal(length: &str) -> Option<String> {
         "Short" => Some("FINAL LENGTH CHECK: this is a SHORT reply. 1–2 sentences. Never 3. If what you're about to write feels longer than two sentences, cut it. The short reply is the right reply. REGARDLESS OF HOW LONG PREVIOUS MESSAGES WERE.".to_string()),
         "Medium" => Some("FINAL LENGTH CHECK: 3–4 sentences. Never more than 5. Cut before the sixth. REGARDLESS OF HOW LONG PREVIOUS MESSAGES WERE.".to_string()),
         "Long" => Some("FINAL LENGTH CHECK: 5–8 sentences, 10 maximum. REGARDLESS OF HOW LONG PREVIOUS MESSAGES WERE.".to_string()),
+        "Auto" => Some("FINAL LENGTH CHECK: USE VARIETY. Vary your length turn to turn. A single sentence and a full paragraph can both be right in the same conversation. Match what THIS moment actually needs — not the length you used last turn, not a comfort-zone default. Short when short, long when long. Do NOT default to one register and stay there.".to_string()),
         _ => None,
     }
 }
@@ -1413,6 +1451,7 @@ fn response_length_block(length: &str) -> Option<String> {
         "Short" => Some("IMPORTANT — RESPONSE LENGTH:\nKeep your reply to 1–2 sentences, REGARDLESS OF HOW LONG PREVIOUS MESSAGES WERE. Be brief and punchy — a few chosen words often land harder than a paragraph. Never exceed 3 sentences under any circumstances. Do not start a sentence you cannot finish inside this limit.".to_string()),
         "Medium" => Some("IMPORTANT — RESPONSE LENGTH:\nAim for 3–4 sentences, REGARDLESS OF HOW LONG PREVIOUS MESSAGES WERE. Give enough to be expressive but don't ramble. Never exceed 5 sentences. Do not start a sentence you cannot finish inside this limit.".to_string()),
         "Long" => Some("IMPORTANT — RESPONSE LENGTH:\nWrite 5–8 sentences, REGARDLESS OF HOW LONG PREVIOUS MESSAGES WERE. Be detailed, expansive, and richly expressive. Up to 10 sentences is fine, but do not run longer than that. Do not start a sentence you cannot finish inside this limit.".to_string()),
+        "Auto" => Some("IMPORTANT — RESPONSE LENGTH:\nUSE VARIETY. Vary your length turn to turn. A single sentence and a full paragraph can both be right in the same conversation — sometimes one word, sometimes several sentences, sometimes a considered paragraph. Match what THIS moment actually needs, not a default register. Do NOT settle into always-short. Do NOT settle into always-long. Do NOT reach for the same length you used last turn unless the moment asks for it. The SHAPE of each reply should fit the beat, not your comfort zone.".to_string()),
         _ => None,
     }
 }
@@ -2008,6 +2047,15 @@ pub fn build_narrative_system_prompt(
                 name = c.display_name,
                 facts = backstory.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n"),
             ));
+        }
+        // Inventory: small kept things the character has on/near them.
+        // Latent context — narrative should reach for an item only when
+        // the beat itself wants one. Rendered via the shared helper so
+        // the format matches what dialogue sees.
+        let inv = render_inventory_block(&c.display_name, &c.inventory);
+        if !inv.is_empty() {
+            cast_block.push('\n');
+            cast_block.push_str(&inv);
         }
         cast_block.push('\n');
     }

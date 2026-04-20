@@ -32,6 +32,8 @@ import { PortraitModal } from "@/components/chat/PortraitModal";
 import { StoryConsultantModal } from "@/components/chat/StoryConsultantModal";
 import { IllustrationMessage } from "@/components/chat/IllustrationMessage";
 import { useChatState } from "@/hooks/use-chat-state";
+import { useChatFocusRefresh } from "@/hooks/use-chat-focus-refresh";
+import { InventoryStrip } from "@/components/chat/InventoryStrip";
 
 
 
@@ -144,6 +146,16 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
     handleRetry,
     playVideo,
   } = useChatState({ store, chatId, chatType: "group" });
+
+  // Focus-trigger: fan out to all group members' inventories on user
+  // engagement. Backend runs one LLM call per overdue member in
+  // parallel; fresh members no-op.
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  useChatFocusRefresh({
+    chatKey: chatId,
+    containerRef: chatContainerRef,
+    onFocusRefresh: () => { if (chatId) store.refreshGroupInventories(chatId); },
+  });
 
   // Close settings popover on outside click
   useEffect(() => {
@@ -342,7 +354,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 relative">
+    <div ref={chatContainerRef} className="flex-1 flex flex-col min-h-0 relative">
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         {(() => {
           const n = groupCharacters.length;
@@ -446,6 +458,11 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                           <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">
                             {ch.identity}
                           </p>
+                        </div>
+                      )}
+                      {ch.inventory && ch.inventory.length > 0 && (
+                        <div className="mt-2 pt-2 border-t border-border/30">
+                          <InventoryStrip inventory={ch.inventory} compact />
                         </div>
                       )}
                     </div>

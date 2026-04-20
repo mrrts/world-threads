@@ -9,6 +9,7 @@ pub mod consultant_cmds;
 pub mod illustration_cmds;
 pub mod video_cmds;
 pub mod group_chat_cmds;
+pub mod inventory_cmds;
 pub mod event_cmds;
 pub mod memory_cmds;
 pub mod mood_cmds;

@@ -1653,6 +1653,7 @@ pub async fn reset_to_message_cmd(
                 avatar_color: String::new(), sex: "male".to_string(), is_archived: false,
                 created_at: String::new(), updated_at: String::new(),
                 visual_description: String::new(), visual_description_portrait_id: None,
+                inventory: serde_json::Value::Array(vec![]), last_inventory_day: None,
             };
             (dummy, world, mc)
         } else {

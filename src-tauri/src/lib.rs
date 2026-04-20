@@ -10,6 +10,7 @@ use commands::consultant_cmds::*;
 use commands::illustration_cmds::*;
 use commands::video_cmds::*;
 use commands::group_chat_cmds::*;
+use commands::inventory_cmds::*;
 use commands::memory_cmds::*;
 use commands::mood_cmds::*;
 use commands::novel_cmds::*;
@@ -227,6 +228,9 @@ pub fn run() {
             send_group_message_cmd,
             pick_group_responders_cmd,
             prompt_group_character_cmd,
+            refresh_character_inventory_cmd,
+            refresh_group_inventories_cmd,
+            set_character_inventory_cmd,
             generate_group_illustration_cmd,
             generate_group_narrative_cmd,
             generate_speech_cmd,

@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Plus, Archive, ArchiveRestore, ChevronRight, Globe, Sparkles, User, Settings2 } from "lucide-react";
 import type { useAppStore } from "@/hooks/use-app-store";
 import { api, type WorldImageInfo } from "@/lib/tauri";
+import { InventoryStrip } from "@/components/chat/InventoryStrip";
 
 interface Props {
   store: ReturnType<typeof useAppStore>;
@@ -273,10 +274,15 @@ export function Sidebar({ store, onNavigate }: Props) {
                           </div>
                         </div>
                         {ch.identity && (
-                          <div className="px-3 pb-3 -mt-1 max-h-52 overflow-y-auto">
+                          <div className="px-3 pb-2 -mt-1 max-h-52 overflow-y-auto">
                             <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">
                               {ch.identity}
                             </p>
+                          </div>
+                        )}
+                        {ch.inventory && ch.inventory.length > 0 && (
+                          <div className="px-3 pb-3 pt-1 border-t border-border/30">
+                            <InventoryStrip inventory={ch.inventory} />
                           </div>
                         )}
                       </div>
@@ -348,6 +354,11 @@ export function Sidebar({ store, onNavigate }: Props) {
                                       <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">
                                         {ch.identity}
                                       </p>
+                                    </div>
+                                  )}
+                                  {ch.inventory && ch.inventory.length > 0 && (
+                                    <div className="mt-2 pt-2 border-t border-border/30">
+                                      <InventoryStrip inventory={ch.inventory} compact />
                                     </div>
                                   )}
                                 </div>

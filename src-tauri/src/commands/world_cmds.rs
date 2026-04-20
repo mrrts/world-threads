@@ -57,6 +57,8 @@ pub fn create_world_cmd(db: State<Database>, name: String) -> Result<World, Stri
             updated_at: ch_now.clone(),
             visual_description: String::new(),
             visual_description_portrait_id: None,
+            inventory: serde_json::Value::Array(vec![]),
+            last_inventory_day: None,
         };
         create_character(&conn, &ch).map_err(|e| e.to_string())?;
         create_thread(&conn, &Thread {

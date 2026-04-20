@@ -958,6 +958,50 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         conn.execute("ALTER TABLE characters ADD COLUMN visual_description_portrait_id TEXT DEFAULT NULL", []).ok();
     }
 
+    // Inventory: per-character "things still in their keeping" (max 3,
+    // user-editable, refreshed by LLM on world-day rollover).
+    //   inventory: JSON array of { name, description } objects.
+    //   last_inventory_day: the world_day index (into World.state.time.day_index)
+    //     the inventory was last refreshed against. NULL = never seeded.
+    let has_inventory: bool = conn.query_row(
+        "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'inventory'",
+        [], |r| r.get::<_, i64>(0),
+    ).unwrap_or(0) > 0;
+    if !has_inventory {
+        conn.execute("ALTER TABLE characters ADD COLUMN inventory TEXT NOT NULL DEFAULT '[]'", []).ok();
+    }
+    let has_last_inv_day: bool = conn.query_row(
+        "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'last_inventory_day'",
+        [], |r| r.get::<_, i64>(0),
+    ).unwrap_or(0) > 0;
+    if !has_last_inv_day {
+        conn.execute("ALTER TABLE characters ADD COLUMN last_inventory_day INTEGER DEFAULT NULL", []).ok();
+    }
+
+    // One-time clear of existing character inventories so they re-seed
+    // under the new mixed physical/interior prompt (soul-level interior
+    // items, up to 10 total, kind tag per slot). Any inventories saved
+    // before this migration held physical-only items and no kind tag —
+    // the next focus refresh on each character will regenerate fresh
+    // under the new rules. Gated by a settings marker so it runs once.
+    let already_cleared_inv: bool = conn.query_row(
+        "SELECT COUNT(*) FROM settings WHERE key = 'schema.inventory_cleared_v4'",
+        [], |r| r.get::<_, i64>(0),
+    ).unwrap_or(0) > 0;
+    if !already_cleared_inv {
+        let cleared = conn.execute(
+            "UPDATE characters SET inventory = '[]', last_inventory_day = NULL WHERE inventory != '[]' OR last_inventory_day IS NOT NULL",
+            [],
+        ).unwrap_or(0);
+        conn.execute(
+            "INSERT OR IGNORE INTO settings (key, value) VALUES ('schema.inventory_cleared_v4', ?1)",
+            [chrono::Utc::now().to_rfc3339()],
+        ).ok();
+        if cleared > 0 {
+            log::warn!("Cleared {} existing character inventories for regeneration under the mixed physical/interior prompt", cleared);
+        }
+    }
+
     // One-time clear of existing visual descriptions so they regenerate
     // under the tightened vision prompt (no pose/expression/lighting —
     // enduring features only). Gated by a marker row in `settings` so

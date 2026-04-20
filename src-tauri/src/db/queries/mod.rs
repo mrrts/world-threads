@@ -11,6 +11,7 @@ mod novel;
 mod canon;
 mod cross_thread;
 mod weathering;
+mod inventory;
 
 pub use world::*;
 pub use user_profile::*;
@@ -25,3 +26,4 @@ pub use novel::*;
 pub use canon::*;
 pub use cross_thread::*;
 pub use weathering::*;
+pub use inventory::*;

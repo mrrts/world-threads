@@ -171,6 +171,7 @@ fn length_reminder_for_turn(response_length: Option<&str>) -> &'static str {
         Some("Short") => " HARD LENGTH LIMIT: 1–2 sentences. Never 3. Stop before you'd need a third. A two-sentence reply is the target; one sentence is often better. If you feel the urge to keep going, that urge is the mistake.",
         Some("Medium") => " LENGTH LIMIT: 3–4 sentences. Never more than 5. Stop before you'd need a sixth.",
         Some("Long") => " LENGTH: 5–8 sentences, 10 maximum. Stop before you'd need more.",
+        Some("Auto") => " LENGTH: USE VARIETY. Vary from the length used last turn. A one-liner and a paragraph can both be right. Match THIS moment, not a default register.",
         _ => "",
     }
 }
@@ -745,6 +746,7 @@ pub async fn send_group_message_cmd(
                 sex: c.sex.clone(),
                 voice_rules: crate::ai::prompts::json_array_to_strings(&c.voice_rules),
                 visual_description: c.visual_description.clone(),
+                inventory_block: crate::ai::prompts::render_inventory_block(&c.display_name, &c.inventory),
             })
             .collect();
         let group_context = GroupContext { other_characters: other_chars };
@@ -999,6 +1001,7 @@ pub async fn prompt_group_character_cmd(
             sex: c.sex.clone(),
             voice_rules: crate::ai::prompts::json_array_to_strings(&c.voice_rules),
             visual_description: c.visual_description.clone(),
+            inventory_block: crate::ai::prompts::render_inventory_block(&c.display_name, &c.inventory),
         })
         .collect();
     let group_context = GroupContext { other_characters: other_chars };

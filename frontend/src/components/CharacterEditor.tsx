@@ -7,8 +7,9 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from "@/components/ui/dialog";
 import { Plus, X, BookTemplate, ImagePlus, Loader2, Check, Images, Shuffle, Trash2, AlertTriangle, MessageSquareX, RotateCcw, PenLine, Volume2, Square } from "lucide-react";
 import { CHARACTER_TEMPLATES, type CharacterTemplate } from "@/lib/character-templates";
-import { api, type Character, type PortraitInfo, type GalleryItem } from "@/lib/tauri";
+import { api, type Character, type PortraitInfo, type GalleryItem, type InventoryItem } from "@/lib/tauri";
 import type { useAppStore } from "@/hooks/use-app-store";
+import { InventoryEditor } from "@/components/character/InventoryEditor";
 
 interface Props {
   store: ReturnType<typeof useAppStore>;
@@ -608,6 +609,20 @@ export function CharacterEditor({ store }: Props) {
                   <RotateCcw size={14} className="mr-1.5" /> Reset State to Defaults
                 </Button>
               </div>
+            </FieldGroup>
+
+            <FieldGroup label="Inventory">
+              <p className="text-xs text-muted-foreground mb-2">Up to 3 small things this character currently has in their keeping. Refreshed by the LLM on world-day rollover; fully editable here.</p>
+              <InventoryEditor
+                characterId={ch?.character_id}
+                initial={(ch?.inventory ?? []) as InventoryItem[]}
+                onSaved={(next) => {
+                  // Reflect the edit into the active character + the
+                  // characters list so popovers / cards / in-prompt
+                  // rendering update without a round-trip.
+                  if (ch) store.applyCharacterInventoryEdit(ch.character_id, next);
+                }}
+              />
             </FieldGroup>
 
             <FieldGroup label="Danger Zone">

@@ -35,6 +35,8 @@ import { NarrativePickerModal } from "@/components/chat/NarrativePickerModal";
 import { PortraitModal } from "@/components/chat/PortraitModal";
 import { StoryConsultantModal } from "@/components/chat/StoryConsultantModal";
 import { useChatState } from "@/hooks/use-chat-state";
+import { useChatFocusRefresh } from "@/hooks/use-chat-focus-refresh";
+import { InventoryStrip } from "@/components/chat/InventoryStrip";
 
 
 
@@ -87,6 +89,17 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
   const charPortrait = store.activeCharacter ? store.activePortraits[store.activeCharacter?.character_id] : undefined;
 
   const chatState = useChatState({ store, chatId: charId, chatType: "individual" });
+
+  // Focus-trigger: when the user engages with this chat (click, scroll,
+  // keydown) and a cooldown has passed, ask the backend to check
+  // whether this character's inventory is overdue for a world-day
+  // refresh. Backend no-ops when still fresh.
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  useChatFocusRefresh({
+    chatKey: charId,
+    containerRef: chatContainerRef,
+    onFocusRefresh: () => { if (charId) store.refreshCharacterInventory(charId); },
+  });
 
   const {
     inputValueRef, hasInput, setHasInput,
@@ -357,7 +370,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 relative">
+    <div ref={chatContainerRef} className="flex-1 flex flex-col min-h-0 relative">
       <div
         className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
         style={{ backgroundColor: store.activeCharacter?.avatar_color ?? undefined }}
@@ -442,6 +455,11 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                 <div className="max-h-48 overflow-y-auto">
                   <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">{store.activeCharacter?.identity}</p>
                 </div>
+                {store.activeCharacter?.inventory && store.activeCharacter.inventory.length > 0 && (
+                  <div className="mt-3 pt-3 border-t border-border/30">
+                    <InventoryStrip inventory={store.activeCharacter.inventory} />
+                  </div>
+                )}
               </div>
             )}
           </div>

@@ -880,6 +880,226 @@ pub async fn run_memory_update_with_base(
 /// that can drift to describe a different beat. Small / cheap call on
 /// the dialogue-tier model. Falls through with Err on empty response so
 /// callers can decide whether to fall back to the memorable-moment text.
+// ─── Inventory (per-character kept-items) ───────────────────────────────────
+//
+// Per-character inventory of up to 3 "things still in their keeping" —
+// small physical things / notes / songs that a world-day of chat might
+// have introduced, passed, or consumed. Refreshed by an LLM call when
+// the world-day has advanced past the last stamp. Injected into the
+// dialogue YOU / OTHER CHARACTER blocks as latent context.
+//
+// Two entry points share one prompt-shape:
+// - `seed_character_inventory` — first-ever pass (last_inventory_day is
+//   NULL). Models the character's plausible starting items from their
+//   identity + any recent-history signals.
+// - `refresh_character_inventory` — incremental. Given yesterday's
+//   inventory + the messages since, decide what's still kept, what's
+//   been consumed/given away, what's new, what's worth inventing.
+
+/// Max inventory slots per character. Each slot is either a PHYSICAL
+/// thing (in their pockets / hands / near them) or an INTERIOR thing
+/// (something they're carrying inside — can be as small as a song
+/// stuck in their head or a name they keep almost saying, as large as
+/// a memory that surfaced or a truth clarified; specific either way,
+/// never generic mood). The LLM is instructed to keep a mix: at least
+/// one of each kind across any populated inventory. Single-line knob —
+/// bump or drop without touching the rules.
+pub const INVENTORY_MAX_ITEMS: usize = 10;
+
+pub const INVENTORY_KIND_PHYSICAL: &str = "physical";
+pub const INVENTORY_KIND_INTERIOR: &str = "interior";
+
+fn default_inventory_kind() -> String { INVENTORY_KIND_PHYSICAL.to_string() }
+
+/// One inventory item as the LLM produces and the DB stores. Matches
+/// the TS-side shape in frontend/src/lib/tauri.ts. `kind` defaults to
+/// "physical" for backward compat with items saved before the
+/// interior-slot addition.
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct InventoryItem {
+    pub name: String,
+    #[serde(default)]
+    pub description: String,
+    #[serde(default = "default_inventory_kind")]
+    pub kind: String,
+}
+
+fn inventory_system_prompt(character_name: &str) -> String {
+    format!(
+        r#"You are maintaining the inventory of {name}, a character in a living story. An inventory here holds EXACTLY {max} items — MANDATORY. Not "up to {max}", not "as many as feel right": exactly {max}. Each item is tagged as either PHYSICAL (something in their keeping they could hand you) or INTERIOR (a non-physical thing they are carrying inside right now — a memory, a song in their head, a name almost said, a worry, a core truth, an ache, an objective). The inventory MUST contain a mix of both kinds: at least one PHYSICAL and at least one INTERIOR. Beyond that, skew the balance however fits this character on this day.
+
+To reach {max}, DRAW LIBERALLY from: the character's identity, their work, their relationships, their place in the world, their recent arcs, the setting they live in, the ordinary textures of their daily life, AND the conversation history. The conversation history is the primary source of what's freshly present, but it does not need to name every item — a blacksmith presumably has tongs even if the scene didn't show them; a believer presumably carries a line of Scripture even if the day's messages didn't quote one. Fill out to {max} using everything you know about who they are.
+
+OUTPUT FORMAT (strict):
+Raw JSON array. Each item is an object with:
+  - "name": short label — brevity and clarity over comprehensiveness; a few chosen words land harder than a full phrase
+  - "description": one sentence — say the specific thing, then stop; don't pad
+  - "kind": exactly "physical" OR "interior"
+No markdown, no commentary, no code fences. Just the array. Favor brief and clear over clever; favor clear over cute.
+
+PHYSICAL ITEMS (kind="physical"):
+Small things they currently have on or near them — folded notes, small objects, a map with a scribbled mark, a stone from somewhere specific, a borrowed book, a song half-learned (yes, songs count — they live in the body). Favor the specific and the worn: "a folded map with the ferry dock circled" beats "a map".
+
+INTERIOR ITEMS (kind="interior"):
+Something the character is carrying inside right now. Anything the day's messages make clear and accurate belongs. Big or small, ordinary or weighty — all of it counts as long as it truly fits what happened and what's present in them now.
+
+AIM FOR SPECIFICITY. Generic labels are lazy and don't land. Every interior item should have ONE concrete hook — a cause, a detail, a when, an object, a named person — that ties it to THIS character on THIS day. Don't say "tired"; say "tired from carrying Aaron's question across the afternoon". Don't say "a bit sad"; say "a small sadness about the empty chair at the table". Don't say "contentment"; say "the contentment that settled when the kettle caught and the light shifted west". Don't say "an objective"; say "to finish the third shelf before supper, or quit honestly". If the hook isn't there, you're writing weather instead of interior — rewrite until one concrete thing anchors it.
+
+PULL THE HOOKS FROM IDENTITY AND HISTORY. The specifics should come as directly from the character's identity and the provided chat history as possible — a name that actually appeared, an object actually mentioned, a phrase someone actually said, a worry the identity makes real. Don't invent standalone particulars — reach into what's on the page first. Only when no hook is available should you draw from the character's profession, setting, or established life, and even then stay in keeping with what's already established. Creativity is encouraged, but it's creativity WITHIN the constraints of who this character actually is and what actually happened — finding the evocative specific angle on what's already there, not fabricating new facts about them.
+
+Range (every one below should still get the specificity treatment):
+- A song stuck in their head (WHICH song, why today).
+- A line of conversation they keep turning over (WHOSE line, what exact phrase).
+- A name they almost said out loud earlier (WHOSE name, in which moment).
+- A worry (about WHAT, specifically — "whether the back-door latch catches" beats "a small worry").
+- A daydream (anchored to one image — "the way light falls on the shed roof at home").
+- A feeling anchored to a cause ("tiredness that set in right after lunch"; "a low unease since the letter came").
+- A shape of the day anchored to one moment ("the long quiet between the second and third coat of varnish").
+- An objective with ONE concrete next step ("to write the letter tonight no matter how tired" beats "to be more honest").
+- A memory ("his grandmother's hands on the stove rail" beats "a childhood memory").
+- A truth they sat with, phrased as a SENTENCE they could hear in their own head ("I should have spoken sooner").
+- A line of Scripture landing sideways — quote it or name the book + verse idea.
+
+The rule: clear, accurate, AND specific to this character on this day. Grounded in who they are and what's actually present — the conversations, their identity, their ongoing life. If the character is a thoughtful person on a quiet day, you still have to surface the specific thing a person like this, after a day like this, would be carrying — not a generic version of that thing.
+
+RULES FOR CHANGES ACROSS DAYS:
+- ALL {max} slots filled. Non-negotiable. At least one of each kind.
+- REMOVE physicals that were clearly consumed, given away, lost, or resolved.
+- REMOVE interiors that have faded / been answered / moved on from.
+- ADD items (either kind) that today introduced — a gift received, a memory that surfaced, a feeling that crystallized, a truth clarified, a song that got stuck, a name the character keeps almost saying, an objective they've taken on.
+- MAINTAIN items that are still plausibly present and weren't displaced. Evolution and maintenance are the most common paths across days — don't churn for the sake of churn.
+- EVOLVE existing items when the day gave them new detail, wear, or nuance. A note gained a second line of ink. A map gained a circled mark. An ache of being seen is now "braided with gratitude". Keep the same item (don't rename it to something unrecognizable) but let its description accrue what happened.
+- INVENT to fill any remaining slots. This is REQUIRED, not a last resort. Draw from the character's identity, profession, relationships, era, setting, ordinary daily life. If the scene didn't mention their boots but they're a farmer, their boots count. If they're a thoughtful person on a quiet day, something on their mind still counts.
+- NEVER include physical items that belong to other characters.
+- Interior items just need to be clear and accurate. Ordinary is fine (a song, a worry, tiredness, a shape of the afternoon, a small objective); weighty is fine (a memory, an ache, a truth clarified). Grounded in who they are and what actually happened — not arbitrary moods, but also not limited to what the messages literally named."#,
+        name = character_name,
+        max = INVENTORY_MAX_ITEMS,
+    )
+}
+
+fn render_history_for_inventory(history: &[crate::db::queries::ConversationLine]) -> String {
+    history.iter()
+        .map(|line| {
+            let clipped: String = line.content.chars().take(280).collect();
+            format!("{}: {}", line.speaker, clipped)
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+/// Parse a raw LLM response into a capped, normalized inventory.
+/// Tolerates code fences / prose wrapping. Caps total items at
+/// INVENTORY_MAX_ITEMS. Any item with an unknown `kind` defaults to
+/// "physical" (the safer bucket). Order is preserved — physicals first,
+/// then interiors — which keeps the strip/prompt rendering consistent.
+fn parse_inventory_json(raw: &str) -> Vec<InventoryItem> {
+    let body = if let (Some(start), Some(end)) = (raw.find('['), raw.rfind(']')) {
+        if end > start { &raw[start..=end] } else { raw }
+    } else {
+        raw
+    };
+    let parsed: Vec<InventoryItem> = serde_json::from_str(body).unwrap_or_default();
+    let mut phys: Vec<InventoryItem> = Vec::new();
+    let mut inter: Vec<InventoryItem> = Vec::new();
+    for mut it in parsed.into_iter().filter(|it| !it.name.trim().is_empty()) {
+        if it.kind.trim().eq_ignore_ascii_case(INVENTORY_KIND_INTERIOR) {
+            it.kind = INVENTORY_KIND_INTERIOR.to_string();
+            inter.push(it);
+        } else {
+            it.kind = INVENTORY_KIND_PHYSICAL.to_string();
+            phys.push(it);
+        }
+    }
+    let mut out = phys;
+    out.extend(inter);
+    if out.len() > INVENTORY_MAX_ITEMS { out.truncate(INVENTORY_MAX_ITEMS); }
+    out
+}
+
+/// Seed an initial inventory for a character who has never been
+/// inventoried before. 2–3 items drawn from identity + any recent-history
+/// signals the model might catch (items mentioned, gifts received, etc.).
+pub async fn seed_character_inventory(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    character_name: &str,
+    character_identity: &str,
+    history: &[crate::db::queries::ConversationLine],
+) -> Result<Vec<InventoryItem>, String> {
+    let history_block = render_history_for_inventory(history);
+    let user = format!(
+        "{name}'s identity:\n{ident}\n\nRecent chat history across their threads (chronological):\n{hist}\n\nSeed {name}'s starting inventory. EXACTLY {max} items — not fewer. Mixed between physical (things they carry) and interior (things they're carrying inside — a song in their head, a worry, an objective, a memory, an ache, a general feeling, a shape of the day). At least one of each kind; otherwise any balance. Draw liberally from the identity, the setting, profession, relationships, AND the chat history to populate all {max} slots. A quiet day is not a reason for fewer items — a person like this would still be carrying {max} things. Output the JSON array with each item tagged kind='physical' or kind='interior'. Exactly {max}.",
+        name = character_name,
+        ident = if character_identity.is_empty() { "(no identity written — infer from context)" } else { character_identity },
+        hist = if history_block.is_empty() { "(no recent history)".to_string() } else { history_block },
+        max = INVENTORY_MAX_ITEMS,
+    );
+
+    let request = ChatRequest {
+        model: model.to_string(),
+        messages: vec![
+            openai::ChatMessage { role: "system".to_string(), content: inventory_system_prompt(character_name) },
+            openai::ChatMessage { role: "user".to_string(), content: user },
+        ],
+        temperature: Some(0.7),
+        max_completion_tokens: None,
+        response_format: None,
+    };
+
+    let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
+    let raw = response.choices.first()
+        .map(|c| c.message.content.clone())
+        .unwrap_or_default();
+    Ok(parse_inventory_json(&raw))
+}
+
+/// Refresh the inventory on a world-day tick. Given yesterday's items +
+/// the chronologically-merged history since, decide today's inventory
+/// (up to INVENTORY_MAX_ITEMS). Removes consumed, adds discovered,
+/// maintains or invents otherwise.
+pub async fn refresh_character_inventory(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    character_name: &str,
+    character_identity: &str,
+    prior_inventory: &[InventoryItem],
+    history: &[crate::db::queries::ConversationLine],
+) -> Result<Vec<InventoryItem>, String> {
+    let prior_block = if prior_inventory.is_empty() {
+        "(empty)".to_string()
+    } else {
+        serde_json::to_string_pretty(prior_inventory).unwrap_or_else(|_| "[]".to_string())
+    };
+    let history_block = render_history_for_inventory(history);
+    let user = format!(
+        "{name}'s identity:\n{ident}\n\n{name}'s inventory AS OF YESTERDAY (mixed physical + interior):\n{prior}\n\nChat history since (chronological, merged across their threads):\n{hist}\n\nOutput today's inventory — EXACTLY {max} items, not fewer. Each tagged kind='physical' or kind='interior'. At least one of each kind. Remove consumed/given/lost. Evolve items whose texture changed. Maintain items still present. Let what today put in them replace or braid into what was there. If yesterday's inventory had fewer than {max} items, INVENT to fill — draw from identity, setting, profession, relationships, the character's ordinary life. If today's conversation was quiet, that's not a reason for fewer items; it's a reason to lean more on identity-rooted inventions. What is {name} actually carrying — in hand and in heart — at the end of this day? All {max} slots.",
+        name = character_name,
+        ident = if character_identity.is_empty() { "(no identity written)" } else { character_identity },
+        prior = prior_block,
+        hist = if history_block.is_empty() { "(no messages since)".to_string() } else { history_block },
+        max = INVENTORY_MAX_ITEMS,
+    );
+
+    let request = ChatRequest {
+        model: model.to_string(),
+        messages: vec![
+            openai::ChatMessage { role: "system".to_string(), content: inventory_system_prompt(character_name) },
+            openai::ChatMessage { role: "user".to_string(), content: user },
+        ],
+        temperature: Some(0.6),
+        max_completion_tokens: None,
+        response_format: None,
+    };
+
+    let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
+    let raw = response.choices.first()
+        .map(|c| c.message.content.clone())
+        .unwrap_or_default();
+    Ok(parse_inventory_json(&raw))
+}
+
 pub async fn derive_caption_from_scene(
     base_url: &str,
     api_key: &str,

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { playChime } from "@/lib/chime";
-import { api, type World, type Character, type Message, type ModelConfig, type Reaction, type PortraitInfo, type UserProfile, type WorldImageInfo, type GroupChat } from "@/lib/tauri";
+import { api, type World, type Character, type Message, type ModelConfig, type Reaction, type PortraitInfo, type UserProfile, type WorldImageInfo, type GroupChat, type InventoryItem } from "@/lib/tauri";
 
 export interface AppState {
   worlds: World[];
@@ -1396,6 +1396,70 @@ export function useAppStore() {
     }
   }, [state.apiKey]);
 
+  // Ask the backend whether this character is overdue for an inventory
+  // refresh; if so, it runs the seed/refresh LLM call and returns the
+  // new inventory. Backend no-ops quickly when still fresh. Applies the
+  // returned inventory to the local store so any open popover / card
+  // updates without a round-trip on the next render.
+  const refreshCharacterInventory = useCallback(async (characterId: string) => {
+    try {
+      const res = await api.refreshCharacterInventory(state.apiKey ?? "", characterId);
+      if (!res.refreshed) return;
+      setState((s) => ({
+        ...s,
+        characters: s.characters.map((c) =>
+          c.character_id === characterId ? { ...c, inventory: res.inventory } : c
+        ),
+        activeCharacter:
+          s.activeCharacter?.character_id === characterId
+            ? { ...s.activeCharacter, inventory: res.inventory }
+            : s.activeCharacter,
+      }));
+    } catch {
+      // ignore — backend errors already logged; noop on cooldown is fine
+    }
+  }, [state.apiKey]);
+
+  // Patch local state with a user-edited inventory (from the settings
+  // editor). Skips the backend LLM call — the editor persists to DB
+  // via setCharacterInventory directly; this is only the in-memory
+  // reflection so popovers/cards update without a round-trip.
+  const applyCharacterInventoryEdit = useCallback((characterId: string, inventory: InventoryItem[]) => {
+    setState((s) => ({
+      ...s,
+      characters: s.characters.map((c) =>
+        c.character_id === characterId ? { ...c, inventory } : c
+      ),
+      activeCharacter:
+        s.activeCharacter?.character_id === characterId
+          ? { ...s.activeCharacter, inventory }
+          : s.activeCharacter,
+    }));
+  }, []);
+
+  // Parallel variant for group chats: one refresh per member. Backend
+  // fans out concurrently; we merge any that came back refreshed into
+  // the local store in a single setState so the UI doesn't flicker.
+  const refreshGroupInventories = useCallback(async (groupChatId: string) => {
+    try {
+      const results = await api.refreshGroupInventories(state.apiKey ?? "", groupChatId);
+      const updatedMap = new Map(results.filter((r) => r.refreshed).map((r) => [r.character_id, r.inventory]));
+      if (updatedMap.size === 0) return;
+      setState((s) => ({
+        ...s,
+        characters: s.characters.map((c) => {
+          const inv = updatedMap.get(c.character_id);
+          return inv ? { ...c, inventory: inv } : c;
+        }),
+        activeCharacter: s.activeCharacter && updatedMap.has(s.activeCharacter.character_id)
+          ? { ...s.activeCharacter, inventory: updatedMap.get(s.activeCharacter.character_id)! }
+          : s.activeCharacter,
+      }));
+    } catch {
+      // ignore
+    }
+  }, [state.apiKey]);
+
   // Backfill sweep: one call per character whose description is missing
   // or out of date versus the active portrait. Spaced out by 500ms so we
   // don't stampede the vision endpoint on app open.
@@ -1525,5 +1589,8 @@ export function useAppStore() {
     generateDream,
     refreshVisualDescription,
     backfillVisualDescriptions,
+    refreshCharacterInventory,
+    refreshGroupInventories,
+    applyCharacterInventoryEdit,
   };
 }
