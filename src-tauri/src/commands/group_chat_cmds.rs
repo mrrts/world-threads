@@ -1359,7 +1359,26 @@ pub async fn generate_group_illustration_cmd(
         Some(&characters.iter().map(|c| c.display_name.clone()).collect::<Vec<_>>()),
         Some(&names_map),
     ).await?;
-    let caption = resolved_instructions.clone().unwrap_or_default();
+    // Caption: user's instructions verbatim when provided; otherwise
+    // derive from scene_description so the caption reflects what was
+    // actually painted. See illustration_cmds.rs for full rationale.
+    let caption = match custom_instructions.as_deref() {
+        Some(s) if !s.trim().is_empty() => s.to_string(),
+        _ => {
+            match orchestrator::derive_caption_from_scene(
+                &model_config.chat_api_base(),
+                &api_key,
+                &model_config.dialogue_model,
+                &scene_description,
+            ).await {
+                Ok(c) => c,
+                Err(e) => {
+                    log::warn!("[Illustration] caption derivation failed: {e}; falling back to memorable-moment");
+                    resolved_instructions.clone().unwrap_or_default()
+                }
+            }
+        }
+    };
 
     if let Some(u) = &chat_usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;

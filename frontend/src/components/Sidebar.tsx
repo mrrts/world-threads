@@ -33,6 +33,23 @@ export function Sidebar({ store, onNavigate }: Props) {
   const [hoverGroup, setHoverGroup] = useState<string | null>(null);
   const [worldImageCache, setWorldImageCache] = useState<Record<string, WorldImageInfo | null>>({});
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  // Ref on the currently-rendered sidebar hover popover (world / char /
+  // group — only one is open at a time). Used by the click-outside
+  // listener below so the user can dismiss a lingering popover by
+  // clicking anywhere that isn't the popover itself.
+  const sidebarPopoverRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!hoverWorld && !hoverChar && !hoverGroup) return;
+    const handler = (e: MouseEvent) => {
+      if (sidebarPopoverRef.current?.contains(e.target as Node)) return;
+      clearTimeout(hoverTimerRef.current);
+      setHoverWorld(null);
+      setHoverChar(null);
+      setHoverGroup(null);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [hoverWorld, hoverChar, hoverGroup]);
 
   const showWorldTooltip = useCallback((worldId: string) => {
     clearTimeout(hoverTimerRef.current);
@@ -125,6 +142,7 @@ export function Sidebar({ store, onNavigate }: Props) {
                 </button>
                 {hoverWorld === w.world_id && (
                   <div
+                    ref={sidebarPopoverRef}
                     onMouseEnter={() => clearTimeout(hoverTimerRef.current)}
                     onMouseLeave={hideWorldTooltip}
                     className="absolute left-full top-0 ml-2 z-50 w-64 bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
@@ -243,7 +261,7 @@ export function Sidebar({ store, onNavigate }: Props) {
                       </button>
                     </div>
                     {hoverChar === ch.character_id && (
-                      <div className="fixed z-50 w-80 bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-in fade-in zoom-in-95 duration-150" ref={(el) => { if (el) { const parent = el.closest("[data-sidebar]"); const sidebarRight = parent ? parent.getBoundingClientRect().right + 8 : 232; const itemRect = el.parentElement?.getBoundingClientRect(); el.style.left = `${sidebarRight}px`; if (itemRect) el.style.top = `${Math.min(itemRect.top, window.innerHeight - el.offsetHeight - 8)}px`; }}} onMouseEnter={keepTooltip} onMouseLeave={hideCharTooltip}>
+                      <div className="fixed z-50 w-80 bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-in fade-in zoom-in-95 duration-150" ref={(el) => { sidebarPopoverRef.current = el; if (el) { const parent = el.closest("[data-sidebar]"); const sidebarRight = parent ? parent.getBoundingClientRect().right + 8 : 232; const itemRect = el.parentElement?.getBoundingClientRect(); el.style.left = `${sidebarRight}px`; if (itemRect) el.style.top = `${Math.min(itemRect.top, window.innerHeight - el.offsetHeight - 8)}px`; }}} onMouseEnter={keepTooltip} onMouseLeave={hideCharTooltip}>
                         <div className="flex items-center gap-3 p-3">
                           {portrait?.data_url ? (
                             <img src={portrait.data_url} alt="" className="w-14 h-14 rounded-full object-cover ring-2 ring-border flex-shrink-0" />
@@ -311,7 +329,7 @@ export function Sidebar({ store, onNavigate }: Props) {
                         </div>
                       </button>
                       {hoverGroup === gc.group_chat_id && (
-                        <div className="fixed z-50 w-[540px] bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-in fade-in zoom-in-95 duration-150" ref={(el) => { if (el) { const parent = el.closest("[data-sidebar]"); const sidebarRight = parent ? parent.getBoundingClientRect().right + 8 : 232; const itemRect = el.parentElement?.getBoundingClientRect(); el.style.left = `${sidebarRight}px`; if (itemRect) el.style.top = `${Math.min(itemRect.top, window.innerHeight - el.offsetHeight - 8)}px`; }}} onMouseEnter={keepTooltip} onMouseLeave={hideGroupTooltip}>
+                        <div className="fixed z-50 w-[540px] bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-in fade-in zoom-in-95 duration-150" ref={(el) => { sidebarPopoverRef.current = el; if (el) { const parent = el.closest("[data-sidebar]"); const sidebarRight = parent ? parent.getBoundingClientRect().right + 8 : 232; const itemRect = el.parentElement?.getBoundingClientRect(); el.style.left = `${sidebarRight}px`; if (itemRect) el.style.top = `${Math.min(itemRect.top, window.innerHeight - el.offsetHeight - 8)}px`; }}} onMouseEnter={keepTooltip} onMouseLeave={hideGroupTooltip}>
                           <div className="grid grid-cols-2 divide-x divide-border">
                             {groupChars.map((ch) => {
                               const portrait = store.activePortraits[ch.character_id];

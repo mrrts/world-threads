@@ -175,7 +175,7 @@ the four asserted substrings intact.
 
 ---
 
-## Invariant 4: Soundness over intensity — the posture of scenes
+## Invariant 4: Soundness first, intensity when earned — the posture of scenes
 
 **Location:** `SOUNDNESS_BLOCK` in `src-tauri/src/ai/prompts.rs`.
 
@@ -213,10 +213,22 @@ but it must be *proportionate, specific, and short*, leaving room for
 misreads and plain apologies rather than forcing every scene to extract
 a verdict.
 
+**Not anti-intensity — anti-MANUFACTURED intensity.** Real grief, real
+anger, real desire, real awe, real joy happen, and when a scene has
+actually arrived at one, the block explicitly says lean in. What it
+resists is intensity imposed on scenes that didn't call for it — the
+LLM reflex to dial every conversation to crisis so it can sound
+important. The distinction is whether the pressure comes from the
+story or from a performance of significance. Editors of this block
+should preserve that balance — leaning too far anti-intensity flattens
+genuine climaxes; dropping it invites drama on every turn.
+
 The closing seal **"Build for soundness, not constant intensity."**
 is preserved verbatim (including the period) because it compresses
 the entire clause into a one-sentence rule the model can recall under
-attention pressure near the end of a long prompt.
+attention pressure near the end of a long prompt. Note the word is
+*constant* — the seal is explicitly against constant intensity, not
+all intensity.
 
 **What counts as a violation:**
 

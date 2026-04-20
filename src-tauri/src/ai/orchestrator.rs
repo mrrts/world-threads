@@ -874,6 +874,49 @@ pub async fn run_memory_update_with_base(
 ///
 /// Short call (~60 output tokens) so the latency cost on top of the
 /// already-expensive image-gen is negligible.
+/// Compress a scene_description (the text the image was generated FROM)
+/// into a single-sentence caption. Used so the caption describes what is
+/// visually in the image rather than a pre-image "memorable moment" pick
+/// that can drift to describe a different beat. Small / cheap call on
+/// the dialogue-tier model. Falls through with Err on empty response so
+/// callers can decide whether to fall back to the memorable-moment text.
+pub async fn derive_caption_from_scene(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    scene_description: &str,
+) -> Result<String, String> {
+    if scene_description.trim().is_empty() {
+        return Err("empty scene description".to_string());
+    }
+    let system = r#"Compress the scene description into a single-sentence caption that states plainly what is visible in the image — as if writing alt-text for someone who can't see it.
+
+Rules:
+- One sentence. No preamble, no commentary, no quotes, no labels.
+- 12-25 words.
+- Visual and concrete: who is in the scene, what they are doing, where.
+- No emotional interpretation, no "in this scene" / "we see" preambles, no adjectives that aren't visually observable."#.to_string();
+    let user = format!("Scene description:\n\n{scene_description}\n\nCaption:");
+    let request = ChatRequest {
+        model: model.to_string(),
+        messages: vec![
+            openai::ChatMessage { role: "system".to_string(), content: system },
+            openai::ChatMessage { role: "user".to_string(), content: user },
+        ],
+        temperature: Some(0.4),
+        max_completion_tokens: Some(80),
+        response_format: None,
+    };
+    let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
+    let text = response.choices.first()
+        .map(|c| c.message.content.trim().to_string())
+        .unwrap_or_default();
+    if text.is_empty() {
+        return Err("empty caption response".to_string());
+    }
+    Ok(text.trim_matches('"').trim_matches('\'').trim().to_string())
+}
+
 pub async fn pick_memorable_moment_caption(
     base_url: &str,
     api_key: &str,

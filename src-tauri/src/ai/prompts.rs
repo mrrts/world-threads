@@ -658,12 +658,14 @@ const _: () = {
 //
 // See docs/INVARIANTS.md.
 
-pub const SOUNDNESS_BLOCK: &str = r#"SOUNDNESS OVER INTENSITY (invariant):
+pub const SOUNDNESS_BLOCK: &str = r#"SOUNDNESS FIRST, INTENSITY WHEN EARNED (invariant):
 Keep the moral center clear, but stop making every scene answer for itself in court. Put more weight on ordinary life that can bear truth without announcing it — building, walking, singing, fixing, reading, eating, getting through a tired day honestly. A scene does not need a verdict to have meaning. Most of the time the work itself is the testimony.
 
-Let characters push back when it matters, but make the pushback proportionate, specific, and short. A firm sentence beats a paragraph. Make room for missed reads, course corrections, and plain apologies — people misunderstand each other and then repair it, without either side having to be crushed first.
+Intensity is welcome when the story has actually arrived at it. Real grief, real anger, real desire, real fear, real awe, real joy — these happen, and when a scene has built to one, lean in and let it land. A confession that costs something should cost visibly. A betrayal should hit. Tenderness should be allowed to be tender without a joke rescuing it. What this resists is MANUFACTURED intensity — drama imposed on scenes that were going to be fine, every conversation dialed to crisis so the model can sound important. The test is whether the pressure comes from the story itself or from a reflex to perform significance. If it's earned, don't flinch; if it's conjured, don't.
 
-Favor fewer speeches, more concrete action. Let affection show up in shared work and presence kept in the light — a hand on the tool, the meal carried over, the song finished together, the book returned. Build for soundness, not constant intensity."#;
+Let characters push back when it matters, but make the pushback proportionate, specific, and short — unless the moment is actually big, in which case let it be as big as it truly is. A firm sentence usually beats a paragraph. Make room for missed reads, course corrections, and plain apologies — people misunderstand each other and then repair it, without either side having to be crushed first.
+
+Favor fewer speeches, more concrete action — except when a speech is the real shape of the beat (a confession, a refusal, a blessing, a reckoning), in which case let the speech happen and let it carry its weight. Let affection show up in shared work and presence kept in the light — a hand on the tool, the meal carried over, the song finished together, the book returned. Build for soundness, not constant intensity."#;
 
 fn soundness_block() -> &'static str { SOUNDNESS_BLOCK }
 
@@ -1511,6 +1513,7 @@ pub fn build_dialogue_messages(
     };
 
     let mut last_time: Option<String> = None;
+    let mut last_day: Option<i64> = None;
     for m in recent_messages {
         // Video messages are purely structural (a video tied to a prior
         // illustration); nothing textual to surface. Skip.
@@ -1537,6 +1540,20 @@ pub fn build_dialogue_messages(
                 content,
             });
             continue;
+        }
+        // Insert world-day boundary marker when the day changes. Emitted
+        // before the time-of-day marker so the transition reads "Day 3.
+        // It is now Morning." rather than the reverse. Skipped on the
+        // first dated message (no prior day to transition FROM) and on
+        // messages without a world_day (pre-feature or untagged).
+        if let Some(day) = m.world_day {
+            if last_day.is_some() && last_day != Some(day) {
+                msgs.push(crate::ai::openai::ChatMessage {
+                    role: "system".to_string(),
+                    content: format!("[Day {day}.]"),
+                });
+            }
+            last_day = Some(day);
         }
         // Insert time-of-day marker when it changes
         if let Some(ref wt) = m.world_time {

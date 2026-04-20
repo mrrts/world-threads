@@ -256,10 +256,30 @@ pub async fn generate_illustration_cmd(
         None,
     ).await?;
 
-    // Caption: user's own instructions verbatim when provided, otherwise
-    // the LLM-picked moment. Empty string if both the user skipped and
-    // the fallback call failed — the illustration still saves.
-    let caption = resolved_instructions.clone().unwrap_or_default();
+    // Caption: user's instructions verbatim when provided; otherwise
+    // derive from scene_description so it describes what was actually
+    // painted. The pre-image "memorable moment" pick used to supply the
+    // caption, but it could anchor on a different beat than the scene
+    // director ended up painting — making the caption look like it
+    // belonged to the previous illustration. Fall back to the memorable
+    // moment if the compression call fails; empty string as last resort.
+    let caption = match custom_instructions.as_deref() {
+        Some(s) if !s.trim().is_empty() => s.to_string(),
+        _ => {
+            match orchestrator::derive_caption_from_scene(
+                &model_config.chat_api_base(),
+                &api_key,
+                &model_config.dialogue_model,
+                &scene_description,
+            ).await {
+                Ok(c) => c,
+                Err(e) => {
+                    log::warn!("[Illustration] caption derivation failed: {e}; falling back to memorable-moment");
+                    resolved_instructions.clone().unwrap_or_default()
+                }
+            }
+        }
+    };
 
     if let Some(u) = &chat_usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
