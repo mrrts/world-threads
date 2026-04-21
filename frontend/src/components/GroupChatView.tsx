@@ -806,6 +806,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                         <Markdown components={markdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{formatMessage(msg.content)}</Markdown>
                       </div>
                     )}
+                    <InventoryUpdateBadge records={inventoryBadges[msg.message_id]} />
                     <p className={`text-[10px] mt-1 flex items-center gap-2 ${
                       isUser ? "text-primary-foreground/50" : "text-muted-foreground"
                     }`}>
@@ -918,7 +919,6 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                       </span>
                     )}
                   </div>
-                  <InventoryUpdateBadge records={inventoryBadges[msg.message_id]} />
                   {showPicker && (
                     <ReactionPicker
                       onPick={(emoji) => store.toggleReaction(msg.message_id, emoji)}

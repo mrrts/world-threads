@@ -748,6 +748,14 @@ pub async fn run_narrative_streaming(
     let mut last_time: Option<String> = None;
     for m in recent_messages {
         if m.role == "illustration" || m.role == "video" { continue; }
+        if m.role == "inventory_update" {
+            let summary = prompts::render_inventory_update_for_prompt(&m.content);
+            msgs.push(openai::ChatMessage {
+                role: "system".to_string(),
+                content: format!("[Inventory update at this moment] {summary}"),
+            });
+            continue;
+        }
         if let Some(ref wt) = m.world_time {
             if last_time.as_deref() != Some(wt) {
                 let formatted = wt.split(' ').map(|w| {
@@ -1671,6 +1679,17 @@ pub async fn run_narrative_with_base(
                 format!("[Illustration shown — {caption}]")
             };
             msgs.push(openai::ChatMessage { role: "system".to_string(), content });
+            continue;
+        }
+        // Inventory-update messages: app meta. Rewrite the role to system
+        // (OpenAI rejects the raw "inventory_update" string) and summarize
+        // the body so the narrator sees when the keeping shifted.
+        if m.role == "inventory_update" {
+            let summary = prompts::render_inventory_update_for_prompt(&m.content);
+            msgs.push(openai::ChatMessage {
+                role: "system".to_string(),
+                content: format!("[Inventory update at this moment] {summary}"),
+            });
             continue;
         }
         if let Some(ref wt) = m.world_time {

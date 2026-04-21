@@ -205,6 +205,9 @@ export function NarrativeMessage({
         <div style={{ fontSize: `${chatFontPx(chatFontSize)}px` }} className="prose prose-sm max-w-none prose-p:my-1 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-amber-100)] [--tw-prose-bold:rgb(252,211,77)]">
           <Markdown components={markdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{formatMessage(message.content)}</Markdown>
         </div>
+        <div className="not-italic">
+          <InventoryUpdateBadge records={inventoryUpdateRecords} />
+        </div>
         <p className="text-[10px] mt-1.5 text-amber-500/50 not-italic flex items-center gap-2">
           {new Date(message.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           {!isPending && (
@@ -216,9 +219,6 @@ export function NarrativeMessage({
             </button>
           )}
         </p>
-        <div className="not-italic">
-          <InventoryUpdateBadge records={inventoryUpdateRecords} />
-        </div>
       </div>
     </div>
 

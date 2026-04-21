@@ -21,11 +21,11 @@ export function InventoryUpdateBadge({ records }: Props) {
   if (clauses.length === 0) return null;
 
   return (
-    <div className="mt-1 flex items-center gap-1.5 text-[11px] text-amber-500/80 italic leading-snug">
-      <Package size={11} className="flex-shrink-0" />
+    <div className="mt-2 px-2.5 py-1.5 rounded-md bg-amber-500/15 border border-amber-500/25 flex items-center gap-1.5 text-[11px] text-amber-100 italic leading-snug">
+      <Package size={11} className="flex-shrink-0 text-amber-400" />
       <span>
-        <span className="font-medium not-italic">Inventory updated</span>
-        <span className="text-amber-500/60"> · </span>
+        <span className="font-medium not-italic text-amber-300">Inventory updated</span>
+        <span className="text-amber-400/70"> · </span>
         <span className="not-italic">{clauses.join("; ")}</span>
       </span>
     </div>

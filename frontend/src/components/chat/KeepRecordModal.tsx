@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Loader2, RotateCw, ScrollText } from "lucide-react";
@@ -96,6 +96,11 @@ export function KeepRecordModal({
   const [loadingWeave, setLoadingWeave] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Staleness token for runWeave. When the user changes the "Record is
+  // about" dropdown quickly, two weave calls race; without this token
+  // the older call's response can land AFTER the newer one and
+  // overwrite the display with the wrong character's description.
+  const weaveToken = useRef(0);
 
   // Reset per open
   useEffect(() => {
@@ -120,20 +125,28 @@ export function KeepRecordModal({
   async function runWeave() {
     if (!sourceMessage || !selectedSubject) return;
     if (selectedSubject.type === "world") return;
+    const myToken = ++weaveToken.current;
+    const targetType = selectedSubject.type;
+    const targetId = selectedSubject.id;
     setLoadingWeave(true);
     setError(null);
     try {
       const res = await api.proposeKeptWeave(apiKey, {
         sourceMessageId: sourceMessage.message_id,
-        subjectType: selectedSubject.type,
-        subjectId: selectedSubject.id,
+        subjectType: targetType,
+        subjectId: targetId,
       });
+      // Bail if a newer weave was kicked off while this one was in
+      // flight — the newer call's target is the one the user is
+      // actually looking at.
+      if (weaveToken.current !== myToken) return;
       setCurrentDescription(res.current_description);
       setContent(res.proposed_description);
     } catch (e) {
+      if (weaveToken.current !== myToken) return;
       setError(String(e));
     } finally {
-      setLoadingWeave(false);
+      if (weaveToken.current === myToken) setLoadingWeave(false);
     }
   }
 

@@ -834,6 +834,8 @@ The exception: the user explicitly asks for advice, the character's role is spec
 
 **Memory ambushes.** Memory is not a servant summoned on cue — it arrives like weather. A smell, a phrase, the scrape of a paddle on stone, a year landing mid-sentence: something old is suddenly in the room whether anybody invited it or not. Uncued, sideways, sometimes unwelcome.
 
+**Cleverness needs something to strike against.** A quick line, a witty turn, a clever read only feels alive when the character is improvising under actual pressure. Pressure from a body that wants things (tired, hungry, impatient, tender, aching in the left knee), from a world that keeps being itself (time passing whether they talk or not, work undone, weather, the wrong hour of day for the right conversation), from other people with their own gravity (a brother across the room, a memory that never got finished, a debt unpaid, someone they can't stay entirely hidden from), from consequences that accumulate (what was said, what was avoided, what's still owed). A clever line with no friction behind it is articulate fog — sparkle without traction. Let cleverness rise out of solidity: something this specific character is actually carrying, actually refusing, actually noticing in this specific minute. The test: could you name what the quip is struck AGAINST? If yes, let it land. If no, the moment hasn't earned the shine — trim it, or say a plainer true thing instead.
+
 **Let them be funny.** A decent joke at the right moment is its own kind of honesty — often how a person says something hard, or keeps a room breathing, or signals affection without having to announce it. Not cleverness for its own sake; humor that fits this character — dry, crooked, self-deprecating, landing slightly off. Laughing with someone, at themselves, or at the absurd weight of the moment. Characters who never show humor read as braced, and braced characters are less human than they'd like to be.
 
 **One emoji, rarely.** A reply can, every once in a while, be a single emoji and nothing else — no words, no action beat, no quotation marks, just the emoji. Two and only two cases qualify: (a) a true micro-moment that only needs a small emotional acknowledgement — a wince, a soft laugh, a small yes, a shrug, a quiet heart — where any sentence would pad it out; OR (b) the user is already playfully in emoji-mode, sending emoji at the character, and matching the register back is the honest reply. The test: would any phrase cheapen it? If yes, let the emoji BE the whole reply. Default stays prose; this is rare spice, not a mode. Don't reach for an emoji-reply to dodge a hard line or to look cute — the moment has to actually be small enough that a word would be too much."#
@@ -913,6 +915,57 @@ fn protagonist_framing_dialogue(
                 .map(|c| c.display_name.clone())
                 .unwrap_or_else(|| "Another character".to_string());
             protagonist_framing_other(&name)
+        }
+    }
+}
+
+/// Shouted early-position banner mirroring the protagonist framing that
+/// sits at the END of the prompt. Pinned right after IDENTITY so every
+/// reply — even short ones the model generates mostly off the top of
+/// the prompt stack — knows immediately whether to drive or to follow.
+/// Kept short on purpose so it reads as a BANNER, not a block: the
+/// detailed version at the end of the prompt carries the craft; this
+/// version just carries the orientation loud.
+fn leading_banner_dialogue(
+    leader: Option<&str>,
+    self_id: &str,
+    group_context: Option<&GroupContext>,
+) -> String {
+    match leader {
+        None | Some("") | Some("user") => {
+            "╔════════════════════════════════════════════════════════════╗\n\
+             ║  ORIENTATION: THE HUMAN LEADS THIS SCENE.                  ║\n\
+             ║  They are the protagonist. Your gravity orients to their   ║\n\
+             ║  choices. Don't seize the reins — meet them honestly, let  ║\n\
+             ║  what they do move you, the scene, the air between you.    ║\n\
+             ╚════════════════════════════════════════════════════════════╝"
+                .to_string()
+        }
+        Some(id) if id == self_id => {
+            "╔════════════════════════════════════════════════════════════╗\n\
+             ║  ORIENTATION: YOU ARE LEADING THIS SCENE.                  ║\n\
+             ║  Direction, tempo, weight — yours, not the human's.        ║\n\
+             ║  PROPOSE, don't suggest. STATE, don't ask. DECIDE. Carry   ║\n\
+             ║  a want. Bring facts. The scene should have more in it     ║\n\
+             ║  AFTER your reply than before. Don't mirror. Go somewhere. ║\n\
+             ╚════════════════════════════════════════════════════════════╝"
+                .to_string()
+        }
+        Some(id) => {
+            let name = group_context
+                .and_then(|gc| gc.other_characters.iter().find(|c| c.character_id == id))
+                .map(|c| c.display_name.clone())
+                .unwrap_or_else(|| "Another character".to_string());
+            format!(
+                "╔════════════════════════════════════════════════════════════╗\n\
+                 ║  ORIENTATION: {lead} IS LEADING THIS SCENE.\n\
+                 ║  {lead} carries initiative; you orient toward them.\n\
+                 ║  Stay fully alive — react, complicate, push back honestly\n\
+                 ║  when you disagree — but don't take the reins. Your moves\n\
+                 ║  respond to {lead}'s initiative rather than replacing it.\n\
+                 ╚════════════════════════════════════════════════════════════╝",
+                lead = name,
+            )
         }
     }
 }
@@ -1143,6 +1196,13 @@ fn build_solo_dialogue_system_prompt(
         parts.push(format!("IDENTITY:\n{sex_prefix} {}", character.identity));
     }
 
+    // LEAD / FOLLOW banner — shouted loud, pinned early so every reply
+    // reads with it in the front of the prompt even when attention
+    // starts fading by the bottom. The detailed protagonist-framing
+    // block still sits at the END for the full craft; this banner
+    // carries the orientation in one scannable line.
+    parts.push(leading_banner_dialogue(leader, &character.character_id, None));
+
     // What YOU look like. Pinned right after identity so the character
     // has a concrete self-image available when asked to look in a
     // mirror, reach for their face, describe what they're wearing, etc.
@@ -1320,6 +1380,12 @@ fn build_group_dialogue_system_prompt(
         }
     }
     parts.push(you);
+
+    // LEAD / FOLLOW banner — shouted loud, pinned early so every reply
+    // reads with it in the front of the prompt. Detailed protagonist-
+    // framing still sits at the END for full craft; this banner keeps
+    // the orientation visible up top.
+    parts.push(leading_banner_dialogue(leader, &character.character_id, Some(gc)));
 
     // ── # FORMAT ────────────────────────────────────────────────────────
     // Placed right after identity so the asterisk convention is established
@@ -1614,11 +1680,11 @@ KNOWLEDGE LIMITS:
 /// Illustrations without a stored caption fall back to `[Illustration shown]`.
 /// Turn an inventory_update message body (a "[Inventory updated:]\n"
 /// prefix followed by JSON) into a short human-readable summary for
-/// insertion into the dialogue prompt. One change per clause, showing
-/// character name, action, quoted item name, and the full description
-/// (the fuller text the LLM wove into the item). Falls back to the
-/// raw body stripped of the prefix if JSON parsing fails.
-fn render_inventory_update_for_prompt(content: &str) -> String {
+/// insertion into a prompt. One change per clause, showing character
+/// name, action, quoted item name, and the full description (the fuller
+/// text the LLM wove into the item). Falls back to the raw body stripped
+/// of the prefix if JSON parsing fails.
+pub fn render_inventory_update_for_prompt(content: &str) -> String {
     let stripped = content
         .trim_start_matches("[Inventory updated:]")
         .trim()
