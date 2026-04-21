@@ -3,6 +3,32 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 
+/**
+ * Detect whether a message body is emoji-only (one or a few emoji, nothing
+ * else except whitespace / variation selectors / ZWJ / skin-tone or flag
+ * modifiers). Used by the chat renderer to jumbo-size such replies the
+ * way iMessage does when a short emoji-only reply carries the whole beat.
+ * The "One emoji, rarely" craft note instructs characters to sometimes
+ * reply with a single emoji; the jumbo rendering makes that land.
+ *
+ * Matches: "🙂", "❤️", "👋🏽", "👨‍👩‍👧", "🎉🎊". Rejects: "hi 🙂",
+ * "🙂!", "(laughs) 🙂". Empty / whitespace-only strings return false.
+ */
+export function isEmojiOnlyMessage(content: string): boolean {
+  const trimmed = content.trim();
+  if (trimmed.length === 0) return false;
+  // Strip every emoji-family character + whitespace. If anything is left,
+  // the message is not emoji-only.
+  const stripped = trimmed.replace(
+    /[\p{Extended_Pictographic}\u200D\uFE0F\u{1F3FB}-\u{1F3FF}\u{1F1E6}-\u{1F1FF}\s]/gu,
+    "",
+  );
+  if (stripped.length > 0) return false;
+  // Must contain at least one actual pictographic codepoint — otherwise
+  // something like "     " would have matched after stripping.
+  return /\p{Extended_Pictographic}/u.test(trimmed);
+}
+
 /** Convert parenthesized text to asterisked text for italic/em rendering in Markdown. */
 export function formatMessage(content: string): string {
   const stripped = stripAsteriskWrappedQuotes(content);
