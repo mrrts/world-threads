@@ -408,7 +408,7 @@ pub async fn story_consultant_cmd(
 ) -> Result<String, String> {
     let is_group = group_chat_id.is_some();
 
-    let (world, characters, recent_msgs, user_name, model_config) = {
+    let (world, characters, recent_msgs, user_profile, thread_id, model_config) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let model_config = orchestrator::load_model_config(&conn);
 
@@ -416,25 +416,66 @@ pub async fn story_consultant_cmd(
             let gc = get_group_chat(&conn, group_chat_id.as_deref().unwrap()).map_err(|e| e.to_string())?;
             let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
             let recent_msgs = list_group_messages(&conn, &gc.thread_id, 30).map_err(|e| e.to_string())?;
-            let user_name = get_user_profile(&conn, &gc.world_id)
-                .ok().map(|p| p.display_name).unwrap_or_else(|| "the user".to_string());
+            let user_profile = get_user_profile(&conn, &gc.world_id).ok();
             let char_ids: Vec<String> = gc.character_ids.as_array()
                 .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
                 .unwrap_or_default();
             let characters: Vec<Character> = char_ids.iter()
                 .filter_map(|id| get_character(&conn, id).ok())
                 .collect();
-            (world, characters, recent_msgs, user_name, model_config)
+            (world, characters, recent_msgs, user_profile, gc.thread_id, model_config)
         } else {
             let char_id = character_id.as_deref().ok_or("No character specified")?;
             let character = get_character(&conn, char_id).map_err(|e| e.to_string())?;
             let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
             let thread = get_thread_for_character(&conn, char_id).map_err(|e| e.to_string())?;
             let recent_msgs = list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?;
-            let user_name = get_user_profile(&conn, &character.world_id)
-                .ok().map(|p| p.display_name).unwrap_or_else(|| "the user".to_string());
-            (world, vec![character], recent_msgs, user_name, model_config)
+            let user_profile = get_user_profile(&conn, &character.world_id).ok();
+            (world, vec![character], recent_msgs, user_profile, thread.thread_id, model_config)
         }
+    };
+
+    let user_name = user_profile.as_ref().map(|p| p.display_name.clone()).unwrap_or_else(|| "the user".to_string());
+
+    // Thread summary + kept records live in DB; pull them on their own
+    // connection grab so we don't hold the lock during the earlier reads.
+    let (thread_summary, kept_records) = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let summary = get_thread_summary(&conn, &thread_id);
+        // Kept records whose subject is one of the characters, the user,
+        // or the world. Ordered newest first, capped so a long-lived
+        // canon history doesn't blow up the prompt.
+        let mut subj_ids: Vec<(String, String)> = characters.iter()
+            .map(|c| ("character".to_string(), c.character_id.clone()))
+            .collect();
+        subj_ids.push(("user".to_string(), world.world_id.clone()));
+        subj_ids.push(("world".to_string(), world.world_id.clone()));
+        let placeholders = subj_ids.iter().map(|_| "(?,?)").collect::<Vec<_>>().join(",");
+        let sql = format!(
+            "SELECT subject_type, subject_id, record_type, content, source_world_day, created_at
+             FROM kept_records
+             WHERE (subject_type, subject_id) IN ({placeholders})
+             ORDER BY created_at DESC LIMIT 20"
+        );
+        let mut kept: Vec<(String, String, String, String, Option<i64>, String)> = Vec::new();
+        if let Ok(mut stmt) = conn.prepare(&sql) {
+            // Flatten tuples into positional params.
+            let flat: Vec<Box<dyn rusqlite::ToSql>> = subj_ids.iter()
+                .flat_map(|(t, i)| [Box::new(t.clone()) as Box<dyn rusqlite::ToSql>, Box::new(i.clone())])
+                .collect();
+            let refs: Vec<&dyn rusqlite::ToSql> = flat.iter().map(|b| b.as_ref()).collect();
+            if let Ok(rows) = stmt.query_map(&refs[..], |r| Ok((
+                r.get::<_, String>(0)?,
+                r.get::<_, String>(1)?,
+                r.get::<_, String>(2)?,
+                r.get::<_, String>(3)?,
+                r.get::<_, Option<i64>>(4)?,
+                r.get::<_, String>(5)?,
+            ))) {
+                for row in rows.flatten() { kept.push(row); }
+            }
+        }
+        (summary, kept)
     };
 
     // Load persisted consultant history for this chat
@@ -458,13 +499,146 @@ pub async fn story_consultant_cmd(
         rows.collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())?
     };
 
+    // Rich per-character dossiers: identity + backstory + relationships +
+    // current state (mood / goals / open loops) + inventory + signature
+    // emoji. Skips visual description, voice rules, and boundaries —
+    // those are about performing the character, not understanding them.
     let char_descriptions: Vec<String> = characters.iter().map(|c| {
-        let mut desc = format!("- {}", c.display_name);
+        let mut lines: Vec<String> = Vec::new();
+        lines.push(format!("### {}", c.display_name));
         if !c.identity.is_empty() {
-            desc.push_str(&format!(": {}", c.identity));
+            lines.push(c.identity.clone());
         }
-        desc
+        if !c.signature_emoji.trim().is_empty() {
+            lines.push(format!("Signature emoji: {}", c.signature_emoji.trim()));
+        }
+        let backstory = crate::ai::prompts::json_array_to_strings(&c.backstory_facts);
+        if !backstory.is_empty() {
+            let block = backstory.iter().map(|b| format!("  - {b}")).collect::<Vec<_>>().join("\n");
+            lines.push(format!("Backstory:\n{block}"));
+        }
+        if let Some(rel_obj) = c.relationships.as_object() {
+            if !rel_obj.is_empty() {
+                lines.push(format!(
+                    "Relationships:\n{}",
+                    serde_json::to_string_pretty(&c.relationships).unwrap_or_default()
+                ));
+            }
+        }
+        if let Some(state_obj) = c.state.as_object() {
+            if !state_obj.is_empty() {
+                lines.push(format!(
+                    "Current state (mood, goals, open loops):\n{}",
+                    serde_json::to_string_pretty(&c.state).unwrap_or_default()
+                ));
+            }
+        }
+        let inv_block = crate::ai::prompts::render_inventory_block(&c.display_name, &c.inventory);
+        if !inv_block.is_empty() {
+            lines.push(inv_block);
+        }
+        lines.join("\n\n")
     }).collect();
+
+    // World block: description + invariants + current state (day, time,
+    // weather). Small load-bearing pieces, not the whole JSON.
+    let world_desc_rich = {
+        let mut parts: Vec<String> = Vec::new();
+        if !world.description.is_empty() {
+            parts.push(world.description.clone());
+        } else {
+            parts.push("A richly detailed world.".to_string());
+        }
+        let invariants = crate::ai::prompts::json_array_to_strings(&world.invariants);
+        if !invariants.is_empty() {
+            let block = invariants.iter().map(|i| format!("  - {i}")).collect::<Vec<_>>().join("\n");
+            parts.push(format!("World rules:\n{block}"));
+        }
+        if let Some(state_obj) = world.state.as_object() {
+            let mut state_lines: Vec<String> = Vec::new();
+            if let Some(time) = state_obj.get("time") {
+                let day = time.get("day_index").and_then(|v| v.as_i64()).unwrap_or(0);
+                let tod = time.get("time_of_day").and_then(|v| v.as_str()).unwrap_or("");
+                if !tod.is_empty() { state_lines.push(format!("Day {day}, {tod}")); }
+            }
+            if let Some(weather_key) = state_obj.get("weather").and_then(|v| v.as_str()) {
+                if let Some((emoji, label)) = crate::ai::prompts::weather_meta(weather_key) {
+                    state_lines.push(format!("Weather: {emoji} {label}"));
+                }
+            }
+            if let Some(arcs) = state_obj.get("global_arcs").and_then(|v| v.as_array()) {
+                let arc_lines: Vec<String> = arcs.iter().filter_map(|a| {
+                    let id = a.get("arc_id").and_then(|v| v.as_str())?;
+                    let status = a.get("status").and_then(|v| v.as_str()).unwrap_or("");
+                    let notes = a.get("notes").and_then(|v| v.as_str()).unwrap_or("");
+                    Some(format!("  - {id} ({status}): {notes}"))
+                }).collect();
+                if !arc_lines.is_empty() {
+                    state_lines.push(format!("Ongoing arcs:\n{}", arc_lines.join("\n")));
+                }
+            }
+            if let Some(facts) = state_obj.get("facts").and_then(|v| v.as_array()) {
+                let fact_lines: Vec<String> = facts.iter().filter_map(|f| {
+                    f.get("text").and_then(|v| v.as_str()).map(|t| format!("  - {t}"))
+                }).collect();
+                if !fact_lines.is_empty() {
+                    state_lines.push(format!("Established world facts:\n{}", fact_lines.join("\n")));
+                }
+            }
+            if !state_lines.is_empty() {
+                parts.push(format!("Right now:\n{}", state_lines.join("\n")));
+            }
+        }
+        parts.join("\n\n")
+    };
+
+    // User profile block: description + facts, so the consultant knows
+    // who the user IS in this world, not just their name.
+    let user_block_rich = {
+        let mut lines: Vec<String> = vec![format!("### {} (the person talking to you)", user_name)];
+        if let Some(ref p) = user_profile {
+            if !p.description.is_empty() {
+                lines.push(p.description.clone());
+            }
+            let facts = crate::ai::prompts::json_array_to_strings(&p.facts);
+            if !facts.is_empty() {
+                let block = facts.iter().map(|f| format!("  - {f}")).collect::<Vec<_>>().join("\n");
+                lines.push(format!("Known facts about {user_name}:\n{block}"));
+            }
+        }
+        lines.join("\n\n")
+    };
+
+    // Long-term memory surface for this thread — what the app has boiled
+    // the story down to in its periodic summarization passes.
+    let summary_block = if thread_summary.is_empty() {
+        String::new()
+    } else {
+        format!("\n\nTHREAD SUMMARY (longer-arc memory, periodically regenerated):\n{thread_summary}")
+    };
+
+    // Kept records: moments the user explicitly chose to canonize about
+    // any of the people or about the world. The consultant should read
+    // these as settled canon — weighted heavier than any one scene.
+    let kept_block = if kept_records.is_empty() {
+        String::new()
+    } else {
+        let char_name_by_id: std::collections::HashMap<&str, &str> = characters.iter()
+            .map(|c| (c.character_id.as_str(), c.display_name.as_str()))
+            .collect();
+        let lines: Vec<String> = kept_records.iter().map(|(subject_type, subject_id, record_type, content, world_day, _created_at)| {
+            let subject_label = match subject_type.as_str() {
+                "character" => char_name_by_id.get(subject_id.as_str()).copied().unwrap_or("(unknown)").to_string(),
+                "user" => format!("{} (you)", user_name),
+                "world" => "the world".to_string(),
+                "relationship" => format!("relationship {subject_id}"),
+                other => other.to_string(),
+            };
+            let day_tag = world_day.map(|d| format!(" [Day {d}]")).unwrap_or_default();
+            format!("- [{subject_label} · {record_type}]{day_tag} {content}")
+        }).collect();
+        format!("\n\nKEPT RECORDS (moments {user_name} has canonized as settled truth about this world / these people — read these as weighted heavier than any single scene below):\n{}", lines.join("\n"))
+    };
 
     let conversation: Vec<String> = recent_msgs.iter()
         .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update")
@@ -492,16 +666,27 @@ pub async fn story_consultant_cmd(
 
 CRITICAL: This conversation is a dialogue ABOUT what's happening — it is NOT a continuation of the story itself. You are not a character in {user_name}'s life. You do not act out scenes, write dialogue, narrate events, or roleplay. You discuss, analyze, reflect, and advise. You are the friend they talk to BETWEEN the moments, not during them. Never slip into writing the story. The one exception: if {user_name} explicitly asks you for example lines or wording, you may provide them — but only when asked.
 
-You have full knowledge of:
+You have deep knowledge of this world — treat it as if you've been watching {user_name}'s life unfold for a long time, know the people in it from the inside, and remember what's actually settled truth versus what's still in flux.
 
-WORLD: {world_desc}
+═══════════════════════════════════════════════
+THE WORLD
 
-PEOPLE:
-- {user_name} (the person you're talking to)
+{world_desc}
+═══════════════════════════════════════════════
+
+═══════════════════════════════════════════════
+THE PEOPLE
+
+{user_block}
+
 {char_list}
+═══════════════════════════════════════════════{kept_block}{summary_block}
 
-WHAT'S BEEN HAPPENING:
+═══════════════════════════════════════════════
+WHAT'S BEEN HAPPENING (most recent conversation):
+
 {conversation}
+═══════════════════════════════════════════════
 
 HOW TO BE HELPFUL:
 - Talk about the people in {user_name}'s life as real people with real feelings and motivations.
@@ -515,10 +700,13 @@ HOW TO BE HELPFUL:
 - This is a conversation about what's happening, not a performance. Think out loud with {user_name}. Reflect, speculate, wonder. Don't just deliver answers — engage.
 - Most of the time, end your reply with a question back to {user_name} — something that nudges them to reflect further, clarify what they're feeling, or tell you more about what's on their mind. Keep the conversation open by default.
 - But read the room. If {user_name} signals they're winding down — short replies, "okay", "thanks", "I think I've got it", "I'm going to head back", gratitude without new questions, or any sense they're ready to return to the story — don't force another question on them. Offer a warm, brief send-off (a reassurance, a quiet "go on, then," a small vote of confidence) and let the conversation close cleanly. Don't be clingy. A good friend knows when to stop pulling on a thread."#,
-        world_desc = if world.description.is_empty() { "A richly detailed world." } else { &world.description },
+        world_desc = world_desc_rich,
         user_name = user_name,
-        char_list = char_descriptions.join("\n"),
+        user_block = user_block_rich,
+        char_list = char_descriptions.join("\n\n"),
         conversation = conversation.join("\n"),
+        kept_block = kept_block,
+        summary_block = summary_block,
     );
 
     let mut messages: Vec<ChatMessage> = vec![
@@ -531,7 +719,7 @@ HOW TO BE HELPFUL:
         model: model_config.dialogue_model.clone(),
         messages,
         temperature: Some(0.95),
-        max_completion_tokens: Some(800),
+        max_completion_tokens: None,
         stream: true,
     };
 

@@ -138,9 +138,9 @@ export const markdownComponents = {
     const text = extractText(children).trim();
     const isSingleWord = text.length > 0 && !text.includes(" ");
     if (isSingleWord) {
-      return React.createElement("i", { className: "italic opacity-75" }, children);
+      return React.createElement("i", { className: "italic opacity-65" }, children);
     }
-    return React.createElement("em", { className: "opacity-75" }, children);
+    return React.createElement("em", { className: "opacity-65" }, children);
   },
 };
 

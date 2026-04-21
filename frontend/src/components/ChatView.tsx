@@ -913,12 +913,16 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                           <button
                             onClick={() => handleInventoryUpdateFromMessage(msg.message_id)}
                             disabled={invUpdatingId === msg.message_id}
-                            className="inline-flex items-center justify-center w-6 h-6 rounded-full border transition-colors cursor-pointer bg-secondary/50 hover:bg-secondary border-border/60 hover:border-border text-muted-foreground hover:text-foreground disabled:opacity-60 disabled:cursor-wait"
+                            className={`inline-flex items-center justify-center w-6 h-6 rounded-full border transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait ${
+                              (inventoryBadges[msg.message_id]?.length ?? 0) > 0
+                                ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-500 hover:bg-emerald-500/25"
+                                : "bg-secondary/50 hover:bg-secondary border-border/60 hover:border-border text-muted-foreground hover:text-foreground"
+                            }`}
                           >
                             {invUpdatingId === msg.message_id ? <Loader2 size={12} className="animate-spin" /> : <Package size={12} />}
                           </button>
                           <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/minv:opacity-100 pointer-events-none transition-opacity z-50">
-                            Update inventory from this moment
+                            {(inventoryBadges[msg.message_id]?.length ?? 0) > 0 ? "Inventory updated · run again" : "Update inventory from this moment"}
                           </span>
                         </div>
                       </>

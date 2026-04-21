@@ -168,20 +168,27 @@ export function NarrativeMessage({
                 </span>
               </div>
             )}
-            {onInventoryUpdate && (
-              <div className="relative group/minv">
-                <button
-                  onClick={() => onInventoryUpdate(message.message_id)}
-                  disabled={inventoryUpdatingId === message.message_id}
-                  className="w-7 h-7 rounded-full bg-black/50 text-white flex items-center justify-center cursor-pointer hover:bg-black/70 transition-colors backdrop-blur-sm disabled:opacity-60 disabled:cursor-wait"
-                >
-                  {inventoryUpdatingId === message.message_id ? <Loader2 size={12} className="animate-spin" /> : <Package size={12} />}
-                </button>
-                <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/minv:opacity-100 pointer-events-none transition-opacity not-italic">
-                  Update inventory from this moment
-                </span>
-              </div>
-            )}
+            {onInventoryUpdate && (() => {
+              const hasTriggered = (inventoryUpdateRecords?.length ?? 0) > 0;
+              return (
+                <div className="relative group/minv">
+                  <button
+                    onClick={() => onInventoryUpdate(message.message_id)}
+                    disabled={inventoryUpdatingId === message.message_id}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors backdrop-blur-sm disabled:opacity-60 disabled:cursor-wait ${
+                      hasTriggered
+                        ? "bg-emerald-500/30 text-emerald-100 hover:bg-emerald-500/50"
+                        : "bg-black/50 text-white hover:bg-black/70"
+                    }`}
+                  >
+                    {inventoryUpdatingId === message.message_id ? <Loader2 size={12} className="animate-spin" /> : <Package size={12} />}
+                  </button>
+                  <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/minv:opacity-100 pointer-events-none transition-opacity not-italic">
+                    {hasTriggered ? "Inventory updated · run again" : "Update inventory from this moment"}
+                  </span>
+                </div>
+              );
+            })()}
             <div className="relative group/mdel">
               <button
                 onClick={() => setShowDeleteConfirm(true)}

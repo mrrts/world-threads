@@ -2862,7 +2862,7 @@ Write ONLY the animation direction, nothing else."#,
 /// Map a weather key (stored in `world.state.weather`) to its label and
 /// emoji. Must stay in lockstep with `frontend/src/lib/weather.ts`.
 /// Returns None for unknown or empty keys.
-fn weather_meta(key: &str) -> Option<(&'static str, &'static str)> {
+pub fn weather_meta(key: &str) -> Option<(&'static str, &'static str)> {
     // (emoji, label)
     match key {
         "sunny_clear"       => Some(("☀️", "Sunny and clear")),
