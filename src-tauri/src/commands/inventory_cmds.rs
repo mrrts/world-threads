@@ -785,7 +785,40 @@ pub async fn update_inventory_for_moment_cmd(
         }
     } else { None };
 
+    // Persist shorthand diff records keyed to the TRIGGER message so the
+    // frontend can paint an "Inventory updated · +X, ~Y" badge under that
+    // message across reloads. One row per character actually changed.
+    // The table is `ON CONFLICT DO UPDATE`, so re-clicking overwrites the
+    // old record rather than accumulating.
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        for r in &results {
+            let added_names: Vec<String> = r.added.iter().map(|i| i.name.clone()).collect();
+            let updated_names: Vec<String> = r.updated.iter().map(|i| i.name.clone()).collect();
+            if let Err(e) = crate::db::queries::record_inventory_update(
+                &conn, &message_id, &r.character_id,
+                &added_names, &updated_names, &r.removed,
+            ) {
+                log::warn!("[Inventory] record_inventory_update failed for {}: {e}", r.character_id);
+            }
+        }
+    }
+
     Ok(UpdateInventoryForMomentResponse { results, new_message })
+}
+
+/// Fetch every inventory-update record for the given message_ids.
+/// Returns a flat vec; the frontend groups by `message_id`. Used to
+/// paint "Inventory updated · +X, ~Y" badges under any trigger message
+/// that has produced an update, persisted across sessions.
+#[tauri::command]
+pub fn get_inventory_updates_for_messages_cmd(
+    db: State<'_, Database>,
+    message_ids: Vec<String>,
+) -> Result<Vec<crate::db::queries::InventoryUpdateRecord>, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    crate::db::queries::get_inventory_updates_for_messages(&conn, &message_ids)
+        .map_err(|e| e.to_string())
 }
 
 /// User-edit entry point from the character settings page. Blindly

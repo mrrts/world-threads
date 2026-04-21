@@ -20,7 +20,8 @@ import { ChatErrorBar } from "@/components/chat/ChatErrorBar";
 import { AnimationReadyToast } from "@/components/chat/AnimationReadyToast";
 import { InventoryUpdatedToast, buildInventoryDiffSummary, type InventoryUpdateSummary } from "@/components/chat/InventoryUpdatedToast";
 import { InventoryUpdateMessage } from "@/components/chat/InventoryUpdateMessage";
-import type { InventoryItem } from "@/lib/tauri";
+import { InventoryUpdateBadge } from "@/components/chat/InventoryUpdateBadge";
+import type { InventoryItem, InventoryUpdateRecord } from "@/lib/tauri";
 import { ResetConfirmModal } from "@/components/chat/ResetConfirmModal";
 import { RemoveVideoConfirmModal } from "@/components/chat/RemoveVideoConfirmModal";
 import { IllustrationPickerModal } from "@/components/chat/IllustrationPickerModal";
@@ -56,6 +57,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
   const [keptIds, setKeptIds] = useState<Set<string>>(new Set());
   const [invUpdatingId, setInvUpdatingId] = useState<string | null>(null);
   const [inventoryToast, setInventoryToast] = useState<InventoryUpdateSummary[] | null>(null);
+  const [inventoryBadges, setInventoryBadges] = useState<Record<string, InventoryUpdateRecord[]>>({});
 
   const handleInventoryUpdateFromMessage = useCallback(async (messageId: string) => {
     setInvUpdatingId(messageId);
@@ -71,6 +73,27 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         .map((r) => buildInventoryDiffSummary(priorByChar.get(r.character_id) ?? [], r.inventory, nameById.get(r.character_id) ?? "A character"))
         .filter((s): s is InventoryUpdateSummary => s !== null);
       if (summaries.length > 0) setInventoryToast(summaries);
+
+      // Overwrite the badge for this trigger message with the fresh
+      // shorthand diffs. The backend's record_inventory_update used
+      // ON CONFLICT REPLACE, so subsequent fetches would return these
+      // too — but updating local state immediately avoids the extra
+      // round-trip.
+      const nowIso = new Date().toISOString();
+      const records: InventoryUpdateRecord[] = resp.results
+        .filter((r) => (r.added?.length ?? 0) + (r.updated?.length ?? 0) + (r.removed?.length ?? 0) > 0)
+        .map((r) => ({
+          message_id: messageId,
+          character_id: r.character_id,
+          character_name: nameById.get(r.character_id) ?? "",
+          added: (r.added ?? []).map((i) => i.name),
+          updated: (r.updated ?? []).map((i) => i.name),
+          removed: r.removed ?? [],
+          created_at: nowIso,
+        }));
+      if (records.length > 0) {
+        setInventoryBadges((prev) => ({ ...prev, [messageId]: records }));
+      }
     } catch (e) {
       console.warn("[Inventory] moment-update failed", e);
     } finally {
@@ -101,6 +124,26 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
     }
   }, [keepThreadId]);
   useEffect(() => { reloadKept(); }, [reloadKept]);
+
+  // Load persisted inventory-update badges for the visible messages.
+  // Joined-ID key so we only refetch when the list actually changes,
+  // not on every store update.
+  const inventoryMsgIdsKey = store.messages.map((m) => m.message_id).join(",");
+  useEffect(() => {
+    const ids = store.messages.map((m) => m.message_id).filter(Boolean);
+    if (ids.length === 0) { setInventoryBadges({}); return; }
+    let cancelled = false;
+    api.getInventoryUpdatesForMessages(ids).then((records) => {
+      if (cancelled) return;
+      const map: Record<string, InventoryUpdateRecord[]> = {};
+      for (const r of records) {
+        (map[r.message_id] = map[r.message_id] ?? []).push(r);
+      }
+      setInventoryBadges(map);
+    }).catch(() => {});
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inventoryMsgIdsKey]);
 
   const [showPortraitModal, setShowPortraitModal] = useState(false);
   const [showIdentityPopover, setShowIdentityPopover] = useState(false);
@@ -581,6 +624,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                   isKept={keptIds.has(msg.message_id)}
                   onInventoryUpdate={handleInventoryUpdateFromMessage}
                   inventoryUpdatingId={invUpdatingId}
+                  inventoryUpdateRecords={inventoryBadges[msg.message_id]}
                   onDelete={(id) => store.deleteMessage(id)}
                   chatFontSize={store.chatFontSize}
                 />
@@ -889,6 +933,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                       </span>
                     )}
                   </div>
+                  <InventoryUpdateBadge records={inventoryBadges[msg.message_id]} />
                   {showPicker && (
                     <ReactionPicker
                       onPick={(emoji) => store.toggleReaction(msg.message_id, emoji)}

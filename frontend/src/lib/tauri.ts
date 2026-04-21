@@ -81,6 +81,16 @@ export interface UpdateInventoryForMomentResponse {
   new_message: Message | null;
 }
 
+export interface InventoryUpdateRecord {
+  message_id: string;
+  character_id: string;
+  character_name: string;
+  added: string[];
+  updated: string[];
+  removed: string[];
+  created_at: string;
+}
+
 export interface CharacterState {
   mood: number;
   trust_user: number;
@@ -702,4 +712,6 @@ export const api = {
     invoke<InventoryItem[]>("set_character_inventory_cmd", { characterId, inventory }),
   updateInventoryForMoment: (apiKey: string, messageId: string) =>
     invoke<UpdateInventoryForMomentResponse>("update_inventory_for_moment_cmd", { apiKey, messageId }),
+  getInventoryUpdatesForMessages: (messageIds: string[]) =>
+    invoke<InventoryUpdateRecord[]>("get_inventory_updates_for_messages_cmd", { messageIds }),
 };

@@ -160,13 +160,15 @@ pub fn gather_character_recent_messages(
 
 // ─── Inventory update records ───────────────────────────────────────────
 //
-// Superseded by the `inventory_update` message role (rows stored in
-// `messages` / `group_messages`) — the old per-message badge design was
-// replaced by first-class message cards in chat history. The table and
-// these helpers are retained unused per the database-safety policy:
-// existing data stays intact but is no longer written or read.
+// One row per (message_id, character_id) pair recording the shorthand
+// diff from a moment-anchored inventory update. Used for the PERSISTENT
+// BADGE under any trigger message showing "Inventory updated · added X,
+// updated Y" — name-only, no descriptions. The detailed version lives
+// in the inventory_update message card that also gets inserted into
+// chat history; this table is purely for badging the trigger message
+// so the user can see at a glance which messages they've already used
+// to update inventory.
 
-#[allow(dead_code)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InventoryUpdateRecord {
     pub message_id: String,
@@ -187,7 +189,6 @@ pub struct InventoryUpdateRecord {
 /// Write (or replace) the record for one (message_id, character_id) pair.
 /// Safe no-op when all three lists are empty — we don't want phantom
 /// "no-change" records cluttering the UI.
-#[allow(dead_code)]
 pub fn record_inventory_update(
     conn: &Connection,
     message_id: &str,
@@ -303,7 +304,6 @@ pub fn get_inventory_snapshot_at_or_before(
 /// Fetch all records whose message_id is in `message_ids`. Returns a
 /// flat vector — the frontend groups by message_id itself. Batched via
 /// a single query with a dynamic IN clause.
-#[allow(dead_code)]
 pub fn get_inventory_updates_for_messages(
     conn: &Connection,
     message_ids: &[String],

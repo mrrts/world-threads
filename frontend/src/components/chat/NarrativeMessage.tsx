@@ -4,7 +4,8 @@ import { BookOpen, Volume2, Loader2, Square, Play, SlidersHorizontal, Trash2, Sc
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { formatMessage, markdownComponents, remarkPlugins, rehypePlugins } from "./formatMessage";
-import type { Message } from "@/lib/tauri";
+import type { Message, InventoryUpdateRecord } from "@/lib/tauri";
+import { InventoryUpdateBadge } from "@/components/chat/InventoryUpdateBadge";
 import { chatFontPx } from "@/lib/chat-font";
 
 interface NarrativeMessageProps {
@@ -35,6 +36,7 @@ interface NarrativeMessageProps {
   // On-demand inventory update anchored to this message
   onInventoryUpdate?: (messageId: string) => void;
   inventoryUpdatingId?: string | null;
+  inventoryUpdateRecords?: InventoryUpdateRecord[];
 }
 
 export function NarrativeMessage({
@@ -44,7 +46,7 @@ export function NarrativeMessage({
   adjustingMessageId, onAdjust, onDelete,
   chatFontSize = 2,
   onKeep, isKept,
-  onInventoryUpdate, inventoryUpdatingId,
+  onInventoryUpdate, inventoryUpdatingId, inventoryUpdateRecords,
 }: NarrativeMessageProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const hasCached = cachedTones && cachedTones.size > 0;
@@ -214,6 +216,9 @@ export function NarrativeMessage({
             </button>
           )}
         </p>
+        <div className="not-italic">
+          <InventoryUpdateBadge records={inventoryUpdateRecords} />
+        </div>
       </div>
     </div>
 

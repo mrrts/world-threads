@@ -1,5 +1,9 @@
 # WorldThreads — Development Guidelines
 
+## MISSION
+
+Create a vivid, excellent, surprising in-world experience that uplifts the user and provides engrossing, good, clean fun. Every design decision, prompt tweak, UX choice, and feature bet is measured against that. The craft stack (invariants, craft notes, conscience pass, inventories, snapshots, etc.) exists to serve that mission — characters that feel real, worlds that hold, scenes that are worth the visit and send the user back to their day nourished rather than hollowed.
+
 ## DATABASE SAFETY — CRITICAL
 
 **NEVER drop, delete, or destroy database data during migrations.** This is the #1 rule.
