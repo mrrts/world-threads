@@ -635,7 +635,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                               ) : null}
                               <p className="text-[10px] font-semibold text-muted-foreground/70">{importPreview.speaker_name}</p>
                             </div>
-                            <div className={`prose prose-sm max-w-none prose-p:my-1 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_em]:italic [&_em]:block [&_em]:border-l-2 [&_em]:border-current/20 [&_em]:pl-3 [&_em]:my-1.5 [&_em]:opacity-80 ${
+                            <div className={`prose prose-sm max-w-none prose-p:my-1 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_em]:italic ${
                               importPreview.role === "user"
                                 ? "[--tw-prose-body:var(--color-primary-foreground)] [--tw-prose-bold:var(--color-primary-foreground)]"
                                 : "[--tw-prose-body:var(--color-secondary-foreground)] [--tw-prose-bold:var(--color-secondary-foreground)]"
