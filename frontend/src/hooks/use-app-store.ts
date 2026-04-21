@@ -552,45 +552,40 @@ export function useAppStore() {
   const promptGroupCharacter = useCallback(async (characterId: string, addressTo?: string) => {
     if (!state.activeGroupChat || !state.apiKey) return;
 
-    const charIds: string[] = Array.isArray(state.activeGroupChat.character_ids) ? state.activeGroupChat.character_ids : [];
-    const selectedIdx = charIds.indexOf(characterId);
-
-    // Characters that should respond: the selected one, plus all after it if auto-respond is on
-    const respondingIds = state.autoRespond
-      ? charIds.slice(selectedIdx)
-      : [characterId];
-
-    setState((s) => ({ ...s, sending: state.activeGroupChat!.group_chat_id, chatError: null }));
+    // Only the selected character responds. We used to chain through
+    // every subsequent character when auto-respond was on, but that
+    // produced the "one character responding after another" behavior
+    // the user doesn't want. If they need a specific other character
+    // to follow up, they can click that character explicitly.
+    setState((s) => ({ ...s, sending: state.activeGroupChat!.group_chat_id, sendingCharacterId: characterId, chatError: null }));
 
     try {
-      for (const cid of respondingIds) {
-        setState((s) => ({ ...s, sendingCharacterId: cid }));
-        const res = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat!.group_chat_id, cid, addressTo);
-        setState((s) => {
-          const merged = { ...s.reactions };
-          for (const r of res.ai_reactions) {
-            if (!merged[r.message_id]) merged[r.message_id] = [];
-            merged[r.message_id].push(r);
-          }
-          return {
-            ...s,
-            messages: [...s.messages, res.assistant_message],
-            totalMessages: s.totalMessages + 1,
-            reactions: merged,
-            sendingCharacterId: null,
-          };
-        });
-        if (state.notifyOnMessage) playChime();
-      }
-      setState((s) => ({ ...s, sending: null }));
+      const res = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat!.group_chat_id, characterId, addressTo);
+      setState((s) => {
+        const merged = { ...s.reactions };
+        for (const r of res.ai_reactions) {
+          if (!merged[r.message_id]) merged[r.message_id] = [];
+          merged[r.message_id].push(r);
+        }
+        return {
+          ...s,
+          messages: [...s.messages, res.assistant_message],
+          totalMessages: s.totalMessages + 1,
+          reactions: merged,
+          sending: null,
+          sendingCharacterId: null,
+        };
+      });
+      if (state.notifyOnMessage) playChime();
     } catch (e) {
       setState((s) => ({
         ...s,
         sending: null,
+        sendingCharacterId: null,
         chatError: String(e),
       }));
     }
-  }, [state.activeGroupChat, state.apiKey, state.autoRespond, state.notifyOnMessage]);
+  }, [state.activeGroupChat, state.apiKey, state.notifyOnMessage]);
 
   const selectUserProfile = useCallback(() => {
     setState((s) => ({ ...s, editingUserProfile: true }));
@@ -1206,12 +1201,25 @@ export function useAppStore() {
         }));
       }
 
-      // For group chats: if auto-respond is on and anchor was user message, trigger all character responses
+      // For group chats: if auto-respond is on and the anchor was a
+      // user message, pick ONE character to respond via the same
+      // addressee-pick pipeline sendGroupMessage uses. Used to
+      // iterate every character in order — that produced the
+      // unwanted one-after-another chain.
       if (isGroupChat && isUserMsg && state.autoRespond && state.activeGroupChat) {
-        const charIds: string[] = Array.isArray(state.activeGroupChat.character_ids) ? state.activeGroupChat.character_ids : [];
+        const memberIds: string[] = Array.isArray(state.activeGroupChat.character_ids) ? state.activeGroupChat.character_ids : [];
+        const anchorContent = anchorMsg?.content ?? "";
+        let pickedIds: string[];
+        try {
+          const picked = await api.pickGroupResponders(state.apiKey, state.activeGroupChat.group_chat_id, anchorContent);
+          pickedIds = picked.filter((id) => memberIds.includes(id));
+          if (pickedIds.length === 0) pickedIds = memberIds.slice(0, 1);
+        } catch {
+          pickedIds = memberIds.slice(0, 1);
+        }
         setState((s) => ({ ...s, sending: state.activeGroupChat!.group_chat_id }));
         try {
-          for (const cid of charIds) {
+          for (const cid of pickedIds) {
             setState((s) => ({ ...s, sendingCharacterId: cid }));
             const res = await api.promptGroupCharacter(state.apiKey, state.activeGroupChat.group_chat_id, cid);
             setState((s) => {
@@ -1230,7 +1238,7 @@ export function useAppStore() {
             });
           }
         } catch { /* non-fatal */ }
-        setState((s) => ({ ...s, sending: null }));
+        setState((s) => ({ ...s, sending: null, sendingCharacterId: null }));
       }
     } catch (e) {
       // Reload messages from DB to get correct state after partial failure

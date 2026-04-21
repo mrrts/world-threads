@@ -664,14 +664,31 @@ pub async fn pick_group_responders_cmd(
 
     if let Some(addressee_id) = pick {
         log::info!("[GroupPick] LLM addressee={} — solo reply", addressee_id);
-        Ok(vec![addressee_id])
-    } else {
-        // 3. Fallback. LLM returned NONE (or the call failed) — the
-        // message belongs to the room. Everyone responds, in stored
-        // character_ids order.
-        let all: Vec<String> = characters.iter().map(|c| c.character_id.clone()).collect();
-        log::info!("[GroupPick] LLM returned NONE — all respond: {:?}", all);
-        Ok(all)
+        return Ok(vec![addressee_id]);
+    }
+
+    // 3. Fallback. LLM returned NONE (or the call failed) — the message
+    // is ambiguous / for-the-room. Still exactly ONE character speaks:
+    // pick the most-recently-active character in the thread (the user
+    // was probably still continuing that thread even if it didn't read
+    // that way). If nobody has spoken yet, default to the first group
+    // member.
+    let fallback_id: Option<String> = recent_msgs.iter()
+        .rev()
+        .filter_map(|m| m.sender_character_id.as_deref())
+        .find(|id| characters.iter().any(|c| c.character_id == *id))
+        .map(String::from)
+        .or_else(|| characters.first().map(|c| c.character_id.clone()));
+
+    match fallback_id {
+        Some(id) => {
+            log::info!("[GroupPick] LLM returned NONE — fallback to most-recent speaker {}", id);
+            Ok(vec![id])
+        }
+        None => {
+            log::warn!("[GroupPick] no characters available for fallback");
+            Ok(Vec::new())
+        }
     }
 }
 
