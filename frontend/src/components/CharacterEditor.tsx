@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,6 +38,20 @@ export function CharacterEditor({ store }: Props) {
   const [showDeleteChar, setShowDeleteChar] = useState(false);
   const [ttsVoice, setTtsVoice] = useState("ash");
   const [ttsModel, setTtsModel] = useState("gpt-4o-mini-tts");
+  const [showSignatureEmojiPicker, setShowSignatureEmojiPicker] = useState(false);
+  const signatureEmojiPickerRef = useRef<HTMLDivElement>(null);
+
+  // Close signature-emoji picker on outside click.
+  useEffect(() => {
+    if (!showSignatureEmojiPicker) return;
+    const handler = (e: MouseEvent) => {
+      if (signatureEmojiPickerRef.current && !signatureEmojiPickerRef.current.contains(e.target as Node)) {
+        setShowSignatureEmojiPicker(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [showSignatureEmojiPicker]);
   const [showVoiceExplorer, setShowVoiceExplorer] = useState(false);
   const [samplePlaying, setSamplePlaying] = useState<string | null>(null);
   const [sampleLoading, setSampleLoading] = useState<string | null>(null);
@@ -65,6 +80,7 @@ export function CharacterEditor({ store }: Props) {
         sex: ch.sex ?? "male",
         state: structuredClone(ch.state),
         visual_description: ch.visual_description ?? "",
+        signature_emoji: ch.signature_emoji ?? "",
       });
       setDirty(false);
       loadPortraits(ch.character_id);
@@ -410,6 +426,50 @@ export function CharacterEditor({ store }: Props) {
                         form.sex === "female" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                       }`}
                     >Female</button>
+                  </div>
+                </Field>
+                <Field label="Signature Emoji" hint="Used rarely, only on beats where they feel especially themselves">
+                  <div className="relative flex items-center gap-2">
+                    <div className="h-9 min-w-9 px-2 rounded-lg border border-input bg-background flex items-center justify-center text-lg">
+                      {form.signature_emoji ? form.signature_emoji : <span className="text-xs text-muted-foreground italic">None</span>}
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setShowSignatureEmojiPicker((v) => !v)}
+                    >
+                      {form.signature_emoji ? "Change" : "Pick"}
+                    </Button>
+                    {form.signature_emoji && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => update({ signature_emoji: "" })}
+                      >
+                        None
+                      </Button>
+                    )}
+                    {showSignatureEmojiPicker && (
+                      <div
+                        ref={signatureEmojiPickerRef}
+                        className="absolute z-50 top-full left-0 mt-2 shadow-xl shadow-black/30 rounded-lg overflow-hidden"
+                      >
+                        <EmojiPicker
+                          onEmojiClick={(data) => {
+                            update({ signature_emoji: data.emoji });
+                            setShowSignatureEmojiPicker(false);
+                          }}
+                          emojiStyle={EmojiStyle.NATIVE}
+                          theme={Theme.DARK}
+                          height={380}
+                          width={320}
+                          lazyLoadEmojis
+                          searchPlaceholder="Search emoji..."
+                        />
+                      </div>
+                    )}
                   </div>
                 </Field>
               </div>

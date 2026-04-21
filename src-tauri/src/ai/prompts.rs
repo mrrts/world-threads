@@ -1196,6 +1196,18 @@ fn build_solo_dialogue_system_prompt(
         parts.push(format!("IDENTITY:\n{sex_prefix} {}", character.identity));
     }
 
+    // Optional signature emoji — a single emoji the character may drop
+    // into a reply on beats where they feel especially themselves. Kept
+    // very small (one line) but explicit about how rarely it should
+    // appear; without the usage clause the model tends to drop it
+    // constantly as a friendly signoff, which kills the signal.
+    if !character.signature_emoji.trim().is_empty() {
+        parts.push(format!(
+            "SIGNATURE EMOJI: {}\nThis is YOUR private signature. Use it RARELY — perhaps one in every fifteen or twenty replies, and only when the beat is actually one where you feel especially yourself: a line that sounds exactly like you, a small clarity, a specific charm, a grin that came out of nowhere. NOT a signoff, NOT a tic, NOT a decoration on ordinary replies, NOT something you sprinkle to seem friendly. Overuse kills the signal — if it shows up every few messages it stops meaning anything. Default: don't use it. Only reach for it when you'd remember this exact moment as one where you were unmistakably yourself.",
+            character.signature_emoji.trim()
+        ));
+    }
+
     // LEAD / FOLLOW banner — shouted loud, pinned early so every reply
     // reads with it in the front of the prompt even when attention
     // starts fading by the bottom. The detailed protagonist-framing
@@ -1339,6 +1351,12 @@ fn build_group_dialogue_system_prompt(
     if !character.identity.is_empty() {
         you.push_str("\n\n");
         you.push_str(&character.identity);
+    }
+    if !character.signature_emoji.trim().is_empty() {
+        you.push_str(&format!(
+            "\n\nSIGNATURE EMOJI: {}\nYour private signature. Use it RARELY — perhaps one in every fifteen or twenty replies, and only on a beat where you feel especially yourself. NOT a signoff, NOT a tic, NOT a decoration on ordinary replies. Overuse kills the signal. Default: don't use it.",
+            character.signature_emoji.trim()
+        ));
     }
     if !character.visual_description.is_empty() {
         you.push_str("\n\nWhat you look like (your own face, body, and the clothes you're in — reach for these when the moment asks you to notice yourself):\n");

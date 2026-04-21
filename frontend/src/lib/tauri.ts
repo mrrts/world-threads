@@ -48,6 +48,10 @@ export interface Character {
   /** World-day index the inventory was last refreshed against. NULL =
    *  never seeded. */
   last_inventory_day?: number | null;
+  /** Optional single-emoji signature. Empty string = no signature.
+   *  Rendered into the prompt with usage guidance (use rarely, only on
+   *  beats where the character feels especially themselves). */
+  signature_emoji?: string;
 }
 
 export interface InventoryItem {

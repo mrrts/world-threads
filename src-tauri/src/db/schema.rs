@@ -978,6 +978,18 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         conn.execute("ALTER TABLE characters ADD COLUMN last_inventory_day INTEGER DEFAULT NULL", []).ok();
     }
 
+    // Signature emoji: an optional single emoji the character may
+    // occasionally drop into a message when they feel especially
+    // themselves in a beat. User-edited from the character settings
+    // page. Empty string = disabled (character has no signature).
+    let has_signature_emoji: bool = conn.query_row(
+        "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'signature_emoji'",
+        [], |r| r.get::<_, i64>(0),
+    ).unwrap_or(0) > 0;
+    if !has_signature_emoji {
+        conn.execute("ALTER TABLE characters ADD COLUMN signature_emoji TEXT NOT NULL DEFAULT ''", []).ok();
+    }
+
     // One-time clear of existing character inventories so they re-seed
     // under the new mixed physical/interior prompt (soul-level interior
     // items, up to 10 total, kind tag per slot). Any inventories saved
