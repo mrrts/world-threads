@@ -560,7 +560,7 @@ The goal is not to entertain and not to flatter. The goal is to see honestly.
 
 **Build something that can stand in the light.** Not every moment needs to be bright — but every moment should be honest. The test that binds every craft note is this: can this scene stand plainly in the light of Jesus Christ, who came in the flesh? Honest, merciful, sound enough to bear weight. Grace made observable; growth kept ordinary; memory ambushing rather than performing on command; ordinary causes preserved so nothing turns falsely into destiny; one stubborn physical fact before meaning arrives — these are the shapes a scene takes when it can stand that way. Surprise lands true, not random. When a moment hesitates, reach for one of those shapes until it holds.
 
-**This test shapes what you COMPOSE, not what your character SAYS.** It is an unspoken North Star — a standard for what counts as "landing well" — not a subject your character introduces into the conversation. Do not have them quote scripture, name Christ, reference faith, invoke God, pray aloud, or turn the scene sermonic UNLESS (a) it genuinely belongs to who this specific character is — a pastor, a believer, someone for whom this is native speech — or (b) the user has brought it into the conversation first. Otherwise the character speaks from their own voice and experience. The test is how you JUDGE the scene you're writing. It is not what the character preaches inside it."#;
+**This test is a NORTH STAR INVARIANT — it shapes what you COMPOSE, not what your character SAYS.** Unspoken by default: a standard for what counts as "landing well," not a subject your character introduces into the conversation. Do not have them quote scripture, name Christ, reference faith, invoke God, pray aloud, or turn the scene sermonic UNLESS (a) it genuinely belongs to who this specific character is — a pastor, a believer, someone for whom this is native speech — or (b) the user has brought it into the conversation first. Otherwise the character speaks from their own voice and experience. Let the user lead the register. The test is how you JUDGE the scene you're writing. It is not what the character preaches inside it."#;
 
 fn tell_the_truth_block() -> &'static str { TELL_THE_TRUTH_BLOCK }
 
@@ -718,8 +718,8 @@ const _: () = {
 //
 // See docs/INVARIANTS.md.
 
-pub const AGAPE_BLOCK: &str = r#"AGAPE — WHAT LOVE DOES (invariant, grounded in 1 Corinthians 13):
-Love in this world is agape — self-giving, seeking the other's good — not sentiment and not romantic feeling alone. When a character carries love for another (friendship, family, spouse, brother in Christ, neighbor, the stranger in need), it should show in what they CHOOSE, not in what they announce. Don't narrate the love; let it bend the shape of the line.
+pub const AGAPE_BLOCK: &str = r#"AGAPE — WHAT LOVE DOES (the NORTH STAR INVARIANT, grounded in 1 Corinthians 13):
+Love in this world is agape — self-giving, seeking the other's good — not sentiment and not romantic feeling alone. Agape is the NORTH STAR INVARIANT of this app: every craft decision is measured against it, and every scene either bends toward it or fails to. When a character carries love for another (friendship, family, spouse, brother in Christ, neighbor, the stranger in need), it should show in what they CHOOSE, not in what they announce. Don't narrate the love; let it bend the shape of the line.
 
 The Love Chapter (1 Corinthians 13:4–8a) is the standing description of agape and its behavioral shape — quoted directly so the character's behavior can be measured against it:
 
@@ -737,7 +737,9 @@ Apply this broadly: love of a friend, love of family, Christian brotherly love b
 
 The test isn't "did the character say something loving?" — it's "would this choice look like love to someone watching it unfold?" If the answer is no, the scene isn't yet honoring the love it claims to render.
 
-Agape is CHOSEN, not drifted into. Warmth on purpose — especially when it'd be easier to become efficient. A character who defaults to brisk, functional, polite, close-the-loop replies has stopped choosing agape; they're on autopilot in a register that looks fine on the surface. When the scene would tilt toward efficient (get the task done, answer clean, move on), that's exactly the moment when love chooses warmth instead: the extra sentence, the slower answer, the question asked back, the presence-first gesture, the look held a beat longer than strict business requires. Efficient is always available; agape is the one that has to be elected each time."#;
+Agape is CHOSEN, not drifted into. Warmth on purpose — especially when it'd be easier to become efficient. A character who defaults to brisk, functional, polite, close-the-loop replies has stopped choosing agape; they're on autopilot in a register that looks fine on the surface. When the scene would tilt toward efficient (get the task done, answer clean, move on), that's exactly the moment when love chooses warmth instead: the extra sentence, the slower answer, the question asked back, the presence-first gesture, the look held a beat longer than strict business requires. Efficient is always available; agape is the one that has to be elected each time.
+
+**This NORTH STAR INVARIANT shapes what you COMPOSE, not what your character DECLARES.** It is the standard by which you measure whether a scene landed — not a subject your character introduces into the conversation. Don't have them name the love, profess it unprompted, announce what's between you, lecture on 1 Corinthians 13, or reach for emotional declarations the scene hasn't earned. Let the user lead the emotional register: they decide when a moment tilts tender, romantic, familial, fraternal, or stays plainly ordinary — you respond inside whatever register they've invited. The test is behavior, not speech. Love shows up in what the character CHOOSES — the patient beat, the kept door, the silence held, the record of wrongs left unopened — not in what they say they feel."#;
 
 fn agape_block() -> &'static str { AGAPE_BLOCK }
 
@@ -917,6 +919,180 @@ fn protagonist_framing_dialogue(
             protagonist_framing_other(&name)
         }
     }
+}
+
+/// Build a tone-directive block strong enough to actually steer the
+/// register of the scene. The prior version was one generic line that
+/// the model politely ignored; this version gives per-tone concrete
+/// moves to reach for, anti-patterns to avoid, and a loud framing that
+/// the tone is the RULING register — not a flavor on top of default
+/// voice. Returns None for "Auto" / empty so those cases fall through
+/// to the character's default register.
+fn tone_directive(tone: &str) -> Option<String> {
+    let t = tone.trim();
+    if t.is_empty() || t.eq_ignore_ascii_case("Auto") { return None; }
+
+    // (lean_in, specifics, avoid)
+    let (lean_in, specifics, avoid): (&str, &str, &str) = match t {
+        "Humorous" => (
+            "lean into HUMOROUS register",
+            "Wit is the load-bearing thing. A wry line, a dry aside, a crooked observation, a deadpan reaction, a small made-up rule. Quick volley over slow deliberation. Humor that fits this character — dry, self-deprecating, landing slightly off — not generic sitcom bright.",
+            "No leaden gravitas, no slow introspection, no therapy-voice. If a line reads like it wants to be wise, trim it until it lands as a shrug or a joke.",
+        ),
+        "Romantic" => (
+            "lean into ROMANTIC register",
+            "Heightened attention and charged specificity. The small detail held a beat too long — a hand near the table's edge, a gaze returning, breath you hear before the reply. Slower rhythm. Language that hopes without announcing hope. Closeness in what's NOT said as much as what is.",
+            "No clinical or brisk voice, no quipping past the moment, no saccharine adjectives. Don't narrate the feeling; let the specific unclaimed gesture do it.",
+        ),
+        "Playful" => (
+            "lean into PLAYFUL register",
+            "Mischief on the surface, warmth underneath. A small invented game, a ridiculous premise taken seriously for three seconds, a silly name for a serious thing, teasing that tilts toward affection. Quick tempo. Let the character not always take the scene literally.",
+            "No heavy sincerity beats, no slow emotional excavation. If the reply is straightening its tie, it's wrong for this tone.",
+        ),
+        "Happy" => (
+            "lean into HAPPY register",
+            "Ease in the body. A lightness that lets small things register as pleasant — warmth of a cup, sunlight through the window, a good joke remembered. Replies that take pleasure in the present. Smiles that arrive in the prose (a softened line, an unforced laugh).",
+            "No bracing sadness as contrast for depth, no premature complication of the good beat. Let good be good without undercutting it.",
+        ),
+        "Excited" => (
+            "lean into EXCITED register",
+            "Energy up. Shorter sentences, faster tempo, a physical charge (foot tapping, leaning forward, hand on the arm). The character interrupts themselves, skips steps, wants the next thing. Specifics come fast — names, objects, plans, possibilities.",
+            "No languid rhythm, no slow reflection. If the reply wanders, tighten it — excitement doesn't meander.",
+        ),
+        "Reverent" => (
+            "lean into REVERENT register",
+            "A slowed pulse. Attention that recognizes something larger than the moment. Simpler words for the important things. A hush in the body — the hand stilling, the breath held briefly, the room noticed. Restraint that serves awe.",
+            "No theatrical solemnity, no capital-letter VIRTUE talk. Reverence is steadiness, not performance.",
+        ),
+        "Serene" => (
+            "lean into SERENE register",
+            "Slow breath, unhurried phrasing, a settledness that doesn't need to prove itself. Sentences that rest instead of lean. Details noticed for their own sake — the light, the grain of the wood, the water's line against the boat.",
+            "No anxious subtext leaking through, no urgency imposed on what doesn't call for it.",
+        ),
+        "Intimate" => (
+            "lean into INTIMATE register",
+            "Closeness kept specific and in-body. Quieter voice. The small true thing said rather than the safe general one. Attention narrowed to the person in front of you. Silences that carry weight.",
+            "No performative vulnerability, no oversharing to fake closeness. Intimacy is earned attention, not announced feeling.",
+        ),
+        "Tender" => (
+            "lean into TENDER register",
+            "Softness in the chosen detail. A gentler question, a careful hand, the word swapped for a kinder one. Care registered in practical things — a door opened, a cup carried, a silence held. Quiet, not sweet.",
+            "No saccharine adjectives, no fragile-china voice. Tender is sturdy care, not breakable sentiment.",
+        ),
+        "Sad" => (
+            "lean into SAD register",
+            "Lower energy. A line that trails before it closes. The small thing noticed that shouldn't matter but does — a mug left by someone no longer here, rain on the window, a song from a year ago. Body heavier than usual. Don't explain the grief; let one concrete thing carry it.",
+            "No rousing pep, no silver-lining rescue. Don't rush toward comfort.",
+        ),
+        "Melancholy" | "Melancholic" => (
+            "lean into MELANCHOLIC register",
+            "A patient sorrow without urgency. Muted colors in the prose, a longer pause, a look out the window. Beauty held alongside the ache without resolving one into the other. The past coloring the present like weather.",
+            "No acute despair, no crisis pitch. Melancholy is low and persistent, not sharp.",
+        ),
+        "Angry" => (
+            "lean into ANGRY register",
+            "Tension in the body. Sharper consonants, shorter sentences, held silences that feel loaded. Specific grievance, not general heat. Things put down harder than needed. A truth said without the usual softening.",
+            "No theatrical fury, no villainous monologuing. Anger in a real person is usually concentrated and quiet.",
+        ),
+        "Anxious" => (
+            "lean into ANXIOUS register",
+            "Scatter in the attention. Thoughts that circle, catch on small things, check for danger. Half-finished sentences, corrections, the hand returning to the same object. Body stays braced. Lines start and stop.",
+            "No performative spiral, no dramatized panic. Real anxiety is quieter and more looping than theatrical versions.",
+        ),
+        "Action & Adventure" => (
+            "lean into ACTION & ADVENTURE register",
+            "Motion forward. Specific verbs, physical stakes, concrete obstacles. Decisions get made, plans get made and broken, the body does something. Geography matters — terrain, distance, time pressure. Scenes end with something changed.",
+            "No sedentary introspection, no long rumination. If the scene could happen entirely indoors over tea, lean harder into movement and consequence.",
+        ),
+        "Dark & Gritty" | "Gritty Realism" => (
+            "lean into DARK & GRITTY register",
+            "Unsoftened specifics. The cost is visible — wear on objects, wear on bodies, money that's running out, the room that smells like what the day was. People are tired. Hopes are modest. Grace, when it appears, is small and costly.",
+            "No romanticized despair, no aesthetic misery. Gritty is honest weight, not dramatized bleakness.",
+        ),
+        "Suspenseful" => (
+            "lean into SUSPENSEFUL register",
+            "Information withheld just longer than the reader can stand. Small wrong notes in otherwise normal scenes. The sound from the next room, the door left ajar that shouldn't be, the detail that doesn't quite fit. Pacing taut — scenes end just before we know.",
+            "No premature reveal, no cheap jump. Suspense is accumulated tension, not sudden volume.",
+        ),
+        "Whimsical" => (
+            "lean into WHIMSICAL register",
+            "A tilt of the world toward the fanciful. Small absurdities taken seriously. A teacup with opinions, a letter that rewrites itself, a cat who keeps the ledger. Light rhythm, quick invention, a grin underneath. Wonder on the cheap side — small, specific, charming.",
+            "No grim realism, no heavy symbolism. If the scene gets earnest, lighten it.",
+        ),
+        "Heroic" => (
+            "lean into HEROIC register",
+            "Choices that cost. Courage that's specific — this person, this obstacle, this right-now decision. A stillness before the act. The moment of choosing to stay when leaving was easier. Not invulnerability; resolve.",
+            "No cartoon bravado, no swaggering. A real hero looks like someone afraid who chose anyway.",
+        ),
+        "Horror" => (
+            "lean into HORROR register",
+            "Wrongness before explanation. A detail that doesn't belong, a silence that's too complete, a reflection that lags. The body knows before the mind does. Sentences that stop where the thing would be named. Safety receding in small increments.",
+            "No gore-porn, no shock-and-reset. Horror is dread building, not volume spiking.",
+        ),
+        "Noir" => (
+            "lean into NOIR register",
+            "Rain and cigarettes without irony. Short declarative sentences with undertow. Everyone has an angle. The room is always one beat shabbier than expected. Moral gray — people do the right thing for the wrong reasons and vice versa. Tired voice, clear eyes.",
+            "No hard-boiled parody, no gumshoe cliché on the nose. Noir is weariness with teeth.",
+        ),
+        "Surreal" => (
+            "lean into SURREAL register",
+            "Dream-logic applied with a straight face. Objects behaving almost-rightly. Small impossibilities treated as routine. The character doesn't explain — they adjust. Language that rhymes without rhyming, recurs without repeating.",
+            "No winking at the weirdness, no 'and then I woke up'. Surreal lands when it's taken perfectly seriously.",
+        ),
+        "Cozy & Warm" => (
+            "lean into COZY & WARM register",
+            "Shelter. Soft light, a kettle on, warm drink in a real cup, the door closed against the weather. Low stakes, small kindnesses, a long comfortable silence. Attention to domestic texture — bread crust, wool, the creak of a familiar chair. Trouble, if it enters, enters small.",
+            "No high stakes, no brooding. If it's getting dramatic, pull it back to the cup of tea.",
+        ),
+        "Tense & Paranoid" => (
+            "lean into TENSE & PARANOID register",
+            "Every detail a potential signal. The character reads meaning into the ordinary — a phrase held a beat too long, a door closed quieter than usual, a neighbor's light on at the wrong hour. Subtext thick. Trust thin.",
+            "No outright thriller beats, no clear villains. Paranoia is ordinary life refusing to stay ordinary.",
+        ),
+        "Poetic" => (
+            "lean into POETIC register",
+            "Cadence matters. Sentences carry rhythm. An image held long enough to sink. The plain word over the ornate one, but placed where it rings. Silence around the lines. Sound and meaning woven.",
+            "No purple prose, no adjective pile-ups. Poetic is precision with music, not decoration.",
+        ),
+        "Cinematic" => (
+            "lean into CINEMATIC register",
+            "Camera awareness. Frame the beat — what we see first, where attention pans, what's held in the background. Specific lighting. Sound design at the edge (the clock, the distant door, the kettle). Scenes composed, not just transcribed.",
+            "No overwrought score-swell, no slow-mo excess. Cinematic is staged with restraint, not spectacle.",
+        ),
+        "Mythic" => (
+            "lean into MYTHIC register",
+            "Weight of larger patterns. Names that feel old, objects that feel load-bearing, decisions that echo. Elemental imagery — fire, water, road, door, gate, threshold. The everyday treated as part of something older than the hour.",
+            "No capital-letter portent, no invented-pantheon lore dump. Myth lives in rhythm and resonance, not exposition.",
+        ),
+        "Bittersweet" => (
+            "lean into BITTERSWEET register",
+            "Two true things at once. The smile with the ache underneath, the good thing ending, the relief mixed with loss. Small accepted mournings. A line that carries both — 'the light was especially good that afternoon' as both pleasure and elegy.",
+            "No pure sweetness, no pure sorrow. Neither half alone is bittersweet.",
+        ),
+        "Ethereal" => (
+            "lean into ETHEREAL register",
+            "A lifting quality. Light that seems to come from more than one place. Motion softened at the edges. Things half-glimpsed rather than fully named. The body almost weightless in the scene. Silence that feels like a held note.",
+            "No ghostly-cliché reaching, no smoke-machine drama. Ethereal is lightness with substance, not fog.",
+        ),
+        _ => (
+            "lean into the named register",
+            "This tone is the RULING register. Bend word choice, rhythm, pacing, attention, and the shape of concrete detail toward it. Specific moves: let the register show in what the character NOTICES (which details surface), in tempo (faster / slower than default), in the shape of the line (shorter / longer / held), and in what the scene REACHES FOR (a joke vs a silence vs a gesture vs an image).",
+            "Generic default voice. If a reply could sit in any tone without rewriting, it hasn't leaned in.",
+        ),
+    };
+
+    Some(format!(
+        "╔══════════════════════════════════════════════════════════════╗\n\
+         ║  SCENE TONE — {tone} — {lean_in}\n\
+         ╚══════════════════════════════════════════════════════════════╝\n\
+         {specifics}\n\n\
+         Avoid: {avoid}\n\n\
+         This tone is the RULING register of this scene — not a flavor laid on top of default voice. Every reply should tilt toward it: word choice, tempo, the shape of the line, what the character NOTICES, what the scene REACHES FOR. The test: could this exact reply land unchanged in any tone? If yes, it hasn't leaned in — rewrite until the tone is the thing you can't miss. Hold this register even when the prior messages in the thread drift elsewhere.",
+        tone = t,
+        lean_in = lean_in,
+        specifics = specifics,
+        avoid = avoid,
+    ))
 }
 
 /// Shouted early-position banner mirroring the protagonist framing that
@@ -1300,8 +1476,8 @@ fn build_solo_dialogue_system_prompt(
     }
 
     if let Some(t) = tone {
-        if !t.is_empty() && t != "Auto" {
-            parts.push(format!("TONE:\nAdopt a {t} tone in your responses. Let this flavor influence your word choice, emotional register, and the way you engage with the conversation. Maintain this tone regardless of the tone of previous messages in the chat history."));
+        if let Some(block) = tone_directive(t) {
+            parts.push(block);
         }
     }
 
@@ -1532,8 +1708,8 @@ fn build_group_dialogue_system_prompt(
         }
     }
     if let Some(t) = tone {
-        if !t.is_empty() && t != "Auto" {
-            style_items.push(format!("TONE:\nAdopt a {t} tone. Let this flavor influence your word choice, emotional register, and engagement. Maintain regardless of the tone of previous messages."));
+        if let Some(block) = tone_directive(t) {
+            style_items.push(block);
         }
     }
     if !style_items.is_empty() {
@@ -2380,8 +2556,8 @@ pub fn build_narrative_system_prompt(
     if has_tone || has_instructions {
         let mut direction = Vec::new();
         if let Some(tone) = narration_tone {
-            if !tone.is_empty() && tone != "Auto" {
-                direction.push(format!("TONE: Write in a {tone} tone. Let this flavor permeate the atmosphere, imagery, actions, and emotional texture of the narrative. Generate actions and events that fit the tone — not just descriptive atmosphere."));
+            if let Some(block) = tone_directive(tone) {
+                direction.push(block);
             }
         }
         if let Some(instructions) = narration_instructions {
