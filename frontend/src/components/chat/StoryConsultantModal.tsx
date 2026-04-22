@@ -345,29 +345,9 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
           const visibleChats = chats.filter((c) => (c.mode ?? "immersive") === activeMode);
           return (
           <div className="w-56 flex-shrink-0 border-r border-border/30 bg-card/90 backdrop-blur-sm flex flex-col relative z-[1]">
-            {/* Mode tabs — Immersive vs Backstage. The active mode drives
-                which chats are listed below and the mode stamp on any new
-                chat created from here. */}
-            <div className="px-2 pt-2">
-              <div className="grid grid-cols-2 gap-1 p-0.5 rounded-md bg-muted/40">
-                <button
-                  onClick={() => { setActiveMode("immersive"); if (activeChatId && chats.find((c) => c.chat_id === activeChatId)?.mode === "backstage") { setActiveChatId(null); setMessages([]); } }}
-                  className={`flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-[11px] font-medium transition-colors cursor-pointer ${activeMode === "immersive" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
-                  title="Immersive — in-the-story confidant"
-                >
-                  <Sparkles size={12} />
-                  Immersive
-                </button>
-                <button
-                  onClick={() => { setActiveMode("backstage"); if (activeChatId && chats.find((c) => c.chat_id === activeChatId)?.mode !== "backstage") { setActiveChatId(null); setMessages([]); } }}
-                  className={`flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-[11px] font-medium transition-colors cursor-pointer ${activeMode === "backstage" ? "bg-amber-500/15 text-amber-300 shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
-                  title="Backstage — fourth-wall stage manager"
-                >
-                  <Drama size={12} />
-                  Backstage
-                </button>
-              </div>
-            </div>
+            {/* Sidebar mode tabs removed — mode toggle now lives prominently
+                in the header. The sidebar just lists chats for the
+                currently-active mode. */}
             <div className="px-3 py-2.5 border-b border-border/30 flex items-center justify-between">
               <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Chats</h3>
               <div className="flex items-center gap-0.5">
@@ -433,36 +413,89 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
 
         {/* Main chat area */}
         <div className="flex-1 flex flex-col relative z-[1]">
-          {/* Header */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-card/95 relative z-[1]">
-            <div className="flex items-center gap-2">
+          {/* Header — Big Mode-switch. The toggle IS the modal's title.
+              Each mode is themed distinctly so the switch feels like
+              flipping a lens, not picking a tab:
+                Immersive → indigo/violet, soft sparkle, "in-the-story"
+                Backstage → amber, theatrical, "fourth-wall"
+              Active mode fills with its accent + label tagline; inactive
+              mode is plain text with the icon, clearly subordinate but
+              one click away. */}
+          <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-gradient-to-b from-card/95 to-card/80 relative z-[1]">
+            <div className="flex items-center gap-3 min-w-0">
               {!sidebarOpen && (
                 <button
                   onClick={() => setSidebarOpen(true)}
-                  className="w-7 h-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer mr-1"
+                  className="w-8 h-8 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer flex-shrink-0"
                   title="Show sidebar"
                 >
-                  <PanelLeftOpen size={15} />
+                  <PanelLeftOpen size={16} />
                 </button>
               )}
-              {activeMode === "backstage" ? (
-                <>
-                  <Drama size={16} className="text-amber-400" />
-                  <h3 className="font-semibold text-sm">Backstage</h3>
-                  <span className="text-[10px] uppercase tracking-wider text-amber-400/70 font-semibold ml-1">fourth-wall</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles size={16} className="text-primary" />
-                  <h3 className="font-semibold text-sm">Story Consultant</h3>
-                </>
-              )}
+              <div className="inline-flex rounded-xl overflow-hidden border border-border/80 bg-background/40 shadow-inner">
+                <button
+                  onClick={() => {
+                    setActiveMode("immersive");
+                    if (activeChatId && chats.find((c) => c.chat_id === activeChatId)?.mode === "backstage") {
+                      setActiveChatId(null);
+                      setMessages([]);
+                    }
+                  }}
+                  className={`group/im flex items-center gap-2.5 px-5 py-2.5 transition-all cursor-pointer ${
+                    activeMode === "immersive"
+                      ? "bg-gradient-to-br from-indigo-500/25 via-violet-500/15 to-indigo-500/10 text-indigo-100 shadow-[inset_0_-1px_0_rgba(99,102,241,0.4)]"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/40"
+                  }`}
+                  title="Immersive — in-the-story confidant"
+                >
+                  <Sparkles
+                    size={18}
+                    className={activeMode === "immersive" ? "text-indigo-300 drop-shadow-[0_0_4px_rgba(165,180,252,0.6)]" : ""}
+                  />
+                  <span className="flex flex-col items-start leading-tight">
+                    <span className={`text-base font-bold tracking-tight ${activeMode === "immersive" ? "" : ""}`}>
+                      Immersive
+                    </span>
+                    <span className={`text-[10px] uppercase tracking-[0.14em] ${activeMode === "immersive" ? "text-indigo-300/80" : "text-muted-foreground/50"}`}>
+                      in-the-story
+                    </span>
+                  </span>
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveMode("backstage");
+                    if (activeChatId && chats.find((c) => c.chat_id === activeChatId)?.mode !== "backstage") {
+                      setActiveChatId(null);
+                      setMessages([]);
+                    }
+                  }}
+                  className={`group/bs flex items-center gap-2.5 px-5 py-2.5 transition-all cursor-pointer border-l border-border/80 ${
+                    activeMode === "backstage"
+                      ? "bg-gradient-to-br from-amber-500/25 via-orange-500/15 to-amber-500/10 text-amber-100 shadow-[inset_0_-1px_0_rgba(245,158,11,0.4)]"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/40"
+                  }`}
+                  title="Backstage — fourth-wall stage manager"
+                >
+                  <Drama
+                    size={18}
+                    className={activeMode === "backstage" ? "text-amber-300 drop-shadow-[0_0_4px_rgba(252,211,77,0.6)]" : ""}
+                  />
+                  <span className="flex flex-col items-start leading-tight">
+                    <span className={`text-base font-bold tracking-tight ${activeMode === "backstage" ? "" : ""}`}>
+                      Backstage
+                    </span>
+                    <span className={`text-[10px] uppercase tracking-[0.14em] ${activeMode === "backstage" ? "text-amber-300/80" : "text-muted-foreground/50"}`}>
+                      fourth-wall
+                    </span>
+                  </span>
+                </button>
+              </div>
             </div>
             <button
               onClick={onClose}
-              className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-muted transition-colors cursor-pointer"
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors cursor-pointer flex-shrink-0"
             >
-              <X size={14} />
+              <X size={15} />
             </button>
           </div>
 
