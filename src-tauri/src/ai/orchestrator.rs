@@ -2246,6 +2246,9 @@ When you return TWO updates, each one must be separately load-bearing. Don't pad
 # For description_weave specifically
 The new_content must be the FULL revised description (not a diff, not a snippet). Preserve the voice and shape of the original. Keep anything already true. Integrate the new truth so a stranger reading the revision cold would sense the specific moment's shape without knowing it happened. Do NOT add meta-frames ("as he revealed", "recently shared"). Cap at 140 words total. If the current description is longer, compress while integrating.
 
+# CRITICAL — EVERY update MUST include `justification`
+The `justification` field is MANDATORY on EVERY update in the `updates` array — not just the first one, not just one of two, ALL of them. This is the commonest failure mode on multi-item outputs like this one: the first update gets a justification, the second is missing it. EVERY SINGLE update object must carry its own one-sentence `justification` string explaining why this moment produces THAT update. An update without justification is invalid output.
+
 # Output JSON schema (strict)
 {
   "updates": [
@@ -2308,10 +2311,11 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#.to_strin
         target_existing_text: Option<String>,
         #[serde(default)]
         new_content: String,
-        // Classifier sometimes drops justification on one of two
-        // updates even though the system prompt requires it. Rather
-        // than fail the whole batch over a missing field, default to
-        // empty and let the UI render nothing in that spot.
+        // Default to empty so parse survives when the classifier
+        // drops this field on one of two updates (a known LLM weakness
+        // on multi-item outputs). We FILL IN any empty justification
+        // via a targeted follow-up call below, so the final proposals
+        // always carry a real one.
         #[serde(default)]
         justification: String,
     }
@@ -2394,7 +2398,96 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#.to_strin
             justification: u.justification.trim().to_string(),
         });
     }
+
+    // Fill-in pass: any update whose justification came back empty
+    // gets a small targeted LLM call to synthesize a real one. The
+    // user asked that justifications be GUARANTEED present — this
+    // pass makes that true even on multi-item outputs where the
+    // classifier drops a field.
+    for p in out.iter_mut() {
+        if !p.justification.trim().is_empty() { continue; }
+        match fill_canon_justification(base_url, api_key, model, source_message, source_speaker_label, p).await {
+            Ok(j) if !j.trim().is_empty() => { p.justification = j; }
+            _ => {
+                // Last-ditch fallback — at least the UI has SOMETHING.
+                // Shouldn't normally reach this: the fill_in call's
+                // prompt is minimal and the model rarely returns empty.
+                p.justification = format!(
+                    "{} {} for {}.",
+                    match p.action.as_str() { "add" => "Adds", "update" => "Refines", "remove" => "Removes", _ => "Updates" },
+                    match p.kind.as_str() {
+                        "description_weave" => "the description",
+                        "voice_rule" => "a voice rule",
+                        "boundary" => "a boundary",
+                        "known_fact" => "a known fact",
+                        "open_loop" => "an open loop",
+                        other => other,
+                    },
+                    p.subject_label,
+                );
+            }
+        }
+    }
+
     Ok((out, usage))
+}
+
+/// Synthesize a one-sentence justification for a canonization update
+/// whose classifier-returned justification was empty. Small, fast
+/// memory-tier call — runs at most once per missing update.
+async fn fill_canon_justification(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    source_message: &Message,
+    source_speaker_label: &str,
+    update: &ProposedCanonUpdate,
+) -> Result<String, String> {
+    let action_verb = match update.action.as_str() {
+        "add" => "adds",
+        "update" => "refines",
+        "remove" => "removes",
+        _ => "changes",
+    };
+    let kind_noun = match update.kind.as_str() {
+        "description_weave" => "the description",
+        "voice_rule" => "a voice rule",
+        "boundary" => "a boundary",
+        "known_fact" => "a known fact",
+        "open_loop" => "an open loop",
+        other => other,
+    };
+    let shown_content: &str = if !update.new_content.trim().is_empty() {
+        &update.new_content
+    } else {
+        update.target_existing_text.as_deref().unwrap_or("")
+    };
+    let system = "You write a one-sentence justification for a canonization update. Given a source moment and the update being proposed, explain in ONE plain sentence why THIS moment produces THIS update. No preamble, no labels, no quotation marks — just the sentence. Plain and specific.".to_string();
+    let user = format!(
+        "MOMENT (from {speaker}):\n{content}\n\nPROPOSED UPDATE: {action_verb} {kind_noun} for {subject}.\nContent: {shown_content}\n\nWrite one sentence explaining why this moment produces this update.",
+        speaker = source_speaker_label,
+        content = source_message.content,
+        action_verb = action_verb,
+        kind_noun = kind_noun,
+        subject = update.subject_label,
+        shown_content = shown_content,
+    );
+    let request = ChatRequest {
+        model: model.to_string(),
+        messages: vec![
+            openai::ChatMessage { role: "system".to_string(), content: system },
+            openai::ChatMessage { role: "user".to_string(), content: user },
+        ],
+        temperature: Some(0.4),
+        max_completion_tokens: Some(80),
+        response_format: None,
+    };
+    let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
+    let text = response.choices.first()
+        .map(|c| c.message.content.trim().trim_matches('"').to_string())
+        .unwrap_or_default();
+    if text.is_empty() { return Err("empty justification fill-in response".to_string()); }
+    Ok(text)
 }
 
 /// chat_cmds to keep cost down. Kept for future reactivation.
