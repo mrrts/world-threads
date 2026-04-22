@@ -13,9 +13,9 @@ interface Props {
   onClose: () => void;
   apiKey: string;
   threadId: string;
-  /** Data URL for the active chat's primary character portrait — shown
-   *  on the compose view's hero. Optional. */
-  characterPortraitUrl?: string;
+  /** Data URLs for the chat's character portraits — shown stacked on the
+   *  compose view's hero. Solo chat = 1, group chat = N. */
+  characterPortraitUrls?: string[];
   /** Whether to play a chime on first token of writing phase. */
   notifyOnMessage: boolean;
   /** Chat font size shared with ChatView/GroupChatView. */
@@ -32,7 +32,7 @@ export function ImaginedChapterModal({
   onClose,
   apiKey,
   threadId,
-  characterPortraitUrl,
+  characterPortraitUrls,
   notifyOnMessage: _notifyOnMessage,
   chatFontSize,
   openChapterId,
@@ -355,7 +355,7 @@ export function ImaginedChapterModal({
                   imageTier={imageTier}
                   setImageTier={setImageTier}
                   onGenerate={handleGenerate}
-                  characterPortraitUrl={characterPortraitUrl ?? null}
+                  characterPortraitUrls={characterPortraitUrls ?? []}
                 />
               )}
 
@@ -408,7 +408,7 @@ function ComposeView({
   continueFromPrevious, setContinueFromPrevious, hasPrior,
   imageTier, setImageTier,
   onGenerate,
-  characterPortraitUrl,
+  characterPortraitUrls,
 }: {
   seedHint: string;
   setSeedHint: (s: string) => void;
@@ -418,14 +418,25 @@ function ComposeView({
   imageTier: "low" | "medium" | "high";
   setImageTier: (t: "low" | "medium" | "high") => void;
   onGenerate: () => void;
-  characterPortraitUrl: string | null;
+  characterPortraitUrls: string[];
 }) {
+  // Negative margin overlap when there are multiple portraits — gives the
+  // group a "stacked huddle" feel rather than a row of disconnected disks.
+  const portraits = characterPortraitUrls.filter(Boolean);
   return (
     <div className="max-w-2xl mx-auto space-y-5">
-      {characterPortraitUrl && (
+      {portraits.length > 0 && (
         <div className="flex justify-center mb-2">
-          <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-amber-200/60 shadow-md">
-            <img src={characterPortraitUrl} alt="" className="w-full h-full object-cover" />
+          <div className="flex">
+            {portraits.map((url, i) => (
+              <div
+                key={i}
+                className="w-24 h-24 rounded-full overflow-hidden border-4 border-amber-200/60 shadow-md bg-amber-100"
+                style={{ marginLeft: i === 0 ? 0 : "-1.25rem", zIndex: portraits.length - i }}
+              >
+                <img src={url} alt="" className="w-full h-full object-cover" />
+              </div>
+            ))}
           </div>
         </div>
       )}

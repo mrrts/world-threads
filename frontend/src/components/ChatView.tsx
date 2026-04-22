@@ -645,7 +645,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
           >
             <Sparkles size={15} />
           </button>
-          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/chapter:opacity-100 pointer-events-none transition-opacity">Imagined Chapter</span>
+          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/chapter:opacity-100 pointer-events-none transition-opacity">Imagine</span>
         </div>
       </div>
 
@@ -1538,7 +1538,9 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         onClose={() => { setShowImaginedChapter(false); setOpenImaginedChapterId(null); }}
         apiKey={store.apiKey}
         threadId={store.messages[0]?.thread_id ?? ""}
-        characterPortraitUrl={store.activeCharacter ? store.activePortraits[store.activeCharacter.character_id]?.data_url : undefined}
+        characterPortraitUrls={store.activeCharacter && store.activePortraits[store.activeCharacter.character_id]?.data_url
+          ? [store.activePortraits[store.activeCharacter.character_id]!.data_url!]
+          : []}
         notifyOnMessage={store.notifyOnMessage}
         chatFontSize={store.chatFontSize}
         openChapterId={openImaginedChapterId}
