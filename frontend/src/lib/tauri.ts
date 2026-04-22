@@ -267,22 +267,40 @@ export type CanonKind =
   | "known_fact"
   | "open_loop";
 
+/// What the classifier wants to do to the canonical record.
+/// - add: append a new item (list kinds) — or rewrite identity (weave).
+/// - update: replace an existing item with a nuanced version. Weave is
+///   effectively always "update."
+/// - remove: delete an existing item. Rare, destructive.
+export type CanonAction = "add" | "update" | "remove";
+
 export interface ProposedCanonUpdate {
   kind: CanonKind;
+  action: CanonAction;
   subject_type: "character" | "user";
   subject_id: string;
   subject_label: string;
   /// For description_weave: full revised description to replace
-  /// identity/description. For the others: the single bullet to append.
+  /// identity/description. For list kinds + add: the new bullet. For
+  /// list kinds + update: the replacement text. For list kinds +
+  /// remove: empty string (unused — content is the target being removed).
   new_content: string;
-  /// Present only for description_weave — the old description, for
-  /// before/after display.
+  /// Present when action ∈ {update, remove} on a list kind — the exact
+  /// existing item being targeted. Commit-side matches this against the
+  /// character's current state.
+  target_existing_text: string | null;
+  /// For description_weave: the old description. For list + update/remove:
+  /// the targeted existing text (mirrored here for convenient UI render).
+  /// For list + add: null.
   prior_content: string | null;
   justification: string;
 }
 
 export interface AppliedCanonUpdate extends ProposedCanonUpdate {
-  kept_id: string;
+  /// Present for add/update commits (a kept_records row was written).
+  /// Null for remove commits — the ledger records assertions kept, not
+  /// assertions deleted.
+  kept_id: string | null;
 }
 
 export interface UserProfile {

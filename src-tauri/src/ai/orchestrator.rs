@@ -2103,20 +2103,38 @@ pub struct CanonizationSubject {
 pub struct ProposedCanonUpdate {
     /// One of: description_weave / voice_rule / boundary / known_fact / open_loop.
     pub kind: String,
+    /// "add" | "update" | "remove". description_weave is always
+    /// effectively "update" (it rewrites the identity prose). List
+    /// kinds (voice_rule / boundary / known_fact / open_loop) use the
+    /// full trio: add appends, update replaces an existing item with
+    /// a nuanced version, remove deletes (rare).
+    #[serde(default = "default_add_action")]
+    pub action: String,
     pub subject_type: String,
     pub subject_id: String,
     pub subject_label: String,
     /// For description_weave: the full revised description to replace
     /// identity/description.
-    /// For appends (voice_rule / boundary / known_fact / open_loop):
-    /// the single bullet string to append to the list.
+    /// For list kinds + action=add: the single bullet string to append.
+    /// For list kinds + action=update: the REPLACEMENT for the target item.
+    /// For list kinds + action=remove: unused (may be blank or equal to target).
     pub new_content: String,
-    /// For description_weave only: the prior description, preserved so the
-    /// UI can render a before/after diff. Ignored for append kinds.
+    /// Present when `action ∈ {update, remove}` on a list kind — the exact
+    /// existing item the operation targets. Commit-side matches this
+    /// against the character's current list (trimmed, case-insensitive)
+    /// and fails loudly if no match is found. For `action=add` and for
+    /// description_weave this is None.
+    pub target_existing_text: Option<String>,
+    /// For description_weave: the prior description, preserved so the
+    /// UI can render a before/after diff. For list + update/remove: the
+    /// targeted existing text (duplicated here for convenient UI render).
+    /// For list + add: None.
     pub prior_content: Option<String>,
     /// One-sentence justification shown to the user before they commit.
     pub justification: String,
 }
+
+fn default_add_action() -> String { "add".to_string() }
 
 pub async fn propose_canonization_updates(
     base_url: &str,
@@ -2176,16 +2194,39 @@ The user clicked "Canonize" on this moment because it tells them something worth
 
 # Update kinds (pick the one that fits each finding)
 - **description_weave** — the moment reveals something fundamental about WHO the subject IS at their core. Requires rewriting the full current_description to integrate the truth organically. Use this when the moment shifts the reader's understanding of the subject in a load-bearing way. NOT for incidental facts, tics, or stated rules.
-- **voice_rule** — the moment shows HOW the subject speaks: a phrasing they reach for, a register they refuse, a tic, a turn, a vocabulary choice only they make. One short bullet appended.
-- **boundary** — the subject has stated or demonstrated a line they will not cross. A stated "won't / don't / not this" — a refusal the scene makes concrete. One short sentence appended.
-- **known_fact** — a concrete specific fact about the subject's life, past, relationships, preferences, habits, daily reality. Appended. Prefer specifics over themes ("takes coffee with a splash of cream, no sugar" beats "has strong feelings about coffee").
-- **open_loop** — an unresolved thread the subject is carrying: a question still hanging, a promise not yet kept, an intention not yet acted on, an ambivalence that hasn't settled. Phrased as the unresolved thing itself. Appended.
+- **voice_rule** — the moment shows HOW the subject speaks: a phrasing they reach for, a register they refuse, a tic, a turn, a vocabulary choice only they make. One short bullet.
+- **boundary** — the subject has stated or demonstrated a line they will not cross. A stated "won't / don't / not this" — a refusal the scene makes concrete. One short sentence.
+- **known_fact** — a concrete specific fact about the subject's life, past, relationships, preferences, habits, daily reality. Prefer specifics over themes ("takes coffee with a splash of cream, no sugar" beats "has strong feelings about coffee").
+- **open_loop** — an unresolved thread the subject is carrying: a question still hanging, a promise not yet kept, an intention not yet acted on, an ambivalence that hasn't settled. Phrased as the unresolved thing itself.
+
+# Action (what to do to the canonical record) — critical
+For list kinds (voice_rule / boundary / known_fact / open_loop), every update must specify one of:
+- **add** — append a NEW item. Use ONLY when the moment reveals something genuinely new that isn't already captured in the existing list.
+- **update** — REPLACE an existing item with a more nuanced version. Use this when existing canon is close but the moment refines it. **Strongly prefer `update` over `add` when the moment is really an evolution of something already on the list.** Duplicate-near-misses clutter the canon — refine in place instead.
+- **remove** — DELETE an existing item. Use RARELY. Only when the moment makes an existing item plainly false, superseded, or contradicted by this character's now-stated reality. Not for "doesn't seem as relevant anymore" — use update for that.
+
+For `description_weave`, action is always effectively "update" (the weave rewrites identity prose). You may set `action: "update"` or omit it.
+
+# target_existing_text (required for update / remove on list kinds)
+When action is `update` or `remove` on a list kind, you MUST include `target_existing_text` containing the EXACT existing item string being targeted, quoted verbatim from the candidate subject's current list. The commit-side matches this to the character's current state; near-misses fail. Quote exactly.
+
+When action is `add` or the kind is `description_weave`, omit `target_existing_text` (or set it to null).
+
+# Examples (illustrative)
+1. Current boundaries list for Darren contains: "Doesn't want a physical relationship." Moment reveals he's open to physical intimacy after marriage.
+   → action: "update", target_existing_text: "Doesn't want a physical relationship.", new_content: "Doesn't want a physical relationship outside of marriage."
+2. Current known_facts for Anna contains: "Takes her coffee black." Moment reveals she takes it with cream and no sugar now.
+   → action: "update", target_existing_text: "Takes her coffee black.", new_content: "Takes her coffee with a splash of cream, no sugar."
+3. Current known_facts for Joe contains: "Lives in Columbus, Ohio." Moment: Joe says "actually I've never been to Ohio, that was my brother."
+   → action: "remove", target_existing_text: "Lives in Columbus, Ohio.", new_content: "" (unused).
+4. No existing boundary on record; Darren states a new one.
+   → action: "add", new_content: "Doesn't discuss his first marriage.", target_existing_text: null.
 
 # Subjects
 You will be given one or more candidate subjects (each a character or the user). A moment can yield an update about any of them — the speaker, the addressee, a third party named, or the user. Route each update to the right subject. When a moment reveals one thing about the speaker and one thing about the addressee, two updates across two subjects is correct.
 
 # Avoid duplicating existing canon
-Every subject's current state is shown. Do NOT add a voice_rule / boundary / known_fact / open_loop that is already present in the existing list — if the canon already says it, the moment doesn't newly add it. If the moment only confirms existing canon, pick a different finding or reach for description_weave (which rewrites with deeper understanding rather than appending).
+Every subject's current state is shown. Do NOT add a voice_rule / boundary / known_fact / open_loop that is already present in the existing list — if the canon already says it, either update the existing entry (with nuance) or pick a different finding. An add that duplicates an existing item is a bug.
 
 # Don't dilute
 When you return TWO updates, each one must be separately load-bearing. Don't pad. If only one strong update exists, return only one. A single sharp update beats two mediocre ones.
@@ -2198,9 +2239,11 @@ The new_content must be the FULL revised description (not a diff, not a snippet)
   "updates": [
     {
       "kind": "description_weave" | "voice_rule" | "boundary" | "known_fact" | "open_loop",
+      "action": "add" | "update" | "remove",
       "subject_type": "character" | "user",
       "subject_id": "<exact id from the subject list>",
-      "new_content": "<full revised description for weave; short bullet string for appends>",
+      "target_existing_text": "<exact existing item for update/remove; null for add/weave>",
+      "new_content": "<full revised description for weave; replacement or new item for list kinds; empty string for remove>",
       "justification": "<one sentence explaining why this moment produces this update>"
     }
   ]
@@ -2245,8 +2288,13 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#.to_strin
     #[derive(serde::Deserialize)]
     struct RawUpdate {
         kind: String,
+        #[serde(default)]
+        action: Option<String>,
         subject_type: String,
         subject_id: String,
+        #[serde(default)]
+        target_existing_text: Option<String>,
+        #[serde(default)]
         new_content: String,
         justification: String,
     }
@@ -2256,24 +2304,75 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#.to_strin
     if parsed.updates.is_empty() {
         return Err("classifier returned zero updates — this is disallowed; retry".to_string());
     }
+    let valid_kinds = ["description_weave", "voice_rule", "boundary", "known_fact", "open_loop"];
+    let valid_actions = ["add", "update", "remove"];
     let mut out: Vec<ProposedCanonUpdate> = Vec::new();
     for (i, u) in parsed.updates.into_iter().take(2).enumerate() {
         let subject = subjects.iter()
             .find(|s| s.subject_type == u.subject_type && s.subject_id == u.subject_id)
             .ok_or_else(|| format!("update {} references unknown subject ({}/{})", i, u.subject_type, u.subject_id))?;
-        let valid_kinds = ["description_weave", "voice_rule", "boundary", "known_fact", "open_loop"];
         if !valid_kinds.contains(&u.kind.as_str()) {
             return Err(format!("update {} has unknown kind: {}", i, u.kind));
         }
+        // Normalize action: default to "add" for list kinds; always
+        // "update" for description_weave regardless of what the LLM said.
+        let action = if u.kind == "description_weave" {
+            "update".to_string()
+        } else {
+            u.action.as_deref().unwrap_or("add").to_string()
+        };
+        if !valid_actions.contains(&action.as_str()) {
+            return Err(format!("update {} has unknown action: {}", i, action));
+        }
+        // target_existing_text sanity: required for update/remove on list
+        // kinds; null for add/weave.
+        let target = u.target_existing_text.map(|s| s.trim().to_string()).filter(|s| !s.is_empty());
+        if u.kind != "description_weave" && (action == "update" || action == "remove") && target.is_none() {
+            return Err(format!(
+                "update {}: action={} on {} requires target_existing_text",
+                i, action, u.kind
+            ));
+        }
+        // For list-kind updates/removes, verify the target text actually
+        // appears in the subject's current list (trimmed, case-insensitive).
+        if u.kind != "description_weave" && (action == "update" || action == "remove") {
+            let current_list: &[String] = match u.kind.as_str() {
+                "voice_rule" => &subject.voice_rules,
+                "boundary" => &subject.boundaries,
+                "known_fact" => &subject.backstory_facts,
+                "open_loop" => &subject.open_loops,
+                _ => &[],
+            };
+            let target_text = target.as_deref().unwrap_or("");
+            let matches = current_list.iter().any(|item| {
+                item.trim().eq_ignore_ascii_case(target_text)
+            });
+            if !matches {
+                return Err(format!(
+                    "update {}: action={} on {} references target not found in current list: {:?}",
+                    i, action, u.kind, target_text
+                ));
+            }
+        }
+        // prior_content population:
+        //   - description_weave: current identity/description prose
+        //   - list update/remove: the targeted existing text (for UI "before")
+        //   - list add: None
         let prior = if u.kind == "description_weave" {
             Some(subject.current_description.clone())
-        } else { None };
+        } else if action == "update" || action == "remove" {
+            target.clone()
+        } else {
+            None
+        };
         out.push(ProposedCanonUpdate {
             kind: u.kind,
+            action,
             subject_type: subject.subject_type.clone(),
             subject_id: subject.subject_id.clone(),
             subject_label: subject.subject_label.clone(),
             new_content: u.new_content.trim().to_string(),
+            target_existing_text: target,
             prior_content: prior,
             justification: u.justification.trim().to_string(),
         });

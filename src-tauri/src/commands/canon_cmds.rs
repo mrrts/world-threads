@@ -374,8 +374,11 @@ pub struct CommitAutoCanonRequest {
 #[derive(Debug, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct AppliedCanonUpdate {
-    pub kept_id: String,
+    /// Present for add/update commits; None for remove (nothing kept —
+    /// the removal is its own artifact on the subject's current state).
+    pub kept_id: Option<String>,
     pub kind: String,
+    pub action: String,
     pub subject_type: String,
     pub subject_id: String,
     pub subject_label: String,
@@ -409,13 +412,25 @@ pub fn commit_auto_canon_cmd(
 
     let mut applied: Vec<AppliedCanonUpdate> = Vec::new();
     for u in &request.updates {
+        // Normalize fields for this update.
+        let kind = u.kind.as_str();
+        let action = if kind == "description_weave" { "update" } else { u.action.as_str() };
         let trimmed = u.new_content.trim().to_string();
-        if trimmed.is_empty() {
-            return Err(format!("update for {} has empty content", u.subject_label));
+        let target = u.target_existing_text.as_ref().map(|s| s.trim().to_string()).filter(|s| !s.is_empty());
+
+        // Validate content vs. action expectations.
+        if action != "remove" && trimmed.is_empty() {
+            return Err(format!("{} on {} has empty content", action, u.subject_label));
+        }
+        if action == "update" || action == "remove" {
+            if target.is_none() {
+                return Err(format!("{} on {} requires target_existing_text", action, u.subject_label));
+            }
         }
 
-        // Apply side effect based on kind + subject_type.
-        let prior_for_report: Option<String> = match (u.subject_type.as_str(), u.kind.as_str()) {
+        // Execute side effect. For list kinds we dispatch on (kind, action);
+        // for description_weave we always do a full rewrite.
+        let (prior_for_report, kept_id): (Option<String>, Option<String>) = match (u.subject_type.as_str(), kind) {
             ("character", "description_weave") => {
                 let ch = get_character(&conn, &u.subject_id).map_err(|e| e.to_string())?;
                 let prior = ch.identity.clone();
@@ -423,23 +438,59 @@ pub fn commit_auto_canon_cmd(
                     "UPDATE characters SET identity = ?2, updated_at = datetime('now') WHERE character_id = ?1",
                     params![u.subject_id, trimmed],
                 ).map_err(|e| e.to_string())?;
-                Some(prior)
+                let id = write_kept_record(&conn, u, &trimmed, &request)?;
+                (Some(prior), Some(id))
             }
-            ("character", "voice_rule") => {
-                append_character_list(&conn, &u.subject_id, "voice_rules", &trimmed)?;
-                None
-            }
-            ("character", "boundary") => {
-                append_character_list(&conn, &u.subject_id, "boundaries", &trimmed)?;
-                None
-            }
-            ("character", "known_fact") => {
-                append_character_list(&conn, &u.subject_id, "backstory_facts", &trimmed)?;
-                None
+            ("character", list_kind @ ("voice_rule" | "boundary" | "known_fact")) => {
+                let field = match list_kind {
+                    "voice_rule" => "voice_rules",
+                    "boundary" => "boundaries",
+                    _ => "backstory_facts",
+                };
+                match action {
+                    "add" => {
+                        append_character_list(&conn, &u.subject_id, field, &trimmed)?;
+                        let id = write_kept_record(&conn, u, &trimmed, &request)?;
+                        (None, Some(id))
+                    }
+                    "update" => {
+                        let target_text = target.as_deref().unwrap();
+                        replace_character_list_item(&conn, &u.subject_id, field, target_text, &trimmed)?;
+                        let id = write_kept_record(&conn, u, &trimmed, &request)?;
+                        (Some(target_text.to_string()), Some(id))
+                    }
+                    "remove" => {
+                        let target_text = target.as_deref().unwrap();
+                        remove_character_list_item(&conn, &u.subject_id, field, target_text)?;
+                        // Remove ops do not write a kept_records row — the
+                        // ledger records assertions kept, not assertions
+                        // deleted. The removal is audible in the
+                        // character's current state.
+                        (Some(target_text.to_string()), None)
+                    }
+                    other => return Err(format!("unknown action: {other}")),
+                }
             }
             ("character", "open_loop") => {
-                append_character_state_open_loop(&conn, &u.subject_id, &trimmed)?;
-                None
+                match action {
+                    "add" => {
+                        append_character_state_open_loop(&conn, &u.subject_id, &trimmed)?;
+                        let id = write_kept_record(&conn, u, &trimmed, &request)?;
+                        (None, Some(id))
+                    }
+                    "update" => {
+                        let target_text = target.as_deref().unwrap();
+                        replace_character_open_loop(&conn, &u.subject_id, target_text, &trimmed)?;
+                        let id = write_kept_record(&conn, u, &trimmed, &request)?;
+                        (Some(target_text.to_string()), Some(id))
+                    }
+                    "remove" => {
+                        let target_text = target.as_deref().unwrap();
+                        remove_character_open_loop(&conn, &u.subject_id, target_text)?;
+                        (Some(target_text.to_string()), None)
+                    }
+                    other => return Err(format!("unknown action: {other}")),
+                }
             }
             ("user", "description_weave") => {
                 let prior = get_user_profile(&conn, &u.subject_id).map(|p| p.description).unwrap_or_default();
@@ -447,49 +498,65 @@ pub fn commit_auto_canon_cmd(
                     "UPDATE user_profiles SET description = ?2, updated_at = datetime('now') WHERE world_id = ?1",
                     params![u.subject_id, trimmed],
                 ).map_err(|e| e.to_string())?;
-                Some(prior)
+                let id = write_kept_record(&conn, u, &trimmed, &request)?;
+                (Some(prior), Some(id))
             }
             ("user", _other) => {
                 // The user profile today doesn't carry voice_rules /
-                // boundaries / backstory_facts / open_loops. Reject with a
-                // clear message rather than silently dropping the intent.
+                // boundaries / backstory_facts / open_loops.
                 return Err(format!(
                     "{} is not yet supported for subject_type=user — only description_weave is applicable to the user profile",
-                    u.kind
+                    kind
                 ));
             }
             (st, k) => return Err(format!("unsupported (subject_type={st}, kind={k})")),
         };
 
-        let kept_id = uuid::Uuid::new_v4().to_string();
-        let entry = KeptRecord {
-            kept_id: kept_id.clone(),
-            source_message_id: Some(request.source_message_id.clone()),
-            source_thread_id: source_thread_id.clone(),
-            source_world_day,
-            source_created_at: source_created_at.clone(),
-            subject_type: u.subject_type.clone(),
-            subject_id: u.subject_id.clone(),
-            record_type: u.kind.clone(),
-            content: trimmed.clone(),
-            user_note: request.user_note.clone(),
-            created_at: Utc::now().to_rfc3339(),
-        };
-        create_kept_record(&conn, &entry).map_err(|e| e.to_string())?;
-
         applied.push(AppliedCanonUpdate {
             kept_id,
             kind: u.kind.clone(),
+            action: action.to_string(),
             subject_type: u.subject_type.clone(),
             subject_id: u.subject_id.clone(),
             subject_label: u.subject_label.clone(),
-            new_content: trimmed,
+            new_content: if action == "remove" { String::new() } else { trimmed },
             prior_content: prior_for_report,
             justification: u.justification.clone(),
         });
     }
 
     Ok(applied)
+}
+
+/// Write a kept_records row for an add/update. Factored out so the three
+/// commit arms that produce a ledger entry share one code path (and so
+/// remove ops can skip calling it entirely).
+fn write_kept_record(
+    conn: &rusqlite::Connection,
+    u: &orchestrator::ProposedCanonUpdate,
+    content: &str,
+    request: &CommitAutoCanonRequest,
+) -> Result<String, String> {
+    let (source_thread_id, source_world_day, source_created_at) = match find_message(conn, &request.source_message_id) {
+        Some((m, _)) => (Some(m.thread_id), m.world_day, Some(m.created_at)),
+        None => (None, None, None),
+    };
+    let kept_id = uuid::Uuid::new_v4().to_string();
+    let entry = KeptRecord {
+        kept_id: kept_id.clone(),
+        source_message_id: Some(request.source_message_id.clone()),
+        source_thread_id,
+        source_world_day,
+        source_created_at,
+        subject_type: u.subject_type.clone(),
+        subject_id: u.subject_id.clone(),
+        record_type: u.kind.clone(),
+        content: content.to_string(),
+        user_note: request.user_note.clone(),
+        created_at: Utc::now().to_rfc3339(),
+    };
+    create_kept_record(conn, &entry).map_err(|e| e.to_string())?;
+    Ok(kept_id)
 }
 
 /// Append `value` to the JSON-array field `field` on character `id`.
@@ -515,6 +582,161 @@ fn append_character_list(
         &format!("UPDATE characters SET {field} = ?2, updated_at = datetime('now') WHERE character_id = ?1"),
         params![character_id, new_json],
     ).map_err(|e| format!("character update failed: {e}"))?;
+    Ok(())
+}
+
+/// Replace an existing string entry in a character's JSON-array field
+/// with a new value. Matches the target trimmed + case-insensitive.
+/// Fails loudly if no match. Replaces the FIRST match only (duplicates
+/// are rare and replacing-all would change semantics the caller didn't
+/// ask for).
+fn replace_character_list_item(
+    conn: &rusqlite::Connection,
+    character_id: &str,
+    field: &str,
+    target: &str,
+    replacement: &str,
+) -> Result<(), String> {
+    let current_json: String = conn.query_row(
+        &format!("SELECT {field} FROM characters WHERE character_id = ?1"),
+        params![character_id], |r| r.get(0),
+    ).map_err(|e| format!("character load failed: {e}"))?;
+    let mut arr: Vec<serde_json::Value> = serde_json::from_str(&current_json)
+        .unwrap_or_else(|_| Vec::new());
+    let target_norm = target.trim().to_ascii_lowercase();
+    let mut replaced = false;
+    for v in arr.iter_mut() {
+        if let Some(s) = v.as_str() {
+            if s.trim().to_ascii_lowercase() == target_norm {
+                *v = serde_json::Value::String(replacement.to_string());
+                replaced = true;
+                break;
+            }
+        }
+    }
+    if !replaced {
+        return Err(format!("target not found in {field}: {target:?}"));
+    }
+    let new_json = serde_json::to_string(&arr).map_err(|e| e.to_string())?;
+    conn.execute(
+        &format!("UPDATE characters SET {field} = ?2, updated_at = datetime('now') WHERE character_id = ?1"),
+        params![character_id, new_json],
+    ).map_err(|e| format!("character update failed: {e}"))?;
+    Ok(())
+}
+
+/// Remove an existing string entry from a character's JSON-array field.
+/// Matches the target trimmed + case-insensitive. Fails loudly if no
+/// match. Removes the FIRST match only.
+fn remove_character_list_item(
+    conn: &rusqlite::Connection,
+    character_id: &str,
+    field: &str,
+    target: &str,
+) -> Result<(), String> {
+    let current_json: String = conn.query_row(
+        &format!("SELECT {field} FROM characters WHERE character_id = ?1"),
+        params![character_id], |r| r.get(0),
+    ).map_err(|e| format!("character load failed: {e}"))?;
+    let mut arr: Vec<serde_json::Value> = serde_json::from_str(&current_json)
+        .unwrap_or_else(|_| Vec::new());
+    let target_norm = target.trim().to_ascii_lowercase();
+    let before_len = arr.len();
+    let mut removed_once = false;
+    arr.retain(|v| {
+        if removed_once { return true; }
+        match v.as_str() {
+            Some(s) if s.trim().to_ascii_lowercase() == target_norm => {
+                removed_once = true;
+                false
+            }
+            _ => true,
+        }
+    });
+    if arr.len() == before_len {
+        return Err(format!("target not found in {field}: {target:?}"));
+    }
+    let new_json = serde_json::to_string(&arr).map_err(|e| e.to_string())?;
+    conn.execute(
+        &format!("UPDATE characters SET {field} = ?2, updated_at = datetime('now') WHERE character_id = ?1"),
+        params![character_id, new_json],
+    ).map_err(|e| format!("character update failed: {e}"))?;
+    Ok(())
+}
+
+/// Replace an existing string entry in `state.open_loops` with a new
+/// value. Trimmed + case-insensitive match; fails loudly if no match.
+fn replace_character_open_loop(
+    conn: &rusqlite::Connection,
+    character_id: &str,
+    target: &str,
+    replacement: &str,
+) -> Result<(), String> {
+    let current_json: String = conn.query_row(
+        "SELECT state FROM characters WHERE character_id = ?1",
+        params![character_id], |r| r.get(0),
+    ).map_err(|e| format!("character load failed: {e}"))?;
+    let mut state: serde_json::Value = serde_json::from_str(&current_json)
+        .unwrap_or_else(|_| serde_json::json!({}));
+    let target_norm = target.trim().to_ascii_lowercase();
+    let mut replaced = false;
+    if let Some(loops) = state.get_mut("open_loops").and_then(|v| v.as_array_mut()) {
+        for v in loops.iter_mut() {
+            if let Some(s) = v.as_str() {
+                if s.trim().to_ascii_lowercase() == target_norm {
+                    *v = serde_json::Value::String(replacement.to_string());
+                    replaced = true;
+                    break;
+                }
+            }
+        }
+    }
+    if !replaced {
+        return Err(format!("target not found in open_loops: {target:?}"));
+    }
+    let new_json = serde_json::to_string(&state).map_err(|e| e.to_string())?;
+    conn.execute(
+        "UPDATE characters SET state = ?2, updated_at = datetime('now') WHERE character_id = ?1",
+        params![character_id, new_json],
+    ).map_err(|e| format!("character state update failed: {e}"))?;
+    Ok(())
+}
+
+/// Remove an existing entry from `state.open_loops`. Trimmed +
+/// case-insensitive match; fails loudly if no match.
+fn remove_character_open_loop(
+    conn: &rusqlite::Connection,
+    character_id: &str,
+    target: &str,
+) -> Result<(), String> {
+    let current_json: String = conn.query_row(
+        "SELECT state FROM characters WHERE character_id = ?1",
+        params![character_id], |r| r.get(0),
+    ).map_err(|e| format!("character load failed: {e}"))?;
+    let mut state: serde_json::Value = serde_json::from_str(&current_json)
+        .unwrap_or_else(|_| serde_json::json!({}));
+    let target_norm = target.trim().to_ascii_lowercase();
+    let mut removed = false;
+    if let Some(loops) = state.get_mut("open_loops").and_then(|v| v.as_array_mut()) {
+        let before = loops.len();
+        let mut once = false;
+        loops.retain(|v| {
+            if once { return true; }
+            match v.as_str() {
+                Some(s) if s.trim().to_ascii_lowercase() == target_norm => { once = true; false }
+                _ => true,
+            }
+        });
+        removed = loops.len() < before;
+    }
+    if !removed {
+        return Err(format!("target not found in open_loops: {target:?}"));
+    }
+    let new_json = serde_json::to_string(&state).map_err(|e| e.to_string())?;
+    conn.execute(
+        "UPDATE characters SET state = ?2, updated_at = datetime('now') WHERE character_id = ?1",
+        params![character_id, new_json],
+    ).map_err(|e| format!("character state update failed: {e}"))?;
     Ok(())
 }
 

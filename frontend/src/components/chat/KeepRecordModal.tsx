@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Loader2, RotateCw, ScrollText, Sparkles } from "lucide-react";
+import { Loader2, RotateCw, ScrollText, Sparkles, X } from "lucide-react";
 import {
   api,
   type KeptRecord,
@@ -12,6 +12,7 @@ import {
   type ProposedCanonUpdate,
   type AppliedCanonUpdate,
   type CanonKind,
+  type CanonAction,
 } from "@/lib/tauri";
 
 /// Props kept compatible with the previous modal so existing callers
@@ -102,9 +103,11 @@ export function KeepRecordModal({
       });
       setApplied(got);
       setPhase("applied");
-      // Fire onSaved per applied update so the parent's toast/log logic
-      // (which expects one call per saved KeptRecord) keeps working.
+      // Fire onSaved per applied update that wrote a kept_records row.
+      // Remove ops don't write a ledger entry (see canon_cmds.rs), so
+      // they're reported to the UI but not as "saved records."
       for (const a of got) {
+        if (!a.kept_id) continue;
         onSaved({
           entry: {
             kept_id: a.kept_id,
@@ -198,8 +201,14 @@ export function KeepRecordModal({
                   key={i}
                   proposal={p}
                   onContentChange={(next) => updateProposalAt(i, { new_content: next })}
+                  onSkip={() => setProposals((prev) => prev.filter((_, idx) => idx !== i))}
                 />
               ))}
+              {proposals.length === 0 && (
+                <div className="rounded-lg border border-border/60 bg-secondary/10 p-3 text-xs text-muted-foreground text-center">
+                  All proposals skipped. Regenerate to get a new set, or cancel.
+                </div>
+              )}
               <div>
                 <label className="text-xs font-medium text-muted-foreground block mb-1.5">
                   Optional note (why this matters to you — stored on every record)
@@ -267,24 +276,45 @@ export function KeepRecordModal({
 /// CharacterEditor shape for that kind:
 /// - description_weave → big textarea (with "before" collapsible)
 /// - voice_rule / boundary / known_fact / open_loop → single-line input
+/// Destructive actions (update / remove) are visually distinguished:
+/// - update: amber accent, "before" shown above the editable replacement
+/// - remove: rose accent, target shown struck-through, no editable field
+/// - add (default): neutral accent, new content in an editable input
 function ProposalCard({
   proposal,
   onContentChange,
+  onSkip,
 }: {
   proposal: ProposedCanonUpdate;
   onContentChange: (next: string) => void;
+  onSkip: () => void;
 }) {
   const label = KIND_LABEL[proposal.kind];
   const isWeave = proposal.kind === "description_weave";
+  const actionStyle = ACTION_STYLES[proposal.action];
+  const isRemove = proposal.action === "remove";
   return (
-    <div className="rounded-lg border border-border/60 bg-secondary/20 p-3 space-y-2">
+    <div className={`rounded-lg border ${actionStyle.border} ${actionStyle.bg} p-3 space-y-2 relative`}>
       <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[10px] uppercase tracking-wider font-semibold text-primary bg-primary/10 border border-primary/30 rounded px-1.5 py-0.5">
             {label}
           </span>
+          {proposal.action !== "add" && (
+            <span className={`text-[10px] uppercase tracking-wider font-semibold ${actionStyle.badgeText} ${actionStyle.badgeBg} ${actionStyle.badgeBorder} border rounded px-1.5 py-0.5`}>
+              {ACTION_LABEL[proposal.action]}
+            </span>
+          )}
           <span className="text-xs text-muted-foreground">for {proposal.subject_label}</span>
         </div>
+        <button
+          onClick={onSkip}
+          title="Skip this proposal"
+          aria-label="Skip this proposal"
+          className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer p-0.5 -mt-0.5 -mr-0.5"
+        >
+          <X size={14} />
+        </button>
       </div>
       {proposal.justification && (
         <div className="text-[11px] text-muted-foreground italic leading-snug">
@@ -310,6 +340,26 @@ function ProposalCard({
             </details>
           )}
         </>
+      ) : isRemove ? (
+        <div className="rounded-md border border-rose-500/30 bg-rose-500/5 px-3 py-2 text-sm">
+          <span className="text-[10px] uppercase tracking-wider text-rose-700 dark:text-rose-400 mr-2">will remove:</span>
+          <span className="line-through text-muted-foreground">{proposal.target_existing_text ?? ""}</span>
+        </div>
+      ) : proposal.action === "update" ? (
+        <>
+          {proposal.target_existing_text && (
+            <div className="rounded-md border border-border/40 bg-secondary/10 px-3 py-1.5 text-xs">
+              <span className="text-[10px] uppercase tracking-wider text-muted-foreground mr-2">current:</span>
+              <span className="text-muted-foreground">{proposal.target_existing_text}</span>
+            </div>
+          )}
+          <input
+            value={proposal.new_content}
+            onChange={(e) => onContentChange(e.target.value)}
+            placeholder="Replacement text"
+            className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+          />
+        </>
       ) : (
         <input
           value={proposal.new_content}
@@ -322,18 +372,29 @@ function ProposalCard({
 }
 
 /// Applied-state row — read-only summary of what just happened.
+/// Uses the same action-color scheme as the preview card so "what was
+/// proposed" and "what was applied" are visually consistent.
 function AppliedCard({ applied }: { applied: AppliedCanonUpdate }) {
   const label = KIND_LABEL[applied.kind];
   const isWeave = applied.kind === "description_weave";
+  const style = ACTION_STYLES[applied.action];
   return (
-    <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3 space-y-1.5">
-      <div className="flex items-center gap-2">
-        <span className="text-[10px] uppercase tracking-wider font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 rounded px-1.5 py-0.5">
+    <div className={`rounded-lg border ${style.border} ${style.bg} p-3 space-y-1.5`}>
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-[10px] uppercase tracking-wider font-semibold text-primary bg-primary/10 border border-primary/30 rounded px-1.5 py-0.5">
           {label}
+        </span>
+        <span className={`text-[10px] uppercase tracking-wider font-semibold ${style.badgeText} ${style.badgeBg} ${style.badgeBorder} border rounded px-1.5 py-0.5`}>
+          {ACTION_LABEL[applied.action]}
         </span>
         <span className="text-xs text-muted-foreground">for {applied.subject_label}</span>
       </div>
-      {isWeave ? (
+      {applied.action === "remove" ? (
+        <div className="text-sm">
+          <span className="text-[10px] uppercase tracking-wider text-rose-700 dark:text-rose-400 mr-2">removed:</span>
+          <span className="line-through text-muted-foreground">{applied.prior_content ?? applied.target_existing_text ?? ""}</span>
+        </div>
+      ) : isWeave ? (
         <>
           <div className="text-sm whitespace-pre-wrap">{applied.new_content}</div>
           {applied.prior_content && applied.prior_content.trim() && (
@@ -346,6 +407,13 @@ function AppliedCard({ applied }: { applied: AppliedCanonUpdate }) {
               </div>
             </details>
           )}
+        </>
+      ) : applied.action === "update" ? (
+        <>
+          {applied.prior_content && (
+            <div className="text-xs text-muted-foreground line-through">{applied.prior_content}</div>
+          )}
+          <div className="text-sm">{applied.new_content}</div>
         </>
       ) : (
         <div className="text-sm">{applied.new_content}</div>
@@ -360,4 +428,40 @@ const KIND_LABEL: Record<CanonKind, string> = {
   boundary: "Boundary",
   known_fact: "Known fact",
   open_loop: "Open loop",
+};
+
+const ACTION_LABEL: Record<CanonAction, string> = {
+  add: "Add",
+  update: "Update",
+  remove: "Remove",
+};
+
+const ACTION_STYLES: Record<CanonAction, {
+  border: string;
+  bg: string;
+  badgeText: string;
+  badgeBg: string;
+  badgeBorder: string;
+}> = {
+  add: {
+    border: "border-border/60",
+    bg: "bg-secondary/20",
+    badgeText: "text-emerald-700 dark:text-emerald-400",
+    badgeBg: "bg-emerald-500/10",
+    badgeBorder: "border-emerald-500/30",
+  },
+  update: {
+    border: "border-amber-500/30",
+    bg: "bg-amber-500/5",
+    badgeText: "text-amber-700 dark:text-amber-400",
+    badgeBg: "bg-amber-500/10",
+    badgeBorder: "border-amber-500/30",
+  },
+  remove: {
+    border: "border-rose-500/30",
+    bg: "bg-rose-500/5",
+    badgeText: "text-rose-700 dark:text-rose-400",
+    badgeBg: "bg-rose-500/10",
+    badgeBorder: "border-rose-500/30",
+  },
 };
