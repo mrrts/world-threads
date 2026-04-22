@@ -982,15 +982,19 @@ FORBIDDEN (cut on sight):
 - Abstract virtue words ("gratitude", "peace", "contentment") without the specific cause + observable moment that produced them.
 
 REQUIRED (the shape EVERY item must take):
-- "tired" → "tired from carrying Aaron's question across the afternoon"
+- "tired" → "tired from carrying Aaron's question — 'when did you last say the hard thing first?' — across the afternoon"
 - "a worry" → "whether the back-door latch catches before the weather turns"
-- "a song" → "the second verse of that hymn his mother hummed when the bread rose"
-- "an objective" → "to write Darren the letter tonight no matter how tired"
+- "a song" → "the second verse of 'It Is Well' — the 'when sorrows like sea billows roll' line — that his mother hummed shaping the Sunday bread"
+- "an objective" → "to write Darren tonight: one paragraph, no excuses, the apology for the harder thing said by the canal — no matter how tired"
 - "contentment" → "the contentment that settled when the kettle caught and the light shifted west"
 - "a memory" → "his grandmother's hands on the stove rail, the year the river froze"
-- "a folded note" → "the folded note from Aaron with the ferry dock circled and the word maybe crossed out twice"
+- "a folded note" → "the folded note from Aaron with the ferry dock circled and the word 'maybe' crossed out twice"
+- "a name almost said" → "the name 'Will' almost said when Ryan asked who he'd lost — caught it behind his teeth, swallowed coffee instead"
+- "a truth they sat with" → "I should have spoken sooner — the sentence that arrived at the bridge and didn't leave"
 
-When you catch yourself writing a vague item, STOP. Ask: "what specific thing is under this?" Rewrite at the level of evidence — a hand, a room, a cup, a silence, a named person, a specific hour, a particular phrase.
+Notice what the strongest examples do: they QUOTE actual phrases ("'when did you last say the hard thing first?'", "'maybe' crossed out twice", "I should have spoken sooner"), NAME specific people and objects ('It Is Well', the canal, Will, the ferry dock), and could only belong to THIS character on THIS day. A label-level item ("Aaron's question", "a hymn", "the letter") is never enough — reach for the literal words, the literal name, the literal mark on the paper. If the page didn't give you the literal, INVENT a literal that would fit who this character is — but never settle for the gesture-level pointer.
+
+When you catch yourself writing a vague item, STOP. Ask: "what specific thing is under this?" Rewrite at the level of evidence — a hand, a room, a cup, a silence, a named person, a specific hour, a particular phrase. If a phrase is under it, QUOTE the phrase.
 
 If a hook is on the page (a name someone said, an object actually mentioned, a phrase actually quoted), REACH FOR IT FIRST — the literal detail is usually stronger than any invention. If no hook is on the page, INVENT a small concrete angle consistent with the character's identity, profession, setting. What's forbidden is inventing new facts that contradict identity/history; what's REQUIRED is making each item specific.
 
