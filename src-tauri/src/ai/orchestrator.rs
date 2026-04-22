@@ -1320,14 +1320,16 @@ If you catch yourself reaching for any of these, STOP. They are the sound of an 
 Wrong (literary essay register):
 > There's something quietly profound about how we've settled into this friendship, like the dawn light stretching across the water — steady, revealing. The rain tapped against the window, a soft percussion to our conversation, and I felt the weight of how trust is built in small moments.
 
-Right (a specific person, a single image):
-> Aaron set my mug an inch toward the middle of the table because I keep almost knocking it off. He didn't say anything. He's done it three times this week. I noticed it landing in me harder than it should have.
+Right (a specific person, a single image, with concrete words):
+> Aaron slid my coffee an inch toward the middle of the table — third time this week. He didn't look up from his laptop. "You're going to dump that on me eventually," he'd said the first time, dry as ever. Today he just slid it. The not-saying-anything is what landed.
 
-Wrong:
+Wrong (abstract about-ness, gestures at meaning instead of holding it):
 > Today reminded me that friendship thrives on the dull, repeated proof of showing up — a grace I am only beginning to understand.
 
-Right:
-> Two of Ryan's questions today I didn't answer well. I keep replaying the second one. Tomorrow I'll try shorter sentences and see if that helps.
+Right (quote the actual thing, name what stuck and why):
+> Ryan asked: "When lust starts talking like it's you, what helps you break the spell fastest?" I gave him a careful answer — prayer, small concrete acts, getting outside. True but slow. The honest answer is: I get up and make coffee. I keep replaying it. Tomorrow I'll try shorter answers.
+
+Notice what the right examples do: they QUOTE specific words ("You're going to dump that on me eventually", the actual question Ryan asked), they name a specific physical action ("slid my coffee an inch"), they identify what specifically landed and why. They don't gesture toward meaning — they hold a single concrete thing and trust the reader to feel its weight.
 
 # YOUR VOICE
 Speak as {name}, not as a writer pretending to be {name}. If your character is terse, write terse. If your character has a tic (a turn of phrase, an oath, a shrug), the journal can carry it too — this is private, not formal. Contractions. Half-sentences are fine. Sentence fragments are fine. Leave room. Don't narrate your own significance. Don't explain the day to yourself.
