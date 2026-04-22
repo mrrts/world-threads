@@ -5,8 +5,11 @@ import { X, Loader2, Sparkles, Trash2, Plus, PanelLeftClose, PanelLeftOpen, Imag
 import { listen } from "@tauri-apps/api/event";
 import { api, type ImaginedChapter, type ImaginedChapterStageEvent, type ImaginedChapterImageEvent, type ImaginedChapterDoneEvent } from "@/lib/tauri";
 import { Button } from "@/components/ui/button";
-import { chatFontPx } from "@/lib/chat-font";
+import { chatFontPx, CHAT_FONT_SIZES_PX } from "@/lib/chat-font";
+import { FontSizeAdjuster } from "@/components/chat/FontSizeAdjuster";
 import { remarkPlugins, rehypePlugins, markdownComponents } from "./formatMessage";
+
+const CHAPTER_FONT_SIZE_KEY = "imagined_chapter.font_size";
 
 interface Props {
   open: boolean;
@@ -21,8 +24,10 @@ interface Props {
   worldImageUrl?: string;
   /** Whether to play a chime on first token of writing phase. */
   notifyOnMessage: boolean;
-  /** Chat font size shared with ChatView/GroupChatView. */
-  chatFontSize: string;
+  /** Chat font size — used as the initial default for the chapter view's
+   *  font-size adjuster (overridable in-modal and persisted in
+   *  localStorage). 0..CHAT_FONT_SIZES_PX.length-1, default 2. */
+  chatFontSize: number;
   /** If provided, the modal opens directly to this chapter instead of the compose view. */
   openChapterId?: string | null;
   /** Bubble up "canonize this chapter" — parent opens its KeepRecordModal
@@ -65,6 +70,24 @@ export function ImaginedChapterModal({
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const generatingRef = useRef(false);
+
+  // Chapter-local font size — defaults to chatFontSize on first open,
+  // then sticks via localStorage so the reading size carries across modal
+  // sessions independent of chat. Clamped to the chat-font ladder.
+  const [chapterFontSize, setChapterFontSize] = useState<number>(() => {
+    try {
+      const stored = localStorage.getItem(CHAPTER_FONT_SIZE_KEY);
+      if (stored !== null) {
+        const n = parseInt(stored, 10);
+        if (!Number.isNaN(n)) return Math.max(0, Math.min(CHAT_FONT_SIZES_PX.length - 1, n));
+      }
+    } catch { /* ignore — fall through to default */ }
+    return chatFontSize;
+  });
+  function persistChapterFontSize(n: number) {
+    setChapterFontSize(n);
+    try { localStorage.setItem(CHAPTER_FONT_SIZE_KEY, String(n)); } catch { /* private mode etc. */ }
+  }
 
   const loadChapters = useCallback(async () => {
     try {
@@ -370,7 +393,9 @@ export function ImaginedChapterModal({
                   imageUrl={streamImage}
                   content={streamContent}
                   phase={phase}
-                  fontPx={chatFontPx(chatFontSize)}
+                  fontPx={chatFontPx(chapterFontSize)}
+                  fontSizeLevel={chapterFontSize}
+                  onChangeFontSize={persistChapterFontSize}
                 />
               )}
 
@@ -381,7 +406,9 @@ export function ImaginedChapterModal({
                     imageUrl={activeImageUrl}
                     content={activeChapterData.content}
                     phase="done"
-                    fontPx={chatFontPx(chatFontSize)}
+                    fontPx={chatFontPx(chapterFontSize)}
+                    fontSizeLevel={chapterFontSize}
+                    onChangeFontSize={persistChapterFontSize}
                   />
                   {onCanonize && activeChapterData.breadcrumb_message_id && (
                     <div className="max-w-2xl mx-auto mt-6 pt-4 border-t border-amber-900/15 flex justify-center">
@@ -549,12 +576,16 @@ function ChapterView({
   content,
   phase,
   fontPx,
+  fontSizeLevel,
+  onChangeFontSize,
 }: {
   title: string;
   imageUrl: string;
   content: string;
   phase: "idle" | "inventing" | "rendering" | "writing" | "done";
   fontPx: number;
+  fontSizeLevel: number;
+  onChangeFontSize: (next: number) => void;
 }) {
   // Drop-cap: render the first character of the content as a large
   // ornamental letter, like the day-pages novelization.
@@ -589,6 +620,14 @@ function ChapterView({
         <div className="flex items-center gap-2 text-sm text-amber-900/60 mb-4">
           <Loader2 size={14} className="animate-spin" />
           <span>Writing the chapter…</span>
+        </div>
+      )}
+
+      {/* Font-size adjuster — shown above the prose so the reader can dial
+          the chapter to a comfortable size. Right-aligned, unobtrusive. */}
+      {content.length > 0 && (
+        <div className="flex justify-end mb-3">
+          <FontSizeAdjuster value={fontSizeLevel} onChange={onChangeFontSize} />
         </div>
       )}
 

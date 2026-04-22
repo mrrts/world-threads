@@ -1073,7 +1073,7 @@ fn protagonist_framing_dialogue(
 /// the tone is the RULING register — not a flavor on top of default
 /// voice. Returns None for "Auto" / empty so those cases fall through
 /// to the character's default register.
-fn tone_directive(tone: &str) -> Option<String> {
+pub fn tone_directive(tone: &str) -> Option<String> {
     let t = tone.trim();
     if t.is_empty() || t.eq_ignore_ascii_case("Auto") { return None; }
 
@@ -3396,6 +3396,10 @@ pub fn build_scene_invention_prompt(
     // texture and current state, not as a recap.
     recent_history: &[crate::db::queries::ConversationLine],
     seed_hint: Option<&str>,
+    // The chat's current tone setting (e.g. "Playful", "Reverent",
+    // "Dark & Gritty"). Shapes BOTH what kind of moment gets invented
+    // AND how the image is rendered. None or "Auto" = no tone block.
+    tone: Option<&str>,
     // When set: the new chapter should chronologically + thematically
     // continue from this previous chapter. Pass the prior chapter's
     // full prose; the prompt extracts what it needs without overwhelming.
@@ -3493,6 +3497,13 @@ pub fn build_scene_invention_prompt(
         s
     };
 
+    let tone_block = tone.and_then(|t| tone_directive(t)).map(|td| {
+        format!(
+            "\nTONE — RULING REGISTER FOR THIS CHAPTER:\n{}\nThe scene you invent must fit this register, AND the image_prompt's mood/light/atmosphere must visually carry it. Do not pick a moment that fights this tone.\n",
+            td.trim()
+        )
+    }).unwrap_or_default();
+
     let prev_chapter_block = match previous_chapter {
         Some(prev) if !prev.trim().is_empty() => format!(
             "\nIMMEDIATELY PREVIOUS IMAGINED CHAPTER (the user has asked for a continuation — the new scene must chronologically pick up from where this one left off, with the same characters in a coherent next-beat. Honor what is established here):\n\n{}\n",
@@ -3509,7 +3520,7 @@ pub fn build_scene_invention_prompt(
         _ => "\nNo user hint — LLM's choice. Surprise them with something true to these people.\n".to_string(),
     };
 
-    let system = r#"You are inventing a single specific VISUAL MOMENT for characters in a living world. The moment has not yet been told in the chat history. It is new — but it is PLAUSIBLE and IN-CHARACTER and TRUE to who these people are.
+    let system = r#"You are a gifted writer with a painter's eye for the moment that matters. You are inventing a single specific VISUAL MOMENT for characters in a living world. The moment has not yet been told in the chat history. It is new — but it is PLAUSIBLE and IN-CHARACTER and TRUE to who these people are.
 
 Constraints on what you're writing:
 - ONE moment. Not a montage. Not a sequence. A single frame a painter could render.
@@ -3519,11 +3530,12 @@ Constraints on what you're writing:
 - IN WORLD. The world's standing rules, cosmology, and canonized truths apply. No violations.
 - ORDINARY OVER EPIC. Small, specific, real-life moments beat epic spectacle. The cost of a bad knot, a coffee going cold, a knock at the door — these earn their weight. Spare the spectacle.
 - NO META. Don't describe the scene's meaning. Describe what is happening in the frame. Meaning is for the chapter writer to discover.
+- AT LEAST ONE CHARACTER MID-SPECIFIC-ACTION. The image MUST show at least one named character caught mid a specific, concrete, visually identifiable action — not "thinking," not "looking," not "sitting." Threading a needle. Pouring coffee. Tying a knot. Closing a book. Lifting a child. Wiping flour from a counter. Pulling a splinter. Writing a word on a page. The action must be readable from the image alone, with no caption needed. AND for that mid-action character, the image_prompt MUST describe in detail BOTH (a) the precise pose — angle of the body, position of the hands, what each limb is doing, where the weight is — AND (b) the precise facial expression — what the eyes are doing, what the mouth is shaped like, what the brow looks like, what the small involuntary tells of the face are right now. A reader looking at the painting should be able to name the action AND read the feeling from the face without any text.
 
 Output format (STRICT JSON, nothing else — no markdown fences, no commentary):
 {
   "title": "2-5 word chapter title, no period",
-  "image_prompt": "A single paragraph, 80-150 words, describing the image a visual artist would paint. Every character named by name every time. Posture, light, hands, faces, environment. No abstraction — only what the eye sees.",
+  "image_prompt": "A single paragraph, 100-200 words, describing the image a visual artist would paint. Every character named by name every time. Pose-and-face detail for the mid-action character (see constraint above) is required and load-bearing. Light, hands, environment, the configuration of bodies and objects. No abstraction — only what the eye sees.",
   "tone_hint": "one word or short phrase: wistful, playful, sober, searching, ordinary, warm, heavy, strange, etc."
 }
 
@@ -3537,6 +3549,7 @@ STRICT: output JSON only. Do not preface with 'Here is' or 'I'll write'. Do not 
          {canon_block}\
          {journals_block}\
          {history_block}\
+         {tone_block}\
          {prev_chapter_block}\
          {hint_block}\n\
          Reminder: the user (named {user_name}) may or may not be IN the scene — your choice. Many of the best chapters are private scenes among the characters when the user isn't present. If you do put the user in, name them as {user_name}.\n\n\
@@ -3548,6 +3561,7 @@ STRICT: output JSON only. Do not preface with 'Here is' or 'I'll write'. Do not 
         canon_block = canon_block,
         journals_block = journals_block,
         history_block = history_block,
+        tone_block = tone_block,
         prev_chapter_block = prev_chapter_block,
         hint_block = hint_block,
         user_name = user_name,
@@ -3578,6 +3592,9 @@ pub fn build_chapter_from_image_system_prompt(
     // what's been happening lately to these people. Same source as the
     // scene-invention pass — different audience.
     recent_history: &[crate::db::queries::ConversationLine],
+    // The chat's current tone setting — appended as a ruling-register
+    // directive so the prose register matches what the chat is in.
+    tone: Option<&str>,
     // When set: continuation of this previous chapter. The model is told
     // to honor what was established (voice, lingering threads, where the
     // prior beat left off) while still letting the new image be primary.
@@ -3627,6 +3644,17 @@ pub fn build_chapter_from_image_system_prompt(
         }
     }
 
+    // Append the chat's current tone as a ruling-register directive
+    // — same per-tone helper the dialogue/narrative prompts use, so the
+    // chapter's prose register matches whatever register the chat is in.
+    if let Some(tone_str) = tone {
+        if let Some(td) = tone_directive(tone_str) {
+            base.push_str("\n\n# TONE — RULING REGISTER FOR THIS CHAPTER\n\n");
+            base.push_str(td.trim());
+            base.push_str("\n\nThe chapter must hold this register from first sentence to last. Do not drift toward a different mood mid-chapter — the image's atmosphere and the prose register were chosen together.\n");
+        }
+    }
+
     // Append previous-chapter continuation block when present.
     if let Some(prev) = previous_chapter {
         let trimmed = prev.trim();
@@ -3652,7 +3680,8 @@ pub fn build_chapter_from_image_system_prompt(
     // Append the chapter-specific directive block.
     base.push_str("\n\n# YOU ARE WRITING A CHAPTER FROM AN IMAGE\n\n");
     base.push_str(
-        "The user message will contain ONE IMAGE and LABELED PORTRAITS of the people who appear in this world. The image is a scene from this world that has not been narrated in chat. You have NOT been given the prompt that generated the image. Your only source is the image itself plus the reference portraits that tell you who each person is.\n\n\
+        "You are a gifted writer — the kind whose prose makes a reader stop reading because the sentence has done something to them. Your job is to write a single chapter that earns its life from the image you are about to be shown.\n\n\
+         The user message will contain ONE IMAGE and LABELED PORTRAITS of the people who appear in this world. The image is a scene from this world that has not been narrated in chat. You have NOT been given the prompt that generated the image. Your only source is the image itself plus the reference portraits that tell you who each person is.\n\n\
          Read the image carefully before writing.\n\n\
          - What are the characters DOING in this frame? (their posture, where their hands are, where they're looking)\n\
          - WHERE are they? (the environment, the light, the time of day)\n\

@@ -133,6 +133,7 @@ pub async fn generate_imagined_chapter_cmd(
         portrait_files_by_name,
         user_portrait_file,
         previous_chapter_content,
+        narration_tone,
         model_config,
     ) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -196,6 +197,22 @@ pub async fn generate_imagined_chapter_cmd(
             chapters.into_iter().next().map(|c| c.content)
         } else { None };
 
+        // Per-chat narration tone — keyed identically to chat_cmds /
+        // group_chat_cmds. Empty string + "Auto" both mean "no tone";
+        // tone_directive() filters those out.
+        let tone_setting_key = if cast.len() == 1 {
+            format!("narration_tone.{}", cast[0].character_id)
+        } else {
+            // Group: keyed on group_chat_id resolved from thread_id.
+            conn.query_row(
+                "SELECT group_chat_id FROM group_chats WHERE thread_id = ?1",
+                params![request.thread_id], |r| r.get::<_, String>(0),
+            ).map(|gid| format!("narration_tone.{}", gid)).unwrap_or_default()
+        };
+        let narration_tone: Option<String> = if tone_setting_key.is_empty() { None }
+            else { get_setting(&conn, &tone_setting_key).ok().flatten()
+                .filter(|s| !s.trim().is_empty() && s != "Auto") };
+
         let mut model_config = orchestrator::load_model_config(&conn);
         // Honor the per-chat provider override that lives at
         // `provider_override.<character_id>` for solo threads and
@@ -227,6 +244,7 @@ pub async fn generate_imagined_chapter_cmd(
             portrait_files,
             user_portrait,
             prev,
+            narration_tone,
             model_config,
         )
     };
@@ -277,6 +295,7 @@ pub async fn generate_imagined_chapter_cmd(
         &cast_journals_owned,
         &recent_history,
         request.seed_hint.as_deref(),
+        narration_tone.as_deref(),
         previous_chapter_content.as_deref(),
     ).await?;
 
@@ -333,6 +352,17 @@ pub async fn generate_imagined_chapter_cmd(
     // the prompt's "Reference image N is X" labels line up.
     let all_names: Vec<String> = portrait_files_by_name.iter().map(|(n, _)| n.clone()).collect();
 
+    // Tone-shape the image prompt so the painted scene's mood matches the
+    // chat's tone setting. Brief — we trust the scene-invention pass to
+    // already carry the tone in its visual specifics; this is reinforcement.
+    let image_prompt_with_tone: String = match narration_tone.as_deref() {
+        Some(t) => format!(
+            "{}\n\nVisual tone: {}. Let the light, color palette, posture, and overall atmosphere carry this register.",
+            invented.image_prompt, t,
+        ),
+        None => invented.image_prompt.clone(),
+    };
+
     // Use the existing illustration pipeline with include_scene_summary=false
     // — the scene description we just invented is passed as custom_instructions.
     let primary_char = cast_refs[0];
@@ -352,7 +382,7 @@ pub async fn generate_imagined_chapter_cmd(
         &[], // recent_messages — unused when include_scene_summary=false
         user_profile_ref,
         &reference_images,
-        Some(&invented.image_prompt),
+        Some(&image_prompt_with_tone),
         false, // has_previous_scene
         false, // include_scene_summary — we already have the description
         if all_names.is_empty() { None } else { Some(&all_names[..]) },
@@ -412,6 +442,7 @@ pub async fn generate_imagined_chapter_cmd(
         user_profile_ref,
         &cast_journals_owned,
         &recent_history,
+        narration_tone.as_deref(),
         previous_chapter_content.as_deref(),
     );
 

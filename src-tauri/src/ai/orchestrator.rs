@@ -3113,11 +3113,12 @@ pub async fn invent_scene_for_chapter(
     cast_recent_journals: &[(String, crate::db::queries::JournalEntry)],
     recent_history: &[crate::db::queries::ConversationLine],
     seed_hint: Option<&str>,
+    tone: Option<&str>,
     previous_chapter: Option<&str>,
 ) -> Result<(InventedScene, Option<openai::Usage>), String> {
     let messages = prompts::build_scene_invention_prompt(
         world, cast, user_profile, recent_kept_facts, cast_recent_journals,
-        recent_history, seed_hint, previous_chapter,
+        recent_history, seed_hint, tone, previous_chapter,
     );
     let request = ChatRequest {
         model: model.to_string(),
