@@ -1,6 +1,8 @@
 # Eval harness config
 samples_per_condition: 3      # bump to 10 for decisions you'd act on
 temperature: 0.9              # match production dialogue temperature
-max_tokens: 400               # cap for sampled replies; well above Medium target
-estimated_cost_per_1k_input: 0.015   # adjust for your model
-estimated_cost_per_1k_output: 0.060
+max_tokens: 280               # cap for sampled replies; ~200 words, above Medium target
+# gpt-5.4 rates — adjust if OpenAI pricing shifts. Used only for the
+# pre-run cost estimate the harness prints; not billed on these numbers.
+estimated_cost_per_1k_input: 0.0025
+estimated_cost_per_1k_output: 0.010

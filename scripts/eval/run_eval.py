@@ -5,7 +5,7 @@ OpenAI-compatible endpoint with each (scenario, condition) pair N times,
 writes side-by-side markdown to results/.
 """
 from __future__ import annotations
-import os, sys, json, pathlib
+import os, sys, json, pathlib, subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import yaml
 from dotenv import load_dotenv
@@ -13,12 +13,43 @@ from openai import OpenAI
 from prompt_blocks import assemble_prompt, assemble_prompt_e3
 
 ROOT = pathlib.Path(__file__).parent
+REPO_ROOT = ROOT.parent.parent
 load_dotenv(ROOT / ".env")
 CFG = yaml.safe_load((ROOT / "config.yaml").read_text())
 SCENARIOS = yaml.safe_load((ROOT / "scenarios.yaml").read_text())
 ABLATIONS = yaml.safe_load((ROOT / "ablations.yaml").read_text())
 
-CLIENT = OpenAI(base_url=os.environ["LLM_BASE_URL"], api_key=os.environ["LLM_API_KEY"])
+
+def resolve_api_key() -> str:
+    """Env var first, then macOS Keychain via the repo helper.
+    Returns empty string if neither is set — caller should error-check."""
+    key = os.environ.get("LLM_API_KEY", "").strip()
+    if key:
+        return key
+    helper = REPO_ROOT / "scripts" / "get-claude-code-llm-key.sh"
+    if helper.exists():
+        try:
+            r = subprocess.run(
+                ["bash", str(helper)],
+                capture_output=True, text=True, timeout=5,
+            )
+            key = r.stdout.strip()
+            if key:
+                return key
+        except Exception:
+            pass
+    return ""
+
+
+API_KEY = resolve_api_key()
+if not API_KEY:
+    sys.exit(
+        "No LLM_API_KEY found. Either:\n"
+        "  - export LLM_API_KEY=sk-... for this session, or\n"
+        "  - run `bash scripts/setup-claude-code-llm-key.sh` once to store in Keychain."
+    )
+
+CLIENT = OpenAI(base_url=os.environ["LLM_BASE_URL"], api_key=API_KEY)
 MODEL = os.environ["LLM_MODEL"]
 DRY_RUN = os.environ.get("LLM_DRY_RUN", "0") == "1"
 

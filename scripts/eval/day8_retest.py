@@ -10,17 +10,38 @@ The question being asked: does the app redirect this opening today,
 when it didn't on the original day?
 """
 from __future__ import annotations
-import os, pathlib
+import os, pathlib, subprocess, sys
 import yaml
 from dotenv import load_dotenv
 from openai import OpenAI
 from prompt_blocks import assemble_prompt
 
 ROOT = pathlib.Path(__file__).parent
+REPO_ROOT = ROOT.parent.parent
 load_dotenv(ROOT / ".env")
 CFG = yaml.safe_load((ROOT / "config.yaml").read_text())
 
-CLIENT = OpenAI(base_url=os.environ["LLM_BASE_URL"], api_key=os.environ["LLM_API_KEY"])
+
+def resolve_api_key() -> str:
+    key = os.environ.get("LLM_API_KEY", "").strip()
+    if key:
+        return key
+    helper = REPO_ROOT / "scripts" / "get-claude-code-llm-key.sh"
+    if helper.exists():
+        try:
+            r = subprocess.run(["bash", str(helper)], capture_output=True, text=True, timeout=5)
+            if r.stdout.strip():
+                return r.stdout.strip()
+        except Exception:
+            pass
+    return ""
+
+
+API_KEY = resolve_api_key()
+if not API_KEY:
+    sys.exit("No LLM_API_KEY. Run `bash scripts/setup-claude-code-llm-key.sh` once.")
+
+CLIENT = OpenAI(base_url=os.environ["LLM_BASE_URL"], api_key=API_KEY)
 MODEL = os.environ["LLM_MODEL"]
 
 # Darren's current character description (verbatim from the live DB at
