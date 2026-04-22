@@ -35,6 +35,36 @@ pub struct MeanwhileEventWithName {
     pub created_at: String,
 }
 
+/// Most-recent meanwhile event for a single character, limited to the
+/// last `within_hours` hours of wall-clock time. Returns None when the
+/// character has no recent off-screen beat. Used by the dialogue
+/// orchestrator to give each character a concrete "what you were just
+/// doing" context to carry into a new reply.
+pub fn latest_meanwhile_for_character(
+    conn: &Connection,
+    character_id: &str,
+    within_hours: i64,
+) -> Option<MeanwhileEvent> {
+    let sql = "SELECT event_id, world_id, character_id, world_day, time_of_day, summary, created_at
+               FROM meanwhile_events
+               WHERE character_id = ?1
+                 AND created_at >= datetime('now', ?2)
+               ORDER BY created_at DESC
+               LIMIT 1";
+    let delta = format!("-{within_hours} hours");
+    conn.query_row(sql, params![character_id, delta], |r| {
+        Ok(MeanwhileEvent {
+            event_id: r.get(0)?,
+            world_id: r.get(1)?,
+            character_id: r.get(2)?,
+            world_day: r.get(3)?,
+            time_of_day: r.get(4)?,
+            summary: r.get(5)?,
+            created_at: r.get(6)?,
+        })
+    }).ok()
+}
+
 pub fn list_meanwhile_events(
     conn: &Connection,
     world_id: &str,

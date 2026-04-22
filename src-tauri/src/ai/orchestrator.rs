@@ -223,6 +223,7 @@ pub async fn run_dialogue_with_base(
     drift_correction: Option<&str>,
     recent_journals: &[crate::db::queries::JournalEntry],
     latest_reading: Option<&crate::db::queries::DailyReading>,
+    latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
 ) -> Result<(String, Option<openai::Usage>), String> {
     // When the user has disabled conversation history for this chat, strip
     // prior turns, semantic memories, and moment markers — the character
@@ -259,7 +260,7 @@ pub async fn run_dialogue_with_base(
         group_context.is_some(),
         6,
     );
-    let mut system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, recent_journals, latest_reading, &own_voice_samples);
+    let mut system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, recent_journals, latest_reading, &own_voice_samples, latest_meanwhile);
     // Conscience-pass retry path: a prior draft drifted on an invariant,
     // and the grader returned a concrete correction note. Append it at the
     // end of the system block so it sits in the high-attention tail right
@@ -480,6 +481,7 @@ pub async fn run_proactive_ping_with_base(
     reactions_by_msg: &std::collections::HashMap<String, Vec<crate::db::queries::Reaction>>,
     recent_journals: &[crate::db::queries::JournalEntry],
     latest_reading: Option<&crate::db::queries::DailyReading>,
+    latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
 ) -> Result<(String, Option<openai::Usage>), String> {
     // Proactive pings are solo-only — pass is_group=false to the sampler.
     let own_voice_samples = prompts::pick_own_voice_samples(
@@ -490,7 +492,7 @@ pub async fn run_proactive_ping_with_base(
     );
     let system = prompts::build_proactive_ping_system_prompt(
         world, character, user_profile, mood_directive, tone, local_model, mood_chain,
-        recent_journals, latest_reading, &own_voice_samples,
+        recent_journals, latest_reading, &own_voice_samples, latest_meanwhile,
     );
     let user_display_name = user_profile.map(|p| p.display_name.as_str());
     // Pick a fresh random angle per call — curated pool keeps framings
@@ -714,7 +716,7 @@ pub async fn run_dialogue_streaming(
     kept_ids: &[String],
     illustration_captions: &std::collections::HashMap<String, String>,
 ) -> Result<String, String> {
-    let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, &[], None, &[]);
+    let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, &[], None, &[], None);
     let empty_reactions: std::collections::HashMap<String, Vec<crate::db::queries::Reaction>> = std::collections::HashMap::new();
     let user_display_name = user_profile.map(|p| p.display_name.as_str());
     let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names, kept_ids, illustration_captions, &empty_reactions, user_display_name);

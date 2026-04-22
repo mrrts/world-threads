@@ -1432,11 +1432,12 @@ pub fn build_dialogue_system_prompt(
     recent_journals: &[crate::db::queries::JournalEntry],
     latest_reading: Option<&crate::db::queries::DailyReading>,
     own_voice_samples: &[String],
+    latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
 ) -> String {
     if group_context.is_some() {
-        build_group_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context.unwrap(), tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples)
+        build_group_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context.unwrap(), tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples, latest_meanwhile)
     } else {
-        build_solo_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples)
+        build_solo_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples, latest_meanwhile)
     }
 }
 
@@ -1456,6 +1457,7 @@ pub fn build_proactive_ping_system_prompt(
     recent_journals: &[crate::db::queries::JournalEntry],
     latest_reading: Option<&crate::db::queries::DailyReading>,
     own_voice_samples: &[String],
+    latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
 ) -> String {
     let base = build_solo_dialogue_system_prompt(
         world,
@@ -1470,6 +1472,7 @@ pub fn build_proactive_ping_system_prompt(
         recent_journals,
         latest_reading,
         own_voice_samples,
+        latest_meanwhile,
     );
     format!("{base}\n\n{}", proactive_ping_block())
 }
@@ -1509,6 +1512,7 @@ fn build_solo_dialogue_system_prompt(
     recent_journals: &[crate::db::queries::JournalEntry],
     latest_reading: Option<&crate::db::queries::DailyReading>,
     own_voice_samples: &[String],
+    latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
 ) -> String {
     let mut parts = Vec::new();
 
@@ -1554,6 +1558,13 @@ fn build_solo_dialogue_system_prompt(
     // residue. Read for tone and carry, not as a subject.
     {
         let block = render_daily_reading_block(latest_reading);
+        if !block.is_empty() { parts.push(block); }
+    }
+    // Meanwhile bridge — the character arrives carrying what they were
+    // just doing off-screen. Single biggest lever for making the scene
+    // feel already-in-motion instead of cold-start chat-register.
+    {
+        let block = render_meanwhile_bridge_block(latest_meanwhile);
         if !block.is_empty() { parts.push(block); }
     }
 
@@ -1710,6 +1721,7 @@ fn build_group_dialogue_system_prompt(
     recent_journals: &[crate::db::queries::JournalEntry],
     latest_reading: Option<&crate::db::queries::DailyReading>,
     own_voice_samples: &[String],
+    latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
 ) -> String {
     let mut parts = Vec::new();
     parts.push(FUNDAMENTAL_SYSTEM_PREAMBLE.to_string());
@@ -1797,6 +1809,13 @@ fn build_group_dialogue_system_prompt(
     // Today's reading — same carry as solo path.
     {
         let block = render_daily_reading_block(latest_reading);
+        if !block.is_empty() { parts.push(block); }
+    }
+    // Meanwhile bridge — the character arrives carrying what they were
+    // just doing off-screen. Single biggest lever for making the scene
+    // feel already-in-motion instead of cold-start chat-register.
+    {
+        let block = render_meanwhile_bridge_block(latest_meanwhile);
         if !block.is_empty() { parts.push(block); }
     }
 
@@ -2212,6 +2231,22 @@ pub fn render_recent_journals_block(
     format!(
         "RECENT PAGES FROM YOUR JOURNAL (what's been sitting with you — your own private voice to yourself; read for continuity, not to recap. These are yours to quietly carry into this moment, not to reference out loud unless the user brings it up first):\n\n{}",
         body.join("\n\n"),
+    )
+}
+
+/// Render the character's most recent "meanwhile" event as a compact
+/// "what you were just doing" context block. The meanwhile system
+/// generates small off-screen beats — a character fixing a lopsided
+/// bench, starting a letter three times, walking the long way — that
+/// give each scene a concrete in-flight thing the character is
+/// carrying in from offstage. Returns empty string when no recent
+/// event is available so the caller can skip without branching.
+pub fn render_meanwhile_bridge_block(event: Option<&crate::db::queries::MeanwhileEvent>) -> String {
+    let Some(e) = event else { return String::new(); };
+    let summary = e.summary.trim();
+    if summary.is_empty() { return String::new(); }
+    format!(
+        "WHAT YOU WERE JUST DOING (a moment ago, off-screen — you arrive to this reply carrying this, whatever mood or residue it left; reference out loud only if the scene naturally reaches for it, otherwise just let it color the way you show up):\n\n{summary}"
     )
 }
 
