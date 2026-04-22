@@ -2224,7 +2224,7 @@ pub async fn propose_canonization_updates(
 - **voice_rule** — even at the heavy-act register, sometimes what changes is HOW they speak: a refusal pattern, a phrasing they now reach for, a register they've settled into. One short bullet.
 - **boundary** — a stated or demonstrated line they will not cross. Heavy-act boundaries are load-bearing ones — not preferences, not minor inconveniences, but commitments the character will hold under pressure. One short sentence.
 - **known_fact** — a concrete specific fact that now belongs to the subject's core biography. Heavy-act facts are ones that, if contradicted later, would change who the subject is. Specifics over themes.
-- **open_loop** — an unresolved thread the subject is carrying. Heavy-act open_loops are the ones that actually haunt them: a question that won't leave, a promise whose non-kept-ness is becoming formative."#,
+- **open_loop** — an unresolved thread the subject is carrying. Heavy-act open_loops are the ones that actually haunt or inspire or buoy or make laugh or otherwise formatively affect them: a question that won't leave, a promise whose non-kept-ness is becoming formative, an intention quietly carrying them."#,
         ),
         _ => (
             "ACT: **LIGHT — \"Remember this.\"** The user is marking this moment as worth carrying but NOT as reshaping who the subject fundamentally is. Reach for the specific detail, the incidental fact, the small tic of speech, the minor preference — things worth remembering that shouldn't claim identity-reshaping weight. A light update is one that can sit on the character's list without demanding that anyone revisit the core description.",
@@ -2233,7 +2233,7 @@ pub async fn propose_canonization_updates(
 - **voice_rule** — the moment shows HOW the subject speaks: a phrasing they reach for, a register they refuse, a tic, a turn, a vocabulary choice only they make. One short bullet.
 - **boundary** — a stated or demonstrated line they won't cross at this moment. Light-act boundaries are smaller scoped — a preference, a habit-of-refusal, not a life-commitment. One short sentence.
 - **known_fact** — a concrete specific fact about daily life, preferences, habits, history — the kind of thing you'd want to remember without it becoming a load-bearing claim about identity. "Takes coffee with a splash of cream, no sugar" beats "has strong feelings about coffee."
-- **open_loop** — an unresolved thread: a question still hanging, an errand not yet run, a small intention not yet acted on. Light-act open_loops are the minor ones; the ones that haunt belong to the heavy act."#,
+- **open_loop** — an unresolved thread: a question still hanging, an errand not yet run, a small intention not yet acted on. Light-act open_loops are the minor ones; the ones that haunt or inspire or buoy or make laugh or otherwise formatively affect belong to the heavy act."#,
         ),
     };
 
