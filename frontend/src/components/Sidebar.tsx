@@ -527,12 +527,11 @@ export function Sidebar({ store, onNavigate }: Props) {
                           <Plus size={10} />
                         </button>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span className="text-muted-foreground/70">Weather:</span>
+                      <div className="text-xs text-muted-foreground">
                         <button
                           ref={weatherAnchorRef}
                           onClick={() => setShowWeatherPicker((v) => !v)}
-                          className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-secondary/50 border border-border/60 hover:bg-secondary hover:border-border transition-colors cursor-pointer shadow-sm text-foreground/85"
+                          className="w-full inline-flex items-center justify-center gap-1.5 px-2 py-1 rounded-md bg-secondary/50 border border-border/60 hover:bg-secondary hover:border-border transition-colors cursor-pointer shadow-sm text-foreground/85"
                           title={currentWeather ? `Change weather (current: ${currentWeather.label})` : "Set current weather"}
                         >
                           {currentWeather ? (
