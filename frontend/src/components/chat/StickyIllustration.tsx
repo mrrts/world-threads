@@ -137,7 +137,36 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
     });
   }, [messages, scrollContainer]);
 
-  if (!activeIllus || activeInView) return null;
+  // First-paint gate: we render the button in its "hidden" state on
+  // the first paint, then flip to the target state on the next frame.
+  // That way CSS transitions animate FROM the hidden state on initial
+  // appearance, not just on prop changes. Double-rAF is the reliable
+  // way to get a paint between the two states.
+  const [initialGate, setInitialGate] = useState<boolean>(true);
+  useEffect(() => {
+    if (!activeIllus) {
+      // No illustration to show yet — keep the gate closed so the
+      // NEXT time activeIllus becomes non-null, we animate in fresh.
+      setInitialGate(true);
+      return;
+    }
+    let raf1 = 0;
+    let raf2 = 0;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => setInitialGate(false));
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
+  }, [activeIllus?.message_id]);
+
+  // No illustration in thread yet → render nothing (unmount cleanly).
+  if (!activeIllus) return null;
+
+  // Visibility: we want the button hidden (fading out) when the active
+  // illustration is in view, OR during the first-paint gate.
+  const hidden = activeInView || initialGate;
 
   const ar = aspectRatios?.[activeIllus.message_id];
   const onClick = () => {
@@ -148,21 +177,29 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
     if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
+  // Shared classes that don't change with visibility.
+  const base = `hidden xl:block absolute bottom-4 right-4 z-20 group select-none
+                rounded-xl overflow-hidden shadow-2xl shadow-black/50
+                ring-1 ring-emerald-700/30
+                bg-gradient-to-br from-emerald-950/40 to-emerald-900/20
+                backdrop-blur-sm
+                transition-all duration-500 ease-out
+                motion-reduce:duration-200`;
+
+  // Visibility-dependent transforms. These drive the enter/exit bloom.
+  const visState = hidden
+    ? "opacity-0 scale-90 translate-y-4 translate-x-2 pointer-events-none"
+    : "opacity-100 scale-100 translate-y-0 translate-x-0 cursor-pointer hover:ring-emerald-500/60 hover:scale-[1.04] hover:-translate-y-0.5";
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={hidden ? undefined : onClick}
+      tabIndex={hidden ? -1 : 0}
+      aria-hidden={hidden ? true : undefined}
       aria-label="Scroll to the illustration for the moment you're reading"
       title="Scroll to this illustration"
-      className="hidden xl:block absolute bottom-4 right-4 z-20 group cursor-pointer select-none
-                 rounded-xl overflow-hidden shadow-2xl shadow-black/50
-                 ring-1 ring-emerald-700/30 hover:ring-emerald-500/60
-                 bg-gradient-to-br from-emerald-950/40 to-emerald-900/20
-                 backdrop-blur-sm transition-all duration-200
-                 hover:scale-[1.04] hover:-translate-y-0.5
-                 animate-in fade-in-0 zoom-in-90 slide-in-from-bottom-4 slide-in-from-right-2
-                 duration-500 ease-out
-                 motion-reduce:animate-in motion-reduce:fade-in-0 motion-reduce:duration-200"
+      className={`${base} ${visState}`}
       style={{ width: 264 }}
     >
       <img
