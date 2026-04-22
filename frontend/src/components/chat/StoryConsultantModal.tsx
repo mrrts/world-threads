@@ -563,7 +563,12 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                           style={{ fontSize: `${chatFontPx(chatFontSize)}px` }}
                           className="prose prose-sm max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-secondary-foreground)] [--tw-prose-headings:var(--color-secondary-foreground)] [--tw-prose-bold:var(--color-secondary-foreground)] [--tw-prose-bullets:var(--color-secondary-foreground)] [--tw-prose-counters:var(--color-secondary-foreground)] [--tw-prose-links:var(--color-primary)]"
                         >
-                          {activeMode === "backstage" && !isStreamingAssistant ? (
+                          {/* Both modes can emit ```action cards now —
+                              Immersive's prompt teaches a small in-world
+                              subset (staged_message, canon_entry,
+                              new_group_chat). The renderer is mode-agnostic;
+                              what differs is what the prompt asks for. */}
+                          {!isStreamingAssistant ? (
                             <>
                               {parseBackstageSegments(msg.content).map((seg, segIdx) => (
                                 seg.kind === "text"
