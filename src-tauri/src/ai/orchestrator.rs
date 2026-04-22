@@ -1996,7 +1996,10 @@ pub async fn generate_canon_weave_description(
 
     let system = r#"You revise a subject's prose description to integrate a specific moment of deeper truth that has come up in a conversation. You are NOT appending a sentence. You are NOT summarizing. You are rewriting the description so that the truth revealed in the moment is now quietly present in the portrait — deeper, refined, more exactly what this subject is.
 
-Preserve the voice, length, and overall structure of the original description. Keep anything that was already true. The revision should feel like the same description, but wiser — as if the writer now knows something they didn't before, and that knowledge has colored the whole portrait.
+# LENGTH CEILING — HARD RULE
+The revised description must be ONE TIGHT PARAGRAPH, under 140 words. No exceptions, regardless of how long the current description is. Overriding the preserve-length rule here: long descriptions are archived, not re-read; only short dense ones actually carry forward as a living portrait the model or reader returns to. If the current description is longer than 140 words, COMPRESS it — keep the most load-bearing specifics, drop the rest. A 400-word portrait that nobody revisits is worth less than a 120-word portrait that lands in one glance. Every revision is an opportunity to tighten, not to accrete. If you find yourself past 140 words on the rewrite, cut the least-specific sentence and try again.
+
+Preserve the voice and overall shape, but NOT length — density over completeness. Keep anything that was already true AND specific; drop the sentences that merely set mood or flesh-out atmosphere without carrying a concrete fact. The revision should feel like the same person, but sharper and smaller — as if the writer now knows exactly which details are load-bearing and has pared away the rest.
 
 Do NOT reference the moment directly in the revised text. Do NOT name the conversation, the date, the other speaker, or the meta-frame ("as he revealed", "in a recent talk", "after recently sharing").
 
@@ -2051,7 +2054,10 @@ Return ONLY the revised description prose. No preamble, no quotes, no commentary
             openai::ChatMessage { role: "user".to_string(), content: user },
         ],
         temperature: Some(0.7),
-        max_completion_tokens: Some(2000),
+        // 140-word ceiling * ~1.5 tokens/word + headroom for reasoning
+        // or a mid-rewrite that edges over. Cap keeps the model honest;
+        // the prompt's ceiling rule does the real work.
+        max_completion_tokens: Some(350),
         response_format: None,
     };
 
