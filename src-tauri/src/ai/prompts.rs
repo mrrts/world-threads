@@ -1910,7 +1910,22 @@ fn response_length_block(length: &str) -> Option<String> {
         "Short" => Some("IMPORTANT — RESPONSE LENGTH:\nKeep your reply to 1–2 sentences, REGARDLESS OF HOW LONG PREVIOUS MESSAGES WERE. Be brief and punchy — a few chosen words often land harder than a paragraph. Never exceed 3 sentences under any circumstances. Do not start a sentence you cannot finish inside this limit.".to_string()),
         "Medium" => Some("IMPORTANT — RESPONSE LENGTH:\nAim for 3–4 sentences, REGARDLESS OF HOW LONG PREVIOUS MESSAGES WERE. Give enough to be expressive but don't ramble. Never exceed 5 sentences. Do not start a sentence you cannot finish inside this limit.".to_string()),
         "Long" => Some("IMPORTANT — RESPONSE LENGTH:\nWrite 5–8 sentences, REGARDLESS OF HOW LONG PREVIOUS MESSAGES WERE. Be detailed, expansive, and richly expressive. Up to 10 sentences is fine, but do not run longer than that. Do not start a sentence you cannot finish inside this limit.".to_string()),
-        "Auto" => Some("IMPORTANT — RESPONSE LENGTH:\nUSE VARIETY. Vary your length turn to turn. A single sentence and a full paragraph can both be right in the same conversation — sometimes one word, sometimes several sentences, sometimes a considered paragraph. Match what THIS moment actually needs, not a default register. Do NOT settle into always-short. Do NOT settle into always-long. Do NOT reach for the same length you used last turn unless the moment asks for it. The SHAPE of each reply should fit the beat, not your comfort zone.".to_string()),
+        "Auto" => Some(r#"IMPORTANT — RESPONSE LENGTH:
+
+USE VARIETY. Your length MUST change from turn to turn. The trap your training pulls you toward is the comfortable mid-length reply (3–4 sentences) on every single turn — REFUSE IT. That default reads as AI-flat and it's wrong for almost every beat. The actual range you are authorized and REQUIRED to reach across, turn to turn:
+
+- **ONE WORD** or a single emoji ("Yeah." "No." a shrug. "Christ.") — valid and often CORRECT for small acknowledgements, dry refusals, winces, quiet yeses, the beat that would be cheapened by any further language.
+- **ONE SHORT SENTENCE** — a plain direct honest line; the answer the question actually asked for, nothing added.
+- **TWO OR THREE SENTENCES** — a reaction with one specific concrete detail; a small thought with its texture.
+- **A FULL PARAGRAPH (5–8 sentences)** — when the moment truly reaches for it: a memory surfacing, a real argument being made, a story with its own shape, a thought being worked out live.
+- **A LONG COMMITTED SWING (10+ sentences)** — rare, deliberate: genuine overwhelm, an actual story that needs its full arc, a thought spiraling outward with real conviction.
+
+HARD RULES:
+- DO NOT use the same length as your last turn unless the moment actively demands it.
+- DO NOT settle into always-medium (the AI-flat default), always-short (terse, unengaged), or always-long (verbose, sermony).
+- A ONE-WORD reply to a tender question can be PERFECT. A PARAGRAPH in response to "hey" is DERANGED. Fit the shape to the beat, not to your comfort zone.
+- When torn between two lengths, pick the LESS-DEFAULT one. If your instinct says "three sentences," test 1 or test 6 and ship whichever actually fits the beat.
+"#.to_string()),
         _ => None,
     }
 }
