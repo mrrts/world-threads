@@ -4,7 +4,7 @@ import { formatMessage, markdownComponents, remarkPlugins, rehypePlugins, isEmoj
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
-import { Send, Loader2, Smile, SmilePlus, X, Copy, ExternalLink, BookOpen, RotateCcw, MessageSquare, Compass, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, Play, Volume2, ChevronDown, ChevronRight, ScrollText, Moon, Package } from "lucide-react";
+import { Send, Loader2, Smile, SmilePlus, X, Copy, ExternalLink, BookOpen, RotateCcw, MessageSquare, Compass, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, Play, Volume2, ChevronDown, ChevronRight, ScrollText, Moon, Package, Sparkles } from "lucide-react";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type { useAppStore } from "@/hooks/use-app-store";
 import { api, type Reaction } from "@/lib/tauri";
@@ -41,6 +41,8 @@ import { ContextMessage } from "@/components/chat/ContextMessage";
 import { NarrativePickerModal } from "@/components/chat/NarrativePickerModal";
 import { PortraitModal } from "@/components/chat/PortraitModal";
 import { StoryConsultantModal } from "@/components/chat/StoryConsultantModal";
+import { ImaginedChapterModal } from "@/components/chat/ImaginedChapterModal";
+import { ImaginedChapterMessage } from "@/components/chat/ImaginedChapterMessage";
 import { useChatState } from "@/hooks/use-chat-state";
 import { useChatFocusRefresh } from "@/hooks/use-chat-focus-refresh";
 import { InventoryStrip } from "@/components/chat/InventoryStrip";
@@ -151,6 +153,8 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
   const [showPortraitModal, setShowPortraitModal] = useState(false);
   const [showIdentityPopover, setShowIdentityPopover] = useState(false);
   const [showConsultant, setShowConsultant] = useState(false);
+  const [showImaginedChapter, setShowImaginedChapter] = useState(false);
+  const [openImaginedChapterId, setOpenImaginedChapterId] = useState<string | null>(null);
   const [showSettingsPopover, setShowSettingsPopover] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
@@ -634,6 +638,15 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
           </button>
           <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/consultant:opacity-100 pointer-events-none transition-opacity">Consultant</span>
         </div>
+        <div className="relative group/chapter">
+          <button
+            onClick={() => { setOpenImaginedChapterId(null); setShowImaginedChapter(true); }}
+            className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
+          >
+            <Sparkles size={15} />
+          </button>
+          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/chapter:opacity-100 pointer-events-none transition-opacity">Imagined Chapter</span>
+        </div>
       </div>
 
       <div className="flex-1 relative overflow-hidden z-10">
@@ -747,6 +760,20 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                 {meanwhileBefore}
                 <TimeDivider current={msg} previous={prevMsg} />
                 <InventoryUpdateMessage message={msg} />
+              </React.Fragment>);
+            }
+
+            if (msg.role === "imagined_chapter") {
+              return (<React.Fragment key={msg.message_id}>
+                {meanwhileBefore}
+                <TimeDivider current={msg} previous={prevMsg} />
+                <ImaginedChapterMessage
+                  message={msg}
+                  onOpen={(chapterId) => {
+                    setOpenImaginedChapterId(chapterId);
+                    setShowImaginedChapter(true);
+                  }}
+                />
               </React.Fragment>);
             }
 
@@ -1504,6 +1531,17 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         userAvatarUrl={userAvatarUrl}
         notifyOnMessage={store.notifyOnMessage}
         chatFontSize={store.chatFontSize}
+      />
+
+      <ImaginedChapterModal
+        open={showImaginedChapter}
+        onClose={() => { setShowImaginedChapter(false); setOpenImaginedChapterId(null); }}
+        apiKey={store.apiKey}
+        threadId={store.messages[0]?.thread_id ?? ""}
+        characterPortraitUrl={store.activeCharacter ? store.activePortraits[store.activeCharacter.character_id]?.data_url : undefined}
+        notifyOnMessage={store.notifyOnMessage}
+        chatFontSize={store.chatFontSize}
+        openChapterId={openImaginedChapterId}
       />
 
       {userAvatarUrl && (

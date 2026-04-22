@@ -617,7 +617,7 @@ Rules:
 
 /// Tiny standard base64 encoder for inline image data-URLs. Kept local so
 /// vision calls don't pull in a crate we don't otherwise need.
-fn base64_encode_bytes(input: &[u8]) -> String {
+pub(crate) fn base64_encode_bytes(input: &[u8]) -> String {
     const CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     let mut out = String::with_capacity(((input.len() + 2) / 3) * 4);
     for chunk in input.chunks(3) {
@@ -3086,4 +3086,62 @@ pub async fn generate_embeddings_with_base(
     texts: Vec<String>,
 ) -> Result<(Vec<Vec<f32>>, u32), String> {
     openai::create_embeddings_with_base(base_url, api_key, model, texts).await
+}
+
+// ─── IMAGINED CHAPTER — scene invention ─────────────────────────────────────
+//
+// Step 1 of the Imagined-Chapter pipeline. Calls the dialogue model with
+// the scene-invention prompt and parses the JSON output. The image_prompt
+// it returns is what drives the illustration step; the chapter writer
+// never sees this output (telephone-game inversion).
+
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+pub struct InventedScene {
+    pub title: String,
+    pub image_prompt: String,
+    pub tone_hint: String,
+}
+
+pub async fn invent_scene_for_chapter(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    world: &World,
+    cast: &[&Character],
+    user_profile: Option<&UserProfile>,
+    recent_kept_facts: &[String],
+    cast_recent_journals: &[(String, crate::db::queries::JournalEntry)],
+    recent_history: &[crate::db::queries::ConversationLine],
+    seed_hint: Option<&str>,
+    previous_chapter: Option<&str>,
+) -> Result<(InventedScene, Option<openai::Usage>), String> {
+    let messages = prompts::build_scene_invention_prompt(
+        world, cast, user_profile, recent_kept_facts, cast_recent_journals,
+        recent_history, seed_hint, previous_chapter,
+    );
+    let request = ChatRequest {
+        model: model.to_string(),
+        messages,
+        // High temperature on purpose — scene invention is a creative
+        // pick. The chapter writer is the one that has to be sober.
+        temperature: Some(1.0),
+        max_completion_tokens: Some(900),
+        response_format: None,
+    };
+    let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
+    let raw = response.choices.first()
+        .map(|c| c.message.content.trim().to_string())
+        .unwrap_or_default();
+    if raw.is_empty() {
+        return Err("empty scene-invention response".to_string());
+    }
+    // Tolerate code fences if the model wraps them despite the prompt.
+    let body = if let (Some(start), Some(end)) = (raw.find('{'), raw.rfind('}')) {
+        if end > start { &raw[start..=end] } else { raw.as_str() }
+    } else {
+        raw.as_str()
+    };
+    let parsed: InventedScene = serde_json::from_str(body)
+        .map_err(|e| format!("scene-invention JSON parse failed: {e}; body: {body}"))?;
+    Ok((parsed, response.usage))
 }

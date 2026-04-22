@@ -169,6 +169,111 @@ pub async fn chat_completion_with_base(base_url: &str, api_key: &str, request: &
     serde_json::from_str(&body).map_err(|e| format!("Parse error: {e}"))
 }
 
+// ─── Streaming Vision Completion ────────────────────────────────────────────
+//
+// Same SSE stream shape as chat_completion_stream, but carries VisionMessage
+// content (array of text+image parts). Used by the Imagined-Chapter feature
+// to stream a chapter written from an image input.
+
+#[derive(Debug, Serialize)]
+pub struct VisionStreamingRequest {
+    pub model: String,
+    pub messages: Vec<VisionMessage>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub temperature: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_completion_tokens: Option<u32>,
+    pub stream: bool,
+}
+
+pub async fn vision_completion_stream(
+    base_url: &str,
+    api_key: &str,
+    request: &VisionStreamingRequest,
+    app_handle: &tauri::AppHandle,
+    event_name: &str,
+) -> Result<String, String> {
+    use futures_util::StreamExt;
+
+    let client = Client::new();
+    let url = format!("{base_url}/chat/completions");
+    let mut builder = client.post(&url).json(request);
+    if !api_key.is_empty() {
+        builder = builder.header("Authorization", format!("Bearer {api_key}"));
+    }
+
+    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let status = resp.status();
+    if !status.is_success() {
+        let body = resp.text().await.unwrap_or_default();
+        if let Ok(err) = serde_json::from_str::<ApiError>(&body) {
+            return Err(format!("Vision API error ({}): {}", status, err.error.message));
+        }
+        return Err(format!("Vision API error ({}): {}", status, body));
+    }
+
+    let mut full_text = String::new();
+    let mut reasoning_text = String::new();
+    let mut stream = resp.bytes_stream();
+
+    let mut buffer = String::new();
+    let mut raw_body = String::new();
+    let mut sse_events_seen = 0usize;
+
+    while let Some(chunk_result) = stream.next().await {
+        let chunk = chunk_result.map_err(|e| format!("Stream error: {e}"))?;
+        let chunk_str = String::from_utf8_lossy(&chunk);
+        raw_body.push_str(&chunk_str);
+        buffer.push_str(&chunk_str);
+        while let Some(line_end) = buffer.find('\n') {
+            let line = buffer[..line_end].trim().to_string();
+            buffer = buffer[line_end + 1..].to_string();
+            if line.is_empty() || line == "data: [DONE]" { continue; }
+            if let Some(json_str) = line.strip_prefix("data: ") {
+                sse_events_seen += 1;
+                if let Ok(err) = serde_json::from_str::<ApiError>(json_str) {
+                    return Err(format!("Model error: {}", err.error.message));
+                }
+                if let Ok(parsed) = serde_json::from_str::<StreamChunk>(json_str) {
+                    for choice in &parsed.choices {
+                        if let Some(content) = &choice.delta.content {
+                            full_text.push_str(content);
+                            let _ = tauri::Emitter::emit(app_handle, event_name, content.clone());
+                        }
+                        if let Some(reasoning) = &choice.delta.reasoning_content {
+                            reasoning_text.push_str(reasoning);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if full_text.is_empty() && !reasoning_text.is_empty() {
+        let _ = tauri::Emitter::emit(app_handle, event_name, reasoning_text.clone());
+        return Ok(reasoning_text);
+    }
+    if full_text.is_empty() {
+        if let Ok(parsed) = serde_json::from_str::<ChatResponse>(raw_body.trim()) {
+            if let Some(content) = parsed.choices.first().map(|c| c.message.content.clone()) {
+                if !content.is_empty() {
+                    let _ = tauri::Emitter::emit(app_handle, event_name, content.clone());
+                    return Ok(content);
+                }
+            }
+        }
+    }
+    if full_text.is_empty() {
+        let snippet: String = raw_body.chars().take(400).collect();
+        return Err(format!(
+            "Empty vision response (parsed {sse_events_seen} SSE events, {} bytes). First bytes: {}",
+            raw_body.len(),
+            if snippet.is_empty() { "(none)".to_string() } else { snippet },
+        ));
+    }
+    Ok(full_text)
+}
+
 // ─── Streaming Chat Completion ──────────────────────────────────────────────
 
 #[derive(Debug, Serialize, Clone)]

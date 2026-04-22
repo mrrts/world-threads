@@ -836,7 +836,56 @@ export const api = {
     invoke<DailyReading[]>("list_daily_readings_cmd", { worldId, limit: limit ?? null }),
   getLatestDailyReading: (worldId: string) =>
     invoke<DailyReading | null>("get_latest_daily_reading_cmd", { worldId }),
+  generateImaginedChapter: (apiKey: string, request: GenerateImaginedChapterRequest) =>
+    invoke<{ chapterId: string }>("generate_imagined_chapter_cmd", { apiKey, request }),
+  listImaginedChaptersForThread: (threadId: string) =>
+    invoke<ImaginedChapter[]>("list_imagined_chapters_for_thread_cmd", { threadId }),
+  getImaginedChapter: (chapterId: string) =>
+    invoke<ImaginedChapter>("get_imagined_chapter_cmd", { chapterId }),
+  deleteImaginedChapter: (chapterId: string) =>
+    invoke<void>("delete_imagined_chapter_cmd", { chapterId }),
+  renameImaginedChapter: (chapterId: string, title: string) =>
+    invoke<void>("rename_imagined_chapter_cmd", { chapterId, title }),
+  getImaginedChapterImageUrl: (chapterId: string) =>
+    invoke<string>("get_imagined_chapter_image_url_cmd", { chapterId }),
 };
+
+export interface ImaginedChapter {
+  chapter_id: string;
+  thread_id: string;
+  world_day: number | null;
+  title: string;
+  seed_hint: string;
+  scene_description: string;
+  image_id: string | null;
+  content: string;
+  created_at: string;
+}
+
+export interface GenerateImaginedChapterRequest {
+  threadId: string;
+  seedHint?: string;
+  continueFromPrevious: boolean;
+  imageTier?: "low" | "medium" | "high";
+}
+
+/** Streaming events emitted during chapter generation. */
+export interface ImaginedChapterStageEvent {
+  chapterId: string;
+  phase: "inventing" | "rendering" | "writing";
+  title?: string | null;
+  toneHint?: string | null;
+}
+export interface ImaginedChapterImageEvent {
+  chapterId: string;
+  dataUrl: string;
+  imageId: string;
+}
+export interface ImaginedChapterDoneEvent {
+  chapterId: string;
+  title: string;
+  content: string;
+}
 
 export interface ReadingDomain {
   name: string;

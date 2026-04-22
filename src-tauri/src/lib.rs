@@ -15,6 +15,7 @@ use commands::journal_cmds::*;
 use commands::user_journal_cmds::*;
 use commands::meanwhile_cmds::*;
 use commands::daily_reading_cmds::*;
+use commands::imagined_chapter_cmds::*;
 use commands::memory_cmds::*;
 use commands::mood_cmds::*;
 use commands::novel_cmds::*;
@@ -253,6 +254,12 @@ pub fn run() {
             maybe_generate_daily_reading_cmd,
             list_daily_readings_cmd,
             get_latest_daily_reading_cmd,
+            generate_imagined_chapter_cmd,
+            list_imagined_chapters_for_thread_cmd,
+            get_imagined_chapter_cmd,
+            delete_imagined_chapter_cmd,
+            rename_imagined_chapter_cmd,
+            get_imagined_chapter_image_url_cmd,
             generate_group_illustration_cmd,
             generate_group_narrative_cmd,
             generate_speech_cmd,

@@ -4,7 +4,7 @@ import { formatMessage, markdownComponents, remarkPlugins, rehypePlugins, isEmoj
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
-import { Send, Loader2, X, BookOpen, MessageSquare, Compass, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, Crosshair, ChevronLeft, ChevronRight, ChevronDown, Play, Pause, Volume2, ArrowRight, Smile, SmilePlus, ScrollText, Package } from "lucide-react";
+import { Send, Loader2, X, BookOpen, MessageSquare, Compass, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, Crosshair, ChevronLeft, ChevronRight, ChevronDown, Play, Pause, Volume2, ArrowRight, Smile, SmilePlus, ScrollText, Package, Sparkles } from "lucide-react";
 import { ReactionBubbles } from "@/components/chat/ReactionBubbles";
 import { ReactionPicker } from "@/components/chat/ReactionPicker";
 import { KeepRecordModal } from "@/components/chat/KeepRecordModal";
@@ -35,6 +35,8 @@ import { TimeDivider } from "@/components/chat/TimeDivider";
 import { ContextMessage } from "@/components/chat/ContextMessage";
 import { PortraitModal } from "@/components/chat/PortraitModal";
 import { StoryConsultantModal } from "@/components/chat/StoryConsultantModal";
+import { ImaginedChapterModal } from "@/components/chat/ImaginedChapterModal";
+import { ImaginedChapterMessage } from "@/components/chat/ImaginedChapterMessage";
 import { IllustrationMessage } from "@/components/chat/IllustrationMessage";
 import { StickyIllustration } from "@/components/chat/StickyIllustration";
 import { useChatState } from "@/hooks/use-chat-state";
@@ -110,6 +112,8 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
   const talkPickerRef = useRef<HTMLDivElement>(null);
   const [portraitModalCharId, setPortraitModalCharId] = useState<string | null>(null);
   const [showConsultant, setShowConsultant] = useState(false);
+  const [showImaginedChapter, setShowImaginedChapter] = useState(false);
+  const [openImaginedChapterId, setOpenImaginedChapterId] = useState<string | null>(null);
   const [showSettingsPopover, setShowSettingsPopover] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
@@ -608,6 +612,15 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
           </button>
           <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/consultant:opacity-100 pointer-events-none transition-opacity">Consultant</span>
         </div>
+        <div className="relative group/chapter">
+          <button
+            onClick={() => { setOpenImaginedChapterId(null); setShowImaginedChapter(true); }}
+            className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
+          >
+            <Sparkles size={15} />
+          </button>
+          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/chapter:opacity-100 pointer-events-none transition-opacity">Imagined Chapter</span>
+        </div>
       </div>
 
       <div className="flex-1 relative overflow-hidden z-10">
@@ -708,6 +721,20 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                 {meanwhileBefore}
                 <TimeDivider current={msg} previous={prevMsg} />
                 <InventoryUpdateMessage message={msg} />
+              </React.Fragment>);
+            }
+
+            if (msg.role === "imagined_chapter") {
+              return (<React.Fragment key={msg.message_id}>
+                {meanwhileBefore}
+                <TimeDivider current={msg} previous={prevMsg} />
+                <ImaginedChapterMessage
+                  message={msg}
+                  onOpen={(chapterId) => {
+                    setOpenImaginedChapterId(chapterId);
+                    setShowImaginedChapter(true);
+                  }}
+                />
               </React.Fragment>);
             }
 
@@ -1486,6 +1513,17 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
         userAvatarUrl={userAvatarUrl}
         notifyOnMessage={store.notifyOnMessage}
         chatFontSize={store.chatFontSize}
+      />
+
+      <ImaginedChapterModal
+        open={showImaginedChapter}
+        onClose={() => { setShowImaginedChapter(false); setOpenImaginedChapterId(null); }}
+        apiKey={store.apiKey}
+        threadId={store.messages[0]?.thread_id ?? ""}
+        characterPortraitUrl={groupCharacters[0] ? store.activePortraits[groupCharacters[0].character_id]?.data_url : undefined}
+        notifyOnMessage={store.notifyOnMessage}
+        chatFontSize={store.chatFontSize}
+        openChapterId={openImaginedChapterId}
       />
 
       {userAvatarUrl && (

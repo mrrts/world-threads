@@ -1455,5 +1455,39 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             ON meanwhile_events(world_id, created_at DESC);
     ").ok();
 
+    // imagined_chapters — novel chapters of moments that DIDN'T happen
+    // in chat but are plausible-in-world / in-character. The "Imagined
+    // Chapter" feature runs a three-stage telephone pipeline per chapter:
+    //   1. Invent a specific visual moment for the chat's characters
+    //      (optional user hint).
+    //   2. Render that description as an illustration with character +
+    //      user portraits as reference images.
+    //   3. Feed ONLY the image + reference portraits into a vision-aware
+    //      model and stream a novel chapter that answers the image.
+    // The step-1 scene_description is stored for debug/replay but NOT
+    // shown to the chapter writer — the inversion ("image-first, prose
+    // answers") is the whole point.
+    //
+    // Scoped to thread_id so the sidebar of past chapters for a given
+    // chat mirrors the consultant-chats sidebar pattern. image_id
+    // references world_images.image_id so the illustration lives
+    // alongside the rest of the gallery and gets the same storage +
+    // backup treatment.
+    conn.execute_batch("
+        CREATE TABLE IF NOT EXISTS imagined_chapters (
+            chapter_id TEXT PRIMARY KEY,
+            thread_id TEXT NOT NULL,
+            world_day INTEGER,
+            title TEXT NOT NULL DEFAULT '',
+            seed_hint TEXT NOT NULL DEFAULT '',
+            scene_description TEXT NOT NULL DEFAULT '',
+            image_id TEXT,
+            content TEXT NOT NULL DEFAULT '',
+            created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_imagined_chapters_thread
+            ON imagined_chapters(thread_id, created_at DESC);
+    ").ok();
+
     Ok(())
 }

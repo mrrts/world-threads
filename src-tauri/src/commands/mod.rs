@@ -23,3 +23,4 @@ pub mod journal_cmds;
 pub mod user_journal_cmds;
 pub mod meanwhile_cmds;
 pub mod daily_reading_cmds;
+pub mod imagined_chapter_cmds;

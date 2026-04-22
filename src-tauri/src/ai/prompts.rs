@@ -3301,3 +3301,336 @@ pub fn json_array_to_strings(val: &Value) -> Vec<String> {
         None => Vec::new(),
     }
 }
+
+// ─── IMAGINED CHAPTER — scene invention + chapter-from-image ────────────────
+//
+// The "Imagined Chapter" feature runs a three-stage telephone pipeline:
+//   (1) Invent a specific visual moment for this chat's characters,
+//       optionally seeded by a user hint.
+//   (2) Render that description as an illustration with character +
+//       user portraits attached as reference images.
+//   (3) Feed ONLY the image + reference portraits into a vision-aware
+//       model and write a chapter that ANSWERS the image. The step-1
+//       prose is never shown to the step-3 model — the telephone-game
+//       inversion ("image-first, prose answers") is the whole point.
+//
+// Two prompt builders live here:
+//   - build_scene_invention_prompt   — step 1
+//   - build_chapter_from_image_instruction — step 3 (text half; the
+//     image + portraits are attached as VisionContent at the call site)
+
+/// Step 1: invent a specific visual moment. Output is JSON:
+///   { "title": "...", "image_prompt": "...", "tone_hint": "..." }
+///
+/// The image_prompt MUST be visually explicit (posture, light, what's
+/// in hands, what the faces are doing, where they stand) because it is
+/// what goes to the image model. It MUST name every character and the
+/// user by their actual display names, because the image model is
+/// given portrait references LABELED by name and needs to bind the
+/// right face to the right position.
+/// Render per-character most-recent journal entries as a labeled block
+/// for the Imagined-Chapter prompts. The existing `render_recent_journals_block`
+/// is scoped to a single primary character ("YOUR journal"); this variant
+/// covers the whole cast in one block, each entry labeled by name, since
+/// the chapter reasoning is cross-cast.
+pub fn render_cast_journals_block(
+    entries_by_name: &[(String, crate::db::queries::JournalEntry)],
+) -> String {
+    if entries_by_name.is_empty() { return String::new(); }
+    let body: Vec<String> = entries_by_name.iter()
+        .map(|(name, e)| format!(
+            "### {name} — Day {day}\n{content}",
+            name = name,
+            day = e.world_day,
+            content = e.content.trim(),
+        ))
+        .collect();
+    format!(
+        "RECENT JOURNAL PAGES FROM THE CAST (one per character, the most recent — what's been sitting with each of them privately; read for continuity and texture, do not have anyone quote or recap their own journal out loud):\n\n{}",
+        body.join("\n\n"),
+    )
+}
+
+pub fn build_scene_invention_prompt(
+    world: &World,
+    cast: &[&Character],
+    user_profile: Option<&UserProfile>,
+    recent_kept_facts: &[String],
+    cast_recent_journals: &[(String, crate::db::queries::JournalEntry)],
+    // Recent merged-history lines (cross-thread) so the inventor knows
+    // where the story actually stands in the cast's current life. Keep
+    // capped to roughly the last 40 lines; the inventor reads for
+    // texture and current state, not as a recap.
+    recent_history: &[crate::db::queries::ConversationLine],
+    seed_hint: Option<&str>,
+    // When set: the new chapter should chronologically + thematically
+    // continue from this previous chapter. Pass the prior chapter's
+    // full prose; the prompt extracts what it needs without overwhelming.
+    previous_chapter: Option<&str>,
+) -> Vec<crate::ai::openai::ChatMessage> {
+    let user_name = user_profile
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("the human");
+
+    let cast_names: Vec<String> = cast.iter().map(|c| c.display_name.clone()).collect();
+    let cast_names_joined = match cast_names.len() {
+        0 => "(no characters)".to_string(),
+        1 => cast_names[0].clone(),
+        2 => format!("{} and {}", cast_names[0], cast_names[1]),
+        n => {
+            let mut s = String::new();
+            for (i, name) in cast_names.iter().enumerate() {
+                if i == n - 1 { s.push_str(", and "); }
+                else if i > 0 { s.push_str(", "); }
+                s.push_str(name);
+            }
+            s
+        }
+    };
+
+    // Cast block: name, identity, backstory summary, visual.
+    let mut cast_block = String::new();
+    for c in cast {
+        cast_block.push_str(&format!("\n## {name}\n", name = c.display_name));
+        if !c.identity.is_empty() {
+            cast_block.push_str(&format!("Identity: {}\n", c.identity));
+        }
+        if !c.visual_description.is_empty() {
+            cast_block.push_str(&format!("How they look: {}\n", c.visual_description));
+        }
+        let backstory = json_array_to_strings(&c.backstory_facts);
+        if !backstory.is_empty() {
+            cast_block.push_str("Backstory anchors:\n");
+            for f in backstory.iter().take(6) {
+                cast_block.push_str(&format!("- {f}\n"));
+            }
+        }
+    }
+
+    let user_block = if let Some(p) = user_profile {
+        let mut s = format!("\n## {} (the user / human in this world)\n", p.display_name);
+        if !p.description.is_empty() {
+            s.push_str(&format!("{}\n", p.description));
+        }
+        s
+    } else {
+        String::new()
+    };
+
+    let world_block = {
+        let mut s = format!("World: {}\n", world.name);
+        if !world.description.is_empty() {
+            s.push_str(&world.description);
+            s.push('\n');
+        }
+        let invariants = json_array_to_strings(&world.invariants);
+        if !invariants.is_empty() {
+            s.push_str("World rules:\n");
+            for inv in invariants.iter().take(6) {
+                s.push_str(&format!("- {inv}\n"));
+            }
+        }
+        s
+    };
+
+    let canon_block = if recent_kept_facts.is_empty() {
+        String::new()
+    } else {
+        let mut s = String::from("\nRecent canonized truths about these people (do NOT contradict):\n");
+        for f in recent_kept_facts.iter().take(8) {
+            s.push_str(&format!("- {}\n", f.chars().take(300).collect::<String>()));
+        }
+        s
+    };
+
+    let journals_block = {
+        let rendered = render_cast_journals_block(cast_recent_journals);
+        if rendered.is_empty() { String::new() } else { format!("\n{rendered}\n") }
+    };
+
+    let history_block = if recent_history.is_empty() {
+        String::new()
+    } else {
+        let mut s = String::from("\nRECENT MERGED HISTORY (across this character's threads — newest at the bottom; read for where things actually stand right now, not as a recap):\n\n");
+        // Cap text to keep token cost bounded. ~280 chars per line × 40 lines ≈ 11k chars max.
+        for line in recent_history.iter().rev().take(40).rev() {
+            let clipped: String = line.content.chars().take(280).collect();
+            s.push_str(&format!("{}: {}\n", line.speaker, clipped));
+        }
+        s
+    };
+
+    let prev_chapter_block = match previous_chapter {
+        Some(prev) if !prev.trim().is_empty() => format!(
+            "\nIMMEDIATELY PREVIOUS IMAGINED CHAPTER (the user has asked for a continuation — the new scene must chronologically pick up from where this one left off, with the same characters in a coherent next-beat. Honor what is established here):\n\n{}\n",
+            prev.trim().chars().take(3000).collect::<String>(),
+        ),
+        _ => String::new(),
+    };
+
+    let hint_block = match seed_hint {
+        Some(h) if !h.trim().is_empty() => format!(
+            "\nUSER'S HINT for what they'd like to read (honor this — it's their nudge, not yours to override):\n{}\n",
+            h.trim()
+        ),
+        _ => "\nNo user hint — LLM's choice. Surprise them with something true to these people.\n".to_string(),
+    };
+
+    let system = r#"You are inventing a single specific VISUAL MOMENT for characters in a living world. The moment has not yet been told in the chat history. It is new — but it is PLAUSIBLE and IN-CHARACTER and TRUE to who these people are.
+
+Constraints on what you're writing:
+- ONE moment. Not a montage. Not a sequence. A single frame a painter could render.
+- VISUALLY SPECIFIC — posture, light, hands, what is on faces, what is in the scene, the exact configuration of bodies and objects. An artist will paint from your description; they need the picture, not the abstraction.
+- NAMES USED EVERY TIME. Never "a man" or "the other character." Say the character's actual name every time you refer to them. If the user is in the scene, name them too.
+- IN CHARACTER. A scene must fit who these people are — their work, their register, their way of being in the world. The scene can surprise; it cannot contradict.
+- IN WORLD. The world's standing rules, cosmology, and canonized truths apply. No violations.
+- ORDINARY OVER EPIC. Small, specific, real-life moments beat epic spectacle. The cost of a bad knot, a coffee going cold, a knock at the door — these earn their weight. Spare the spectacle.
+- NO META. Don't describe the scene's meaning. Describe what is happening in the frame. Meaning is for the chapter writer to discover.
+
+Output format (STRICT JSON, nothing else — no markdown fences, no commentary):
+{
+  "title": "2-5 word chapter title, no period",
+  "image_prompt": "A single paragraph, 80-150 words, describing the image a visual artist would paint. Every character named by name every time. Posture, light, hands, faces, environment. No abstraction — only what the eye sees.",
+  "tone_hint": "one word or short phrase: wistful, playful, sober, searching, ordinary, warm, heavy, strange, etc."
+}
+
+STRICT: output JSON only. Do not preface with 'Here is' or 'I'll write'. Do not wrap in ``` fences. JSON, nothing else."#;
+
+    let user_turn = format!(
+        "Invent a chapter for {cast} in this world.\n\n\
+         {world_block}\n\
+         # CAST{cast_block}\n\
+         {user_block}\
+         {canon_block}\
+         {journals_block}\
+         {history_block}\
+         {prev_chapter_block}\
+         {hint_block}\n\
+         Reminder: the user (named {user_name}) may or may not be IN the scene — your choice. Many of the best chapters are private scenes among the characters when the user isn't present. If you do put the user in, name them as {user_name}.\n\n\
+         Now return the JSON.",
+        cast = cast_names_joined,
+        world_block = world_block,
+        cast_block = cast_block,
+        user_block = user_block,
+        canon_block = canon_block,
+        journals_block = journals_block,
+        history_block = history_block,
+        prev_chapter_block = prev_chapter_block,
+        hint_block = hint_block,
+        user_name = user_name,
+    );
+
+    vec![
+        crate::ai::openai::ChatMessage { role: "system".to_string(), content: system.to_string() },
+        crate::ai::openai::ChatMessage { role: "user".to_string(), content: user_turn },
+    ]
+}
+
+/// Step 3: the TEXT portion of the chapter-from-image prompt. The caller
+/// composes this alongside the image + labeled portraits into a
+/// VisionMessage array. This function returns the full system prompt
+/// string; the user message is built at the call site because it needs
+/// to attach VisionContent blocks (image URL, portrait URLs + labels).
+///
+/// The system prompt intentionally does NOT include the step-1 scene
+/// description. The telephone-game inversion — image-first, prose
+/// answers what the eye sees — is what makes this feature different
+/// from novelization. Do not feed step 1 through to step 3.
+pub fn build_chapter_from_image_system_prompt(
+    world: &World,
+    cast: &[&Character],
+    user_profile: Option<&UserProfile>,
+    cast_recent_journals: &[(String, crate::db::queries::JournalEntry)],
+    // Recent merged history (cross-thread) so the chapter writer knows
+    // what's been happening lately to these people. Same source as the
+    // scene-invention pass — different audience.
+    recent_history: &[crate::db::queries::ConversationLine],
+    // When set: continuation of this previous chapter. The model is told
+    // to honor what was established (voice, lingering threads, where the
+    // prior beat left off) while still letting the new image be primary.
+    previous_chapter: Option<&str>,
+) -> String {
+    // Reuse the narrative stack as the base — craft notes, invariants,
+    // agape/truth/cosmology/soundness all apply to a chapter the same
+    // as to a narrative beat.
+    //
+    // build_narrative_system_prompt requires one primary character +
+    // optional additional cast. Pick the first as primary and pass the
+    // rest as additional.
+    let primary = cast.first().copied();
+    let additional: Vec<&Character> = cast.iter().skip(1).copied().collect();
+
+    let mut base = if let Some(p) = primary {
+        build_narrative_system_prompt(
+            world,
+            p,
+            if additional.is_empty() { None } else { Some(&additional[..]) },
+            user_profile,
+            None, // mood_directive
+            None, // narration_tone
+            None, // narration_instructions
+        )
+    } else {
+        NARRATIVE_SYSTEM_PREAMBLE.to_string()
+    };
+
+    // Append per-character recent journals so the chapter writer has
+    // each character's interior register to draw on.
+    let journals = render_cast_journals_block(cast_recent_journals);
+    if !journals.is_empty() {
+        base.push_str("\n\n");
+        base.push_str(&journals);
+    }
+
+    // Append recent merged history so the chapter writer knows where
+    // the story stands at the moment this image is captured. Same data
+    // the scene inventor saw — keeps the two stages in agreement about
+    // when "now" is, even though step 3 doesn't see step 1's prose.
+    if !recent_history.is_empty() {
+        base.push_str("\n\n# WHAT HAS BEEN HAPPENING LATELY (chronological, newest at the bottom — read for current state, do not recap)\n\n");
+        for line in recent_history.iter().rev().take(40).rev() {
+            let clipped: String = line.content.chars().take(280).collect();
+            base.push_str(&format!("{}: {}\n", line.speaker, clipped));
+        }
+    }
+
+    // Append previous-chapter continuation block when present.
+    if let Some(prev) = previous_chapter {
+        let trimmed = prev.trim();
+        if !trimmed.is_empty() {
+            base.push_str(
+                "\n\n# CONTINUATION OF A PREVIOUS CHAPTER\n\n\
+                 The user has asked you to continue from the previous imagined chapter \
+                 in this thread. The chapter you write now should pick up the voice, \
+                 the lingering threads, and the relational state where that one left \
+                 off — but the IMAGE you are about to see is still the primary subject. \
+                 Do not re-narrate what already happened. Do not summarize. Let the prior \
+                 chapter's truths sit underneath this one as established context, and \
+                 write what THIS new image now shows happening next.\n\n\
+                 PREVIOUS CHAPTER (text, no image — that one was rendered separately):\n\n",
+            );
+            // Cap at a generous length; the chapter writer mostly needs voice + last-beat continuity.
+            let snippet: String = trimmed.chars().take(4000).collect();
+            base.push_str(&snippet);
+            base.push('\n');
+        }
+    }
+
+    // Append the chapter-specific directive block.
+    base.push_str("\n\n# YOU ARE WRITING A CHAPTER FROM AN IMAGE\n\n");
+    base.push_str(
+        "The user message will contain ONE IMAGE and LABELED PORTRAITS of the people who appear in this world. The image is a scene from this world that has not been narrated in chat. You have NOT been given the prompt that generated the image. Your only source is the image itself plus the reference portraits that tell you who each person is.\n\n\
+         Read the image carefully before writing.\n\n\
+         - What are the characters DOING in this frame? (their posture, where their hands are, where they're looking)\n\
+         - WHERE are they? (the environment, the light, the time of day)\n\
+         - What is in their faces? (what the expression is, without naming it abstractly)\n\
+         - WHAT is in the scene alongside them? (objects, other bodies, weather, textures)\n\n\
+         Use the labeled portraits to bind identity: the person in the image whose features match the portrait labeled 'Aaron' is Aaron. Name them in the prose. Never say 'the man' or 'the other character.'\n\n\
+         Write ONE CHAPTER, 600-1200 words of third-person narrative prose. The chapter is about THIS MOMENT — do not drift into a sequence of scenes, do not flash back to other days, do not introduce events the image cannot support. The image is the whole subject; the prose expands what the eye sees into what the reader feels.\n\n\
+         Open with a beat that lands the reader in the frame. Let the middle breathe. Close honestly. No headings, no chapter number, no preamble — just the prose.\n\n\
+         Honor every standing invariant (cosmology, agape, truth, soundness, daylight). Honor every craft note that applies. Length obedience is ABSOLUTE: stop by ~1,200 words even if the moment could go further. Compression is a kindness to the reader.\n"
+    );
+
+    base
+}
+
