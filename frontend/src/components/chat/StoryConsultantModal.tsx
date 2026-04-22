@@ -5,6 +5,7 @@ import { X, Loader2, Send, Lightbulb, Sparkles, Trash2, ChevronDown, Pencil, Plu
 import { formatMessage, markdownComponents, remarkPlugins, rehypePlugins } from "./formatMessage";
 import { listen } from "@tauri-apps/api/event";
 import { api, type ConsultantChat } from "@/lib/tauri";
+import { BackstageActionCard, parseBackstageSegments, type BackstageActionContext } from "./BackstageActionCard";
 import { playChime } from "@/lib/chime";
 import { Button } from "@/components/ui/button";
 import { chatFontPx } from "@/lib/chat-font";
@@ -547,7 +548,26 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                           style={{ fontSize: `${chatFontPx(chatFontSize)}px` }}
                           className="prose prose-sm max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-secondary-foreground)] [--tw-prose-headings:var(--color-secondary-foreground)] [--tw-prose-bold:var(--color-secondary-foreground)] [--tw-prose-bullets:var(--color-secondary-foreground)] [--tw-prose-counters:var(--color-secondary-foreground)] [--tw-prose-links:var(--color-primary)]"
                         >
-                          <Markdown components={markdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{formatMessage(msg.content)}</Markdown>
+                          {activeMode === "backstage" && !isStreamingAssistant ? (
+                            <>
+                              {parseBackstageSegments(msg.content).map((seg, segIdx) => (
+                                seg.kind === "text"
+                                  ? (seg.value.trim()
+                                      ? <Markdown key={segIdx} components={markdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{formatMessage(seg.value)}</Markdown>
+                                      : null)
+                                  : <BackstageActionCard
+                                      key={segIdx}
+                                      block={seg.block}
+                                      ctx={{
+                                        activeThreadId: threadId,
+                                        onAppliedClose: onClose,
+                                      } as BackstageActionContext}
+                                    />
+                              ))}
+                            </>
+                          ) : (
+                            <Markdown components={markdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{formatMessage(msg.content)}</Markdown>
+                          )}
                         </div>
                       ) : (
                         <p>{msg.content}</p>

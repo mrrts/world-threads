@@ -472,6 +472,30 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
     if (hasInput === empty) setHasInput(!empty);
   }, [inputRef, inputValueRef, hasInput, setHasInput]);
 
+  // Backstage action: "Stage in chat" — AI-drafted message text gets
+  // placed in this chat's input when the user accepts the action card.
+  // Event dispatched from BackstageActionCard; we filter by thread_id so
+  // a stage meant for another chat doesn't land here.
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { threadId?: string; text?: string };
+      if (!detail?.text) return;
+      const myThread = store.messages[0]?.thread_id;
+      if (detail.threadId && myThread && detail.threadId !== myThread) return;
+      const ta = inputRef.current;
+      if (!ta) return;
+      ta.value = detail.text;
+      inputValueRef.current = detail.text;
+      ta.focus();
+      ta.setSelectionRange(detail.text.length, detail.text.length);
+      ta.style.height = "auto";
+      ta.style.height = `${ta.scrollHeight}px`;
+      setHasInput(!!detail.text.trim());
+    };
+    window.addEventListener("backstage:stage-message", handler as EventListener);
+    return () => window.removeEventListener("backstage:stage-message", handler as EventListener);
+  }, [inputRef, inputValueRef, setHasInput, store.messages]);
+
   const openGallery = useCallback(async () => {
     const lastIllus = store.messages.filter((m) => m.role === "illustration").at(-1);
     if (!lastIllus || !store.activeCharacter) return;
