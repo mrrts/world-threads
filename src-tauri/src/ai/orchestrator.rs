@@ -2148,6 +2148,16 @@ pub struct ProposedCanonUpdate {
 
 fn default_add_action() -> String { "add".to_string() }
 
+/// Classify a moment into 1 or 2 proposed canonization updates.
+///
+/// `act` is the two-act gate: either `"light"` ("Remember this") or
+/// `"heavy"` ("This changes them"). Both acts admit all five kinds
+/// (description_weave / voice_rule / boundary / known_fact /
+/// open_loop); the act is a weight/register cue for the classifier,
+/// not a kind restriction — a boundary or fact can be heavy when it's
+/// load-bearing to who the subject IS, or light when it's a specific
+/// detail worth carrying. Both acts support add/update/remove actions
+/// so canon is allowed to evolve, develop nuance, or evaporate.
 pub async fn propose_canonization_updates(
     base_url: &str,
     api_key: &str,
@@ -2157,6 +2167,7 @@ pub async fn propose_canonization_updates(
     context_messages: &[Message],
     subjects: &[CanonizationSubject],
     user_hint: Option<&str>,
+    act: &str,
 ) -> Result<(Vec<ProposedCanonUpdate>, Option<openai::Usage>), String> {
     if subjects.is_empty() {
         return Err("no canonization subjects provided".to_string());
@@ -2199,17 +2210,39 @@ pub async fn propose_canonization_updates(
         None => String::new(),
     };
 
+    // Compose the system prompt per act. The two acts differ in WEIGHT,
+    // not in which kinds they produce — a boundary or fact can be heavy
+    // (load-bearing to who the subject IS) or light (a specific detail
+    // worth carrying). All five kinds remain available in both acts;
+    // the act biases the classifier's register — what scale of finding
+    // to reach for. See project memory project_canonization_open_question.
+    let (act_header, allowed_kinds_doc) = match act {
+        "heavy" => (
+            "ACT: **HEAVY — \"This changes them.\"** The user is declaring this moment load-bearing — it reshapes who the subject is in a way the canon needs to reflect. Reach for the revelation that actually shifts the reader's understanding of the subject. A heavy update is one that, if someone re-read the character's description and canon a year from now, would clearly be present. Not every kind fits every heavy moment — pick the kind that CARRIES the weight best.",
+            r#"# Kinds — all five available in this act; pick the one that bears the weight
+- **description_weave** — the moment rewrites who the subject IS at their core; the full description needs to integrate the new truth. Most heavy-act moments of "fundamental revelation" land here. Cap at 140 words. No meta-frames.
+- **voice_rule** — even at the heavy-act register, sometimes what changes is HOW they speak: a refusal pattern, a phrasing they now reach for, a register they've settled into. One short bullet.
+- **boundary** — a stated or demonstrated line they will not cross. Heavy-act boundaries are load-bearing ones — not preferences, not minor inconveniences, but commitments the character will hold under pressure. One short sentence.
+- **known_fact** — a concrete specific fact that now belongs to the subject's core biography. Heavy-act facts are ones that, if contradicted later, would change who the subject is. Specifics over themes.
+- **open_loop** — an unresolved thread the subject is carrying. Heavy-act open_loops are the ones that actually haunt them: a question that won't leave, a promise whose non-kept-ness is becoming formative."#,
+        ),
+        _ => (
+            "ACT: **LIGHT — \"Remember this.\"** The user is marking this moment as worth carrying but NOT as reshaping who the subject fundamentally is. Reach for the specific detail, the incidental fact, the small tic of speech, the minor preference — things worth remembering that shouldn't claim identity-reshaping weight. A light update is one that can sit on the character's list without demanding that anyone revisit the core description.",
+            r#"# Kinds — all five available in this act; pick the one that fits the detail
+- **description_weave** — available but rarely appropriate here. Only use if the moment TRULY reshapes identity prose and the user may have mis-picked "light." Prefer one of the list-field kinds when in doubt.
+- **voice_rule** — the moment shows HOW the subject speaks: a phrasing they reach for, a register they refuse, a tic, a turn, a vocabulary choice only they make. One short bullet.
+- **boundary** — a stated or demonstrated line they won't cross at this moment. Light-act boundaries are smaller scoped — a preference, a habit-of-refusal, not a life-commitment. One short sentence.
+- **known_fact** — a concrete specific fact about daily life, preferences, habits, history — the kind of thing you'd want to remember without it becoming a load-bearing claim about identity. "Takes coffee with a splash of cream, no sugar" beats "has strong feelings about coffee."
+- **open_loop** — an unresolved thread: a question still hanging, an errand not yet run, a small intention not yet acted on. Light-act open_loops are the minor ones; the ones that haunt belong to the heavy act."#,
+        ),
+    };
+
     let system = r#"You extract 1 or 2 canonization updates from a moment a user has deliberately flagged as meaningful. Return STRICT JSON only.
 
 # Your job
-The user clicked "Canonize" on this moment because it tells them something worth making canonical. Find the strongest ONE or TWO ways the moment becomes canon. You MUST return at least one update; you MUST NOT return more than two. Never zero. The click was deliberate — find the reason.
+The user clicked "Canonize" on this moment AND chose a specific ceremony for it. __ACT_HEADER__ You MUST return at least one update; you MUST NOT return more than two. Never zero. The click was deliberate — find the reason.
 
-# Update kinds (pick the one that fits each finding)
-- **description_weave** — the moment reveals something fundamental about WHO the subject IS at their core. Requires rewriting the full current_description to integrate the truth organically. Use this when the moment shifts the reader's understanding of the subject in a load-bearing way. NOT for incidental facts, tics, or stated rules.
-- **voice_rule** — the moment shows HOW the subject speaks: a phrasing they reach for, a register they refuse, a tic, a turn, a vocabulary choice only they make. One short bullet.
-- **boundary** — the subject has stated or demonstrated a line they will not cross. A stated "won't / don't / not this" — a refusal the scene makes concrete. One short sentence.
-- **known_fact** — a concrete specific fact about the subject's life, past, relationships, preferences, habits, daily reality. Prefer specifics over themes ("takes coffee with a splash of cream, no sugar" beats "has strong feelings about coffee").
-- **open_loop** — an unresolved thread the subject is carrying: a question still hanging, a promise not yet kept, an intention not yet acted on, an ambivalence that hasn't settled. Phrased as the unresolved thing itself.
+__ALLOWED_KINDS_DOC__
 
 # Action (what to do to the canonical record) — critical
 For list kinds (voice_rule / boundary / known_fact / open_loop), every update must specify one of:
@@ -2264,7 +2297,9 @@ The `justification` field is MANDATORY on EVERY update in the `updates` array �
   ]
 }
 
-Return ONLY the JSON object. No markdown, no preamble, no commentary."#.to_string();
+Return ONLY the JSON object. No markdown, no preamble, no commentary."#
+        .replace("__ACT_HEADER__", act_header)
+        .replace("__ALLOWED_KINDS_DOC__", allowed_kinds_doc);
 
     let user = format!(
         "# THE MOMENT\n{context_block}\n\n\
@@ -2325,6 +2360,10 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#.to_strin
     if parsed.updates.is_empty() {
         return Err("classifier returned zero updates — this is disallowed; retry".to_string());
     }
+    // All five kinds remain available in both acts — the act is a
+    // weight/register cue for the classifier, not a kind restriction.
+    // A boundary or known_fact can be heavy (load-bearing to who the
+    // subject IS) or light (a specific detail worth carrying).
     let valid_kinds = ["description_weave", "voice_rule", "boundary", "known_fact", "open_loop"];
     let valid_actions = ["add", "update", "remove"];
     let mut out: Vec<ProposedCanonUpdate> = Vec::new();

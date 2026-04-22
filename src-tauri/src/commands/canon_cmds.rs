@@ -268,12 +268,22 @@ pub fn save_kept_record_cmd(
 #[serde(rename_all = "camelCase")]
 pub struct ProposeAutoCanonRequest {
     pub source_message_id: String,
+    /// Which canonization ceremony the user picked at the gate.
+    /// "light" — "Remember this" (append / update / remove a list-field
+    /// canon entry: voice_rule / boundary / known_fact / open_loop).
+    /// "heavy" — "This changes them" (rewrite the description_weave).
+    /// Defaults to "light" for backward compatibility with any caller
+    /// that forgets to pass it.
+    #[serde(default = "default_light_act")]
+    pub act: String,
     /// Free-text user hint to steer the classifier ("add as boundary for
     /// Darren", "remember Anna likes coffee with cream, no sugar").
     /// Optional — blank or missing is fine.
     #[serde(default)]
     pub user_hint: String,
 }
+
+fn default_light_act() -> String { "light".to_string() }
 
 /// Classify a moment into 1-2 proposed canonization updates without
 /// applying anything. Returns a preview the UI can display (and
@@ -349,6 +359,7 @@ pub async fn propose_auto_canon_cmd(
         &model_config.chat_api_base(), &api_key, &model_config.memory_model,
         &source_msg, &source_speaker_label, &context_msgs, &subjects,
         Some(&request.user_hint),
+        &request.act,
     ).await?;
 
     if let Some(u) = &usage {

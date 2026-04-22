@@ -738,7 +738,7 @@ export const api = {
   /// subject, content, optional prior content for diff, and a brief
   /// justification — the UI can let the user edit content and then
   /// commit.
-  proposeAutoCanon: (apiKey: string, request: { sourceMessageId: string; userHint?: string }) =>
+  proposeAutoCanon: (apiKey: string, request: { sourceMessageId: string; act: "light" | "heavy"; userHint?: string }) =>
     invoke<ProposedCanonUpdate[]>("propose_auto_canon_cmd", { apiKey, request }),
   commitAutoCanon: (request: { sourceMessageId: string; updates: ProposedCanonUpdate[]; userNote?: string }) =>
     invoke<AppliedCanonUpdate[]>("commit_auto_canon_cmd", { request }),

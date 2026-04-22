@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Loader2, RotateCw, ScrollText, Sparkles, X } from "lucide-react";
+import { ArrowLeft, BookOpen, Feather, Loader2, RotateCw, ScrollText, X } from "lucide-react";
 import {
   api,
   type KeptRecord,
@@ -45,8 +45,13 @@ export function KeepRecordModal({
   void userProfile;
   void characters;
 
-  type Phase = "idle" | "proposing" | "preview" | "committing" | "applied";
-  const [phase, setPhase] = useState<Phase>("idle");
+  // Two-act gate phase precedes the classifier call. The user picks
+  // "light" (remember this) or "heavy" (this changes them); the same
+  // modal branches the ceremony from that choice.
+  type Phase = "gate" | "proposing" | "preview" | "committing" | "applied";
+  type Act = "light" | "heavy";
+  const [phase, setPhase] = useState<Phase>("gate");
+  const [act, setAct] = useState<Act | null>(null);
   const [userHint, setUserHint] = useState("");
   const [userNote, setUserNote] = useState("");
   const [proposals, setProposals] = useState<ProposedCanonUpdate[]>([]);
@@ -56,7 +61,8 @@ export function KeepRecordModal({
   // Reset modal state each time it opens or closes.
   useEffect(() => {
     if (!open) {
-      setPhase("idle");
+      setPhase("gate");
+      setAct(null);
       setUserHint("");
       setUserNote("");
       setProposals([]);
@@ -65,21 +71,30 @@ export function KeepRecordModal({
     }
   }, [open]);
 
-  async function runPropose() {
+  async function runPropose(pickedAct: Act) {
     if (!sourceMessage) return;
+    setAct(pickedAct);
     setPhase("proposing");
     setError(null);
     try {
       const got = await api.proposeAutoCanon(apiKey, {
         sourceMessageId: sourceMessage.message_id,
+        act: pickedAct,
         userHint: userHint.trim() || undefined,
       });
       setProposals(got);
       setPhase("preview");
     } catch (e) {
       setError(String(e));
-      setPhase("idle");
+      setPhase("gate");
     }
+  }
+
+  function backToGate() {
+    setPhase("gate");
+    setProposals([]);
+    setApplied([]);
+    setError(null);
   }
 
   async function runCommit() {
@@ -144,7 +159,13 @@ export function KeepRecordModal({
           <div className="flex items-center gap-2">
             <ScrollText size={18} className="text-primary" />
             <h2 className="text-base font-semibold">
-              {phase === "applied" ? "Canonized" : "Canonize this moment"}
+              {phase === "applied"
+                ? "Canonized"
+                : phase === "gate"
+                ? "Canonize this moment"
+                : act === "heavy"
+                ? "This changes them"
+                : "Remember this"}
             </h2>
           </div>
 
@@ -159,12 +180,12 @@ export function KeepRecordModal({
             <div className="text-sm whitespace-pre-wrap line-clamp-6">{sourceMessage.content}</div>
           </div>
 
-          {/* Phase: idle — collect optional hint + fire propose */}
-          {phase === "idle" && (
+          {/* Phase: gate — the two-act primary choice */}
+          {phase === "gate" && (
             <>
               <div>
                 <label className="text-xs font-medium text-muted-foreground block mb-1.5">
-                  Optional hint for the classifier
+                  Optional hint (applies to either act)
                 </label>
                 <textarea
                   value={userHint}
@@ -173,9 +194,35 @@ export function KeepRecordModal({
                   placeholder={`e.g. "add this as a boundary for Darren" or "remember Anna likes her coffee with a splash of cream, no sugar"`}
                   className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring resize-y"
                 />
-                <div className="text-[11px] text-muted-foreground/70 mt-1">
-                  Steers the LLM's choice of update type and subject. Leave blank to let it decide.
-                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                  onClick={() => runPropose("light")}
+                  disabled={!apiKey}
+                  className="text-left rounded-xl border border-border bg-secondary/30 hover:bg-secondary/60 hover:border-primary/50 transition-colors p-4 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer group"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <Feather size={16} className="text-primary" />
+                    <span className="text-sm font-semibold">Remember this</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground leading-snug">
+                    A fact, boundary, tic, or open thread worth carrying. Does not reshape who they fundamentally are.
+                  </div>
+                </button>
+                <button
+                  onClick={() => runPropose("heavy")}
+                  disabled={!apiKey}
+                  className="text-left rounded-xl border border-border bg-secondary/30 hover:bg-secondary/60 hover:border-primary/50 transition-colors p-4 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer group"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <BookOpen size={16} className="text-primary" />
+                    <span className="text-sm font-semibold">This changes them</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground leading-snug">
+                    A load-bearing revelation the canon needs to hold. Reshapes how this character is carried from here forward.
+                  </div>
+                </button>
               </div>
             </>
           )}
@@ -243,19 +290,16 @@ export function KeepRecordModal({
 
           {/* Actions — phase-dependent */}
           <div className="flex items-center justify-end gap-2 pt-1">
-            {phase === "idle" && (
-              <>
-                <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-                <Button onClick={runPropose} disabled={!apiKey}>
-                  <Sparkles size={14} className="mr-1.5" />
-                  Canonize
-                </Button>
-              </>
+            {phase === "gate" && (
+              <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
             )}
             {phase === "preview" && (
               <>
-                <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-                <Button variant="outline" onClick={runPropose}>
+                <Button variant="ghost" onClick={backToGate}>
+                  <ArrowLeft size={14} className="mr-1.5" />
+                  Back
+                </Button>
+                <Button variant="outline" onClick={() => act && runPropose(act)}>
                   <RotateCw size={14} className="mr-1.5" />
                   Regenerate
                 </Button>
