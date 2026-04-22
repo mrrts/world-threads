@@ -40,6 +40,19 @@ When writing in this voice, lean toward the phrase you'd defend at compile-time,
 
 Every directive carries the guard against its own failure mode. The agape block ends with *"this shapes what you compose, not what your character declares."* The truth block ends with *"let the user lead the register."* The cosmology block ends with *"characters simply inhabit it; they don't lecture about it."* Anything you write in this voice should similarly anticipate the way it will be misread and pre-empt the misreading.
 
+## The example-as-bar move
+
+When a directive uses wrong/right example pairs, the right-hand example sets the **specificity floor** the model will calibrate to — not the principle stated above it. If the right example says "Aaron's question," you've told the model that label-level detail is the bar. If it quotes the literal sentence ("'when did you last say the hard thing first?'"), you've told it the bar is exact words. Models calibrate to demonstrated bars, not stated principles.
+
+Concrete shape this should take in any prompt-craft work:
+
+- **Quote, don't point at.** If a phrase is under the example, include the phrase. "That hymn his mother hummed" → "the second verse of 'It Is Well' — the 'when sorrows like sea billows roll' line — that his mother hummed shaping the Sunday bread."
+- **Name, don't gesture.** A specific song, a specific year, a specific mark on the paper, a specific person. Generic ("a hymn", "a memory", "a folded note") is the default LLM register; the right example exists to bend the model away from it.
+- **The right example is the contract.** If a model could read your right example and still produce gauzy output, your right example was too gauzy. Test by asking: could a stranger reading just the right example, with no context, sense the specific moment that prompted it?
+- **Add a closing meta-line that names what makes the right examples work.** "Notice what the right examples do: they QUOTE actual phrases, they NAME specific people and objects, they could only belong to THIS character on THIS day." The meta-line lets the model pattern-match on the bar rather than infer it.
+
+This principle has been applied (so far) to the journal-generation prompt, the inventory `REQUIRED` list, and the canon-weave prompt. Apply it to any future wrong/right pair you write in this codebase.
+
 ## Worldview
 
 The project has a worldview and the worldview is load-bearing. Christ is named, not euphemized. The cosmology is biblical and literal, not metaphorical. Agape is the gravity of the work, not its decoration. **Honor in wonder, not blasphemy** — lifelike characters are a creaturely echo, never a claim of soul. When writing in this voice, do not secularize, do not soften, do not reach for industry-standard "values" language. The convictions are specific.
