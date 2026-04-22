@@ -2,6 +2,11 @@ import { invoke } from "@tauri-apps/api/core";
 import { appDataDir } from "@tauri-apps/api/path";
 import { Client, Stronghold } from "@tauri-apps/plugin-stronghold";
 
+/** Summary length mode for the on-demand summary modal. "auto" lets the
+ *  model pick a length appropriate to the conversation; the named tiers
+ *  give the user explicit control. */
+export type SummaryMode = "short" | "medium" | "auto";
+
 export interface World {
   world_id: string;
   name: string;
@@ -668,10 +673,10 @@ export const api = {
     invoke<MemoryArtifact[]>("get_memory_artifacts_cmd", { subjectId, artifactType }),
   getThreadSummary: (characterId: string) =>
     invoke<string>("get_thread_summary_cmd", { characterId }),
-  generateChatSummary: (apiKey: string, characterId: string) =>
-    invoke<string>("generate_chat_summary_cmd", { apiKey, characterId }),
-  generateGroupChatSummary: (apiKey: string, groupChatId: string) =>
-    invoke<string>("generate_group_chat_summary_cmd", { apiKey, groupChatId }),
+  generateChatSummary: (apiKey: string, characterId: string, mode?: SummaryMode) =>
+    invoke<string>("generate_chat_summary_cmd", { apiKey, characterId, mode: mode ?? null }),
+  generateGroupChatSummary: (apiKey: string, groupChatId: string, mode?: SummaryMode) =>
+    invoke<string>("generate_group_chat_summary_cmd", { apiKey, groupChatId, mode: mode ?? null }),
 
   generatePortrait: (apiKey: string, characterId: string, formHint?: { display_name?: string; identity?: string; backstory_facts?: unknown }) =>
     invoke<PortraitInfo>("generate_portrait_cmd", { apiKey, characterId, formHint: formHint ?? null }),

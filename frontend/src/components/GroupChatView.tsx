@@ -1592,7 +1592,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
         open={showSummary}
         onClose={() => setShowSummary(false)}
         title={`Summary: ${groupCharacters.map((c) => c.display_name).join(" & ")}`}
-        generateSummary={() => api.generateGroupChatSummary(store.apiKey, store.activeGroupChat?.group_chat_id ?? "")}
+        generateSummary={(mode) => api.generateGroupChatSummary(store.apiKey, store.activeGroupChat?.group_chat_id ?? "", mode)}
         notifyOnMessage={store.notifyOnMessage}
       />
 

@@ -356,12 +356,12 @@ export function WorldSummary({ store, onChat, onSettings }: Props) {
         open={!!summaryTarget}
         onClose={() => setSummaryTarget(null)}
         title={summaryTarget ? `Summary: ${summaryTarget.name}` : ""}
-        generateSummary={async () => {
+        generateSummary={async (mode) => {
           if (!summaryTarget || !store.apiKey) return "No API key configured.";
           if (summaryTarget.type === "char") {
-            return api.generateChatSummary(store.apiKey, summaryTarget.id);
+            return api.generateChatSummary(store.apiKey, summaryTarget.id, mode);
           } else {
-            return api.generateGroupChatSummary(store.apiKey, summaryTarget.id);
+            return api.generateGroupChatSummary(store.apiKey, summaryTarget.id, mode);
           }
         }}
       />

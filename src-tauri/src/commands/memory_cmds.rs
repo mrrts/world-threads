@@ -281,6 +281,29 @@ pub async fn backfill_embeddings_cmd(
     Ok(BackfillSummary { embedded, skipped, errors })
 }
 
+/// Map a summary mode (short / medium / auto) to a length directive that
+/// gets stitched into the system prompt, plus an output-token cap. "auto"
+/// means no length constraint — model picks. Defaults applied where the
+/// caller passes None or an unknown value (treated as "short" to keep
+/// per-call spend low by default).
+fn summary_length_directive(mode: Option<&str>) -> (&'static str, u32) {
+    match mode.unwrap_or("short").to_ascii_lowercase().as_str() {
+        "medium" => (
+            "Write a substantive narrative summary (7-12 sentences) covering the key events, emotional beats, and where things currently stand. Include a few key specific details — names, places, actions, or things said that capture the texture of the conversation.",
+            2000,
+        ),
+        "auto" => (
+            "Write a narrative summary at whatever length the conversation actually warrants — short if little has happened, longer if there's a lot to cover. Cover the key events, emotional beats, and where things stand. Include the specific details that capture the texture (names, places, actions, things said).",
+            3200,
+        ),
+        _ => (
+            // "short" (default)
+            "Write a tight narrative summary (3-6 sentences) covering the key events, the emotional shape, and where things currently stand. Pick the load-bearing specifics — a name, a place, a thing said — and skip the rest.",
+            900,
+        ),
+    }
+}
+
 /// Generate a fresh on-demand summary for a character's chat thread.
 #[tauri::command]
 pub async fn generate_chat_summary_cmd(
@@ -288,6 +311,7 @@ pub async fn generate_chat_summary_cmd(
     app_handle: AppHandle,
     api_key: String,
     character_id: String,
+    mode: Option<String>,
 ) -> Result<String, String> {
     let (character, recent_msgs, model_config, user_name) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -309,17 +333,18 @@ pub async fn generate_chat_summary_cmd(
         .map(|m| format!("[{}] {}", m.role, m.content))
         .collect();
 
+    let (length_directive, max_tokens) = summary_length_directive(mode.as_deref());
+
     let messages = vec![
         openai::ChatMessage {
             role: "system".to_string(),
             content: format!(
                 "Summarize the recent conversation between {user} and {char}. \
-                 Write a substantial narrative summary (12-24 sentences) covering the key events, \
-                 emotional beats, and where things currently stand. Include a few key specific details — \
-                 names, places, actions, or things said that capture the texture of the conversation. \
+                 {length_directive} \
                  Write in third person. Refer to the human as \"{user}\", never as \"the user\" or \"you\". \
                  Refer to {char} by name.",
                 user = user_name, char = character.display_name,
+                length_directive = length_directive,
             ),
         },
         openai::ChatMessage {
@@ -332,7 +357,7 @@ pub async fn generate_chat_summary_cmd(
         model: model_config.dialogue_model.clone(),
         messages,
         temperature: Some(0.5),
-        max_completion_tokens: Some(3200),
+        max_completion_tokens: Some(max_tokens),
         stream: true,
     };
 
@@ -348,6 +373,7 @@ pub async fn generate_group_chat_summary_cmd(
     app_handle: AppHandle,
     api_key: String,
     group_chat_id: String,
+    mode: Option<String>,
 ) -> Result<String, String> {
     let (characters, recent_msgs, model_config, user_name) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -385,17 +411,17 @@ pub async fn generate_group_chat_summary_cmd(
         })
         .collect();
 
+    let (length_directive, max_tokens) = summary_length_directive(mode.as_deref());
     let messages = vec![
         openai::ChatMessage {
             role: "system".to_string(),
             content: format!(
                 "Summarize the recent group conversation involving {user} and {chars}. \
-                 Write a substantial narrative summary (12-24 sentences) covering the key events, \
-                 emotional beats, and where things currently stand. Include a few key specific details — \
-                 names, places, actions, or things said that capture the texture of the conversation. \
+                 {length_directive} \
                  Write in third person. Refer to the human as \"{user}\", never as \"the user\" or \"you\". \
                  Refer to each character by name.",
                 user = user_name, chars = char_names.join(" and "),
+                length_directive = length_directive,
             ),
         },
         openai::ChatMessage {
@@ -403,12 +429,11 @@ pub async fn generate_group_chat_summary_cmd(
             content: format!("Recent messages:\n{}", conversation.join("\n")),
         },
     ];
-
     let request = StreamingRequest {
         model: model_config.dialogue_model.clone(),
         messages,
         temperature: Some(0.5),
-        max_completion_tokens: Some(3200),
+        max_completion_tokens: Some(max_tokens),
         stream: true,
     };
 

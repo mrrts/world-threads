@@ -1611,7 +1611,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         open={showSummary}
         onClose={() => setShowSummary(false)}
         title={`Summary: ${store.activeCharacter?.display_name ?? "Chat"}`}
-        generateSummary={() => api.generateChatSummary(store.apiKey, store.activeCharacter?.character_id ?? "")}
+        generateSummary={(mode) => api.generateChatSummary(store.apiKey, store.activeCharacter?.character_id ?? "", mode)}
         notifyOnMessage={store.notifyOnMessage}
       />
 
