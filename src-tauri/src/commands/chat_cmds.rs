@@ -154,7 +154,8 @@ pub fn build_cross_thread_snippet(
         &conn,
         character_id,
         current_thread_id,
-        6,   // per-thread limit
+        20,  // per-thread limit — up from 6 so long conversations
+             // don't get truncated out of cross-thread memory.
         2,   // max other-threads pulled
         user_name,
     );
