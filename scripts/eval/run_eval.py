@@ -61,10 +61,12 @@ def estimate_tokens(s: str) -> int:
 def sample(system: str, user: str) -> str:
     if DRY_RUN:
         return f"[DRY_RUN — would call {MODEL} with {estimate_tokens(system)} sys tokens]"
+    # gpt-5-class models require max_completion_tokens; older endpoints
+    # accept max_tokens. Pass both-compatible form; SDK / API normalizes.
     r = CLIENT.chat.completions.create(
         model=MODEL,
         messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
-        temperature=CFG["temperature"], max_tokens=CFG["max_tokens"],
+        temperature=CFG["temperature"], max_completion_tokens=CFG["max_tokens"],
     )
     return r.choices[0].message.content or "(empty)"
 

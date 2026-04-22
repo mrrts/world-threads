@@ -87,7 +87,7 @@ def main():
                 {"role": "user", "content": USER_TURN},
             ],
             temperature=CFG["temperature"],
-            max_tokens=CFG["max_tokens"],
+            max_completion_tokens=CFG["max_tokens"],
         )
         reply = r.choices[0].message.content or "(empty)"
         samples.append(reply)
