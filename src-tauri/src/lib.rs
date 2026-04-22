@@ -122,6 +122,7 @@ pub fn run() {
             generate_narrative_cmd,
             generate_dream_cmd,
             generate_illustration_cmd,
+            list_thread_illustrations_cmd,
             get_illustration_captions_cmd,
             update_illustration_caption_cmd,
             delete_illustration_cmd,

@@ -638,3 +638,66 @@ pub fn get_illustration_aspect_ratio_cmd(
 
     Ok(ratio)
 }
+
+/// Compact summary of an illustration message — enough for a thumbnail
+/// view (message_id, the image content URL/path, timestamp, and the
+/// world time metadata). Returned by list_thread_illustrations_cmd
+/// when the caller needs every illustration in a thread regardless of
+/// which messages are currently paginated into memory.
+#[derive(Debug, Serialize)]
+pub struct IllustrationSummary {
+    pub message_id: String,
+    pub content: String,
+    pub created_at: String,
+    pub world_day: Option<i64>,
+    pub world_time: Option<String>,
+    pub thread_id: String,
+}
+
+/// List every illustration message for a thread, across both
+/// `messages` (solo) and `group_messages` (group chat) tables, ordered
+/// ASC by created_at. Used by the sticky-illustration feature so the
+/// UI has access to the full illustration timeline even when older
+/// history hasn't been paginated into `store.messages`.
+#[tauri::command]
+pub fn list_thread_illustrations_cmd(
+    db: State<'_, Database>,
+    thread_id: String,
+) -> Result<Vec<IllustrationSummary>, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let mut out: Vec<IllustrationSummary> = Vec::new();
+
+    // Check both tables. A thread_id will normally only appear in one,
+    // but the query is cheap and avoids needing to know which.
+    for table in &["messages", "group_messages"] {
+        let sql = format!(
+            "SELECT message_id, content, created_at, world_day, world_time, thread_id \
+             FROM {table} \
+             WHERE thread_id = ?1 AND role = 'illustration' \
+             ORDER BY created_at ASC"
+        );
+        let mut stmt = match conn.prepare(&sql) {
+            Ok(s) => s,
+            Err(_) => continue,
+        };
+        let rows = stmt.query_map(params![thread_id], |r| {
+            Ok(IllustrationSummary {
+                message_id: r.get(0)?,
+                content: r.get(1)?,
+                created_at: r.get(2)?,
+                world_day: r.get::<_, Option<i64>>(3)?,
+                world_time: r.get::<_, Option<String>>(4)?,
+                thread_id: r.get(5)?,
+            })
+        });
+        if let Ok(rows) = rows {
+            for row in rows.flatten() {
+                out.push(row);
+            }
+        }
+    }
+
+    // Belt-and-suspenders: sort merged results by created_at.
+    out.sort_by(|a, b| a.created_at.cmp(&b.created_at));
+    Ok(out)
+}

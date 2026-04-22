@@ -110,6 +110,19 @@ export interface CharacterState {
   last_seen: { day_index: number; time_of_day: string };
 }
 
+/// Compact summary of an illustration message — returned by
+/// listThreadIllustrations for the sticky-thumbnail feature so the UI
+/// can reference illustrations even when they're not paginated into
+/// store.messages.
+export interface IllustrationSummary {
+  message_id: string;
+  content: string;
+  created_at: string;
+  world_day: number | null;
+  world_time: string | null;
+  thread_id: string;
+}
+
 export interface Message {
   message_id: string;
   thread_id: string;
@@ -604,6 +617,13 @@ export const api = {
     invoke<ResetToMessageResult>("reset_to_message_cmd", { apiKey, characterId, messageId }),
   getIllustrationData: (messageId: string) =>
     invoke<string | null>("get_illustration_data_cmd", { messageId }),
+  /// List every illustration message in a thread (across both solo
+  /// `messages` and group `group_messages` tables), ordered ASC by
+  /// created_at. Independent of pagination — returns the full
+  /// timeline of illustrations so the UI can reference ones that
+  /// aren't currently loaded in `store.messages`.
+  listThreadIllustrations: (threadId: string) =>
+    invoke<IllustrationSummary[]>("list_thread_illustrations_cmd", { threadId }),
   getLastMessageTime: (worldId: string) =>
     invoke<string | null>("get_last_message_time_cmd", { worldId }),
   getMessages: (characterId: string, limit?: number, offset?: number) =>

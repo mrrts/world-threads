@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUp } from "lucide-react";
-import type { Message } from "@/lib/tauri";
+import { api, type Message, type IllustrationSummary } from "@/lib/tauri";
 
 interface Props {
   messages: Message[];
   /** The scrollable viewport element. Used to read scroll position
-   *  and as the coordinate frame for visibility calculations. Can be
-   *  null if not yet mounted. */
+   *  and as the coordinate frame for visibility calculations. */
   scrollContainer: HTMLElement | null;
   /** Optional aspect-ratio map keyed by message_id, same shape as
    *  store.aspectRatios, so the thumbnail matches the illustration
@@ -15,36 +14,68 @@ interface Props {
 }
 
 /// A floating thumbnail pinned to the lower-right of the chat viewport.
-/// Tracks the scroll position: shows the illustration most recently
-/// scrolled past (i.e. the one whose DOM position is still above the
-/// current viewport), so as the user scrolls through history, the
-/// sticky stays tied to the scene depicted by what they're currently
-/// reading. Hides when that active illustration is itself in view.
+/// Shows the illustration most contextually relevant to whatever the
+/// user is currently reading — the most-recently-preceding illustration
+/// in the full thread timeline. Critically: this works even when the
+/// relevant illustration isn't paginated into `store.messages` yet.
 ///
-/// Rationale: the user wanted a persistent visual-orientation anchor
-/// for whatever moment they're currently reading, not just the latest
-/// illustration in the thread.
+/// Full illustration timeline is fetched from the server per thread;
+/// scroll-position mapping uses (a) DOM positions for messages that
+/// ARE loaded, and (b) fallback to "this illustration predates all
+/// loaded history" for ones that aren't.
 export function StickyIllustration({ messages, scrollContainer, aspectRatios }: Props) {
-  // All illustration messages in chronological order.
-  const illustrations = useMemo(
-    () => messages.filter((m) => m.role === "illustration"),
+  // Thread ID is derived from the loaded messages. When a thread has
+  // no messages at all, the sticky has nothing to work with.
+  const threadId = messages[0]?.thread_id ?? "";
+
+  // Full timeline of illustrations in this thread, fetched from the
+  // server. Kept in state so we can refresh when a new illustration
+  // is generated locally or the thread changes.
+  const [timeline, setTimeline] = useState<IllustrationSummary[]>([]);
+
+  // Count of illustrations currently in loaded messages — used as a
+  // trigger to refetch the full timeline when a new one arrives.
+  const localIllusCount = useMemo(
+    () => messages.filter((m) => m.role === "illustration").length,
     [messages]
   );
 
-  // Keep a live ref so the scroll listener reads the latest messages
-  // without needing to re-bind every time a new message arrives.
-  const illusRef = useRef(illustrations);
-  illusRef.current = illustrations;
+  // Fetch on thread change or when a new local illustration appears.
+  useEffect(() => {
+    if (!threadId) {
+      setTimeline([]);
+      return;
+    }
+    let cancelled = false;
+    api
+      .listThreadIllustrations(threadId)
+      .then((list) => {
+        if (!cancelled) setTimeline(list);
+      })
+      .catch(() => {
+        if (!cancelled) setTimeline([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [threadId, localIllusCount]);
 
-  const [activeIllus, setActiveIllus] = useState<Message | null>(null);
+  // Live ref for the scroll handler so it always sees the latest
+  // timeline without needing to rebind on each fetch.
+  const timelineRef = useRef<IllustrationSummary[]>(timeline);
+  timelineRef.current = timeline;
+  const messagesRef = useRef<Message[]>(messages);
+  messagesRef.current = messages;
+
+  const [activeIllus, setActiveIllus] = useState<IllustrationSummary | null>(null);
   const [activeInView, setActiveInView] = useState<boolean>(true);
 
   useEffect(() => {
     if (!scrollContainer) return;
 
     const recompute = () => {
-      const list = illusRef.current;
-      if (list.length === 0) {
+      const tl = timelineRef.current;
+      if (tl.length === 0) {
         setActiveIllus(null);
         setActiveInView(true);
         return;
@@ -54,25 +85,33 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
       const viewportTop = containerRect.top;
       const viewportBottom = containerRect.bottom;
 
-      let lastPreceding: Message | null = null;
+      // Walk the FULL timeline (not just loaded messages). For each:
+      //   - if its row is mounted in the DOM, use the real rect.
+      //   - if not, it's in older unloaded history — treat as
+      //     positionally preceding everything visible (so any
+      //     loaded illustration later in the timeline will
+      //     override it; if none do, it becomes the active).
+      let lastPreceding: IllustrationSummary | null = null;
       let inView = false;
 
-      for (const msg of list) {
+      for (const illus of tl) {
         const el = scrollContainer.querySelector<HTMLElement>(
-          `[data-message-id="${msg.message_id}"]`
+          `[data-message-id="${illus.message_id}"]`
         );
-        if (!el) continue;
-        const elRect = el.getBoundingClientRect();
-
-        // Illustration has started (top is at or above viewport-bottom)
-        // → candidate for "most recently seen/scrolled past."
-        if (elRect.top <= viewportBottom) {
-          lastPreceding = msg;
-          // Visible if any part of it intersects the viewport.
-          inView = elRect.bottom > viewportTop && elRect.top < viewportBottom;
+        if (!el) {
+          // Not rendered → must be in unloaded older history.
+          // Its "position" is above every loaded row, so it qualifies
+          // as preceding whatever is currently in view.
+          lastPreceding = illus;
+          inView = false;
+          continue;
+        }
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= viewportBottom) {
+          lastPreceding = illus;
+          inView = rect.bottom > viewportTop && rect.top < viewportBottom;
         } else {
-          // This illustration is below the viewport entirely.
-          // All later ones are also below (chronological order).
+          // This illustration is below the viewport; rest will be too.
           break;
         }
       }
@@ -81,10 +120,8 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
       setActiveInView(inView);
     };
 
-    // Initial compute.
     recompute();
 
-    // rAF-throttled scroll handler — fires at most once per frame.
     let rafId = 0;
     const onScroll = () => {
       if (rafId) return;
@@ -95,13 +132,11 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
     };
     scrollContainer.addEventListener("scroll", onScroll, { passive: true });
 
-    // Resize can change which illustration is in view (reflow).
     const onResize = () => recompute();
     window.addEventListener("resize", onResize);
 
-    // When messages change (new illustration arrives, one is deleted),
-    // rerun. MutationObserver is the simplest way to catch reflow
-    // without re-binding listeners on every React render.
+    // Catch reflow (new messages inserted, old ones rendered as user
+    // paginates backward, etc.) without re-binding on each render.
     const mo = new MutationObserver(() => {
       if (rafId) return;
       rafId = requestAnimationFrame(() => {
@@ -119,34 +154,22 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
     };
   }, [scrollContainer]);
 
-  // Also recompute when the messages array reference changes, in case
-  // the MutationObserver hasn't fired yet (e.g. first render batch).
+  // Recompute when the timeline itself changes (fetched, or new
+  // illustration added). The scroll-based effect reads the ref, but
+  // won't fire on its own when nothing has scrolled.
   useEffect(() => {
     if (!scrollContainer) return;
-    const list = illusRef.current;
-    if (list.length === 0) {
-      setActiveIllus(null);
-      return;
-    }
-    // Let the main effect's recompute path handle it — but nudge once
-    // via a microtask so the initial active illustration is set before
-    // paint rather than after first scroll.
-    queueMicrotask(() => {
-      const event = new Event("scroll");
-      scrollContainer.dispatchEvent(event);
-    });
-  }, [messages, scrollContainer]);
+    // Nudge: dispatch a synthetic scroll so the handler recomputes.
+    const ev = new Event("scroll");
+    scrollContainer.dispatchEvent(ev);
+  }, [timeline.length, scrollContainer]);
 
-  // First-paint gate: we render the button in its "hidden" state on
-  // the first paint, then flip to the target state on the next frame.
-  // That way CSS transitions animate FROM the hidden state on initial
-  // appearance, not just on prop changes. Double-rAF is the reliable
-  // way to get a paint between the two states.
+  // First-paint gate: render the button in the "hidden" state on the
+  // very first paint, then double-rAF flip to the target state so CSS
+  // transitions animate FROM hidden on initial appearance.
   const [initialGate, setInitialGate] = useState<boolean>(true);
   useEffect(() => {
     if (!activeIllus) {
-      // No illustration to show yet — keep the gate closed so the
-      // NEXT time activeIllus becomes non-null, we animate in fresh.
       setInitialGate(true);
       return;
     }
@@ -161,23 +184,27 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
     };
   }, [activeIllus?.message_id]);
 
-  // No illustration in thread yet → render nothing (unmount cleanly).
   if (!activeIllus) return null;
 
-  // Visibility: we want the button hidden (fading out) when the active
-  // illustration is in view, OR during the first-paint gate.
   const hidden = activeInView || initialGate;
 
   const ar = aspectRatios?.[activeIllus.message_id];
+
+  // If the active illustration IS in the currently-loaded messages,
+  // clicking scrolls it into view. If it's in older unloaded history,
+  // the click is a soft no-op (no scroll target yet) — the user still
+  // gets the visual-orientation value from the thumbnail.
+  const isInLoadedHistory = messagesRef.current.some(
+    (m) => m.message_id === activeIllus.message_id
+  );
   const onClick = () => {
-    if (!scrollContainer) return;
+    if (!scrollContainer || !isInLoadedHistory) return;
     const el = scrollContainer.querySelector<HTMLElement>(
       `[data-message-id="${activeIllus.message_id}"]`
     );
     if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
-  // Shared classes that don't change with visibility.
   const base = `hidden xl:block absolute bottom-4 right-4 z-20 group select-none
                 rounded-xl overflow-hidden shadow-2xl shadow-black/50
                 ring-1 ring-emerald-700/30
@@ -186,10 +213,11 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
                 transition-all duration-500 ease-out
                 motion-reduce:duration-200`;
 
-  // Visibility-dependent transforms. These drive the enter/exit bloom.
   const visState = hidden
     ? "opacity-0 scale-90 translate-y-4 translate-x-2 pointer-events-none"
-    : "opacity-100 scale-100 translate-y-0 translate-x-0 cursor-pointer hover:ring-emerald-500/60 hover:scale-[1.04] hover:-translate-y-0.5";
+    : `opacity-100 scale-100 translate-y-0 translate-x-0 ${
+        isInLoadedHistory ? "cursor-pointer hover:ring-emerald-500/60 hover:scale-[1.04] hover:-translate-y-0.5" : "cursor-default"
+      }`;
 
   return (
     <button
@@ -197,8 +225,16 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
       onClick={hidden ? undefined : onClick}
       tabIndex={hidden ? -1 : 0}
       aria-hidden={hidden ? true : undefined}
-      aria-label="Scroll to the illustration for the moment you're reading"
-      title="Scroll to this illustration"
+      aria-label={
+        isInLoadedHistory
+          ? "Scroll to the illustration for the moment you're reading"
+          : "Illustration for the moment you're reading (in older history)"
+      }
+      title={
+        isInLoadedHistory
+          ? "Jump to scene"
+          : "Scene from older history (not loaded)"
+      }
       className={`${base} ${visState}`}
       style={{ width: 264 }}
     >
@@ -214,11 +250,13 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
                    transition-opacity duration-150 flex items-end justify-end
                    bg-gradient-to-t from-black/60 via-transparent to-transparent"
       >
-        <span className="m-1.5 inline-flex items-center gap-1 rounded-full
-                         bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white">
-          <ArrowUp size={10} />
-          Jump to scene
-        </span>
+        {isInLoadedHistory && (
+          <span className="m-1.5 inline-flex items-center gap-1 rounded-full
+                           bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white">
+            <ArrowUp size={10} />
+            Jump to scene
+          </span>
+        )}
       </div>
     </button>
   );
