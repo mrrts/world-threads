@@ -431,37 +431,38 @@ function ComposeView({
   return (
     <div className="space-y-5">
       {/* Edge-to-edge banner — portraits float over the active world image,
-          banner fades into the parchment at the bottom. Negative top + horizontal
+          banner alpha-fades into the parchment at the bottom via CSS mask
+          (true transparency, no color-matching). Negative top + horizontal
           margins back out of the body's px-6 py-6 padding. */}
       {(portraits.length > 0 || worldImageUrl) && (
         <div className="-mx-6 -mt-6 relative">
-          <div className="relative w-full h-44 overflow-hidden">
+          <div className="relative w-full h-80">
             {worldImageUrl ? (
               <img
                 src={worldImageUrl}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  // Mask the image's alpha so the bottom genuinely fades to
+                  // transparent — whatever sits below (parchment, header
+                  // shadow, anything) shows through with no color seam.
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, black 0%, black 55%, transparent 100%)",
+                  maskImage:
+                    "linear-gradient(to bottom, black 0%, black 55%, transparent 100%)",
+                }}
               />
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-b from-amber-200/50 to-amber-100/40" />
+              <div
+                className="absolute inset-0 bg-gradient-to-b from-amber-200/60 to-amber-100/40"
+                style={{
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, black 0%, black 55%, transparent 100%)",
+                  maskImage:
+                    "linear-gradient(to bottom, black 0%, black 55%, transparent 100%)",
+                }}
+              />
             )}
-            {/* Bottom fade into the parchment. The parchment color is
-                #f4ecd8 (top) → #ede2c4 (bottom) on the modal's main panel.
-                Use the lighter top color here so the seam reads clean. */}
-            <div
-              className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none"
-              style={{
-                background: "linear-gradient(to bottom, rgba(244,236,216,0) 0%, rgba(244,236,216,0.55) 45%, rgba(244,236,216,0.95) 85%, rgba(244,236,216,1) 100%)",
-              }}
-            />
-            {/* A soft top vignette so the world image doesn't clash with
-                the modal header's edge. */}
-            <div
-              className="absolute inset-x-0 top-0 h-12 pointer-events-none"
-              style={{
-                background: "linear-gradient(to bottom, rgba(244,236,216,0.55) 0%, rgba(244,236,216,0) 100%)",
-              }}
-            />
             {portraits.length > 0 && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="flex">
