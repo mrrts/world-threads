@@ -259,6 +259,10 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
       if (store.apiKey && store.activeWorld) {
         api.maybeGenerateDailyReading(store.apiKey, store.activeWorld.world_id).catch(() => {});
       }
+      // Player's own journal: per-world, once per world-day.
+      if (store.apiKey && store.activeWorld) {
+        api.maybeGenerateUserJournal(store.apiKey, store.activeWorld.world_id).catch(() => {});
+      }
     },
   });
 

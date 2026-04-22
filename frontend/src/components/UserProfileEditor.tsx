@@ -5,9 +5,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from "@/components/ui/dialog";
-import { Save, Plus, X, User, ImagePlus, Upload, Loader2, Images, Copy } from "lucide-react";
+import { Save, Plus, X, User, ImagePlus, Upload, Loader2, Images, Copy, PenLine } from "lucide-react";
 import type { useAppStore } from "@/hooks/use-app-store";
-import { api, type UserProfile, type GalleryItem } from "@/lib/tauri";
+import { api, type UserProfile, type GalleryItem, type UserJournalEntry } from "@/lib/tauri";
 
 interface Props {
   store: ReturnType<typeof useAppStore>;
@@ -33,6 +33,35 @@ export function UserProfileEditor({ store }: Props) {
   const [showCrossWorldPicker, setShowCrossWorldPicker] = useState(false);
   const [crossWorldAvatars, setCrossWorldAvatars] = useState<Array<{ world_id: string; world_name: string; avatar_file: string; data_url: string }>>([]);
   const [loadingCrossWorld, setLoadingCrossWorld] = useState(false);
+
+  const [journalEntries, setJournalEntries] = useState<UserJournalEntry[]>([]);
+  const [journalLoading, setJournalLoading] = useState(false);
+  const [journalGenerating, setJournalGenerating] = useState(false);
+
+  useEffect(() => {
+    if (!worldId) { setJournalEntries([]); return; }
+    setJournalLoading(true);
+    api.listUserJournals(worldId, 30)
+      .then((entries) => setJournalEntries(entries))
+      .catch(() => setJournalEntries([]))
+      .finally(() => setJournalLoading(false));
+  }, [worldId]);
+
+  const handleGenerateJournal = async () => {
+    if (!worldId || !store.apiKey) return;
+    setJournalGenerating(true);
+    try {
+      const entry = await api.generateUserJournal(store.apiKey, worldId);
+      setJournalEntries((prev) => {
+        const filtered = prev.filter((e) => e.world_day !== entry.world_day);
+        return [entry, ...filtered].sort((a, b) => b.world_day - a.world_day);
+      });
+    } catch (e: any) {
+      console.error("Failed to generate user journal:", e);
+    } finally {
+      setJournalGenerating(false);
+    }
+  };
 
   useEffect(() => {
     if (existing) {
@@ -293,6 +322,42 @@ export function UserProfileEditor({ store }: Props) {
                 placeholder="e.g. Lives near the coast. Has a cat named Pepper."
               />
             </Field>
+          </FieldGroup>
+
+          <FieldGroup label="Journal">
+            <div className="flex items-start justify-between gap-4 mb-3">
+              <p className="text-xs text-muted-foreground flex-1">
+                A private reflection per world-day, written as you across every chat you were in that day. Auto-generates when the world clock crosses into a new day. Scoped to this world only.
+              </p>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleGenerateJournal}
+                disabled={journalGenerating || !store.apiKey || !worldId}
+              >
+                {journalGenerating ? <Loader2 size={12} className="animate-spin mr-1.5" /> : <PenLine size={12} className="mr-1.5" />}
+                {journalGenerating ? "Writing..." : "Write yesterday's entry"}
+              </Button>
+            </div>
+            {journalLoading ? (
+              <div className="text-xs text-muted-foreground italic">Loading entries…</div>
+            ) : journalEntries.length === 0 ? (
+              <div className="text-xs text-muted-foreground italic py-4 text-center">
+                No entries yet. Click "Write yesterday's entry" once the world has crossed into Day 1.
+              </div>
+            ) : (
+              <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
+                {journalEntries.map((e) => (
+                  <div key={e.journal_id} className="rounded-lg border border-border/60 bg-secondary/20 p-3">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">Day {e.world_day}</span>
+                      <span className="text-[10px] text-muted-foreground/60">{new Date(e.created_at).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
+                    </div>
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap italic text-foreground/85">{e.content}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </FieldGroup>
         </div>
       </ScrollArea>

@@ -1364,6 +1364,24 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             ON character_journals(character_id, world_day DESC);
     ").ok();
 
+    // ── User (player) journals ────────────────────────────────────────────
+    //
+    // Parallel to character_journals but keyed by world_id — one entry
+    // per world per world-day, written as the player-character
+    // retrospecting yesterday across every chat they were in.
+    conn.execute_batch("
+        CREATE TABLE IF NOT EXISTS user_journals (
+            journal_id TEXT PRIMARY KEY,
+            world_id TEXT NOT NULL REFERENCES worlds(world_id) ON DELETE CASCADE,
+            world_day INTEGER NOT NULL DEFAULT 0,
+            content TEXT NOT NULL DEFAULT '',
+            created_at TEXT NOT NULL DEFAULT (datetime('now')),
+            UNIQUE(world_id, world_day)
+        );
+        CREATE INDEX IF NOT EXISTS idx_user_journals_world_day
+            ON user_journals(world_id, world_day DESC);
+    ").ok();
+
     // One-shot wipe of existing journal entries so every character
     // re-generates under the new world-day-bounded logic (history feed
     // strictly today's messages; prior entries strictly before today).

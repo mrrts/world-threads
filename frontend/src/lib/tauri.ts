@@ -816,6 +816,12 @@ export const api = {
     invoke<MaybeJournalResult>("maybe_generate_character_journal_cmd", { apiKey, characterId }),
   listCharacterJournals: (characterId: string, limit?: number) =>
     invoke<JournalEntry[]>("list_character_journals_cmd", { characterId, limit: limit ?? null }),
+  generateUserJournal: (apiKey: string, worldId: string) =>
+    invoke<UserJournalEntry>("generate_user_journal_cmd", { apiKey, worldId }),
+  maybeGenerateUserJournal: (apiKey: string, worldId: string) =>
+    invoke<MaybeUserJournalResult>("maybe_generate_user_journal_cmd", { apiKey, worldId }),
+  listUserJournals: (worldId: string, limit?: number) =>
+    invoke<UserJournalEntry[]>("list_user_journals_cmd", { worldId, limit: limit ?? null }),
   generateMeanwhileEvents: (apiKey: string, worldId: string) =>
     invoke<MeanwhileEvent[]>("generate_meanwhile_events_cmd", { apiKey, worldId }),
   maybeGenerateMeanwhileEvents: (apiKey: string, worldId: string) =>
@@ -863,6 +869,19 @@ export interface JournalEntry {
   world_day: number;
   content: string;
   created_at: string;
+}
+
+export interface UserJournalEntry {
+  journal_id: string;
+  world_id: string;
+  world_day: number;
+  content: string;
+  created_at: string;
+}
+
+export interface MaybeUserJournalResult {
+  entry: UserJournalEntry | null;
+  refreshed: boolean;
 }
 
 export interface MeanwhileEvent {

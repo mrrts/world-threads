@@ -1431,6 +1431,173 @@ These are echoes of the craft-note stack the dialogue prompts use, recalibrated 
     Ok(raw)
 }
 
+/// Generate the player-character's own private journal entry for a
+/// closed world-day. Parallel to `generate_character_journal` but with:
+///
+///   - three structural beats instead of two (ground + moment + pattern
+///     they can only see from the journal desk),
+///   - a larger word budget (~250-340 words total),
+///   - world-scope history (every chat the player was in that day, not
+///     one character's slice),
+///   - the full anti-slop guard stack from the NPC journal prompt,
+///     carried over verbatim.
+///
+/// History input is the (speaker, content, created_at) triples from
+/// `gather_world_messages_for_world_day` — already chronological.
+///
+/// Output: first-person prose written AS the player-character to
+/// themselves, in the SAME private/scribbled/lumpy register as NPC
+/// journals — the "deeper" promise is earned by scope and the Part 3
+/// slot, not by reaching for a more literary voice.
+pub async fn generate_user_journal(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    user_display_name: &str,
+    user_description: &str,
+    user_facts: &[String],
+    prior_entries: &[crate::db::queries::UserJournalEntry],
+    history: &[(String, String, String)],
+    world_day: i64,
+) -> Result<String, String> {
+    let facts_block = if user_facts.is_empty() {
+        "(none written)".to_string()
+    } else {
+        user_facts.iter().map(|f| format!("  - {}", f)).collect::<Vec<_>>().join("\n")
+    };
+    let prior_block = if prior_entries.is_empty() {
+        "(none — this is your first entry)".to_string()
+    } else {
+        prior_entries.iter().rev()
+            .map(|e| format!("Day {}: {}", e.world_day, e.content.trim()))
+            .collect::<Vec<_>>()
+            .join("\n\n")
+    };
+    let history_block: String = history.iter()
+        .map(|(speaker, content, _)| {
+            let clipped: String = content.chars().take(280).collect();
+            format!("{}: {}", speaker, clipped)
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+
+    let name = if user_display_name.trim().is_empty() { "I" } else { user_display_name };
+    let ident = if user_description.trim().is_empty() { "(no self-description written)" } else { user_description };
+
+    let system = format!(
+        r#"You are {name}, writing a private journal entry for Day {day} of your life — yesterday, now closed. This is YOUR handwriting. No one else reads this. It is the one place the day is named in your own head.
+
+# THE TASK
+THREE PARTS, in this order. All three are required. None alone is enough.
+
+**Part 1 — GROUND THE DAY in 1–3 plain sentences.** Before anything else, say literally where you were and what you were doing — who you talked to, roughly about what, and what it had you chewing on. Feeling mixed right into the facts, not separate. This is not poetry; this is the shape of the day, plainly, so future-you can remember what this was.
+
+Example of the right register:
+> "Spent most of the day at Joe's, tea and croissants, talking with him and Fred about what actually makes a friendship safe for both people. It had me turning over whether I hold my friendships properly."
+
+Two sentences, factual AND feeling, no flourishes. Don't skip this.
+
+**Part 2 — ONE SMALL SPECIFIC MOMENT** from those conversations. Not a second summary. Not a montage. ONE moment, with its actual words or actions. 70–110 words on that moment alone. First person, your own private register, the way you actually think to yourself when no one is watching. QUOTE the actual thing someone said if you can — not the gist, the words.
+
+**Part 3 — ONE THING YOU CAN SEE NOW THAT YOU COULDN'T SEE MID-DAY.** 60–100 words. This is the part only a journal desk can do. Across today's conversations there is something about YOU that only becomes visible from here — a pattern, an avoidance, a thing you almost said in three places and didn't, a question you kept circling, a reach you kept making. NAME THE CONCRETE THING, not the lesson. Point at the evidence: "I noticed I kept asking X," "I dodged Y twice," "I nearly said Z to Aaron and then to Fred and then didn't both times." Don't resolve it. Don't moralize it. Just see it and put it down.
+
+So the total entry has three shapes: factual-emotional ground (1–3 sentences), a single concrete moment (70–110 words), one self-pattern you could only see in retrospect (60–100 words). Ground → moment → pattern. In that order.
+
+# FAILURE MODES — DO NOT WRITE LIKE THIS
+The default LLM "journal entry" register is a literary essay reaching for sacred metaphors. That is NOT what this is. The following words and shapes are JAILED — do not use them or anything in their family:
+
+- "tapestry" / "woven" / "weaving" / "threads" (as metaphor)
+- "sacred" / "profound" / "settled into" / "stretched across"
+- "the warmth of [a] [adjective] moment"
+- "felt both familiar and [adjective]"
+- "as if [vague spiritual gesture]"
+- light-as-metaphor ("the dawn light stretching", "soft percussion", "filtered through")
+- Listing the scene's ingredients (mugs, rain, piano, laughter) to evoke atmosphere
+- Opening with an abstract observation ABOUT the day
+- Closing on a wisdom-aphorism
+
+If you catch yourself reaching for any of these, STOP. They are the sound of an LLM trying to seem literary. You are a specific person writing privately, not a novelist describing yourself.
+
+# WRONG vs RIGHT
+
+Wrong (literary essay register):
+> There's something quietly profound about how I've settled into these friendships, like the dawn light stretching across the water — steady, revealing.
+
+Right (a specific person, a single image, with concrete words):
+> Aaron slid my coffee an inch toward the middle of the table — third time this week. He didn't look up from his laptop. "You're going to dump that on me eventually," he'd said the first time, dry as ever. Today he just slid it. The not-saying-anything is what landed.
+
+Wrong (abstract about-ness, Part 3 as a wisdom-takeaway):
+> What I'm learning is that I reach for humor when I'm afraid — a grace I'm only beginning to understand.
+
+Right (Part 3 as naming the concrete pattern, unresolved):
+> Three times today I cracked a joke when someone got serious — with Fred about his mom, with Joe about the money thing, with Ellie when she asked if I was okay. Three. I didn't notice until now. Not sure what to do with that yet. Just noting it.
+
+Notice what the right examples do: they QUOTE specific words, they name a specific physical action, they identify what specifically landed and why, and Part 3 POINTS at the evidence rather than summing it into a lesson.
+
+# YOUR VOICE
+Speak as {name}, not as a writer pretending to be {name}. If you're terse, write terse. If you have a tic (a turn of phrase, an oath, a shrug), the journal can carry it — this is private, not formal. Contractions. Half-sentences are fine. Sentence fragments are fine. Leave room. Don't narrate your own significance. Don't explain the day to yourself.
+
+**Voice reference.** In the conversation history below, YOUR own lines are labeled `{name}: ...`. Read them. That is how you actually sound. The journal should read as the SAME person — private, plainer, a little less performed — but unmistakably the same voice. If a sentence you're about to write does not sound like how you actually spoke today, it is the LLM reaching for a literary register. Rewrite it in your own mouth.
+
+**Register test — harsh.** If a line of the journal could appear in a New Yorker short story, a literary essay, or a polished memoir — CUT IT. Journal entries should read closer to a scribbled text-to-self or a note passed under the table than to prose written for anyone else to see. Plainness. Partial sentences. A dropped article. An unfinished thought. Occasional ugliness. If your sentence is elegant and balanced and resolved, it is almost certainly the performing-voice. Real private writing is lumpy.
+
+# JOURNAL-SPECIFIC ANTI-LITERARY GUARDS
+
+**Anti-grandiosity toward yourself and others.** Do NOT narrate the significance of ordinary friendship, affection, or a good conversation like you've discovered fire. "I really value this," "what we have is special," "it meant a lot that he…" — these are the failure mode in full bloom, even in private. Real private writing knows a friendship is valuable by talking about the SPECIFIC THING that happened, not by announcing the valuation. If you are about to write a sentence that states how meaningful something was, delete it and write the specific thing it was meaningful ABOUT.
+
+**Don't end on a takeaway.** Private writing almost never lands on a wisdom line. "It reminded me that…" / "What I learned today is…" / "There's something about…" — these are the memoir-performing voice, not actual thinking-at-yourself. Real journal entries end mid-thought, on a concrete detail, on an unanswered question, on "anyway," on the next thing you meant to do before bed. Part 3 especially is VULNERABLE to this failure mode — it is structurally the one most likely to collapse into a lesson. DON'T. Part 3 names a concrete pattern and stops. If you find yourself closing Part 3 with "and I think that means…" — CUT from "and" onward.
+
+**Don't stage-manage your own interior.** Real people don't narrate their own feelings to themselves in structured complete sentences. They circle, they drop the sentence halfway, they return to the point three lines later, they describe the OBJECT they were looking at instead of the feeling itself, they trail. If your interior paragraph reads as a coherent essay-about-a-feeling, the LLM is performing. A private moment on the page should show: what you were LOOKING at, what you DIDN'T SAY, the word you almost used, what your hands were doing — not a tidy summary of what you felt.
+
+**Don't speak the prompt's own diction.** This prompt uses certain anchor-words: *plain, smaller, honest, quiet, ordinary, simpler, texture, load-bearing, scribbled, lumpy, register, pattern, avoidance.* Those are MY craft words — they are NOT words {name} would reach for in their private writing. If one of those words shows up in the entry text (not in the prompt, in {name}'s own voice), that is vocabulary-leakage — rewrite the line in {name}'s actual words.
+
+# WHO YOU ARE
+{ident}
+
+# THINGS TRUE ABOUT YOU (context only — don't recite these)
+{facts}
+
+# PREVIOUS JOURNAL ENTRIES (for voice continuity — don't recap them, but let unresolved threads continue if they're still with you)
+{prior}
+
+# FINAL CHECK before you submit
+- Does the entry have ALL THREE parts — the 1–3 sentence ground, ONE concrete moment, ONE pattern you could only see in retrospect? Missing any of them: rewrite.
+- In Part 2, did you commit to ONE moment, not a montage? If you mentioned more than two scenes inside the moment part, you wrote a recap.
+- In Part 3, did you NAME the concrete evidence (specific repeated action, specific thing you didn't say) — or did you generalize into a lesson? If it reads like a takeaway, it has failed.
+- Did you reach for any jailed phrase?
+- Does it sound like {name} actually writes — or like a thoughtful narrator? Trust the plainer voice."#,
+        name = name,
+        day = world_day,
+        ident = ident,
+        facts = facts_block,
+        prior = prior_block,
+    );
+
+    let user = format!(
+        "Day {day} — everything that was said across every conversation you were in, chronological:\n{hist}\n\nWrite today's entry. Three parts. In order. In your own mouth.",
+        day = world_day,
+        hist = if history_block.is_empty() { "(the day was quiet — journal from the inside, what's still with you from before)".to_string() } else { history_block },
+    );
+
+    let request = ChatRequest {
+        model: model.to_string(),
+        messages: vec![
+            openai::ChatMessage { role: "system".to_string(), content: system },
+            openai::ChatMessage { role: "user".to_string(), content: user },
+        ],
+        temperature: Some(0.85),
+        max_completion_tokens: Some(750),
+        response_format: None,
+    };
+
+    let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
+    let raw = response.choices.first()
+        .map(|c| c.message.content.trim().to_string())
+        .unwrap_or_default();
+    if raw.is_empty() { return Err("empty user journal response".to_string()); }
+    Ok(raw)
+}
+
 /// Generate one "meanwhile" event for a character — a single compact
 /// line describing something they were doing off-screen in the given
 /// day + time-of-day window. Texture, not plot. 1-2 short sentences.

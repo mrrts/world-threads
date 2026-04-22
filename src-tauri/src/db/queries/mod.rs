@@ -13,6 +13,7 @@ mod cross_thread;
 mod weathering;
 mod inventory;
 mod journal;
+mod user_journal;
 mod meanwhile;
 mod daily_reading;
 
@@ -31,5 +32,6 @@ pub use cross_thread::*;
 pub use weathering::*;
 pub use inventory::*;
 pub use journal::*;
+pub use user_journal::*;
 pub use meanwhile::*;
 pub use daily_reading::*;

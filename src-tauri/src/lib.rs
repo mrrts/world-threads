@@ -12,6 +12,7 @@ use commands::video_cmds::*;
 use commands::group_chat_cmds::*;
 use commands::inventory_cmds::*;
 use commands::journal_cmds::*;
+use commands::user_journal_cmds::*;
 use commands::meanwhile_cmds::*;
 use commands::daily_reading_cmds::*;
 use commands::memory_cmds::*;
@@ -242,6 +243,9 @@ pub fn run() {
             generate_character_journal_cmd,
             maybe_generate_character_journal_cmd,
             list_character_journals_cmd,
+            generate_user_journal_cmd,
+            maybe_generate_user_journal_cmd,
+            list_user_journals_cmd,
             generate_meanwhile_events_cmd,
             maybe_generate_meanwhile_events_cmd,
             list_meanwhile_events_cmd,
