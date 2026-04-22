@@ -537,6 +537,12 @@ export function useAppStore() {
           };
         });
         if (state.notifyOnMessage) playChime();
+        // Per-character journal check after this character's reply
+        // lands — server short-circuits if yesterday's entry already
+        // exists for this character. Fire-and-forget.
+        if (state.apiKey) {
+          api.maybeGenerateCharacterJournal(state.apiKey, cid).catch(() => {});
+        }
       }
     } catch (e) {
       setState((s) => ({
@@ -577,6 +583,8 @@ export function useAppStore() {
         };
       });
       if (state.notifyOnMessage) playChime();
+      // Same yesterday-journal trigger as the bulk-send path.
+      api.maybeGenerateCharacterJournal(state.apiKey, characterId).catch(() => {});
     } catch (e) {
       setState((s) => ({
         ...s,
@@ -851,6 +859,13 @@ export function useAppStore() {
         };
       });
       if (state.notifyOnMessage) playChime();
+      // Character message just landed — if the world has crossed into a
+      // new day, yesterday's journal is now eligible. Server cmd
+      // short-circuits when yesterday's entry already exists (cheap DB
+      // read, no LLM call). Fire-and-forget; non-fatal on any error.
+      if (state.apiKey && state.activeCharacter) {
+        api.maybeGenerateCharacterJournal(state.apiKey, state.activeCharacter.character_id).catch(() => {});
+      }
     } catch (e) {
       setState((s) => ({
         ...s,

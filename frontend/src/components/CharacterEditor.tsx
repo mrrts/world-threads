@@ -722,14 +722,14 @@ export function CharacterEditor({ store }: Props) {
                   disabled={journalGenerating || !store.apiKey}
                 >
                   {journalGenerating ? <Loader2 size={12} className="animate-spin mr-1.5" /> : <PenLine size={12} className="mr-1.5" />}
-                  {journalGenerating ? "Writing..." : "Write today's entry"}
+                  {journalGenerating ? "Writing..." : "Write yesterday's entry"}
                 </Button>
               </div>
               {journalLoading ? (
                 <div className="text-xs text-muted-foreground italic">Loading entries…</div>
               ) : journalEntries.length === 0 ? (
                 <div className="text-xs text-muted-foreground italic py-4 text-center">
-                  No entries yet. Click "Write today's entry" to generate the first one.
+                  No entries yet. Click "Write yesterday's entry" to generate the first one (requires world-day ≥ 1).
                 </div>
               ) : (
                 <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
