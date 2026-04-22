@@ -631,10 +631,15 @@ function ChapterView({
         </div>
       )}
 
-      {/* Content with drop-cap */}
+      {/* Content with drop-cap.
+          NOTE: deliberately NOT using Tailwind's `prose` plugin here —
+          its child selectors set their own font-size, which would
+          shadow the inline `fontSize` and break the adjuster. We use
+          plain inheritance instead and add explicit paragraph spacing
+          via `[&>p]:mb-4` so the rendered markdown still breathes. */}
       {content.length > 0 && (
         <div
-          className="font-serif leading-relaxed text-amber-950 chapter-prose"
+          className="font-serif leading-relaxed text-amber-950 chapter-prose [&>p]:mb-4 [&>p:last-child]:mb-0 [&_em]:italic [&_strong]:font-bold"
           style={{ fontSize: `${fontPx}px` }}
         >
           {firstChar && (
@@ -642,11 +647,9 @@ function ChapterView({
               {firstChar}
             </span>
           )}
-          <div className="prose prose-stone max-w-none">
-            <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins} components={markdownComponents}>
-              {rest}
-            </Markdown>
-          </div>
+          <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins} components={markdownComponents}>
+            {rest}
+          </Markdown>
         </div>
       )}
     </article>
