@@ -28,6 +28,7 @@ import { IllustrationPickerModal } from "@/components/chat/IllustrationPickerMod
 import { AdjustIllustrationModal } from "@/components/chat/AdjustIllustrationModal";
 import { VideoGenerationModal } from "@/components/chat/VideoGenerationModal";
 import { IllustrationMessage } from "@/components/chat/IllustrationMessage";
+import { StickyIllustration } from "@/components/chat/StickyIllustration";
 import { IllustrationCarouselModal } from "@/components/chat/IllustrationCarouselModal";
 import { AdjustMessageModal } from "@/components/chat/AdjustMessageModal";
 import { SummaryModal } from "@/components/chat/SummaryModal";
@@ -1030,6 +1031,12 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
           <ChevronDown size={16} />
         </button>
       )}
+      <StickyIllustration
+        messages={store.messages}
+        scrollContainer={scrollRef.current}
+        aspectRatios={store.aspectRatios}
+      />
+
       <AnimationReadyToast
         animationReadyId={animationReadyId}
         onGo={() => {

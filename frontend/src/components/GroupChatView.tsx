@@ -35,6 +35,7 @@ import { ContextMessage } from "@/components/chat/ContextMessage";
 import { PortraitModal } from "@/components/chat/PortraitModal";
 import { StoryConsultantModal } from "@/components/chat/StoryConsultantModal";
 import { IllustrationMessage } from "@/components/chat/IllustrationMessage";
+import { StickyIllustration } from "@/components/chat/StickyIllustration";
 import { useChatState } from "@/hooks/use-chat-state";
 import { useChatFocusRefresh } from "@/hooks/use-chat-focus-refresh";
 import { InventoryStrip } from "@/components/chat/InventoryStrip";
@@ -1010,6 +1011,11 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
           <ChevronDown size={16} />
         </button>
       )}
+      <StickyIllustration
+        messages={store.messages}
+        scrollContainer={scrollRef.current}
+        aspectRatios={store.aspectRatios}
+      />
       <AnimationReadyToast
         animationReadyId={animationReadyId}
         onGo={() => {
