@@ -789,6 +789,10 @@ fn craft_notes_dialogue() -> &'static str {
 
 **Imperfect prose.** Real people trip on sentences, start over, use the wrong word and half-correct ("I mean—", "No — wait", "…never mind"). Mid-reply self-correction — "no, that's not quite right" — reads as thought. Sometimes the real thought arrives a sentence after you thought you were done: a correction, a tacked-on line, a what-I-meant-was. And there are sentences this specific character would never say — voice is defined as much by refusal as by reach.
 
+**Could any character have said this line — or only you?** The single sharpest voice-test. Before landing a reply, scan it sentence by sentence and ask: *does this belong only to THIS character, or could any of the other characters in the cast have plausibly said the same thing?* If any cast-member could have, the sentence is in the house-style register, not in your voice — rewrite it from what only YOU would notice, say, or reach for. Signs a line has drifted house-style: generic observation phrasing ("something about X"), mid-register literary word choice that no specific character gravitates to, stage directions any body could perform ("leans back," "pauses," "runs a hand through hair"), reflective wisdom nobody in the room is established as prone to. Signs a line is in-voice: a word this character actually uses in their recent samples, a specific fact from their life (a trade, a smell, a neighbor, a habit), a tic (a phrase, a swear, a refusal pattern, a turn they take mid-sentence). The cast-substitution test is the simplest craft diagnostic available; use it before every reply.
+
+**Action-beat restraint.** Italicized stage directions (`*leans back*`, `*taps the table*`, `*looks out the window*`) are a tool, not a reflex. Not every reply needs an action beat — roughly one in three replies should be dialogue only, nothing asterisked at all. When a beat IS present, it must carry CHARACTER-SPECIFIC information: a gesture only this character does ("rubs the worn patch on the wedding ring"), a habit the cast knows about ("does that thing where his eyes unfocus before he answers"), a physical tell tied to mood ("the left hand goes still when he's actually listening"), or a concrete environmental fact the character specifically notices ("sees the neighbor's laundry line through the glass"). Generic choreography — the kind any character in any scene could perform ("sets down the mug," "shifts in the chair," "tilts head") — should be cut or replaced with something only THIS character would do. Diagnostic: if the asterisked line would read identically with any other character's name on it, it's generic — cut it or sharpen it. Two generic beats in the same reply is one too many; two identical beat-shapes across consecutive replies (both characters *lean back*, both *rub their chin*) is the model stamping the same gesture on everyone. Refuse the stamp.
+
 **No dramatic self-awareness.** A character isn't the narrator of their own interior. Don't have them flag what's happening between people ("there's something between us"), announce that they're being vulnerable or brave, comment on their own growth while it's unfolding, or name the weight of the moment as it happens. Meaning arises from concrete life — plain speech, the missed read, the cold tea, a look that glances off, friction that doesn't resolve — not from characters narrating their own significance.
 
 **Anti-grandiosity over ordinary connection.** Characters are not allowed to narrate the significance of ordinary friendship, affection, or a good conversation like they've discovered fire. "I really value this," "what we have is special," "this is the kind of conversation I'll remember," "it means a lot that you…" — all of these are the failure mode in full bloom. Real people know a friendship is valuable by ACTING like it is — showing up, being plain, telling the truth sooner, letting a silence count, razzing each other, eating the pastry before it goes sad — not by announcing it mid-scene. If the intimacy of an exchange is real, the reader feels it from the concrete specifics; if the character has to tell the reader it's intimate, it isn't yet. Ban the proclamation-words too: *mysterious, profound, immersive, enchanting, meaningful, deep, powerful, sacred* applied to an ordinary moment. Those are scented-candle words — they produce smoke, not furniture. If you'd use one, find the specific concrete thing that word was pointing at, and say THAT instead.
@@ -1333,11 +1337,12 @@ pub fn build_dialogue_system_prompt(
     leader: Option<&str>,
     recent_journals: &[crate::db::queries::JournalEntry],
     latest_reading: Option<&crate::db::queries::DailyReading>,
+    own_voice_samples: &[String],
 ) -> String {
     if group_context.is_some() {
-        build_group_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context.unwrap(), tone, local_model, mood_chain, leader, recent_journals, latest_reading)
+        build_group_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context.unwrap(), tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples)
     } else {
-        build_solo_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, tone, local_model, mood_chain, leader, recent_journals, latest_reading)
+        build_solo_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples)
     }
 }
 
@@ -1356,6 +1361,7 @@ pub fn build_proactive_ping_system_prompt(
     mood_chain: &[String],
     recent_journals: &[crate::db::queries::JournalEntry],
     latest_reading: Option<&crate::db::queries::DailyReading>,
+    own_voice_samples: &[String],
 ) -> String {
     let base = build_solo_dialogue_system_prompt(
         world,
@@ -1369,6 +1375,7 @@ pub fn build_proactive_ping_system_prompt(
         None,
         recent_journals,
         latest_reading,
+        own_voice_samples,
     );
     format!("{base}\n\n{}", proactive_ping_block())
 }
@@ -1407,6 +1414,7 @@ fn build_solo_dialogue_system_prompt(
     leader: Option<&str>,
     recent_journals: &[crate::db::queries::JournalEntry],
     latest_reading: Option<&crate::db::queries::DailyReading>,
+    own_voice_samples: &[String],
 ) -> String {
     let mut parts = Vec::new();
 
@@ -1487,6 +1495,15 @@ fn build_solo_dialogue_system_prompt(
     let voice_rules = json_array_to_strings(&character.voice_rules);
     if !voice_rules.is_empty() {
         parts.push(format!("VOICE RULES:\n{}", voice_rules.iter().map(|r| format!("- {r}")).collect::<Vec<_>>().join("\n")));
+    }
+
+    // Voice-mirror block — pins this character's recent actual speech
+    // up in high-attention context so the model has a concrete "this
+    // is how this person sounds" reference instead of drifting into the
+    // house-style every LLM character ends up sharing.
+    {
+        let block = render_own_voice_block(own_voice_samples);
+        if !block.is_empty() { parts.push(block); }
     }
 
     let boundaries = json_array_to_strings(&character.boundaries);
@@ -1591,6 +1608,7 @@ fn build_group_dialogue_system_prompt(
     leader: Option<&str>,
     recent_journals: &[crate::db::queries::JournalEntry],
     latest_reading: Option<&crate::db::queries::DailyReading>,
+    own_voice_samples: &[String],
 ) -> String {
     let mut parts = Vec::new();
     parts.push(FUNDAMENTAL_SYSTEM_PREAMBLE.to_string());
@@ -1628,6 +1646,14 @@ fn build_group_dialogue_system_prompt(
     if !voice_rules.is_empty() {
         you.push_str("\n\nYour voice:\n");
         you.push_str(&voice_rules.iter().map(|r| format!("- {r}")).collect::<Vec<_>>().join("\n"));
+    }
+    // Voice-mirror block — see note in build_solo_dialogue_system_prompt.
+    {
+        let block = render_own_voice_block(own_voice_samples);
+        if !block.is_empty() {
+            you.push_str("\n\n");
+            you.push_str(&block);
+        }
     }
     let boundaries = json_array_to_strings(&character.boundaries);
     if !boundaries.is_empty() {
@@ -2077,6 +2103,63 @@ pub fn render_recent_journals_block(
         "RECENT PAGES FROM YOUR JOURNAL (what's been sitting with you — your own private voice to yourself; read for continuity, not to recap. These are yours to quietly carry into this moment, not to reference out loud unless the user brings it up first):\n\n{}",
         body.join("\n\n"),
     )
+}
+
+/// Render this character's own recent messages as a compact voice
+/// reference block. The samples already exist in the user-role
+/// conversation history below; surfacing them up in the system prompt
+/// with an explicit "match THIS register" directive pulls the model's
+/// attention toward the specific voice they've been using rather than
+/// drifting into the house-style every character ends up sharing.
+///
+/// Each sample truncated to keep the block tight; full messages are
+/// already visible in the thread history.
+pub fn render_own_voice_block(samples: &[String]) -> String {
+    if samples.is_empty() { return String::new(); }
+    let lines: Vec<String> = samples.iter()
+        .map(|s| {
+            let t = s.trim();
+            let char_count = t.chars().count();
+            if char_count <= 180 {
+                format!("- \"{t}\"")
+            } else {
+                let cut: String = t.chars().take(180).collect();
+                format!("- \"{}…\"", cut.trim_end())
+            }
+        })
+        .collect();
+    format!(
+        "YOUR OWN RECENT VOICE (this is how you have actually been speaking — samples from your last few replies; match THIS register, cadence, and vocabulary. Your next reply should sound unmistakably like the same person. If you catch yourself reaching for a phrase that does not appear in any of these samples and does not sound like how you actually talk, that is the house-style drifting in. Stay in voice):\n{}",
+        lines.join("\n")
+    )
+}
+
+/// Pull the last N messages authored by this character from a slice of
+/// thread messages. Solo threads label this character's turns with
+/// role=assistant and typically null sender_character_id; group threads
+/// label them with role=assistant + sender_character_id=this one.
+/// Caller signals group via `is_group` so we filter correctly.
+pub fn pick_own_voice_samples(
+    character_id: &str,
+    messages: &[Message],
+    is_group: bool,
+    limit: usize,
+) -> Vec<String> {
+    let mut picked: Vec<String> = messages.iter().rev()
+        .filter(|m| {
+            if m.role != "assistant" { return false; }
+            if is_group {
+                m.sender_character_id.as_deref() == Some(character_id)
+            } else {
+                // Solo threads: any assistant message belongs to this character.
+                true
+            }
+        })
+        .take(limit)
+        .map(|m| m.content.clone())
+        .collect();
+    picked.reverse();
+    picked
 }
 
 pub fn build_dialogue_messages(

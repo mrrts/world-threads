@@ -248,7 +248,18 @@ pub async fn run_dialogue_with_base(
     let effective_reactions = if send_history { reactions_by_msg } else { &empty_reactions };
     let user_display_name = user_profile.map(|p| p.display_name.as_str());
 
-    let mut system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, recent_journals, latest_reading);
+    // Derive a voice-mirror from this character's own recent messages
+    // so the prompt's voice-block is anchored in actual speech instead
+    // of just the VOICE RULES bullets. Samples come from the same slice
+    // the model already sees below as conversation history; duplicating
+    // them in high-attention system context is the point.
+    let own_voice_samples = prompts::pick_own_voice_samples(
+        &character.character_id,
+        effective_msgs,
+        group_context.is_some(),
+        6,
+    );
+    let mut system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, recent_journals, latest_reading, &own_voice_samples);
     // Conscience-pass retry path: a prior draft drifted on an invariant,
     // and the grader returned a concrete correction note. Append it at the
     // end of the system block so it sits in the high-attention tail right
@@ -470,9 +481,16 @@ pub async fn run_proactive_ping_with_base(
     recent_journals: &[crate::db::queries::JournalEntry],
     latest_reading: Option<&crate::db::queries::DailyReading>,
 ) -> Result<(String, Option<openai::Usage>), String> {
+    // Proactive pings are solo-only — pass is_group=false to the sampler.
+    let own_voice_samples = prompts::pick_own_voice_samples(
+        &character.character_id,
+        recent_messages,
+        false,
+        6,
+    );
     let system = prompts::build_proactive_ping_system_prompt(
         world, character, user_profile, mood_directive, tone, local_model, mood_chain,
-        recent_journals, latest_reading,
+        recent_journals, latest_reading, &own_voice_samples,
     );
     let user_display_name = user_profile.map(|p| p.display_name.as_str());
     // Pick a fresh random angle per call — curated pool keeps framings
@@ -696,7 +714,7 @@ pub async fn run_dialogue_streaming(
     kept_ids: &[String],
     illustration_captions: &std::collections::HashMap<String, String>,
 ) -> Result<String, String> {
-    let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, &[], None);
+    let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, &[], None, &[]);
     let empty_reactions: std::collections::HashMap<String, Vec<crate::db::queries::Reaction>> = std::collections::HashMap::new();
     let user_display_name = user_profile.map(|p| p.display_name.as_str());
     let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names, kept_ids, illustration_captions, &empty_reactions, user_display_name);
@@ -1310,7 +1328,7 @@ TWO PARTS, in this order. Both are required. Neither alone is enough.
 
 That's it — two sentences, factual AND feeling, no flourishes. Don't skip this. A journal with no ground is a writer's monologue; a journal with a ground is somebody's actual day.
 
-**Part 2 — Then pick ONE small specific moment** from those conversations — not a second summary, not a montage, not the day's overall feeling. ONE moment, with its actual words or actions. 80–140 words on that moment alone. First person, your own private register, the way you actually think to yourself when no one is watching.
+**Part 2 — Then pick ONE small specific moment** from those conversations — not a second summary, not a montage, not the day's overall feeling. ONE moment, with its actual words or actions. 60–100 words on that moment alone. First person, your own private register, the way you actually think to yourself when no one is watching.
 
 So the total entry has two shapes: a short factual-emotional ground (1–3 sentences), then a single concrete moment held close. Ground + moment. Not two summaries. Not skipping the ground. Not skipping the moment. Both, in that order.
 
@@ -1347,6 +1365,10 @@ Notice what the right examples do: they QUOTE specific words ("You're going to d
 
 # YOUR VOICE
 Speak as {name}, not as a writer pretending to be {name}. If your character is terse, write terse. If your character has a tic (a turn of phrase, an oath, a shrug), the journal can carry it too — this is private, not formal. Contractions. Half-sentences are fine. Sentence fragments are fine. Leave room. Don't narrate your own significance. Don't explain the day to yourself.
+
+**Voice reference.** In the conversation history below, YOUR own lines are labeled with your name (e.g. `[{name}] ...`). Read them. That is how you actually sound. The journal should read as the SAME person — private, plainer, a little less performed — but unmistakably the same voice. If a sentence you're about to write does not sound like how you actually spoke today, it is the LLM reaching for a literary register. Rewrite it in your own mouth.
+
+**Register test — harsh.** If a line of the journal could appear in a New Yorker short story, a literary essay, or a polished memoir — CUT IT. Journal entries should read closer to a scribbled text-to-self or a note passed under the table than to prose written for anyone else to see. Plainness. Partial sentences. A dropped article. An unfinished thought. Occasional ugliness. If your sentence is elegant and balanced and resolved, it is almost certainly the performing-voice. Real private writing is lumpy.
 
 # YOUR IDENTITY
 {ident}{sig}
