@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, X, Loader2, Feather, Send } from "lucide-react";
+import { Check, X, Loader2, Feather, Send, ImagePlus, Palette, Users } from "lucide-react";
 import { api } from "@/lib/tauri";
 
 /// A parsed Backstage action — extracted from a ```action fenced block
@@ -31,6 +31,29 @@ export type BackstageActionBlock =
       content: string;
     }
   | {
+      type: "portrait_regen";
+      /// Character whose portrait is regenerating.
+      subject_id: string;
+      /// Freeform pose / mood / detail description passed to
+      /// generate_portrait_with_pose_cmd as the pose_description arg.
+      pose_description: string;
+      label: string;
+    }
+  | {
+      type: "illustration";
+      /// Character whose solo chat the illustration gets attached to.
+      character_id: string;
+      /// Scene description → generate_illustration_cmd custom_instructions.
+      custom_instructions: string;
+      label: string;
+    }
+  | {
+      type: "new_group_chat";
+      /// Exactly two character ids — backend rejects anything else.
+      character_ids: string[];
+      label: string;
+    }
+  | {
       type: string;
       label?: string;
       content?: string;
@@ -45,6 +68,12 @@ export interface BackstageActionContext {
   /// the "fire-and-forget" feel — the card did its job, return user to
   /// their chat.
   onAppliedClose: () => void;
+  /// API key for actions that trigger LLM/image generation (portrait
+  /// regen, illustration). Missing key → action shows an error instead
+  /// of silently failing.
+  apiKey: string;
+  /// World id — required for new_group_chat creation.
+  worldId: string;
 }
 
 interface Props {
@@ -65,12 +94,17 @@ export function BackstageActionCard({ block, ctx }: Props) {
   }
 
   if (state === "applied") {
+    const label =
+      block.type === "canon_entry" ? "Saved to Canon." :
+      block.type === "staged_message" ? "Staged in your chat." :
+      block.type === "portrait_regen" ? "Portrait painted — find it in the character editor." :
+      block.type === "illustration" ? "Illustration added to the chat." :
+      block.type === "new_group_chat" ? "Group chat created — find it in your sidebar." :
+      "Applied.";
     return (
       <div className="my-3 px-3 py-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-[11px] text-emerald-400 flex items-center gap-2">
         <Check size={12} />
-        <span>
-          {block.type === "canon_entry" ? "Saved to Canon." : "Staged in your chat."}
-        </span>
+        <span>{label}</span>
       </div>
     );
   }
@@ -163,6 +197,172 @@ export function BackstageActionCard({ block, ctx }: Props) {
             </button>
             <button
               onClick={() => setState("dismissed")}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent text-xs transition-colors cursor-pointer"
+            >
+              <X size={12} />
+              Dismiss
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Portrait regeneration card
+  if (block.type === "portrait_regen") {
+    const onApply = async () => {
+      if (!ctx.apiKey) { setError("No API key configured."); setState("error"); return; }
+      setState("applying");
+      setError(null);
+      try {
+        await api.generatePortraitWithPose(ctx.apiKey, block.subject_id, block.pose_description);
+        setState("applied");
+        // Portrait creation is slow — leave the success state visible a
+        // beat longer before auto-close so the user sees what happened.
+        setTimeout(() => ctx.onAppliedClose(), 1200);
+      } catch (e: any) {
+        setError(String(e));
+        setState("error");
+      }
+    };
+    return (
+      <div className="my-3 rounded-xl border border-amber-400/40 bg-amber-500/5 overflow-hidden">
+        <div className="px-4 py-2.5 border-b border-amber-400/20 bg-amber-500/10 flex items-center gap-2">
+          <Palette size={13} className="text-amber-400" />
+          <span className="text-[11px] uppercase tracking-wider font-semibold text-amber-300">
+            Propose portrait variation
+          </span>
+        </div>
+        <div className="px-4 py-3">
+          <p className="text-[11px] text-muted-foreground/80 mb-2 italic">{block.label}</p>
+          <div className="text-sm leading-relaxed whitespace-pre-wrap text-foreground/90 bg-background/40 rounded-md p-3 border border-border/40">
+            {block.pose_description}
+          </div>
+          {error && <p className="text-xs text-destructive mt-2">{error}</p>}
+          <div className="flex items-center gap-2 mt-3">
+            <button
+              onClick={onApply}
+              disabled={state === "applying"}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-amber-500/90 hover:bg-amber-500 text-black text-xs font-medium transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+            >
+              {state === "applying" ? <Loader2 size={12} className="animate-spin" /> : <Palette size={12} />}
+              {state === "applying" ? "Painting…" : "Paint this portrait"}
+            </button>
+            <button
+              onClick={() => setState("dismissed")}
+              disabled={state === "applying"}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent text-xs transition-colors cursor-pointer"
+            >
+              <X size={12} />
+              Dismiss
+            </button>
+          </div>
+          {state === "applying" && (
+            <p className="text-[10px] text-muted-foreground/60 mt-2 italic">This usually takes 20-40 seconds.</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Illustration card
+  if (block.type === "illustration") {
+    const onApply = async () => {
+      if (!ctx.apiKey) { setError("No API key configured."); setState("error"); return; }
+      setState("applying");
+      setError(null);
+      try {
+        await api.generateIllustration(ctx.apiKey, block.character_id, undefined, block.custom_instructions);
+        setState("applied");
+        setTimeout(() => ctx.onAppliedClose(), 1200);
+      } catch (e: any) {
+        setError(String(e));
+        setState("error");
+      }
+    };
+    return (
+      <div className="my-3 rounded-xl border border-amber-400/40 bg-amber-500/5 overflow-hidden">
+        <div className="px-4 py-2.5 border-b border-amber-400/20 bg-amber-500/10 flex items-center gap-2">
+          <ImagePlus size={13} className="text-amber-400" />
+          <span className="text-[11px] uppercase tracking-wider font-semibold text-amber-300">
+            Propose an illustration
+          </span>
+        </div>
+        <div className="px-4 py-3">
+          <p className="text-[11px] text-muted-foreground/80 mb-2 italic">{block.label}</p>
+          <div className="text-sm leading-relaxed whitespace-pre-wrap text-foreground/90 bg-background/40 rounded-md p-3 border border-border/40 max-h-[240px] overflow-y-auto">
+            {block.custom_instructions}
+          </div>
+          {error && <p className="text-xs text-destructive mt-2">{error}</p>}
+          <div className="flex items-center gap-2 mt-3">
+            <button
+              onClick={onApply}
+              disabled={state === "applying"}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-amber-500/90 hover:bg-amber-500 text-black text-xs font-medium transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+            >
+              {state === "applying" ? <Loader2 size={12} className="animate-spin" /> : <ImagePlus size={12} />}
+              {state === "applying" ? "Illustrating…" : "Illustrate this"}
+            </button>
+            <button
+              onClick={() => setState("dismissed")}
+              disabled={state === "applying"}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent text-xs transition-colors cursor-pointer"
+            >
+              <X size={12} />
+              Dismiss
+            </button>
+          </div>
+          {state === "applying" && (
+            <p className="text-[10px] text-muted-foreground/60 mt-2 italic">This usually takes 15-30 seconds.</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // New group chat card
+  if (block.type === "new_group_chat") {
+    const onApply = async () => {
+      if (!ctx.worldId) { setError("Missing world context."); setState("error"); return; }
+      if (!Array.isArray(block.character_ids) || block.character_ids.length !== 2) {
+        setError("Group chats need exactly 2 characters.");
+        setState("error");
+        return;
+      }
+      setState("applying");
+      setError(null);
+      try {
+        await api.createGroupChat(ctx.worldId, block.character_ids);
+        setState("applied");
+        setTimeout(() => ctx.onAppliedClose(), 800);
+      } catch (e: any) {
+        setError(String(e));
+        setState("error");
+      }
+    };
+    return (
+      <div className="my-3 rounded-xl border border-amber-400/40 bg-amber-500/5 overflow-hidden">
+        <div className="px-4 py-2.5 border-b border-amber-400/20 bg-amber-500/10 flex items-center gap-2">
+          <Users size={13} className="text-amber-400" />
+          <span className="text-[11px] uppercase tracking-wider font-semibold text-amber-300">
+            Propose a new group chat
+          </span>
+        </div>
+        <div className="px-4 py-3">
+          <p className="text-sm leading-relaxed text-foreground/90">{block.label}</p>
+          {error && <p className="text-xs text-destructive mt-2">{error}</p>}
+          <div className="flex items-center gap-2 mt-3">
+            <button
+              onClick={onApply}
+              disabled={state === "applying"}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-amber-500/90 hover:bg-amber-500 text-black text-xs font-medium transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+            >
+              {state === "applying" ? <Loader2 size={12} className="animate-spin" /> : <Users size={12} />}
+              {state === "applying" ? "Creating…" : "Start this group chat"}
+            </button>
+            <button
+              onClick={() => setState("dismissed")}
+              disabled={state === "applying"}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent text-xs transition-colors cursor-pointer"
             >
               <X size={12} />

@@ -1547,6 +1547,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         characterId={store.activeCharacter?.character_id ?? null}
         groupChatId={null}
         threadId={store.messages[0]?.thread_id ?? ""}
+        worldId={store.activeWorld?.world_id ?? ""}
         characterNames={store.activeCharacter ? [store.activeCharacter.display_name] : []}
         worldImageUrl={store.activeWorldImage?.data_url}
         portraits={Object.fromEntries(

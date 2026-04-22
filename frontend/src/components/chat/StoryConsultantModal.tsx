@@ -34,6 +34,9 @@ interface Props {
   notifyOnMessage: boolean;
   /** Chat font size ("sm" | "md" | "lg" etc.) — shared with ChatView/GroupChatView */
   chatFontSize: string;
+  /** Active world id — required for Backstage actions that create
+   *  world-scoped entities (e.g. new group chats). */
+  worldId: string;
 }
 
 interface PromptCategory {
@@ -85,7 +88,7 @@ function buildCategories(names: string[]): PromptCategory[] {
   ];
 }
 
-export function StoryConsultantModal({ open, onClose, apiKey, characterId, groupChatId, threadId, characterNames, worldImageUrl, portraits, userAvatarUrl, notifyOnMessage, chatFontSize }: Props) {
+export function StoryConsultantModal({ open, onClose, apiKey, characterId, groupChatId, threadId, characterNames, worldImageUrl, portraits, userAvatarUrl, notifyOnMessage, chatFontSize, worldId }: Props) {
   const [chats, setChats] = useState<ConsultantChat[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   // Which tab the sidebar is showing. Also determines the mode of any
@@ -561,6 +564,8 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                                       ctx={{
                                         activeThreadId: threadId,
                                         onAppliedClose: onClose,
+                                        apiKey,
+                                        worldId,
                                       } as BackstageActionContext}
                                     />
                               ))}

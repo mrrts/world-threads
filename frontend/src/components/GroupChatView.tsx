@@ -1527,6 +1527,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
         characterId={null}
         groupChatId={store.activeGroupChat?.group_chat_id ?? null}
         threadId={store.messages[0]?.thread_id ?? ""}
+        worldId={store.activeWorld?.world_id ?? ""}
         characterNames={groupCharacters.map((c) => c.display_name)}
         worldImageUrl={store.activeWorldImage?.data_url}
         portraits={Object.fromEntries(
