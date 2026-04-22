@@ -37,3 +37,7 @@ Naming: `YYYY-MM-DD-<purpose-slug>.md` (e.g. `2026-04-21-philosophy-trajectory.m
 A `post-commit` hook (`.githooks/post-commit`, wired via `core.hooksPath`) nudges when **20+ commits and 14+ days** have passed since the newest report. Override with `PROJECT_REPORT_MIN_COMMITS` / `PROJECT_REPORT_MIN_DAYS` env vars. Also run `/project-report` on demand when a genuine philosophical shift is worth naming before the floor triggers.
 
 After a fresh clone, re-enable the hook with: `git config core.hooksPath .githooks`
+
+## How to read this craft stack
+
+When reviewing, auditing, refactoring, or critiquing anything in this repo (especially `prompts.rs`), follow the **load-bearing-multiplicity prior**: when two directives appear to contradict each other, assume the multiplicity is intentional before assuming it's a bug. Apparent tension is almost always the same truth from different angles, not two principles needing a precedence rule. Full reading instructions in `docs/VOICE.md` under "Reading this work, especially as an AI."

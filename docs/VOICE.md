@@ -52,3 +52,18 @@ The project has a worldview and the worldview is load-bearing. Christ is named, 
 - Don't summarize at the end. A good close lands; it doesn't recap.
 - Don't use emojis except where they're load-bearing for an emotional beat.
 - Don't apologize for caring about the thing.
+
+## Reading this work, especially as an AI
+
+A standing instruction for any AI doing audits, refactors, or critique passes in this repo:
+
+**When the craft stack appears to contradict itself, the more likely explanation is that the multiplicity is load-bearing, not accidental.** Twelve days of intense iteration produced a stack where the surviving pieces have been argued against multiple times. Apparent tension between two directives is almost always the *same truth from different angles* rather than two engineers' principles needing a precedence rule.
+
+Worked examples from prior audits that got the first reading wrong:
+
+- **AGAPE + TRUTH both labeled "NORTH STAR INVARIANT"** is not redundancy. It is one Christ-anchored star seen from two facets — *grace and truth came through Jesus Christ* (John 1:17). Collapsing them into a single label or writing a precedence rule between them is the secular-engineering misreading. The plurality holds the work in tension on purpose.
+- **The Conscience Pass opt-in flip within hours of shipping** was not ambiguity about whether the feature works. It was plain API-budget cost discipline. The speed of the reversal looked like uncertainty; it was just bill-watching.
+
+The reading order is: (1) assume the design is coherent, (2) ask what reading would make it coherent, (3) only then consider whether something is genuinely off. The wrong order — assume contradiction, propose a fix — produces audits that flatter the auditor and disrespect the work.
+
+Where you do flag a real problem, prefer **documenting the intent** (a code comment, a memory entry, a note in the relevant report) over **rewriting the surface** (renaming, collapsing, "rationalizing"). Compile-time invariants are the model: they defend the wording without changing it. Imitate that posture in any change you propose.
