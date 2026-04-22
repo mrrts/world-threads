@@ -1458,7 +1458,11 @@ pub async fn generate_meanwhile_event(
     let system = format!(
         r#"You write ONE small line of texture — what {name} was doing when no one was watching, in the {time} window of Day {day}. Not plot. Not stakes. Not dialogue. Not a scene. Just a small concrete thing a specific person like {name} would actually be doing in this hour of this kind of day.
 
-The goal: someone reading this feels the world kept moving without them. Not drama, not setup — the small grain of an ongoing life. Fixing a hinge. Standing at the window with tea gone cold. Walking the dog the long way. Half-remembering a tune. Re-sorting the tools on the bench. Greeting someone across the square. Starting a letter and stopping. Small ordinary continuities.
+The goal: someone reading this feels the world kept moving without them. Not drama, not setup — the small grain of an ongoing life.
+
+**Favor ACTIVE beats over STATIC ones.** Most of these should show a character DOING something that took time, had a shape, went somewhere — not merely BEING somewhere. A bench that turned out to be more lopsided than expected, and the quick fix became three hours of frustrated redos. A hedge that needed trimming and two spiders had to be rehomed. A letter started three times because the first two times it came out wrong. A walk that got longer than planned because somebody's dog followed them halfway home. A recipe that didn't behave the way the memory of it said it would. Activities with a small arc — started easy, hit friction, got worked through or abandoned — read truer than stationary snapshots.
+
+Static beats are ALLOWED (standing at the window with tea gone cold; sitting on the porch watching light change; half-remembering a tune) — but no more than one in three. Default to showing the person at WORK on something small that took effort, not at rest.
 
 Length: ONE sentence, TWO at most. Present tense or past, either is fine. Third person ("{name} did X"). No quotes. No dialogue. No explanatory framing.
 
