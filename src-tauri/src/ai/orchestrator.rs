@@ -2308,6 +2308,11 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#.to_strin
         target_existing_text: Option<String>,
         #[serde(default)]
         new_content: String,
+        // Classifier sometimes drops justification on one of two
+        // updates even though the system prompt requires it. Rather
+        // than fail the whole batch over a missing field, default to
+        // empty and let the UI render nothing in that spot.
+        #[serde(default)]
         justification: String,
     }
     let parsed: RawOut = serde_json::from_str(&text)
