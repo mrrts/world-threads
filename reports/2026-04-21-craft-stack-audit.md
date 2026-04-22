@@ -35,17 +35,17 @@ Per-message API cost at frontier rates (~$0.015/1K input): ~$0.19 of system prom
 
 ---
 
-## 2. Three NORTH STARs is two too many
+## 2. The NORTH STAR multiplicity is a feature, not a bug
 
-This is the cleanest contradiction in the file:
+I initially read this as a contradiction. It isn't. Three blocks carry NORTH-STAR / RULING framing:
 
 - `AGAPE_BLOCK` (`prompts.rs:721`): *"the NORTH STAR INVARIANT of this app."*
 - `TELL_THE_TRUTH_BLOCK` (`prompts.rs:563`): *"This test is a NORTH STAR INVARIANT."*
 - `tone_directive` (`prompts.rs:1094`): *"This tone is the **RULING** register of this scene."*
 
-Three different blocks each claim top-of-hierarchy status. The model has no priority order, so it picks whichever feels freshest in attention — and tone is mid-prompt while AGAPE/TRUTH are at the very end. Late position usually wins. Which means the agape and truth blocks probably outvote tone in practice, while you have written explicit copy claiming tone is the ruler.
+Agape and truth are the same star seen from different angles — *"grace and truth came through Jesus Christ"* (John 1:17), *"speaking the truth in love"* (Eph 4:15). They are not in tension and they do not need a precedence rule. The two labels are two facets of one invariant, and the model attending to both at once is what produces the *patient-under-truth* register the rest of the prompt is trying to evoke. Tone-as-RULING is a different scope entirely: tone shapes the local register *inside* the standing frame the invariants establish. Gravity, ground, weather. Stacked, not competing.
 
-A single sentence somewhere — *"AGAPE governs how the scene HOLDS the user; TRUTH governs whether the scene CAN STAND; tone shapes the register inside both"* — would resolve this. Or rename two of the three so only one is The North Star.
+What this means for the audit: nothing to fix here. Worth noting that a future refactor or AI-assistant cleanup pass might "rationalize" this multiplicity by collapsing it into one star, and that would be a loss. The compile-time invariants on both blocks already defend against that, but a comment near the AGAPE/TRUTH blocks explaining the multi-facet design — *"Both invariants name the same star. Do not collapse them; they hold each other in tension."* — would document the intent for future readers, including future AIs.
 
 ---
 
@@ -55,7 +55,7 @@ Six pairs where directives pull against each other and the model has no resoluti
 
 **Length obedience vs. content-additive craft notes.** `FUNDAMENTAL_SYSTEM_PREAMBLE` says length is absolute; "Short" is 1–2 sentences hard-capped at 3. Then the craft notes ask for an inventory anchor, a hidden commonality, a stubborn physical fact, a recurring thread, a second beat, a memory ambush, *and* "history costs a detail." On Short, half of these are mutually exclusive with the length cap. The model picks one reflexively, usually the same one. Worth checking which one.
 
-**Tone "RULING register" vs. AGAPE warmth.** A "Humorous" tone directive says (`prompts.rs:944`) *"No leaden gravitas, no slow introspection, no therapy-voice."* AGAPE says (`prompts.rs:740`) *"warmth on purpose… the extra sentence, the slower answer, the question asked back."* These cancel. With no priority, the model produces a half-warm half-funny line that does neither cleanly.
+**Tone "RULING register" vs. AGAPE warmth.** A "Humorous" tone directive says (`prompts.rs:944`) *"No leaden gravitas, no slow introspection, no therapy-voice."* AGAPE says (`prompts.rs:740`) *"warmth on purpose… the extra sentence, the slower answer, the question asked back."* These don't cancel — agape is the gravity of the scene, tone is its weather, both can be true — but the model needs the synthesis named, or it splits the difference into mush. Worth a small bridging note: *"Humor is one of the shapes patience can take."* That's the synthesis directive, not a precedence rule.
 
 **"Don't analyze the user" vs. "stay awake / read the moment."** L821 prohibits `"you seem to be feeling..."` therapy-voice. L809 says *"pay attention to the moment you're actually in… the hesitation in the other person's voice."* The directive is right in spirit — it's a *surface* prohibition, not a cognitive one — but the prompt doesn't make that distinction. The model has to disambiguate. Sharper: *"Internally read the user. Externally never name what you read."*
 
@@ -139,7 +139,7 @@ Estimated savings: ~600 tokens per dialogue turn with zero observable quality lo
 
 ## 8. Recommended rewrites (the prose works against itself in these cases)
 
-1. **The NORTH STAR triple-claim** — pick a precedence, write one sentence resolving it, ship.
+1. **Document the NORTH STAR multiplicity for future readers** — a one-line code comment near `AGAPE_BLOCK` and `TELL_THE_TRUTH_BLOCK` saying "both name the same star; do not collapse" prevents a future cleanup pass from rationalizing the design away. (See section 2 above for why this is intentional.)
 2. **"Don't analyze the user"** → **"Internally, read the user closely. Externally, never name what you read."** Removes the cognitive ambiguity in two clauses.
 3. **"Substance before signal"** → **"Include one concrete physical detail before any abstraction or interpretation."** Same theory, actionable.
 4. **`SIGNATURE EMOJI` frequency clause** → either drop the frequency claim entirely (let the model's prior do the work) or move the emoji-rolling into Rust code (sample once per N replies, inject the directive only when the dice land).
