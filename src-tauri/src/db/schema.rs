@@ -1489,5 +1489,19 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             ON imagined_chapters(thread_id, created_at DESC);
     ").ok();
 
+    // breadcrumb_message_id — links a chapter to the role='imagined_chapter'
+    // row inserted into the chat transcript when the chapter was saved.
+    // Lets the canon flow look up the breadcrumb by chapter_id (the existing
+    // canon classifier expects a source_message_id; this column is what the
+    // frontend hands over for "canonize this chapter"). Added via
+    // ALTER TABLE ADD COLUMN per CLAUDE.md DATABASE SAFETY rule.
+    let column_exists: bool = conn.query_row(
+        "SELECT 1 FROM pragma_table_info('imagined_chapters') WHERE name = 'breadcrumb_message_id'",
+        [], |_| Ok(true),
+    ).unwrap_or(false);
+    if !column_exists {
+        let _ = conn.execute("ALTER TABLE imagined_chapters ADD COLUMN breadcrumb_message_id TEXT", []);
+    }
+
     Ok(())
 }

@@ -2144,6 +2144,26 @@ KNOWLEDGE LIMITS:
 /// name, action, quoted item name, and the full description (the fuller
 /// text the LLM wove into the item). Falls back to the raw body stripped
 /// of the prefix if JSON parsing fails.
+/// Format an `imagined_chapter` row's JSON payload as a compact note for
+/// the dialogue / narrative history. The breadcrumb tells the model that
+/// a chapter EXISTS in this thread's history without dumping the whole
+/// chapter text. Title + first line + date — enough to recognize and not
+/// contradict.
+pub fn render_imagined_chapter_for_prompt(content: &str) -> String {
+    let parsed: serde_json::Value = match serde_json::from_str(content) {
+        Ok(v) => v,
+        Err(_) => return format!("[An imagined chapter exists here, but its record could not be parsed.]"),
+    };
+    let title = parsed.get("title").and_then(|v| v.as_str()).unwrap_or("(untitled)");
+    let first_line = parsed.get("first_line").and_then(|v| v.as_str()).unwrap_or("");
+    if first_line.is_empty() {
+        format!("An imagined chapter titled '{title}' was written here. (Treat as a remembered scene that happened in this world; do not contradict, but also do not narrate it back.)")
+    } else {
+        format!("An imagined chapter titled '{title}' was written here. It opens: \"{}…\" (Treat the chapter as a remembered scene in this world. Don't contradict its truths; don't narrate it back unless someone asks.)",
+            first_line.chars().take(220).collect::<String>())
+    }
+}
+
 pub fn render_inventory_update_for_prompt(content: &str) -> String {
     let stripped = content
         .trim_start_matches("[Inventory updated:]")
@@ -2392,6 +2412,19 @@ pub fn build_dialogue_messages(
             msgs.push(crate::ai::openai::ChatMessage {
                 role: "system".to_string(),
                 content: format!("[Inventory update at this moment] {summary}"),
+            });
+            continue;
+        }
+        // Imagined-chapter breadcrumb rows: render as a compact system
+        // note carrying title + first-line excerpt. The full chapter
+        // text isn't injected (it would be too heavy); the model knows
+        // the chapter exists in this world's history and can let it
+        // sit underneath the scene without re-narrating.
+        if m.role == "imagined_chapter" {
+            let summary = render_imagined_chapter_for_prompt(&m.content);
+            msgs.push(crate::ai::openai::ChatMessage {
+                role: "system".to_string(),
+                content: format!("[Imagined chapter] {summary}"),
             });
             continue;
         }
@@ -2744,7 +2777,7 @@ IMPORTANT: Output raw JSON only. Do NOT wrap in markdown code fences."#);
     }];
 
     let conversation: Vec<String> = recent_messages.iter()
-        .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update")
+        .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update" && m.role != "imagined_chapter")
         .map(|m| {
             format!("[{}] {}: {}", m.message_id, m.role, m.content)
         }).collect();
@@ -3103,7 +3136,7 @@ pub fn build_scene_description_prompt(
     // In group scenes, prefix assistant messages with [CharName] so the scene
     // director can tell who's speaking (same fix as dialogue history).
     let conversation: Vec<String> = recent_messages.iter()
-        .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update")
+        .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update" && m.role != "imagined_chapter")
         .map(|m| {
             let speaker = if m.role == "user" {
                 user_name.to_string()
@@ -3197,7 +3230,7 @@ Write ONLY the animation direction, nothing else."#,
     let system = system_parts.join("\n\n");
 
     let conversation: Vec<String> = recent_messages.iter()
-        .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update")
+        .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update" && m.role != "imagined_chapter")
         .rev().take(6).collect::<Vec<_>>().into_iter().rev()
         .map(|m| {
             let speaker = if m.role == "user" {

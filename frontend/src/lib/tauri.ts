@@ -860,6 +860,10 @@ export interface ImaginedChapter {
   image_id: string | null;
   content: string;
   created_at: string;
+  /** message_id of the role='imagined_chapter' chat-history breadcrumb
+   *  inserted when the chapter was generated. Used by the canon flow
+   *  to canonize a chapter via the standard KeepRecordModal path. */
+  breadcrumb_message_id: string | null;
 }
 
 export interface GenerateImaginedChapterRequest {

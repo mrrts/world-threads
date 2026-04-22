@@ -617,7 +617,7 @@ Rules:
 
 /// Tiny standard base64 encoder for inline image data-URLs. Kept local so
 /// vision calls don't pull in a crate we don't otherwise need.
-pub(crate) fn base64_encode_bytes(input: &[u8]) -> String {
+pub fn base64_encode_bytes(input: &[u8]) -> String {
     const CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     let mut out = String::with_capacity(((input.len() + 2) / 3) * 4);
     for chunk in input.chunks(3) {

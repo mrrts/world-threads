@@ -117,7 +117,7 @@ fn render_solo_block(
     let mut stmt = conn
         .prepare(
             "SELECT role, content, created_at FROM messages
-             WHERE thread_id = ?1 AND role NOT IN ('illustration', 'video', 'context', 'system')
+             WHERE thread_id = ?1 AND role NOT IN ('illustration', 'video', 'context', 'system', 'imagined_chapter')
              ORDER BY created_at DESC LIMIT ?2",
         )
         .ok()?;
@@ -187,7 +187,7 @@ fn render_group_block(
     let mut stmt = conn
         .prepare(
             "SELECT role, content, sender_character_id, created_at FROM group_messages
-             WHERE thread_id = ?1 AND role NOT IN ('illustration', 'video', 'context', 'system')
+             WHERE thread_id = ?1 AND role NOT IN ('illustration', 'video', 'context', 'system', 'imagined_chapter')
              ORDER BY created_at DESC LIMIT ?2",
         )
         .ok()?;

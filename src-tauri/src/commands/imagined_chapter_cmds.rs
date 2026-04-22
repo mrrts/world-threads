@@ -196,7 +196,27 @@ pub async fn generate_imagined_chapter_cmd(
             chapters.into_iter().next().map(|c| c.content)
         } else { None };
 
-        let model_config = orchestrator::load_model_config(&conn);
+        let mut model_config = orchestrator::load_model_config(&conn);
+        // Honor the per-chat provider override that lives at
+        // `provider_override.<character_id>` for solo threads and
+        // `provider_override.<group_chat_id>` for group threads. This is
+        // the same key chat_cmds + group_chat_cmds use, so a chapter
+        // generated from a chat will use whatever provider that chat is
+        // configured to use.
+        let override_key: Option<String> = if cast.len() == 1 {
+            // Solo: keyed on character_id.
+            Some(format!("provider_override.{}", cast[0].character_id))
+        } else {
+            // Group: keyed on group_chat_id resolved from thread_id.
+            conn.query_row(
+                "SELECT group_chat_id FROM group_chats WHERE thread_id = ?1",
+                params![request.thread_id],
+                |r| r.get::<_, String>(0),
+            ).ok().map(|gid| format!("provider_override.{}", gid))
+        };
+        if let Some(key) = override_key.as_deref() {
+            model_config.apply_provider_override(&conn, key);
+        }
         (
             world,
             cast,
@@ -233,6 +253,7 @@ pub async fn generate_imagined_chapter_cmd(
             image_id: None,
             content: String::new(),
             created_at: now.clone(),
+            breadcrumb_message_id: None,
         };
         create_imagined_chapter(&conn, &row).map_err(|e| e.to_string())?;
     }
@@ -455,9 +476,8 @@ pub async fn generate_imagined_chapter_cmd(
     });
 
     let stream_request = openai::VisionStreamingRequest {
-        // Use the configured dialogue model. Per-chat frontier override
-        // (which exists for live chat) is not threaded through here yet —
-        // chapters fall back to the global dialogue_model setting.
+        // Honors the per-chat provider override applied above; falls back
+        // to the global dialogue_model when no override is set.
         model: model_config.dialogue_model.clone(),
         messages: vec![
             openai::VisionMessage {
@@ -526,6 +546,7 @@ pub async fn generate_imagined_chapter_cmd(
             ),
             params![breadcrumb_id, request.thread_id, content, now2, world_day, world_time_str],
         );
+        let _ = set_imagined_chapter_breadcrumb(&conn, &chapter_id, &breadcrumb_id);
     }
 
     let _ = app_handle.emit("imagined-chapter-done", ChapterDoneEvent {

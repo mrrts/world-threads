@@ -100,7 +100,7 @@ pub fn gather_character_recent_messages(
         let lim = (limit as i64).max(1);
         if let Ok(mut stmt) = conn.prepare(
             "SELECT role, content, created_at, sender_character_id FROM messages
-             WHERE thread_id = ?1 AND role NOT IN ('illustration', 'video', 'system', 'context', 'inventory_update')
+             WHERE thread_id = ?1 AND role NOT IN ('illustration', 'video', 'system', 'context', 'inventory_update', 'imagined_chapter')
              ORDER BY created_at DESC LIMIT ?2",
         ) {
             if let Ok(rows) = stmt.query_map(params![tid, lim], |r| {
@@ -127,7 +127,7 @@ pub fn gather_character_recent_messages(
         let lim = (limit as i64).max(1);
         if let Ok(mut stmt) = conn.prepare(
             "SELECT role, content, created_at, sender_character_id FROM group_messages
-             WHERE thread_id = ?1 AND role NOT IN ('illustration', 'video', 'system', 'context', 'inventory_update')
+             WHERE thread_id = ?1 AND role NOT IN ('illustration', 'video', 'system', 'context', 'inventory_update', 'imagined_chapter')
              ORDER BY created_at DESC LIMIT ?2",
         ) {
             if let Ok(rows) = stmt.query_map(params![tid, lim], |r| {
@@ -406,7 +406,7 @@ pub fn gather_character_messages_for_world_day(
             "SELECT role, content, created_at, sender_character_id FROM messages
              WHERE thread_id = ?1
                AND world_day = ?2
-               AND role NOT IN ('illustration', 'video', 'system', 'context', 'inventory_update')
+               AND role NOT IN ('illustration', 'video', 'system', 'context', 'inventory_update', 'imagined_chapter')
              ORDER BY created_at ASC",
         ) {
             if let Ok(rows) = stmt.query_map(params![tid, world_day], |r| {
@@ -433,7 +433,7 @@ pub fn gather_character_messages_for_world_day(
             "SELECT role, content, created_at, sender_character_id FROM group_messages
              WHERE thread_id = ?1
                AND world_day = ?2
-               AND role NOT IN ('illustration', 'video', 'system', 'context', 'inventory_update')
+               AND role NOT IN ('illustration', 'video', 'system', 'context', 'inventory_update', 'imagined_chapter')
              ORDER BY created_at ASC",
         ) {
             if let Ok(rows) = stmt.query_map(params![tid, world_day], |r| {

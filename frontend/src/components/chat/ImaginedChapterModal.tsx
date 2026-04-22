@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Markdown from "react-markdown";
 import { Dialog } from "@/components/ui/dialog";
-import { X, Loader2, Sparkles, Trash2, Plus, PanelLeftClose, PanelLeftOpen, Image as ImageIcon } from "lucide-react";
+import { X, Loader2, Sparkles, Trash2, Plus, PanelLeftClose, PanelLeftOpen, Image as ImageIcon, ScrollText } from "lucide-react";
 import { listen } from "@tauri-apps/api/event";
 import { api, type ImaginedChapter, type ImaginedChapterStageEvent, type ImaginedChapterImageEvent, type ImaginedChapterDoneEvent } from "@/lib/tauri";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,9 @@ interface Props {
   chatFontSize: string;
   /** If provided, the modal opens directly to this chapter instead of the compose view. */
   openChapterId?: string | null;
+  /** Bubble up "canonize this chapter" — parent opens its KeepRecordModal
+   *  with the breadcrumb message_id as the source. */
+  onCanonize?: (breadcrumbMessageId: string, chapterTitle: string) => void;
 }
 
 export function ImaginedChapterModal({
@@ -33,6 +36,7 @@ export function ImaginedChapterModal({
   notifyOnMessage: _notifyOnMessage,
   chatFontSize,
   openChapterId,
+  onCanonize,
 }: Props) {
   const [chapters, setChapters] = useState<ImaginedChapter[]>([]);
   const [activeChapterId, setActiveChapterId] = useState<string | null>(null);
@@ -366,13 +370,30 @@ export function ImaginedChapterModal({
               )}
 
               {showActiveChapterView && activeChapterData && (
-                <ChapterView
-                  title={activeChapterData.title}
-                  imageUrl={activeImageUrl}
-                  content={activeChapterData.content}
-                  phase="done"
-                  fontPx={chatFontPx(chatFontSize)}
-                />
+                <>
+                  <ChapterView
+                    title={activeChapterData.title}
+                    imageUrl={activeImageUrl}
+                    content={activeChapterData.content}
+                    phase="done"
+                    fontPx={chatFontPx(chatFontSize)}
+                  />
+                  {onCanonize && activeChapterData.breadcrumb_message_id && (
+                    <div className="max-w-2xl mx-auto mt-6 pt-4 border-t border-amber-900/15 flex justify-center">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          onCanonize(activeChapterData.breadcrumb_message_id!, activeChapterData.title);
+                          onClose();
+                        }}
+                        className="border-amber-700/50 text-amber-900 hover:bg-amber-100"
+                      >
+                        <ScrollText size={14} className="mr-2" />
+                        Canonize this chapter
+                      </Button>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </main>

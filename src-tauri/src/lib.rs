@@ -1,6 +1,6 @@
-mod ai;
+pub mod ai;
 mod commands;
-mod db;
+pub mod db;
 
 use commands::audio_cmds::*;
 use commands::backup_cmds::*;

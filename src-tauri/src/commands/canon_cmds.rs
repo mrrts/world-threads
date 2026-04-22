@@ -10,19 +10,40 @@ const CONTEXT_BEFORE: i64 = 3;
 const CONTEXT_AFTER: i64 = 3;
 
 /// Find the source message across both message tables.
+///
+/// Special handling for imagined-chapter breadcrumb rows: their stored
+/// content is a small JSON record (chapter_id + title + first_line),
+/// which is useless to the canonization classifier. When we detect one,
+/// we look up the actual chapter and replace `m.content` with the
+/// chapter's prose (title heading + body) so the canon flow Just Works
+/// — the user can canonize a chapter via the same modal as any message.
 fn find_message(conn: &rusqlite::Connection, message_id: &str) -> Option<(Message, String)> {
     // tuple: (message, table_name)
+    let mut found = None;
     if let Ok(m) = conn.query_row(
         &format!("SELECT {MSG_COLS} FROM messages WHERE message_id = ?1"),
         params![message_id], row_to_message,
     ) {
-        return Some((m, "messages".to_string()));
-    }
-    if let Ok(m) = conn.query_row(
+        found = Some((m, "messages".to_string()));
+    } else if let Ok(m) = conn.query_row(
         &format!("SELECT {MSG_COLS} FROM group_messages WHERE message_id = ?1"),
         params![message_id], row_to_message,
     ) {
-        return Some((m, "group_messages".to_string()));
+        found = Some((m, "group_messages".to_string()));
+    }
+    if let Some((mut m, table)) = found {
+        if m.role == "imagined_chapter" {
+            if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&m.content) {
+                let chapter_id = parsed.get("chapter_id").and_then(|v| v.as_str()).unwrap_or("");
+                if !chapter_id.is_empty() {
+                    if let Ok(chapter) = get_imagined_chapter(conn, chapter_id) {
+                        let title = if chapter.title.trim().is_empty() { "(untitled)" } else { chapter.title.trim() };
+                        m.content = format!("[Imagined chapter — '{}']\n\n{}", title, chapter.content.trim());
+                    }
+                }
+            }
+        }
+        return Some((m, table));
     }
     None
 }

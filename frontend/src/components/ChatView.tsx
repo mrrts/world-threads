@@ -1542,6 +1542,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         notifyOnMessage={store.notifyOnMessage}
         chatFontSize={store.chatFontSize}
         openChapterId={openImaginedChapterId}
+        onCanonize={(breadcrumbMessageId) => setKeepTargetId(breadcrumbMessageId)}
       />
 
       {userAvatarUrl && (
