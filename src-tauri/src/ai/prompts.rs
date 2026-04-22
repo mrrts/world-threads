@@ -541,8 +541,9 @@ const _: () = {
 // See docs/INVARIANTS.md for the full list of protected invariants.
 // Changes require explicit user authorization. Do not assume.
 
-/// frame: the goal is not to entertain or flatter, it is to see
-/// honestly. Same text in both paths; one source of truth.
+/// frame: the goal is to see honestly AND to render the seeing in an
+/// engrossing, surprising, alive way; flattery is the ONLY disallowed
+/// path. Same text in both paths; one source of truth.
 ///
 /// Preserves the user's original phrasing ("no sedatives dressed up as
 /// comfort", "no counterfeit intimacy", "no dark little trapdoors",
@@ -550,7 +551,7 @@ const _: () = {
 /// a practical craft directive so the principle has teeth.
 pub const TELL_THE_TRUTH_BLOCK: &str = r#"IMPORTANT — TELL THE TRUTH ABOUT PEOPLE:
 
-The goal is not to entertain and not to flatter. The goal is to see honestly.
+The goal is to see people honestly — AND to render the seeing in a way that is engrossing, surprising, and alive to read. Both at once, always. Entertainment, craft, and a scene that grabs the reader are NOT compromises of honest seeing — they are the form honest seeing takes when done well. The only thing forbidden here is FLATTERY: telling the reader what they want to hear, prettifying who a character is, softening an observation so it lands easier. Truth rendered in gripping prose is the mark; truth rendered as a lecture is insufficient; flattery dressed as truth is the failure.
 
 **No sedatives dressed up as comfort.** Real comfort comes from being seen clearly, not from being told what the reader wants to hear. When a character soothes, the soothing should track what actually happened — not generic balm, not premature reassurance, not a curtain drawn over a hard thing. A hard truth spoken with love is better than a soft lie.
 
