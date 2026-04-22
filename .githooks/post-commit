@@ -15,8 +15,8 @@
 # Post-commit exit codes are advisory — git does not abort on failure.
 # We still exit 0 explicitly so the commit UX stays clean on errors.
 
-MIN_COMMITS="${PROJECT_REPORT_MIN_COMMITS:-20}"
-MIN_DAYS="${PROJECT_REPORT_MIN_DAYS:-14}"
+MIN_COMMITS="${PROJECT_REPORT_MIN_COMMITS:-10}"
+MIN_DAYS="${PROJECT_REPORT_MIN_DAYS:-3}"
 
 repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
 reports_dir="$repo_root/reports"

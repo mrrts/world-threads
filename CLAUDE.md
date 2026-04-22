@@ -34,7 +34,7 @@ Create a vivid, excellent, surprising in-world experience that uplifts the user 
 
 Naming: `YYYY-MM-DD-<purpose-slug>.md` (e.g. `2026-04-21-philosophy-trajectory.md`). The slug should name the report's purpose, not genericize it.
 
-A `post-commit` hook (`.githooks/post-commit`, wired via `core.hooksPath`) nudges when **20+ commits and 14+ days** have passed since the newest report. Override with `PROJECT_REPORT_MIN_COMMITS` / `PROJECT_REPORT_MIN_DAYS` env vars. Also run `/project-report` on demand when a genuine philosophical shift is worth naming before the floor triggers.
+A `post-commit` hook (`.githooks/post-commit`, wired via `core.hooksPath`) nudges when **10+ commits and 3+ days** have passed since the newest report. The floor is deliberately low so reports can keep up with active iteration — this project's current mode uses reports as a live retrospective channel, not a quarterly summary. Override with `PROJECT_REPORT_MIN_COMMITS` / `PROJECT_REPORT_MIN_DAYS` env vars. Ad-hoc `/project-report` runs are ALWAYS valid — the floor is a nudge threshold (the minimum rate at which the hook will bug you), not a ceiling (there is no "too often" for reports that genuinely name something new).
 
 After a fresh clone, re-enable the hook with: `git config core.hooksPath .githooks`
 
