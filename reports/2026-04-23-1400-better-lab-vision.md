@@ -79,21 +79,23 @@ Mirror the `ask` run-log pattern: `~/.worldcli/evaluate-runs/<run-id>.json` capt
 
 **Build cost:** small-medium. ~3 hours.
 
-### 3. `worldcli replay` for cross-commit A/B — medium cost, high ROI
+### 3. `worldcli replay` for cross-commit A/B — higher cost, high ROI
 
-Single command that handles the git dance. Uses `git worktree add` under the hood (not `git stash && checkout`) so the main working directory stays untouched. For each `--ref`:
+**Ryan's correction (2026-04-23, in-session):** don't use git worktrees or re-check-out commits. Instead, simulate conversations using the historical prompt text directly, without touching the working tree.
 
-1. `git worktree add <tmp-path> <ref>`
-2. `cargo build --bin worldcli --manifest-path <tmp-path>/src-tauri/Cargo.toml`
-3. Invoke the freshly-built binary with the same `ask` call
-4. Capture reply + cost
-5. Clean up worktree
+The design this prefers: for each `--ref`, read the historical version of `src-tauri/src/ai/prompts.rs` (and anything else load-bearing) via `git show <ref>:<path>` into memory as a source string, then inject the historical craft-note function bodies into the running binary's prompt-assembly pipeline as overrides. Specifically:
 
-Run across N refs, return a side-by-side diff of replies. Saves the whole run as a structured artifact under `~/.worldcli/replay-runs/<run-id>.json`.
+1. Parse the current binary's prompt-stack structure to identify which named functions contribute craft notes (e.g. `name_the_glad_thing_plain_dialogue`, `keep_the_scene_breathing_dialogue`, etc.).
+2. For each `--ref`, `git show <ref>:src-tauri/src/ai/prompts.rs` returns the historical source; parse out the same named functions' bodies as raw string constants.
+3. At runtime, when assembling the dialogue system prompt, check an override map: if a function's name has a historical body, use that body instead of the current one.
+4. Run the same `ask` prompt against each ref's override set; capture reply + cost.
+5. Return a side-by-side diff of replies.
 
-**ROI:** makes the strongest form of active elicitation — the true controlled A/B — a single command. Unblocks entire classes of experiments the current doctrine names but the tooling makes impractical.
+This requires a prompt-assembly override hook that the codebase doesn't currently have — the current builders just `format!` the compiled-in strings. The hook is the load-bearing build: once it exists, `worldcli replay` becomes straightforward orchestration. No checkout, no rebuild, no touching the working tree. One binary; historical prompts fetched on demand and injected as overrides.
 
-**Build cost:** medium. The git worktree orchestration + sequential cargo builds + capture / diff. ~6 hours.
+**ROI:** same as the worktree approach — makes the strongest form of active elicitation a single command. Better: leaves the working tree untouched, no risk of stale builds, no interaction with uncommitted changes.
+
+**Build cost:** higher than the worktree approach (~1 day). The override-hook refactor is the expensive part; once in place, the replay command is thin.
 
 ### 4. First-class Mode B — medium cost, high ROI
 

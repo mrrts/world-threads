@@ -158,7 +158,7 @@ When passive corpus observation is better:
 - You want the character's register unmediated by your particular prompting style.
 - The rule's effect should show up in ordinary conversation, not just in contrived probes.
 
-**The strongest active-elicitation pattern — cross-commit replay.** `git stash && git checkout <older-ref> && cargo build --bin worldcli && worldcli ask <char> "<exact prompt>" --session <name>`, then restore HEAD and repeat against the current ref. Same character, same prompt, different prompt-stack version — a true A/B with every confound held constant except the prompt commit. Manual ceremony today; automating it into a `worldcli replay` command is a reasonable future extension if this pattern gets used enough.
+**The strongest active-elicitation pattern — cross-commit replay, via prompt override, NOT checkout.** The right implementation doesn't check out historical commits or shuffle the working tree — it uses `git show <ref>:src-tauri/src/ai/prompts.rs` to fetch the historical source as a string, parses the named craft-note function bodies out of it, and injects those bodies into the RUNNING current binary's prompt-assembly pipeline as overrides. Same binary; historical prompt fragments layered in on demand. The prompt-assembly layer doesn't currently support overrides; that hook is the load-bearing build. Once in place, `worldcli replay --refs <a,b,c> --character <id> "<prompt>"` runs the same prompt against each ref's override set and diffs the replies. No checkout; no rebuild; no git worktree orchestration.
 
 **Be reflective about your role as the scientist.** Your prompts are not Ryan's. The data you elicit reflects YOUR style of inquiry as much as the character's register. When writing up an active-elicitation experiment, **quote every prompt you sent verbatim** in the report — the prompt IS part of the experimental condition and should be inspectable by future readers. If your prompts skew toward a register Ryan doesn't naturally use (more meta, more probing, more analytical), name that as a confound and stratify against it by either (a) running a parallel passive-corpus evaluation on the same rule, or (b) asking the character to respond as they would to "a real user in a normal conversation" vs. to "a scientist asking a probing question" and comparing.
 
@@ -323,7 +323,7 @@ worldcli consult <char-id> "<message>" \
 # quote + one-line reasoning, aggregated into window totals with
 # deltas. The instrument the reports keep flagging as missing.
 worldcli evaluate --ref <sha> (--character <id> | --group-chat <id>) \
-    --rubric "<qualitative question>" \    # OR --rubric-file <path>
+    (--rubric "<q>" | --rubric-file <path> | --rubric-ref <name>) \
     [--end-ref <sha>] \
     [--limit N]                             # default: 12 per window
     [--context-turns N]                     # default: 3 (scene context for evaluator)
@@ -331,6 +331,21 @@ worldcli evaluate --ref <sha> (--character <id> | --group-chat <id>) \
     [--model <override>] \
     [--confirm-cost <usd>] \
     [--json]
+
+# Rubric library — versioned, reusable rubrics under reports/rubrics/.
+# Using --rubric-ref auto-appends to the rubric's run history;
+# craft capital compounds across experiments instead of each run
+# re-inventing.
+worldcli rubric list
+worldcli rubric show <name>
+worldcli rubric search "<substring>"
+
+# Structured evaluate run log — every `worldcli evaluate` invocation
+# persists to ~/.worldcli/evaluate-runs/<id>.json automatically;
+# browse past runs without grepping prose reports.
+worldcli evaluate-runs list [--limit N]
+worldcli evaluate-runs show <id-or-prefix>
+worldcli evaluate-runs search "<substring>"
 
 # Read your own prior runs (avoid redoing answered questions):
 worldcli runs-list [--limit N] [--json]

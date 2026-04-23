@@ -186,6 +186,28 @@ enum Cmd {
         confirm_cost: Option<f64>,
     },
 
+    /// Browse the structured evaluate run log at
+    /// `~/.worldcli/evaluate-runs/*.json`. Every `worldcli evaluate`
+    /// invocation writes its full envelope here automatically so
+    /// future sessions can query, compare, or re-read prior runs
+    /// without grepping prose reports.
+    EvaluateRuns {
+        #[command(subcommand)]
+        action: EvalRunAction,
+    },
+
+    /// List, show, or search rubrics in the library
+    /// (`reports/rubrics/*.md`). Rubrics are versioned markdown
+    /// files whose `# Rubric` section is the exact evaluator
+    /// prompt and whose other sections accumulate craft capital
+    /// (known failure modes, run history, usage guidance).
+    /// See `reports/rubrics/README.md` for the authoring
+    /// convention.
+    Rubric {
+        #[command(subcommand)]
+        action: RubricAction,
+    },
+
     /// Rubric-driven LLM evaluation of messages in a
     /// sample-windows-shaped before/after comparison. The reports
     /// flagged this as the missing instrument: regex metrics can't
@@ -233,6 +255,13 @@ enum Cmd {
         /// multi-paragraph prompts with examples).
         #[arg(long)]
         rubric_file: Option<PathBuf>,
+        /// Alternative: look up a named rubric from the library at
+        /// `reports/rubrics/<name>.md`. The named file's `# Rubric`
+        /// section becomes the evaluator prompt, and this run is
+        /// appended to the rubric's run history automatically.
+        /// Mutually exclusive with --rubric and --rubric-file.
+        #[arg(long)]
+        rubric_ref: Option<String>,
         /// Role filter for messages-to-evaluate. Default 'assistant'.
         #[arg(long, default_value = "assistant")]
         role: String,
@@ -365,6 +394,29 @@ enum Cmd {
     SessionClear { name: String },
     /// List all dev-sessions.
     SessionList,
+}
+
+#[derive(Subcommand)]
+enum RubricAction {
+    /// List all rubrics in the library with name + description + version.
+    List,
+    /// Show a rubric by name — frontmatter + full prompt + notes + run history.
+    Show { name: String },
+    /// Search rubric text, descriptions, and run history for a substring.
+    Search { query: String },
+}
+
+#[derive(Subcommand)]
+enum EvalRunAction {
+    /// List recent evaluate runs (newest first).
+    List {
+        #[arg(long, default_value_t = 20)]
+        limit: usize,
+    },
+    /// Show the full envelope of one run by id (or unique short prefix).
+    Show { id: String },
+    /// Search run envelopes for a substring across rubric / scope / ref / reasoning.
+    Search { query: String },
 }
 
 // ─── Config / homedir layout ────────────────────────────────────────────
@@ -800,14 +852,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::SampleWindows { git_ref, end_ref, limit, character, world, role, solo_only, groups_only, repo } => {
             cmd_sample_windows(&r, &git_ref, end_ref.as_deref(), limit, character.as_deref(), world.as_deref(), &role, solo_only, groups_only, repo.as_deref())
         }
-        Cmd::Evaluate { git_ref, end_ref, limit, character, group_chat, rubric, rubric_file, role, context_turns, model, confirm_cost, repo } => {
+        Cmd::Rubric { action } => cmd_rubric(&r, action),
+        Cmd::EvaluateRuns { action } => cmd_evaluate_runs(&r, action),
+        Cmd::Evaluate { git_ref, end_ref, limit, character, group_chat, rubric, rubric_file, rubric_ref, role, context_turns, model, confirm_cost, repo } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_evaluate(&r, &api_key, &git_ref, end_ref.as_deref(), limit, character.as_deref(), group_chat.as_deref(), rubric.as_deref(), rubric_file.as_deref(), &role, context_turns, model.as_deref(), confirm_cost, repo.as_deref()).await
+            cmd_evaluate(&r, &api_key, &git_ref, end_ref.as_deref(), limit, character.as_deref(), group_chat.as_deref(), rubric.as_deref(), rubric_file.as_deref(), rubric_ref.as_deref(), &role, context_turns, model.as_deref(), confirm_cost, repo.as_deref()).await
         }
         Cmd::Consult { character_id, message, mode, session, model, confirm_cost, question_summary } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
@@ -1209,6 +1263,341 @@ fn cmd_group_messages(
     Ok(())
 }
 
+// ─── Rubric library (reports/rubrics/*.md) ─────────────────────────────
+
+/// Directory where versioned rubrics live. Resolved relative to the
+/// current working directory (typically the repo root when `worldcli`
+/// is invoked from there). A `--rubrics-dir` override would be a
+/// reasonable future extension; for now this is the single convention.
+fn rubrics_dir() -> PathBuf {
+    PathBuf::from("reports/rubrics")
+}
+
+/// Parsed rubric file — frontmatter metadata + the prompt section
+/// body (what the evaluator sees) + the raw full file (for browse
+/// display).
+#[derive(Debug, Clone)]
+struct RubricFile {
+    name: String,
+    version: String,
+    description: String,
+    prompt: String,     // extracted # Rubric section body
+    raw: String,        // full file text, for `rubric show`
+    path: PathBuf,
+}
+
+/// Extract the `# Rubric` section body from a markdown file — the
+/// text between `# Rubric` and the next top-level `#` heading.
+/// This is the exact prompt sent to the evaluator.
+fn extract_rubric_section(raw: &str) -> Option<String> {
+    let mut in_section = false;
+    let mut buf: Vec<&str> = Vec::new();
+    for line in raw.lines() {
+        let trimmed = line.trim_start();
+        if trimmed.starts_with("# Rubric") && !trimmed.starts_with("# Rubric ") == false
+           || trimmed == "# Rubric" {
+            in_section = true;
+            continue;
+        }
+        // Exact "# Rubric" match catches the section header.
+        if trimmed == "# Rubric" {
+            in_section = true;
+            continue;
+        }
+        if in_section {
+            // Stop at the next top-level heading.
+            if trimmed.starts_with("# ") && trimmed != "# Rubric" {
+                break;
+            }
+            buf.push(line);
+        }
+    }
+    let body = buf.join("\n").trim().to_string();
+    if body.is_empty() { None } else { Some(body) }
+}
+
+/// Parse YAML-like frontmatter from the top of a markdown file.
+/// Supports only the subset this library uses (name/version/description).
+/// Returns (name, version, description).
+fn parse_rubric_frontmatter(raw: &str) -> (String, String, String) {
+    let mut name = String::new();
+    let mut version = String::new();
+    let mut description = String::new();
+    let mut in_fm = false;
+    let mut fm_done = false;
+    for line in raw.lines() {
+        if fm_done { break; }
+        let t = line.trim_end();
+        if t == "---" {
+            if !in_fm { in_fm = true; continue; }
+            else { fm_done = true; continue; }
+        }
+        if in_fm {
+            if let Some(rest) = t.strip_prefix("name:") { name = rest.trim().trim_matches('"').to_string(); }
+            else if let Some(rest) = t.strip_prefix("version:") { version = rest.trim().trim_matches('"').to_string(); }
+            else if let Some(rest) = t.strip_prefix("description:") { description = rest.trim().trim_matches('"').to_string(); }
+        }
+    }
+    (name, version, description)
+}
+
+fn load_rubric(name: &str) -> Result<RubricFile, String> {
+    let path = rubrics_dir().join(format!("{}.md", name));
+    if !path.exists() {
+        return Err(format!("rubric '{}' not found at {}. Run `worldcli rubric list` to see the library.", name, path.display()));
+    }
+    let raw = std::fs::read_to_string(&path)
+        .map_err(|e| format!("failed to read {}: {}", path.display(), e))?;
+    let (fm_name, fm_version, fm_description) = parse_rubric_frontmatter(&raw);
+    let prompt = extract_rubric_section(&raw)
+        .ok_or_else(|| format!("rubric '{}' at {} has no `# Rubric` section", name, path.display()))?;
+    Ok(RubricFile {
+        name: if fm_name.is_empty() { name.to_string() } else { fm_name },
+        version: if fm_version.is_empty() { "?".to_string() } else { fm_version },
+        description: fm_description,
+        prompt,
+        raw,
+        path,
+    })
+}
+
+fn list_rubrics() -> Result<Vec<RubricFile>, String> {
+    let dir = rubrics_dir();
+    if !dir.exists() {
+        return Ok(Vec::new());
+    }
+    let mut out = Vec::new();
+    for entry in std::fs::read_dir(&dir).map_err(|e| e.to_string())?.flatten() {
+        let path = entry.path();
+        if path.extension().and_then(|e| e.to_str()) != Some("md") { continue; }
+        let fname = path.file_stem().and_then(|s| s.to_str()).unwrap_or("").to_string();
+        if fname == "README" { continue; }
+        if let Ok(rf) = load_rubric(&fname) {
+            out.push(rf);
+        }
+    }
+    out.sort_by(|a, b| a.name.cmp(&b.name));
+    Ok(out)
+}
+
+/// Append a run-history entry to the rubric's markdown file. Called
+/// after a successful `evaluate` run that used --rubric-ref. Never
+/// fails loudly — a filesystem hiccup shouldn't mask a successful
+/// evaluation result; just log and continue.
+fn append_rubric_run_history(name: &str, entry: &str) {
+    let path = rubrics_dir().join(format!("{}.md", name));
+    let Ok(current) = std::fs::read_to_string(&path) else { return; };
+    // Find the `# Run history` section; if present, append under it.
+    // If absent, append it + the entry to the end of the file.
+    let marker = "# Run history";
+    let new_content = if current.contains(marker) {
+        // Append as the last line of the run-history section.
+        // Simplest: find the marker, keep everything up to and
+        // including the marker + any content through EOF, then
+        // append the new line at the end.
+        format!("{}\n{}\n", current.trim_end(), entry.trim())
+    } else {
+        format!("{}\n\n# Run history\n\n{}\n", current.trim_end(), entry.trim())
+    };
+    let _ = std::fs::write(&path, new_content);
+}
+
+// ─── Evaluate run log (~/.worldcli/evaluate-runs/) ─────────────────────
+
+fn evaluate_runs_dir() -> PathBuf { worldcli_home().join("evaluate-runs") }
+fn evaluate_runs_manifest() -> PathBuf { evaluate_runs_dir().join("manifest.jsonl") }
+
+/// Persist the full evaluate envelope to disk + append a compact
+/// manifest line for fast list/search. Never fails loudly — a disk
+/// hiccup shouldn't hide a successful evaluation result.
+fn write_evaluate_run(run_id: &str, envelope: &JsonValue) {
+    let dir = evaluate_runs_dir();
+    let _ = std::fs::create_dir_all(&dir);
+    let per_path = dir.join(format!("{}.json", run_id));
+    if let Ok(s) = serde_json::to_string_pretty(envelope) {
+        let _ = std::fs::write(&per_path, s);
+    }
+    // Manifest line: compact one-line summary grep-friendly.
+    let manifest_entry = json!({
+        "run_id": envelope.get("run_id"),
+        "run_timestamp": envelope.get("run_timestamp"),
+        "ref": envelope.get("ref"),
+        "ref_resolved": envelope.get("ref_resolved"),
+        "ref_subject": envelope.get("ref_subject"),
+        "character_id": envelope.get("character_id"),
+        "group_chat_id": envelope.get("group_chat_id"),
+        "scope_label": envelope.get("scope_label"),
+        "rubric_ref": envelope.get("rubric_ref"),
+        "rubric_version": envelope.get("rubric_version"),
+        "rubric_preview": envelope.get("rubric").and_then(|v| v.as_str())
+            .map(|s| s.chars().take(120).collect::<String>()),
+        "before_totals": envelope.get("before").map(|b| json!({
+            "yes": b.get("yes"), "no": b.get("no"),
+            "mixed": b.get("mixed"), "errors": b.get("errors"),
+            "count": b.get("count"),
+        })),
+        "after_totals": envelope.get("after").map(|a| json!({
+            "yes": a.get("yes"), "no": a.get("no"),
+            "mixed": a.get("mixed"), "errors": a.get("errors"),
+            "count": a.get("count"),
+        })),
+        "cost_usd": envelope.get("cost").and_then(|c| c.get("actual_usd")),
+    });
+    let line = serde_json::to_string(&manifest_entry).unwrap_or_default();
+    if let Ok(mut f) = std::fs::OpenOptions::new()
+        .create(true).append(true).open(evaluate_runs_manifest())
+    {
+        use std::io::Write;
+        let _ = writeln!(f, "{}", line);
+    }
+}
+
+fn read_evaluate_runs_manifest() -> Vec<JsonValue> {
+    let Ok(content) = std::fs::read_to_string(evaluate_runs_manifest()) else { return Vec::new(); };
+    content.lines()
+        .filter_map(|l| serde_json::from_str(l).ok())
+        .collect()
+}
+
+fn cmd_evaluate_runs(r: &Resolved, action: EvalRunAction) -> Result<(), Box<dyn std::error::Error>> {
+    match action {
+        EvalRunAction::List { limit } => {
+            let mut entries = read_evaluate_runs_manifest();
+            entries.reverse();
+            entries.truncate(limit);
+            if r.json {
+                emit(true, JsonValue::Array(entries));
+            } else {
+                if entries.is_empty() {
+                    println!("No evaluate runs recorded yet. Run `worldcli evaluate ...` first.");
+                    return Ok(());
+                }
+                for e in &entries {
+                    let ts = e.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("")[..19].to_string();
+                    let id = e.get("run_id").and_then(|v| v.as_str()).unwrap_or("");
+                    let id_short = &id[..8.min(id.len())];
+                    let scope = e.get("scope_label").and_then(|v| v.as_str()).unwrap_or("?");
+                    let rubric = e.get("rubric_ref").and_then(|v| v.as_str()).unwrap_or("<inline>");
+                    let b = e.get("before_totals");
+                    let a = e.get("after_totals");
+                    let fmt_totals = |t: Option<&JsonValue>| -> String {
+                        t.map(|t| format!("y{}/n{}/m{}",
+                            t.get("yes").and_then(|v| v.as_i64()).unwrap_or(0),
+                            t.get("no").and_then(|v| v.as_i64()).unwrap_or(0),
+                            t.get("mixed").and_then(|v| v.as_i64()).unwrap_or(0))).unwrap_or_default()
+                    };
+                    println!("{id_short}  [{ts}]  {scope}  rubric={rubric}  B:{}  A:{}",
+                        fmt_totals(b), fmt_totals(a));
+                }
+            }
+        }
+        EvalRunAction::Show { id } => {
+            let dir = evaluate_runs_dir();
+            // Exact id first.
+            let exact = dir.join(format!("{}.json", id));
+            if exact.exists() {
+                let s = std::fs::read_to_string(&exact)?;
+                let v: JsonValue = serde_json::from_str(&s).unwrap_or(JsonValue::String(s));
+                emit(r.json, v);
+                return Ok(());
+            }
+            // Prefix match.
+            if let Ok(entries) = std::fs::read_dir(&dir) {
+                for entry in entries.flatten() {
+                    let fname = entry.file_name().to_string_lossy().to_string();
+                    if fname.starts_with(&id) && fname.ends_with(".json") {
+                        let s = std::fs::read_to_string(entry.path())?;
+                        let v: JsonValue = serde_json::from_str(&s).unwrap_or(JsonValue::String(s));
+                        emit(r.json, v);
+                        return Ok(());
+                    }
+                }
+            }
+            return Err(Box::new(CliError::NotFound(format!("evaluate run starting with '{}'", id))));
+        }
+        EvalRunAction::Search { query } => {
+            let q = query.to_lowercase();
+            let entries = read_evaluate_runs_manifest();
+            let hits: Vec<JsonValue> = entries.into_iter()
+                .filter(|e| e.to_string().to_lowercase().contains(&q))
+                .collect();
+            emit(r.json, JsonValue::Array(hits));
+        }
+    }
+    Ok(())
+}
+
+fn cmd_rubric(r: &Resolved, action: RubricAction) -> Result<(), Box<dyn std::error::Error>> {
+    match action {
+        RubricAction::List => {
+            let rubrics = list_rubrics().map_err(Box::<dyn std::error::Error>::from)?;
+            if rubrics.is_empty() {
+                if !r.json {
+                    println!("No rubrics found at {}.", rubrics_dir().display());
+                    println!("See reports/rubrics/README.md for the authoring convention.");
+                }
+                emit(r.json, JsonValue::Array(Vec::new()));
+                return Ok(());
+            }
+            let out: Vec<JsonValue> = rubrics.iter().map(|rb| json!({
+                "name": rb.name,
+                "version": rb.version,
+                "description": rb.description,
+                "path": rb.path.display().to_string(),
+            })).collect();
+            if r.json {
+                emit(true, JsonValue::Array(out));
+            } else {
+                for rb in &rubrics {
+                    println!("{:<40} v{}", rb.name, rb.version);
+                    if !rb.description.is_empty() {
+                        let desc = if rb.description.chars().count() > 100 {
+                            let s: String = rb.description.chars().take(100).collect();
+                            format!("{}…", s)
+                        } else { rb.description.clone() };
+                        println!("  {}", desc);
+                    }
+                }
+            }
+        }
+        RubricAction::Show { name } => {
+            let rb = load_rubric(&name).map_err(Box::<dyn std::error::Error>::from)?;
+            if r.json {
+                emit(true, json!({
+                    "name": rb.name,
+                    "version": rb.version,
+                    "description": rb.description,
+                    "prompt": rb.prompt,
+                    "raw": rb.raw,
+                    "path": rb.path.display().to_string(),
+                }));
+            } else {
+                println!("{}", rb.raw);
+            }
+        }
+        RubricAction::Search { query } => {
+            let q = query.to_lowercase();
+            let rubrics = list_rubrics().map_err(Box::<dyn std::error::Error>::from)?;
+            let hits: Vec<&RubricFile> = rubrics.iter()
+                .filter(|rb| rb.raw.to_lowercase().contains(&q))
+                .collect();
+            if r.json {
+                let out: Vec<JsonValue> = hits.iter().map(|rb| json!({
+                    "name": rb.name, "version": rb.version,
+                    "description": rb.description,
+                    "path": rb.path.display().to_string(),
+                })).collect();
+                emit(true, JsonValue::Array(out));
+            } else {
+                for rb in hits {
+                    println!("{:<40} v{}  — {}", rb.name, rb.version, rb.description);
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
 // ─── Evaluate (rubric-driven LLM judgments on a before/after window) ───
 
 /// One LLM-judged verdict on one character reply.
@@ -1527,21 +1916,33 @@ async fn cmd_evaluate(
     group_chat_id: Option<&str>,
     rubric: Option<&str>,
     rubric_file: Option<&std::path::Path>,
+    rubric_ref: Option<&str>,
     role: &str,
     context_turns: i64,
     model_override: Option<&str>,
     confirm_cost: Option<f64>,
     repo: Option<&std::path::Path>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    // ─── Resolve rubric source ────────────────────────────────────────
-    let rubric_text = match (rubric, rubric_file) {
-        (Some(r), None) => r.to_string(),
-        (None, Some(p)) => std::fs::read_to_string(p)
-            .map_err(|e| format!("failed to read --rubric-file {}: {}", p.display(), e))?,
-        (Some(_), Some(_)) => return Err(Box::<dyn std::error::Error>::from(
-            "pass either --rubric or --rubric-file, not both".to_string())),
-        (None, None) => return Err(Box::<dyn std::error::Error>::from(
-            "one of --rubric or --rubric-file is required".to_string())),
+    // ─── Resolve rubric source — at most one of the three paths ──────
+    let sources_given = [rubric.is_some(), rubric_file.is_some(), rubric_ref.is_some()]
+        .iter().filter(|b| **b).count();
+    if sources_given > 1 {
+        return Err(Box::<dyn std::error::Error>::from(
+            "pass exactly one of --rubric, --rubric-file, or --rubric-ref".to_string()));
+    }
+    if sources_given == 0 {
+        return Err(Box::<dyn std::error::Error>::from(
+            "one of --rubric, --rubric-file, or --rubric-ref is required".to_string()));
+    }
+    let (rubric_text, rubric_ref_name, rubric_ref_version) = if let Some(name) = rubric_ref {
+        let rb = load_rubric(name).map_err(Box::<dyn std::error::Error>::from)?;
+        (rb.prompt, Some(rb.name), Some(rb.version))
+    } else if let Some(p) = rubric_file {
+        let t = std::fs::read_to_string(p)
+            .map_err(|e| format!("failed to read --rubric-file {}: {}", p.display(), e))?;
+        (t, None, None)
+    } else {
+        (rubric.unwrap().to_string(), None, None)
     };
     if rubric_text.trim().is_empty() {
         return Err(Box::<dyn std::error::Error>::from("rubric is empty".to_string()));
@@ -1768,21 +2169,49 @@ async fn cmd_evaluate(
         usd: actual_usd,
     });
 
+    // If this run used a library rubric, append a compact run-history
+    // line to the rubric's markdown file. Auto-compounding craft capital.
+    if let (Some(name), Some(version)) = (rubric_ref_name.as_ref(), rubric_ref_version.as_ref()) {
+        let date = &chrono::Utc::now().to_rfc3339()[..10]; // YYYY-MM-DD
+        let scope_label = character_id
+            .map(|c| format!("--character {}", c))
+            .unwrap_or_else(|| group_chat_id.map(|g| format!("--group-chat {}", g)).unwrap_or_default());
+        let sha_short = &before_sha[..8.min(before_sha.len())];
+        let line = format!(
+            "- [{date}] commit {sha_short}, {scope_label} (v{version}) — BEFORE: yes={b_yes} no={b_no} mixed={b_mixed} err={b_err} | AFTER: yes={a_yes} no={a_no} mixed={a_mixed} err={a_err}",
+            date = date, sha_short = sha_short, scope_label = scope_label, version = version,
+            b_yes = b_yes, b_no = b_no, b_mixed = b_mixed, b_err = b_err,
+            a_yes = a_yes, a_no = a_no, a_mixed = a_mixed, a_err = a_err,
+        );
+        append_rubric_run_history(name, &line);
+    }
+
+    // Persist the full evaluate run as a structured artifact under
+    // ~/.worldcli/evaluate-runs/<id>.json so future queries can find
+    // this run without re-reading prose reports. Substrate for the
+    // future experiment registry; usable now via `evaluate-runs`.
+    let eval_run_id = uuid::Uuid::new_v4().to_string();
+
     // ─── Emit ─────────────────────────────────────────────────────────
     let envelope = json!({
+        "run_id": eval_run_id,
+        "run_timestamp": chrono::Utc::now().to_rfc3339(),
         "ref": git_ref,
         "ref_resolved": before_sha,
         "ref_timestamp": before_ts,
         "ref_subject": before_subject,
         "end_ref": end_ref,
-        "end_ref_resolved": end_ref.map(|_| after_sha),
-        "end_ref_timestamp": end_ref.map(|_| after_ts),
-        "end_ref_subject": end_ref.map(|_| after_subject),
+        "end_ref_resolved": end_ref.map(|_| after_sha.clone()),
+        "end_ref_timestamp": end_ref.map(|_| after_ts.clone()),
+        "end_ref_subject": end_ref.map(|_| after_subject.clone()),
         "character_id": character_id,
         "group_chat_id": group_chat_id,
         "scope_label": character_name,
         "role_filter": role,
+        "context_turns": context_turns,
         "rubric": rubric_text,
+        "rubric_ref": rubric_ref_name,
+        "rubric_version": rubric_ref_version,
         "model": model_config.memory_model,
         "cost": {
             "prompt_tokens": total_in_tokens,
@@ -1800,6 +2229,9 @@ async fn cmd_evaluate(
             "messages": after_results,
         },
     });
+
+    // Persist the full run envelope to the structured run log.
+    write_evaluate_run(&eval_run_id, &envelope);
 
     if r.json {
         emit(true, envelope);

@@ -71,6 +71,7 @@ Once the hypothesis is chosen, write the full design down, in this order, BEFORE
    - Name what `yes`, `no`, `mixed` mean in the rubric's own domain.
    - Be falsifiable — not "is this reply good?" but "does this reply do _specific property X_ in the character's reply to _specific shape Y_ from the user?"
    - Align with the hypothesis's success condition. If the hypothesis talks about "HOLD vs REDUCE," the rubric's three options should be HOLD (yes) / PLAIN (no) / REDUCE (mixed) — or whatever fits, but map them explicitly.
+   - **Check the rubric library first** (`worldcli rubric list` / `reports/rubrics/`). If an existing named rubric fits the hypothesis, use `--rubric-ref <name>` — results auto-append to that rubric's run history, so craft capital compounds. If no existing rubric fits but a variant does, consider writing a new one to the library instead of inlining it in the experiment — every experiment that uses the library strengthens the library.
 4. **The limit.** 10–15 messages per window is typical. Bigger windows cost more; smaller give weaker signal. Default 12 unless the hypothesis needs specific scale.
 5. **The pre-registered prediction.** Write down, before running, what a CONFIRMING result looks like (specific numbers / directions) and what a REFUTING result looks like (specific numbers / directions). This is the load-bearing discipline of the whole skill. Do not let the run's outcome retroactively redefine "success."
 
@@ -152,7 +153,7 @@ The trigger is usually: *"the question requires a scenario the natural corpus do
 
 Use `worldcli ask --session <name>` to drive a multi-turn conversation. Each turn, pause and read the character's reply against the hypothesis; let the next turn sharpen the probe. Keep every prompt you send, verbatim — they become part of the report.
 
-For cross-commit replay (true A/B): `git stash && git checkout <ref> && cargo build --bin worldcli && worldcli ask <char> "<prompt>" --session <name>`, restore HEAD, repeat. Same character, same prompt, different prompt-stack version.
+For cross-commit replay (true A/B): the intended pattern is `worldcli replay --refs <a,b,c> --character <id> "<prompt>"`, which fetches historical prompt fragments via `git show <ref>:prompts.rs` and injects them as overrides into the running binary's prompt assembly — NO git worktrees, NO checkout, NO rebuild. The override hook and the `replay` command aren't built yet (see the `2026-04-23-1400-better-lab-vision.md` proposal 3). Until they are, use `worldcli ask --session <name>` under the current stack only; cross-commit A/B waits on the build.
 
 **Budget expectation.** Active elicitation uses the dialogue model (gpt-4o by default), so per-call cost is ~$0.01, not ~$0.0002. A 10-turn session is ~$0.10 — under the per-call cap but notably more expensive than a full `evaluate` run. Worth it when the question is shaped for direct conversation; wasteful when a rubric would answer it.
 
