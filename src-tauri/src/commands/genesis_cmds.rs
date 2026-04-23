@@ -578,13 +578,74 @@ pub async fn auto_generate_world_with_characters_cmd(
     }
 
     // ── Stage 6: seed inventories ──────────────────────────────────
-    emit_stage(&app_handle, "inventories", "Placing what they carry into their pockets…", 0.88);
+    emit_stage(&app_handle, "inventories", "Placing what they carry into their pockets…", 0.78);
     for char_id in &character_ids {
         let inv_res = crate::commands::inventory_cmds::refresh_character_inventory_cmd(
             db.clone(), api_key.clone(), char_id.clone(),
         ).await;
         if let Err(e) = inv_res {
             log::warn!("[Genesis] inventory seed for {char_id} failed (non-fatal): {e}");
+        }
+    }
+
+    // ── Stage 7: meanwhile events — catch each character mid-day ───
+    // One LLM call generates events for every character in the world.
+    // This is what makes the chat feel "already in motion" when the user
+    // opens it — the character isn't waiting at the door for input; they
+    // were doing something specific when the user arrived.
+    emit_stage(&app_handle, "meanwhile", "Catching them mid-day…", 0.84);
+    let mw_res = crate::commands::meanwhile_cmds::generate_meanwhile_events_cmd(
+        db.clone(), api_key.clone(), world_id.clone(),
+    ).await;
+    if let Err(e) = mw_res {
+        log::warn!("[Genesis] meanwhile generation failed (non-fatal): {e}");
+    }
+
+    // ── Stage 8: first illustration per character — cheap tier, seeded
+    //      by the character's just-generated meanwhile so the chat opens
+    //      on a glimpse of them already doing something in the world ───
+    // Fetch the events so we can pass their summaries in as the image
+    // prompt; the illustration-cmd's custom_instructions path trusts the
+    // caller's text directly.
+    let meanwhile_by_char: std::collections::HashMap<String, String> = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let events = list_meanwhile_events(&conn, &world_id, 16).unwrap_or_default();
+        let mut map = std::collections::HashMap::new();
+        for e in events {
+            // The first event per character (most recent first in the
+            // list; we want their ONE for the opener).
+            map.entry(e.character_id.clone()).or_insert_with(|| e.summary.clone());
+        }
+        map
+    };
+    for (idx, char_id) in character_ids.iter().enumerate() {
+        let name = char_names.get(idx).cloned().unwrap_or_else(|| "them".to_string());
+        let Some(summary) = meanwhile_by_char.get(char_id) else {
+            log::warn!("[Genesis] no meanwhile for {char_id}; skipping illustration");
+            continue;
+        };
+        emit_stage(
+            &app_handle,
+            if idx == 0 { "first_glimpse_1" } else { "first_glimpse_2" },
+            &format!("A glimpse of {name} from their day…"),
+            0.88 + (idx as f32) * 0.04,
+        );
+        // Low quality tier = 1024x1024, low cost — matches "cheap first
+        // image" intent. Custom instructions carry the meanwhile summary
+        // verbatim so the image depicts the specific moment the event
+        // described. include_scene_summary=false because there's no chat
+        // scene yet, and previous_illustration_id is None (this IS the
+        // first one).
+        let illus_res = crate::commands::illustration_cmds::generate_illustration_cmd(
+            db.clone(), portraits_dir.clone(), api_key.clone(),
+            char_id.clone(),
+            Some("low".to_string()),
+            Some(summary.clone()),
+            None,
+            Some(false),
+        ).await;
+        if let Err(e) = illus_res {
+            log::warn!("[Genesis] first illustration for {char_id} failed (non-fatal): {e}");
         }
     }
 
