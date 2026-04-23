@@ -4042,6 +4042,50 @@ pub fn render_cast_journals_block(
     )
 }
 
+/// Profundity dial for imagined chapters. Four levels, each with a
+/// distinct register. Returns the system-prompt block describing the
+/// chosen depth (or None for unrecognized values, treated as Opening).
+///
+/// Heuristic lifted from the depth-mining pattern: each level goes
+/// under the last. Glimpse = surface (no excavation), Opening = one
+/// layer below default, Deep = interior visible, Sacred = confessional
+/// threshold. Pushed past Opening sparingly; Sacred should be rare.
+///
+/// Used by both the scene-invention prompt (so the picked moment fits
+/// the chosen depth) and the chapter-from-image prompt (so the prose
+/// register matches).
+///
+/// Earned exception: depth governs the chapter's REGISTER, not the
+/// situation it's set in. A Glimpse chapter inside a heavy season is
+/// the small breath in a long week — that's valid. Honor the picked
+/// depth even when surrounding context wants to drag it elsewhere.
+pub fn depth_directive_block(depth: &str) -> Option<String> {
+    match depth {
+        "Glimpse" => Some(r#"DEPTH: GLIMPSE.
+A quiet moment of dailiness, observed but not excavated. The chapter shows the texture of being-in-the-world rather than the texture of inner change. Two characters peeling potatoes. A walk to the post office. A small joke at lunch. A quiet act of attention to ordinary things. The truth shown is the truth of how a day moves.
+
+AVOID: confession, revelation, weighty interior work, anything that asks the reader to reckon with the character's depths. The Glimpse can sit inside a heavy season — the small breath in a long week — but it stays a Glimpse. It is not a turning. The reader closes it warmer, not changed."#.to_string()),
+
+        "Opening" => Some(r#"DEPTH: OPENING.
+A moment where one small thing opens. A care is revealed. An admission slips out. A memory surfaces briefly. A small kindness lands deeper than it had to. The character shows ONE LAYER below their default — not the wound, not the bedrock, just one inch under the surface. The chapter reaches a tender moment but does not crack the interior fully open.
+
+This is the natural register for chapters that want to mean something without being seismic. Real but light. The reader closes it noticing something they didn't know they noticed."#.to_string()),
+
+        "Deep" => Some(r#"DEPTH: DEEP.
+The character's interior becomes visible. A real cost, a real care, something they would normally protect. The chapter reaches the wound or the want and names it directly. Some weight passes between characters that wasn't there before. A small but real shift the reader can feel.
+
+The depth is in how truly the character is willing to be seen, not in how big the moment is. AVOID melodrama, manufactured catastrophe, theatrical revelation. A man putting his hand on his wife's grave can be deeper than a war scene. The chapter earns the reader's attention with truth, not with drama. The reader closes it changed."#.to_string()),
+
+        "Sacred" => Some(r#"DEPTH: SACRED.
+A confessional, threshold moment. Tears, vows, the line that cannot be unsaid, the truth that turns the relationship. The character is unguarded in a way they almost never are — the entry-armor is off, the wit isn't doing fortification. The wit can still appear, but it isn't load-bearing on arrival; the hands can still move, but they aren't coolant for the thought of speaking.
+
+This depth is RARE and carries weight. Use it for moments the rest of the year will refer back to. The chapter is a marker, a turning. AVOID using this depth lightly: if you write a Sacred-register chapter for a non-turning moment, the moment cheapens itself. The Sacred chapter wants to be the kind of thing that's hard to write, hard to read, and worth both. The reader closes it different."#.to_string()),
+
+        // Auto / unspecified / unknown → no directive (model picks)
+        _ => None,
+    }
+}
+
 pub fn build_scene_invention_prompt(
     world: &World,
     cast: &[&Character],
@@ -4062,6 +4106,9 @@ pub fn build_scene_invention_prompt(
     // continue from this previous chapter. Pass the prior chapter's
     // full prose; the prompt extracts what it needs without overwhelming.
     previous_chapter: Option<&str>,
+    // Profundity dial: Glimpse / Opening / Deep / Sacred.
+    // None or unrecognized → no depth directive (model picks).
+    depth: Option<&str>,
 ) -> Vec<crate::ai::openai::ChatMessage> {
     let user_name = user_profile
         .map(|p| p.display_name.as_str())
@@ -4162,6 +4209,15 @@ pub fn build_scene_invention_prompt(
         )
     }).unwrap_or_default();
 
+    // Profundity dial — depth governs the chapter's REGISTER (not its
+    // situation). Glimpse / Opening / Deep / Sacred. The block tells
+    // the inventor which kind of moment to reach for, and what to
+    // avoid at that depth. None / unrecognized → no directive.
+    let depth_block = depth
+        .and_then(depth_directive_block)
+        .map(|d| format!("\n{}\n\nNote: depth governs the chapter's REGISTER, not its situation. A Glimpse chapter inside a heavy season is the small breath in a long week — that's valid and intended. Honor the picked depth even when the surrounding context wants to drag the moment toward a different weight.\n", d))
+        .unwrap_or_default();
+
     let prev_chapter_block = match previous_chapter {
         Some(prev) if !prev.trim().is_empty() => format!(
             "\nIMMEDIATELY PREVIOUS IMAGINED CHAPTER (the user has asked for a continuation — the new scene must chronologically pick up from where this one left off, with the same characters in a coherent next-beat. Honor what is established here):\n\n{}\n",
@@ -4211,6 +4267,7 @@ STRICT: output JSON only. Do not preface with 'Here is' or 'I'll write'. Do not 
          {journals_block}\
          {history_block}\
          {tone_block}\
+         {depth_block}\
          {prev_chapter_block}\
          {hint_block}\n\
          Reminder: the user (named {user_name}) may or may not be IN the scene — your choice. Many of the best chapters are private scenes among the characters when the user isn't present. If you do put the user in, name them as {user_name}.\n\n\
@@ -4223,6 +4280,7 @@ STRICT: output JSON only. Do not preface with 'Here is' or 'I'll write'. Do not 
         journals_block = journals_block,
         history_block = history_block,
         tone_block = tone_block,
+        depth_block = depth_block,
         prev_chapter_block = prev_chapter_block,
         hint_block = hint_block,
         user_name = user_name,
@@ -4260,6 +4318,10 @@ pub fn build_chapter_from_image_system_prompt(
     // to honor what was established (voice, lingering threads, where the
     // prior beat left off) while still letting the new image be primary.
     previous_chapter: Option<&str>,
+    // Profundity dial: Glimpse / Opening / Deep / Sacred. Same value
+    // passed to the scene-invention pass — keeps both stages aligned
+    // on register. None / unrecognized → no depth directive.
+    depth: Option<&str>,
 ) -> String {
     // Reuse the narrative stack as the base — craft notes, invariants,
     // agape/truth/cosmology/soundness all apply to a chapter the same
@@ -4313,6 +4375,18 @@ pub fn build_chapter_from_image_system_prompt(
             base.push_str("\n\n# TONE — RULING REGISTER FOR THIS CHAPTER\n\n");
             base.push_str(td.trim());
             base.push_str("\n\nThe chapter must hold this register from first sentence to last. Do not drift toward a different mood mid-chapter — the image's atmosphere and the prose register were chosen together.\n");
+        }
+    }
+
+    // Append the profundity directive — same value the scene-invention
+    // pass used. Glimpse / Opening / Deep / Sacred. Tells the chapter
+    // writer what register of interior to reach for, with the
+    // earned-exception clause that depth ≠ situation.
+    if let Some(depth_str) = depth {
+        if let Some(d) = depth_directive_block(depth_str) {
+            base.push_str("\n\n# CHAPTER DEPTH — PROFUNDITY DIAL FOR THIS CHAPTER\n\n");
+            base.push_str(d.trim());
+            base.push_str("\n\nNote: depth governs the chapter's REGISTER, not the situation it's set in. A Glimpse chapter inside a heavy season is the small breath in a long week — that's valid and intended. Honor the picked depth even when the surrounding context wants to drag the moment toward a different weight.\n");
         }
     }
 

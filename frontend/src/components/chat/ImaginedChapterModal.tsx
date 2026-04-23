@@ -56,6 +56,10 @@ export function ImaginedChapterModal({
   const [seedHint, setSeedHint] = useState("");
   const [continueFromPrevious, setContinueFromPrevious] = useState(false);
   const [imageTier, setImageTier] = useState<"low" | "medium" | "high">("medium");
+  // Profundity dial — Glimpse / Opening / Deep / Sacred. Default
+  // "Opening" — the natural register for chapters that want to mean
+  // something without being seismic. Sacred used rarely.
+  const [depth, setDepth] = useState<"Glimpse" | "Opening" | "Deep" | "Sacred">("Opening");
 
   // Streaming generation state
   const [phase, setPhase] = useState<"idle" | "inventing" | "rendering" | "writing" | "done">("idle");
@@ -332,6 +336,7 @@ export function ImaginedChapterModal({
         seedHint: seedHint.trim() || undefined,
         continueFromPrevious,
         imageTier,
+        depth,
       });
       setStreamChapterId(res.chapterId);
     } catch (e) {
@@ -574,6 +579,8 @@ export function ImaginedChapterModal({
                   hasPrior={hasPrior}
                   imageTier={imageTier}
                   setImageTier={setImageTier}
+                  depth={depth}
+                  setDepth={setDepth}
                   onGenerate={handleGenerate}
                   characterPortraitUrls={characterPortraitUrls ?? []}
                   worldImageUrl={worldImageUrl}
@@ -707,6 +714,7 @@ function ComposeView({
   seedHint, setSeedHint,
   continueFromPrevious, setContinueFromPrevious, hasPrior,
   imageTier, setImageTier,
+  depth, setDepth,
   onGenerate,
   characterPortraitUrls,
   worldImageUrl,
@@ -718,6 +726,8 @@ function ComposeView({
   hasPrior: boolean;
   imageTier: "low" | "medium" | "high";
   setImageTier: (t: "low" | "medium" | "high") => void;
+  depth: "Glimpse" | "Opening" | "Deep" | "Sacred";
+  setDepth: (d: "Glimpse" | "Opening" | "Deep" | "Sacred") => void;
   onGenerate: () => void;
   characterPortraitUrls: string[];
   worldImageUrl?: string;
@@ -823,6 +833,35 @@ function ComposeView({
               }`}
             >
               {t.charAt(0).toUpperCase() + t.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+      {/* Profundity dial — Glimpse / Opening / Deep / Sacred. The
+          register the chapter reaches for. Each level has a one-line
+          subtitle so the user can pick without opening docs. */}
+      <div>
+        <label className="text-xs font-medium text-amber-900/70 block mb-1.5">Depth</label>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {(
+            [
+              { key: "Glimpse", subtitle: "a quiet daily moment" },
+              { key: "Opening", subtitle: "one layer below default" },
+              { key: "Deep", subtitle: "interior visible, real cost" },
+              { key: "Sacred", subtitle: "confessional, threshold; rare" },
+            ] as const
+          ).map((d) => (
+            <button
+              key={d.key}
+              onClick={() => setDepth(d.key)}
+              className={`px-3 py-2 text-xs rounded-md border transition-colors text-left ${
+                depth === d.key
+                  ? "border-amber-700 bg-amber-100 text-amber-900"
+                  : "border-amber-200 bg-white/60 text-amber-900/60 hover:bg-amber-50"
+              }`}
+            >
+              <div className="font-medium">{d.key}</div>
+              <div className="text-[10px] text-amber-900/55 mt-0.5 leading-snug">{d.subtitle}</div>
             </button>
           ))}
         </div>

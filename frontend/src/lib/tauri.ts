@@ -978,6 +978,11 @@ export interface GenerateImaginedChapterRequest {
   seedHint?: string;
   continueFromPrevious: boolean;
   imageTier?: "low" | "medium" | "high";
+  /** Profundity dial. "Glimpse" = quiet daily moment, no excavation.
+   *  "Opening" = one layer below default (default in UI). "Deep" =
+   *  interior visible, real cost named. "Sacred" = confessional,
+   *  threshold, rare. Omit to let the model pick. */
+  depth?: "Glimpse" | "Opening" | "Deep" | "Sacred";
 }
 
 /** Streaming events emitted during chapter generation. */

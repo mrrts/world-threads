@@ -34,6 +34,11 @@ pub struct GenerateImaginedChapterRequest {
     pub continue_from_previous: bool,
     /// Image quality tier ("low" / "medium" / "high"). Defaults to "medium".
     pub image_tier: Option<String>,
+    /// Profundity dial: "Glimpse" / "Opening" / "Deep" / "Sacred".
+    /// None / unrecognized → no depth directive (model picks). Default
+    /// in the UI is "Opening" — the natural register for chapters that
+    /// want to mean something without being seismic.
+    pub depth: Option<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -325,6 +330,7 @@ pub async fn generate_imagined_chapter_cmd(
         request.seed_hint.as_deref(),
         narration_tone.as_deref(),
         previous_chapter_content.as_deref(),
+        request.depth.as_deref(),
     ).await?;
 
     if let Some(u) = &invent_usage {
@@ -472,6 +478,7 @@ pub async fn generate_imagined_chapter_cmd(
         &recent_history,
         narration_tone.as_deref(),
         previous_chapter_content.as_deref(),
+        request.depth.as_deref(),
     );
 
     // Build vision content: a brief framing line, the scene image, then

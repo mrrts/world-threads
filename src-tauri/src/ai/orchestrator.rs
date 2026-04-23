@@ -3175,10 +3175,11 @@ pub async fn invent_scene_for_chapter(
     seed_hint: Option<&str>,
     tone: Option<&str>,
     previous_chapter: Option<&str>,
+    depth: Option<&str>,
 ) -> Result<(InventedScene, Option<openai::Usage>), String> {
     let messages = prompts::build_scene_invention_prompt(
         world, cast, user_profile, recent_kept_facts, cast_recent_journals,
-        recent_history, seed_hint, tone, previous_chapter,
+        recent_history, seed_hint, tone, previous_chapter, depth,
     );
     let request = ChatRequest {
         model: model.to_string(),
