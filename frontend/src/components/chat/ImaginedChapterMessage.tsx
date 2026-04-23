@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
-import { Sparkles, ChevronDown, ChevronRight } from "lucide-react";
-import { type Message } from "@/lib/tauri";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Sparkles, ScrollText, ImageOff } from "lucide-react";
+import { type Message, api } from "@/lib/tauri";
 
 interface Props {
   message: Message;
@@ -16,7 +16,6 @@ interface ParsedContent {
 }
 
 export function ImaginedChapterMessage({ message, onOpen }: Props) {
-  const [expanded, setExpanded] = useState(false);
   const parsed = useMemo<ParsedContent | null>(() => {
     try {
       const obj = JSON.parse(message.content);
@@ -27,6 +26,25 @@ export function ImaginedChapterMessage({ message, onOpen }: Props) {
     return null;
   }, [message.content]);
 
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageFailed, setImageFailed] = useState(false);
+  // Guard against setState after unmount when the async fetch resolves late.
+  const aliveRef = useRef(true);
+  useEffect(() => () => { aliveRef.current = false; }, []);
+
+  useEffect(() => {
+    if (!parsed?.chapter_id || !parsed.image_id) {
+      setImageUrl("");
+      setImageFailed(!parsed?.image_id);
+      return;
+    }
+    setImageUrl("");
+    setImageFailed(false);
+    api.getImaginedChapterImageUrl(parsed.chapter_id)
+      .then((url) => { if (aliveRef.current) setImageUrl(url); })
+      .catch(() => { if (aliveRef.current) setImageFailed(true); });
+  }, [parsed?.chapter_id, parsed?.image_id]);
+
   if (!parsed) {
     return (
       <div className="my-2 px-3 py-2 rounded-md border border-dashed border-amber-300/40 text-xs text-muted-foreground">
@@ -36,34 +54,54 @@ export function ImaginedChapterMessage({ message, onOpen }: Props) {
   }
 
   return (
-    <div className="my-2 flex justify-center">
-      <div
-        className="w-full max-w-md rounded-lg border border-amber-300/30 bg-amber-50/40 dark:bg-amber-950/20 dark:border-amber-700/30 overflow-hidden cursor-pointer hover:border-amber-400/50 dark:hover:border-amber-600/50 transition-colors"
+    <div className="my-4 flex justify-center">
+      <button
+        type="button"
         onClick={() => onOpen(parsed.chapter_id)}
         title="Open this chapter"
+        className="group w-full max-w-xl overflow-hidden rounded-xl border border-amber-400/50 bg-gradient-to-b from-amber-100/60 via-amber-50/40 to-amber-50/20 dark:from-amber-950/40 dark:via-amber-950/25 dark:to-amber-950/15 shadow-[0_0_18px_rgba(251,191,36,0.22)] hover:shadow-[0_0_28px_rgba(251,191,36,0.4)] hover:border-amber-400/80 transition-all text-left"
       >
-        <div className="flex items-center gap-2 px-3 py-2 border-b border-amber-300/20 dark:border-amber-700/20 bg-amber-100/40 dark:bg-amber-900/30">
-          <Sparkles size={13} className="text-amber-700 dark:text-amber-400 shrink-0" />
-          <div className="flex-1 min-w-0">
-            <div className="text-[10px] uppercase tracking-wide text-amber-800/70 dark:text-amber-400/70">Imagined Chapter</div>
-            <div className="text-sm font-medium text-amber-950 dark:text-amber-100 truncate">
+        <div className="relative w-full aspect-[16/9] bg-amber-950/30 overflow-hidden">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={parsed.title || "Imagined chapter"}
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+              draggable={false}
+            />
+          ) : imageFailed ? (
+            <div className="absolute inset-0 flex items-center justify-center text-amber-400/50">
+              <ImageOff size={32} />
+            </div>
+          ) : (
+            <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-amber-900/30 via-amber-800/20 to-amber-950/40" />
+          )}
+          {/* Gilded vignette so the title/label sits legibly over any image. */}
+          <div className="absolute inset-0 bg-gradient-to-t from-amber-950/85 via-amber-950/20 to-transparent pointer-events-none" />
+          <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-1 rounded-full bg-amber-950/60 backdrop-blur-sm border border-amber-400/40">
+            <Sparkles size={11} className="text-amber-300 drop-shadow-[0_0_4px_rgba(251,191,36,0.7)]" />
+            <span className="text-[10px] uppercase tracking-[0.15em] font-semibold text-amber-100">
+              Imagined Chapter
+            </span>
+          </div>
+          <div className="absolute bottom-3 left-4 right-4">
+            <div className="text-lg sm:text-xl font-serif font-semibold text-amber-50 leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] line-clamp-2">
               {parsed.title || "(untitled)"}
             </div>
           </div>
-          <button
-            className="text-amber-700/60 dark:text-amber-400/60 hover:text-amber-700 dark:hover:text-amber-400"
-            onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
-            title={expanded ? "Collapse" : "Show first line"}
-          >
-            {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-          </button>
         </div>
-        {expanded && parsed.first_line && (
-          <div className="px-3 py-2 text-xs italic text-amber-900/80 dark:text-amber-200/70 line-clamp-3">
-            {parsed.first_line}…
+        {parsed.first_line && (
+          <div className="px-5 py-4 flex gap-3 items-start">
+            <ScrollText size={14} className="text-amber-700/70 dark:text-amber-400/70 mt-0.5 shrink-0" />
+            <p className="text-sm italic text-amber-950/85 dark:text-amber-100/85 leading-relaxed line-clamp-3">
+              {parsed.first_line}…
+            </p>
           </div>
         )}
-      </div>
+        <div className="px-5 pb-3 pt-1 text-[10px] uppercase tracking-[0.18em] text-amber-800/60 dark:text-amber-400/60 font-medium">
+          Open chapter →
+        </div>
+      </button>
     </div>
   );
 }
