@@ -34,3 +34,17 @@ futures-util = "0.3"
 sha2 = "0.10"
 hex = "0.4"
 thiserror = "2"
+clap = { version = "4", features = ["derive"] }
+
+# Developer CLI — out-of-band tool for Claude Code to converse directly
+# with the user's characters without the exchange appearing in the UI.
+# See the "Direct character access" section of CLAUDE.md for usage.
+[[bin]]
+name = "worldcli"
+path = "src/bin/worldcli.rs"
+
+# The Tauri desktop-app entry point. Declared explicitly because Cargo
+# requires all bins to be named once any [[bin]] is.
+[[bin]]
+name = "world-threads"
+path = "src/main.rs"

@@ -98,3 +98,79 @@ The character (the LLM speaking in their voice) reflects on the moment from insi
 - The user is asking you directly for the rule. Match what they want.
 
 Default, when it fits: ask the character, in-world. The user can always say "no, just give me your read."
+
+## Direct character access — the `worldcli` dev tool
+
+You (Claude Code) have a CLI binary at `src-tauri/src/bin/worldcli.rs` that lets you converse with the user's characters and inspect db state DIRECTLY, without needing the user to copy/paste between the UI and our chat. **Reach for this tool whenever you want to verify a prompt theory, run a quick A/B test, or apply the "ask the character" pattern from above without round-tripping through the user.**
+
+The CLI uses the same prompt-building pipeline as the Tauri app, so character voice and behavior match what the user sees. Exchanges via `worldcli ask` are persisted to a separate `dev_chat_sessions` schema that the UI never reads — your conversations with the characters are invisible to the user's chat history, kept records, journals, and every other surface. Safe to use freely.
+
+### Build it once
+
+```bash
+cd src-tauri
+cargo build --bin worldcli
+# Binary lands at src-tauri/target/debug/worldcli
+```
+
+### API key
+
+The CLI reads its OpenAI key (in this precedence): `--api-key` flag → `OPENAI_API_KEY` env var → macOS keychain at service `WorldThreadsCLI`, account `openai`. The user has set up the keychain entry — you can call `ask` directly without env-var fiddling. If the keychain ever returns empty (key expired / removed), the CLI surfaces a clear error with the `security add-generic-password` command to re-add it.
+
+### Subcommands you'll actually use
+
+```bash
+# Context queries (read-only, no LLM calls):
+worldcli list-worlds
+worldcli list-characters [--world <id>]
+worldcli show-character <id>           # identity, voice rules, boundaries, backstory
+worldcli show-world <id>               # description, weather, time, invariants
+worldcli recent-messages <char-id> [--limit 30]
+worldcli kept-records <char-id>        # canonized facts about this character
+worldcli journals <char-id>
+worldcli quests [--world <id>]
+
+# The load-bearing one:
+worldcli ask <char-id> "<message>" [--session <name>]
+
+# Session management for multi-turn dev work:
+worldcli session-show <name>
+worldcli session-clear <name>
+worldcli session-list
+```
+
+### When to reach for this tool — proactively
+
+You should reach for `worldcli ask` (often without asking the user first) any time:
+
+- **You're about to make a prompt change and want to know if it'll actually work.** Don't ship and hope. Run a few `worldcli ask` calls against a relevant character with the new prompt, see what comes back, iterate. The cost of a few API calls is negligible compared to shipping a craft note that doesn't behave the way you imagined.
+- **You're debating between two prompt phrasings.** Run an A/B: set up two named sessions (`session-a` and `session-b`), git-stash the change, run a `worldcli ask` against version A, restore, run against B. The character is the empirical ground truth.
+- **You want to apply the "ask the character" pattern (above) but the user isn't online to copy/paste between the UI and our chat.** Just run `worldcli ask <character> "<your in-world meta question>"` directly. Lift the answer into `prompts.rs`. Same pattern as before, fewer hops.
+- **You're not sure how a character would actually respond to a moment.** Don't speculate; ask them.
+- **You want to verify the prompt-stack changes you JUST made are working as intended.** Build the app (or just `cargo build`), then test the new behavior with a `worldcli ask` call.
+
+### When NOT to use it
+
+- For trivial changes where you're not actually testing prompt behavior (typo fixes, comment edits, refactors with no semantic change).
+- For tasks unrelated to the prompt stack (db schema work, UI fixes, build issues — the character can't help with those).
+- When the user has explicitly asked you to do something else first; don't sidetrack.
+
+### Working in sessions
+
+For multi-turn craft mining (the kind of depth-mining demonstrated in the Hal trilogy), use `--session`:
+
+```bash
+worldcli ask 51824a2f-... "Hal — when you go quiet mid-sentence, what's actually happening?" --session hal-silence-mining
+worldcli ask 51824a2f-... "What's the difference between that silence and the one where you're cooling a thought before it comes out?" --session hal-silence-mining
+worldcli session-show hal-silence-mining   # see the full conversation
+```
+
+Each `--session` invocation loads the prior turns, sends the new message, persists the reply. The character experiences continuity within the session.
+
+### Disclose what you're doing
+
+When you use the CLI in a way that costs the user money (any `ask` call), mention it in your reply. *"Ran a quick `worldcli ask` against Hal to verify the new craft note actually changes the behavior — it does."* The user wants visibility into when their key is being spent for craft work, even though authorization is standing.
+
+### Schema safety
+
+The `dev_chat_sessions` and `dev_chat_messages` tables live alongside the user's data but are never read by any UI command. Sessions accumulate over time; it's fine to leave them around as a working memory of past prompt-mining conversations. Clear individual sessions with `worldcli session-clear <name>` when they've outlived their usefulness.

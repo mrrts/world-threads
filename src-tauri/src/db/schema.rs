@@ -1587,5 +1587,37 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
     }
 
+    // ── dev_chat_sessions / dev_chat_messages ─────────────────────────────
+    //
+    // Out-of-band conversations between the developer (Claude Code, via
+    // the `worldcli` binary) and the user's characters. These are
+    // INVISIBLE to the UI — no chat in the app reads or displays them.
+    // Used for craft-extraction work: Claude Code asks a character a
+    // meta question (per the "ask the character" pattern in CLAUDE.md),
+    // mines the answer for craft material, ships into prompts.rs.
+    //
+    // Schema is intentionally minimal — name + role + content + time.
+    // No reactions, no portraits, no inventory tracking. Ephemeral
+    // working memory for prompt-stack development.
+    conn.execute_batch("
+        CREATE TABLE IF NOT EXISTS dev_chat_sessions (
+            session_id TEXT PRIMARY KEY,
+            name TEXT NOT NULL UNIQUE,
+            character_id TEXT,
+            created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+
+        CREATE TABLE IF NOT EXISTS dev_chat_messages (
+            message_id TEXT PRIMARY KEY,
+            session_id TEXT NOT NULL,
+            role TEXT NOT NULL CHECK(role IN ('user','assistant')),
+            content TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT (datetime('now')),
+            FOREIGN KEY (session_id) REFERENCES dev_chat_sessions(session_id) ON DELETE CASCADE
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_dev_chat_messages_session ON dev_chat_messages(session_id);
+    ").ok();
+
     Ok(())
 }
