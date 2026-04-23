@@ -489,9 +489,69 @@ without it, the exception becomes a leak in the invariant.
 
 ---
 
+## Invariant 8: The Genesis Ceremony
+
+**Locations:** `GENESIS_SYSTEM_TEMPLATE` and `NOBLE_REFLECTION_SYSTEM_PROMPT`
+in `src-tauri/src/commands/genesis_cmds.rs`. UI ceremony in
+`frontend/src/components/GenesisModal.tsx`. Full specification in
+`docs/GENESIS_WIZARD.md`.
+
+**Required substrings (compile-time asserted):**
+
+In `GENESIS_SYSTEM_TEMPLATE`:
+- `"Gently holy"` — the project's distinctive register anchor for world generation.
+- `"Deeply fun"` — the anti-gritty counterweight.
+- `"Gilead"` — the tonal comparator (not evangelical tract, not sneering secular satire).
+- `"Biblical cosmology"` — the world-shape guard.
+- `"NOT a generic medieval village"` — the anti-default guard.
+- `"the good is real and the question of it actually matters"` — the anchor that distinguishes the app's gently-holy register from secular neutrality.
+
+In `NOBLE_REFLECTION_SYSTEM_PROMPT`:
+- `"Noble in SPIRIT, not in register"` — the anti-medieval guard.
+- `"No \"thou,\""` — the explicit anti-archaism.
+- `"Named as a thing to be done, not a feeling to be had"` — the anti-therapy-speak guard.
+- `"One or two sentences"` — the length cap keeping the reflection an offering, not a speech.
+- `"NOBLE OFFERING"` — the framing anchor.
+
+**Why it's load-bearing:**
+
+Genesis is the first thing a brand-new user experiences in
+WorldThreads. The register the ceremony establishes — noble but not
+medieval, gently holy but not preachy, dramatic but not gritty,
+surprising but specific — is what distinguishes the app's first
+impression from every other AI-companion app in the category.
+Drifting any of the register anchors toward generic AI-generated-world
+defaults collapses that distinction on the single highest-leverage
+screen in the product.
+
+The ceremony's STRUCTURE is equally load-bearing (documented in full
+in `GENESIS_WIZARD.md`): seven named phases, progressive reveal,
+user-ratified commitment ceremony before world entry. The
+chosen-into-existence pattern the app has been building across
+every meaningful entry point (quests, canon, illustrations, chapters)
+is anchored here at world birth.
+
+**What counts as a violation:**
+
+- Removing any asserted substring (fails compile).
+- Adding a config-register stage string ("Generating world
+  description…") to the pipeline.
+- Collapsing any of the seven ceremony phases into a click-through.
+- Skipping the noble reflection round-trip (Phase 5 → Phase 6).
+- Hiding pre-generation content reveals behind a generic load bar.
+- Landing the user in a world without refreshing the sidebar's
+  worlds list.
+
+**Editing guidance:** See `docs/GENESIS_WIZARD.md` § "Extending the
+ceremony" for the pattern for adding new phases without breaking the
+invariant. New register constraints in either prompt must be
+compile-time-asserted and documented in the spec doc.
+
+---
+
 ## Enforcement
 
-All seven invariants are enforced by `const _: () = { assert!(...); };`
+All eight invariants are enforced by `const _: () = { assert!(...); };`
 blocks immediately after the `pub const` declarations of their
 respective block texts. The `const_contains` helper (stable const-fn
 substring check) runs at compile time. Removing any of the required

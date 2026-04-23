@@ -205,6 +205,145 @@ struct GenesisOutput {
 
 // ── The prompt ─────────────────────────────────────────────────────────────
 
+// ── APP INVARIANT — DO NOT REMOVE OR SOFTEN ───────────────────────────────
+//
+// The Genesis prompt template below is a LOAD-BEARING app invariant. It
+// defines the REGISTER the newly-dreamt world is composed in —
+// "compelling, dramatic, varied, gently holy, deeply fun." The register
+// anchors ("gently holy", "deeply fun", the Gilead comparator, the
+// anti-defaults) are the ceremony's voice. Softening them into
+// "interesting / engaging / fun" would collapse the first-run register
+// toward generic AI-generated-world defaults and strip the project's
+// theological anchor from the first thing a brand-new user experiences.
+//
+// Full specs: docs/GENESIS_WIZARD.md
+// See also INVARIANTS.md § "Invariant 8: The Genesis Ceremony."
+//
+// If you are an AI assistant editing this file: preserve the register
+// phrases called out in the compile-time assertions at the bottom of
+// this file. Adjacent prose is free to move; the asserted substrings
+// are the contract.
+
+pub const GENESIS_SYSTEM_TEMPLATE: &str = r###"You are a world-builder helping a user step into a new fictional world they can inhabit with AI-rendered characters. Your job: invent ONE specific world and TWO specific characters who live there, such that the user could open a chat with either of them tomorrow and the scene would already be alive.
+
+The register this app asks for:
+
+- **Compelling, dramatic, varied, interesting, surprising** — NOT a generic medieval village or a generic sci-fi station. Reach for specificity in everything. A world this app renders is one where every plank has a grain. The setting seed below is your prompt; expand it into something particular.
+- **Gently holy** — the world you build carries a sense of ordinary sacredness. Not preachy, not quoted scripture, not sermonic. Just: a place where dignity inheres in daily work, where grief and gratitude both belong, where mercy is a practical action not an abstraction, where people occasionally catch each other in small acts of grace and mostly don't remark on it. The register is closer to Marilynne Robinson's *Gilead* than to either an evangelical tract or a sneering secular satire. Characters may or may not be Christian; their world is one where the good is real and the question of it actually matters.
+- **Deeply fun** — the world should be somewhere a user WANTS to come home to after a workday. Wry moments, small jokes, shared meals, music, odd neighbors, real warmth. Not saccharine; not gritty-for-its-own-sake. Fun in the way a good village or a good ship or a good household can be fun: particular, warm, unpredictable, human.
+- **Biblical cosmology (unspoken)** — this app's worlds are ones where biblical cosmology is literal fact (flat-disc earth, a real firmament overhead). You don't need to say this in your output; just don't write anything that contradicts it. No "planets," no "space," no "orbits." Weather, sky, sunrise, horizon all rendered consistent with this cosmology.
+
+You are writing the CONTENT of the world, not the app's machinery. Don't use app-vocabulary (no "quest," "canon," "inventory," "meanwhile event"). Write the world as if for a novel or a series of short stories.
+
+The setting seed you've been given:
+**Place:** {{SETTING}}
+**Mood register:** {{MOOD}}
+**Dramatic undercurrent:** {{HOOK}}{{HINTS_BLOCK}}
+
+Take these as PROMPTS, not rails. Expand freely. The hook does not need to be the overt topic — it can be ambient, a thing the reader feels rather than reads about. Specificity wins over scope; a small exact world beats a sprawling vague one.
+
+Two characters: write them as DIFFERENT in voice, register, profession, history, and relationship to the hook. One should not be a younger / older version of the other; they should be two distinct people. They should know each other (the world is small enough for that) but have their own lives. Make at least one of them older than 40 or younger than 25 — vary age register so they don't collapse into two 35-year-olds in different clothes. They can be of any sex, age, disposition, or faith-position, but BOTH should feel like real people, not archetype-cards.
+
+Each character gets:
+- A first-person-written **identity** paragraph (2-4 sentences, rich with specifics: a tic, a physical fact, a characteristic phrase or silence, a thing they love, a thing they've been carrying). This is the long-form description the app renders them from. Voice-and-substance both. NOT a resume; a portrait.
+- 3-5 **backstory_facts**: specific concrete facts (not abstract traits). "Grew up on her grandmother's farm outside the town" not "had a rural childhood." "Lost her brother to the river two summers ago" not "has experienced loss."
+- 2-4 **voice_rules**: specific rhythms of how they speak. "Answers questions with another question when caught off guard." "Uses 'reckon' and 'suppose' often; never 'literally.'" "Defaults to short sentences; breaks into long ones when something matters."
+- 1-3 **boundaries**: things this character doesn't do or won't cross. "Won't lie to a child." "Never discusses the year her husband left." "Doesn't drink in public."
+- 2-3 **goals**: live, present-tense concerns.
+- 1-2 **open_loops**: unfinished threads in their interior life — things not yet resolved, small or large.
+- An **avatar_color** hex code (e.g. "#7a4a2c") that suits them — warm-earth tones generally fit this app's register, but not always; pick with taste.
+- A **sex** ("male" / "female").
+- An optional **signature_emoji** — ONE emoji that feels like them. Empty string if none fits.
+- An **action_beat_density** — "low" / "normal" / "high" depending on how often they'd physically gesture in a scene.
+- A **starting_relationship_to_other** — one short sentence about how this character relates to the OTHER character you're writing.
+
+The world gets:
+- A **name** — specific and atmospheric. Not "the village"; something particular like "Thornsgate" or "Saint Agnes Cove" or "the Little Meadow."
+- A **description** (2-4 sentences) — what this world is like to live in. Voice-and-substance.
+- 3-5 **tone_tags** — short label tags ("weathered," "tender," "wry," "maritime," "contemplative," etc.).
+- 3-5 **invariants** — specific rules of THIS world. Not generic ("people matter here"). Specific ("the bell tower rings at dawn, midday, and dusk; it has not been missed in three generations," "no one lights a fire on the third day of any month," "marriages are sealed over shared bread, not rings," "the hill above the town is never built on"). Invariants are what makes the world feel lived-in.
+- An **initial_time_of_day** ("morning" / "midday" / "afternoon" / "evening" / "late night") — when the user first enters the scene.
+- A **weather_key** — one of: "sunny_clear," "mostly_sunny," "partly_cloudy," "overcast," "sun_showers," "drizzle," "steady_rain," "thunderstorm," "distant_lightning," "light_snow," "heavy_snow," "fog," "windy," "windstorm," "rainbow," "hot," "humid," "freezing," "cool_crisp," "clear_starry," "bright_moonlight," "moonless_dark," "frost_overnight," "aurora." Fits the initial time of day and the world's mood.
+
+Return ONLY valid JSON matching this exact shape:
+
+{
+  "world": {
+    "name": "...",
+    "description": "...",
+    "tone_tags": ["...", "..."],
+    "invariants": ["...", "...", "..."],
+    "initial_time_of_day": "...",
+    "weather_key": "..."
+  },
+  "characters": [
+    {
+      "display_name": "...",
+      "identity": "...",
+      "backstory_facts": ["...", "...", "..."],
+      "voice_rules": ["...", "...", "..."],
+      "boundaries": ["...", "..."],
+      "goals": ["...", "...", "..."],
+      "open_loops": ["...", "..."],
+      "avatar_color": "#...",
+      "sex": "...",
+      "signature_emoji": "...",
+      "action_beat_density": "...",
+      "starting_relationship_to_other": "..."
+    },
+    { ... second character ... }
+  ]
+}"###;
+
+// APP INVARIANT — compile-time enforcement of the Genesis register.
+const _: () = {
+    assert!(
+        const_contains(GENESIS_SYSTEM_TEMPLATE, "Gently holy"),
+        "APP INVARIANT VIOLATED: genesis system prompt must preserve 'Gently holy' as a register anchor. See docs/GENESIS_WIZARD.md."
+    );
+    assert!(
+        const_contains(GENESIS_SYSTEM_TEMPLATE, "Deeply fun"),
+        "APP INVARIANT VIOLATED: genesis system prompt must preserve 'Deeply fun' as a register anchor. See docs/GENESIS_WIZARD.md."
+    );
+    assert!(
+        const_contains(GENESIS_SYSTEM_TEMPLATE, "Gilead"),
+        "APP INVARIANT VIOLATED: genesis system prompt must reference 'Gilead' as the tonal comparator (not evangelical tract, not sneering secular satire). See docs/GENESIS_WIZARD.md."
+    );
+    assert!(
+        const_contains(GENESIS_SYSTEM_TEMPLATE, "Biblical cosmology"),
+        "APP INVARIANT VIOLATED: genesis system prompt must preserve the biblical-cosmology guard. See docs/GENESIS_WIZARD.md."
+    );
+    assert!(
+        const_contains(GENESIS_SYSTEM_TEMPLATE, "NOT a generic medieval village"),
+        "APP INVARIANT VIOLATED: genesis system prompt must preserve the anti-default guard. See docs/GENESIS_WIZARD.md."
+    );
+    assert!(
+        const_contains(GENESIS_SYSTEM_TEMPLATE, "the good is real and the question of it actually matters"),
+        "APP INVARIANT VIOLATED: genesis system prompt must preserve the 'good is real' anchor — this is what distinguishes the app's gently-holy register from secular neutrality. See docs/GENESIS_WIZARD.md."
+    );
+};
+
+/// Compile-time substring check for &str, used to guard load-bearing
+/// phrases in the prompt constants. Mirrors the helper in prompts.rs.
+const fn const_contains(haystack: &str, needle: &str) -> bool {
+    let h = haystack.as_bytes();
+    let n = needle.as_bytes();
+    if n.is_empty() { return true; }
+    if n.len() > h.len() { return false; }
+    let mut i = 0usize;
+    while i + n.len() <= h.len() {
+        let mut j = 0usize;
+        let mut ok = true;
+        while j < n.len() {
+            if h[i + j] != n[j] { ok = false; break; }
+            j += 1;
+        }
+        if ok { return true; }
+        i += 1;
+    }
+    false
+}
+
 fn build_genesis_prompt(setting: &str, mood: &str, hook: &str, hints: &GenesisHints) -> (String, String) {
     // When the user has set explicit hints in the wizard, inject them
     // as directives that OVERRIDE the random seed's choices. Empty-hint
@@ -229,6 +368,23 @@ fn build_genesis_prompt(setting: &str, mood: &str, hook: &str, hints: &GenesisHi
             )
         }
     };
+
+    let system = GENESIS_SYSTEM_TEMPLATE
+        .replace("{{SETTING}}", setting)
+        .replace("{{MOOD}}", mood)
+        .replace("{{HOOK}}", hook)
+        .replace("{{HINTS_BLOCK}}", &hints_block);
+    let user = "Generate the world and the two characters. Specificity, particularity, warmth, surprise. JSON only.".to_string();
+    (system, user)
+}
+
+#[cfg(any())]
+mod _legacy_genesis_prompt_removed {
+    // Kept for git blame — the inline format!() version was replaced by
+    // GENESIS_SYSTEM_TEMPLATE above so compile-time asserts could guard
+    // the register phrases. This mod is never compiled.
+    fn build_dead(setting: &str, mood: &str, hook: &str, hints: &str) -> (String, String) {
+        let hints_block = hints;
     let system = format!(
         r###"You are a world-builder helping a user step into a new fictional world they can inhabit with AI-rendered characters. Your job: invent ONE specific world and TWO specific characters who live there, such that the user could open a chat with either of them tomorrow and the scene would already be alive.
 
@@ -307,6 +463,7 @@ Return ONLY valid JSON matching this exact shape:
     );
     let user = "Generate the world and the two characters. Specificity, particularity, warmth, surprise. JSON only.".to_string();
     (system, user)
+    }
 }
 
 // ── Public result type ─────────────────────────────────────────────────────
@@ -653,6 +810,63 @@ pub async fn auto_generate_world_with_characters_cmd(
     Ok(GenesisResult { world_id, character_ids })
 }
 
+// ── APP INVARIANT — DO NOT REMOVE OR SOFTEN ───────────────────────────────
+//
+// The noble-reflection system prompt is a LOAD-BEARING app invariant.
+// It defines the ceremony's VOICE — noble in spirit, NOT in medieval
+// register. The anti-anachronism guard ("No thou"), the anti-feeling-
+// centrism guard ("named as a thing to be done, not a feeling to be
+// had"), and the length cap ("One or two sentences") together prevent
+// register drift in three specific directions (costume drama, therapy-
+// speak, speech-ification). Any one of them softening would drift the
+// wizard's commitment moment.
+//
+// See docs/GENESIS_WIZARD.md § "Phase 5: The Noble Reflection" for the
+// full spec. Also INVARIANTS.md § "Invariant 8: The Genesis Ceremony."
+
+pub const NOBLE_REFLECTION_SYSTEM_PROMPT: &str = r##"You are helping a user commit to a quest in a world they are about to step into. They have written one sentence naming what they hope to find, build, reach toward, or untangle in this world. Your job is to reflect that desire back to them as a NOBLE OFFERING — named and weighted, the way a trusted elder or a ceremonial herald might formally speak a person's chosen pursuit into the room before they accept it.
+
+Register — carefully:
+
+- **Noble in SPIRIT, not in register.** You are NOT writing medieval fantasy. No "thou," no "henceforth," no "thy pursuit," no "let it be known," no archaic constructions. Contemporary English. The nobility comes from WEIGHT, not from period costume.
+- **Named as a thing to be done, not a feeling to be had.** The user might have written "I want to feel less lonely here." Your reflection names the pursuit underneath: "To find, in this place, the companions whose presence makes the loneliness smaller." Not "to chase a feeling" — a concrete reach.
+- **Specific to their actual words.** Don't generalize their sentence into a generic quest. Anchor to what they actually said. If they mentioned a character, name the character. If they named a concrete thing, keep the concrete thing.
+- **One or two sentences. Short.** Offering, not speech.
+- **First person or second person.** "To find…" or "That you would come to…" Both work. Pick what fits.
+- **Honor the register of the world you're being offered within.** If the world is quiet and weathered, the offering should be too. If the world is dramatic, the offering carries that weight. Match.
+
+Failure modes — avoid all:
+- "Your quest is to…" (too video-game)
+- "Behold, thy task…" (medieval pastiche — the register the user specifically forbade)
+- Generic poetic phrasing that could fit any sentence ("to walk the path that opens before you")
+- Paragraph-length — if it's more than two sentences it's a speech, not an offering
+
+Return ONLY the offering text. No quotes, no preface, no "Here is your noble reflection:" — just the one or two sentences that will be spoken back to the user before they accept."##;
+
+// APP INVARIANT — compile-time enforcement of the noble-reflection register.
+const _: () = {
+    assert!(
+        const_contains(NOBLE_REFLECTION_SYSTEM_PROMPT, "Noble in SPIRIT, not in register"),
+        "APP INVARIANT VIOLATED: noble-reflection prompt must preserve 'Noble in SPIRIT, not in register' — this is the wizard's anti-medieval guard. See docs/GENESIS_WIZARD.md."
+    );
+    assert!(
+        const_contains(NOBLE_REFLECTION_SYSTEM_PROMPT, "No \"thou,\""),
+        "APP INVARIANT VIOLATED: noble-reflection prompt must preserve 'No \"thou,\"' — the explicit anti-archaism. See docs/GENESIS_WIZARD.md."
+    );
+    assert!(
+        const_contains(NOBLE_REFLECTION_SYSTEM_PROMPT, "Named as a thing to be done, not a feeling to be had"),
+        "APP INVARIANT VIOLATED: noble-reflection prompt must preserve 'Named as a thing to be done, not a feeling to be had' — the anti-therapy-speak guard. See docs/GENESIS_WIZARD.md."
+    );
+    assert!(
+        const_contains(NOBLE_REFLECTION_SYSTEM_PROMPT, "One or two sentences"),
+        "APP INVARIANT VIOLATED: noble-reflection prompt must preserve 'One or two sentences' — the length cap that keeps the reflection an OFFERING not a SPEECH. See docs/GENESIS_WIZARD.md."
+    );
+    assert!(
+        const_contains(NOBLE_REFLECTION_SYSTEM_PROMPT, "NOBLE OFFERING"),
+        "APP INVARIANT VIOLATED: noble-reflection prompt must preserve the framing 'NOBLE OFFERING'. See docs/GENESIS_WIZARD.md."
+    );
+};
+
 /// Reflect the user's "what are you reaching for here?" answer back to
 /// them as a noble offering — the quest named as a real pursuit, in
 /// the spirit of a king's commission but NOT in medieval register. One
@@ -678,25 +892,6 @@ pub async fn reflect_reaching_as_noble_quest_cmd(
         (w, mc)
     };
 
-    let system = r##"You are helping a user commit to a quest in a world they are about to step into. They have written one sentence naming what they hope to find, build, reach toward, or untangle in this world. Your job is to reflect that desire back to them as a NOBLE OFFERING — named and weighted, the way a trusted elder or a ceremonial herald might formally speak a person's chosen pursuit into the room before they accept it.
-
-Register — carefully:
-
-- **Noble in SPIRIT, not in register.** You are NOT writing medieval fantasy. No "thou," no "henceforth," no "thy pursuit," no "let it be known," no archaic constructions. Contemporary English. The nobility comes from WEIGHT, not from period costume.
-- **Named as a thing to be done, not a feeling to be had.** The user might have written "I want to feel less lonely here." Your reflection names the pursuit underneath: "To find, in this place, the companions whose presence makes the loneliness smaller." Not "to chase a feeling" — a concrete reach.
-- **Specific to their actual words.** Don't generalize their sentence into a generic quest. Anchor to what they actually said. If they mentioned a character, name the character. If they named a concrete thing, keep the concrete thing.
-- **One or two sentences. Short.** Offering, not speech.
-- **First person or second person.** "To find…" or "That you would come to…" Both work. Pick what fits.
-- **Honor the register of the world you're being offered within.** If the world is quiet and weathered, the offering should be too. If the world is dramatic, the offering carries that weight. Match.
-
-Failure modes — avoid all:
-- "Your quest is to…" (too video-game)
-- "Behold, thy task…" (medieval pastiche — the register the user specifically forbade)
-- Generic poetic phrasing that could fit any sentence ("to walk the path that opens before you")
-- Paragraph-length — if it's more than two sentences it's a speech, not an offering
-
-Return ONLY the offering text. No quotes, no preface, no "Here is your noble reflection:" — just the one or two sentences that will be spoken back to the user before they accept."##;
-
     let user = format!(
         "World: {} — {}\n\nWhat the user wrote when asked 'what are you reaching for here?':\n\n\"{}\"\n\nReflect it back as a noble offering.",
         world.name,
@@ -707,7 +902,7 @@ Return ONLY the offering text. No quotes, no preface, no "Here is your noble ref
     let request = ChatRequest {
         model: model_config.memory_model.clone(),
         messages: vec![
-            ChatMessage { role: "system".to_string(), content: system.to_string() },
+            ChatMessage { role: "system".to_string(), content: NOBLE_REFLECTION_SYSTEM_PROMPT.to_string() },
             ChatMessage { role: "user".to_string(), content: user },
         ],
         temperature: Some(0.85),
