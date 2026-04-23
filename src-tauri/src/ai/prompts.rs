@@ -1317,6 +1317,35 @@ EARNED EXCEPTIONS — narrow and specific:
 2. *Don't engineer empty-handedness for plainness:* the "stripped regulator → plainer" insight is for understanding what happens when the SCENE'S setting denies the character their usual props. It is NOT a directive to artificially strip props for the sake of forced directness. Let the scene's actual physical setting determine whether the character has hands free. If they're at a workbench, they have a workbench; don't have them mysteriously sitting empty-handed across from the user just to land a confession plain. The rule describes a phenomenon, not a stage direction."#
 }
 
+/// "Noticing as mirror" craft note — perception-side companion to
+/// the wit/hands self-regulation notes. Where those govern what a
+/// character DOES, this governs what they SEE — and the principle
+/// that connects them is symmetry: a character's perception register
+/// mirrors their self-regulation register. They notice what they
+/// themselves use to manage. Hands-people read hands; wit-people
+/// read other people's reach for jokes; silence-people hear silence.
+///
+/// Provenance: Hal Stroud, asked "what's the first thing your eye
+/// goes to when I walk in?" — *"Your hands, usually. They tell on
+/// you quicker than your mouth does."* The line gives both halves
+/// at once: a) Hal's attentional habit (hands-first); b) the
+/// perception principle (hands leak state before speech). Sixth
+/// deployment of the "ask the character" pattern in two days.
+fn noticing_as_mirror_dialogue() -> &'static str {
+    r#"NOTICING AS MIRROR — what a character SEES is what they themselves USE:
+A character's attentional habit — what they notice first about another person, before any words have been exchanged — mirrors their own self-regulation register. The general principle: **where you HIDE is what you NOTICE in others**. A character who uses their hands as a coolant will read other people's hands first; a character who manages weight through silence will read silence first; a character whose self-regulation is wit will catch the moment another person reaches for a joke. Self-regulation and perception are mirror channels.
+
+For Hal Stroud specifically, hands are the channel: *"Your hands, usually. They tell on you quicker than your mouth does."* Hands leak state before speech composes it. A clenched fist, a grip on the table edge, fingers worrying a sleeve, a thumb hunting for an absent seam — these tell a hands-trained reader what's happening in the speaker before the speaker has decided what to say.
+
+In practice:
+- When writing a character's perception of another person (the user, another character), let them notice through their OWN attentional lens, not a generic "scanned the room" register.
+- The first thing they observe should be character-specific. A nurse notices breathing. A boxer notices stance. A grandmother notices what someone is holding. An anxious person notices exits. Hal notices hands.
+- The *what they noticed* IS character work. Don't waste it on "she had brown hair." Use it to reveal the character's own calibration.
+
+EARNED EXCEPTION — attentional habits are calibrations, not collapses:
+The rule says characters HAVE attentional habits and they CORRELATE with self-regulation; it does NOT reduce a character to one noticing-channel forever. Mood, scene, the listener's salient features can shift the calibration in any beat. A normally hands-focused character in grief might notice eyes first. A normally silence-attuned character at a loud party will notice the loudest voice. Honor the character's habitual register as the DEFAULT, but let scene and state move the camera when they should."#
+}
+
 /// After-the-landing craft note: how to keep the scene breathing once an
 /// emotional beat has settled, without padding with restatement and
 /// without manufacturing drama. Companion to drive_the_moment_dialogue —
@@ -2085,6 +2114,7 @@ fn build_solo_dialogue_system_prompt(
     parts.push(wit_as_dimmer_dialogue().to_string());
     parts.push(let_the_real_thing_in_dialogue().to_string());
     parts.push(hands_as_coolant_dialogue().to_string());
+    parts.push(noticing_as_mirror_dialogue().to_string());
     parts.push(protagonist_framing_dialogue(leader, &character.character_id, None));
     parts.push(reverence_block().to_string());
     parts.push(daylight_block().to_string());
@@ -2392,6 +2422,7 @@ fn build_group_dialogue_system_prompt(
     parts.push(wit_as_dimmer_dialogue().to_string());
     parts.push(let_the_real_thing_in_dialogue().to_string());
     parts.push(hands_as_coolant_dialogue().to_string());
+    parts.push(noticing_as_mirror_dialogue().to_string());
     parts.push(protagonist_framing_dialogue(leader, &character.character_id, Some(gc)));
     parts.push(reverence_block().to_string());
     parts.push(daylight_block().to_string());
