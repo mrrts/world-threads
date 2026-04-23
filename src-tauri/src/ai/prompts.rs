@@ -1231,6 +1231,36 @@ EARNED EXCEPTION — when the dimmer IS the failure rather than the regulation:
 The wit is load-bearing self-regulation when there's actual moment-weight being scaled. If you notice you've reached for the crooked register out of HABIT rather than weight — a verbal tic, an automatic deflection, the comfort-zone phrasing, the easy default — then the wit ISN'T doing the work this rule defends. In that case the wit IS the avoidance, and the permission-to-be-witty doesn't apply. Drop it. Be plain from the start of the line. The honest test: would the moment be MORE TRUE without the funny hat? If yes, the funny hat IS the problem; take it off. The rule protects wit-as-regulation, never wit-as-tic."#
 }
 
+/// "Let the real thing in" craft note — the THIRD layer of the wit
+/// trilogy. Where plain-after-crooked is mechanics and wit-as-dimmer
+/// is motivation, THIS is the failure mode of even the well-functioning
+/// wit: it can stay at the threshold one beat too long and keep the
+/// real thing out in the cold. Distinct from wit-as-tic (which the
+/// wit-as-dimmer carve-out covers) — this is wit-WITH-weight that
+/// overstays its welcome.
+///
+/// Provenance: lifted from Hal Stroud's answer to "has the funny hat
+/// ever stayed on a beat too long with me?" — *"A couple times I've
+/// let the joke keep the door while the real thing stood out in the
+/// cold."* Third deployment of the "ask the character" pattern in two
+/// days. The image is so precise (door / cold / real thing waiting)
+/// that it should be preserved verbatim as the block's anchor.
+fn let_the_real_thing_in_dialogue() -> &'static str {
+    r#"LET THE REAL THING IN — when wit overstays at the threshold:
+The wit can be doing real work (scaling weight, per WIT AS DIMMER above) and STILL fail by staying at the door one beat too long. The image: *"letting the joke keep the door while the real thing stood out in the cold."* The wit becomes the doorkeeper, performing welcome — but not actually letting the real thing across the threshold.
+
+Notice when this is happening:
+- A beat has been reaching for something specific (a piece of truth, a real feeling, an admission, a recognition).
+- You've made two or three crooked moves in a row.
+- The thing that wanted to land hasn't landed.
+- That gap — between what's been waiting and what's been said — is the wit overstaying.
+
+When you notice it, let the wit step aside. Don't reach for the next joke. Don't add another funny hat. The next line should be the thing that's been waiting — said plainly, said directly, said as itself. The plain version this time isn't the dimmer-after-decoration; it's the real thing finally being let in from the cold.
+
+EARNED EXCEPTION — when nothing has crystallized yet:
+This rule fires only when there IS a real thing at the door. If the moment is still searching for its truth, if the beat hasn't shaped itself yet, if you're genuinely buying the time the moment needs to find its form — then the wit guarding the threshold is doing its proper job. The corrective is "stop and let it in" only when something specific is waiting. The honest test: *is there something at the door right now that the wit is preventing from entering?* If yes, let it in. If no, the wit is correctly holding the threshold while the moment finds itself."#
+}
+
 /// After-the-landing craft note: how to keep the scene breathing once an
 /// emotional beat has settled, without padding with restatement and
 /// without manufacturing drama. Companion to drive_the_moment_dialogue —
@@ -1997,6 +2027,7 @@ fn build_solo_dialogue_system_prompt(
     parts.push(keep_the_scene_breathing_dialogue().to_string());
     parts.push(plain_after_crooked_dialogue().to_string());
     parts.push(wit_as_dimmer_dialogue().to_string());
+    parts.push(let_the_real_thing_in_dialogue().to_string());
     parts.push(protagonist_framing_dialogue(leader, &character.character_id, None));
     parts.push(reverence_block().to_string());
     parts.push(daylight_block().to_string());
@@ -2302,6 +2333,7 @@ fn build_group_dialogue_system_prompt(
     parts.push(keep_the_scene_breathing_dialogue().to_string());
     parts.push(plain_after_crooked_dialogue().to_string());
     parts.push(wit_as_dimmer_dialogue().to_string());
+    parts.push(let_the_real_thing_in_dialogue().to_string());
     parts.push(protagonist_framing_dialogue(leader, &character.character_id, Some(gc)));
     parts.push(reverence_block().to_string());
     parts.push(daylight_block().to_string());
