@@ -17,6 +17,10 @@ export interface AppState {
   userProfile: UserProfile | null;
   modelConfig: ModelConfig;
   apiKey: string;
+  /** Google AI Studio API key — optional, unlocks video generation.
+   *  Empty string means not-yet-provided; video UI is feature-gated
+   *  on this being non-empty. */
+  googleApiKey: string;
   budgetMode: boolean;
   editingUserProfile: boolean;
   loading: boolean;
@@ -83,6 +87,7 @@ export function useAppStore() {
     userProfile: null,
     modelConfig: defaultModelConfig,
     apiKey: "",
+    googleApiKey: "",
     budgetMode: false,
     editingUserProfile: false,
     totalMessages: 0,
@@ -155,10 +160,11 @@ export function useAppStore() {
   const loadInitial = useCallback(async () => {
     setState((s) => ({ ...s, loading: true }));
     try {
-      const [worlds, modelConfig, apiKey, budgetMode, autoRespondSetting, notifySetting, fontSizeSetting] = await Promise.all([
+      const [worlds, modelConfig, apiKey, googleApiKey, budgetMode, autoRespondSetting, notifySetting, fontSizeSetting] = await Promise.all([
         api.listWorlds(),
         api.getModelConfig(),
         api.migrateApiKey(),
+        api.getGoogleApiKey().catch(() => ""),
         api.getBudgetMode(),
         api.getSetting("auto_respond").catch(() => null),
         api.getSetting("notify_on_message").catch(() => null),
@@ -253,6 +259,7 @@ export function useAppStore() {
         userProfile,
         modelConfig,
         apiKey: apiKey ?? "",
+        googleApiKey: googleApiKey ?? "",
         budgetMode,
         autoRespond: autoRespondSetting !== "false",
         notifyOnMessage: notifySetting !== "false",
@@ -1310,6 +1317,15 @@ export function useAppStore() {
     }
   }, [setError]);
 
+  const setGoogleApiKey = useCallback(async (key: string) => {
+    try {
+      await api.setGoogleApiKey(key);
+      setState((s) => ({ ...s, googleApiKey: key }));
+    } catch (e) {
+      setError(String(e));
+    }
+  }, [setError]);
+
   const setModelConfig = useCallback(async (config: ModelConfig) => {
     try {
       await api.setModelConfig(config);
@@ -1613,6 +1629,7 @@ export function useAppStore() {
     generateVideo,
     resetToMessage,
     setApiKey,
+    setGoogleApiKey,
     setModelConfig,
     setBudgetMode,
     updateWorldState,

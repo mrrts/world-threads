@@ -232,30 +232,36 @@ export function IllustrationMessage({
                 </button>
                 <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/dl:opacity-100 pointer-events-none transition-opacity">{downloadedId === msg.message_id ? "Saved!" : "Download"}</span>
               </div>
-              <div className="relative group/vid">
-                {videoFiles[msg.message_id] ? (
-                  <button
-                    onClick={() => setRemoveVideoConfirmId(msg.message_id)}
-                    className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-destructive transition-colors backdrop-blur-sm"
-                  >
-                    <span className="relative">
-                      <Video size={14} />
-                      <span className="absolute inset-0 flex items-center justify-center">
-                        <span className="block w-[18px] h-[1.5px] bg-white rotate-45" />
+              {/* Video controls — feature-gated on Google AI API key. If
+                  the user hasn't set one up, we hide the Animate button
+                  entirely (no teaser, no upsell). Existing videos still
+                  show their remove button so users can clean up. */}
+              {(store.googleApiKey || videoFiles[msg.message_id]) && (
+                <div className="relative group/vid">
+                  {videoFiles[msg.message_id] ? (
+                    <button
+                      onClick={() => setRemoveVideoConfirmId(msg.message_id)}
+                      className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-destructive transition-colors backdrop-blur-sm"
+                    >
+                      <span className="relative">
+                        <Video size={14} />
+                        <span className="absolute inset-0 flex items-center justify-center">
+                          <span className="block w-[18px] h-[1.5px] bg-white rotate-45" />
+                        </span>
                       </span>
-                    </span>
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => { setVideoModalId(msg.message_id); setVideoPrompt(""); setVideoDuration(8); setVideoStyle("action-no-dialogue"); setVideoTab("generate"); }}
-                    className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-purple-600 transition-colors backdrop-blur-sm"
-                    disabled={isGeneratingVideo}
-                  >
-                    <Video size={14} />
-                  </button>
-                )}
-                <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/vid:opacity-100 pointer-events-none transition-opacity">{videoFiles[msg.message_id] ? "Remove Video" : "Animate"}</span>
-              </div>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => { setVideoModalId(msg.message_id); setVideoPrompt(""); setVideoDuration(8); setVideoStyle("action-no-dialogue"); setVideoTab("generate"); }}
+                      className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-purple-600 transition-colors backdrop-blur-sm"
+                      disabled={isGeneratingVideo}
+                    >
+                      <Video size={14} />
+                    </button>
+                  )}
+                  <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/vid:opacity-100 pointer-events-none transition-opacity">{videoFiles[msg.message_id] ? "Remove Video" : "Animate"}</span>
+                </div>
+              )}
             </div>
           )}
           {store.generatingVideo === msg.message_id && (

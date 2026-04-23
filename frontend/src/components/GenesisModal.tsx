@@ -21,10 +21,13 @@ interface Props {
   open: boolean;
   onClose: () => void;
   apiKey: string;
+  googleApiKey: string;
+  setApiKey: (key: string) => Promise<void>;
+  setGoogleApiKey: (key: string) => Promise<void>;
   onWorldAccepted: (worldId: string) => void;
 }
 
-type Phase = "idle" | "generating" | "error" | "reaching" | "reflecting" | "offering";
+type Phase = "keys" | "idle" | "generating" | "error" | "reaching" | "reflecting" | "offering";
 
 interface CharacterReveal {
   character_id: string;
@@ -52,8 +55,15 @@ interface WorldReveal {
 /// QuestAcceptanceDialog uses. The answer is saved as the world's
 /// first user-authored quest, turning a model-generated world into a
 /// chosen home.
-export function GenesisModal({ open, onClose, apiKey, onWorldAccepted }: Props) {
-  const [phase, setPhase] = useState<Phase>("idle");
+export function GenesisModal({ open, onClose, apiKey, googleApiKey, setApiKey, setGoogleApiKey, onWorldAccepted }: Props) {
+  // If no OpenAI key is stored, start in the keys phase — the user
+  // must provide one before they can dream a world. Google key is
+  // always optional and surfaced alongside.
+  const [phase, setPhase] = useState<Phase>(() => apiKey.trim() ? "idle" : "keys");
+  const [openaiInput, setOpenaiInput] = useState("");
+  const [googleInput, setGoogleInput] = useState("");
+  const [savingKeys, setSavingKeys] = useState(false);
+  const [keyError, setKeyError] = useState<string | null>(null);
   const [stageDetail, setStageDetail] = useState("Sketching the shape of a world…");
   const [progress, setProgress] = useState(0);
   const [history, setHistory] = useState<string[]>([]);
@@ -74,7 +84,11 @@ export function GenesisModal({ open, onClose, apiKey, onWorldAccepted }: Props) 
 
   useEffect(() => {
     if (!open) return;
-    setPhase("idle");
+    setPhase(apiKey.trim() ? "idle" : "keys");
+    setOpenaiInput("");
+    setGoogleInput("");
+    setSavingKeys(false);
+    setKeyError(null);
     setStageDetail("Sketching the shape of a world…");
     setProgress(0);
     setHistory([]);
@@ -215,9 +229,111 @@ export function GenesisModal({ open, onClose, apiKey, onWorldAccepted }: Props) 
     onClose();
   };
 
+  const onSaveKeys = async () => {
+    const openai = openaiInput.trim();
+    if (!openai) { setKeyError("Please paste your OpenAI API key to continue."); return; }
+    if (!openai.startsWith("sk-")) { setKeyError('OpenAI keys start with "sk-". Please check what you pasted.'); return; }
+    setSavingKeys(true);
+    setKeyError(null);
+    try {
+      await setApiKey(openai);
+      const google = googleInput.trim();
+      if (google) { await setGoogleApiKey(google); }
+      setPhase("idle");
+    } catch (e: any) {
+      setKeyError(String(e));
+    } finally {
+      setSavingKeys(false);
+    }
+  };
+
   return (
-    <Dialog open={open} onClose={phase === "generating" ? () => {} : onClose} className="max-w-2xl">
+    <Dialog open={open} onClose={phase === "generating" || phase === "reflecting" ? () => {} : onClose} className="max-w-2xl">
       <DialogContent>
+        {phase === "keys" && (
+          <>
+            <DialogHeader onClose={onClose}>
+              <DialogTitle>
+                <Sparkles size={16} className="inline mr-2 text-amber-400" />
+                Let's get the worst part over with
+              </DialogTitle>
+            </DialogHeader>
+            <DialogBody className="space-y-5">
+              <p className="text-sm text-foreground/90 leading-relaxed">
+                WorldThreads doesn't run its own AI — you bring your own key. That means the app is free
+                and your data stays on your machine, but it also means the first five minutes involve
+                a small dance with OpenAI's billing page. There's no way around it. Let's do it now and
+                not look back.
+              </p>
+
+              {/* OpenAI (required) */}
+              <div className="space-y-2.5 rounded-xl border-2 border-amber-400/40 bg-amber-500/5 p-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-400">Required</span>
+                  <p className="text-sm font-semibold">OpenAI API key</p>
+                </div>
+                <ol className="text-xs text-foreground/85 leading-relaxed space-y-1 list-decimal list-inside ml-1">
+                  <li>Go to <a href="https://platform.openai.com" target="_blank" rel="noreferrer" className="text-amber-400 underline">platform.openai.com</a> and sign in (or create an account).</li>
+                  <li>Open <span className="font-medium">Billing</span> and add a payment method. Put $5-$10 of credit on the account — this lasts a long time in normal play.</li>
+                  <li>Open <span className="font-medium">API keys</span> and create a new secret key. Copy it immediately — OpenAI won't show it again.</li>
+                  <li>Paste it below. It'll be stored securely in your system keychain, never sent anywhere but OpenAI.</li>
+                </ol>
+                <Input
+                  autoFocus
+                  type="password"
+                  value={openaiInput}
+                  onChange={(e) => setOpenaiInput(e.target.value)}
+                  placeholder="sk-..."
+                  className="font-mono text-xs"
+                />
+              </div>
+
+              {/* Google (optional) */}
+              <div className="space-y-2.5 rounded-xl border border-border/60 bg-card/30 p-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground/70">Optional</span>
+                  <p className="text-sm font-semibold text-foreground/80">Google AI API key</p>
+                  <span className="text-[11px] text-muted-foreground">— unlocks video generation</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  If you'd like to animate illustrations into short videos, you'll need a key from
+                  Google AI Studio. If you don't want that feature right now, leave this blank —
+                  you can add it later from Settings.
+                </p>
+                <ol className="text-xs text-foreground/75 leading-relaxed space-y-1 list-decimal list-inside ml-1">
+                  <li>Visit <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer" className="text-amber-400 underline">aistudio.google.com/apikey</a>.</li>
+                  <li>Create a new API key. Video generation via Veo requires a billing-enabled Google Cloud project.</li>
+                  <li>Paste it below.</li>
+                </ol>
+                <Input
+                  type="password"
+                  value={googleInput}
+                  onChange={(e) => setGoogleInput(e.target.value)}
+                  placeholder="(optional — leave blank if you don't want video)"
+                  className="font-mono text-xs"
+                />
+              </div>
+
+              {keyError && <p className="text-xs text-destructive">{keyError}</p>}
+
+              <p className="text-[11px] text-muted-foreground/60 italic">
+                That's the worst part. After this, the app just makes worlds for you.
+              </p>
+            </DialogBody>
+            <DialogFooter>
+              <Button variant="ghost" onClick={onClose} disabled={savingKeys}>Cancel</Button>
+              <Button
+                onClick={onSaveKeys}
+                disabled={savingKeys || !openaiInput.trim()}
+                className="bg-amber-500/90 hover:bg-amber-500 text-black"
+              >
+                {savingKeys ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <Sparkles size={14} className="mr-1.5" />}
+                {savingKeys ? "Saving…" : "Continue"}
+              </Button>
+            </DialogFooter>
+          </>
+        )}
+
         {phase === "idle" && (
           <>
             <DialogHeader onClose={onClose}>

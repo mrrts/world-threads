@@ -722,6 +722,9 @@ export function Sidebar({ store, onNavigate }: Props) {
         open={showGenesis}
         onClose={() => setShowGenesis(false)}
         apiKey={store.apiKey}
+        googleApiKey={store.googleApiKey}
+        setApiKey={store.setApiKey}
+        setGoogleApiKey={store.setGoogleApiKey}
         onWorldAccepted={async (worldId) => {
           // loadWorlds updates store.worlds so the sidebar list
           // refreshes; selectWorld then activates the new one.
