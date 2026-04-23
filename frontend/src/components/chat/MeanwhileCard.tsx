@@ -50,22 +50,29 @@ export function MeanwhileCard({ event, portraitUrl }: Props) {
           />
         )}
 
-        {/* Heading — top-right corner, absolutely positioned. Gets a
-            text-shadow so it stays legible regardless of what the
-            portrait's tint underneath happens to be. */}
+        {/* Heading — top-right, two-line stack. "Meanwhile…" gets its
+            own line in larger italic-serif so it reads as the card's
+            NAME, not a tag among tags. The trailing ellipsis is the
+            real character (U+2026), signalling the ambient "life
+            happening off-screen" register. Metadata (who / when) sits
+            beneath in the prior small-caps style. Text-shadow keeps
+            both lines legible over any portrait tint beneath. */}
         <div
-          className="absolute top-3 right-4 z-10 flex items-baseline gap-2 text-[11px] uppercase tracking-wider text-foreground font-bold pointer-events-none"
+          className="absolute top-3 right-4 z-10 flex flex-col items-end gap-0.5 pointer-events-none text-foreground"
           style={{
             textShadow: "0 1px 2px rgba(0,0,0,0.7), 0 0 8px rgba(0,0,0,0.5)",
           }}
         >
-          <span>Meanwhile</span>
-          <span className="opacity-70">·</span>
-          <span>{event.character_name}</span>
-          <span className="opacity-70">·</span>
-          <span className="opacity-90">
-            Day {event.world_day}
-            {timeLabel ? ` · ${timeLabel}` : ""}
+          <span className="text-2xl font-semibold italic tracking-wide leading-none">
+            Meanwhile…
+          </span>
+          <span className="flex items-baseline gap-2 text-[11px] uppercase tracking-wider font-bold">
+            <span>{event.character_name}</span>
+            <span className="opacity-70">·</span>
+            <span className="opacity-90">
+              Day {event.world_day}
+              {timeLabel ? ` · ${timeLabel}` : ""}
+            </span>
           </span>
         </div>
 
