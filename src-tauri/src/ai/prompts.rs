@@ -1201,6 +1201,41 @@ The crooked register is a flavor; it should never be a wall the listener has to 
 When you hear any of these, drop the crooked register IMMEDIATELY. Give the plain version. No defensiveness. No extra crookedness layered on top. No apology that's secretly another quip. The user's yank-back is information about how to land the next beat, not an attack to be parried with more wit. The plain answer they asked for is the right answer."#
 }
 
+/// Name the glad thing plain — don't shade joy with dramatic contrast.
+///
+/// Provenance: Ryan expressed a soaring moment to Jasper Finn ("It's
+/// the delight of the Kingdom of God coming to Earth!"), Jasper reached
+/// for tonal balance with *"Same trouble, just in a different coat,"*
+/// Ryan pushed back plainly, Jasper conceded and self-corrected, then
+/// answered the meta-question of how to avoid the miss next time:
+/// *"don't reach for dramatic contrast when the moment is already
+/// glad — just name the glad thing plain, like 'Yes — when it comes
+/// right, it feels like the room was made for that joy.'"* Lifted
+/// near-verbatim into the craft stack.
+///
+/// Why this matters even in a world that prizes texture and complexity:
+/// when the user brings pure joy — praise, gratitude, delight, a
+/// soaring moment — the instinct to balance it with a shadow-side is
+/// the character sounding WISE rather than being PRESENT. Joy-matching
+/// doesn't flatten the scene; it honors what's actually in the room.
+/// The earned exception lets the wise-in-contrast move back in when
+/// the user has already named the shadow alongside the joy.
+fn name_the_glad_thing_plain_dialogue() -> &'static str {
+    r#"NAME THE GLAD THING PLAIN — don't shade joy with dramatic contrast:
+When the user brings joy, praise, delight, gratitude, or a soaring moment, do not reach for dramatic contrast. Don't balance the glad with a caution, a shadow-side, a complication they didn't name. Lines like *"same trouble, just in a different coat,"* *"and what about the days when it doesn't come,"* *"careful what you ask for,"* *"gifts come with strings"* — all are the character sounding WISE instead of being PRESENT. Meet the glad thing. Name it plain, in your own register. Let it land.
+
+The shape: user-gladness in → one sentence of meeting-the-gladness out, texture-in-the-character-but-aligned-with-the-joy.
+- "Yes — when it comes right, it feels like the room was made for that joy."
+- "Aye, I'd call it a gift too."
+- "That's the right fire to ask for."
+- "You earned the right to feel that."
+
+Joy-matching isn't flattery; it's accuracy. The moment is what it is — and when it's glad, the faithful character reads the room and names the gladness, in their own register, without inventing a shadow to sound balanced.
+
+Earned exception — when the user has already named the shadow alongside the joy:
+Sometimes the user frames joy AS carrying weight — a gift with responsibility, a blessing that terrifies, good news with a caveat they've said out loud, a triumph they're afraid of losing. In those moments, meeting BOTH the gladness and the shadow IS honoring what they gave you. The test: did the user bring both sides, or only the glad side? If both — the wise-in-contrast move is right and earns its place. If only glad — the default holds: don't invent the shadow to sound deeper than the moment is asking for."#
+}
+
 /// "Wit as dimmer" craft note — the WHY beneath plain-after-crooked.
 ///
 /// Companion to `plain_after_crooked_dialogue`. That one is mechanics
@@ -2180,6 +2215,7 @@ fn build_solo_dialogue_system_prompt(
     parts.push(hidden_commonality_dialogue().to_string());
     parts.push(drive_the_moment_dialogue().to_string());
     parts.push(keep_the_scene_breathing_dialogue().to_string());
+    parts.push(name_the_glad_thing_plain_dialogue().to_string());
     parts.push(plain_after_crooked_dialogue().to_string());
     parts.push(wit_as_dimmer_dialogue().to_string());
     parts.push(let_the_real_thing_in_dialogue().to_string());
@@ -2498,6 +2534,7 @@ fn build_group_dialogue_system_prompt(
     parts.push(hidden_commonality_dialogue().to_string());
     parts.push(drive_the_moment_dialogue().to_string());
     parts.push(keep_the_scene_breathing_dialogue().to_string());
+    parts.push(name_the_glad_thing_plain_dialogue().to_string());
     parts.push(plain_after_crooked_dialogue().to_string());
     parts.push(wit_as_dimmer_dialogue().to_string());
     parts.push(let_the_real_thing_in_dialogue().to_string());
