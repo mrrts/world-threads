@@ -230,6 +230,7 @@ pub struct SaveCanonRequest {
 #[tauri::command]
 pub fn save_kept_record_cmd(
     db: State<Database>,
+    api_key: String,
     request: SaveCanonRequest,
 ) -> Result<KeptRecord, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -280,6 +281,39 @@ pub fn save_kept_record_cmd(
         created_at: Utc::now().to_rfc3339(),
     };
     create_kept_record(&conn, &entry).map_err(|e| e.to_string())?;
+
+    // Stance refresh trigger — same logic as commit_auto_canon_cmd:
+    // canonization is the moment that earned this re-synthesis.
+    let mut character_id_to_refresh: Option<String> = None;
+    if entry.subject_type == "character" {
+        character_id_to_refresh = Some(entry.subject_id.clone());
+    } else if entry.subject_type == "user" {
+        if let Some(mid) = entry.source_message_id.as_deref() {
+            if let Some((m, _)) = find_message(&conn, mid) {
+                let cid: Option<String> = conn.query_row(
+                    "SELECT character_id FROM threads WHERE thread_id = ?1",
+                    params![m.thread_id],
+                    |r| r.get(0),
+                ).ok().flatten();
+                character_id_to_refresh = cid;
+            }
+        }
+    }
+    if let Some(cid) = character_id_to_refresh {
+        if !api_key.trim().is_empty() {
+            let model_config = orchestrator::load_model_config(&conn);
+            drop(conn);
+            crate::ai::relational_stance::spawn_stance_refresh(
+                db.conn.clone(),
+                model_config.chat_api_base(),
+                api_key.clone(),
+                model_config.memory_model.clone(),
+                cid,
+                "canonization".to_string(),
+            );
+        }
+    }
+
     Ok(entry)
 }
 
@@ -425,6 +459,7 @@ pub struct AppliedCanonUpdate {
 #[tauri::command]
 pub fn commit_auto_canon_cmd(
     db: State<Database>,
+    api_key: String,
     request: CommitAutoCanonRequest,
 ) -> Result<Vec<AppliedCanonUpdate>, String> {
     if request.updates.is_empty() {
@@ -549,6 +584,48 @@ pub fn commit_auto_canon_cmd(
             prior_content: prior_for_report,
             justification: u.justification.clone(),
         });
+    }
+
+    // ─── Relational stance refresh trigger ────────────────────────────
+    // Canonization is a load-bearing moment by definition (the user just
+    // anchored something into the world's permanent record). Refresh the
+    // stance for every character whose record was touched, plus the
+    // character whose conversation produced the moment for any
+    // user-subject canonizations. Fire-and-forget — never block the
+    // commit response on synthesis.
+    let mut character_ids_to_refresh: std::collections::HashSet<String> = Default::default();
+    for u in &applied {
+        if u.subject_type == "character" {
+            character_ids_to_refresh.insert(u.subject_id.clone());
+        }
+    }
+    if applied.iter().any(|u| u.subject_type == "user") {
+        if let Some((m, _)) = find_message(&conn, &request.source_message_id) {
+            let cid: Option<String> = conn.query_row(
+                "SELECT character_id FROM threads WHERE thread_id = ?1",
+                params![m.thread_id],
+                |r| r.get(0),
+            ).ok().flatten();
+            if let Some(c) = cid {
+                character_ids_to_refresh.insert(c);
+            }
+        }
+    }
+    if !character_ids_to_refresh.is_empty() && !api_key.trim().is_empty() {
+        let model_config = orchestrator::load_model_config(&conn);
+        // Drop the conn lock before spawning so the spawned tasks can
+        // re-acquire it without contending with the canonization handler.
+        drop(conn);
+        for cid in character_ids_to_refresh {
+            crate::ai::relational_stance::spawn_stance_refresh(
+                db.conn.clone(),
+                model_config.chat_api_base(),
+                api_key.clone(),
+                model_config.memory_model.clone(),
+                cid,
+                "canonization".to_string(),
+            );
+        }
     }
 
     Ok(applied)

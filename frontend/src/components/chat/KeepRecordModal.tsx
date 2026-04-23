@@ -111,7 +111,7 @@ export function KeepRecordModal({
     setPhase("committing");
     setError(null);
     try {
-      const got = await api.commitAutoCanon({
+      const got = await api.commitAutoCanon(apiKey, {
         sourceMessageId: sourceMessage.message_id,
         updates: cleaned,
         userNote: userNote.trim() || undefined,

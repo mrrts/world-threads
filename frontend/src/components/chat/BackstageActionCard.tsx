@@ -143,7 +143,7 @@ export function BackstageActionCard({ block, ctx }: Props) {
       setState("applying");
       setError(null);
       try {
-        await api.saveKeptRecord({
+        await api.saveKeptRecord(ctx.apiKey ?? "", {
           subjectType: block.subject_type,
           subjectId: block.subject_id,
           recordType: block.record_type || "description_weave",

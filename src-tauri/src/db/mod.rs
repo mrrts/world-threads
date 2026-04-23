@@ -4,10 +4,14 @@ pub mod queries;
 use rusqlite::ffi::sqlite3_auto_extension;
 use rusqlite::Connection;
 use std::path::Path;
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 
 pub struct Database {
-    pub conn: Mutex<Connection>,
+    /// Wrapped in Arc so background tasks (e.g. relational_stance
+    /// refresh) can clone the inner handle and run after the
+    /// originating Tauri command has returned, without us having to
+    /// reopen the SQLite file.
+    pub conn: Arc<Mutex<Connection>>,
 }
 
 impl Database {
@@ -28,7 +32,7 @@ impl Database {
         conn.pragma_update(None, "foreign_keys", "ON")?;
 
         schema::run_migrations(&conn)?;
-        Ok(Database { conn: Mutex::new(conn) })
+        Ok(Database { conn: Arc::new(Mutex::new(conn)) })
     }
 
     /// Create a rolling backup of the database. Keeps the 5 most recent backups.

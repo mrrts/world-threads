@@ -18,6 +18,7 @@ mod meanwhile;
 mod daily_reading;
 mod imagined_chapters;
 mod quest;
+mod relational_stance;
 
 pub use world::*;
 pub use user_profile::*;
@@ -39,3 +40,4 @@ pub use meanwhile::*;
 pub use daily_reading::*;
 pub use imagined_chapters::*;
 pub use quest::*;
+pub use relational_stance::*;

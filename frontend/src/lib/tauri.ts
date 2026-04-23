@@ -766,14 +766,14 @@ export const api = {
   // Canon (Promote to Canon flow)
   proposeKeptWeave: (apiKey: string, request: { sourceMessageId: string; subjectType: string; subjectId: string }) =>
     invoke<{ current_description: string; proposed_description: string }>("propose_kept_weave_cmd", { apiKey, request }),
-  saveKeptRecord: (request: {
+  saveKeptRecord: (apiKey: string, request: {
     sourceMessageId?: string | null;
     subjectType: string;
     subjectId: string;
     recordType: string;
     content: string;
     userNote?: string;
-  }) => invoke<KeptRecord>("save_kept_record_cmd", { request }),
+  }) => invoke<KeptRecord>("save_kept_record_cmd", { apiKey, request }),
   /// Auto-canon propose: classify a moment into 1-2 proposed updates
   /// (description_weave / voice_rule / boundary / known_fact / open_loop)
   /// without applying anything. The returned proposals carry a kind,
@@ -782,8 +782,8 @@ export const api = {
   /// commit.
   proposeAutoCanon: (apiKey: string, request: { sourceMessageId: string; act: "light" | "heavy"; userHint?: string }) =>
     invoke<ProposedCanonUpdate[]>("propose_auto_canon_cmd", { apiKey, request }),
-  commitAutoCanon: (request: { sourceMessageId: string; updates: ProposedCanonUpdate[]; userNote?: string }) =>
-    invoke<AppliedCanonUpdate[]>("commit_auto_canon_cmd", { request }),
+  commitAutoCanon: (apiKey: string, request: { sourceMessageId: string; updates: ProposedCanonUpdate[]; userNote?: string }) =>
+    invoke<AppliedCanonUpdate[]>("commit_auto_canon_cmd", { apiKey, request }),
   listKeptMessageIds: (threadId: string) =>
     invoke<string[]>("list_kept_message_ids_cmd", { threadId }),
   listKeptForMessage: (messageId: string) =>

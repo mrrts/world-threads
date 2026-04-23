@@ -976,6 +976,28 @@ pub async fn send_group_message_cmd(
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
             list_active_quests(&conn, &world.world_id).unwrap_or_default()
         };
+        let latest_stance = {
+            let conn = db.conn.lock().map_err(|e| e.to_string())?;
+            latest_relational_stance(&conn, &character.character_id).unwrap_or(None)
+        };
+        let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
+        let current_world_day_for_stance: Option<i64> = dialogue_msgs.iter().rev()
+            .find_map(|m| m.world_day);
+        let stance_needs_refresh = match (latest_stance.as_ref(), current_world_day_for_stance) {
+            (None, _) => true,
+            (Some(s), Some(today)) => s.world_day_at_generation.map(|d| today > d).unwrap_or(true),
+            (Some(_), None) => false,
+        };
+        if stance_needs_refresh {
+            crate::ai::relational_stance::spawn_stance_refresh(
+                db.conn.clone(),
+                model_config.chat_api_base(),
+                api_key.clone(),
+                model_config.memory_model.clone(),
+                character.character_id.clone(),
+                "first_message_new_day".to_string(),
+            );
+        }
         let (raw_reply, usage) = orchestrator::run_dialogue_with_base(
             &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
             if !model_config.is_local() { Some(&model_config.memory_model) } else { None },
@@ -998,6 +1020,7 @@ pub async fn send_group_message_cmd(
             latest_reading.as_ref(),
             latest_meanwhile.as_ref(),
             active_quests.as_slice(),
+            stance_text.as_deref(),
         ).await?;
 
         // Strip own prefix and truncate any other-character dialogue
@@ -1056,6 +1079,7 @@ pub async fn send_group_message_cmd(
                                 latest_reading.as_ref(),
                                 latest_meanwhile.as_ref(),
                                 active_quests.as_slice(),
+                                stance_text.as_deref(),
                             ).await {
                                 Ok((corrected_raw, corrected_usage)) => {
                                     log::info!("[Conscience] {} (group) reply corrected after drift", character.display_name);
@@ -1319,6 +1343,28 @@ pub async fn prompt_group_character_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         list_active_quests(&conn, &world.world_id).unwrap_or_default()
     };
+    let latest_stance = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        latest_relational_stance(&conn, &character.character_id).unwrap_or(None)
+    };
+    let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
+    let current_world_day_for_stance: Option<i64> = dialogue_msgs.iter().rev()
+        .find_map(|m| m.world_day);
+    let stance_needs_refresh = match (latest_stance.as_ref(), current_world_day_for_stance) {
+        (None, _) => true,
+        (Some(s), Some(today)) => s.world_day_at_generation.map(|d| today > d).unwrap_or(true),
+        (Some(_), None) => false,
+    };
+    if stance_needs_refresh {
+        crate::ai::relational_stance::spawn_stance_refresh(
+            db.conn.clone(),
+            base.clone(),
+            api_key.clone(),
+            model_config.memory_model.clone(),
+            character.character_id.clone(),
+            "first_message_new_day".to_string(),
+        );
+    }
     let dialogue_fut = orchestrator::run_dialogue_with_base(
         &base, &api_key, &model_config.dialogue_model,
         if !model_config.is_local() { Some(&model_config.memory_model) } else { None },
@@ -1341,6 +1387,7 @@ pub async fn prompt_group_character_cmd(
         latest_reading.as_ref(),
         latest_meanwhile.as_ref(),
         active_quests.as_slice(),
+        stance_text.as_deref(),
     );
     let reaction_fut = orchestrator::pick_character_reaction_via_llm(
         &base, &api_key, &model_config.dialogue_model,
@@ -1398,6 +1445,7 @@ pub async fn prompt_group_character_cmd(
                             latest_reading.as_ref(),
                             latest_meanwhile.as_ref(),
                             active_quests.as_slice(),
+                            stance_text.as_deref(),
                         ).await {
                             Ok((corrected_raw, corrected_usage)) => {
                                 log::info!("[Conscience] {} (group-prompt) reply corrected after drift", character.display_name);

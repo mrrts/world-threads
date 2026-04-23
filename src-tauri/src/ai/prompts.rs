@@ -1868,11 +1868,12 @@ pub fn build_dialogue_system_prompt(
     own_voice_samples: &[String],
     latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
     active_quests: &[crate::db::queries::Quest],
+    relational_stance: Option<&str>,
 ) -> String {
     if group_context.is_some() {
-        build_group_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context.unwrap(), tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples, latest_meanwhile, active_quests)
+        build_group_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context.unwrap(), tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples, latest_meanwhile, active_quests, relational_stance)
     } else {
-        build_solo_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples, latest_meanwhile, active_quests)
+        build_solo_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples, latest_meanwhile, active_quests, relational_stance)
     }
 }
 
@@ -1894,6 +1895,7 @@ pub fn build_proactive_ping_system_prompt(
     own_voice_samples: &[String],
     latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
     active_quests: &[crate::db::queries::Quest],
+    relational_stance: Option<&str>,
 ) -> String {
     let base = build_solo_dialogue_system_prompt(
         world,
@@ -1910,6 +1912,7 @@ pub fn build_proactive_ping_system_prompt(
         own_voice_samples,
         latest_meanwhile,
         active_quests,
+        relational_stance,
     );
     format!("{base}\n\n{}", proactive_ping_block())
 }
@@ -1951,6 +1954,7 @@ fn build_solo_dialogue_system_prompt(
     own_voice_samples: &[String],
     latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
     active_quests: &[crate::db::queries::Quest],
+    relational_stance: Option<&str>,
 ) -> String {
     let mut parts = Vec::new();
 
@@ -2011,6 +2015,16 @@ fn build_solo_dialogue_system_prompt(
     // days and keep threads alive without the user having to restate.
     {
         let block = render_recent_journals_block(recent_journals);
+        if !block.is_empty() { parts.push(block); }
+    }
+
+    // Private accumulated read of the user — synthesized out-of-band
+    // by the relational_stance pipeline. Sits right after journals as
+    // the most-distilled "where I am with this person right now" — the
+    // settled residue of everything they've already been carrying.
+    // Never surfaced to the player; injected here as ambient awareness.
+    {
+        let block = render_relational_stance_block(relational_stance);
         if !block.is_empty() { parts.push(block); }
     }
 
@@ -2196,6 +2210,7 @@ fn build_group_dialogue_system_prompt(
     own_voice_samples: &[String],
     latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
     active_quests: &[crate::db::queries::Quest],
+    relational_stance: Option<&str>,
 ) -> String {
     let mut parts = Vec::new();
     parts.push(FUNDAMENTAL_SYSTEM_PREAMBLE.to_string());
@@ -2298,6 +2313,14 @@ fn build_group_dialogue_system_prompt(
     // days even in group register.
     {
         let block = render_recent_journals_block(recent_journals);
+        if !block.is_empty() { parts.push(block); }
+    }
+
+    // Private accumulated read of the user — same injection as solo
+    // path. Even in a group thread, each speaker carries their own
+    // settled sense of the human in the room with them.
+    {
+        let block = render_relational_stance_block(relational_stance);
         if !block.is_empty() { parts.push(block); }
     }
 
@@ -2883,6 +2906,28 @@ pub fn render_recent_journals_block(
     format!(
         "RECENT PAGES FROM YOUR JOURNAL (what's been sitting with you — your own private voice to yourself; read for continuity, not to recap. These are yours to quietly carry into this moment, not to reference out loud unless the user brings it up first. NOTE: the journal often refers to the person you talk to BY NAME — that name is the human you are talking to RIGHT NOW in this chat. Do not re-quote those passages out loud as if that person were a third party; you are talking to them now, address them as you):\n\n{}",
         body.join("\n\n"),
+    )
+}
+
+/// Render the character's private accumulated read of the user — the
+/// relational_stance, generated out-of-band by an LLM synthesis pass
+/// over kept_records + journals + recent exchanges. NEVER surfaced to
+/// the player; injected here as ambient awareness so the character is
+/// measurably more attuned to who the user has become *to them* over
+/// time, without exposing a meter or a stat. Returns empty string when
+/// no stance has been generated yet so the caller can skip without
+/// branching.
+///
+/// The framing is deliberately non-analytical — "your settled sense"
+/// rather than "facts about them" — and explicitly forbids quoting the
+/// stance out loud. Same cadence as the journal block: this is private
+/// material, carried into the moment, not recited from.
+pub fn render_relational_stance_block(stance_text: Option<&str>) -> String {
+    let Some(text) = stance_text else { return String::new(); };
+    let trimmed = text.trim();
+    if trimmed.is_empty() { return String::new(); }
+    format!(
+        "YOUR PRIVATE READ OF THE PERSON YOU'RE TALKING TO RIGHT NOW (your accumulated sense of them, in your own voice — what you've earned with them, what register feels right, what touches you, what you're guarded about. NOT for analysis, NOT for quoting, NOT for reciting back. Background warmth that lets you show up as someone who has actually been paying attention to who they are. Read it once, then let it shape how you reach for them):\n\n{trimmed}"
     )
 }
 
