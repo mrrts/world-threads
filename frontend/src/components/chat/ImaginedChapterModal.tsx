@@ -428,10 +428,18 @@ export function ImaginedChapterModal({
                   </div>
                 ) : (
                   chapters.map((c) => (
-                    <button
+                    <div
                       key={c.chapter_id}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => handleSelectChapter(c)}
-                      className={`w-full text-left px-2 py-1.5 rounded-md text-xs transition-colors group/item ${
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleSelectChapter(c);
+                        }
+                      }}
+                      className={`w-full text-left px-2 py-1.5 rounded-md text-xs transition-colors group/item cursor-pointer ${
                         activeChapterId === c.chapter_id
                           ? "bg-primary/15 text-foreground"
                           : "hover:bg-accent text-muted-foreground hover:text-foreground"
@@ -453,7 +461,7 @@ export function ImaginedChapterModal({
                           <span className="text-emerald-700/70 dark:text-emerald-400/70" title="Canonized">●</span>
                         )}
                       </div>
-                    </button>
+                    </div>
                   ))
                 )}
               </div>

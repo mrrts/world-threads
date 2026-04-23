@@ -29,11 +29,14 @@ export function MeanwhileCard({ event, portraitUrl }: Props) {
             className="absolute inset-y-0 left-0 w-[260px] bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${portraitUrl})`,
+              // CSS mask: keep the portrait fully opaque across most of the
+              // band so the face reads cleanly, only fading in the last
+              // sliver near the right edge where the band meets the text.
               maskImage:
-                "linear-gradient(to right, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0) 95%)",
+                "linear-gradient(to right, black 0%, black 75%, transparent 100%)",
               WebkitMaskImage:
-                "linear-gradient(to right, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0) 95%)",
-              opacity: 0.6,
+                "linear-gradient(to right, black 0%, black 75%, transparent 100%)",
+              opacity: 0.7,
             }}
             aria-hidden
           />

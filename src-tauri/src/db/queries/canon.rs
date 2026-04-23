@@ -32,12 +32,27 @@ pub fn create_kept_record(conn: &Connection, e: &KeptRecord) -> Result<(), rusql
 
 /// Fetch the distinct message IDs in a thread that have been canonized at
 /// least once. Drives the per-message "this moment is canon" indicator.
+///
+/// Resolves membership in the thread by joining against the actual
+/// messages / group_messages tables rather than trusting
+/// kept_records.source_thread_id. The denormalized source_thread_id
+/// column is populated at write-time and was occasionally getting left
+/// NULL when find_message couldn't resolve the source — which silently
+/// hid the highlight on freshly-canonized messages. Joining directly
+/// fixes this regardless of the denormalized column's state.
 pub fn list_kept_message_ids_for_thread(
     conn: &Connection,
     thread_id: &str,
 ) -> Result<Vec<String>, rusqlite::Error> {
     let mut stmt = conn.prepare(
-        "SELECT DISTINCT source_message_id FROM kept_records WHERE source_thread_id = ?1 AND source_message_id IS NOT NULL"
+        "SELECT DISTINCT kr.source_message_id
+         FROM kept_records kr
+         WHERE kr.source_message_id IS NOT NULL
+           AND (
+             EXISTS (SELECT 1 FROM messages       m  WHERE m.message_id  = kr.source_message_id AND m.thread_id  = ?1)
+             OR
+             EXISTS (SELECT 1 FROM group_messages gm WHERE gm.message_id = kr.source_message_id AND gm.thread_id = ?1)
+           )"
     )?;
     let rows = stmt.query_map(params![thread_id], |r| r.get::<_, String>(0))?;
     rows.collect()

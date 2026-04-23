@@ -236,12 +236,19 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
           : "Scene from older history (not loaded)"
       }
       className={`${base} ${visState}`}
-      style={{ width: 264 }}
+      // Width grows fluidly with viewport instead of staying pinned at
+      // 264px. Lower bound keeps it usable on the narrowest xl screens
+      // (the `xl:block` gate already hides it below ~1280px); upper
+      // bound prevents it from dominating very wide displays. The
+      // image inside scales by aspect ratio so height tracks naturally.
+      // max-height clamps the visual against tall, narrow windows so a
+      // portrait-AR illustration doesn't overflow the viewport.
+      style={{ width: "clamp(340px, 30vw, 620px)", maxHeight: "72vh" }}
     >
       <img
         src={activeIllus.content}
         alt="Illustration for the moment you're reading"
-        className="block w-full h-auto"
+        className="block w-full h-auto max-h-[72vh] object-contain"
         style={ar ? { aspectRatio: String(ar) } : undefined}
         draggable={false}
       />

@@ -602,12 +602,37 @@ pub fn get_imagined_chapter_cmd(
     get_imagined_chapter(&conn, &chapter_id).map_err(|e| e.to_string())
 }
 
+/// Delete a chapter and cascade to every artifact it owns:
+///   • the breadcrumb message row in messages/group_messages (if canonized)
+///   • the world_images row for the chapter illustration
+///   • the image file on disk
+///   • finally the imagined_chapters row itself
+/// Pre-canon chapters skip the breadcrumb step (they never had one).
 #[tauri::command]
 pub fn delete_imagined_chapter_cmd(
     db: State<Database>,
+    portraits_dir: State<'_, PortraitsDir>,
     chapter_id: String,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let chapter = get_imagined_chapter(&conn, &chapter_id).map_err(|e| e.to_string())?;
+
+    if let Some(bc_id) = chapter.breadcrumb_message_id.as_deref() {
+        let _ = conn.execute("DELETE FROM messages WHERE message_id = ?1", params![bc_id]);
+        let _ = conn.execute("DELETE FROM group_messages WHERE message_id = ?1", params![bc_id]);
+    }
+
+    if let Some(img_id) = chapter.image_id.as_deref() {
+        let file_name: Option<String> = conn.query_row(
+            "SELECT file_name FROM world_images WHERE image_id = ?1",
+            params![img_id], |r| r.get::<_, String>(0),
+        ).ok();
+        if let Some(file_name) = file_name {
+            let _ = std::fs::remove_file(portraits_dir.0.join(&file_name));
+        }
+        let _ = conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![img_id]);
+    }
+
     delete_imagined_chapter(&conn, &chapter_id).map_err(|e| e.to_string())
 }
 
