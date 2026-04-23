@@ -196,6 +196,16 @@ enum Cmd {
         action: EvalRunAction,
     },
 
+    /// Browse the structured synthesize run log at
+    /// `~/.worldcli/synthesize-runs/*.json`. Every `worldcli synthesize`
+    /// invocation writes its full envelope (bundled messages + question +
+    /// prose synthesis) here automatically so Mode B findings accumulate
+    /// as queryable substrate alongside Mode A evaluate runs.
+    SynthesizeRuns {
+        #[command(subcommand)]
+        action: SynthRunAction,
+    },
+
     /// List, show, or search rubrics in the library
     /// (`reports/rubrics/*.md`). Rubrics are versioned markdown
     /// files whose `# Rubric` section is the exact evaluator
@@ -279,6 +289,72 @@ enum Cmd {
         #[arg(long)]
         model: Option<String>,
         /// Required when projected total cost exceeds the per-call cap.
+        #[arg(long)]
+        confirm_cost: Option<f64>,
+        /// Git repo path for ref resolution.
+        #[arg(long)]
+        repo: Option<PathBuf>,
+    },
+
+    /// Qualitative synthesis of a message corpus — Mode B (open-ended
+    /// LLM feedback) as a first-class command. Bundles N messages
+    /// (before + after windows around a git ref) into ONE call to the
+    /// dialogue_model, asks an open-ended question, returns prose.
+    /// Complements `evaluate` (Mode A — per-message structured
+    /// yes/no/mixed verdicts) for questions whose shape is "read all
+    /// these replies together and tell me what's happening in them"
+    /// rather than "does each reply pass this specific test?". The
+    /// 1326 John-stillness report is the worked example of when Mode B
+    /// is the right instrument — the rubric's gates correctly excluded
+    /// the actual register-move, so counts couldn't find it.
+    Synthesize {
+        /// Git ref marking the boundary commit. By default both the
+        /// before-window (messages before the ref's timestamp) and
+        /// the after-window (messages at/after) are bundled into the
+        /// synthesis call — so the question can address change, not
+        /// just current state. Pass --end-ref to use a different
+        /// cutoff for the after-window (A..B series).
+        #[arg(long = "ref")]
+        git_ref: String,
+        /// Optional second ref. After-window starts here instead of
+        /// at `--ref` (same semantics as `evaluate --end-ref`).
+        #[arg(long)]
+        end_ref: Option<String>,
+        /// Messages per window. Default 20 — higher than `evaluate`
+        /// because synthesis is one call, not N calls, so per-message
+        /// cost is bundled-in rather than linear.
+        #[arg(long, default_value_t = 20)]
+        limit: i64,
+        /// Restrict to one character's solo thread + group chats.
+        /// Mutually exclusive with --group-chat; exactly one required.
+        #[arg(long)]
+        character: Option<String>,
+        /// Synthesize from one group-chat thread's assistant replies.
+        #[arg(long)]
+        group_chat: Option<String>,
+        /// The open-ended question to answer about the corpus. Plain
+        /// English. Name specifically what you want the synthesizer
+        /// to look for — patterns, register choices, things NOT
+        /// present. Vague questions return vague prose.
+        #[arg(long)]
+        question: Option<String>,
+        /// Alternative: read question from a file (useful for multi-
+        /// paragraph prompts with worked examples of what to look for).
+        #[arg(long)]
+        question_file: Option<PathBuf>,
+        /// Role filter for messages-to-synthesize. Default 'assistant'.
+        #[arg(long, default_value = "assistant")]
+        role: String,
+        /// Preceding turns of chat-history per target, included so
+        /// the synthesizer can read each reply in scene. Default 3.
+        #[arg(long, default_value_t = 3)]
+        context_turns: i64,
+        /// Override the synthesizer model. Default: dialogue_model —
+        /// the user's more capable model. Synthesis is qualitative
+        /// prose; the extra capability over memory_model matters.
+        #[arg(long)]
+        model: Option<String>,
+        /// Required when projected cost exceeds the per-call cap.
         #[arg(long)]
         confirm_cost: Option<f64>,
         /// Git repo path for ref resolution.
@@ -416,6 +492,19 @@ enum EvalRunAction {
     /// Show the full envelope of one run by id (or unique short prefix).
     Show { id: String },
     /// Search run envelopes for a substring across rubric / scope / ref / reasoning.
+    Search { query: String },
+}
+
+#[derive(Subcommand)]
+enum SynthRunAction {
+    /// List recent synthesize runs (newest first).
+    List {
+        #[arg(long, default_value_t = 20)]
+        limit: usize,
+    },
+    /// Show the full envelope of one run by id (or unique short prefix).
+    Show { id: String },
+    /// Search run envelopes for a substring across question / scope / ref / synthesis.
     Search { query: String },
 }
 
@@ -854,6 +943,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         Cmd::Rubric { action } => cmd_rubric(&r, action),
         Cmd::EvaluateRuns { action } => cmd_evaluate_runs(&r, action),
+        Cmd::SynthesizeRuns { action } => cmd_synthesize_runs(&r, action),
         Cmd::Evaluate { git_ref, end_ref, limit, character, group_chat, rubric, rubric_file, rubric_ref, role, context_turns, model, confirm_cost, repo } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
@@ -862,6 +952,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )),
             };
             cmd_evaluate(&r, &api_key, &git_ref, end_ref.as_deref(), limit, character.as_deref(), group_chat.as_deref(), rubric.as_deref(), rubric_file.as_deref(), rubric_ref.as_deref(), &role, context_turns, model.as_deref(), confirm_cost, repo.as_deref()).await
+        }
+        Cmd::Synthesize { git_ref, end_ref, limit, character, group_chat, question, question_file, role, context_turns, model, confirm_cost, repo } => {
+            let api_key = match resolve_api_key(cli.api_key.as_deref()) {
+                Some(k) => k,
+                None => return Err(Box::<dyn std::error::Error>::from(
+                    "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
+                )),
+            };
+            cmd_synthesize(&r, &api_key, &git_ref, end_ref.as_deref(), limit, character.as_deref(), group_chat.as_deref(), question.as_deref(), question_file.as_deref(), &role, context_turns, model.as_deref(), confirm_cost, repo.as_deref()).await
         }
         Cmd::Consult { character_id, message, mode, session, model, confirm_cost, question_summary } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
@@ -1518,6 +1617,116 @@ fn cmd_evaluate_runs(r: &Resolved, action: EvalRunAction) -> Result<(), Box<dyn 
         EvalRunAction::Search { query } => {
             let q = query.to_lowercase();
             let entries = read_evaluate_runs_manifest();
+            let hits: Vec<JsonValue> = entries.into_iter()
+                .filter(|e| e.to_string().to_lowercase().contains(&q))
+                .collect();
+            emit(r.json, JsonValue::Array(hits));
+        }
+    }
+    Ok(())
+}
+
+// ─── Synthesize run log (~/.worldcli/synthesize-runs/) ─────────────────
+
+fn synthesize_runs_dir() -> PathBuf { worldcli_home().join("synthesize-runs") }
+fn synthesize_runs_manifest() -> PathBuf { synthesize_runs_dir().join("manifest.jsonl") }
+
+/// Persist the full synthesize envelope + append a compact manifest
+/// line for fast list/search. Mirrors write_evaluate_run so the two
+/// Mode-A/Mode-B run logs look and query the same way.
+fn write_synthesize_run(run_id: &str, envelope: &JsonValue) {
+    let dir = synthesize_runs_dir();
+    let _ = std::fs::create_dir_all(&dir);
+    let per_path = dir.join(format!("{}.json", run_id));
+    if let Ok(s) = serde_json::to_string_pretty(envelope) {
+        let _ = std::fs::write(&per_path, s);
+    }
+    let manifest_entry = json!({
+        "run_id": envelope.get("run_id"),
+        "run_timestamp": envelope.get("run_timestamp"),
+        "ref": envelope.get("ref"),
+        "ref_resolved": envelope.get("ref_resolved"),
+        "ref_subject": envelope.get("ref_subject"),
+        "character_id": envelope.get("character_id"),
+        "group_chat_id": envelope.get("group_chat_id"),
+        "scope_label": envelope.get("scope_label"),
+        "question_preview": envelope.get("question").and_then(|v| v.as_str())
+            .map(|s| s.chars().take(140).collect::<String>()),
+        "synthesis_preview": envelope.get("synthesis").and_then(|v| v.as_str())
+            .map(|s| s.chars().take(200).collect::<String>()),
+        "before_count": envelope.get("before").and_then(|b| b.get("count")),
+        "after_count": envelope.get("after").and_then(|a| a.get("count")),
+        "cost_usd": envelope.get("cost").and_then(|c| c.get("actual_usd")),
+        "model": envelope.get("model"),
+    });
+    let line = serde_json::to_string(&manifest_entry).unwrap_or_default();
+    if let Ok(mut f) = std::fs::OpenOptions::new()
+        .create(true).append(true).open(synthesize_runs_manifest())
+    {
+        use std::io::Write;
+        let _ = writeln!(f, "{}", line);
+    }
+}
+
+fn read_synthesize_runs_manifest() -> Vec<JsonValue> {
+    let Ok(content) = std::fs::read_to_string(synthesize_runs_manifest()) else { return Vec::new(); };
+    content.lines()
+        .filter_map(|l| serde_json::from_str(l).ok())
+        .collect()
+}
+
+fn cmd_synthesize_runs(r: &Resolved, action: SynthRunAction) -> Result<(), Box<dyn std::error::Error>> {
+    match action {
+        SynthRunAction::List { limit } => {
+            let mut entries = read_synthesize_runs_manifest();
+            entries.reverse();
+            entries.truncate(limit);
+            if r.json {
+                emit(true, JsonValue::Array(entries));
+            } else {
+                if entries.is_empty() {
+                    println!("No synthesize runs recorded yet. Run `worldcli synthesize ...` first.");
+                    return Ok(());
+                }
+                for e in &entries {
+                    let ts = e.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("")[..19.min(e.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("").len())].to_string();
+                    let id = e.get("run_id").and_then(|v| v.as_str()).unwrap_or("");
+                    let id_short = &id[..8.min(id.len())];
+                    let scope = e.get("scope_label").and_then(|v| v.as_str()).unwrap_or("?");
+                    let q_preview = e.get("question_preview").and_then(|v| v.as_str()).unwrap_or("");
+                    let b = e.get("before_count").and_then(|v| v.as_i64()).unwrap_or(0);
+                    let a = e.get("after_count").and_then(|v| v.as_i64()).unwrap_or(0);
+                    let cost = e.get("cost_usd").and_then(|v| v.as_f64()).unwrap_or(0.0);
+                    println!("{id_short}  [{ts}]  {scope}  B:{b} A:{a}  ${:.4}  — {}",
+                        cost, q_preview);
+                }
+            }
+        }
+        SynthRunAction::Show { id } => {
+            let dir = synthesize_runs_dir();
+            let exact = dir.join(format!("{}.json", id));
+            if exact.exists() {
+                let s = std::fs::read_to_string(&exact)?;
+                let v: JsonValue = serde_json::from_str(&s).unwrap_or(JsonValue::String(s));
+                emit(r.json, v);
+                return Ok(());
+            }
+            if let Ok(entries) = std::fs::read_dir(&dir) {
+                for entry in entries.flatten() {
+                    let fname = entry.file_name().to_string_lossy().to_string();
+                    if fname.starts_with(&id) && fname.ends_with(".json") {
+                        let s = std::fs::read_to_string(entry.path())?;
+                        let v: JsonValue = serde_json::from_str(&s).unwrap_or(JsonValue::String(s));
+                        emit(r.json, v);
+                        return Ok(());
+                    }
+                }
+            }
+            return Err(Box::new(CliError::NotFound(format!("synthesize run starting with '{}'", id))));
+        }
+        SynthRunAction::Search { query } => {
+            let q = query.to_lowercase();
+            let entries = read_synthesize_runs_manifest();
             let hits: Vec<JsonValue> = entries.into_iter()
                 .filter(|e| e.to_string().to_lowercase().contains(&q))
                 .collect();
@@ -2287,6 +2496,329 @@ async fn cmd_evaluate(
         println!();
         eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok)",
             actual_usd, total_in_tokens, total_out_tokens);
+    }
+    Ok(())
+}
+
+// ─── Synthesize (Mode B — qualitative synthesis, single call, prose) ────
+
+fn synthesizer_system_prompt() -> &'static str {
+    r#"You are a qualitative analyst of character-reply corpora for a text-based roleplay / worldbuilding project. You will receive:
+
+  1. A QUESTION — an open-ended question about the corpus.
+  2. A CORPUS — a bundle of character replies, each marked with its window (BEFORE or AFTER a git-commit cutoff), timestamp, scene context (the preceding user/character turns), and the active chat-settings state at the time the reply was generated.
+
+Read the corpus carefully. Answer the question as thoughtfully and specifically as you can. When you make a claim, ground it with a brief quote (≤ 15 words) from the reply that supports it. Name patterns. Name surprises. Name what's NOT present that you'd expect to be. Be honest about ambiguity — if the corpus can't support a claim, say so.
+
+If the question asks about change between BEFORE and AFTER windows, compare the two directly; if it asks about current state, focus on the AFTER window. If the chat-settings stamp on a reply is a likely confound (e.g. response_length=Short explaining brevity), name it.
+
+Your output is prose. No JSON, no required headings. Structure so the reader can track which pattern you're naming and where in the corpus it shows up. Quote exactly when you make a claim."#
+}
+
+fn build_synthesize_user_prompt(
+    question: &str,
+    before_pairs: &[(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)],
+    after_pairs: &[(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)],
+) -> String {
+    let mut out = String::new();
+    out.push_str("QUESTION:\n");
+    out.push_str(question.trim());
+    out.push_str("\n\nCORPUS:\n");
+
+    let render_window = |out: &mut String, name: &str, pairs: &[(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)]| {
+        if pairs.is_empty() {
+            out.push_str(&format!("\n─── {} window: (empty) ───\n", name));
+            return;
+        }
+        out.push_str(&format!("\n─── {} window ({} msgs) ───\n", name, pairs.len()));
+        for (i, (m, context, settings)) in pairs.iter().enumerate() {
+            out.push_str(&format!("\n[{} #{}]  {}", name, i + 1, m.created_at));
+            if !settings.is_empty() {
+                let mut keys: Vec<&String> = settings.keys().collect();
+                keys.sort();
+                let parts: Vec<String> = keys.iter()
+                    .filter(|k| ["response_length", "leader", "narration_tone", "send_history"].contains(&k.as_str()))
+                    .filter_map(|k| settings.get(k.as_str()).map(|v| format!("{}={}", k, v)))
+                    .collect();
+                if !parts.is_empty() {
+                    out.push_str(&format!("  [settings: {}]", parts.join(", ")));
+                }
+            }
+            out.push('\n');
+            if context.is_empty() {
+                out.push_str("  SCENE: (no preceding context)\n");
+            } else {
+                out.push_str("  SCENE (preceding turns):\n");
+                for cm in context {
+                    let label = match cm.role.as_str() {
+                        "user" => "User",
+                        "assistant" => "Character",
+                        "narrative" => "[Narrative]",
+                        other => other,
+                    };
+                    out.push_str(&format!("    {}: {}\n", label, cm.content.trim()));
+                }
+            }
+            out.push_str("  REPLY (this is the character's turn):\n");
+            for line in m.content.trim().lines() {
+                out.push_str(&format!("    {}\n", line));
+            }
+        }
+    };
+
+    render_window(&mut out, "BEFORE", before_pairs);
+    render_window(&mut out, "AFTER", after_pairs);
+    out
+}
+
+async fn cmd_synthesize(
+    r: &Resolved,
+    api_key: &str,
+    git_ref: &str,
+    end_ref: Option<&str>,
+    limit: i64,
+    character_id: Option<&str>,
+    group_chat_id: Option<&str>,
+    question: Option<&str>,
+    question_file: Option<&std::path::Path>,
+    role: &str,
+    context_turns: i64,
+    model_override: Option<&str>,
+    confirm_cost: Option<f64>,
+    repo: Option<&std::path::Path>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    // ─── Resolve question source — one of two mutually exclusive paths ──
+    let sources_given = [question.is_some(), question_file.is_some()]
+        .iter().filter(|b| **b).count();
+    if sources_given > 1 {
+        return Err(Box::<dyn std::error::Error>::from(
+            "pass exactly one of --question or --question-file".to_string()));
+    }
+    if sources_given == 0 {
+        return Err(Box::<dyn std::error::Error>::from(
+            "one of --question or --question-file is required".to_string()));
+    }
+    let question_text: String = if let Some(p) = question_file {
+        std::fs::read_to_string(p)
+            .map_err(|e| format!("failed to read --question-file {}: {}", p.display(), e))?
+    } else {
+        question.unwrap().to_string()
+    };
+    if question_text.trim().is_empty() {
+        return Err(Box::<dyn std::error::Error>::from("question is empty".to_string()));
+    }
+
+    // ─── Resolve scope (solo character vs. group chat) ───────────────
+    if character_id.is_some() && group_chat_id.is_some() {
+        return Err(Box::<dyn std::error::Error>::from(
+            "pass either --character or --group-chat, not both".to_string()));
+    }
+    if character_id.is_none() && group_chat_id.is_none() {
+        return Err(Box::<dyn std::error::Error>::from(
+            "one of --character or --group-chat is required".to_string()));
+    }
+    if let Some(cid) = character_id { let _ = r.check_character(cid)?; }
+
+    let (before_sha, before_ts, before_subject) = git_resolve_ref(repo, git_ref)?;
+    let (after_sha, after_ts, after_subject) = match end_ref {
+        Some(er) => git_resolve_ref(repo, er)?,
+        None => (before_sha.clone(), before_ts.clone(), before_subject.clone()),
+    };
+
+    // ─── Pull windows + model config + display label ─────────────────
+    let (model_config, before_pairs, after_pairs, display_label) = {
+        let conn = r.db.conn.lock().unwrap();
+        let mut mc = orchestrator::load_model_config(&conn);
+        // Synthesis defaults to dialogue_model (the user's more
+        // capable model) — qualitative prose benefits from the extra
+        // capability that memory_model typically doesn't have.
+        if let Some(m) = model_override { mc.dialogue_model = m.to_string(); }
+
+        let (scope, display) = if let Some(cid) = character_id {
+            let thread = get_thread_for_character(&conn, cid)?;
+            let ch = get_character(&conn, cid)?;
+            (
+                EvalScope::Character {
+                    character_id: cid.to_string(),
+                    solo_thread_id: thread.thread_id,
+                },
+                format!("{} (solo + groups)", ch.display_name),
+            )
+        } else {
+            let gcid = group_chat_id.unwrap();
+            let gc = get_group_chat(&conn, gcid)
+                .map_err(|e| Box::<dyn std::error::Error>::from(
+                    format!("group_chat {}: {}", gcid, e)))?;
+            r.check_world(&gc.world_id)?;
+            (
+                EvalScope::Group { thread_id: gc.thread_id },
+                format!("{} (group)", gc.display_name),
+            )
+        };
+
+        let before_raw = pull_eval_window(&conn, &scope, &before_ts, "before", role, limit, context_turns)?;
+        let after_raw  = pull_eval_window(&conn, &scope, &after_ts,  "after",  role, limit, context_turns)?;
+        let enrich = |triples: Vec<EvalTriple>| -> Vec<(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)> {
+            triples.into_iter().map(|(m, context, is_group)| {
+                let settings = active_settings_at(&conn, &m.thread_id, &m.created_at, is_group);
+                (m, context, settings)
+            }).collect()
+        };
+        (mc, enrich(before_raw), enrich(after_raw), display)
+    };
+    let character_name = display_label;
+
+    let total_msgs = before_pairs.len() + after_pairs.len();
+    if total_msgs == 0 {
+        return Err(Box::<dyn std::error::Error>::from(
+            "no messages in either window; widen --limit or pick a different ref".to_string()));
+    }
+
+    // ─── Build the single-call prompt ─────────────────────────────────
+    let user_prompt = build_synthesize_user_prompt(&question_text, &before_pairs, &after_pairs);
+    let system_prompt = synthesizer_system_prompt();
+
+    // ─── Cost projection for one call ─────────────────────────────────
+    let in_tokens = estimate_tokens(&user_prompt) + estimate_tokens(system_prompt);
+    let out_budget: i64 = 2000; // Headroom for a substantive synthesis.
+    let projected_usd = project_cost(&model_config.dialogue_model, in_tokens, out_budget, &r.cfg.model_pricing);
+
+    let daily_so_far = rolling_24h_total_usd();
+    let daily_after = daily_so_far + projected_usd;
+    let per_call_cap = r.cfg.budget.per_call_usd;
+    let daily_cap = r.cfg.budget.daily_usd;
+    let confirm = confirm_cost.unwrap_or(0.0);
+    if projected_usd > per_call_cap && confirm < projected_usd {
+        return Err(Box::new(CliError::Budget {
+            kind: "per_call".to_string(),
+            projected_usd,
+            cap_usd: per_call_cap,
+            confirm_at_least: (projected_usd * 1.05).max(0.01),
+        }));
+    }
+    if daily_after > daily_cap && confirm < projected_usd {
+        return Err(Box::new(CliError::Budget {
+            kind: "daily".to_string(),
+            projected_usd: daily_after,
+            cap_usd: daily_cap,
+            confirm_at_least: (projected_usd * 1.05).max(0.01),
+        }));
+    }
+
+    if !r.json {
+        eprintln!("[worldcli] synthesizing {} msgs ({} before / {} after) via {} — projected≈${:.4} ({} in tok est); 24h spent=${:.4}/${:.2}",
+            total_msgs, before_pairs.len(), after_pairs.len(), model_config.dialogue_model,
+            projected_usd, in_tokens, daily_so_far, daily_cap);
+        eprintln!("[worldcli] question: {}", question_text.lines().next().unwrap_or("").chars().take(120).collect::<String>());
+    }
+
+    // ─── Make the single synthesis call ───────────────────────────────
+    let base_url = model_config.chat_api_base();
+    let req = openai::ChatRequest {
+        model: model_config.dialogue_model.clone(),
+        messages: vec![
+            openai::ChatMessage { role: "system".to_string(), content: system_prompt.to_string() },
+            openai::ChatMessage { role: "user".to_string(), content: user_prompt.clone() },
+        ],
+        temperature: Some(0.4),
+        max_completion_tokens: Some(out_budget as u32),
+        response_format: None,
+    };
+    let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await
+        .map_err(|e| format!("synthesize call failed: {}", e))?;
+    let synthesis_text = resp.choices.first()
+        .map(|c| c.message.content.clone())
+        .ok_or_else(|| "synthesizer returned no choices".to_string())?;
+    let usage = resp.usage.unwrap_or(openai::Usage {
+        prompt_tokens: 0, completion_tokens: 0, total_tokens: 0,
+    });
+    let actual_in = usage.prompt_tokens as i64;
+    let actual_out = usage.completion_tokens as i64;
+    let actual_usd = actual_cost(&model_config.dialogue_model, actual_in, actual_out, &r.cfg.model_pricing);
+    append_cost_log(&CostEntry {
+        timestamp: chrono::Utc::now().to_rfc3339(),
+        model: model_config.dialogue_model.clone(),
+        prompt_tokens: actual_in,
+        completion_tokens: actual_out,
+        usd: actual_usd,
+    });
+
+    // ─── Build envelope + persist run log ─────────────────────────────
+    let summarize_window = |pairs: &[(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)]| -> Vec<JsonValue> {
+        pairs.iter().map(|(m, _ctx, settings)| {
+            let mut settings_sorted: Vec<(String, String)> = settings.iter()
+                .map(|(k, v)| (k.clone(), v.clone())).collect();
+            settings_sorted.sort();
+            let settings_json: serde_json::Map<String, JsonValue> = settings_sorted.into_iter()
+                .map(|(k, v)| (k, JsonValue::String(v))).collect();
+            json!({
+                "message_id": m.message_id,
+                "created_at": m.created_at,
+                "content_preview": m.content.chars().take(200).collect::<String>(),
+                "active_settings": settings_json,
+            })
+        }).collect()
+    };
+    let before_summary = summarize_window(&before_pairs);
+    let after_summary = summarize_window(&after_pairs);
+
+    let run_id = uuid::Uuid::new_v4().to_string();
+    let envelope = json!({
+        "run_id": run_id,
+        "run_timestamp": chrono::Utc::now().to_rfc3339(),
+        "ref": git_ref,
+        "ref_resolved": before_sha,
+        "ref_timestamp": before_ts,
+        "ref_subject": before_subject,
+        "end_ref": end_ref,
+        "end_ref_resolved": end_ref.map(|_| after_sha.clone()),
+        "end_ref_timestamp": end_ref.map(|_| after_ts.clone()),
+        "end_ref_subject": end_ref.map(|_| after_subject.clone()),
+        "character_id": character_id,
+        "group_chat_id": group_chat_id,
+        "scope_label": character_name,
+        "role_filter": role,
+        "context_turns": context_turns,
+        "question": question_text,
+        "synthesis": synthesis_text,
+        "model": model_config.dialogue_model,
+        "cost": {
+            "prompt_tokens": actual_in,
+            "completion_tokens": actual_out,
+            "actual_usd": actual_usd,
+        },
+        "before": {
+            "count": before_summary.len(),
+            "messages": before_summary,
+        },
+        "after": {
+            "count": after_summary.len(),
+            "messages": after_summary,
+        },
+    });
+
+    write_synthesize_run(&run_id, &envelope);
+
+    if r.json {
+        emit(true, envelope);
+    } else {
+        println!("=== SYNTHESIS ===");
+        println!("ref:       {} ({})", git_ref, &before_sha[..8.min(before_sha.len())]);
+        println!("subject:   {}", before_subject);
+        let scope_id = character_id.or(group_chat_id).unwrap_or("?");
+        println!("scope:     {} ({})", character_name, scope_id);
+        println!("corpus:    {} msgs ({} before / {} after)", total_msgs, before_pairs.len(), after_pairs.len());
+        println!("model:     {}", model_config.dialogue_model);
+        println!("run_id:    {}", run_id);
+        println!();
+        println!("QUESTION:");
+        println!("{}", question_text.trim());
+        println!();
+        println!("SYNTHESIS:");
+        println!("{}", synthesis_text);
+        println!();
+        eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok)",
+            actual_usd, actual_in, actual_out);
     }
     Ok(())
 }
