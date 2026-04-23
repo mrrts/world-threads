@@ -723,9 +723,9 @@ export function Sidebar({ store, onNavigate }: Props) {
         onClose={() => setShowGenesis(false)}
         apiKey={store.apiKey}
         onWorldAccepted={async (worldId) => {
-          // Refresh worlds list so the new one shows, then activate it
-          // via selectWorld (which loads characters, portraits, etc).
-          const worlds = await api.listWorlds();
+          // loadWorlds updates store.worlds so the sidebar list
+          // refreshes; selectWorld then activates the new one.
+          const worlds = await store.loadWorlds();
           const w = worlds.find((x) => x.world_id === worldId);
           if (w) { await store.selectWorld(w); }
         }}
