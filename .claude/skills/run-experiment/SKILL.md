@@ -133,7 +133,7 @@ Every hypothesis you audition should pick one of three modes, and the mode shoul
 
 **Mode A — Passive corpus observation.** The default `worldcli evaluate` run over messages Ryan and the characters actually exchanged. Measures whether a rule has moved real-use behavior. The right mode when you're validating a shipped craft rule's effect on ordinary conversation.
 
-**Mode B — Qualitative feedback synthesis.** Sample N messages, hand them all to a capable LLM, ask an open-ended prose question ("what patterns do you see? what's working? what register-moves aren't named yet?"). No structured verdicts; you read the reply as collaborator notes. The right mode when two count-based runs have refuted cleanly but the refutation's reasoning is the real signal.
+**Mode B — Qualitative feedback synthesis.** Use `worldcli synthesize --ref <sha> --character <id> --limit N --question "..."` — it bundles the before/after corpus around a git ref into ONE call to `dialogue_model` and returns prose grounded in direct quotes. No structured verdicts; you read the reply as collaborator notes. The right mode when two count-based runs have refuted cleanly but the refutation's reasoning is the real signal — or when the hypothesis is shaped as *"read these together and tell me what's happening"* rather than *"does each reply pass this test?"*
 
 **Mode C — Active elicitation (Claude Code as scientist-interlocutor).** Use `worldcli ask --session <name>` to converse directly with the character in a designed conversation. The data is what you elicit, not what's pre-existing in the corpus. The right mode when: testing an edge-case input the corpus doesn't cover; running controlled variation (same character, three versions of a prompt, one variable changed); needing turn-by-turn data about how the character's register evolves within a session; or probing a scenario Ryan hasn't organically created.
 
@@ -145,7 +145,11 @@ Every hypothesis you audition should pick one of three modes, and the mode shoul
 
 ## Mode B (qualitative feedback) — when to reach for it
 
-The trigger is usually: *"the refutation's reasoning is where the signal lives."* If the last two count-based runs both refuted cleanly AND both surfaced something the rubric couldn't name (the 1326 John-stillness report is the worked example — the rubric's "≤2 sentences" gate correctly excluded John's actual move, so counting wasn't going to find what he was doing), don't run a third count run. Run a qualitative pass: sample N messages, include them all in one prompt to a capable model, ask *"what patterns do you notice, what register-moves are working that haven't been named yet, what failure modes surface that a yes/no rubric would miss?"*
+The trigger is usually: *"the refutation's reasoning is where the signal lives."* If the last two count-based runs both refuted cleanly AND both surfaced something the rubric couldn't name (the 1326 John-stillness report is the worked example — the rubric's "≤2 sentences" gate correctly excluded John's actual move, so counting wasn't going to find what he was doing), don't run a third count run. Run `worldcli synthesize --ref <sha> --character <id> --limit 20 --question "..."` instead — the one call bundles the corpus, asks an open-ended question, and returns prose grounded in specific quotes.
+
+Question-writing for Mode B matters the way rubric-writing matters for Mode A. Vague questions return vague prose. Good shape: name specifically what to look for, what failure modes you suspect, what you'd want quoted as evidence, what you'd want compared between BEFORE and AFTER windows if a commit cutoff is involved. Example: `--question "What pastoral register-moves does John make across these 20 replies? Where does his authority come from — what does he say instead of reassuring or explaining? Quote 3-5 specific phrases that anchor the move. What's he NOT doing that a stereotypical pastor would?"`
+
+Synthesize runs persist to `~/.worldcli/synthesize-runs/` automatically — browse via `worldcli synthesize-runs list | show | search`. When a synthesis surfaces something load-bearing, write it up under `reports/` just like a count-based experiment; the run-log file is a receipt, the report is the artifact.
 
 ## Mode C (active elicitation) — when to reach for it
 

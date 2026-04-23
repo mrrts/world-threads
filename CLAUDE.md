@@ -139,7 +139,7 @@ The one gotcha worth naming: message `created_at` is stored as UTC; git `committ
 
 - **Chat-history context.** Replies are shaped by the scene they're generated into, not just by the single preceding user turn. The evaluator reads each reply with `--context-turns N` preceding turns (default 3) so it judges the reply against the actual conversational moment — a "short affirmation" can read differently after a vow than after a joke. Up the budget (`--context-turns 5` or more, ~$0.00003/turn at gpt-4o-mini pricing) when the rubric asks a scene-dependent question; the signal gain often justifies the cost.
 
-**Qualitative LLM feedback is a legitimate science move, not just quantitative rubrics.** `worldcli evaluate` returns structured yes/no/mixed counts per message — that's the quantitative mode and it's the default. But nothing in the methodology requires every science run to be count-based. When a rule's effect is subtle, when the rubric-writing keeps missing the actual move, when a refutation's pattern is interesting in ways counts can't capture — ask the LLM open-ended questions instead. Sample N messages, hand them all to a capable model in one call, prompt like *"Read these 20 replies by this character. What patterns do you notice? What failure modes surface that a yes/no rubric would miss? What register-moves are working that haven't been named yet?"* The reply is prose; there's no structured verdict; you read it as you'd read a collaborator's notes. Expect this to cost more per-call than `evaluate` (the model has to process a bigger context and generate more), but when the question is shaped for prose it's worth the cost.
+**Qualitative LLM feedback is a legitimate science move, not just quantitative rubrics.** `worldcli evaluate` returns structured yes/no/mixed counts per message — that's the quantitative mode and it's the default. But nothing in the methodology requires every science run to be count-based. When a rule's effect is subtle, when the rubric-writing keeps missing the actual move, when a refutation's pattern is interesting in ways counts can't capture — ask the LLM open-ended questions instead. **The first-class tool for this is `worldcli synthesize`** — it bundles a before/after corpus around a git ref into one call to `dialogue_model` and returns prose grounded in direct quotes. Example: `worldcli synthesize --ref <sha> --character <id> --limit 20 --question "Across these 20 replies, what pastoral moves does John make? What register choices anchor his authority? What's he NOT doing that a stereotypical pastor would?"`. The reply is prose; there's no structured verdict; you read it as you'd read a collaborator's notes. Expect this to cost more per-call than `evaluate` (one big call instead of N small ones, and using the more capable model rather than `memory_model`), but when the question is shaped for prose it's worth the cost.
 
 Be **reflective about when this fits**: when the prior run refuted cleanly AND the refutation's reasoning surfaced something the rubric couldn't name (the 1326 John-stillness report is the worked example — the rubric's "≤2 sentences" gate correctly excluded John's actual move, so counting wasn't going to find what he was doing). In those moments, an open-ended prose pass is the right next instrument. **Offer to take initiative**: when you notice a qualitative-feedback pass would teach more than another count-based rubric, propose it proactively without waiting to be asked. The discipline is the same as everywhere else in this repo — name the move before making it, and write up what you learned afterward.
 
@@ -346,6 +346,31 @@ worldcli rubric search "<substring>"
 worldcli evaluate-runs list [--limit N]
 worldcli evaluate-runs show <id-or-prefix>
 worldcli evaluate-runs search "<substring>"
+
+# Mode B (qualitative synthesis) as a first-class command. Bundles
+# a corpus of before/after messages into ONE call to dialogue_model
+# and answers an open-ended question with prose, grounded in direct
+# quotes. Complements evaluate (Mode A, structured yes/no/mixed) for
+# questions whose shape is "read these replies together and tell me
+# what's happening in them" — the 1326 John-stillness report is the
+# worked case where a rubric's gates correctly excluded the actual
+# register-move and counts couldn't find it.
+worldcli synthesize --ref <sha> (--character <id> | --group-chat <id>) \
+    (--question "<q>" | --question-file <path>) \
+    [--end-ref <sha>] \
+    [--limit N]                             # default: 20 (higher than evaluate — one call, not N)
+    [--context-turns N]                     # default: 3
+    [--role assistant|user|any] \
+    [--model <override>]                    # default: dialogue_model (the more capable one)
+    [--confirm-cost <usd>] \
+    [--json]
+
+# Structured synthesize run log — every `worldcli synthesize` invocation
+# persists to ~/.worldcli/synthesize-runs/<id>.json automatically;
+# Mode B findings accumulate as queryable substrate alongside Mode A.
+worldcli synthesize-runs list [--limit N]
+worldcli synthesize-runs show <id-or-prefix>
+worldcli synthesize-runs search "<substring>"
 
 # Read your own prior runs (avoid redoing answered questions):
 worldcli runs-list [--limit N] [--json]

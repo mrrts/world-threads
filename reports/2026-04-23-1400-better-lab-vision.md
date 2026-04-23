@@ -97,7 +97,7 @@ This requires a prompt-assembly override hook that the codebase doesn't currentl
 
 **Build cost:** higher than the worktree approach (~1 day). The override-hook refactor is the expensive part; once in place, the replay command is thin.
 
-### 4. First-class Mode B — medium cost, high ROI
+### 4. First-class Mode B — medium cost, high ROI — **SHIPPED 2026-04-23**
 
 `worldcli synthesize --ref <sha> --character <id> --limit N --question "<open-ended question>"`. Samples messages like `sample-windows` does, bundles them into a single dialogue-model call (using the more capable model, not the cheap memory_model), returns a prose synthesis. Saves to the structured run log.
 
