@@ -638,6 +638,49 @@ enum LabAction {
         slug: String,
         run_id: String,
     },
+    /// Scenario templates — canonical multi-variant probe sequences for
+    /// Mode C (active elicitation). Each scenario lives at
+    /// experiments/scenarios/<name>.md with frontmatter (name, purpose,
+    /// optional measure_with rubric) and ## Variant: <name> sections
+    /// whose bodies are the prompt text to send. `lab scenario run`
+    /// fires each variant as a fresh dialogue call and returns the
+    /// replies side-by-side (optionally with rubric verdicts applied).
+    Scenario {
+        #[command(subcommand)]
+        action: ScenarioAction,
+    },
+}
+
+#[derive(Subcommand)]
+enum ScenarioAction {
+    /// List available scenarios under experiments/scenarios/.
+    List,
+    /// Show one scenario's full file.
+    Show { name: String },
+    /// Run a scenario — fire each variant prompt at the character via
+    /// dialogue_model, capture reply, optionally evaluate with the
+    /// scenario's `measure_with` rubric.
+    Run {
+        name: String,
+        /// Character to run the scenario against.
+        #[arg(long)]
+        character: String,
+        /// Override the scenario's `measure_with` rubric (or provide
+        /// one if the scenario didn't set one).
+        #[arg(long)]
+        rubric_ref: Option<String>,
+        /// Skip rubric evaluation even if the scenario sets measure_with.
+        /// Useful when you want replies only, for a faster cheap pass.
+        #[arg(long)]
+        skip_evaluate: bool,
+        /// Override the dialogue model.
+        #[arg(long)]
+        model: Option<String>,
+        /// Required when projected total cost (N variants × dialogue call
+        /// + optional evaluator calls) exceeds the per-call cap.
+        #[arg(long)]
+        confirm_cost: Option<f64>,
+    },
 }
 
 // ─── Config / homedir layout ────────────────────────────────────────────
@@ -1095,7 +1138,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             cmd_synthesize(&r, &api_key, &git_ref, end_ref.as_deref(), limit, character.as_deref(), group_chat.as_deref(), question.as_deref(), question_file.as_deref(), &role, context_turns, model.as_deref(), confirm_cost, repo.as_deref()).await
         }
         Cmd::ReplayRuns { action } => cmd_replay_runs(&r, action),
-        Cmd::Lab { action } => cmd_lab(&r, action),
+        Cmd::Lab { action } => {
+            // Scenario::Run needs api_key; other lab actions don't.
+            let api_key = if matches!(action, LabAction::Scenario { action: ScenarioAction::Run { .. } }) {
+                match resolve_api_key(cli.api_key.as_deref()) {
+                    Some(k) => Some(k),
+                    None => return Err(Box::<dyn std::error::Error>::from(
+                        "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
+                    )),
+                }
+            } else { None };
+            cmd_lab(&r, action, api_key.as_deref()).await
+        }
         Cmd::Replay { refs, character, prompt, model, confirm_cost, repo } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
@@ -3601,7 +3655,7 @@ fn push_list(out: &mut String, key: &str, items: &[String]) {
     }
 }
 
-fn cmd_lab(r: &Resolved, action: LabAction) -> Result<(), Box<dyn std::error::Error>> {
+async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
     match action {
         LabAction::List { status } => {
             let mut experiments = list_experiments().map_err(Box::<dyn std::error::Error>::from)?;
@@ -3815,6 +3869,476 @@ fn cmd_lab(r: &Resolved, action: LabAction) -> Result<(), Box<dyn std::error::Er
                 println!("Linked run {} → {} (now {} total).", run_id, slug, exp.run_ids.len());
             }
         }
+        LabAction::Scenario { action } => {
+            match action {
+                ScenarioAction::List => cmd_lab_scenario_list(r)?,
+                ScenarioAction::Show { name } => cmd_lab_scenario_show(r, &name)?,
+                ScenarioAction::Run { name, character, rubric_ref, skip_evaluate, model, confirm_cost } => {
+                    let key = api_key.ok_or_else(|| Box::<dyn std::error::Error>::from(
+                        "internal: api_key missing for scenario run".to_string()))?;
+                    cmd_lab_scenario_run(r, key, &name, &character, rubric_ref.as_deref(),
+                        skip_evaluate, model.as_deref(), confirm_cost).await?;
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+// ─── Scenario templates (experiments/scenarios/*.md) ────────────────────
+//
+// Canonical probe sequences for Mode C. Each scenario is a markdown file
+// with YAML-ish frontmatter (name, purpose, measure_with) and a body of
+// `## Variant: <label>` sections whose text is the prompt to send. The
+// `lab scenario run` command fires each variant as a fresh dialogue
+// call (no session history; each variant is its own controlled
+// condition) and optionally applies the measure_with rubric to every
+// reply.
+
+fn scenarios_dir() -> PathBuf { PathBuf::from("experiments/scenarios") }
+
+#[derive(Debug, Clone, Default)]
+struct ScenarioFile {
+    name: String,
+    path: PathBuf,
+    purpose: String,
+    measure_with: String,
+    /// Ordered list of (variant_label, prompt_text) — order matters
+    /// because the `run` output presents variants in sequence.
+    variants: Vec<(String, String)>,
+    raw: String,
+}
+
+/// Parse the `## Variant: <label>\n<body>` sections out of a scenario
+/// file's markdown body. Returns ordered pairs.
+fn extract_scenario_variants(body: &str) -> Vec<(String, String)> {
+    let mut out: Vec<(String, String)> = Vec::new();
+    let mut current_label: Option<String> = None;
+    let mut current_buf: Vec<String> = Vec::new();
+    let flush = |label: Option<String>, buf: Vec<String>, out: &mut Vec<(String, String)>| {
+        if let Some(l) = label {
+            let text = buf.join("\n").trim().to_string();
+            if !text.is_empty() {
+                out.push((l, text));
+            }
+        }
+    };
+    for line in body.lines() {
+        if let Some(rest) = line.strip_prefix("## Variant:") {
+            flush(current_label.take(), std::mem::take(&mut current_buf), &mut out);
+            current_label = Some(rest.trim().to_string());
+        } else if current_label.is_some() {
+            current_buf.push(line.to_string());
+        }
+    }
+    flush(current_label, current_buf, &mut out);
+    out
+}
+
+fn load_scenario(name: &str) -> Result<ScenarioFile, String> {
+    let path = scenarios_dir().join(format!("{}.md", name));
+    if !path.exists() {
+        return Err(format!("scenario '{}' not found at {}. Run `worldcli lab scenario list` to see the templates.", name, path.display()));
+    }
+    let raw = std::fs::read_to_string(&path)
+        .map_err(|e| format!("failed to read {}: {}", path.display(), e))?;
+    let (fm_text, body) = split_frontmatter(&raw)
+        .ok_or_else(|| format!("scenario '{}' has no `---` frontmatter fence", name))?;
+    // Reuse the experiment parser's scalar machinery for just the three
+    // fields we care about (name, purpose, measure_with).
+    let mut sf = ScenarioFile::default();
+    sf.name = name.to_string();
+    sf.path = path;
+    sf.raw = raw;
+    for line in fm_text.lines() {
+        let trimmed = line.trim_end();
+        if trimmed.starts_with(' ') || trimmed.starts_with('\t') { continue; }
+        if let Some(ci) = trimmed.find(':') {
+            let key = trimmed[..ci].trim();
+            let value = trimmed[ci + 1..].trim().trim_matches('"').to_string();
+            match key {
+                "name" => if !value.is_empty() { sf.name = value; },
+                "purpose" => sf.purpose = value,
+                "measure_with" => sf.measure_with = value,
+                _ => {}
+            }
+        }
+    }
+    sf.variants = extract_scenario_variants(&body);
+    if sf.variants.is_empty() {
+        return Err(format!("scenario '{}' has no `## Variant: <label>` sections", name));
+    }
+    Ok(sf)
+}
+
+fn list_scenarios() -> Result<Vec<ScenarioFile>, String> {
+    let dir = scenarios_dir();
+    if !dir.exists() { return Ok(Vec::new()); }
+    let mut out = Vec::new();
+    for entry in std::fs::read_dir(&dir).map_err(|e| e.to_string())?.flatten() {
+        let path = entry.path();
+        if path.extension().and_then(|e| e.to_str()) != Some("md") { continue; }
+        let fname = path.file_stem().and_then(|s| s.to_str()).unwrap_or("").to_string();
+        if fname == "README" { continue; }
+        if let Ok(sf) = load_scenario(&fname) {
+            out.push(sf);
+        }
+    }
+    out.sort_by(|a, b| a.name.cmp(&b.name));
+    Ok(out)
+}
+
+fn scenario_runs_dir() -> PathBuf { worldcli_home().join("scenario-runs") }
+fn scenario_runs_manifest() -> PathBuf { scenario_runs_dir().join("manifest.jsonl") }
+
+fn write_scenario_run(run_id: &str, envelope: &JsonValue) {
+    let dir = scenario_runs_dir();
+    let _ = std::fs::create_dir_all(&dir);
+    let per_path = dir.join(format!("{}.json", run_id));
+    if let Ok(s) = serde_json::to_string_pretty(envelope) {
+        let _ = std::fs::write(&per_path, s);
+    }
+    let manifest_entry = json!({
+        "run_id": envelope.get("run_id"),
+        "run_timestamp": envelope.get("run_timestamp"),
+        "scenario": envelope.get("scenario"),
+        "character_id": envelope.get("character_id"),
+        "character_name": envelope.get("character_name"),
+        "variants": envelope.get("variants").and_then(|v| v.as_array()).map(|a| a.len()).unwrap_or(0),
+        "measure_with": envelope.get("measure_with"),
+        "cost_usd": envelope.get("cost").and_then(|c| c.get("actual_usd")),
+    });
+    let line = serde_json::to_string(&manifest_entry).unwrap_or_default();
+    if let Ok(mut f) = std::fs::OpenOptions::new()
+        .create(true).append(true).open(scenario_runs_manifest())
+    {
+        use std::io::Write;
+        let _ = writeln!(f, "{}", line);
+    }
+}
+
+fn cmd_lab_scenario_list(r: &Resolved) -> Result<(), Box<dyn std::error::Error>> {
+    let scenarios = list_scenarios().map_err(Box::<dyn std::error::Error>::from)?;
+    if scenarios.is_empty() {
+        if !r.json {
+            println!("No scenarios found at {}.", scenarios_dir().display());
+            println!("See experiments/scenarios/README.md for the authoring convention.");
+        }
+        emit(r.json, JsonValue::Array(Vec::new()));
+        return Ok(());
+    }
+    let out: Vec<JsonValue> = scenarios.iter().map(|s| json!({
+        "name": s.name,
+        "purpose": s.purpose,
+        "measure_with": s.measure_with,
+        "variant_count": s.variants.len(),
+        "variants": s.variants.iter().map(|(l, _)| l.clone()).collect::<Vec<_>>(),
+    })).collect();
+    if r.json {
+        emit(true, JsonValue::Array(out));
+    } else {
+        for s in &scenarios {
+            println!("{:<32} {} variants", s.name, s.variants.len());
+            if !s.purpose.is_empty() {
+                println!("  purpose:      {}", s.purpose);
+            }
+            if !s.measure_with.is_empty() {
+                println!("  measure_with: {}", s.measure_with);
+            }
+            let labels: Vec<String> = s.variants.iter().map(|(l, _)| l.clone()).collect();
+            println!("  variants:     {}", labels.join(", "));
+        }
+    }
+    Ok(())
+}
+
+fn cmd_lab_scenario_show(r: &Resolved, name: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let s = load_scenario(name).map_err(Box::<dyn std::error::Error>::from)?;
+    if r.json {
+        emit(true, json!({
+            "name": s.name, "path": s.path.display().to_string(),
+            "purpose": s.purpose, "measure_with": s.measure_with,
+            "variants": s.variants.iter().map(|(l, p)| json!({
+                "label": l, "prompt": p,
+            })).collect::<Vec<_>>(),
+            "raw": s.raw,
+        }));
+    } else {
+        println!("{}", s.raw);
+    }
+    Ok(())
+}
+
+#[allow(clippy::too_many_arguments)]
+async fn cmd_lab_scenario_run(
+    r: &Resolved,
+    api_key: &str,
+    name: &str,
+    character_id: &str,
+    rubric_ref_override: Option<&str>,
+    skip_evaluate: bool,
+    model_override: Option<&str>,
+    confirm_cost: Option<f64>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let scenario = load_scenario(name).map_err(Box::<dyn std::error::Error>::from)?;
+    let _ = r.check_character(character_id)?;
+
+    // Resolve rubric (for evaluator) — precedence: CLI override, then
+    // scenario's measure_with, then nothing.
+    let rubric_name = rubric_ref_override
+        .map(str::to_string)
+        .or_else(|| {
+            if scenario.measure_with.is_empty() { None }
+            else { Some(scenario.measure_with.clone()) }
+        });
+    let rubric_text: Option<(String, String, String)> = if skip_evaluate {
+        None
+    } else if let Some(rn) = rubric_name.as_ref() {
+        let rb = load_rubric(rn).map_err(Box::<dyn std::error::Error>::from)?;
+        Some((rb.name, rb.version, rb.prompt))
+    } else { None };
+
+    // Build the system prompt ONCE — held constant across variants.
+    let (system_prompt, mut model_config, character, _world_id) = {
+        let conn = r.db.conn.lock().unwrap();
+        let character = get_character(&conn, character_id)?;
+        let world = get_world(&conn, &character.world_id)?;
+        let user_profile = get_user_profile(&conn, &character.world_id).ok();
+        let recent_journals = list_journal_entries(&conn, character_id, 1).unwrap_or_default();
+        let active_quests = list_active_quests(&conn, &character.world_id).unwrap_or_default();
+        let latest_stance = latest_relational_stance(&conn, character_id).unwrap_or(None);
+        let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
+        let system = app_lib::ai::prompts::build_dialogue_system_prompt(
+            &world, &character, user_profile.as_ref(),
+            None, Some("Auto"), None, None, false, &[], None,
+            &recent_journals, None, &[], None, &active_quests,
+            stance_text.as_deref(),
+        );
+        let mc = orchestrator::load_model_config(&conn);
+        let world_id = character.world_id.clone();
+        (system, mc, character, world_id)
+    };
+    if let Some(m) = model_override { model_config.dialogue_model = m.to_string(); }
+
+    // Project cost: N dialogue calls + (optionally) N evaluator calls.
+    let dialogue_in_est = estimate_tokens(&system_prompt);
+    let per_variant_out: i64 = 600;
+    let dialogue_cost: f64 = scenario.variants.iter().map(|(_, p)| {
+        let in_tok = dialogue_in_est + estimate_tokens(p);
+        project_cost(&model_config.dialogue_model, in_tok, per_variant_out, &r.cfg.model_pricing)
+    }).sum();
+    let evaluator_cost: f64 = if let Some((_, _, rp)) = &rubric_text {
+        let per_eval_in = estimate_tokens(rp) + 300 + 200 + 180 * 3 + 150;
+        let per_eval_out: i64 = 220;
+        let per_call = project_cost(&model_config.memory_model, per_eval_in, per_eval_out, &r.cfg.model_pricing);
+        per_call * (scenario.variants.len() as f64)
+    } else { 0.0 };
+    let total_projected = dialogue_cost + evaluator_cost;
+
+    let daily_so_far = rolling_24h_total_usd();
+    let daily_after = daily_so_far + total_projected;
+    let per_call_cap = r.cfg.budget.per_call_usd;
+    let daily_cap = r.cfg.budget.daily_usd;
+    let confirm = confirm_cost.unwrap_or(0.0);
+    if total_projected > per_call_cap && confirm < total_projected {
+        return Err(Box::new(CliError::Budget {
+            kind: "per_call (scenario total)".to_string(),
+            projected_usd: total_projected,
+            cap_usd: per_call_cap,
+            confirm_at_least: (total_projected * 1.05).max(0.01),
+        }));
+    }
+    if daily_after > daily_cap && confirm < total_projected {
+        return Err(Box::new(CliError::Budget {
+            kind: "daily".to_string(),
+            projected_usd: daily_after,
+            cap_usd: daily_cap,
+            confirm_at_least: (total_projected * 1.05).max(0.01),
+        }));
+    }
+
+    if !r.json {
+        eprintln!("[worldcli] scenario '{}' × {} variants against {} via {} — dialogue≈${:.4}, evaluator≈${:.4}, total≈${:.4}; 24h=${:.4}/${:.2}",
+            scenario.name, scenario.variants.len(), character.display_name,
+            model_config.dialogue_model, dialogue_cost, evaluator_cost,
+            total_projected, daily_so_far, daily_cap);
+    }
+
+    let base_url = model_config.chat_api_base();
+    let mut per_variant_results: Vec<JsonValue> = Vec::new();
+    let mut total_in: i64 = 0;
+    let mut total_out: i64 = 0;
+    let mut total_in_eval: i64 = 0;
+    let mut total_out_eval: i64 = 0;
+
+    for (i, (label, prompt_text)) in scenario.variants.iter().enumerate() {
+        eprint!("\r[worldcli] variant {}/{}: {}", i + 1, scenario.variants.len(), label);
+        let req = openai::ChatRequest {
+            model: model_config.dialogue_model.clone(),
+            messages: vec![
+                openai::ChatMessage { role: "system".to_string(), content: system_prompt.clone() },
+                openai::ChatMessage { role: "user".to_string(), content: prompt_text.clone() },
+            ],
+            temperature: Some(0.95),
+            max_completion_tokens: None,
+            response_format: None,
+        };
+        // Per-variant errors (network, 5xx, rate-limit) get recorded in
+        // the envelope rather than aborting the whole run — a flaky
+        // middle variant shouldn't throw away the completed ones.
+        let resp = match openai::chat_completion_with_base(&base_url, api_key, &req).await {
+            Ok(r) => r,
+            Err(e) => {
+                eprintln!();
+                eprintln!("[worldcli] variant '{}' dialogue call failed: {} — continuing", label, e);
+                per_variant_results.push(json!({
+                    "label": label,
+                    "prompt": prompt_text,
+                    "reply": null,
+                    "error": format!("dialogue call failed: {}", e),
+                    "verdict": null,
+                }));
+                continue;
+            }
+        };
+        let reply = match resp.choices.first().map(|c| c.message.content.clone()) {
+            Some(s) => s,
+            None => {
+                eprintln!();
+                eprintln!("[worldcli] variant '{}' returned no choices — continuing", label);
+                per_variant_results.push(json!({
+                    "label": label,
+                    "prompt": prompt_text,
+                    "reply": null,
+                    "error": "no choices returned",
+                    "verdict": null,
+                }));
+                continue;
+            }
+        };
+        let usage = resp.usage.unwrap_or(openai::Usage {
+            prompt_tokens: 0, completion_tokens: 0, total_tokens: 0,
+        });
+        total_in += usage.prompt_tokens as i64;
+        total_out += usage.completion_tokens as i64;
+
+        // Optional evaluator pass.
+        let verdict: Option<JsonValue> = if let Some((_, _, rp)) = rubric_text.as_ref() {
+            let ctx = vec![("User".to_string(), prompt_text.clone())];
+            match evaluate_one(&base_url, api_key, &model_config.memory_model, rp, &ctx, &reply).await {
+                Ok((v, u)) => {
+                    total_in_eval += u.prompt_tokens as i64;
+                    total_out_eval += u.completion_tokens as i64;
+                    Some(json!({
+                        "judgment": v.judgment, "confidence": v.confidence,
+                        "quote": v.quote, "reasoning": v.reasoning,
+                    }))
+                }
+                Err(e) => Some(json!({ "error": e })),
+            }
+        } else { None };
+
+        per_variant_results.push(json!({
+            "label": label,
+            "prompt": prompt_text,
+            "reply": reply,
+            "verdict": verdict,
+            "dialogue_usage": {
+                "prompt_tokens": usage.prompt_tokens,
+                "completion_tokens": usage.completion_tokens,
+            },
+        }));
+    }
+    eprintln!();
+
+    let actual_dialogue_usd = actual_cost(&model_config.dialogue_model, total_in, total_out, &r.cfg.model_pricing);
+    let actual_eval_usd = actual_cost(&model_config.memory_model, total_in_eval, total_out_eval, &r.cfg.model_pricing);
+    let actual_usd = actual_dialogue_usd + actual_eval_usd;
+    // Log both separately so cost.jsonl attributes to the right model.
+    append_cost_log(&CostEntry {
+        timestamp: chrono::Utc::now().to_rfc3339(),
+        model: model_config.dialogue_model.clone(),
+        prompt_tokens: total_in,
+        completion_tokens: total_out,
+        usd: actual_dialogue_usd,
+    });
+    if total_in_eval > 0 || total_out_eval > 0 {
+        append_cost_log(&CostEntry {
+            timestamp: chrono::Utc::now().to_rfc3339(),
+            model: model_config.memory_model.clone(),
+            prompt_tokens: total_in_eval,
+            completion_tokens: total_out_eval,
+            usd: actual_eval_usd,
+        });
+    }
+
+    let run_id = uuid::Uuid::new_v4().to_string();
+    let envelope = json!({
+        "run_id": run_id,
+        "run_timestamp": chrono::Utc::now().to_rfc3339(),
+        "scenario": scenario.name,
+        "scenario_path": scenario.path.display().to_string(),
+        "purpose": scenario.purpose,
+        "character_id": character_id,
+        "character_name": character.display_name,
+        "dialogue_model": model_config.dialogue_model,
+        "measure_with": rubric_name,
+        "rubric_version": rubric_text.as_ref().map(|(_, v, _)| v.clone()),
+        "variants": per_variant_results,
+        "cost": {
+            "dialogue_prompt_tokens": total_in,
+            "dialogue_completion_tokens": total_out,
+            "evaluator_prompt_tokens": total_in_eval,
+            "evaluator_completion_tokens": total_out_eval,
+            "actual_usd": actual_usd,
+        },
+    });
+    write_scenario_run(&run_id, &envelope);
+
+    if r.json {
+        emit(true, envelope);
+    } else {
+        println!("=== SCENARIO RUN ===");
+        println!("scenario:  {} ({})", scenario.name, scenario.path.display());
+        println!("purpose:   {}", scenario.purpose);
+        println!("character: {} ({})", character.display_name, character_id);
+        println!("model:     {}", model_config.dialogue_model);
+        if let Some(rn) = rubric_name.as_ref() {
+            println!("rubric:    {}", rn);
+        } else {
+            println!("rubric:    (none — replies only)");
+        }
+        println!("run_id:    {}", run_id);
+        println!();
+        for v in envelope["variants"].as_array().unwrap_or(&vec![]) {
+            let label = v["label"].as_str().unwrap_or("?");
+            let prompt = v["prompt"].as_str().unwrap_or("");
+            let reply = v["reply"].as_str().unwrap_or("");
+            println!("─── Variant: {} ───", label);
+            println!("PROMPT: {}", prompt);
+            println!();
+            println!("REPLY:");
+            println!("{}", reply);
+            if let Some(verdict) = v.get("verdict") {
+                if !verdict.is_null() {
+                    if let Some(err) = verdict.get("error").and_then(|e| e.as_str()) {
+                        println!();
+                        println!("VERDICT: ERROR — {}", err);
+                    } else {
+                        let j = verdict["judgment"].as_str().unwrap_or("?");
+                        let c = verdict["confidence"].as_str().unwrap_or("?");
+                        let q = verdict["quote"].as_str().unwrap_or("");
+                        let rs = verdict["reasoning"].as_str().unwrap_or("");
+                        println!();
+                        println!("VERDICT: {} ({}) — \"{}\"", j, c, q);
+                        println!("         → {}", rs);
+                    }
+                }
+            }
+            println!();
+        }
+        eprintln!("[worldcli] actual cost ${:.4} (dialogue=${:.4}, evaluator=${:.4})",
+            actual_usd, actual_dialogue_usd, actual_eval_usd);
     }
     Ok(())
 }
