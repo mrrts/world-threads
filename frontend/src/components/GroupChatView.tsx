@@ -4,7 +4,7 @@ import { formatMessage, markdownComponents, remarkPlugins, rehypePlugins, isEmoj
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
-import { Send, Loader2, X, BookOpen, MessageSquare, Compass, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, Crosshair, ChevronLeft, ChevronRight, ChevronDown, Play, Pause, Volume2, ArrowRight, Smile, SmilePlus, ScrollText, Package, Sparkles } from "lucide-react";
+import { Send, Loader2, X, BookOpen, MessageSquare, Compass, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, Crosshair, ChevronLeft, ChevronRight, ChevronDown, Play, Pause, Volume2, ArrowRight, Smile, SmilePlus, ScrollText, Package, Sparkles, MessageCircleQuestion } from "lucide-react";
 import { ReactionBubbles } from "@/components/chat/ReactionBubbles";
 import { ReactionPicker } from "@/components/chat/ReactionPicker";
 import { KeepRecordModal } from "@/components/chat/KeepRecordModal";
@@ -112,6 +112,9 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
   const talkPickerRef = useRef<HTMLDivElement>(null);
   const [portraitModalCharId, setPortraitModalCharId] = useState<string | null>(null);
   const [showConsultant, setShowConsultant] = useState(false);
+  // When set, the consultant modal opens AND auto-sends this string as
+  // a user message. Used by per-message "How do I react!?" buttons.
+  const [consultantAutoSend, setConsultantAutoSend] = useState<string | null>(null);
   const [showImaginedChapter, setShowImaginedChapter] = useState(false);
   const [openImaginedChapterId, setOpenImaginedChapterId] = useState<string | null>(null);
   const [showSettingsPopover, setShowSettingsPopover] = useState(false);
@@ -431,6 +434,18 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
     window.addEventListener("backstage:stage-message", handler as EventListener);
     return () => window.removeEventListener("backstage:stage-message", handler as EventListener);
   }, [inputRef, inputValueRef, setHasInput, store.messages]);
+
+  // Listen for Backstage's preview→attach illustration flow. See ChatView
+  // for the full rationale; same pattern here for groups.
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ threadId: string; message?: Message }>).detail;
+      if (!detail?.message) return;
+      store.appendMessage(detail.message);
+    };
+    window.addEventListener("backstage:illustration-added", handler as EventListener);
+    return () => window.removeEventListener("backstage:illustration-added", handler as EventListener);
+  }, [store]);
 
   const openGallery = useCallback(async () => {
     const lastIllus = store.messages.filter((m) => m.role === "illustration").at(-1);
@@ -1034,6 +1049,31 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                             {(inventoryBadges[msg.message_id]?.length ?? 0) > 0 ? "Inventory updated · run again" : "Update group inventories from this moment"}
                           </span>
                         </div>
+                        {/* "How do I react!?" — only on character messages.
+                            Opens the consultant modal in whichever mode is
+                            persisted in localStorage and auto-sends the
+                            question as the user's first message.
+
+                            Sent text is intentionally longer than the
+                            tooltip: "How do I react!?" alone gets
+                            interpreted by the consultant as "how do I add
+                            a reaction emoji to this message" — same
+                            surface form as the actual reaction-emoji
+                            UX. The long form anchors it to dialogue
+                            response. Don't shorten. */}
+                        {!isUser && (
+                          <div className="relative group/mhowreact">
+                            <button
+                              onClick={() => { setConsultantAutoSend("How do I react to this message!? What do I say to that!?"); setShowConsultant(true); }}
+                              className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-secondary/50 hover:bg-secondary border border-border/60 hover:border-border text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                            >
+                              <MessageCircleQuestion size={12} />
+                            </button>
+                            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/mhowreact:opacity-100 pointer-events-none transition-opacity z-50">
+                              How do I react!?
+                            </span>
+                          </div>
+                        )}
                       </>
                     )}
                     <ReactionBubbles
@@ -1522,7 +1562,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
 
       <StoryConsultantModal
         open={showConsultant}
-        onClose={() => setShowConsultant(false)}
+        onClose={() => { setShowConsultant(false); setConsultantAutoSend(null); }}
         apiKey={store.apiKey}
         characterId={null}
         groupChatId={store.activeGroupChat?.group_chat_id ?? null}
@@ -1536,6 +1576,8 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
         userAvatarUrl={userAvatarUrl}
         notifyOnMessage={store.notifyOnMessage}
         chatFontSize={store.chatFontSize}
+        autoSendOnOpen={consultantAutoSend}
+        onAutoSendConsumed={() => setConsultantAutoSend(null)}
       />
 
       <ImaginedChapterModal
@@ -1598,7 +1640,8 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
 
       <KeepRecordModal
         open={!!keepTargetId}
-        onOpenChange={(o) => { if (!o) setKeepTargetId(null); }}
+        // Belt-and-suspenders reload on close; see ChatView for rationale.
+        onOpenChange={(o) => { if (!o) { setKeepTargetId(null); reloadKept(); } }}
         sourceMessage={keepTargetId ? store.messages.find((m) => m.message_id === keepTargetId) ?? null : null}
         sourceSpeakerLabel={(() => {
           const m = keepTargetId ? store.messages.find((x) => x.message_id === keepTargetId) : null;

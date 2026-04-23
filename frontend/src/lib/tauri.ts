@@ -594,6 +594,15 @@ export const api = {
     invoke<DreamResult>("generate_dream_cmd", { apiKey, characterId }),
   generateIllustration: (apiKey: string, characterId: string, qualityTier?: string, customInstructions?: string, previousIllustrationId?: string, includeSceneSummary?: boolean) =>
     invoke<IllustrationResult>("generate_illustration_cmd", { apiKey, characterId, qualityTier: qualityTier ?? null, customInstructions: customInstructions ?? null, previousIllustrationId: previousIllustrationId ?? null, includeSceneSummary: includeSceneSummary ?? true }),
+  /// Backstage two-step illustration flow — preview returns the rendered
+  /// image without inserting a chat message; attach commits it to the
+  /// active chat (solo or group); discard cleans up the preview.
+  previewBackstageIllustration: (apiKey: string, characterId: string, groupChatId: string | null, customInstructions?: string) =>
+    invoke<{ image_id: string; data_url: string; aspect_ratio: number; caption: string }>("preview_backstage_illustration_cmd", { apiKey, characterId, groupChatId, customInstructions: customInstructions ?? null }),
+  attachPreviewedIllustration: (imageId: string, targetThreadId: string, isGroupThread: boolean) =>
+    invoke<Message>("attach_previewed_illustration_cmd", { imageId, targetThreadId, isGroupThread }),
+  discardPreviewedIllustration: (imageId: string) =>
+    invoke<void>("discard_previewed_illustration_cmd", { imageId }),
   deleteIllustration: (messageId: string) =>
     invoke<void>("delete_illustration_cmd", { messageId }),
   updateIllustrationCaption: (messageId: string, caption: string) =>

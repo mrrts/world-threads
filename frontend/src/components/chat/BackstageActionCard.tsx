@@ -62,8 +62,15 @@ export type BackstageActionBlock =
 
 export interface BackstageActionContext {
   /// Thread id of the chat the user was in when Backstage opened.
-  /// Staged messages route here.
+  /// Staged messages route here. Illustrations also commit to this
+  /// thread (whether it's a solo or group thread is resolved by
+  /// `groupChatId` below).
   activeThreadId: string;
+  /// When the active chat is a group chat, its id. Lets the
+  /// illustration flow paint with the full group cast and commit to
+  /// the group_messages table instead of the (wrong) solo character's
+  /// thread.
+  groupChatId: string | null;
   /// Close the Backstage modal after a successful stage/save. Matches
   /// the "fire-and-forget" feel — the card did its job, return user to
   /// their chat.
@@ -82,8 +89,12 @@ interface Props {
 }
 
 export function BackstageActionCard({ block, ctx }: Props) {
-  const [state, setState] = useState<"idle" | "applying" | "applied" | "dismissed" | "error">("idle");
+  const [state, setState] = useState<"idle" | "applying" | "applied" | "dismissed" | "error" | "previewing" | "preview-shown" | "attaching">("idle");
   const [error, setError] = useState<string | null>(null);
+  // Illustration card preview state — set after the preview command
+  // returns; cleared on discard/try-again. The image is already saved to
+  // disk + world_images at preview time; the imageId is what attach uses.
+  const [previewedImage, setPreviewedImage] = useState<{ imageId: string; dataUrl: string; aspectRatio: number } | null>(null);
 
   if (state === "dismissed") {
     return (
@@ -265,20 +276,61 @@ export function BackstageActionCard({ block, ctx }: Props) {
     );
   }
 
-  // Illustration card
+  // Illustration card — two-step flow:
+  //   1. "Generate preview" → backend renders the image without inserting
+  //      a chat message, returns the data URL. Card shows the preview
+  //      inline + "Add to chat" / "Try again" / "Discard" buttons.
+  //   2. "Add to chat" → backend commits the previewed image into the
+  //      active thread (solo or group, routed by ctx.groupChatId).
+  //   3. "Discard" → backend deletes the file + world_images row.
+  // The earlier one-step flow lost the image into the wrong thread when
+  // Backstage was opened from a group chat.
   if (block.type === "illustration") {
-    const onApply = async () => {
+    const onPreview = async () => {
       if (!ctx.apiKey) { setError("No API key configured."); setState("error"); return; }
-      setState("applying");
+      setState("previewing");
       setError(null);
       try {
-        await api.generateIllustration(ctx.apiKey, block.character_id, undefined, block.custom_instructions);
-        setState("applied");
-        setTimeout(() => ctx.onAppliedClose(), 1200);
+        const result = await api.previewBackstageIllustration(ctx.apiKey, block.character_id, ctx.groupChatId, block.custom_instructions);
+        setPreviewedImage({ imageId: result.image_id, dataUrl: result.data_url, aspectRatio: result.aspect_ratio });
+        setState("preview-shown");
       } catch (e: any) {
         setError(String(e));
         setState("error");
       }
+    };
+    const onAttach = async () => {
+      if (!previewedImage) return;
+      setState("attaching");
+      setError(null);
+      try {
+        const msg = await api.attachPreviewedIllustration(previewedImage.imageId, ctx.activeThreadId, ctx.groupChatId !== null);
+        // Tell the chat view (which is mounted under the modal) to
+        // refresh its message list so the illustration appears.
+        window.dispatchEvent(new CustomEvent("backstage:illustration-added", {
+          detail: { threadId: ctx.activeThreadId, message: msg },
+        }));
+        setState("applied");
+        setTimeout(() => ctx.onAppliedClose(), 800);
+      } catch (e: any) {
+        setError(String(e));
+        setState("preview-shown");
+      }
+    };
+    const onDiscard = async () => {
+      if (!previewedImage) { setState("dismissed"); return; }
+      try {
+        await api.discardPreviewedIllustration(previewedImage.imageId);
+      } catch { /* best effort cleanup */ }
+      setPreviewedImage(null);
+      setState("dismissed");
+    };
+    const onTryAgain = async () => {
+      if (previewedImage) {
+        try { await api.discardPreviewedIllustration(previewedImage.imageId); } catch { /* best effort */ }
+        setPreviewedImage(null);
+      }
+      onPreview();
     };
     return (
       <div className="my-3 rounded-xl border border-amber-400/40 bg-amber-500/5 overflow-hidden">
@@ -293,28 +345,73 @@ export function BackstageActionCard({ block, ctx }: Props) {
           <div className="text-sm leading-relaxed whitespace-pre-wrap text-foreground/90 bg-background/40 rounded-md p-3 border border-border/40 max-h-[240px] overflow-y-auto">
             {block.custom_instructions}
           </div>
-          {error && <p className="text-xs text-destructive mt-2">{error}</p>}
-          <div className="flex items-center gap-2 mt-3">
-            <button
-              onClick={onApply}
-              disabled={state === "applying"}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-amber-500/90 hover:bg-amber-500 text-black text-xs font-medium transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
-            >
-              {state === "applying" ? <Loader2 size={12} className="animate-spin" /> : <ImagePlus size={12} />}
-              {state === "applying" ? "Illustrating…" : "Illustrate this"}
-            </button>
-            <button
-              onClick={() => setState("dismissed")}
-              disabled={state === "applying"}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent text-xs transition-colors cursor-pointer"
-            >
-              <X size={12} />
-              Dismiss
-            </button>
-          </div>
-          {state === "applying" && (
-            <p className="text-[10px] text-muted-foreground/60 mt-2 italic">This usually takes 15-30 seconds.</p>
+          {previewedImage && (
+            <div className="mt-3 rounded-lg overflow-hidden border border-amber-400/30 bg-black/20">
+              <img
+                src={previewedImage.dataUrl}
+                alt="Preview"
+                className="block w-full h-auto"
+                style={{ aspectRatio: String(previewedImage.aspectRatio) }}
+                draggable={false}
+              />
+            </div>
           )}
+          {state === "previewing" && (
+            <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground italic">
+              <Loader2 size={12} className="animate-spin" />
+              <span>Painting preview… (20–40 seconds)</span>
+            </div>
+          )}
+          {error && <p className="text-xs text-destructive mt-2">{error}</p>}
+          <div className="flex items-center gap-2 mt-3 flex-wrap">
+            {state === "preview-shown" || state === "attaching" ? (
+              <>
+                <button
+                  onClick={onAttach}
+                  disabled={state === "attaching"}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-500/90 hover:bg-emerald-500 text-black text-xs font-medium transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+                >
+                  {state === "attaching" ? <Loader2 size={12} className="animate-spin" /> : <Check size={12} />}
+                  {state === "attaching" ? "Adding…" : "Add to chat"}
+                </button>
+                <button
+                  onClick={onTryAgain}
+                  disabled={state === "attaching"}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent text-xs transition-colors cursor-pointer"
+                >
+                  <ImagePlus size={12} />
+                  Try again
+                </button>
+                <button
+                  onClick={onDiscard}
+                  disabled={state === "attaching"}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent text-xs transition-colors cursor-pointer"
+                >
+                  <X size={12} />
+                  Discard
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={onPreview}
+                  disabled={state === "previewing"}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-amber-500/90 hover:bg-amber-500 text-black text-xs font-medium transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+                >
+                  {state === "previewing" ? <Loader2 size={12} className="animate-spin" /> : <ImagePlus size={12} />}
+                  {state === "previewing" ? "Painting…" : "Generate preview"}
+                </button>
+                <button
+                  onClick={onDiscard}
+                  disabled={state === "previewing"}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent text-xs transition-colors cursor-pointer"
+                >
+                  <X size={12} />
+                  Dismiss
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     );

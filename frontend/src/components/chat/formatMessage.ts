@@ -2,6 +2,36 @@ import React from "react";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
+import {
+  ArrowLeft,
+  BookOpen,
+  Camera,
+  ChevronDown,
+  Compass,
+  Database,
+  Download,
+  Feather,
+  Image as ImageIcon,
+  Loader2,
+  PanelLeft,
+  Pencil,
+  Plus,
+  RotateCw,
+  Save,
+  ScrollText,
+  Send,
+  Settings,
+  SmilePlus,
+  Sparkles,
+  Trash2,
+  Volume2,
+  Package,
+  Wallpaper,
+  X,
+  Sliders,
+  Wand2,
+  type LucideIcon,
+} from "lucide-react";
 
 /**
  * Detect whether a message body is emoji-only (one or a few emoji, nothing
@@ -142,6 +172,142 @@ export const markdownComponents = {
     }
     return React.createElement("em", { className: "opacity-65" }, children);
   },
+};
+
+/**
+ * Inline icon catalog for the consultant. The Backstage prompt teaches
+ * the model to write `[icon:Name]` inline (e.g. "click the [icon:Sparkles]
+ * Imagine button"); we transform those tokens into actual Lucide icons
+ * at render time.
+ *
+ * Only the names below are honored — unknown names fall back to plain
+ * text so the assistant can't spray broken icons by guessing. Names are
+ * case-sensitive on purpose so the prompt's catalog reads as the source
+ * of truth.
+ */
+export const CONSULTANT_ICON_MAP: Record<string, LucideIcon> = {
+  Settings,
+  Sparkles,
+  Compass,
+  Image: ImageIcon,
+  Gallery: ImageIcon,
+  ScrollText,
+  Canon: ScrollText,
+  Keep: ScrollText,
+  BookOpen,
+  Plus,
+  Pencil,
+  Edit: Pencil,
+  Trash: Trash2,
+  Trash2,
+  Download,
+  Send,
+  Volume: Volume2,
+  Speak: Volume2,
+  Package,
+  Inventory: Package,
+  Sidebar: PanelLeft,
+  PanelLeft,
+  SmilePlus,
+  Reaction: SmilePlus,
+  Wallpaper,
+  Background: Wallpaper,
+  Save,
+  Database,
+  Backup: Database,
+  Camera,
+  Feather,
+  Imagine: Sparkles,
+  Consultant: Compass,
+  ChevronDown,
+  ArrowLeft,
+  Loader: Loader2,
+  RotateCw,
+  X,
+  Sliders,
+  Tone: Sliders,
+  Wand: Wand2,
+  Generate: Wand2,
+};
+
+/**
+ * Replace `[icon:Name]` tokens in consultant message text with backticked
+ * sentinels (`` `icon:Name` ``) so they survive markdown processing as
+ * inline `<code>` nodes — which the consultant `code` component below
+ * intercepts and renders as the actual Lucide icon. Unknown names are
+ * left as plain text so a typo doesn't produce a broken/empty icon.
+ */
+export function transformConsultantIcons(text: string): string {
+  return text.replace(/\[icon:([A-Za-z][A-Za-z0-9_]*)\]/g, (full, name: string) => {
+    if (CONSULTANT_ICON_MAP[name]) return `\`icon:${name}\``;
+    return full;
+  });
+}
+
+/// Render an `icon:Name` inline-code node as the matching Lucide icon.
+/// Falls through to a normal `<code>` element for any other inline-code
+/// content so real backticked snippets still render as code.
+function consultantInlineCode({ children }: { children?: React.ReactNode }) {
+  const text = extractText(children);
+  const match = /^icon:([A-Za-z][A-Za-z0-9_]*)$/.exec(text.trim());
+  if (match) {
+    const Icon = CONSULTANT_ICON_MAP[match[1]];
+    if (Icon) {
+      return React.createElement(
+        "span",
+        {
+          className:
+            "inline-flex items-center justify-center align-text-bottom w-[1em] h-[1em] mx-[0.15em] text-current opacity-90",
+          "aria-label": match[1],
+          title: match[1],
+        },
+        React.createElement(Icon, { size: "1em", strokeWidth: 2 }),
+      );
+    }
+  }
+  return React.createElement(
+    "code",
+    { className: "px-1 py-0.5 rounded bg-muted/40 text-[0.9em]" },
+    children,
+  );
+}
+
+/**
+ * Variant of markdownComponents for the StoryConsultant. Adds inline-icon
+ * rendering (intercepts `<code>` nodes that match the icon sentinel) on
+ * top of the base components.
+ */
+export const consultantMarkdownComponents = {
+  ...markdownComponents,
+  code: consultantInlineCode,
+};
+
+/**
+ * Variant for the StoryConsultant's *streaming* render. Layers two
+ * transforms on top of the base components:
+ *   • inline-icon rendering (so `[icon:Foo]` sentinels render as icons)
+ *   • `pre` override that turns in-progress fenced code blocks into a
+ *     small spinner with "Checking tools…" — keeps an in-progress
+ *     ```action ...``` JSON block from flickering through as raw code.
+ *     Once streaming finishes the renderer switches back to the
+ *     segment-aware view (parseBackstageSegments) and the block becomes
+ *     a proper BackstageActionCard.
+ */
+export const consultantStreamingMarkdownComponents = {
+  ...consultantMarkdownComponents,
+  pre: (_props: { children?: React.ReactNode }) =>
+    React.createElement(
+      "div",
+      {
+        className:
+          "my-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted/40 border border-border/40 text-xs text-muted-foreground",
+      },
+      React.createElement("span", {
+        className:
+          "inline-block w-3 h-3 rounded-full border-2 border-muted-foreground/30 border-t-muted-foreground animate-spin",
+      }),
+      React.createElement("span", null, "Checking tools…"),
+    ),
 };
 
 /** Remark plugins for Markdown rendering (includes math support) */

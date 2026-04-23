@@ -1006,6 +1006,22 @@ export function useAppStore() {
     }
   }, [state.activeCharacter, state.activeGroupChat, state.apiKey, state.notifyOnMessage]);
 
+  /// Append an externally-created message into the active chat's local
+  /// state, used by event-driven flows that bypass the standard
+  /// generate/send paths (e.g. Backstage's preview/attach illustration
+  /// flow). No-op if the message's thread doesn't match the active chat
+  /// — guards against late events firing after the user has switched
+  /// chats. Plays the new-message chime if notifyOnMessage is set.
+  const appendMessage = useCallback((msg: Message) => {
+    setState((s) => {
+      const activeThreadId = s.messages.find((m) => m.thread_id)?.thread_id ?? null;
+      if (activeThreadId && msg.thread_id !== activeThreadId) return s;
+      if (s.messages.some((m) => m.message_id === msg.message_id)) return s;
+      return { ...s, messages: [...s.messages, msg], totalMessages: s.totalMessages + 1 };
+    });
+    if (state.notifyOnMessage) playChime();
+  }, [state.notifyOnMessage]);
+
   const adjustMessage = useCallback(async (messageId: string, instructions: string) => {
     if (!state.apiKey) return;
     const isGroup = !!state.activeGroupChat && !state.activeCharacter;
@@ -1587,6 +1603,7 @@ export function useAppStore() {
     promptCharacter,
     generateNarrative,
     generateIllustration,
+    appendMessage,
     adjustMessage,
     editMessageContent,
     deleteMessage,

@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Markdown from "react-markdown";
 import { Dialog } from "@/components/ui/dialog";
-import { X, Loader2, Send, Lightbulb, Sparkles, Trash2, ChevronDown, Pencil, Plus, PanelLeftClose, PanelLeftOpen, Download, BookOpen, Drama } from "lucide-react";
-import { formatMessage, markdownComponents, remarkPlugins, rehypePlugins } from "./formatMessage";
+import { X, Loader2, Send, Lightbulb, Sparkles, Trash2, ChevronDown, Pencil, Plus, PanelLeftClose, PanelLeftOpen, Download, BookOpen, Drama, Eye, Feather, Wand2, RotateCcw, Sprout, Map, Hammer, ArrowRight, Users, Flame, type LucideIcon } from "lucide-react";
+import { formatMessage, markdownComponents, consultantMarkdownComponents, consultantStreamingMarkdownComponents, transformConsultantIcons, remarkPlugins, rehypePlugins } from "./formatMessage";
 import { listen } from "@tauri-apps/api/event";
 import { api, type ConsultantChat } from "@/lib/tauri";
 import { BackstageActionCard, parseBackstageSegments, type BackstageActionContext } from "./BackstageActionCard";
@@ -39,10 +39,21 @@ interface Props {
   /** Active world id — required for Backstage actions that create
    *  world-scoped entities (e.g. new group chats). */
   worldId: string;
+  /** When set, the modal auto-sends this text as a user message exactly
+   *  once after `open` becomes true. Used by per-message "How do I
+   *  react!?" buttons in ChatView/GroupChatView. Parent should clear it
+   *  via `onAutoSendConsumed` after firing so reopening the modal
+   *  later doesn't re-send the same prompt. */
+  autoSendOnOpen?: string | null;
+  onAutoSendConsumed?: () => void;
 }
 
 interface PromptCategory {
   name: string;
+  /// Lucide icon shown next to the category heading. Picks a verb-shape
+  /// for the category (Eye for diagnostic, Feather for craft, Wand for
+  /// action, etc.) so the heading row reads at a glance.
+  icon: LucideIcon;
   prompts: Array<{ label: string; prompt: string }>;
 }
 
@@ -50,57 +61,89 @@ interface PromptCategory {
 /// uniquely answers well that Immersive can't — state of the world,
 /// craft/worldbuilding, action proposals, post-mortem, maintenance.
 /// Prompts are plainspoken (the user types in their voice; the theatre
-/// register is Backstage's voice, not the user's).
+/// register is Backstage's voice, not the user's). Tuned to be bold —
+/// these should provoke, name what's been ducked, and push toward the
+/// brave move rather than the safe survey.
 function buildBackstageCategories(names: string[]): PromptCategory[] {
   return [
     {
       name: "State of the World",
+      icon: Eye,
       prompts: [
-        { label: "What's the shape of this week?", prompt: "What's the shape of this week in the world? What's been alive, what's gone quiet, where's the energy?" },
-        { label: "Who's been quiet lately?", prompt: "Which characters have I been neglecting? Who hasn't had air in a while?" },
-        { label: "Which chat has been doing the most work?", prompt: "Which chat thread has been doing the most work lately, and what's it been about?" },
-        { label: "What's overdue?", prompt: "Is anything overdue — a chat I should re-enter, a character I should check on, a thread I left dangling?" },
-        { label: "Where's the world's center of gravity right now?", prompt: "Where's the center of gravity of this world right now? Which character or thread is pulling the most weight?" },
+        { label: "What's gone stale and won't admit it?", prompt: "Be honest with me — what in this world has gone stale lately and is coasting on past momentum? Name it specifically." },
+        { label: "Which character is being protected from harm?", prompt: "Which character have I been quietly protecting from anything difficult? Who needs something to actually go wrong for them?" },
+        { label: "Where am I avoiding a confrontation?", prompt: "Where in this world am I dodging a confrontation that should have already happened? Point to the chat and the unsaid thing." },
       ],
     },
     {
       name: "Craft & Worldbuilding",
+      icon: Feather,
       prompts: [
-        { label: "What's missing from this world?", prompt: "What's missing from this world right now that I might want to develop? A character type, a kind of place, a register I haven't touched?" },
-        ...names.map((n) => ({ label: `Where could ${n} grow?`, prompt: `Where could ${n} grow as a character? What's a dimension of them I haven't really explored yet?` })),
-        { label: "What am I leaning too hard on?", prompt: "What am I leaning too hard on lately? A theme, a setting, a beat that's recurring more than I realize?" },
-        { label: "What thread did I start and drop?", prompt: "What's a thread I started and never came back to? Something that deserves another visit." },
-        { label: "What would freshen this world up?", prompt: "If I wanted to surprise myself in this world this week, what would you suggest?" },
+        ...names.slice(0, 1).map((n) => ({ label: `What about ${n} am I afraid to write?`, prompt: `What about ${n} have I been treating with kid gloves? What dimension of them would I write if I weren't worried about being kind?` })),
+        { label: "What would a brutal editor cut?", prompt: "If a brutal editor read the last month of this world's chats, what would they cut, and what would they tell me to write more of?" },
+        { label: "What truth about this world am I avoiding?", prompt: "What truth about this world have I been circling but not writing? Name it." },
       ],
     },
     {
       name: "Stage a Move",
+      icon: Drama,
       prompts: [
-        ...names.map((n) => ({ label: `Propose a canon update about ${n}`, prompt: `Look at recent activity with ${n} and propose a canon update that would be worth keeping. Something settled has shifted; weave it in.` })),
-        { label: "Draft a message I could send", prompt: "Look at where I've been recently and draft a message I could send. Pick the chat where the next move is clearest, and stage the line." },
-        { label: "Two characters who should meet", prompt: "Are there two characters who haven't met yet (or haven't been in a chat together) who clearly should be? Suggest the pairing." },
-        { label: "A scene worth illustrating", prompt: "What's a scene from a recent chat that's worth illustrating? Something with a strong visual beat that an image would honor." },
-        { label: "A portrait worth refreshing", prompt: "Has a character physically shifted in a way a fresh portrait would honor? Suggest a regeneration if so." },
+        ...names.slice(0, 1).map((n) => ({ label: `Stage a costly move for ${n}`, prompt: `Look at recent activity with ${n} and propose a canon update that would actually cost them something — not a flattering note, a real shift.` })),
+        { label: "Where am I hedging? Stage the line that stops.", prompt: "Pick the chat where I've been hedging the most and draft the message that stops hedging. Don't soften it." },
+        { label: "What's the secret I should let surface?", prompt: "Is there a secret or unsaid thing in this world that I've kept buried too long? Suggest where it surfaces and who notices first." },
       ],
     },
     {
       name: "Look Back",
+      icon: RotateCcw,
       prompts: [
-        { label: "What's the through-line of recent days?", prompt: "Step back with me — what's the through-line of the last several days across all chats? What story am I actually telling?" },
-        { label: "Which moment landed hardest?", prompt: "Looking back at the last week or so, which specific moment landed hardest? Pick one and tell me why it stuck." },
-        { label: "What pattern is forming?", prompt: "What pattern is forming across recent activity that I might not have named yet?" },
-        { label: "What did I expect that didn't happen?", prompt: "Has anything gone differently than I might have expected? Where has a character surprised you (or me)?" },
-        { label: "What's the emotional weather right now?", prompt: "What's the overall emotional weather of this world right now? Bright? Heavy? Restless? Stuck?" },
+        { label: "What story am I actually telling?", prompt: "Step back. Across the last weeks of this world, what story am I actually telling — not what I think I'm telling, what's on the page?" },
+        { label: "Which moment did I rush past that should have hurt?", prompt: "Looking back, which moment did I rush past that should have actually hurt — a death, a betrayal, a goodbye I underplayed?" },
+        { label: "What's the through-line costing me?", prompt: "What's the through-line of this world right now — and what's it costing me to keep telling it that way? What might be on the other side of changing it?" },
       ],
     },
     {
       name: "Tending the World",
+      icon: Sprout,
       prompts: [
-        { label: "What needs maintenance?", prompt: "What in this world needs maintenance — a stale chat, a contradicting canon entry, a character whose description hasn't kept up with who they actually are now?" },
-        { label: "Which canon entries are doing the most work?", prompt: "Which canonized entries (description weaves, kept records) are doing the most work in shaping how scenes land? Which ones could be sharpened?" },
-        { label: "Where does a meanwhile event belong?", prompt: "Is there a chat that's gone quiet where a meanwhile event would help me re-enter? Suggest one." },
-        { label: "Help me re-enter a cold chat", prompt: "Pick a chat that's gone cold and tell me what re-entering it might look like. Where would I pick up?" },
-        { label: "What would you do if you were me right now?", prompt: "Honestly — if you were me, sitting at the keyboard right now, what would you do next?" },
+        { label: "Which canon entry is now a lie?", prompt: "Which canonized entry (description weave, kept record) is now a lie about who this character actually is? Suggest the rewrite." },
+        { label: "Which character description is flattering, not honest?", prompt: "Which character's description is flattering them rather than describing them as they actually behave now? Name it and propose the honest version." },
+        { label: "Where would an ending serve this world?", prompt: "Where in this world would a real ending — a death, a departure, a relationship breaking — serve the larger story right now? Don't be precious about it." },
+      ],
+    },
+    {
+      // Backstage as a wayfinding companion — the user can ask "where
+      // is X" or "how do I do Y" and get a direct answer about the
+      // app's UI rather than craft advice. Different register from the
+      // bolder categories: matter-of-fact, helpful, location-aware.
+      name: "Find Your Way Around",
+      icon: Map,
+      prompts: [
+        ...names.slice(0, 1).map((n) => ({ label: `Where do I change ${n}'s portrait?`, prompt: `Where in the app do I change ${n}'s portrait — generate a new one, pick from the gallery, or upload my own? Walk me through it.` })),
+        { label: "How do I start a group chat?", prompt: "How do I start a group chat — picking which characters are in it, naming it, and getting the first message going?" },
+        { label: "Where do I change the chat background or world image?", prompt: "Where do I change the chat background, manage the world image gallery, or set the active world image? Walk me through the world-image controls." },
+        { label: "How do I undo a canon entry I just made?", prompt: "I just canonized something and I want to undo it — where do I go to find that kept record and remove it, and what does removing it actually change about the character?" },
+        { label: "Where are my backups — and how do I restore one?", prompt: "Where does the app store its backups, how do I trigger one manually, and how do I restore from a previous backup if I need to?" },
+        { label: "How do I switch which AI model is being used?", prompt: "Where do I change which AI model the app is using — globally, and per-chat? Walk me through both controls." },
+        { label: "Where do I find all my Imagined Chapters?", prompt: "Where do I open the Imagined Chapters modal for a chat, and how do I see (and revisit) every chapter I've already made for a thread?" },
+      ],
+    },
+    {
+      // Backstage's other strength: it knows the apparatus. This category
+      // surfaces the app's actual tools (canonization, imagined chapters,
+      // meanwhile events, portraits, illustrations, journals, group chats,
+      // inventories) so the user can ASK Backstage to recommend which
+      // tool to reach for and why. The bold register stays — these are
+      // pointed asks, not menu items.
+      name: "Reach for the Apparatus",
+      icon: Hammer,
+      prompts: [
+        { label: "What moment is overdue for canonization?", prompt: "Look at recent activity — which specific message or exchange is overdue for canonization? Tell me which to click 'Remember this' on and which deserves 'This changes them.'" },
+        { label: "What scene is begging for an Imagined Chapter?", prompt: "Which moment from recent chats is begging to be turned into an imagined chapter — something that would gain weight from being rendered as image + prose?" },
+        ...names.slice(0, 1).map((n) => ({ label: `Has ${n}'s portrait fallen behind?`, prompt: `Has ${n} shifted in a way the current portrait no longer carries — emotionally, physically, in bearing? Should I generate a new one, and what should it capture?` })),
+        ...names.slice(0, 1).map((n) => ({ label: `Should ${n}'s inventory be refreshed?`, prompt: `Look at ${n}'s recent activity — has anything changed about what they're carrying, wearing, or holding that the inventory should now reflect? If so, tell me what to update.` })),
+        { label: "Two characters who should be in a group chat", prompt: "Which two (or three) characters should be put in a group chat together that haven't been? What's the encounter that would surface, and which world-day setting would land it best?" },
+        { label: "Whose user-journal entry am I overdue for?", prompt: "Looking at what I've been doing in this world recently, what would my own user-journal entry need to say honestly? Draft the shape of it." },
       ],
     },
   ];
@@ -110,47 +153,44 @@ function buildCategories(names: string[]): PromptCategory[] {
   return [
     {
       name: "What's Next",
+      icon: ArrowRight,
       prompts: [
         { label: "What should I do?", prompt: "What should I do next? Give me a few options." },
         { label: "How should I respond to that?", prompt: "How should I respond to what just happened? Give me a few options." },
-        { label: "What could I say here?", prompt: "Help me think of what to say. What would feel right given everything that's happened?" },
-        { label: "Something feels like it's about to shift", prompt: "Something feels like it's about to shift. What do you think is coming?" },
         { label: "What haven't I thought of?", prompt: "What's an angle here I haven't considered?" },
       ],
     },
     {
       name: "The People",
+      icon: Users,
       prompts: [
-        ...names.map((n) => ({ label: `What's going on with ${n}?`, prompt: `What's going on with ${n} right now? What do you think they're feeling?` })),
-        ...names.map((n) => ({ label: `What am I missing about ${n}?`, prompt: `Am I missing something about ${n}? About what they just said or did?` })),
+        ...names.slice(0, 1).map((n) => ({ label: `What's going on with ${n}?`, prompt: `What's going on with ${n} right now? What do you think they're feeling?` })),
         { label: "Where do things stand between us?", prompt: "Where do things stand between us right now? What's changed recently?" },
-        ...names.map((n) => ({ label: `What might ${n} do next?`, prompt: `What do you think ${n} might do next? What would you expect from them here?` })),
+        ...names.slice(0, 1).map((n) => ({ label: `What might ${n} do next?`, prompt: `What do you think ${n} might do next? What would you expect from them here?` })),
       ],
     },
     {
       name: "Stepping Back",
+      icon: Eye,
       prompts: [
         { label: "What's really going on here?", prompt: "Step back with me — what's really going on here? What's the bigger picture?" },
         { label: "What's the subtext right now?", prompt: "What's the subtext of what just happened? What's going on beneath the surface?" },
-        { label: "What moment mattered most recently?", prompt: "Pick a moment from recently and tell me why it mattered." },
-        { label: "What should I be paying more attention to?", prompt: "Is there something I should be paying more attention to? Something I'm glossing over?" },
         { label: "What would you do in my position?", prompt: "Honestly — what would you do if you were me right now?" },
       ],
     },
     {
       name: "The Tension",
+      icon: Flame,
       prompts: [
         { label: "How can I push this further?", prompt: "How can I push this further? Raise the stakes a little?" },
         { label: "How can I ease things?", prompt: "How can I ease things? Bring some warmth or calm to this?" },
-        { label: "Is there something unresolved?", prompt: "Is there something unresolved hanging in the air between us that I should address?" },
         { label: "What am I avoiding?", prompt: "Am I avoiding something? Something I should probably say or do but haven't?" },
-        { label: "What should I be asking you?", prompt: "What question should I be asking you right now?" },
       ],
     },
   ];
 }
 
-export function StoryConsultantModal({ open, onClose, apiKey, characterId, groupChatId, threadId, characterNames, worldImageUrl, portraits, userAvatarUrl, notifyOnMessage, chatFontSize, worldId }: Props) {
+export function StoryConsultantModal({ open, onClose, apiKey, characterId, groupChatId, threadId, characterNames, worldImageUrl, portraits, userAvatarUrl, notifyOnMessage, chatFontSize, worldId, autoSendOnOpen, onAutoSendConsumed }: Props) {
   const [chats, setChats] = useState<ConsultantChat[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   // Which tab the sidebar is showing. Also determines the mode of any
@@ -363,6 +403,38 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
       }
     }
   }, [activeChatId, threadId, characterId, groupChatId, activeMode]);
+
+  // Auto-send-on-open: per-message "How do I react!?" buttons set
+  // `autoSendOnOpen` and flip `open` true in the same render. After the
+  // modal mounts, fire send(text) once and notify the parent so the
+  // trigger gets cleared.
+  //
+  // CRITICAL — refs over deps: `send` is a useCallback whose identity
+  // changes whenever its deps move (loading, chats, activeChatId, ...).
+  // Several of those deps change within ~10-50ms of the modal opening
+  // (loadChats resolves → setChats fires → send identity changes). If
+  // we put `send` in this effect's dep array, the new identity causes
+  // a re-run, the cleanup cancels the pending setTimeout, and the
+  // 50ms callback never fires — auto-send silently no-ops. Ref the
+  // function and depend only on the trigger flags.
+  const autoSendFiredRef = useRef<string | null>(null);
+  const sendRef = useRef(send);
+  sendRef.current = send;
+  const onAutoSendConsumedRef = useRef(onAutoSendConsumed);
+  onAutoSendConsumedRef.current = onAutoSendConsumed;
+  useEffect(() => {
+    if (!open) { autoSendFiredRef.current = null; return; }
+    if (!autoSendOnOpen) return;
+    if (autoSendFiredRef.current === autoSendOnOpen) return;
+    autoSendFiredRef.current = autoSendOnOpen;
+    // Tiny defer so the modal mount + chat-load effects settle before
+    // send() runs. send() auto-creates a chat if there isn't one.
+    const t = setTimeout(() => {
+      sendRef.current(autoSendOnOpen);
+      onAutoSendConsumedRef.current?.();
+    }, 100);
+    return () => clearTimeout(t);
+  }, [open, autoSendOnOpen]);
 
   const handleEditSave = async () => {
     if (editingIdx == null || !activeChatId) return;
@@ -579,7 +651,10 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                 <div className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
                   {categories.map((cat) => (
                     <div key={cat.name}>
-                      <h4 className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground/60 mb-2 px-1">{cat.name}</h4>
+                      <h4 className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground/60 mb-2 px-1 flex items-center gap-1.5">
+                        <cat.icon size={11} className="text-muted-foreground/70" />
+                        <span>{cat.name}</span>
+                      </h4>
                       <div className="space-y-0.5">
                         {cat.prompts.map((p, i) => (
                           <button
@@ -666,7 +741,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                       {msg.role === "assistant" ? (
                         <div
                           style={{ fontSize: `${chatFontPx(chatFontSize)}px` }}
-                          className="prose prose-sm max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-secondary-foreground)] [--tw-prose-headings:var(--color-secondary-foreground)] [--tw-prose-bold:var(--color-secondary-foreground)] [--tw-prose-bullets:var(--color-secondary-foreground)] [--tw-prose-counters:var(--color-secondary-foreground)] [--tw-prose-links:var(--color-primary)]"
+                          className="prose prose-sm max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [--tw-prose-body:var(--color-secondary-foreground)] [--tw-prose-headings:var(--color-secondary-foreground)] [--tw-prose-bold:var(--color-secondary-foreground)] [--tw-prose-bullets:var(--color-secondary-foreground)] [--tw-prose-counters:var(--color-secondary-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-quotes:var(--color-secondary-foreground)] [--tw-prose-quote-borders:rgba(255,255,255,0.25)]"
                         >
                           {/* Both modes can emit ```action cards now —
                               Immersive's prompt teaches a small in-world
@@ -678,13 +753,14 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                               {parseBackstageSegments(msg.content).map((seg, segIdx) => (
                                 seg.kind === "text"
                                   ? (seg.value.trim()
-                                      ? <Markdown key={segIdx} components={markdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{formatMessage(seg.value)}</Markdown>
+                                      ? <Markdown key={segIdx} components={consultantMarkdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{transformConsultantIcons(formatMessage(seg.value))}</Markdown>
                                       : null)
                                   : <BackstageActionCard
                                       key={segIdx}
                                       block={seg.block}
                                       ctx={{
                                         activeThreadId: threadId,
+                                        groupChatId,
                                         onAppliedClose: onClose,
                                         apiKey,
                                         worldId,
@@ -693,7 +769,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                               ))}
                             </>
                           ) : (
-                            <Markdown components={markdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{formatMessage(msg.content)}</Markdown>
+                            <Markdown components={consultantStreamingMarkdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{transformConsultantIcons(formatMessage(msg.content))}</Markdown>
                           )}
                         </div>
                       ) : (
@@ -753,17 +829,15 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
           {/* Input area */}
           <div className="flex-shrink-0 border-t border-border px-4 py-3 relative z-[1]">
             <div className="max-w-3xl mx-auto flex items-end gap-2">
-              {activeMode !== "backstage" && (
-                <button
-                  onClick={() => setShowPrompts(!showPrompts)}
-                  className={`flex-shrink-0 h-9 rounded-lg flex items-center gap-1.5 px-3 text-sm font-medium transition-colors cursor-pointer ${
-                    showPrompts ? "bg-amber-500/20 text-amber-400" : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                  }`}
-                >
-                  <Lightbulb size={18} />
-                  <span>Ideas</span>
-                </button>
-              )}
+              <button
+                onClick={() => setShowPrompts(!showPrompts)}
+                className={`flex-shrink-0 h-9 rounded-lg flex items-center gap-1.5 px-3 text-sm font-medium transition-colors cursor-pointer ${
+                  showPrompts ? "bg-amber-500/20 text-amber-400" : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                }`}
+              >
+                <Lightbulb size={18} />
+                <span>Ideas</span>
+              </button>
               <textarea
                 ref={inputRef}
                 value={input}

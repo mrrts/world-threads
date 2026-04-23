@@ -701,3 +701,310 @@ pub fn list_thread_illustrations_cmd(
     out.sort_by(|a, b| a.created_at.cmp(&b.created_at));
     Ok(out)
 }
+
+// ─── Backstage two-step illustration flow ───────────────────────────────
+//
+// Backstage proposes an illustration as an action card. The user should be
+// able to PREVIEW the rendered image inside the card before committing it
+// to the chat — and reject it if it doesn't land. Three commands wire this:
+//
+//   1. preview_backstage_illustration_cmd — generate + save bytes + write
+//      to world_images, but do NOT insert a chat message yet. Returns the
+//      image_id + data URL + aspect ratio + caption so the card can render.
+//   2. attach_previewed_illustration_cmd — given an existing image_id and
+//      the target thread (solo or group), insert the message row into the
+//      correct table. World_day is read from the active world state.
+//   3. discard_previewed_illustration_cmd — clean up the file + world_images
+//      row when the user rejects the preview.
+//
+// Routing fix vs the prior bug: the previous BackstageActionCard always
+// called the SOLO command, so an illustration generated from a group chat
+// went to the wrong thread. This split lets the card pass the active
+// chat's own thread context (group_chat_id when in a group) at preview
+// time AND at attach time.
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PreviewedIllustration {
+    /// UUID assigned at preview time. Stable across attach/discard.
+    pub image_id: String,
+    /// data:image/png;base64,... — render directly in the action card.
+    pub data_url: String,
+    pub aspect_ratio: f64,
+    pub caption: String,
+}
+
+/// Generate an illustration for Backstage WITHOUT inserting a chat message.
+/// Saves the image to disk + world_images so the attach step can reference
+/// it by id. When `group_chat_id` is set, paints the scene with the group's
+/// full cast as references; otherwise paints as a solo scene for the
+/// `character_id`'s chat.
+#[tauri::command]
+pub async fn preview_backstage_illustration_cmd(
+    db: State<'_, Database>,
+    portraits_dir: State<'_, PortraitsDir>,
+    api_key: String,
+    character_id: String,
+    group_chat_id: Option<String>,
+    custom_instructions: Option<String>,
+) -> Result<PreviewedIllustration, String> {
+    let dir = &portraits_dir.0;
+
+    // ── Resolve context: solo vs group ──────────────────────────────────
+    let is_group = group_chat_id.is_some();
+    let (
+        world,
+        primary_character,
+        additional_cast_owned,
+        recent_msgs,
+        model_config,
+        user_profile,
+        all_names,
+        names_map,
+        list_for_thread_msg_id_set,
+    ): (
+        World,
+        Character,
+        Vec<Character>,
+        Vec<Message>,
+        orchestrator::ModelConfig,
+        Option<UserProfile>,
+        Vec<String>,
+        Option<std::collections::HashMap<String, String>>,
+        std::collections::HashSet<String>,
+    ) = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        if let Some(gc_id) = group_chat_id.as_deref() {
+            let gc = get_group_chat(&conn, gc_id).map_err(|e| e.to_string())?;
+            let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
+            let mut model_config = orchestrator::load_model_config(&conn);
+            model_config.apply_provider_override(&conn, &format!("provider_override.{}", gc_id));
+            let recent_msgs = list_group_messages_within_budget(
+                &conn, &gc.thread_id, model_config.safe_history_budget() as i64, 30,
+            ).map_err(|e| e.to_string())?;
+            let user_profile = get_user_profile(&conn, &gc.world_id).ok();
+            let char_ids: Vec<String> = gc.character_ids.as_array()
+                .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+                .unwrap_or_default();
+            let characters: Vec<Character> = char_ids.iter()
+                .filter_map(|id| get_character(&conn, id).ok())
+                .collect();
+            let primary = characters.iter().find(|c| c.character_id == character_id)
+                .cloned()
+                .or_else(|| characters.first().cloned())
+                .ok_or_else(|| "No characters in group chat".to_string())?;
+            let additional: Vec<Character> = characters.iter()
+                .filter(|c| c.character_id != primary.character_id)
+                .cloned()
+                .collect();
+            let all_names: Vec<String> = characters.iter().map(|c| c.display_name.clone()).collect();
+            let names_map: std::collections::HashMap<String, String> = characters.iter()
+                .map(|c| (c.character_id.clone(), c.display_name.clone()))
+                .collect();
+            (world, primary, additional, recent_msgs, model_config, user_profile,
+             all_names, Some(names_map), std::collections::HashSet::new())
+        } else {
+            let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
+            let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
+            let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
+            let model_config = orchestrator::load_model_config(&conn);
+            let recent_msgs = list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?;
+            let user_profile = get_user_profile(&conn, &character.world_id).ok();
+            (world, character, Vec::new(), recent_msgs, model_config, user_profile,
+             Vec::new(), None, std::collections::HashSet::new())
+        }
+    };
+    let _ = list_for_thread_msg_id_set;
+
+    // ── Reference images: user avatar + character portrait(s) ───────────
+    let mut reference_images: Vec<Vec<u8>> = Vec::new();
+    if let Some(ref profile) = user_profile {
+        if !profile.avatar_file.is_empty() {
+            let path = dir.join(&profile.avatar_file);
+            if let Ok(bytes) = std::fs::read(&path) { reference_images.push(bytes); }
+        }
+    }
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        if let Some(p) = get_active_portrait(&conn, &primary_character.character_id) {
+            let path = dir.join(&p.file_name);
+            if let Ok(bytes) = std::fs::read(&path) { reference_images.push(bytes); }
+        }
+        for c in &additional_cast_owned {
+            if let Some(p) = get_active_portrait(&conn, &c.character_id) {
+                let path = dir.join(&p.file_name);
+                if let Ok(bytes) = std::fs::read(&path) { reference_images.push(bytes); }
+            }
+        }
+    }
+
+    // High tier by default for Backstage previews — the user is choosing
+    // to commit them deliberately and shouldn't get the rough draft.
+    let (img_size, img_quality) = ("1536x1024", "medium");
+
+    let user_display_name = user_profile.as_ref()
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("The human");
+    let resolved_instructions: Option<String> = match custom_instructions.as_deref() {
+        Some(s) if !s.trim().is_empty() => Some(s.to_string()),
+        _ => orchestrator::pick_memorable_moment_caption(
+                &model_config.chat_api_base(),
+                &api_key,
+                &model_config.dialogue_model,
+                &recent_msgs,
+                user_display_name,
+            ).await.ok(),
+    };
+
+    let additional_refs: Vec<&Character> = additional_cast_owned.iter().collect();
+    let additional_opt: Option<&[&Character]> = if additional_refs.is_empty() { None } else { Some(&additional_refs) };
+    let names_map_ref = names_map.as_ref();
+
+    let (scene_description, image_bytes, chat_usage) = orchestrator::generate_illustration_with_base(
+        &model_config.chat_api_base(),
+        &model_config.openai_api_base(),
+        &api_key,
+        &model_config.dialogue_model,
+        &model_config.image_model,
+        img_quality,
+        img_size,
+        model_config.image_output_format().as_deref(),
+        &world,
+        &primary_character,
+        additional_opt,
+        &recent_msgs,
+        user_profile.as_ref(),
+        &reference_images,
+        resolved_instructions.as_deref(),
+        false, // has_previous
+        true,  // include_scene_summary
+        if all_names.is_empty() { None } else { Some(&all_names) },
+        names_map_ref,
+    ).await?;
+
+    let caption = match custom_instructions.as_deref() {
+        Some(s) if !s.trim().is_empty() => s.to_string(),
+        _ => orchestrator::derive_caption_from_scene(
+                &model_config.chat_api_base(),
+                &api_key,
+                &model_config.dialogue_model,
+                &scene_description,
+            ).await.unwrap_or_else(|_| resolved_instructions.clone().unwrap_or_default()),
+    };
+
+    if let Some(u) = &chat_usage {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let _ = record_token_usage(&conn, "illustration", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
+    }
+
+    let image_id = uuid::Uuid::new_v4().to_string();
+    let file_name = format!("illustration_{image_id}.png");
+    std::fs::create_dir_all(dir).map_err(|e| format!("Failed to create dir: {e}"))?;
+    std::fs::write(dir.join(&file_name), &image_bytes)
+        .map_err(|e| format!("Failed to save illustration: {e}"))?;
+    let aspect = png_aspect_ratio(&image_bytes);
+    let b64 = base64_encode_bytes(&image_bytes);
+    let data_url = format!("data:image/png;base64,{b64}");
+    let now = Utc::now().to_rfc3339();
+
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let img = WorldImage {
+            image_id: image_id.clone(),
+            world_id: world.world_id.clone(),
+            prompt: scene_description,
+            file_name: file_name.clone(),
+            is_active: false,
+            // Mark previewed (not yet attached) so cleanup tooling can
+            // see the difference. The attach step rewrites this to
+            // "illustration".
+            source: "illustration_preview".to_string(),
+            created_at: now,
+            aspect_ratio: aspect,
+            caption: caption.clone(),
+        };
+        let _ = create_world_image(&conn, &img);
+    }
+    let _ = is_group;
+
+    Ok(PreviewedIllustration { image_id, data_url, aspect_ratio: aspect, caption })
+}
+
+/// Commit a previewed illustration into the active chat. Routes to the
+/// correct table based on whether the target is a group or solo thread.
+/// World_day / world_time on the message come from the active world state
+/// at attach-time so the illustration gets the right time-of-day badge.
+#[tauri::command]
+pub fn attach_previewed_illustration_cmd(
+    db: State<'_, Database>,
+    portraits_dir: State<'_, PortraitsDir>,
+    image_id: String,
+    target_thread_id: String,
+    is_group_thread: bool,
+) -> Result<Message, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+
+    let (file_name, world_id): (String, String) = conn.query_row(
+        "SELECT file_name, world_id FROM world_images WHERE image_id = ?1",
+        params![image_id], |r| Ok((r.get(0)?, r.get(1)?)),
+    ).map_err(|_| "Previewed image not found — may have been discarded".to_string())?;
+
+    let world = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
+    let path = portraits_dir.0.join(&file_name);
+    let bytes = std::fs::read(&path).map_err(|e| format!("Failed to read previewed image: {e}"))?;
+    let b64 = base64_encode_bytes(&bytes);
+    let data_url = format!("data:image/png;base64,{b64}");
+
+    // Promote source from "illustration_preview" to "illustration" so it's
+    // indexed alongside the regular illustrations in the world gallery.
+    conn.execute(
+        "UPDATE world_images SET source = 'illustration' WHERE image_id = ?1",
+        params![image_id],
+    ).map_err(|e| e.to_string())?;
+
+    let (wd, wt) = world_time_fields(&world);
+    let now = Utc::now().to_rfc3339();
+    let msg = Message {
+        message_id: image_id.clone(),
+        thread_id: target_thread_id.clone(),
+        role: "illustration".to_string(),
+        content: data_url,
+        tokens_estimate: 0,
+        sender_character_id: None,
+        created_at: now,
+        world_day: wd,
+        world_time: wt,
+        address_to: None,
+        mood_chain: None,
+        is_proactive: false,
+    };
+
+    if is_group_thread {
+        create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
+    } else {
+        create_message(&conn, &msg).map_err(|e| e.to_string())?;
+    }
+
+    Ok(msg)
+}
+
+/// Discard a previewed illustration: delete the file from disk and remove
+/// the world_images row.
+#[tauri::command]
+pub fn discard_previewed_illustration_cmd(
+    db: State<'_, Database>,
+    portraits_dir: State<'_, PortraitsDir>,
+    image_id: String,
+) -> Result<(), String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let file_name: Option<String> = conn.query_row(
+        "SELECT file_name FROM world_images WHERE image_id = ?1",
+        params![image_id], |r| r.get(0),
+    ).ok();
+    if let Some(f) = file_name {
+        let path = portraits_dir.0.join(&f);
+        if path.exists() { let _ = std::fs::remove_file(&path); }
+    }
+    let _ = conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![image_id]);
+    Ok(())
+}
