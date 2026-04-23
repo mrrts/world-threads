@@ -126,15 +126,35 @@ Before interpreting any result as "the commit caused it," rule out two alternati
 
 - **Scene/chat-history context.** A short affirmation after a vow reads differently than a short affirmation after a joke. `worldcli evaluate --context-turns N` (default 3) gives the evaluator the preceding scene so it judges the reply against its actual moment. Up the budget (`--context-turns 5` or `8`) when the rubric asks a scene-dependent question — the signal gain is worth ~$0.00003/turn per call.
 
-## Qualitative feedback is a legitimate experiment mode
+## Three experimental modes — pick the one the question wants
 
-`worldcli evaluate` is count-based by default, and that's the right default for hypotheses with clean yes/no/mixed verdicts. But nothing in the methodology requires every science run to be quantitative. When a rule's effect is subtle, when two count-based rubrics in a row have failed to catch the move (the 1326 John-stillness report is the worked example), when a refutation's reasoning is teaching you more than the numbers — ask the LLM open-ended questions instead.
+Every hypothesis you audition should pick one of three modes, and the mode should be named in the candidate's design sketch so the user chooses knowing what kind of run they're approving.
 
-The shape: sample N messages, include them all in a single prompt to a capable model, ask something like *"Read these N replies by this character. What patterns do you notice? What failure modes surface that a yes/no rubric would miss? What register-moves are working that haven't been named yet?"* The reply is prose, not structured data. You read it as collaborator notes and name what's useful.
+**Mode A — Passive corpus observation.** The default `worldcli evaluate` run over messages Ryan and the characters actually exchanged. Measures whether a rule has moved real-use behavior. The right mode when you're validating a shipped craft rule's effect on ordinary conversation.
 
-**Be reflective about when this fits.** The trigger is usually: "the refutation's reasoning is where the signal lives." If the last two count runs both refuted cleanly AND both surfaced something the rubric couldn't name, don't run a third count run. Run a qualitative pass.
+**Mode B — Qualitative feedback synthesis.** Sample N messages, hand them all to a capable LLM, ask an open-ended prose question ("what patterns do you see? what's working? what register-moves aren't named yet?"). No structured verdicts; you read the reply as collaborator notes. The right mode when two count-based runs have refuted cleanly but the refutation's reasoning is the real signal.
 
-**Offer to take initiative.** When you notice a qualitative pass would teach more than another count-based rubric, propose it proactively during hypothesis auditioning — include it as one of the candidates in the chooser. Don't wait for the user to ask. The discipline is the same as everywhere else: name the move before making it, and write up what you learned.
+**Mode C — Active elicitation (Claude Code as scientist-interlocutor).** Use `worldcli ask --session <name>` to converse directly with the character in a designed conversation. The data is what you elicit, not what's pre-existing in the corpus. The right mode when: testing an edge-case input the corpus doesn't cover; running controlled variation (same character, three versions of a prompt, one variable changed); needing turn-by-turn data about how the character's register evolves within a session; or probing a scenario Ryan hasn't organically created.
+
+**The strongest active-elicitation pattern — cross-commit replay.** `git stash && git checkout <older-ref> && cargo build --bin worldcli && worldcli ask <char> "<exact prompt>" --session <name>`, restore HEAD, repeat. Same character, same prompt, different prompt-stack version — a true A/B with every confound held constant except the commit. Manual ceremony today.
+
+**When writing up an active-elicitation experiment, quote every prompt verbatim** in the report. Your prompts are not Ryan's prompts; they're part of the experimental condition and must be inspectable.
+
+**Offer modes proactively during hypothesis auditioning.** Each of the 2–3 candidates you present to the user should carry its mode in the design sketch: *"Candidate 1 is Mode A (passive corpus against commit X), Candidate 2 is Mode C (active elicitation with three joy-prompt variants), Candidate 3 is Mode B (qualitative synthesis over the 1304 John sample)."* The user can then pick by both question-shape and methodology-fit.
+
+## Mode B (qualitative feedback) — when to reach for it
+
+The trigger is usually: *"the refutation's reasoning is where the signal lives."* If the last two count-based runs both refuted cleanly AND both surfaced something the rubric couldn't name (the 1326 John-stillness report is the worked example — the rubric's "≤2 sentences" gate correctly excluded John's actual move, so counting wasn't going to find what he was doing), don't run a third count run. Run a qualitative pass: sample N messages, include them all in one prompt to a capable model, ask *"what patterns do you notice, what register-moves are working that haven't been named yet, what failure modes surface that a yes/no rubric would miss?"*
+
+## Mode C (active elicitation) — when to reach for it
+
+The trigger is usually: *"the question requires a scenario the natural corpus doesn't cover."* Or: *"I need to vary one condition while holding others constant."* Or: *"turn-by-turn evolution within a session matters for this question."*
+
+Use `worldcli ask --session <name>` to drive a multi-turn conversation. Each turn, pause and read the character's reply against the hypothesis; let the next turn sharpen the probe. Keep every prompt you send, verbatim — they become part of the report.
+
+For cross-commit replay (true A/B): `git stash && git checkout <ref> && cargo build --bin worldcli && worldcli ask <char> "<prompt>" --session <name>`, restore HEAD, repeat. Same character, same prompt, different prompt-stack version.
+
+**Budget expectation.** Active elicitation uses the dialogue model (gpt-4o by default), so per-call cost is ~$0.01, not ~$0.0002. A 10-turn session is ~$0.10 — under the per-call cap but notably more expensive than a full `evaluate` run. Worth it when the question is shaped for direct conversation; wasteful when a rubric would answer it.
 
 ## Rubric-writing is load-bearing
 

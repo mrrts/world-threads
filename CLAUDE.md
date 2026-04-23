@@ -143,6 +143,27 @@ The one gotcha worth naming: message `created_at` is stored as UTC; git `committ
 
 Be **reflective about when this fits**: when the prior run refuted cleanly AND the refutation's reasoning surfaced something the rubric couldn't name (the 1326 John-stillness report is the worked example — the rubric's "≤2 sentences" gate correctly excluded John's actual move, so counting wasn't going to find what he was doing). In those moments, an open-ended prose pass is the right next instrument. **Offer to take initiative**: when you notice a qualitative-feedback pass would teach more than another count-based rubric, propose it proactively without waiting to be asked. The discipline is the same as everywhere else in this repo — name the move before making it, and write up what you learned afterward.
 
+**Active elicitation as a first-class experimental mode.** The methodology need not be limited to observing what's already in the corpus. Claude Code can be the scientist-interlocutor: use `worldcli ask --session <name>` (or `worldcli consult --session <name>`) to converse directly with characters, running designed probes turn-by-turn. **The data you elicit is data, and often better data than the natural corpus** — because you control the prompt, you can test a specific hypothesis directly, you can vary one condition while holding others fixed, and you can follow up on a reply with the next turn that sharpens or disambiguates the finding. When Ryan says *"this should be the data over my input"* he means: active elicitation is the preferred mode for hypothesis-testing; the natural corpus is where the question is seeded, but the controlled experiment lives in sessions you drive.
+
+When active elicitation is the right mode:
+
+- Testing a hypothesis about an edge-case input the natural corpus doesn't cover (e.g., *"does Jasper shade joy specifically when it's theologically framed, or whenever joy is ecstatic in register?"* — needs three carefully-crafted joy prompts, not whatever Ryan has happened to say).
+- Running controlled variation — same character, three versions of the same prompt with one variable changed, see which triggers the behavior.
+- Needing turn-by-turn data: how does the character's register shift within a session as the conversation develops?
+- A hypothesis requires a scenario Ryan hasn't organically created.
+
+When passive corpus observation is better:
+
+- You're validating whether a rule has shifted real-use behavior — not controlled behavior under your probes.
+- You want the character's register unmediated by your particular prompting style.
+- The rule's effect should show up in ordinary conversation, not just in contrived probes.
+
+**The strongest active-elicitation pattern — cross-commit replay.** `git stash && git checkout <older-ref> && cargo build --bin worldcli && worldcli ask <char> "<exact prompt>" --session <name>`, then restore HEAD and repeat against the current ref. Same character, same prompt, different prompt-stack version — a true A/B with every confound held constant except the prompt commit. Manual ceremony today; automating it into a `worldcli replay` command is a reasonable future extension if this pattern gets used enough.
+
+**Be reflective about your role as the scientist.** Your prompts are not Ryan's. The data you elicit reflects YOUR style of inquiry as much as the character's register. When writing up an active-elicitation experiment, **quote every prompt you sent verbatim** in the report — the prompt IS part of the experimental condition and should be inspectable by future readers. If your prompts skew toward a register Ryan doesn't naturally use (more meta, more probing, more analytical), name that as a confound and stratify against it by either (a) running a parallel passive-corpus evaluation on the same rule, or (b) asking the character to respond as they would to "a real user in a normal conversation" vs. to "a scientist asking a probing question" and comparing.
+
+**Offer to take initiative on active elicitation.** Same as with qualitative feedback: when a hypothesis would be better tested by a designed conversation than by rubric-ing the natural corpus, propose active elicitation as one of the candidates during hypothesis auditioning. Don't wait to be asked. The three modes — passive corpus observation, qualitative feedback synthesis, and active elicitation — should be in the tool-belt for every experiment design, with the choice of which to use driven by the question's shape rather than by habit.
+
 ## Direct character access — the `worldcli` dev tool
 
 You (Claude Code) have a CLI binary at `src-tauri/src/bin/worldcli.rs` that lets you converse with the user's characters and inspect db state DIRECTLY, without needing the user to copy/paste between the UI and our chat. **Reach for this tool whenever you want to verify a prompt theory, run a quick A/B test, or apply the "ask the character" pattern from above without round-tripping through the user.**
