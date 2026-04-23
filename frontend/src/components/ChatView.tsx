@@ -587,11 +587,16 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
     return () => window.removeEventListener("imagined-chapter-canonized", handler as EventListener);
   }, [store]);
 
-  const openGallery = useCallback(async () => {
+  const openGallery = useCallback(async (startMessageId?: string) => {
+    // Default entry point: the most recent illustration in loaded
+    // messages. Explicit startMessageId (from e.g. the sticky-
+    // illustration thumbnail) overrides so we land on the specific
+    // image the user clicked — even if it's older than the default.
     const lastIllus = store.messages.filter((m) => m.role === "illustration").at(-1);
-    if (!lastIllus || !store.activeCharacter) return;
-    setIllustrationModalId(lastIllus.message_id);
-    setModalSelectedId(lastIllus.message_id);
+    const seedId = startMessageId ?? lastIllus?.message_id;
+    if (!seedId || !store.activeCharacter) return;
+    setIllustrationModalId(seedId);
+    setModalSelectedId(seedId);
     setModalPlayingVideo(false);
     setModalImageLoading(false);
     try {
@@ -606,7 +611,10 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
   }, [store.messages, store.activeCharacter]);
 
   useEffect(() => {
-    const onGallery = () => openGallery();
+    const onGallery = (e: Event) => {
+      const detail = (e as CustomEvent<{ messageId?: string }>).detail;
+      openGallery(detail?.messageId);
+    };
     const onConsultant = () => setShowConsultant(true);
     const onSummary = () => setShowSummary(true);
     const onSettings = () => setShowSettingsPopover(true);
@@ -727,7 +735,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         )}
         <div className="ml-auto relative group/gallery">
           <button
-            onClick={openGallery}
+            onClick={() => openGallery()}
             className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed"
             disabled={!store.messages.some((m) => m.role === "illustration")}
           >

@@ -1,6 +1,30 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUp } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { Images, Maximize2, Minimize2 } from "lucide-react";
 import { api, type Message, type IllustrationSummary } from "@/lib/tauri";
+
+// Three size presets for the floating sticky. `lg` is the historical
+// default (what the sticky has always been); `md` and `sm` are the
+// new smaller steps. The clamp values scale fluidly across laptop →
+// ultrawide viewports so every preset stays visually coherent at the
+// `xl:block` gate (~1280px) through 3840px displays.
+const SIZE_PRESETS = {
+  sm: "clamp(110px, 8vw, 260px)",
+  md: "clamp(160px, 14vw, 440px)",
+  lg: "clamp(220px, 20vw, 620px)",
+} as const;
+type SizeKey = keyof typeof SIZE_PRESETS;
+const SIZE_ORDER: SizeKey[] = ["sm", "md", "lg"];
+const SIZE_STORAGE_KEY = "wt.sticky-illustration.size";
+
+function loadInitialSize(): SizeKey {
+  try {
+    const v = localStorage.getItem(SIZE_STORAGE_KEY);
+    if (v === "sm" || v === "md" || v === "lg") return v;
+  } catch {
+    // localStorage unavailable — use default.
+  }
+  return "lg";
+}
 
 interface Props {
   messages: Message[];
@@ -64,9 +88,6 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
   // timeline without needing to rebind on each fetch.
   const timelineRef = useRef<IllustrationSummary[]>(timeline);
   timelineRef.current = timeline;
-  const messagesRef = useRef<Message[]>(messages);
-  messagesRef.current = messages;
-
   const [activeIllus, setActiveIllus] = useState<IllustrationSummary | null>(null);
   const [activeInView, setActiveInView] = useState<boolean>(true);
 
@@ -184,25 +205,38 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
     };
   }, [activeIllus?.message_id]);
 
+  // User-selected size preset. Persisted to localStorage so the
+  // preference rides across sessions and thread switches.
+  const [size, setSize] = useState<SizeKey>(loadInitialSize);
+  useEffect(() => {
+    try { localStorage.setItem(SIZE_STORAGE_KEY, size); } catch { /* ignore */ }
+  }, [size]);
+  const cycleSize = useCallback(() => {
+    setSize((prev) => {
+      const idx = SIZE_ORDER.indexOf(prev);
+      return SIZE_ORDER[(idx + 1) % SIZE_ORDER.length];
+    });
+  }, []);
+
   if (!activeIllus) return null;
 
   const hidden = activeInView || initialGate;
 
   const ar = aspectRatios?.[activeIllus.message_id];
 
-  // If the active illustration IS in the currently-loaded messages,
-  // clicking scrolls it into view. If it's in older unloaded history,
-  // the click is a soft no-op (no scroll target yet) — the user still
-  // gets the visual-orientation value from the thumbnail.
-  const isInLoadedHistory = messagesRef.current.some(
-    (m) => m.message_id === activeIllus.message_id
-  );
-  const onClick = () => {
-    if (!scrollContainer || !isInLoadedHistory) return;
-    const el = scrollContainer.querySelector<HTMLElement>(
-      `[data-message-id="${activeIllus.message_id}"]`
-    );
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  // Clicking the sticky image opens the gallery modal to this exact
+  // illustration. Older/unloaded illustrations are still reachable
+  // because the modal fetches the full thread page on open.
+  const onClickImage = () => {
+    window.dispatchEvent(new CustomEvent("wt:open-gallery", {
+      detail: { messageId: activeIllus.message_id },
+    }));
+  };
+  const onKeyDownOuter = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onClickImage();
+    }
   };
 
   const base = `hidden xl:block absolute bottom-4 right-4 z-20 group select-none
@@ -215,64 +249,72 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
 
   const visState = hidden
     ? "opacity-0 scale-90 translate-y-4 translate-x-2 pointer-events-none"
-    : `opacity-100 scale-100 translate-y-0 translate-x-0 ${
-        isInLoadedHistory ? "cursor-pointer hover:ring-emerald-500/60 hover:scale-[1.04] hover:-translate-y-0.5" : "cursor-default"
-      }`;
+    : "opacity-100 scale-100 translate-y-0 translate-x-0 cursor-pointer hover:ring-emerald-500/60";
+
+  // Icon for the resize button: signal the NEXT step explicitly.
+  // From sm/md the next step is larger → Maximize2. From lg the
+  // next step wraps back to sm → Minimize2.
+  const ResizeIcon = size === "lg" ? Minimize2 : Maximize2;
+  const nextSizeLabel = size === "lg" ? "sm" : size === "md" ? "lg" : "md";
 
   return (
-    <button
-      type="button"
-      onClick={hidden ? undefined : onClick}
+    <div
+      role="button"
       tabIndex={hidden ? -1 : 0}
+      onClick={hidden ? undefined : onClickImage}
+      onKeyDown={hidden ? undefined : onKeyDownOuter}
       aria-hidden={hidden ? true : undefined}
-      aria-label={
-        isInLoadedHistory
-          ? "Scroll to the illustration for the moment you're reading"
-          : "Illustration for the moment you're reading (in older history)"
-      }
-      title={
-        isInLoadedHistory
-          ? "Jump to scene"
-          : "Scene from older history (not loaded)"
-      }
+      aria-label="Open this illustration in the gallery"
+      title="Open in gallery"
       className={`${base} ${visState}`}
-      // Width grows fluidly with viewport instead of staying pinned at
-      // 264px. Lower bound keeps it usable on the narrowest xl screens
-      // (the `xl:block` gate already hides it below ~1280px); upper
-      // bound prevents it from dominating very wide displays. The
-      // image inside scales by aspect ratio so height tracks naturally.
-      // max-height clamps the visual against tall, narrow windows so a
-      // portrait-AR illustration doesn't overflow the viewport.
-      // Floor lowered + vw multiplier reduced so the sticky doesn't
-      // overlap the chat content at smaller laptop viewports (~1280px,
-      // where the xl:block gate first lights this up). At ultrawide /
-      // Vision Pro virtual displays the upper cap (620px) preserves
-      // the same substantial reference-image size as before.
-      // Approximate sizes:
-      //   1280px → 256px   1440px → 288px   1920px → 384px
-      //   2560px → 512px   3840px → 620px (capped)
-      style={{ width: "clamp(220px, 20vw, 620px)", maxHeight: "70vh" }}
+      // width uses the active size preset; the transition on the
+      // outer container animates between presets smoothly.
+      style={{ width: SIZE_PRESETS[size], maxHeight: "70vh" }}
     >
       <img
         src={activeIllus.content}
         alt="Illustration for the moment you're reading"
-        className="block w-full h-auto max-h-[70vh] object-contain"
+        className="block w-full h-auto max-h-[70vh] object-contain pointer-events-none"
         style={ar ? { aspectRatio: String(ar) } : undefined}
         draggable={false}
       />
+      {/* Hover overlay — the resize button sits top-right (mirroring
+          IllustrationMessage's hover toolbar), and a small "Open in
+          gallery" pill sits bottom-right as the primary affordance
+          cue. Both appear together on hover. */}
+      <div
+        className="absolute top-1.5 right-1.5 flex gap-1.5 opacity-0 group-hover:opacity-100
+                   transition-opacity duration-150"
+      >
+        <div className="relative group/resize">
+          <button
+            type="button"
+            onClick={(e) => {
+              // Don't trigger the outer's open-gallery click.
+              e.stopPropagation();
+              cycleSize();
+            }}
+            aria-label={`Resize (next: ${nextSizeLabel})`}
+            className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors backdrop-blur-sm"
+          >
+            <ResizeIcon size={14} />
+          </button>
+          <span className="absolute top-full right-0 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/resize:opacity-100 pointer-events-none transition-opacity">
+            Resize
+          </span>
+        </div>
+      </div>
       <div
         className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100
                    transition-opacity duration-150 flex items-end justify-end
                    bg-gradient-to-t from-black/60 via-transparent to-transparent"
       >
-        {isInLoadedHistory && (
-          <span className="m-1.5 inline-flex items-center gap-1 rounded-full
-                           bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white">
-            <ArrowUp size={10} />
-            Jump to scene
-          </span>
-        )}
+        <span className="m-1.5 inline-flex items-center gap-1 rounded-full
+                         bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white">
+          <Images size={10} />
+          Open in gallery
+        </span>
       </div>
-    </button>
+    </div>
   );
 }
