@@ -372,6 +372,24 @@ worldcli synthesize-runs list [--limit N]
 worldcli synthesize-runs show <id-or-prefix>
 worldcli synthesize-runs search "<substring>"
 
+# Cross-commit A/B replay via prompt override — Mode C's strongest
+# instrument. For each ref in --refs, fetch prompts.rs at that commit
+# via `git show`, parse out the named dialogue craft-note bodies,
+# inject them as overrides into THIS running binary's prompt-assembly
+# pipeline, send the same prompt against each ref's overrides, and
+# return the replies side-by-side. No git worktrees, no checkout, no
+# rebuild. Overridable scope is narrow on purpose: dialogue craft notes
+# only (OVERRIDABLE_DIALOGUE_FRAGMENTS in prompts.rs); cosmology /
+# agape / reverence / truth / daylight / nourishment / soundness
+# invariants are NOT overridable.
+worldcli replay --refs <sha>,<sha>,... --character <id> \
+    --prompt "<user message>" \
+    [--model <override>] \
+    [--confirm-cost <usd>]   # replay fans out per ref; total cost adds up fast
+worldcli replay-runs list [--limit N]
+worldcli replay-runs show <id-or-prefix>
+worldcli replay-runs search "<substring>"
+
 # Read your own prior runs (avoid redoing answered questions):
 worldcli runs-list [--limit N] [--json]
 worldcli runs-show <id-or-prefix> [--json]

@@ -79,7 +79,7 @@ Mirror the `ask` run-log pattern: `~/.worldcli/evaluate-runs/<run-id>.json` capt
 
 **Build cost:** small-medium. ~3 hours.
 
-### 3. `worldcli replay` for cross-commit A/B — higher cost, high ROI
+### 3. `worldcli replay` for cross-commit A/B — higher cost, high ROI — **SHIPPED 2026-04-23**
 
 **Ryan's correction (2026-04-23, in-session):** don't use git worktrees or re-check-out commits. Instead, simulate conversations using the historical prompt text directly, without touching the working tree.
 
