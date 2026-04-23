@@ -38,6 +38,8 @@ A `post-commit` hook (`.githooks/post-commit`, wired via `core.hooksPath`) nudge
 
 After a fresh clone, re-enable the hook with: `git config core.hooksPath .githooks`
 
+A second genre of report lives in the same directory under the same naming convention: **natural-experiment findings** from `worldcli sample-windows`. Those are nudged by an in-flight design decision needing data, not by the time-or-volume floor — see the worldcli section below for the bar and the frequency discipline.
+
 ## How to read this craft stack
 
 When reviewing, auditing, refactoring, or critiquing anything in this repo (especially `prompts.rs`), follow the **load-bearing-multiplicity prior**: when two directives appear to contradict each other, assume the multiplicity is intentional before assuming it's a bug. Apparent tension is almost always the same truth from different angles, not two principles needing a precedence rule. Full reading instructions in `docs/VOICE.md` under "Reading this work, especially as an AI."
@@ -167,6 +169,24 @@ worldcli recent-messages <char-id> \
     [--with-context N] \
     [--json]
 
+# Group-chat surfaces (some characters live mostly here, not in solo):
+worldcli list-group-chats [--world <id>] [--json]
+worldcli group-messages <group-chat-id> \
+    [--limit N] [--grep "..."] [--before <iso>] [--after <iso>] \
+    [--with-context N] [--json]
+
+# Natural-experiment evaluation — sample messages on either side of a
+# git ref so prompt changes can be tested against the corpus:
+worldcli sample-windows --ref <git-sha-or-ref> \
+    [--end-ref <sha>] \
+    [--limit N] \
+    [--character <id>] \
+    [--world <id>] \
+    [--role assistant|user|narrative|any] \
+    [--solo-only | --groups-only] \
+    [--repo <path>] \
+    [--json]
+
 # The cost-gated one:
 worldcli ask <char-id> "<message>" \
     [--session <name>] \
@@ -207,6 +227,38 @@ worldcli quests --world b8368a15-... --json
 ```
 
 Combine `--json` + `jq` (or python -c "import json,sys") for any analytic transform. The CLI gives you primitives; you do the synthesis.
+
+### Natural-experiment evaluation: `sample-windows` + reports/
+
+Every assistant message has a `created_at`. Every prompt change is a git commit with a `committer_date`. So the corpus is *already* a before/after dataset for any prompt change — no instrumentation needed. `sample-windows` is the read primitive built around this fact: it pulls the most recent N messages before a ref's commit timestamp and the earliest N after, across both surfaces, so a single command returns the dataset a comparison needs.
+
+```bash
+# Did the keep_the_scene_breathing block actually reduce dead-end closes?
+worldcli sample-windows --ref <commit-that-added-it> --limit 30 --json | jq '...'
+
+# Two refs — skip a noisy in-between range when a series A..B is the change:
+worldcli sample-windows --ref <A> --end-ref <B> --limit 40 --json
+
+# Just one character, just one surface:
+worldcli sample-windows --ref <sha> --character <id> --groups-only --limit 20 --json
+```
+
+Defaults to `--role assistant` because the assistant turn is where prompt changes show up — but `--role any` is there if you want the user-side too. Defaults to BOTH solo and group surfaces because solo-only sweeps systematically under-represent ensemble-coded characters. Use `--solo-only` / `--groups-only` to scope explicitly.
+
+The discipline that goes with this primitive: **when a sample-windows investigation surfaces something load-bearing for an in-flight build/design decision, write a report and commit it.** Same `reports/YYYY-MM-DD-<purpose-slug>.md` convention as the trajectory reports above; same standing autonomy to commit. The point is to keep findings from dying in conversation context — future investigations can read prior reports the same way they can read prior runs via `runs-search`, and the project's reflective layer accumulates rather than resets.
+
+What qualifies for a report:
+- The finding directly informs a craft choice currently being made (ship/don't ship a tightening pass; soften/sharpen a rule; settle whether two prompt knobs actually stratify).
+- The before/after comparison surfaces an asymmetry across surfaces or characters that a feature-in-flight needs to design around.
+- A natural-experiment result that resolves an open question some other commit explicitly flagged.
+
+What does NOT qualify (and would dilute the signal):
+- One-off sanity checks that nothing is broken.
+- A run that surprised you but didn't change anything in flight.
+- "Vibes" confirmation that the new prompt feels good.
+- General curiosity with no build/design decision attached.
+
+The bar is honest: *would a future Claude Code reading this report change its behavior on a feature still in flight?* If yes, write it. If no, leave the finding in the conversation and the run manifest — those are sufficient for "interesting but not load-bearing." This is a different cadence from the trajectory reports, which are nudged by the post-commit hook. Natural-experiment reports are nudged by an active design decision needing data, not by time-or-volume thresholds.
 
 ### When to reach for `worldcli ask`
 
