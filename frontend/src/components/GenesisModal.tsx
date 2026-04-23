@@ -703,7 +703,11 @@ export function GenesisModal({ open, onClose, apiKey, googleApiKey, setApiKey, s
                 And you? Who walks in?
               </DialogTitle>
             </DialogHeader>
-            <DialogBody className="space-y-4">
+            {/* max-h + overflow-y-auto keeps the dialog from growing past
+                the viewport when the form expands — importing a portrait
+                from another world auto-opens the advanced section, which
+                otherwise pushes the footer off-screen on shorter laptops. */}
+            <DialogBody className="space-y-4 max-h-[65vh] overflow-y-auto">
               <p className="text-sm text-foreground/90 leading-relaxed">
                 The world's been dreamt. The people in it are waiting. One small piece left —
                 you, in their eyes. Short and easy; fuller if you want.
