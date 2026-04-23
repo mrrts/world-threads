@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
-import { Images, Maximize2, Minimize2 } from "lucide-react";
+import { Crosshair, Images, Maximize2, Minimize2 } from "lucide-react";
 import { api, type Message, type IllustrationSummary } from "@/lib/tauri";
 
 // Three size presets for the floating sticky. `lg` is the historical
@@ -252,6 +252,18 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
       detail: { messageId: activeIllus.message_id },
     }));
   };
+  // Jump-to-scene: smooth-scroll the chat to the illustration's
+  // message row if it's currently in loaded history. Soft-noop for
+  // older/unloaded illustrations — rare in practice because the
+  // sticky only surfaces when its anchor is near the viewport.
+  const onJumpToScene = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!scrollContainer) return;
+    const el = scrollContainer.querySelector<HTMLElement>(
+      `[data-message-id="${activeIllus.message_id}"]`
+    );
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
   const onKeyDownOuter = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -309,6 +321,22 @@ export function StickyIllustration({ messages, scrollContainer, aspectRatios }: 
         className="absolute top-1.5 right-1.5 flex gap-1.5 opacity-0 group-hover:opacity-100
                    transition-opacity duration-150"
       >
+        {/* Jump-to-scene: smooth-scroll the chat up to the
+            illustration's message row so the user can revisit
+            the surrounding conversation without hunting for it. */}
+        <div className="relative group/jump">
+          <button
+            type="button"
+            onClick={onJumpToScene}
+            aria-label="Jump to the scene in chat history"
+            className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors backdrop-blur-sm"
+          >
+            <Crosshair size={14} />
+          </button>
+          <span className="absolute top-full right-0 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/jump:opacity-100 pointer-events-none transition-opacity">
+            Jump to scene
+          </span>
+        </div>
         <div className="relative group/resize">
           <button
             type="button"
