@@ -37,6 +37,9 @@ Do NOT use this rubric for:
 
 - **Interrogative follow-up isn't dilution.** *"That tracks. What made you want it that way?"* is NOT dilution — the question invites the listener in rather than defending the verdict. Answer NO for this shape.
 
+- **Aaron-class baseline is already low-dilution.** (Added v1 calibration, 2026-04-23 evening, iteration 10.) The first calibration run against Aaron at ref `8e9e53d` returned 0 YES / 12 NO / 4 MIXED across both windows — Aaron's native register already executes verdict-without-over-explanation; the rule the new craft block names was already implicit in his behavior. This is GOOD news for rubric calibration (it correctly classified his signature moves as NO and his "compact + brief earned elaboration" patterns as MIXED) but means **Aaron is the WRONG target for testing whether commit `2445fec` bit**. The right targets are characters with HIGH-DILUTION baseline — those who currently follow assessments with multi-paragraph defense. Candidates: Eli (writer/thinker register), Jasper (reflective potter who already articulates at length per the 1037 report), possibly Jonah. Run the rubric against any of those at a pre-commit ref FIRST to establish their dilution baseline; then a post-commit run can show whether the rule moved them.
+
 # Run history
 
 *(none yet — rubric v1 authored 2026-04-23 evening in iteration 9 of the autonomous loop. First run should target a talkative-explainer character pre/post commit `2445fec` to test whether the craft block bit.)*
+- [2026-04-23] commit 8e9e53dd, --character 0d080429-81b5-431e-8f51-1f8ad4279f9b (v1) — BEFORE: yes=0 no=6 mixed=2 err=0 | AFTER: yes=0 no=6 mixed=2 err=0
