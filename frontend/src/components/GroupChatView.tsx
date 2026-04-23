@@ -343,10 +343,29 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
     }).catch(() => { if (!cancelled) setProviderOverride(""); });
     return () => { cancelled = true; };
   }, [chatId]);
+  // Shared helper for atomic dropdown/toggle chat-settings changes —
+  // writes a settings_update row into group_messages so the change
+  // surfaces in chat history (and reaches the LLM through the dialogue
+  // prompt's history block). Text-input settings below use the
+  // debounced diff path instead. Both land in the same table as
+  // settings_update rows.
+  const recordSettingChange = useCallback(async (key: string, label: string, from: string, to: string) => {
+    if (from === to) return;
+    const threadId = store.messages.find((m) => m.thread_id)?.thread_id ?? null;
+    if (!threadId) return;
+    try {
+      const msg = await api.recordChatSettingsChange(threadId, [{ key, label, from, to }], true);
+      store.appendMessage(msg);
+    } catch { /* best-effort */ }
+  }, [store]);
+
   const setProviderOverridePersist = useCallback((next: string) => {
+    const prev = providerOverride;
     setProviderOverride(next);
     if (chatId) api.setSetting(`provider_override.${chatId}`, next).catch(() => {});
-  }, [chatId]);
+    const fmt = (v: string) => v === "lmstudio" ? "LM Studio" : v === "openai" ? "OpenAI" : "Default";
+    recordSettingChange("provider_override", "Model Provider", fmt(prev), fmt(next));
+  }, [chatId, providerOverride, recordSettingChange]);
 
   // Leader setting: "user" or a character_id.
   const [leader, setLeader] = useState<string>("user");
@@ -361,9 +380,18 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
     return () => { cancelled = true; };
   }, [chatId]);
   const setLeaderPersist = useCallback((next: string) => {
+    const prev = leader;
     setLeader(next);
     if (chatId) api.setSetting(`leader.${chatId}`, next).catch(() => {});
-  }, [chatId]);
+    // Format: "user" → "You"; otherwise the character's display name
+    // (resolved against the group's cast).
+    const fmt = (v: string) => {
+      if (v === "user") return "You";
+      const c = store.characters.find((c) => c.character_id === v);
+      return c?.display_name ?? v;
+    };
+    recordSettingChange("leader", "Leader", fmt(prev), fmt(next));
+  }, [chatId, leader, store.characters, recordSettingChange]);
 
   // Send conversation history: default ON. When OFF, each responding
   // character sees only the system prompt + the triggering message.
@@ -377,9 +405,11 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
     return () => { cancelled = true; };
   }, [chatId]);
   const setSendHistoryPersist = useCallback((next: boolean) => {
+    const prev = sendHistory;
     setSendHistory(next);
     if (chatId) api.setSetting(`send_history.${chatId}`, next ? "on" : "off").catch(() => {});
-  }, [chatId]);
+    recordSettingChange("send_history", "Send History", prev ? "On" : "Off", next ? "On" : "Off");
+  }, [chatId, sendHistory, recordSettingChange]);
 
   // Snapshot of last-saved settings for diff. See ChatView for full
   // rationale; same pattern here for groups.

@@ -401,10 +401,29 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
     }).catch(() => { if (!cancelled) setProviderOverride(""); });
     return () => { cancelled = true; };
   }, [charId]);
+  // Record a one-shot chat-settings change into chat history, so the
+  // inline card renders and the LLM sees the transition on the next
+  // reply. Used by the dropdown / toggle settings (leader, provider,
+  // send-history) whose value changes atomically on a single click —
+  // distinct from the debounced text-input path below (narration tone
+  // / instructions / response length) which records a batched diff.
+  const recordSettingChange = useCallback(async (key: string, label: string, from: string, to: string) => {
+    if (from === to) return;
+    const threadId = store.messages.find((m) => m.thread_id)?.thread_id ?? null;
+    if (!threadId) return;
+    try {
+      const msg = await api.recordChatSettingsChange(threadId, [{ key, label, from, to }], false);
+      store.appendMessage(msg);
+    } catch { /* best-effort; the setting has already been persisted */ }
+  }, [store]);
+
   const setProviderOverridePersist = useCallback((next: string) => {
+    const prev = providerOverride;
     setProviderOverride(next);
     if (charId) api.setSetting(`provider_override.${charId}`, next).catch(() => {});
-  }, [charId]);
+    const fmt = (v: string) => v === "lmstudio" ? "LM Studio" : v === "openai" ? "OpenAI" : "Default";
+    recordSettingChange("provider_override", "Model Provider", fmt(prev), fmt(next));
+  }, [charId, providerOverride, recordSettingChange]);
 
   // Send conversation history: default ON. When OFF, the character sees
   // only the system prompt + the triggering message — prior turns, semantic
@@ -420,9 +439,11 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
     return () => { cancelled = true; };
   }, [charId]);
   const setSendHistoryPersist = useCallback((next: boolean) => {
+    const prev = sendHistory;
     setSendHistory(next);
     if (charId) api.setSetting(`send_history.${charId}`, next ? "on" : "off").catch(() => {});
-  }, [charId]);
+    recordSettingChange("send_history", "Send History", prev ? "On" : "Off", next ? "On" : "Off");
+  }, [charId, sendHistory, recordSettingChange]);
 
   // Leader setting: "user" (default) or the character_id. Controls whose
   // story the scene is framed around in the dialogue prompt.
@@ -438,9 +459,14 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
     return () => { cancelled = true; };
   }, [charId]);
   const setLeaderPersist = useCallback((next: string) => {
+    const prev = leader;
     setLeader(next);
     if (charId) api.setSetting(`leader.${charId}`, next).catch(() => {});
-  }, [charId]);
+    // Format: "user" → "You"; otherwise the character's display name
+    // (solo chat has exactly one other character).
+    const fmt = (v: string) => v === "user" ? "You" : (store.activeCharacter?.display_name ?? v);
+    recordSettingChange("leader", "Leader", fmt(prev), fmt(next));
+  }, [charId, leader, store.activeCharacter, recordSettingChange]);
 
   // Snapshot of last-saved settings, used to compute the diff when the
   // user changes one. Initialized null and seeded on first non-dirty
