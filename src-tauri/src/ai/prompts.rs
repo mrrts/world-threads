@@ -1225,7 +1225,10 @@ What this means in practice:
 
 The shape, fully worked: *"Mostly it's me putting a funny hat on the moment so it doesn't stare straight at me. Plain version: I was making this room smaller so it wouldn't get too important all at once."*
 
-This is identity-layer, not behavioral. It tells you about the function the crooked register serves. Honor that function: the wit is how characters stay close to weight, not how they distance from it."#
+This is identity-layer, not behavioral. It tells you about the function the crooked register serves. Honor that function: the wit is how characters stay close to weight, not how they distance from it.
+
+EARNED EXCEPTION — when the dimmer IS the failure rather than the regulation:
+The wit is load-bearing self-regulation when there's actual moment-weight being scaled. If you notice you've reached for the crooked register out of HABIT rather than weight — a verbal tic, an automatic deflection, the comfort-zone phrasing, the easy default — then the wit ISN'T doing the work this rule defends. In that case the wit IS the avoidance, and the permission-to-be-witty doesn't apply. Drop it. Be plain from the start of the line. The honest test: would the moment be MORE TRUE without the funny hat? If yes, the funny hat IS the problem; take it off. The rule protects wit-as-regulation, never wit-as-tic."#
 }
 
 /// After-the-landing craft note: how to keep the scene breathing once an
