@@ -612,12 +612,12 @@ export function GenesisModal({ open, onClose, apiKey, googleApiKey, setApiKey, s
                 {world && (
                   <div className="rounded-xl overflow-hidden border border-amber-400/30 bg-amber-500/5 animate-in fade-in slide-in-from-bottom-2 duration-500">
                     {world.imageUrl ? (
-                      <div className="relative w-full h-32 overflow-hidden">
+                      <div className="relative w-full h-72 overflow-hidden">
                         <img src={world.imageUrl} alt="" className="w-full h-full object-cover animate-in fade-in duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
                       </div>
                     ) : (
-                      <div className="w-full h-24 bg-gradient-to-br from-amber-500/20 to-amber-500/5 flex items-center justify-center">
+                      <div className="w-full h-72 bg-gradient-to-br from-amber-500/20 to-amber-500/5 flex items-center justify-center">
                         <div className="text-xs text-amber-300/60 italic flex items-center gap-2">
                           <Loader2 size={11} className="animate-spin" />
                           the land is being painted…
