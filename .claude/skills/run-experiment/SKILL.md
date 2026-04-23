@@ -118,6 +118,24 @@ Save to `reports/YYYY-MM-DD-HHMM-<purpose-slug>.md` using the CLAUDE.md naming c
 
 Commit and push per the project's standing autonomy. The report is the artifact; a run not written up is only partial value.
 
+## Confounds to stratify against (not just attribute to the commit)
+
+Before interpreting any result as "the commit caused it," rule out two alternative causes:
+
+- **Chat-settings changes.** Users flip `response_length`, `leader`, `narration_tone`, `send_history`, `provider_override` mid-conversation. Each reshapes character behavior independent of any prompt rule. `worldcli evaluate` stamps each verdict with `active_settings` at reply-time; read those stamps. If response_length flipped from Auto to Short halfway through the window, treat length-sensitive results as contaminated.
+
+- **Scene/chat-history context.** A short affirmation after a vow reads differently than a short affirmation after a joke. `worldcli evaluate --context-turns N` (default 3) gives the evaluator the preceding scene so it judges the reply against its actual moment. Up the budget (`--context-turns 5` or `8`) when the rubric asks a scene-dependent question — the signal gain is worth ~$0.00003/turn per call.
+
+## Qualitative feedback is a legitimate experiment mode
+
+`worldcli evaluate` is count-based by default, and that's the right default for hypotheses with clean yes/no/mixed verdicts. But nothing in the methodology requires every science run to be quantitative. When a rule's effect is subtle, when two count-based rubrics in a row have failed to catch the move (the 1326 John-stillness report is the worked example), when a refutation's reasoning is teaching you more than the numbers — ask the LLM open-ended questions instead.
+
+The shape: sample N messages, include them all in a single prompt to a capable model, ask something like *"Read these N replies by this character. What patterns do you notice? What failure modes surface that a yes/no rubric would miss? What register-moves are working that haven't been named yet?"* The reply is prose, not structured data. You read it as collaborator notes and name what's useful.
+
+**Be reflective about when this fits.** The trigger is usually: "the refutation's reasoning is where the signal lives." If the last two count runs both refuted cleanly AND both surfaced something the rubric couldn't name, don't run a third count run. Run a qualitative pass.
+
+**Offer to take initiative.** When you notice a qualitative pass would teach more than another count-based rubric, propose it proactively during hypothesis auditioning — include it as one of the candidates in the chooser. Don't wait for the user to ask. The discipline is the same as everywhere else: name the move before making it, and write up what you learned.
+
 ## Rubric-writing is load-bearing
 
 The rubric IS the instrument. A vague rubric returns vague verdicts. Shape examples:

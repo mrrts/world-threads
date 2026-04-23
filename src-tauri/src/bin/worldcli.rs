@@ -236,6 +236,16 @@ enum Cmd {
         /// Role filter for messages-to-evaluate. Default 'assistant'.
         #[arg(long, default_value = "assistant")]
         role: String,
+        /// Number of preceding turns (both user and assistant) to
+        /// include as context for each eval target. Default 3 — the
+        /// immediate triggering user turn plus ~2 more beats before
+        /// it. Replies are shaped by chat history, not just by the
+        /// single preceding turn; giving the evaluator scene context
+        /// grounds its judgments. Larger values cost more per call
+        /// (~$0.00003/turn at gpt-4o-mini pricing) but provide
+        /// stronger signal for nuanced rubrics.
+        #[arg(long, default_value_t = 3)]
+        context_turns: i64,
         /// Override the evaluator model (default: memory_model).
         #[arg(long)]
         model: Option<String>,
@@ -790,14 +800,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::SampleWindows { git_ref, end_ref, limit, character, world, role, solo_only, groups_only, repo } => {
             cmd_sample_windows(&r, &git_ref, end_ref.as_deref(), limit, character.as_deref(), world.as_deref(), &role, solo_only, groups_only, repo.as_deref())
         }
-        Cmd::Evaluate { git_ref, end_ref, limit, character, group_chat, rubric, rubric_file, role, model, confirm_cost, repo } => {
+        Cmd::Evaluate { git_ref, end_ref, limit, character, group_chat, rubric, rubric_file, role, context_turns, model, confirm_cost, repo } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_evaluate(&r, &api_key, &git_ref, end_ref.as_deref(), limit, character.as_deref(), group_chat.as_deref(), rubric.as_deref(), rubric_file.as_deref(), &role, model.as_deref(), confirm_cost, repo.as_deref()).await
+            cmd_evaluate(&r, &api_key, &git_ref, end_ref.as_deref(), limit, character.as_deref(), group_chat.as_deref(), rubric.as_deref(), rubric_file.as_deref(), &role, context_turns, model.as_deref(), confirm_cost, repo.as_deref()).await
         }
         Cmd::Consult { character_id, message, mode, session, model, confirm_cost, question_summary } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
@@ -1231,11 +1241,23 @@ Return a strict JSON object with exactly these fields:
 No preface, no markdown, no extra keys. Just the JSON."#
 }
 
-fn evaluator_user_prompt(rubric: &str, user_turn: &str, reply: &str) -> String {
+fn evaluator_user_prompt(
+    rubric: &str,
+    context_turns: &[(String, String)],  // (speaker_label, content) in chronological order
+    reply: &str,
+) -> String {
+    let scene = if context_turns.is_empty() {
+        "(no preceding context available)".to_string()
+    } else {
+        context_turns.iter()
+            .map(|(who, content)| format!("{}: {}", who, content.trim()))
+            .collect::<Vec<_>>()
+            .join("\n\n")
+    };
     format!(
-        "RUBRIC:\n{}\n\nUSER TURN (context only, not being judged):\n{}\n\nCHARACTER REPLY (this is what you're judging):\n{}",
+        "RUBRIC:\n{}\n\nSCENE (preceding conversation, chronological — context only, NOT being judged):\n\n{}\n\nCHARACTER REPLY (this is what you're judging — the next turn after the scene above):\n{}",
         rubric.trim(),
-        user_turn.trim(),
+        scene,
         reply.trim(),
     )
 }
@@ -1245,14 +1267,14 @@ async fn evaluate_one(
     api_key: &str,
     model: &str,
     rubric: &str,
-    user_turn: &str,
+    context_turns: &[(String, String)],
     reply: &str,
 ) -> Result<(EvalVerdict, openai::Usage), String> {
     let req = openai::ChatRequest {
         model: model.to_string(),
         messages: vec![
             openai::ChatMessage { role: "system".to_string(), content: evaluator_system_prompt().to_string() },
-            openai::ChatMessage { role: "user".to_string(), content: evaluator_user_prompt(rubric, user_turn, reply) },
+            openai::ChatMessage { role: "user".to_string(), content: evaluator_user_prompt(rubric, context_turns, reply) },
         ],
         temperature: Some(0.0),
         max_completion_tokens: Some(220),
@@ -1299,6 +1321,17 @@ enum EvalScope {
     Group     { thread_id: String },
 }
 
+/// `EvalTriple` = (target message, preceding turns context, is_group_flag).
+/// The preceding-turns vector carries the N most recent turns before
+/// the target (both user and assistant, chronological order). The
+/// is_group flag tells downstream code which table to read from when
+/// it needs auxiliary context (settings_update rows, etc.).
+type EvalTriple = (
+    app_lib::db::queries::Message,
+    Vec<app_lib::db::queries::Message>, // preceding turns, chronological
+    bool, // is_group
+);
+
 fn pull_eval_window(
     conn: &rusqlite::Connection,
     scope: &EvalScope,
@@ -1306,7 +1339,8 @@ fn pull_eval_window(
     direction: &str,  // "before" or "after"
     role: &str,
     limit: i64,
-) -> Result<Vec<(app_lib::db::queries::Message, Option<app_lib::db::queries::Message>)>, Box<dyn std::error::Error>> {
+    context_turns: i64,
+) -> Result<Vec<EvalTriple>, Box<dyn std::error::Error>> {
     // Normalize the cutoff to the same UTC-with-microseconds shape the
     // messages tables store — "YYYY-MM-DDTHH:MM:SS.ffffff+00:00" —
     // so string comparison matches real-time ordering. git commit
@@ -1391,19 +1425,30 @@ fn pull_eval_window(
 
     // For each target, find the nearest preceding user turn in the
     // correct table (src tells us which).
-    let mut pairs: Vec<(app_lib::db::queries::Message, Option<app_lib::db::queries::Message>)> = Vec::new();
+    // Clamp context_turns to at least 1 — every eval needs at least
+    // the triggering user turn as context. Higher values include
+    // more surrounding turns (both user and assistant roles).
+    let n_context = context_turns.max(1);
+
+    let mut pairs: Vec<EvalTriple> = Vec::new();
     for (m, src) in targets {
-        let tbl = if src == "group" { "group_messages" } else { "messages" };
-        let prev_sql = format!(
+        let is_group = src == "group";
+        let tbl = if is_group { "group_messages" } else { "messages" };
+        // Pull N preceding turns of both roles (user + assistant),
+        // excluding noise roles. Chronological order so the
+        // evaluator reads the scene forward.
+        let ctx_sql = format!(
             "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id,
                     created_at, world_day, world_time, address_to, mood_chain, is_proactive
              FROM {tbl}
-             WHERE thread_id = ?1 AND role = 'user' AND created_at < ?2
-             ORDER BY created_at DESC LIMIT 1"
+             WHERE thread_id = ?1
+               AND created_at < ?2
+               AND role IN ('user', 'assistant', 'narrative')
+             ORDER BY created_at DESC LIMIT ?3"
         );
-        let prev: Option<app_lib::db::queries::Message> = conn.query_row(
-            &prev_sql,
-            rusqlite::params![m.thread_id, m.created_at],
+        let mut stmt = conn.prepare(&ctx_sql)?;
+        let rows = stmt.query_map(
+            rusqlite::params![m.thread_id, m.created_at, n_context],
             |r| Ok(app_lib::db::queries::Message {
                 message_id: r.get(0)?,
                 thread_id: r.get(1)?,
@@ -1418,10 +1463,58 @@ fn pull_eval_window(
                 mood_chain: r.get(10)?,
                 is_proactive: r.get::<_, Option<i64>>(11)?.map(|v| v != 0).unwrap_or(false),
             }),
-        ).ok();
-        pairs.push((m, prev));
+        )?;
+        let mut context: Vec<app_lib::db::queries::Message> = rows.filter_map(|r| r.ok()).collect();
+        context.reverse(); // chronological
+        pairs.push((m, context, is_group));
     }
     Ok(pairs)
+}
+
+/// Reconstruct the chat-settings state active at `at_ts` in the given
+/// thread by walking `settings_update` rows backwards. For each key
+/// (response_length, leader, narration_tone, etc.) the first time we
+/// see it in reverse-chronological order, that's its active value —
+/// every earlier change has been superseded. Returns a map of
+/// key → display-formatted value.
+///
+/// Purpose: any prompt-stack experiment that fails to account for
+/// chat-settings confounds may attribute behavior-shifts to rule
+/// commits that were actually caused by the user flipping a setting
+/// (response_length most notably). Every eval verdict gets stamped
+/// with the then-active settings so the analyst can read the
+/// confound or stratify against it.
+fn active_settings_at(
+    conn: &rusqlite::Connection,
+    thread_id: &str,
+    at_ts: &str,
+    is_group: bool,
+) -> std::collections::HashMap<String, String> {
+    let tbl = if is_group { "group_messages" } else { "messages" };
+    let sql = format!(
+        "SELECT content FROM {tbl}
+         WHERE thread_id = ?1 AND role = 'settings_update' AND created_at < ?2
+         ORDER BY created_at DESC"
+    );
+    let mut out: std::collections::HashMap<String, String> = std::collections::HashMap::new();
+    let Ok(mut stmt) = conn.prepare(&sql) else { return out; };
+    let Ok(rows) = stmt.query_map(
+        rusqlite::params![thread_id, at_ts],
+        |r| r.get::<_, String>(0),
+    ) else { return out; };
+    for row in rows.flatten() {
+        let Ok(body) = serde_json::from_str::<JsonValue>(&row) else { continue; };
+        let Some(changes) = body.get("changes").and_then(|v| v.as_array()) else { continue; };
+        for ch in changes {
+            let (Some(k), Some(to_val)) = (
+                ch.get("key").and_then(|v| v.as_str()),
+                ch.get("to").and_then(|v| v.as_str()),
+            ) else { continue; };
+            // First occurrence in DESC order wins — that's the most recent change.
+            out.entry(k.to_string()).or_insert_with(|| to_val.to_string());
+        }
+    }
+    out
 }
 
 async fn cmd_evaluate(
@@ -1435,6 +1528,7 @@ async fn cmd_evaluate(
     rubric: Option<&str>,
     rubric_file: Option<&std::path::Path>,
     role: &str,
+    context_turns: i64,
     model_override: Option<&str>,
     confirm_cost: Option<f64>,
     repo: Option<&std::path::Path>,
@@ -1498,9 +1592,19 @@ async fn cmd_evaluate(
             )
         };
 
-        let before = pull_eval_window(&conn, &scope, &before_ts, "before", role, limit)?;
-        let after  = pull_eval_window(&conn, &scope, &after_ts,  "after",  role, limit)?;
-        (mc, before, after, display)
+        let before_raw = pull_eval_window(&conn, &scope, &before_ts, "before", role, limit, context_turns)?;
+        let after_raw  = pull_eval_window(&conn, &scope, &after_ts,  "after",  role, limit, context_turns)?;
+        // Enrich each target with the chat-settings state active at
+        // reply-time, so the evaluator output can surface the confound
+        // response_length / leader / narration_tone etc. present when
+        // this particular message was generated.
+        let enrich = |triples: Vec<EvalTriple>| -> Vec<(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)> {
+            triples.into_iter().map(|(m, context, is_group)| {
+                let settings = active_settings_at(&conn, &m.thread_id, &m.created_at, is_group);
+                (m, context, settings)
+            }).collect()
+        };
+        (mc, enrich(before_raw), enrich(after_raw), display)
     };
     let character_name = display_label;
 
@@ -1513,7 +1617,11 @@ async fn cmd_evaluate(
     // ─── Cost projection ─────────────────────────────────────────────
     // Each eval call: ~rubric + ~400 tok context + ~150 tok output.
     let rubric_tokens = estimate_tokens(&rubric_text);
-    let per_call_in = rubric_tokens + 600; // rubric + user_turn + reply + system + overhead
+    // Budget: rubric + system + reply + per-context-turn overhead + slack.
+    // Each context turn ~150 tokens typical; reply ~300; system ~200;
+    // rubric varies. At context_turns=3 that's ~450 context tokens,
+    // adding to the previous ~600 baseline → ~1050 tokens/call.
+    let per_call_in = rubric_tokens + 300 /*reply*/ + 200 /*system*/ + (context_turns as i64 * 180) + 150 /*slack*/;
     let per_call_out: i64 = 220;
     let per_call_usd = project_cost(&model_config.memory_model, per_call_in, per_call_out, &r.cfg.model_pricing);
     let total_projected = per_call_usd * (total_msgs as f64);
@@ -1563,7 +1671,7 @@ async fn cmd_evaluate(
     let mut total_in_tokens: i64 = 0;
     let mut total_out_tokens: i64 = 0;
 
-    let run_window = |name: &'static str, pairs: Vec<(app_lib::db::queries::Message, Option<app_lib::db::queries::Message>)>|
+    let run_window = |name: &'static str, pairs: Vec<(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)>|
       -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(Vec<JsonValue>, i64, i64), Box<dyn std::error::Error>>>>>
     {
         let base_url = base_url.clone();
@@ -1574,9 +1682,30 @@ async fn cmd_evaluate(
             let mut out: Vec<JsonValue> = Vec::new();
             let mut in_tok: i64 = 0;
             let mut out_tok: i64 = 0;
-            for (i, (m, prev)) in pairs.iter().enumerate() {
-                let user_turn = prev.as_ref().map(|p| p.content.as_str()).unwrap_or("(no preceding user turn in this window)");
-                match evaluate_one(&base_url, &api_key, &model, &rubric, user_turn, &m.content).await {
+            for (i, (m, context, settings)) in pairs.iter().enumerate() {
+                // Render context turns as labeled (speaker, content) pairs.
+                // Assistant turns in group chats can have multiple
+                // speakers; for solo threads the speaker is always the
+                // same character. We use "User" and "Character" as
+                // generic labels to keep the prompt compact.
+                let ctx_labeled: Vec<(String, String)> = context.iter().map(|cm| {
+                    let label = match cm.role.as_str() {
+                        "user" => "User".to_string(),
+                        "assistant" => "Character".to_string(),
+                        "narrative" => "[Narrative]".to_string(),
+                        other => other.to_string(),
+                    };
+                    (label, cm.content.clone())
+                }).collect();
+                // JSON-able settings: HashMap → sorted Vec<(k,v)> for stable output.
+                let mut settings_sorted: Vec<(String, String)> = settings.iter()
+                    .map(|(k, v)| (k.clone(), v.clone()))
+                    .collect();
+                settings_sorted.sort();
+                let settings_json: serde_json::Map<String, JsonValue> = settings_sorted.into_iter()
+                    .map(|(k, v)| (k, JsonValue::String(v)))
+                    .collect();
+                match evaluate_one(&base_url, &api_key, &model, &rubric, &ctx_labeled, &m.content).await {
                     Ok((v, u)) => {
                         in_tok += u.prompt_tokens as i64;
                         out_tok += u.completion_tokens as i64;
@@ -1589,6 +1718,7 @@ async fn cmd_evaluate(
                             "confidence": v.confidence,
                             "quote": v.quote,
                             "reasoning": v.reasoning,
+                            "active_settings": settings_json,
                         }));
                     }
                     Err(e) => {
@@ -1597,6 +1727,7 @@ async fn cmd_evaluate(
                             "message_id": m.message_id,
                             "created_at": m.created_at,
                             "error": e,
+                            "active_settings": settings_json,
                         }));
                     }
                 }
@@ -1704,7 +1835,21 @@ async fn cmd_evaluate(
             let c = r_row["confidence"].as_str().unwrap_or("?");
             let quote = r_row["quote"].as_str().unwrap_or("").chars().take(80).collect::<String>();
             let reasoning = r_row["reasoning"].as_str().unwrap_or("").chars().take(140).collect::<String>();
-            println!("  [{ts} {:6}] {} ({}) — \"{}\"", w, j, c, quote);
+            // Chat-settings confound annotation. Print the few
+            // behavior-affecting keys inline if present so the
+            // analyst can see "was this reply under Short mode?"
+            // without leaving the verdict line.
+            let settings_summary: String = r_row.get("active_settings")
+                .and_then(|v| v.as_object())
+                .map(|obj| {
+                    let keys_of_interest = ["response_length", "leader", "narration_tone", "send_history"];
+                    let parts: Vec<String> = keys_of_interest.iter()
+                        .filter_map(|k| obj.get(*k).and_then(|v| v.as_str()).map(|v| format!("{}={}", k, v)))
+                        .collect();
+                    if parts.is_empty() { String::new() } else { format!("  [settings: {}]", parts.join(", ")) }
+                })
+                .unwrap_or_default();
+            println!("  [{ts} {:6}] {} ({}) — \"{}\"{}", w, j, c, quote, settings_summary);
             println!("                      → {}", reasoning);
         }
         println!();
