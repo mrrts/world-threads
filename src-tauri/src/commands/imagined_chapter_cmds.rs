@@ -726,3 +726,61 @@ pub fn canonize_imagined_chapter_cmd(
 
     Ok(CanonizeImaginedChapterResponse { breadcrumb_message_id: breadcrumb_id })
 }
+
+/// Reverse a chapter's canonization. Flips canonized=false, deletes
+/// the breadcrumb message row from messages/group_messages, and
+/// clears breadcrumb_message_id on the chapter. The chapter content
+/// itself is preserved — only the chat-history footprint is removed,
+/// and the chapter goes back to pre-canon state in the modal.
+#[tauri::command]
+pub fn decanonize_imagined_chapter_cmd(
+    db: State<Database>,
+    chapter_id: String,
+) -> Result<(), String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let chapter = get_imagined_chapter(&conn, &chapter_id).map_err(|e| e.to_string())?;
+    if let Some(bc_id) = chapter.breadcrumb_message_id.as_deref() {
+        // Try both tables; whichever has it deletes one row.
+        let _ = conn.execute("DELETE FROM messages WHERE message_id = ?1", params![bc_id]);
+        let _ = conn.execute("DELETE FROM group_messages WHERE message_id = ?1", params![bc_id]);
+    }
+    conn.execute(
+        "UPDATE imagined_chapters SET canonized = 0, breadcrumb_message_id = NULL WHERE chapter_id = ?1",
+        params![chapter_id],
+    ).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BulkDecanonizeResponse {
+    pub decanonized_count: usize,
+}
+
+/// Bulk reset: decanonize every chapter in a thread. Useful as a
+/// one-shot cleanup after the migration auto-canonized prior chapters
+/// based on their existing breadcrumbs. Same per-chapter mechanics:
+/// flips canonized=false, deletes the breadcrumb row, clears the FK.
+#[tauri::command]
+pub fn bulk_decanonize_imagined_chapters_for_thread_cmd(
+    db: State<Database>,
+    thread_id: String,
+) -> Result<BulkDecanonizeResponse, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let chapters = list_imagined_chapters_for_thread(&conn, &thread_id)
+        .map_err(|e| e.to_string())?;
+    let mut count = 0usize;
+    for chapter in chapters {
+        if !chapter.canonized && chapter.breadcrumb_message_id.is_none() { continue; }
+        if let Some(bc_id) = chapter.breadcrumb_message_id.as_deref() {
+            let _ = conn.execute("DELETE FROM messages WHERE message_id = ?1", params![bc_id]);
+            let _ = conn.execute("DELETE FROM group_messages WHERE message_id = ?1", params![bc_id]);
+        }
+        let _ = conn.execute(
+            "UPDATE imagined_chapters SET canonized = 0, breadcrumb_message_id = NULL WHERE chapter_id = ?1",
+            params![chapter.chapter_id],
+        );
+        count += 1;
+    }
+    Ok(BulkDecanonizeResponse { decanonized_count: count })
+}

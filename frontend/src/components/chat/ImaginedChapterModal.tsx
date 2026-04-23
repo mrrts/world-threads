@@ -180,18 +180,67 @@ export function ImaginedChapterModal({
         next.add(chapterId);
         return next;
       });
-      // Refresh activeChapterData if it matches so the indicator updates.
       if (activeChapterData?.chapter_id === chapterId) {
         try {
           const fresh = await api.getImaginedChapter(chapterId);
           setActiveChapterData(fresh);
         } catch { /* non-fatal */ }
       }
-      // Refresh sidebar list so the canonized state shows there too.
       loadChapters();
     } catch (e) {
       setError(String(e));
       throw e;
+    } finally {
+      setCanonizing(false);
+    }
+  }
+
+  async function decanonizeChapter(chapterId: string): Promise<void> {
+    if (canonizing) return;
+    setCanonizing(true);
+    setError(null);
+    try {
+      await api.decanonizeImaginedChapter(chapterId);
+      setCanonizedThisSession((prev) => {
+        const next = new Set(prev);
+        next.delete(chapterId);
+        return next;
+      });
+      if (activeChapterData?.chapter_id === chapterId) {
+        try {
+          const fresh = await api.getImaginedChapter(chapterId);
+          setActiveChapterData(fresh);
+        } catch { /* non-fatal */ }
+      }
+      loadChapters();
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setCanonizing(false);
+    }
+  }
+
+  // Bulk reset — for the user to clean up after the migration auto-
+  // canonized prior chapters that they didn't actually choose. Requires
+  // explicit confirm because it removes chat-history breadcrumbs.
+  const [bulkResetConfirm, setBulkResetConfirm] = useState(false);
+  async function bulkResetCanonization(): Promise<void> {
+    if (canonizing) return;
+    setCanonizing(true);
+    setError(null);
+    try {
+      await api.bulkDecanonizeImaginedChaptersForThread(threadId);
+      setCanonizedThisSession(new Set());
+      if (activeChapterData) {
+        try {
+          const fresh = await api.getImaginedChapter(activeChapterData.chapter_id);
+          setActiveChapterData(fresh);
+        } catch { /* non-fatal */ }
+      }
+      loadChapters();
+      setBulkResetConfirm(false);
+    } catch (e) {
+      setError(String(e));
     } finally {
       setCanonizing(false);
     }
@@ -398,13 +447,30 @@ export function ImaginedChapterModal({
                           <Trash2 size={11} />
                         </button>
                       </div>
-                      <div className="text-[10px] text-muted-foreground/60 mt-0.5">
-                        {new Date(c.created_at).toLocaleString()}
+                      <div className="text-[10px] text-muted-foreground/60 mt-0.5 flex items-center gap-1.5">
+                        <span>{new Date(c.created_at).toLocaleString()}</span>
+                        {(c.canonized || canonizedThisSession.has(c.chapter_id)) && (
+                          <span className="text-emerald-700/70 dark:text-emerald-400/70" title="Canonized">●</span>
+                        )}
                       </div>
                     </button>
                   ))
                 )}
               </div>
+              {/* Bulk reset — one-shot cleanup for the migration's
+                  auto-canonization of pre-existing chapters. */}
+              {chapters.some((c) => c.canonized) && (
+                <div className="border-t border-border/30 p-2">
+                  <button
+                    onClick={() => setBulkResetConfirm(true)}
+                    disabled={canonizing}
+                    className="w-full text-left px-2 py-1.5 rounded-md text-[11px] text-muted-foreground hover:text-foreground hover:bg-accent/40 transition-colors cursor-pointer disabled:opacity-50"
+                    title="Decanonize every chapter in this thread"
+                  >
+                    Reset canonization for this chat…
+                  </button>
+                </div>
+              )}
             </aside>
           )}
 
@@ -473,6 +539,7 @@ export function ImaginedChapterModal({
                       canonized={canonizedThisSession.has(streamChapterId)}
                       canonizing={canonizing}
                       onCanonize={() => canonizeChapter(streamChapterId)}
+                      onDecanonize={() => decanonizeChapter(streamChapterId)}
                     />
                   )}
                 </>
@@ -493,6 +560,7 @@ export function ImaginedChapterModal({
                     canonized={activeChapterData.canonized || canonizedThisSession.has(activeChapterData.chapter_id)}
                     canonizing={canonizing}
                     onCanonize={() => canonizeChapter(activeChapterData.chapter_id)}
+                    onDecanonize={() => decanonizeChapter(activeChapterData.chapter_id)}
                   />
                 </>
               )}
@@ -537,6 +605,34 @@ export function ImaginedChapterModal({
                       >
                         {canonizing ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <ScrollText size={14} className="mr-2" />}
                         Canonize
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Bulk reset confirm — for the migration cleanup case. */}
+              {bulkResetConfirm && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50" onClick={() => setBulkResetConfirm(false)}>
+                  <div
+                    className="w-full max-w-md bg-card border border-border rounded-xl shadow-2xl p-5 space-y-4"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <h3 className="text-base font-semibold text-foreground">Reset canonization for this chat?</h3>
+                    <p className="text-sm text-muted-foreground">
+                      This will decanonize <span className="font-medium text-foreground">every chapter in this chat</span> — removing their breadcrumb cards from the chat history and reverting them to pre-canon state. The chapters themselves stay in this sidebar; you can re-canonize each one individually. Useful as a one-shot cleanup if the migration auto-canonized chapters you didn't actually act on.
+                    </p>
+                    <div className="flex justify-end gap-2 pt-2">
+                      <Button variant="ghost" onClick={() => setBulkResetConfirm(false)} disabled={canonizing}>
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={bulkResetCanonization}
+                        disabled={canonizing}
+                        variant="destructive"
+                      >
+                        {canonizing ? <Loader2 size={14} className="animate-spin mr-1.5" /> : null}
+                        Reset all
                       </Button>
                     </div>
                   </div>
@@ -775,18 +871,32 @@ function CanonizeRow({
   canonized,
   canonizing,
   onCanonize,
+  onDecanonize,
 }: {
   canonized: boolean;
   canonizing: boolean;
   onCanonize: () => void;
+  onDecanonize?: () => void;
 }) {
   return (
-    <div className="max-w-2xl mx-auto mt-6 pt-4 border-t border-amber-900/15 flex justify-center">
+    <div className="max-w-2xl mx-auto mt-6 pt-4 border-t border-amber-900/15 flex justify-center items-center gap-3">
       {canonized ? (
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-emerald-100/50 border border-emerald-700/30 text-emerald-900 text-sm font-medium">
-          <ScrollText size={14} />
-          <span>Canonized — this chapter is part of the world</span>
-        </div>
+        <>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-emerald-100/50 border border-emerald-700/30 text-emerald-900 text-sm font-medium">
+            <ScrollText size={14} />
+            <span>Canonized — this chapter is part of the world</span>
+          </div>
+          {onDecanonize && (
+            <button
+              onClick={onDecanonize}
+              disabled={canonizing}
+              className="text-xs text-amber-900/60 hover:text-amber-900 underline underline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              title="Remove this chapter from chat history and canon"
+            >
+              {canonizing ? "Decanonizing…" : "Decanonize"}
+            </button>
+          )}
+        </>
       ) : (
         <Button
           onClick={onCanonize}

@@ -19,19 +19,21 @@ export function MeanwhileCard({ event, portraitUrl }: Props) {
   return (
     <div className="flex justify-center my-3">
       <div className="relative w-full max-w-[720px] h-[260px] rounded-xl overflow-hidden border border-border/30 bg-card/30 backdrop-blur-sm">
-        {/* Portrait background — full-height left band, contained (not
-            cropped) so the entire portrait reads, faded toward the right
-            so the text sits cleanly over it. */}
+        {/* Portrait background — full-height left band, contained so
+            the entire portrait reads, then SOFT-FADED across the whole
+            card so it blends into the card's bg rather than ending
+            in a hard edge. The right half of the card has effectively
+            no portrait, leaving room for the text to sit cleanly. */}
         {portraitUrl ? (
           <div
-            className="absolute inset-y-0 left-0 w-[55%] bg-contain bg-left bg-no-repeat"
+            className="absolute inset-y-0 left-0 w-[260px] bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${portraitUrl})`,
               maskImage:
-                "linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 55%, rgba(0,0,0,0) 100%)",
+                "linear-gradient(to right, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0) 95%)",
               WebkitMaskImage:
-                "linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 55%, rgba(0,0,0,0) 100%)",
-              opacity: 0.7,
+                "linear-gradient(to right, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0) 95%)",
+              opacity: 0.6,
             }}
             aria-hidden
           />
@@ -45,19 +47,28 @@ export function MeanwhileCard({ event, portraitUrl }: Props) {
           />
         )}
 
-        {/* Content sits on top, vertically centered against the card's
-            full height so it visually anchors to the portrait's gaze. */}
-        <div className="relative z-10 h-full px-5 py-4 flex flex-col justify-center gap-2">
-          <div className="flex items-baseline gap-2 text-[10px] uppercase tracking-wider text-muted-foreground/90 font-semibold">
-            <span>Meanwhile</span>
-            <span className="opacity-60">·</span>
-            <span>{event.character_name}</span>
-            <span className="opacity-60">·</span>
-            <span className="opacity-80">
-              Day {event.world_day}
-              {timeLabel ? ` · ${timeLabel}` : ""}
-            </span>
-          </div>
+        {/* Heading — top-right corner, absolutely positioned. Gets a
+            text-shadow so it stays legible regardless of what the
+            portrait's tint underneath happens to be. */}
+        <div
+          className="absolute top-3 right-4 z-10 flex items-baseline gap-2 text-[11px] uppercase tracking-wider text-foreground font-bold pointer-events-none"
+          style={{
+            textShadow: "0 1px 2px rgba(0,0,0,0.7), 0 0 8px rgba(0,0,0,0.5)",
+          }}
+        >
+          <span>Meanwhile</span>
+          <span className="opacity-70">·</span>
+          <span>{event.character_name}</span>
+          <span className="opacity-70">·</span>
+          <span className="opacity-90">
+            Day {event.world_day}
+            {timeLabel ? ` · ${timeLabel}` : ""}
+          </span>
+        </div>
+
+        {/* Summary — vertically centered, right-anchored so it sits
+            clear of the portrait's left band. */}
+        <div className="relative z-10 h-full px-5 py-4 flex flex-col justify-center">
           <div className="text-sm text-foreground/90 italic leading-relaxed max-w-[60%] ml-auto">
             {event.summary}
           </div>

@@ -858,6 +858,10 @@ export const api = {
     invoke<string>("get_imagined_chapter_image_url_cmd", { chapterId }),
   canonizeImaginedChapter: (chapterId: string) =>
     invoke<{ breadcrumbMessageId: string }>("canonize_imagined_chapter_cmd", { chapterId }),
+  decanonizeImaginedChapter: (chapterId: string) =>
+    invoke<void>("decanonize_imagined_chapter_cmd", { chapterId }),
+  bulkDecanonizeImaginedChaptersForThread: (threadId: string) =>
+    invoke<{ decanonizedCount: number }>("bulk_decanonize_imagined_chapters_for_thread_cmd", { threadId }),
 };
 
 export interface ImaginedChapter {
