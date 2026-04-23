@@ -1514,5 +1514,27 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         let _ = conn.execute("ALTER TABLE imagined_chapters ADD COLUMN breadcrumb_message_id TEXT", []);
     }
 
+    // canonized — chapters now exist in TWO states: pre-canon (just an
+    // entry in the modal sidebar, no chat-history footprint) and
+    // canonized (chapter "counts" — breadcrumb row inserted into the
+    // chat transcript so the model + user see it as part of history).
+    // Only canonized chapters reach the dialogue prompt's history block.
+    // ALTER TABLE ADD COLUMN per CLAUDE.md DATABASE SAFETY rule.
+    //
+    // Backfill: any pre-existing chapter that has a breadcrumb_message_id
+    // is treated as canonized (matches current observable state — the
+    // breadcrumbs are already in the chat). New rows default to 0.
+    let canonized_col_exists: bool = conn.query_row(
+        "SELECT 1 FROM pragma_table_info('imagined_chapters') WHERE name = 'canonized'",
+        [], |_| Ok(true),
+    ).unwrap_or(false);
+    if !canonized_col_exists {
+        let _ = conn.execute("ALTER TABLE imagined_chapters ADD COLUMN canonized INTEGER NOT NULL DEFAULT 0", []);
+        let _ = conn.execute(
+            "UPDATE imagined_chapters SET canonized = 1 WHERE breadcrumb_message_id IS NOT NULL",
+            [],
+        );
+    }
+
     Ok(())
 }

@@ -197,6 +197,33 @@ pub async fn generate_imagined_chapter_cmd(
             chapters.into_iter().next().map(|c| c.content)
         } else { None };
 
+        // CONTEXT SCOPING — two distinct modes, no middle ground:
+        //
+        //   continue_from_previous = false (default): the new chapter is
+        //     a FRESH invention. Send no previous-chapter content. Send
+        //     world, cast, history, journals, kept facts — the model
+        //     reads all of these to know who these people are and where
+        //     they stand right now.
+        //
+        //   continue_from_previous = true: the new chapter is the next
+        //     beat AFTER the prior chapter. Send ONLY the previous
+        //     chapter (plus the structural minimums: world + cast +
+        //     user + tone, which the prompt physically needs). NO
+        //     recent_history, NO journals, NO kept_facts — those
+        //     feeds would pull the continuation off-course toward
+        //     whatever the chats have been about lately. The continuation
+        //     should anchor on the prior chapter, full stop.
+        //
+        // The user wanted these two modes to be cleanly separate so
+        // back-to-back fresh chapters don't all converge on the same
+        // theme (knots/docks/kayaks etc.) and continuations don't drift
+        // away from the prior chapter's thread.
+        let (kept_facts, journals, recent_history) = if prev.is_some() {
+            (Vec::new(), Vec::new(), Vec::new())
+        } else {
+            (kept_facts, journals, recent_history)
+        };
+
         // Per-chat narration tone — keyed identically to chat_cmds /
         // group_chat_cmds. Empty string + "Auto" both mean "no tone";
         // tone_directive() filters those out.
