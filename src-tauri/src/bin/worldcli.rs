@@ -206,6 +206,51 @@ enum Cmd {
         action: SynthRunAction,
     },
 
+    /// Browse the structured replay run log at
+    /// `~/.worldcli/replay-runs/*.json`.
+    ReplayRuns {
+        #[command(subcommand)]
+        action: ReplayRunAction,
+    },
+
+    /// Cross-commit A/B replay — Mode C's strongest instrument. Takes
+    /// one user prompt + one character + a list of git refs. For each
+    /// ref, fetches the historical `prompts.rs` via `git show <ref>:...`,
+    /// parses out the named dialogue craft-note bodies, injects them as
+    /// overrides into THIS running binary's prompt-assembly pipeline,
+    /// then sends the prompt against that injected stack. No checkout,
+    /// no rebuild, no git worktrees — one binary, historical prompts
+    /// layered in on demand. Returns each ref's reply side-by-side for
+    /// direct comparison. See the prompt-override hook in
+    /// `src-tauri/src/ai/prompts.rs` for which fragments are
+    /// overridable (cosmology/theology blocks are NOT — those are
+    /// load-bearing across all commits by design).
+    Replay {
+        /// Comma-separated list of git refs (shas, tags, branches).
+        /// Each ref produces one reply in the side-by-side output.
+        /// Typical use: --refs HEAD,8e9e53d,bce17e9 to compare the
+        /// current stack against two prior states.
+        #[arg(long, value_delimiter = ',')]
+        refs: Vec<String>,
+        /// Character whose voice is being replayed across refs.
+        #[arg(long)]
+        character: String,
+        /// The user prompt to send against each ref's injected stack.
+        /// Same prompt for every ref — that's the A/B discipline.
+        #[arg(long)]
+        prompt: String,
+        /// Override the configured dialogue model.
+        #[arg(long)]
+        model: Option<String>,
+        /// Required when projected total cost (sum across refs) exceeds
+        /// the per-call cap. Passes through to each individual call.
+        #[arg(long)]
+        confirm_cost: Option<f64>,
+        /// Git repo path for ref resolution + `git show`.
+        #[arg(long)]
+        repo: Option<PathBuf>,
+    },
+
     /// List, show, or search rubrics in the library
     /// (`reports/rubrics/*.md`). Rubrics are versioned markdown
     /// files whose `# Rubric` section is the exact evaluator
@@ -505,6 +550,19 @@ enum SynthRunAction {
     /// Show the full envelope of one run by id (or unique short prefix).
     Show { id: String },
     /// Search run envelopes for a substring across question / scope / ref / synthesis.
+    Search { query: String },
+}
+
+#[derive(Subcommand)]
+enum ReplayRunAction {
+    /// List recent replay runs (newest first).
+    List {
+        #[arg(long, default_value_t = 20)]
+        limit: usize,
+    },
+    /// Show the full envelope of one run by id (or unique short prefix).
+    Show { id: String },
+    /// Search replay envelopes for a substring.
     Search { query: String },
 }
 
@@ -961,6 +1019,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )),
             };
             cmd_synthesize(&r, &api_key, &git_ref, end_ref.as_deref(), limit, character.as_deref(), group_chat.as_deref(), question.as_deref(), question_file.as_deref(), &role, context_turns, model.as_deref(), confirm_cost, repo.as_deref()).await
+        }
+        Cmd::ReplayRuns { action } => cmd_replay_runs(&r, action),
+        Cmd::Replay { refs, character, prompt, model, confirm_cost, repo } => {
+            let api_key = match resolve_api_key(cli.api_key.as_deref()) {
+                Some(k) => k,
+                None => return Err(Box::<dyn std::error::Error>::from(
+                    "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
+                )),
+            };
+            cmd_replay(&r, &api_key, &refs, &character, &prompt, model.as_deref(), confirm_cost, repo.as_deref()).await
         }
         Cmd::Consult { character_id, message, mode, session, model, confirm_cost, question_summary } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
@@ -2819,6 +2887,379 @@ async fn cmd_synthesize(
         println!();
         eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok)",
             actual_usd, actual_in, actual_out);
+    }
+    Ok(())
+}
+
+// ─── Replay (cross-commit A/B via prompt override, not worktree) ────────
+
+/// Shell out to `git show <ref>:<rel_path>` and return the file content
+/// at that historical commit, without touching the working tree.
+fn git_show_file(
+    repo: Option<&std::path::Path>,
+    git_ref: &str,
+    rel_path: &str,
+) -> Result<String, CliError> {
+    let mut cmd = std::process::Command::new("git");
+    if let Some(p) = repo {
+        cmd.args(["-C", &p.display().to_string()]);
+    }
+    cmd.args(["show", &format!("{}:{}", git_ref, rel_path)]);
+    let out = cmd.output().map_err(|e| {
+        CliError::Other(format!("git invocation failed: {} (is git on PATH?)", e))
+    })?;
+    if !out.status.success() {
+        let err = String::from_utf8_lossy(&out.stderr).trim().to_string();
+        return Err(CliError::Other(format!(
+            "git show {}:{} failed: {}",
+            git_ref, rel_path, err
+        )));
+    }
+    Ok(String::from_utf8_lossy(&out.stdout).into_owned())
+}
+
+/// Extract the raw-string body of a `fn <name>() -> &'static str { r#"..."# }`
+/// function from a source string. Returns None if the function isn't
+/// present at this ref (rule hadn't been written yet, or was removed).
+///
+/// Only handles the common `r#"..."#` single-hash form — the form every
+/// targeted craft-note function uses. If a future rule uses `r##"..."##`
+/// or `r###"..."###` (needed when the body contains `"#`), extend this
+/// parser; for now, returning None is the right behavior since the
+/// replay will fall through to the current body.
+fn extract_raw_str_fn_body(source: &str, fn_name: &str) -> Option<String> {
+    let sig = format!("fn {}()", fn_name);
+    let start = source.find(&sig)?;
+    let after_sig = &source[start..];
+    // Find the opening brace of the function body.
+    let brace = after_sig.find('{')?;
+    let body_section = &after_sig[brace + 1..];
+    // Find the opening r#" of the raw-string literal.
+    let open_marker = "r#\"";
+    let open = body_section.find(open_marker)?;
+    let body_start = open + open_marker.len();
+    let rest = &body_section[body_start..];
+    // Find the closing "#. For single-hash raw strings this is the
+    // first occurrence of "# — the raw-string grammar guarantees the
+    // body cannot contain it.
+    let close_marker = "\"#";
+    let close = rest.find(close_marker)?;
+    Some(rest[..close].to_string())
+}
+
+/// Parse the historical prompts.rs source for ALL known overridable
+/// dialogue-craft-note fragments. Missing functions (because the rule
+/// wasn't in the stack at this ref) are silently skipped — the override
+/// map won't have a key for them, so the CURRENT body flows through,
+/// which is the honest default.
+fn parse_historical_prompts_overrides(source: &str) -> app_lib::ai::prompts::PromptOverrides {
+    let mut overrides = app_lib::ai::prompts::PromptOverrides::new();
+    for &name in app_lib::ai::prompts::OVERRIDABLE_DIALOGUE_FRAGMENTS {
+        if let Some(body) = extract_raw_str_fn_body(source, name) {
+            overrides.insert(name, body);
+        }
+    }
+    overrides
+}
+
+fn replay_runs_dir() -> PathBuf { worldcli_home().join("replay-runs") }
+fn replay_runs_manifest() -> PathBuf { replay_runs_dir().join("manifest.jsonl") }
+
+fn write_replay_run(run_id: &str, envelope: &JsonValue) {
+    let dir = replay_runs_dir();
+    let _ = std::fs::create_dir_all(&dir);
+    let per_path = dir.join(format!("{}.json", run_id));
+    if let Ok(s) = serde_json::to_string_pretty(envelope) {
+        let _ = std::fs::write(&per_path, s);
+    }
+    let manifest_entry = json!({
+        "run_id": envelope.get("run_id"),
+        "run_timestamp": envelope.get("run_timestamp"),
+        "character_id": envelope.get("character_id"),
+        "character_name": envelope.get("character_name"),
+        "prompt_preview": envelope.get("prompt").and_then(|v| v.as_str())
+            .map(|s| s.chars().take(140).collect::<String>()),
+        "refs": envelope.get("refs"),
+        "model": envelope.get("model"),
+        "cost_usd": envelope.get("cost").and_then(|c| c.get("actual_usd")),
+    });
+    let line = serde_json::to_string(&manifest_entry).unwrap_or_default();
+    if let Ok(mut f) = std::fs::OpenOptions::new()
+        .create(true).append(true).open(replay_runs_manifest())
+    {
+        use std::io::Write;
+        let _ = writeln!(f, "{}", line);
+    }
+}
+
+fn read_replay_runs_manifest() -> Vec<JsonValue> {
+    let Ok(content) = std::fs::read_to_string(replay_runs_manifest()) else { return Vec::new(); };
+    content.lines().filter_map(|l| serde_json::from_str(l).ok()).collect()
+}
+
+fn cmd_replay_runs(r: &Resolved, action: ReplayRunAction) -> Result<(), Box<dyn std::error::Error>> {
+    match action {
+        ReplayRunAction::List { limit } => {
+            let mut entries = read_replay_runs_manifest();
+            entries.reverse();
+            entries.truncate(limit);
+            if r.json {
+                emit(true, JsonValue::Array(entries));
+            } else {
+                if entries.is_empty() {
+                    println!("No replay runs recorded yet. Run `worldcli replay ...` first.");
+                    return Ok(());
+                }
+                for e in &entries {
+                    let ts = e.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("");
+                    let ts_short = &ts[..19.min(ts.len())];
+                    let id = e.get("run_id").and_then(|v| v.as_str()).unwrap_or("");
+                    let id_short = &id[..8.min(id.len())];
+                    let name = e.get("character_name").and_then(|v| v.as_str()).unwrap_or("?");
+                    let refs = e.get("refs").and_then(|v| v.as_array())
+                        .map(|a| a.len()).unwrap_or(0);
+                    let prompt_preview = e.get("prompt_preview").and_then(|v| v.as_str()).unwrap_or("");
+                    let cost = e.get("cost_usd").and_then(|v| v.as_f64()).unwrap_or(0.0);
+                    println!("{id_short}  [{ts_short}]  {name}  refs×{refs}  ${:.4}  — {}",
+                        cost, prompt_preview);
+                }
+            }
+        }
+        ReplayRunAction::Show { id } => {
+            let dir = replay_runs_dir();
+            let exact = dir.join(format!("{}.json", id));
+            if exact.exists() {
+                let s = std::fs::read_to_string(&exact)?;
+                let v: JsonValue = serde_json::from_str(&s).unwrap_or(JsonValue::String(s));
+                emit(r.json, v);
+                return Ok(());
+            }
+            if let Ok(entries) = std::fs::read_dir(&dir) {
+                for entry in entries.flatten() {
+                    let fname = entry.file_name().to_string_lossy().to_string();
+                    if fname.starts_with(&id) && fname.ends_with(".json") {
+                        let s = std::fs::read_to_string(entry.path())?;
+                        let v: JsonValue = serde_json::from_str(&s).unwrap_or(JsonValue::String(s));
+                        emit(r.json, v);
+                        return Ok(());
+                    }
+                }
+            }
+            return Err(Box::new(CliError::NotFound(format!("replay run starting with '{}'", id))));
+        }
+        ReplayRunAction::Search { query } => {
+            let q = query.to_lowercase();
+            let entries = read_replay_runs_manifest();
+            let hits: Vec<JsonValue> = entries.into_iter()
+                .filter(|e| e.to_string().to_lowercase().contains(&q))
+                .collect();
+            emit(r.json, JsonValue::Array(hits));
+        }
+    }
+    Ok(())
+}
+
+async fn cmd_replay(
+    r: &Resolved,
+    api_key: &str,
+    refs: &[String],
+    character_id: &str,
+    prompt: &str,
+    model_override: Option<&str>,
+    confirm_cost: Option<f64>,
+    repo: Option<&std::path::Path>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    if refs.is_empty() {
+        return Err(Box::<dyn std::error::Error>::from(
+            "at least one ref is required (use --refs HEAD,<sha>,...)".to_string()));
+    }
+    if prompt.trim().is_empty() {
+        return Err(Box::<dyn std::error::Error>::from("prompt is empty".to_string()));
+    }
+    let _ = r.check_character(character_id)?;
+
+    // Resolve each ref to (sha, timestamp, subject) up front so failures
+    // happen before any LLM spend.
+    let mut resolved_refs: Vec<(String, String, String, String)> = Vec::new();
+    for rr in refs {
+        let (sha, ts, subj) = git_resolve_ref(repo, rr)?;
+        resolved_refs.push((rr.clone(), sha, ts, subj));
+    }
+
+    // Fetch + parse the historical prompts.rs for each ref.
+    let mut per_ref_overrides: Vec<(String, app_lib::ai::prompts::PromptOverrides, Vec<String>)> = Vec::new();
+    for (ref_input, sha, _ts, _subj) in &resolved_refs {
+        let source = git_show_file(repo, sha, "src-tauri/src/ai/prompts.rs")
+            .map_err(|e| Box::<dyn std::error::Error>::from(
+                format!("fetching prompts.rs at {}: {}", ref_input, e)))?;
+        let overrides = parse_historical_prompts_overrides(&source);
+        let found: Vec<String> = overrides.map.keys().cloned().collect();
+        per_ref_overrides.push((ref_input.clone(), overrides, found));
+    }
+
+    // Load character + world context ONCE — this is the held-constant
+    // side of the A/B. Only the overrides vary per ref.
+    let (world, character, user_profile, recent_journals, active_quests, stance_text, mut model_config) = {
+        let conn = r.db.conn.lock().unwrap();
+        let character = get_character(&conn, character_id)?;
+        let world = get_world(&conn, &character.world_id)?;
+        let user_profile = get_user_profile(&conn, &character.world_id).ok();
+        let recent_journals = list_journal_entries(&conn, character_id, 1).unwrap_or_default();
+        let active_quests = list_active_quests(&conn, &character.world_id).unwrap_or_default();
+        let latest_stance = latest_relational_stance(&conn, character_id).unwrap_or(None);
+        let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
+        let model_config = orchestrator::load_model_config(&conn);
+        (world, character, user_profile, recent_journals, active_quests, stance_text, model_config)
+    };
+    if let Some(m) = model_override { model_config.dialogue_model = m.to_string(); }
+
+    // Project cost per ref (each ref is one dialogue-model call against
+    // the assembled system prompt). Conservative: use first ref's
+    // assembled prompt to estimate — they'll be close in size.
+    let sample_system = app_lib::ai::prompts::build_dialogue_system_prompt_with_overrides(
+        &world, &character, user_profile.as_ref(),
+        None, Some("Auto"), None, None, false, &[], None,
+        &recent_journals, None, &[], None, &active_quests,
+        stance_text.as_deref(),
+        Some(&per_ref_overrides[0].1),
+    );
+    let est_in = estimate_tokens(&sample_system) + estimate_tokens(prompt);
+    let est_out: i64 = 600;
+    let per_ref_usd = project_cost(&model_config.dialogue_model, est_in, est_out, &r.cfg.model_pricing);
+    let total_projected = per_ref_usd * (refs.len() as f64);
+
+    let daily_so_far = rolling_24h_total_usd();
+    let daily_after = daily_so_far + total_projected;
+    let per_call_cap = r.cfg.budget.per_call_usd;
+    let daily_cap = r.cfg.budget.daily_usd;
+    let confirm = confirm_cost.unwrap_or(0.0);
+    if total_projected > per_call_cap && confirm < total_projected {
+        return Err(Box::new(CliError::Budget {
+            kind: "per_call (total replay)".to_string(),
+            projected_usd: total_projected,
+            cap_usd: per_call_cap,
+            confirm_at_least: (total_projected * 1.05).max(0.01),
+        }));
+    }
+    if daily_after > daily_cap && confirm < total_projected {
+        return Err(Box::new(CliError::Budget {
+            kind: "daily".to_string(),
+            projected_usd: daily_after,
+            cap_usd: daily_cap,
+            confirm_at_least: (total_projected * 1.05).max(0.01),
+        }));
+    }
+
+    if !r.json {
+        eprintln!("[worldcli] replay {} refs against {} via {} — per-ref≈${:.4}, total≈${:.4}; 24h spent=${:.4}/${:.2}",
+            refs.len(), character.display_name, model_config.dialogue_model,
+            per_ref_usd, total_projected, daily_so_far, daily_cap);
+    }
+
+    // Run each ref sequentially — same prompt, different override set.
+    let base_url = model_config.chat_api_base();
+    let mut per_ref_results: Vec<JsonValue> = Vec::new();
+    let mut total_in: i64 = 0;
+    let mut total_out: i64 = 0;
+    for (i, (ref_input, overrides, found_keys)) in per_ref_overrides.iter().enumerate() {
+        let (_input, sha, ts, subj) = &resolved_refs[i];
+        let system_prompt = app_lib::ai::prompts::build_dialogue_system_prompt_with_overrides(
+            &world, &character, user_profile.as_ref(),
+            None, Some("Auto"), None, None, false, &[], None,
+            &recent_journals, None, &[], None, &active_quests,
+            stance_text.as_deref(),
+            Some(overrides),
+        );
+        let messages = vec![
+            openai::ChatMessage { role: "system".to_string(), content: system_prompt.clone() },
+            openai::ChatMessage { role: "user".to_string(), content: prompt.to_string() },
+        ];
+        let req = openai::ChatRequest {
+            model: model_config.dialogue_model.clone(),
+            messages,
+            temperature: Some(0.95),
+            max_completion_tokens: None,
+            response_format: None,
+        };
+        eprint!("\r[worldcli] replaying {}/{} — ref {}", i + 1, refs.len(), &sha[..8.min(sha.len())]);
+        let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await
+            .map_err(|e| format!("replay call for ref {} failed: {}", ref_input, e))?;
+        let reply = resp.choices.first()
+            .map(|c| c.message.content.clone())
+            .ok_or_else(|| "no choices returned".to_string())?;
+        let usage = resp.usage.unwrap_or(openai::Usage {
+            prompt_tokens: 0, completion_tokens: 0, total_tokens: 0,
+        });
+        total_in += usage.prompt_tokens as i64;
+        total_out += usage.completion_tokens as i64;
+        per_ref_results.push(json!({
+            "ref": ref_input,
+            "ref_resolved": sha,
+            "ref_timestamp": ts,
+            "ref_subject": subj,
+            "overrides_applied": found_keys,
+            "reply": reply,
+            "usage": {
+                "prompt_tokens": usage.prompt_tokens,
+                "completion_tokens": usage.completion_tokens,
+            },
+        }));
+    }
+    eprintln!();
+
+    let actual_usd = actual_cost(&model_config.dialogue_model, total_in, total_out, &r.cfg.model_pricing);
+    append_cost_log(&CostEntry {
+        timestamp: chrono::Utc::now().to_rfc3339(),
+        model: model_config.dialogue_model.clone(),
+        prompt_tokens: total_in,
+        completion_tokens: total_out,
+        usd: actual_usd,
+    });
+
+    let run_id = uuid::Uuid::new_v4().to_string();
+    let envelope = json!({
+        "run_id": run_id,
+        "run_timestamp": chrono::Utc::now().to_rfc3339(),
+        "character_id": character_id,
+        "character_name": character.display_name,
+        "prompt": prompt,
+        "model": model_config.dialogue_model,
+        "refs": resolved_refs.iter().map(|(i, s, t, sub)| json!({
+            "ref": i, "sha": s, "timestamp": t, "subject": sub,
+        })).collect::<Vec<_>>(),
+        "results": per_ref_results,
+        "cost": {
+            "prompt_tokens": total_in,
+            "completion_tokens": total_out,
+            "actual_usd": actual_usd,
+        },
+    });
+    write_replay_run(&run_id, &envelope);
+
+    if r.json {
+        emit(true, envelope);
+    } else {
+        println!("=== REPLAY ===");
+        println!("character: {} ({})", character.display_name, character_id);
+        println!("model:     {}", model_config.dialogue_model);
+        println!("prompt:    {}", prompt);
+        println!("run_id:    {}", run_id);
+        println!();
+        for result in envelope["results"].as_array().unwrap_or(&vec![]) {
+            let r_input = result["ref"].as_str().unwrap_or("?");
+            let sha = result["ref_resolved"].as_str().unwrap_or("");
+            let sha_short = &sha[..8.min(sha.len())];
+            let subj = result["ref_subject"].as_str().unwrap_or("");
+            let reply = result["reply"].as_str().unwrap_or("");
+            let overrides_count = result["overrides_applied"].as_array().map(|a| a.len()).unwrap_or(0);
+            println!("─── ref: {} ({}) — {} craft-note override(s) applied ───", r_input, sha_short, overrides_count);
+            println!("    commit: {}", subj);
+            println!();
+            println!("{}", reply);
+            println!();
+        }
+        eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok)",
+            actual_usd, total_in, total_out);
     }
     Ok(())
 }
