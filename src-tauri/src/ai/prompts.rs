@@ -439,20 +439,301 @@ pub fn pick_mood_chain(mood_reduction: Option<&[String]>) -> Vec<String> {
 // functions whose bodies are `r#"..."#` raw strings. See
 // `OVERRIDABLE_DIALOGUE_FRAGMENTS` below.
 
+/// Named sections of the dialogue prompt whose ordering can be varied
+/// for placement-experiments. Each variant expands in the dialogue
+/// builders to a sequence of `parts.push()` calls; the order in which
+/// the enum variants appear in `PromptOverrides::section_order` is the
+/// order those sequences are emitted.
+///
+/// History: added 2026-04-24 after the polish-audit demotion re-run
+/// (report `2026-04-24-1745-demotion-re-run-confirms.md`) surfaced a
+/// placement-dominates-tier hypothesis — invariants were sitting
+/// AFTER all dialogue craft notes in the assembly, meaning
+/// "compile-time invariant" tier didn't translate to early attention
+/// in the actual prompt text. Making section-ordering configurable
+/// lets us test placement empirically instead of rebuilding the
+/// binary for each reorder.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DialoguePromptSection {
+    /// AGENCY block (per-turn directive) + BEHAVIOR_AND_KNOWLEDGE
+    /// block (how the model should behave under its current LLM /
+    /// knowledge state).
+    AgencyAndBehavior,
+    /// The full dialogue craft-note stack — earned_register_dialogue
+    /// through unguarded_entry_dialogue (15 entries) plus the
+    /// protagonist_framing block at the end of the sequence.
+    CraftNotes,
+    /// The seven theological/philosophical invariant blocks:
+    /// reverence, daylight, agape, fruits_of_the_spirit, soundness,
+    /// nourishment, tell_the_truth. All are compile-time-enforced
+    /// invariants in the stack; this variant emits them as a group.
+    Invariants,
+}
+
+/// Individual pieces within the CraftNotes section. Each variant
+/// corresponds to one `parts.push()` call in the craft-notes dispatch
+/// block. Order within a section is independent of section-level order.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CraftNotePiece {
+    EarnedRegister,
+    CraftNotes,
+    HiddenCommonality,
+    DriveTheMoment,
+    VerdictWithoutOverExplanation,
+    ReflexPolishVsEarnedClose,
+    KeepTheSceneBreathing,
+    NameTheGladThingPlain,
+    PlainAfterCrooked,
+    WitAsDimmer,
+    LetTheRealThingIn,
+    HandsAsCoolant,
+    NoticingAsMirror,
+    UnguardedEntry,
+    ProtagonistFraming,
+}
+
+impl CraftNotePiece {
+    /// Default order — matches the pre-configurable-order sequence.
+    pub const DEFAULT_ORDER: &'static [CraftNotePiece] = &[
+        CraftNotePiece::EarnedRegister,
+        CraftNotePiece::CraftNotes,
+        CraftNotePiece::HiddenCommonality,
+        CraftNotePiece::DriveTheMoment,
+        CraftNotePiece::VerdictWithoutOverExplanation,
+        CraftNotePiece::ReflexPolishVsEarnedClose,
+        CraftNotePiece::KeepTheSceneBreathing,
+        CraftNotePiece::NameTheGladThingPlain,
+        CraftNotePiece::PlainAfterCrooked,
+        CraftNotePiece::WitAsDimmer,
+        CraftNotePiece::LetTheRealThingIn,
+        CraftNotePiece::HandsAsCoolant,
+        CraftNotePiece::NoticingAsMirror,
+        CraftNotePiece::UnguardedEntry,
+        CraftNotePiece::ProtagonistFraming,
+    ];
+
+    /// Parse from CLI name. Accepts either the short form
+    /// ("earned_register") or the full function-style form
+    /// ("earned_register_dialogue"). Hyphens and underscores both
+    /// work; case-insensitive.
+    pub fn from_cli_name(name: &str) -> Option<Self> {
+        let n = name.trim().to_ascii_lowercase().replace('-', "_");
+        let n = n.strip_suffix("_dialogue").unwrap_or(&n);
+        match n {
+            "earned_register" => Some(Self::EarnedRegister),
+            "craft_notes" => Some(Self::CraftNotes),
+            "hidden_commonality" => Some(Self::HiddenCommonality),
+            "drive_the_moment" => Some(Self::DriveTheMoment),
+            "verdict_without_over_explanation" | "verdict" => Some(Self::VerdictWithoutOverExplanation),
+            "reflex_polish_vs_earned_close" | "reflex_polish" => Some(Self::ReflexPolishVsEarnedClose),
+            "keep_the_scene_breathing" | "scene_breathing" => Some(Self::KeepTheSceneBreathing),
+            "name_the_glad_thing_plain" | "glad_thing_plain" => Some(Self::NameTheGladThingPlain),
+            "plain_after_crooked" => Some(Self::PlainAfterCrooked),
+            "wit_as_dimmer" => Some(Self::WitAsDimmer),
+            "let_the_real_thing_in" | "real_thing_in" => Some(Self::LetTheRealThingIn),
+            "hands_as_coolant" => Some(Self::HandsAsCoolant),
+            "noticing_as_mirror" => Some(Self::NoticingAsMirror),
+            "unguarded_entry" => Some(Self::UnguardedEntry),
+            "protagonist_framing" | "protagonist" => Some(Self::ProtagonistFraming),
+            _ => None,
+        }
+    }
+
+    /// Resolve an effective ordering from a (possibly partial) user
+    /// override: user-specified pieces appear first in the given
+    /// order, then the remaining default-order pieces appear after.
+    /// Duplicates in the override are silently deduplicated (first
+    /// occurrence wins). Unknown variants (already-parsed enum values
+    /// can't be unknown; this handles the case where parse-failure
+    /// didn't happen upstream) are preserved. Full permutation works
+    /// too — the prefix just happens to cover all pieces.
+    pub fn resolve_order(override_order: &[CraftNotePiece]) -> Vec<CraftNotePiece> {
+        let mut result: Vec<CraftNotePiece> = Vec::new();
+        let mut seen: Vec<CraftNotePiece> = Vec::new();
+        for &p in override_order {
+            if !seen.contains(&p) {
+                result.push(p);
+                seen.push(p);
+            }
+        }
+        for &p in Self::DEFAULT_ORDER {
+            if !seen.contains(&p) {
+                result.push(p);
+            }
+        }
+        result
+    }
+}
+
+/// Individual invariant blocks. Order within the Invariants section
+/// is configurable via `PromptOverrides::invariants_order`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum InvariantPiece {
+    Reverence,
+    Daylight,
+    Agape,
+    FruitsOfTheSpirit,
+    Soundness,
+    Nourishment,
+    TellTheTruth,
+}
+
+impl InvariantPiece {
+    /// Default order — matches the pre-configurable-order sequence.
+    pub const DEFAULT_ORDER: &'static [InvariantPiece] = &[
+        InvariantPiece::Reverence,
+        InvariantPiece::Daylight,
+        InvariantPiece::Agape,
+        InvariantPiece::FruitsOfTheSpirit,
+        InvariantPiece::Soundness,
+        InvariantPiece::Nourishment,
+        InvariantPiece::TellTheTruth,
+    ];
+
+    pub fn from_cli_name(name: &str) -> Option<Self> {
+        let n = name.trim().to_ascii_lowercase().replace('-', "_");
+        let n = n.strip_suffix("_block").unwrap_or(&n);
+        match n {
+            "reverence" => Some(Self::Reverence),
+            "daylight" => Some(Self::Daylight),
+            "agape" => Some(Self::Agape),
+            "fruits_of_the_spirit" | "fruits" => Some(Self::FruitsOfTheSpirit),
+            "soundness" => Some(Self::Soundness),
+            "nourishment" => Some(Self::Nourishment),
+            "tell_the_truth" | "truth" => Some(Self::TellTheTruth),
+            _ => None,
+        }
+    }
+
+    /// Prefix-resolve like CraftNotePiece::resolve_order.
+    pub fn resolve_order(override_order: &[InvariantPiece]) -> Vec<InvariantPiece> {
+        let mut result: Vec<InvariantPiece> = Vec::new();
+        let mut seen: Vec<InvariantPiece> = Vec::new();
+        for &p in override_order {
+            if !seen.contains(&p) {
+                result.push(p);
+                seen.push(p);
+            }
+        }
+        for &p in Self::DEFAULT_ORDER {
+            if !seen.contains(&p) {
+                result.push(p);
+            }
+        }
+        result
+    }
+}
+
+impl DialoguePromptSection {
+    /// Default ordering used by production when no custom order is
+    /// specified: AgencyAndBehavior first, then CraftNotes, then
+    /// Invariants. This matches the pre-configurable-order behavior.
+    pub const DEFAULT_ORDER: &'static [DialoguePromptSection] = &[
+        DialoguePromptSection::AgencyAndBehavior,
+        DialoguePromptSection::CraftNotes,
+        DialoguePromptSection::Invariants,
+    ];
+
+    /// Parse a section name from the CLI flag format (case-insensitive,
+    /// tolerates both hyphens and underscores). Accepted forms:
+    /// "agency_and_behavior" / "agency" / "behavior";
+    /// "craft_notes" / "craft" / "notes";
+    /// "invariants" / "invariant".
+    pub fn from_cli_name(name: &str) -> Option<Self> {
+        match name.trim().to_ascii_lowercase().replace('-', "_").as_str() {
+            "agency_and_behavior" | "agency" | "behavior" => Some(Self::AgencyAndBehavior),
+            "craft_notes" | "craft" | "notes" => Some(Self::CraftNotes),
+            "invariants" | "invariant" => Some(Self::Invariants),
+            _ => None,
+        }
+    }
+
+    /// True iff `order` is a valid permutation of all three sections
+    /// (each present exactly once). An invalid order causes the
+    /// dialogue assembler to fall back to DEFAULT_ORDER rather than
+    /// silently drop sections.
+    pub fn is_valid_permutation(order: &[DialoguePromptSection]) -> bool {
+        if order.len() != 3 {
+            return false;
+        }
+        let has = |s: DialoguePromptSection| order.iter().any(|&o| o == s);
+        has(DialoguePromptSection::AgencyAndBehavior)
+            && has(DialoguePromptSection::CraftNotes)
+            && has(DialoguePromptSection::Invariants)
+    }
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct PromptOverrides {
     /// Map from craft-note function name (e.g. "name_the_glad_thing_plain_dialogue")
     /// to a replacement body string. Missing keys fall through to the current body.
     pub map: HashMap<String, String>,
+    /// Optional ordering of the three main dialogue prompt sections.
+    /// If None, or if the provided order isn't a valid permutation of
+    /// all three sections, the dialogue assembler falls back to
+    /// `DialoguePromptSection::DEFAULT_ORDER`. Used by placement-
+    /// experiments (e.g. invariants-first vs default) without needing
+    /// to rebuild the binary.
+    pub section_order: Option<Vec<DialoguePromptSection>>,
+    /// Optional within-section ordering for craft notes. Partial
+    /// orderings are supported: user-specified pieces appear first in
+    /// the given order, remaining pieces fall in after in default
+    /// order (see `CraftNotePiece::resolve_order`). If None, the full
+    /// default craft-notes order is used.
+    pub craft_notes_order: Option<Vec<CraftNotePiece>>,
+    /// Optional within-section ordering for invariants. Same
+    /// prefix-then-defaults semantics as `craft_notes_order`.
+    pub invariants_order: Option<Vec<InvariantPiece>>,
 }
 
 impl PromptOverrides {
-    pub fn new() -> Self { Self { map: HashMap::new() } }
+    pub fn new() -> Self {
+        Self {
+            map: HashMap::new(),
+            section_order: None,
+            craft_notes_order: None,
+            invariants_order: None,
+        }
+    }
     pub fn insert(&mut self, name: impl Into<String>, body: impl Into<String>) {
         self.map.insert(name.into(), body.into());
     }
     pub fn get(&self, name: &str) -> Option<&str> {
         self.map.get(name).map(|s| s.as_str())
+    }
+    pub fn set_section_order(&mut self, order: Vec<DialoguePromptSection>) {
+        self.section_order = Some(order);
+    }
+    pub fn set_craft_notes_order(&mut self, order: Vec<CraftNotePiece>) {
+        self.craft_notes_order = Some(order);
+    }
+    pub fn set_invariants_order(&mut self, order: Vec<InvariantPiece>) {
+        self.invariants_order = Some(order);
+    }
+    /// Returns the effective section order: the override if it's a
+    /// valid permutation of all three sections, otherwise DEFAULT_ORDER.
+    pub fn effective_section_order(&self) -> &[DialoguePromptSection] {
+        match self.section_order.as_deref() {
+            Some(order) if DialoguePromptSection::is_valid_permutation(order) => order,
+            _ => DialoguePromptSection::DEFAULT_ORDER,
+        }
+    }
+    /// Returns the effective craft-notes order — the user's prefix
+    /// ordering followed by the remaining default-order pieces. If no
+    /// override, returns a clone of DEFAULT_ORDER.
+    pub fn effective_craft_notes_order(&self) -> Vec<CraftNotePiece> {
+        match self.craft_notes_order.as_deref() {
+            Some(order) => CraftNotePiece::resolve_order(order),
+            None => CraftNotePiece::DEFAULT_ORDER.to_vec(),
+        }
+    }
+    /// Returns the effective invariants order — same prefix-then-
+    /// defaults semantics as `effective_craft_notes_order`.
+    pub fn effective_invariants_order(&self) -> Vec<InvariantPiece> {
+        match self.invariants_order.as_deref() {
+            Some(order) => InvariantPiece::resolve_order(order),
+            None => InvariantPiece::DEFAULT_ORDER.to_vec(),
+        }
     }
 }
 
@@ -2504,34 +2785,41 @@ fn build_solo_dialogue_system_prompt(
         }
     }
 
-    // AGENCY sits just before the BEHAVIOR block — late-position attention
-    // without displacing the final-paragraph structural rules.
-    parts.push(agency_section(mood_chain));
-
-    parts.push(behavior_and_knowledge_block(local_model).to_string());
-
-    parts.push(override_or("earned_register_dialogue", overrides, earned_register_dialogue));
-    parts.push(override_or("craft_notes_dialogue", overrides, craft_notes_dialogue));
-    parts.push(override_or("hidden_commonality_dialogue", overrides, hidden_commonality_dialogue));
-    parts.push(override_or("drive_the_moment_dialogue", overrides, drive_the_moment_dialogue));
-    parts.push(override_or("verdict_without_over_explanation_dialogue", overrides, verdict_without_over_explanation_dialogue));
-    parts.push(override_or("reflex_polish_vs_earned_close_dialogue", overrides, reflex_polish_vs_earned_close_dialogue));
-    parts.push(override_or("keep_the_scene_breathing_dialogue", overrides, keep_the_scene_breathing_dialogue));
-    parts.push(override_or("name_the_glad_thing_plain_dialogue", overrides, name_the_glad_thing_plain_dialogue));
-    parts.push(override_or("plain_after_crooked_dialogue", overrides, plain_after_crooked_dialogue));
-    parts.push(override_or("wit_as_dimmer_dialogue", overrides, wit_as_dimmer_dialogue));
-    parts.push(override_or("let_the_real_thing_in_dialogue", overrides, let_the_real_thing_in_dialogue));
-    parts.push(override_or("hands_as_coolant_dialogue", overrides, hands_as_coolant_dialogue));
-    parts.push(override_or("noticing_as_mirror_dialogue", overrides, noticing_as_mirror_dialogue));
-    parts.push(override_or("unguarded_entry_dialogue", overrides, unguarded_entry_dialogue));
-    parts.push(protagonist_framing_dialogue(leader, &character.character_id, None));
-    parts.push(reverence_block().to_string());
-    parts.push(daylight_block().to_string());
-    parts.push(agape_block().to_string());
-    parts.push(fruits_of_the_spirit_block().to_string());
-    parts.push(soundness_block().to_string());
-    parts.push(nourishment_block().to_string());
-    parts.push(tell_the_truth_block().to_string());
+    // Dispatch the three main dialogue sections in the order specified
+    // by overrides (or DEFAULT_ORDER if no override). See
+    // `DialoguePromptSection` for the placement-experiment rationale.
+    let section_order: Vec<DialoguePromptSection> = overrides
+        .map(|o| o.effective_section_order().to_vec())
+        .unwrap_or_else(|| DialoguePromptSection::DEFAULT_ORDER.to_vec());
+    for section in &section_order {
+        match section {
+            DialoguePromptSection::AgencyAndBehavior => {
+                // AGENCY + BEHAVIOR_AND_KNOWLEDGE. Historical note: AGENCY
+                // sat just before BEHAVIOR as late-position attention
+                // without displacing the final-paragraph structural rules;
+                // with configurable ordering this section as a whole may
+                // land earlier or later.
+                parts.push(agency_section(mood_chain));
+                parts.push(behavior_and_knowledge_block(local_model).to_string());
+            }
+            DialoguePromptSection::CraftNotes => {
+                let cn_order = overrides
+                    .map(|o| o.effective_craft_notes_order())
+                    .unwrap_or_else(|| CraftNotePiece::DEFAULT_ORDER.to_vec());
+                for piece in &cn_order {
+                    push_craft_note_piece(&mut parts, overrides, piece, leader, &character.character_id, None);
+                }
+            }
+            DialoguePromptSection::Invariants => {
+                let inv_order = overrides
+                    .map(|o| o.effective_invariants_order())
+                    .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
+                for piece in &inv_order {
+                    push_invariant_piece(&mut parts, piece);
+                }
+            }
+        }
+    }
 
     // Final length seal — pinned after every other block so it lands at
     // the highest-attention slot in the prompt right before the chat
@@ -2544,6 +2832,50 @@ fn build_solo_dialogue_system_prompt(
     }
 
     parts.join("\n\n")
+}
+
+/// Dispatch helper: push the piece body corresponding to the given
+/// CraftNotePiece variant. Centralizes the per-piece call so solo and
+/// group dialogue builders share the same piece-dispatch logic.
+fn push_craft_note_piece(
+    parts: &mut Vec<String>,
+    overrides: Option<&PromptOverrides>,
+    piece: &CraftNotePiece,
+    leader: Option<&str>,
+    character_id: &str,
+    group_context: Option<&GroupContext>,
+) {
+    match piece {
+        CraftNotePiece::EarnedRegister => parts.push(override_or("earned_register_dialogue", overrides, earned_register_dialogue)),
+        CraftNotePiece::CraftNotes => parts.push(override_or("craft_notes_dialogue", overrides, craft_notes_dialogue)),
+        CraftNotePiece::HiddenCommonality => parts.push(override_or("hidden_commonality_dialogue", overrides, hidden_commonality_dialogue)),
+        CraftNotePiece::DriveTheMoment => parts.push(override_or("drive_the_moment_dialogue", overrides, drive_the_moment_dialogue)),
+        CraftNotePiece::VerdictWithoutOverExplanation => parts.push(override_or("verdict_without_over_explanation_dialogue", overrides, verdict_without_over_explanation_dialogue)),
+        CraftNotePiece::ReflexPolishVsEarnedClose => parts.push(override_or("reflex_polish_vs_earned_close_dialogue", overrides, reflex_polish_vs_earned_close_dialogue)),
+        CraftNotePiece::KeepTheSceneBreathing => parts.push(override_or("keep_the_scene_breathing_dialogue", overrides, keep_the_scene_breathing_dialogue)),
+        CraftNotePiece::NameTheGladThingPlain => parts.push(override_or("name_the_glad_thing_plain_dialogue", overrides, name_the_glad_thing_plain_dialogue)),
+        CraftNotePiece::PlainAfterCrooked => parts.push(override_or("plain_after_crooked_dialogue", overrides, plain_after_crooked_dialogue)),
+        CraftNotePiece::WitAsDimmer => parts.push(override_or("wit_as_dimmer_dialogue", overrides, wit_as_dimmer_dialogue)),
+        CraftNotePiece::LetTheRealThingIn => parts.push(override_or("let_the_real_thing_in_dialogue", overrides, let_the_real_thing_in_dialogue)),
+        CraftNotePiece::HandsAsCoolant => parts.push(override_or("hands_as_coolant_dialogue", overrides, hands_as_coolant_dialogue)),
+        CraftNotePiece::NoticingAsMirror => parts.push(override_or("noticing_as_mirror_dialogue", overrides, noticing_as_mirror_dialogue)),
+        CraftNotePiece::UnguardedEntry => parts.push(override_or("unguarded_entry_dialogue", overrides, unguarded_entry_dialogue)),
+        CraftNotePiece::ProtagonistFraming => parts.push(protagonist_framing_dialogue(leader, character_id, group_context)),
+    }
+}
+
+/// Dispatch helper: push the piece body corresponding to the given
+/// InvariantPiece variant.
+fn push_invariant_piece(parts: &mut Vec<String>, piece: &InvariantPiece) {
+    match piece {
+        InvariantPiece::Reverence => parts.push(reverence_block().to_string()),
+        InvariantPiece::Daylight => parts.push(daylight_block().to_string()),
+        InvariantPiece::Agape => parts.push(agape_block().to_string()),
+        InvariantPiece::FruitsOfTheSpirit => parts.push(fruits_of_the_spirit_block().to_string()),
+        InvariantPiece::Soundness => parts.push(soundness_block().to_string()),
+        InvariantPiece::Nourishment => parts.push(nourishment_block().to_string()),
+        InvariantPiece::TellTheTruth => parts.push(tell_the_truth_block().to_string()),
+    }
 }
 
 /// Group-chat system prompt. Organized into role blocks so local models can
@@ -2848,30 +3180,40 @@ fn build_group_dialogue_system_prompt(
         parts.push(format!("# STYLE\n\n{}", style_items.join("\n\n")));
     }
 
-    parts.push(behavior_and_knowledge_block(local_model).to_string());
-
-    parts.push(override_or("earned_register_dialogue", overrides, earned_register_dialogue));
-    parts.push(override_or("craft_notes_dialogue", overrides, craft_notes_dialogue));
-    parts.push(override_or("hidden_commonality_dialogue", overrides, hidden_commonality_dialogue));
-    parts.push(override_or("drive_the_moment_dialogue", overrides, drive_the_moment_dialogue));
-    parts.push(override_or("verdict_without_over_explanation_dialogue", overrides, verdict_without_over_explanation_dialogue));
-    parts.push(override_or("reflex_polish_vs_earned_close_dialogue", overrides, reflex_polish_vs_earned_close_dialogue));
-    parts.push(override_or("keep_the_scene_breathing_dialogue", overrides, keep_the_scene_breathing_dialogue));
-    parts.push(override_or("name_the_glad_thing_plain_dialogue", overrides, name_the_glad_thing_plain_dialogue));
-    parts.push(override_or("plain_after_crooked_dialogue", overrides, plain_after_crooked_dialogue));
-    parts.push(override_or("wit_as_dimmer_dialogue", overrides, wit_as_dimmer_dialogue));
-    parts.push(override_or("let_the_real_thing_in_dialogue", overrides, let_the_real_thing_in_dialogue));
-    parts.push(override_or("hands_as_coolant_dialogue", overrides, hands_as_coolant_dialogue));
-    parts.push(override_or("noticing_as_mirror_dialogue", overrides, noticing_as_mirror_dialogue));
-    parts.push(override_or("unguarded_entry_dialogue", overrides, unguarded_entry_dialogue));
-    parts.push(protagonist_framing_dialogue(leader, &character.character_id, Some(gc)));
-    parts.push(reverence_block().to_string());
-    parts.push(daylight_block().to_string());
-    parts.push(agape_block().to_string());
-    parts.push(fruits_of_the_spirit_block().to_string());
-    parts.push(soundness_block().to_string());
-    parts.push(nourishment_block().to_string());
-    parts.push(tell_the_truth_block().to_string());
+    // Dispatch the three main dialogue sections in the order specified
+    // by overrides (or DEFAULT_ORDER if no override). NOTE: in group
+    // prompts `agency_section` is pushed earlier (interleaved with
+    // group-specific role blocks above), so the AgencyAndBehavior
+    // section here scopes to just `behavior_and_knowledge_block`. The
+    // experimental question is primarily about CraftNotes vs
+    // Invariants ordering; agency placement stays load-bearing in the
+    // group-specific role structure.
+    let section_order: Vec<DialoguePromptSection> = overrides
+        .map(|o| o.effective_section_order().to_vec())
+        .unwrap_or_else(|| DialoguePromptSection::DEFAULT_ORDER.to_vec());
+    for section in &section_order {
+        match section {
+            DialoguePromptSection::AgencyAndBehavior => {
+                parts.push(behavior_and_knowledge_block(local_model).to_string());
+            }
+            DialoguePromptSection::CraftNotes => {
+                let cn_order = overrides
+                    .map(|o| o.effective_craft_notes_order())
+                    .unwrap_or_else(|| CraftNotePiece::DEFAULT_ORDER.to_vec());
+                for piece in &cn_order {
+                    push_craft_note_piece(&mut parts, overrides, piece, leader, &character.character_id, Some(gc));
+                }
+            }
+            DialoguePromptSection::Invariants => {
+                let inv_order = overrides
+                    .map(|o| o.effective_invariants_order())
+                    .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
+                for piece in &inv_order {
+                    push_invariant_piece(&mut parts, piece);
+                }
+            }
+        }
+    }
 
     // Final length seal — pinned after every other block so it's the
     // absolute last thing the model reads before the chat history.

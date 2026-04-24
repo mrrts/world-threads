@@ -286,6 +286,45 @@ enum Cmd {
         /// Git repo path for ref resolution + `git show`.
         #[arg(long)]
         repo: Option<PathBuf>,
+        /// Optional custom ordering of the three main dialogue prompt
+        /// sections. Comma-separated. Valid names (case-insensitive,
+        /// hyphens or underscores): agency-and-behavior / agency /
+        /// behavior; craft-notes / craft / notes; invariants /
+        /// invariant. Must include exactly one of each. Default
+        /// (no flag): agency-and-behavior,craft-notes,invariants.
+        /// Example: --section-order invariants,craft-notes,agency-and-behavior
+        /// tests the placement-dominates-tier hypothesis by putting
+        /// invariants first. Applied identically across all refs so the
+        /// section-order is held constant while only the prompt
+        /// override-bodies vary per ref.
+        #[arg(long, value_delimiter = ',')]
+        section_order: Vec<String>,
+        /// Optional within-section ordering for craft notes. Comma-
+        /// separated short names (e.g. earned_register,hands_as_coolant,
+        /// reflex_polish,protagonist_framing). Partial orderings are
+        /// supported: pieces you name appear first in the given order,
+        /// the rest fall in by default order. Accepted names (full list):
+        /// earned_register, craft_notes, hidden_commonality, drive_the_moment,
+        /// verdict_without_over_explanation (or verdict),
+        /// reflex_polish_vs_earned_close (or reflex_polish),
+        /// keep_the_scene_breathing (or scene_breathing),
+        /// name_the_glad_thing_plain (or glad_thing_plain),
+        /// plain_after_crooked, wit_as_dimmer,
+        /// let_the_real_thing_in (or real_thing_in), hands_as_coolant,
+        /// noticing_as_mirror, unguarded_entry,
+        /// protagonist_framing (or protagonist). Trailing "_dialogue"
+        /// suffixes are stripped.
+        #[arg(long, value_delimiter = ',')]
+        craft_notes_order: Vec<String>,
+        /// Optional within-section ordering for invariants. Comma-
+        /// separated short names. Partial orderings supported (same
+        /// prefix-then-defaults semantics as --craft-notes-order).
+        /// Accepted names: reverence, daylight, agape,
+        /// fruits_of_the_spirit (or fruits), soundness, nourishment,
+        /// tell_the_truth (or truth). Trailing "_block" suffixes are
+        /// stripped.
+        #[arg(long, value_delimiter = ',')]
+        invariants_order: Vec<String>,
     },
 
     /// List, show, or search rubrics in the library
@@ -1222,14 +1261,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             } else { None };
             cmd_lab(&r, action, api_key.as_deref()).await
         }
-        Cmd::Replay { refs, character, prompt, model, confirm_cost, repo } => {
+        Cmd::Replay { refs, character, prompt, model, confirm_cost, repo, section_order, craft_notes_order, invariants_order } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_replay(&r, &api_key, &refs, &character, &prompt, model.as_deref(), confirm_cost, repo.as_deref()).await
+            cmd_replay(&r, &api_key, &refs, &character, &prompt, model.as_deref(), confirm_cost, repo.as_deref(), &section_order, &craft_notes_order, &invariants_order).await
         }
         Cmd::Consult { character_id, message, mode, session, model, confirm_cost, question_summary } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
@@ -3543,6 +3582,43 @@ fn cmd_replay_runs(r: &Resolved, action: ReplayRunAction) -> Result<(), Box<dyn 
     Ok(())
 }
 
+/// Display/serialize name for a CraftNotePiece, used by header
+/// printout and the persisted run log envelope.
+fn craft_note_piece_name(p: &app_lib::ai::prompts::CraftNotePiece) -> &'static str {
+    use app_lib::ai::prompts::CraftNotePiece as CN;
+    match p {
+        CN::EarnedRegister => "earned_register",
+        CN::CraftNotes => "craft_notes",
+        CN::HiddenCommonality => "hidden_commonality",
+        CN::DriveTheMoment => "drive_the_moment",
+        CN::VerdictWithoutOverExplanation => "verdict_without_over_explanation",
+        CN::ReflexPolishVsEarnedClose => "reflex_polish_vs_earned_close",
+        CN::KeepTheSceneBreathing => "keep_the_scene_breathing",
+        CN::NameTheGladThingPlain => "name_the_glad_thing_plain",
+        CN::PlainAfterCrooked => "plain_after_crooked",
+        CN::WitAsDimmer => "wit_as_dimmer",
+        CN::LetTheRealThingIn => "let_the_real_thing_in",
+        CN::HandsAsCoolant => "hands_as_coolant",
+        CN::NoticingAsMirror => "noticing_as_mirror",
+        CN::UnguardedEntry => "unguarded_entry",
+        CN::ProtagonistFraming => "protagonist_framing",
+    }
+}
+
+/// Display/serialize name for an InvariantPiece.
+fn invariant_piece_name(p: &app_lib::ai::prompts::InvariantPiece) -> &'static str {
+    use app_lib::ai::prompts::InvariantPiece as IP;
+    match p {
+        IP::Reverence => "reverence",
+        IP::Daylight => "daylight",
+        IP::Agape => "agape",
+        IP::FruitsOfTheSpirit => "fruits_of_the_spirit",
+        IP::Soundness => "soundness",
+        IP::Nourishment => "nourishment",
+        IP::TellTheTruth => "tell_the_truth",
+    }
+}
+
 async fn cmd_replay(
     r: &Resolved,
     api_key: &str,
@@ -3552,6 +3628,9 @@ async fn cmd_replay(
     model_override: Option<&str>,
     confirm_cost: Option<f64>,
     repo: Option<&std::path::Path>,
+    section_order_names: &[String],
+    craft_notes_order_names: &[String],
+    invariants_order_names: &[String],
 ) -> Result<(), Box<dyn std::error::Error>> {
     if refs.is_empty() {
         return Err(Box::<dyn std::error::Error>::from(
@@ -3562,6 +3641,70 @@ async fn cmd_replay(
     }
     let _ = r.check_character(character_id)?;
 
+    // Parse optional --section-order flag into a validated
+    // Vec<DialoguePromptSection>. Empty input = no override (default
+    // order applies). Invalid names or a non-permutation are hard
+    // errors — fail fast rather than silently fall back to default.
+    let section_order_override: Option<Vec<app_lib::ai::prompts::DialoguePromptSection>> =
+        if section_order_names.is_empty() {
+            None
+        } else {
+            let mut parsed: Vec<app_lib::ai::prompts::DialoguePromptSection> = Vec::new();
+            for name in section_order_names {
+                match app_lib::ai::prompts::DialoguePromptSection::from_cli_name(name) {
+                    Some(sec) => parsed.push(sec),
+                    None => return Err(Box::<dyn std::error::Error>::from(format!(
+                        "unknown section name '{}' in --section-order. Valid names: agency-and-behavior, craft-notes, invariants.",
+                        name
+                    ))),
+                }
+            }
+            if !app_lib::ai::prompts::DialoguePromptSection::is_valid_permutation(&parsed) {
+                return Err(Box::<dyn std::error::Error>::from(format!(
+                    "--section-order must include exactly one of each: agency-and-behavior, craft-notes, invariants. Got: {:?}",
+                    parsed
+                )));
+            }
+            Some(parsed)
+        };
+
+    // Parse --craft-notes-order (partial orderings OK — prefix then
+    // defaults). Only invalid names are hard errors.
+    let craft_notes_order_override: Option<Vec<app_lib::ai::prompts::CraftNotePiece>> =
+        if craft_notes_order_names.is_empty() {
+            None
+        } else {
+            let mut parsed: Vec<app_lib::ai::prompts::CraftNotePiece> = Vec::new();
+            for name in craft_notes_order_names {
+                match app_lib::ai::prompts::CraftNotePiece::from_cli_name(name) {
+                    Some(p) => parsed.push(p),
+                    None => return Err(Box::<dyn std::error::Error>::from(format!(
+                        "unknown craft-note name '{}' in --craft-notes-order. See --help for the full list of valid names.",
+                        name
+                    ))),
+                }
+            }
+            Some(parsed)
+        };
+
+    // Parse --invariants-order (same prefix-then-defaults semantics).
+    let invariants_order_override: Option<Vec<app_lib::ai::prompts::InvariantPiece>> =
+        if invariants_order_names.is_empty() {
+            None
+        } else {
+            let mut parsed: Vec<app_lib::ai::prompts::InvariantPiece> = Vec::new();
+            for name in invariants_order_names {
+                match app_lib::ai::prompts::InvariantPiece::from_cli_name(name) {
+                    Some(p) => parsed.push(p),
+                    None => return Err(Box::<dyn std::error::Error>::from(format!(
+                        "unknown invariant name '{}' in --invariants-order. Valid names: reverence, daylight, agape, fruits_of_the_spirit (or fruits), soundness, nourishment, tell_the_truth (or truth).",
+                        name
+                    ))),
+                }
+            }
+            Some(parsed)
+        };
+
     // Resolve each ref to (sha, timestamp, subject) up front so failures
     // happen before any LLM spend.
     let mut resolved_refs: Vec<(String, String, String, String)> = Vec::new();
@@ -3570,13 +3713,25 @@ async fn cmd_replay(
         resolved_refs.push((rr.clone(), sha, ts, subj));
     }
 
-    // Fetch + parse the historical prompts.rs for each ref.
+    // Fetch + parse the historical prompts.rs for each ref. Apply the
+    // section-order override (if any) identically to every ref — the
+    // override is the held-constant condition; ref-varying content
+    // bodies is the A/B variable.
     let mut per_ref_overrides: Vec<(String, app_lib::ai::prompts::PromptOverrides, Vec<String>)> = Vec::new();
     for (ref_input, sha, _ts, _subj) in &resolved_refs {
         let source = git_show_file(repo, sha, "src-tauri/src/ai/prompts.rs")
             .map_err(|e| Box::<dyn std::error::Error>::from(
                 format!("fetching prompts.rs at {}: {}", ref_input, e)))?;
-        let overrides = parse_historical_prompts_overrides(&source);
+        let mut overrides = parse_historical_prompts_overrides(&source);
+        if let Some(order) = &section_order_override {
+            overrides.set_section_order(order.clone());
+        }
+        if let Some(order) = &craft_notes_order_override {
+            overrides.set_craft_notes_order(order.clone());
+        }
+        if let Some(order) = &invariants_order_override {
+            overrides.set_invariants_order(order.clone());
+        }
         let found: Vec<String> = overrides.map.keys().cloned().collect();
         per_ref_overrides.push((ref_input.clone(), overrides, found));
     }
@@ -3704,6 +3859,22 @@ async fn cmd_replay(
     });
 
     let run_id = uuid::Uuid::new_v4().to_string();
+    let section_order_json: serde_json::Value = match &section_order_override {
+        Some(order) => json!(order.iter().map(|s| match s {
+            app_lib::ai::prompts::DialoguePromptSection::AgencyAndBehavior => "agency-and-behavior",
+            app_lib::ai::prompts::DialoguePromptSection::CraftNotes => "craft-notes",
+            app_lib::ai::prompts::DialoguePromptSection::Invariants => "invariants",
+        }).collect::<Vec<_>>()),
+        None => serde_json::Value::Null,
+    };
+    let craft_notes_order_json: serde_json::Value = match &craft_notes_order_override {
+        Some(order) => json!(order.iter().map(|p| craft_note_piece_name(p)).collect::<Vec<_>>()),
+        None => serde_json::Value::Null,
+    };
+    let invariants_order_json: serde_json::Value = match &invariants_order_override {
+        Some(order) => json!(order.iter().map(|p| invariant_piece_name(p)).collect::<Vec<_>>()),
+        None => serde_json::Value::Null,
+    };
     let envelope = json!({
         "run_id": run_id,
         "run_timestamp": chrono::Utc::now().to_rfc3339(),
@@ -3711,6 +3882,9 @@ async fn cmd_replay(
         "character_name": character.display_name,
         "prompt": prompt,
         "model": model_config.dialogue_model,
+        "section_order_override": section_order_json,
+        "craft_notes_order_override": craft_notes_order_json,
+        "invariants_order_override": invariants_order_json,
         "refs": resolved_refs.iter().map(|(i, s, t, sub)| json!({
             "ref": i, "sha": s, "timestamp": t, "subject": sub,
         })).collect::<Vec<_>>(),
@@ -3731,6 +3905,22 @@ async fn cmd_replay(
         println!("model:     {}", model_config.dialogue_model);
         println!("prompt:    {}", prompt);
         println!("run_id:    {}", run_id);
+        if let Some(order) = &section_order_override {
+            let names: Vec<&str> = order.iter().map(|s| match s {
+                app_lib::ai::prompts::DialoguePromptSection::AgencyAndBehavior => "agency-and-behavior",
+                app_lib::ai::prompts::DialoguePromptSection::CraftNotes => "craft-notes",
+                app_lib::ai::prompts::DialoguePromptSection::Invariants => "invariants",
+            }).collect();
+            println!("section-order: {} (non-default)", names.join(","));
+        }
+        if let Some(order) = &craft_notes_order_override {
+            let names: Vec<String> = order.iter().map(|p| craft_note_piece_name(p).to_string()).collect();
+            println!("craft-notes-order: {} (prefix; rest default)", names.join(","));
+        }
+        if let Some(order) = &invariants_order_override {
+            let names: Vec<String> = order.iter().map(|p| invariant_piece_name(p).to_string()).collect();
+            println!("invariants-order: {} (prefix; rest default)", names.join(","));
+        }
         println!();
         for result in envelope["results"].as_array().unwrap_or(&vec![]) {
             let r_input = result["ref"].as_str().unwrap_or("?");
