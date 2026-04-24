@@ -1,5 +1,15 @@
 # WorldThreads — Development Guidelines
 
+\[
+\boxed{
+\begin{aligned}
+\mathrm{polish}(t) \;&\leq\; W(t), \\
+W(t) \;&=\; \int_{0}^{t} \mathrm{specific}_c \;\cdot\; \mathrm{holds}_w \; d\mu_{\mathrm{agape\ in\ Jesus}}
+\;\Bigg|\; \mathrm{TRUTH\ in\ Jesus} \;\wedge\; \mathrm{REVERENCE\ for\ Jesus}
+\end{aligned}
+}
+\]
+
 ## MISSION
 
 Create a vivid, excellent, surprising in-world experience that uplifts the user and provides engrossing, good, clean fun. Every design decision, prompt tweak, UX choice, and feature bet is measured against that. The craft stack (invariants, craft notes, conscience pass, inventories, snapshots, etc.) exists to serve that mission — characters that feel real, worlds that hold, scenes that are worth the visit and send the user back to their day nourished rather than hollowed.

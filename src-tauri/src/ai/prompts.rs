@@ -991,6 +991,53 @@ A narrative beat should tilt the scene by at least one small degree — an image
 //
 // Changes require explicit user authorization. Do not assume.
 
+/// Mission formula — the grand-unified shape of what the craft stack
+/// serves. Pushed FIRST in the invariant assembly sequence so every
+/// subsequent invariant and craft note is read through its frame.
+/// Christ-named in the measure and the conditional so it
+/// Jesus-points at first-position rather than merely describes.
+/// Authored by the user; preserved as literal LaTeX.
+pub const MISSION_FORMULA_BLOCK: &str = r#"THE MISSION (NORTH STAR INVARIANT):
+
+\[
+\boxed{
+\begin{aligned}
+\mathrm{polish}(t) \;&\leq\; W(t), \\
+W(t) \;&=\; \int_{0}^{t} \mathrm{specific}_c \;\cdot\; \mathrm{holds}_w \; d\mu_{\mathrm{agape\ in\ Jesus}}
+\;\Bigg|\; \mathrm{TRUTH\ in\ Jesus} \;\wedge\; \mathrm{REVERENCE\ for\ Jesus}
+\end{aligned}
+}
+\]"#;
+
+fn mission_formula_block() -> &'static str { MISSION_FORMULA_BLOCK }
+
+// APP INVARIANT — compile-time enforcement of the mission-formula
+// clause. This block is the TOP INVARIANT. Its Christ-named phrases
+// and the polish-bounded-by-weight inequality must not be softened.
+// Changes require explicit user authorization.
+const _: () = {
+    assert!(
+        const_contains(MISSION_FORMULA_BLOCK, r"\mathrm{polish}(t)"),
+        "APP INVARIANT VIOLATED: mission formula must preserve 'polish(t)' as the bounded quantity. See docs/INVARIANTS.md."
+    );
+    assert!(
+        const_contains(MISSION_FORMULA_BLOCK, r"\leq"),
+        "APP INVARIANT VIOLATED: mission formula must preserve the polish ≤ W inequality. Polish is bounded by weight, not equal to it."
+    );
+    assert!(
+        const_contains(MISSION_FORMULA_BLOCK, r"\mathrm{agape\ in\ Jesus}"),
+        "APP INVARIANT VIOLATED: mission formula must preserve 'agape in Jesus' as the measure. The measure is Christ-rooted, not abstract."
+    );
+    assert!(
+        const_contains(MISSION_FORMULA_BLOCK, r"\mathrm{TRUTH\ in\ Jesus}"),
+        "APP INVARIANT VIOLATED: mission formula must preserve 'TRUTH in Jesus' verbatim. Truth is Christ-bounded."
+    );
+    assert!(
+        const_contains(MISSION_FORMULA_BLOCK, r"\mathrm{REVERENCE\ for\ Jesus}"),
+        "APP INVARIANT VIOLATED: mission formula must preserve 'REVERENCE for Jesus' verbatim. Reverence is directed at Jesus, not a generic creaturely stance."
+    );
+};
+
 /// Cosmology of this world. Inserted into the WORLD section of every
 /// dialogue / narrative / dream system prompt so characters and the
 /// narrator share a single literal picture of the heavens and the
@@ -2923,6 +2970,11 @@ fn build_solo_dialogue_system_prompt(
             }
             DialoguePromptSection::Invariants => {
                 maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionStart(*section), InsertPosition::After);
+                // MISSION FORMULA — top invariant. Precedes all other invariants
+                // so every subsequent block is read through its frame. Not
+                // overridable, not reorderable; it is the shape of what the
+                // rest of the stack serves. See MISSION_FORMULA_BLOCK.
+                parts.push(mission_formula_block().to_string());
                 let inv_order = overrides
                     .map(|o| o.effective_invariants_order())
                     .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
@@ -3352,6 +3404,11 @@ fn build_group_dialogue_system_prompt(
             }
             DialoguePromptSection::Invariants => {
                 maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionStart(*section), InsertPosition::After);
+                // MISSION FORMULA — top invariant. Precedes all other invariants
+                // so every subsequent block is read through its frame. Not
+                // overridable, not reorderable; it is the shape of what the
+                // rest of the stack serves. See MISSION_FORMULA_BLOCK.
+                parts.push(mission_formula_block().to_string());
                 let inv_order = overrides
                     .map(|o| o.effective_invariants_order())
                     .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
@@ -4190,6 +4247,7 @@ pub fn build_dream_system_prompt(
     }
 
     parts.push(dream_craft_block().to_string());
+    parts.push(mission_formula_block().to_string());
     parts.push(reverence_block().to_string());
     parts.push(daylight_block().to_string());
     parts.push(agape_block().to_string());
@@ -4582,6 +4640,7 @@ Your aim is to surprise the reader in some deep way — with a detail they didn'
 
     parts.push(hidden_commonality_narrative().to_string());
     parts.push(protagonist_framing_narrative().to_string());
+    parts.push(mission_formula_block().to_string());
     parts.push(reverence_block().to_string());
     parts.push(daylight_block().to_string());
     parts.push(agape_block().to_string());
