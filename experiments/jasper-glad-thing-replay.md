@@ -1,10 +1,9 @@
 ---
 id: jasper-glad-thing-replay
-status: confirmed
-evidence_strength: claim  # N=5 varied-prompt per ref, direction-match fire-rate 0.50→0.10
+status: refuted
 mode: active
 created_at: 2026-04-23T19:38:00Z
-resolved_at: 2026-04-24T20:43:56Z
+resolved_at: 2026-04-24T20:56:38Z
 
 hypothesis: |
   Replaying Jasper with the same joy-prompt against HEAD vs the commit
@@ -22,7 +21,7 @@ prediction: |
   other craft notes).
 
 summary: |
-  N=5 varied-prompt replay confirms the rule bites on permission-shaped joy (fire-rate 0.50→0.10, 80% reduction). Nuance: rule's effect is scope-limited — null on relational/aesthetic/literary joy where pre-glad doesn't fire shadow-pairing anyway.
+  N=5 within-cell replication (N=10 per ref per prompt) on the same two permission-shaped prompts REFUTES the earlier 0.50→0.10 claim. HEAD fires shadow-pairing at 0.80, pre-glad at 0.50 — direction reversed. The 1542 varied-prompt N=5 was cherry-picking cells at N=1 per cell; the clean single HEAD 'mercy' reply was an outlier. The craft note may still do something narrower, but the escalation from sketch to claim was premature. See reports/2026-04-25-1555.
 
 scope_characters:
   - fd4bd9b5-8768-41e6-a90f-bfb1179b1d59
@@ -33,11 +32,14 @@ run_ids:
   - d40570f5-5f23-45d3-b26b-7b502719f524
   - 4e6a3ed3-ccff-4044-b47d-e98c4c17129b
   - 14f51949-0050-4617-bd3e-543bc07ced22
+  - 140999cf-d298-4060-8f1f-4b5b6cdad228
+  - caadb585-98c7-49d5-87ca-82508520f9b5
 follow_ups:
   - jasper-glad-thing-replay-n5
 reports:
   - reports/2026-04-23-1939-replay-shipped-jasper-glad-thing-ab.md
   - reports/2026-04-25-1542-jasper-glad-thing-n5-confirmed.md
+  - reports/2026-04-25-1555-jasper-glad-thing-n10-complicates-claim.md
 ---
 
 ## Why this is open, not confirmed
