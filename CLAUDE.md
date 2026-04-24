@@ -40,6 +40,34 @@ After a fresh clone, re-enable the hook with: `git config core.hooksPath .githoo
 
 A second genre of report lives in the same directory under the same naming convention: **natural-experiment findings** from `worldcli sample-windows`. Those are nudged by an in-flight design decision needing data, not by the time-or-volume floor — see the worldcli section below for the bar and the frequency discipline.
 
+## Open-thread hygiene — executing or retiring follow-ups
+
+Every experiment report ends with a "What's open for next time" section (or equivalent). Those items are proposals, not tickets — but they accumulate, and unexecuted-unretired follow-ups become their own drift class. A prior report's open thread that was genuinely superseded by later instruments but never formally acknowledged leaves the registry and future sessions in a state where the question looks open when it isn't, and where the project's own record of its reasoning reads as if it forgot rather than decided. The project has enough cleanliness-discipline elsewhere (compile-time invariants, per-axis earned-exception clauses, frame-discipline across layers) to deserve the same cleanliness at the reflective layer.
+
+**The ritual: open follow-ups must be either EXECUTED or RETIRED, not left to drift.** Four dispositions are valid:
+
+- **Executed.** Run the experiment, write the report, link it to the original via "Dialogue with prior reports." The default path when the follow-up's question is still open and the instruments for answering it exist.
+- **Retired — `superseded_by`.** The follow-up's question was answered by a different technique that emerged later. State which later work subsumed it and why. This is the honest outcome in a project whose instruments improve faster than its follow-up queue — often the follow-up's specific TECHNIQUE is obsolete even when the underlying QUESTION got answered.
+- **Retired — `abandoned`.** The follow-up's question is no longer worth answering (priorities shifted, the surrounding code changed, the question turned out to be framed wrong). Name the rationale; don't just drop silently.
+- **Deferred — with a dated target.** Genuinely still live but blocked on something specific. Say so — with the blocker named and a target window. Stronger than silence and weaker than open; use it when the work is coming but not now.
+
+**How retirement is written.** A retirement is a small written artifact, not a ceremony. Two surfaces together:
+
+1. **The experiments/ registry entry** (`experiments/<slug>.md`) gets a `follow_ups_retired:` field in its frontmatter, with one entry per retired proposal: `proposal`, `disposition` (one of `superseded_by` / `abandoned` / `deferred`), `by` (the superseding work, if applicable), and `rationale` (one paragraph explaining the call). Plus a `retirement_date` and optional `retirement_report` pointer. A short markdown body section ("## Follow-up retirement") states the same in prose.
+2. **An optional short retirement report** under `reports/YYYY-MM-DD-HHMM-retiring-<slug>.md` if the retirement itself teaches something (applying the ritual to its first instance; naming the pattern that superseded the follow-up; surfacing what the retirement does NOT close). Skip this when the retirement is purely mechanical.
+
+**Triggers for a retirement check.** When you notice:
+- a follow-up from a prior report that hasn't been executed within 7+ days AND hasn't been referenced as still-active in any intervening report, or
+- a later instrument/technique that materially covers a question an earlier follow-up proposed,
+
+those are triggers. Don't wait to be asked; propose the retirement and commit it. The user can revise. Prefer `superseded_by` when the underlying question is genuinely answered by later work; prefer `abandoned` when the question itself is no longer the right one to ask; prefer `deferred` only when you can name both the blocker and a target window.
+
+**Cadence.** Every trajectory-shaped report (the `/project-report` genre) should include a brief "follow-up hygiene" pass — which prior open threads are still open, which have been executed, which should be retired. This extends the "dialogue with prior reports" discipline already in place. Experiment reports (the natural-experiment genre) don't need to audit all prior follow-ups, but they should explicitly state what their own open follow-ups are, so the registry remains queryable.
+
+**What this prevents.** The session-arc retrospective's open follow-ups silently accumulating. The trajectory report's "still open" list growing without ever shrinking. The `worldcli lab list` output showing [refuted] status on hypotheses whose follow-up proposals look open forever because no one formally closed them. Silent staleness corrodes the reflective layer; written retirement preserves it.
+
+First application: the 2026-04-24-1500-retiring-cluster-then-rubric-followup report retires two follow-ups from the 2026-04-23-1326 john-stillness-refuted report, both with `superseded_by` disposition, superseded by `worldcli synthesize` + the load-test anchor synthesizer. The report and the registry-entry edit together are the worked example of the ritual.
+
 ## How to read this craft stack
 
 When reviewing, auditing, refactoring, or critiquing anything in this repo (especially `prompts.rs`), follow the **load-bearing-multiplicity prior**: when two directives appear to contradict each other, assume the multiplicity is intentional before assuming it's a bug. Apparent tension is almost always the same truth from different angles, not two principles needing a precedence rule. Full reading instructions in `docs/VOICE.md` under "Reading this work, especially as an AI."
