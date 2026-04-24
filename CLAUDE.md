@@ -330,6 +330,21 @@ The check isn't an ironclad gate. The directional-claims corollary applies here 
 
 The pattern: **rubrics that key on surface vocabulary or single-phrase presence tend to miss bite that lives in the reply's SHAPE.** When designing a rubric, ask: is the rule's bite about a specific phrase/word, or about the reply's overall shape (length, structure, register-cleanup)? If the latter, write a shape-level rubric, not a phrase-level one. And regardless of which, sanity-read samples before trusting aggregates.
 
+**The deeper principle — measure the failure-mode phrases, not the negative space the rule creates.** Behavioral-abstraction rubrics (*"is this reply brief and release-shaped?"*, *"does this reply meet joy plainly?"*, *"is this reply verdict-first?"*) **under-measure bite because they count the negative space the rule creates rather than the specific failure-mode phrases the rule suppresses.** Rules suppress moves; suppressed moves leave specific traces (or are detectable by their characteristic vocabulary in the unsuppressed case). Count the traces directly.
+
+Concretely: for a rule that suppresses *X*, the question to ask is NOT *"does this reply NOT do X?"* (negative-space, abstract, easy to mis-grade by stretching the abstraction). It's *"does this reply contain any of these specific phrases / moves that exemplify X?"* (positive presence, concrete, falsifiable per item).
+
+The two failure modes of behavioral-abstraction rubrics:
+
+1. **Mis-extension.** The grader stretches the abstraction to cover content it shouldn't — *"Night's waiting for both of us"* read as "extending the conversation" because the rubric said "no extending"; the in-register closing image got punished as a failure.
+2. **Under-extension.** The grader fails to recognize a textured form of the desired behavior — *"I don't trust ducks"* read as "doesn't open with a verdict" because the rubric's example list only included *Yeah / No / Good*; a real verdict in non-stereotyped vocabulary got missed.
+
+Both failure modes vanish when the rubric keys on the FAILURE-MODE side: list the specific tokens / phrases / moves that constitute the failure, ask whether ANY of them are present, and explicitly note that absence of those specific failure-mode tokens is the success condition. The rubric becomes a checklist against a vocabulary, not a judgment-call about whether the reply matches an abstract shape.
+
+When the rule's failure mode is genuinely shape-level rather than phrase-level (compression, structural cleanup, register pruning), don't fall back to behavioral-abstraction either — instead write a multi-dimensional rubric that lists each failure-mode dimension as its own concrete check (e.g., *"a) reply length >100 tokens? b) presence of performed-warmth phrases [list]? c) presence of scene-prop padding (sensory environment description not present in the prompt)? d) presence of second-thought tag-on (sentence beginning 'And [name]—' or 'Oh, one thing—')? e) presence of return-prescription phrases [list]?"*). Each dimension is concrete; aggregation across dimensions captures the multi-dimensional bite.
+
+**Stated as one rule:** *Rubrics that work key on concrete vocabulary tokens; rubrics that fail key on abstract shape descriptions.* The same principle applies whether the rule suppresses a single phrase, a vocabulary cluster, or a multi-dimensional shape. Concretize the failure mode; count its traces.
+
 **2. Evidence-status provenance in `prompts.rs`.** Each craft note's doc-comment carries one `Evidence:` line naming its verification status. The taxonomy:
 
 - `Evidence: unverified — no bite-test run` — default for rules authored without a verification pass. Honest baseline.
