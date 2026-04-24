@@ -1021,6 +1021,7 @@ pub async fn send_group_message_cmd(
             latest_meanwhile.as_ref(),
             active_quests.as_slice(),
             stance_text.as_deref(),
+            None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
         ).await?;
 
         // Strip own prefix and truncate any other-character dialogue
@@ -1080,6 +1081,7 @@ pub async fn send_group_message_cmd(
                                 latest_meanwhile.as_ref(),
                                 active_quests.as_slice(),
                                 stance_text.as_deref(),
+                                None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
                             ).await {
                                 Ok((corrected_raw, corrected_usage)) => {
                                     log::info!("[Conscience] {} (group) reply corrected after drift", character.display_name);
@@ -1388,6 +1390,7 @@ pub async fn prompt_group_character_cmd(
         latest_meanwhile.as_ref(),
         active_quests.as_slice(),
         stance_text.as_deref(),
+        None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
     );
     let reaction_fut = orchestrator::pick_character_reaction_via_llm(
         &base, &api_key, &model_config.dialogue_model,
@@ -1446,6 +1449,7 @@ pub async fn prompt_group_character_cmd(
                             latest_meanwhile.as_ref(),
                             active_quests.as_slice(),
                             stance_text.as_deref(),
+                            None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
                         ).await {
                             Ok((corrected_raw, corrected_usage)) => {
                                 log::info!("[Conscience] {} (group-prompt) reply corrected after drift", character.display_name);

@@ -613,6 +613,7 @@ pub async fn send_message_cmd(
     latest_meanwhile.as_ref(),
     active_quests.as_slice(),
     stance_text.as_deref(),
+    None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
     );
     // Context for the reaction-emoji pick: the recent messages EXCLUDING
     // the user's brand-new one (which goes in the user-role slot). Gives
@@ -680,6 +681,7 @@ pub async fn send_message_cmd(
                             latest_meanwhile.as_ref(),
                             active_quests.as_slice(),
                             stance_text.as_deref(),
+                            None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
                         ).await {
                             Ok((corrected, corrected_usage)) => {
                                 log::info!("[Conscience] {} reply corrected after drift", character.display_name);
@@ -1063,6 +1065,7 @@ pub async fn prompt_character_cmd(
         latest_meanwhile.as_ref(),
         active_quests.as_slice(),
         stance_text.as_deref(),
+        None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
     ).await?;
 
     // Conscience Pass: grade + regenerate-on-drift (see send_message_cmd).
@@ -1110,6 +1113,7 @@ pub async fn prompt_character_cmd(
                             latest_meanwhile.as_ref(),
                             active_quests.as_slice(),
                             stance_text.as_deref(),
+                            None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
                         ).await {
                             Ok((corrected, corrected_usage)) => {
                                 log::info!("[Conscience] {} (prompt) reply corrected after drift", character.display_name);
@@ -1394,6 +1398,7 @@ pub async fn try_proactive_ping_cmd(
         latest_meanwhile.as_ref(),
         active_quests.as_slice(),
         stance_text.as_deref(),
+        None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
     ).await?;
 
     if reply_text.trim().is_empty() {
@@ -2183,6 +2188,7 @@ pub async fn reset_to_message_cmd(
         latest_meanwhile.as_ref(),
         active_quests.as_slice(),
         stance_text.as_deref(),
+        None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
         );
         let reaction_context: Vec<Message> = recent_msgs.iter()
             .rev().skip(1).take(4).rev().cloned().collect();
@@ -2235,6 +2241,7 @@ pub async fn reset_to_message_cmd(
                                 latest_meanwhile.as_ref(),
                                 active_quests.as_slice(),
                                 stance_text.as_deref(),
+                                None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
                             ).await {
                                 Ok((corrected, corrected_usage)) => {
                                     log::info!("[Conscience] {} (reset) reply corrected after drift", character.display_name);

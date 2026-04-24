@@ -523,6 +523,7 @@ fn override_or(
 /// The OVERRIDABLE_DIALOGUE_FRAGMENTS entry and call-site wiring
 /// remain in place as scaffold so future replay experiments comparing
 /// stack-states across the synthesizer rollout will work cleanly.
+#[allow(dead_code)]
 fn load_test_anchor_block() -> &'static str {
     ""
 }
@@ -2082,12 +2083,13 @@ pub fn build_dialogue_system_prompt(
     latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
     active_quests: &[crate::db::queries::Quest],
     relational_stance: Option<&str>,
+    load_test_anchor: Option<&str>,
 ) -> String {
     build_dialogue_system_prompt_with_overrides(
         world, character, user_profile, mood_directive, response_length,
         group_context, tone, local_model, mood_chain, leader, recent_journals,
         latest_reading, own_voice_samples, latest_meanwhile, active_quests,
-        relational_stance, None,
+        relational_stance, load_test_anchor, None,
     )
 }
 
@@ -2113,12 +2115,13 @@ pub fn build_dialogue_system_prompt_with_overrides(
     latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
     active_quests: &[crate::db::queries::Quest],
     relational_stance: Option<&str>,
+    load_test_anchor: Option<&str>,
     overrides: Option<&PromptOverrides>,
 ) -> String {
     if group_context.is_some() {
-        build_group_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context.unwrap(), tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples, latest_meanwhile, active_quests, relational_stance, overrides)
+        build_group_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context.unwrap(), tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples, latest_meanwhile, active_quests, relational_stance, load_test_anchor, overrides)
     } else {
-        build_solo_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples, latest_meanwhile, active_quests, relational_stance, overrides)
+        build_solo_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples, latest_meanwhile, active_quests, relational_stance, load_test_anchor, overrides)
     }
 }
 
@@ -2141,6 +2144,7 @@ pub fn build_proactive_ping_system_prompt(
     latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
     active_quests: &[crate::db::queries::Quest],
     relational_stance: Option<&str>,
+    load_test_anchor: Option<&str>,
 ) -> String {
     let base = build_solo_dialogue_system_prompt(
         world,
@@ -2158,6 +2162,7 @@ pub fn build_proactive_ping_system_prompt(
         latest_meanwhile,
         active_quests,
         relational_stance,
+        load_test_anchor,
         None,
     );
     format!("{base}\n\n{}", proactive_ping_block())
@@ -2201,6 +2206,7 @@ fn build_solo_dialogue_system_prompt(
     latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
     active_quests: &[crate::db::queries::Quest],
     relational_stance: Option<&str>,
+    load_test_anchor: Option<&str>,
     overrides: Option<&PromptOverrides>,
 ) -> String {
     let mut parts = Vec::new();
@@ -2225,12 +2231,19 @@ fn build_solo_dialogue_system_prompt(
     }
 
     // Load-test anchor — names the architecture-level dimension this
-    // character load-tests when authority is being rendered. v1 is empty
-    // (baseline boundary commit); v2 will populate the four mapped
-    // characters. See OVERRIDABLE_DIALOGUE_FRAGMENTS notes for replay
-    // experiment shape.
+    // character load-tests when authority is being rendered. Per-
+    // character, periodically synthesized from corpus (see
+    // `ai::load_test_anchor::refresh_load_test_anchor`). Precedence:
+    // replay override > caller-passed anchor from DB > empty (skip).
     {
-        let block = override_or("load_test_anchor_block", overrides, load_test_anchor_block);
+        let override_text = overrides
+            .and_then(|o| o.get("load_test_anchor_block"))
+            .map(|s| s.to_string());
+        let block = match override_text {
+            Some(t) if !t.trim().is_empty() => t,
+            Some(_) => String::new(),  // override present but empty = suppress
+            None => load_test_anchor.map(|s| s.to_string()).unwrap_or_default(),
+        };
         if !block.trim().is_empty() { parts.push(block); }
     }
 
@@ -2470,6 +2483,7 @@ fn build_group_dialogue_system_prompt(
     latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
     active_quests: &[crate::db::queries::Quest],
     relational_stance: Option<&str>,
+    load_test_anchor: Option<&str>,
     overrides: Option<&PromptOverrides>,
 ) -> String {
     let mut parts = Vec::new();
@@ -2486,9 +2500,17 @@ fn build_group_dialogue_system_prompt(
         you.push_str("\n\n");
         you.push_str(&character.identity);
     }
-    // Load-test anchor (architecture-vs-vocabulary hypothesis). v1 empty.
+    // Load-test anchor (architecture-vs-vocabulary). Precedence:
+    // replay override > caller-passed anchor from DB > empty.
     {
-        let block = override_or("load_test_anchor_block", overrides, load_test_anchor_block);
+        let override_text = overrides
+            .and_then(|o| o.get("load_test_anchor_block"))
+            .map(|s| s.to_string());
+        let block = match override_text {
+            Some(t) if !t.trim().is_empty() => t,
+            Some(_) => String::new(),
+            None => load_test_anchor.map(|s| s.to_string()).unwrap_or_default(),
+        };
         if !block.trim().is_empty() {
             you.push_str("\n\n");
             you.push_str(&block);

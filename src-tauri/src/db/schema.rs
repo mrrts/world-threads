@@ -1655,5 +1655,40 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             ON relational_stances(character_id, created_at DESC);
     ").ok();
 
+    // ── character_load_test_anchors ─────────────────────────────────────
+    //
+    // Per-character "what does this character load-test?" — the
+    // architecture-level spine of their authority, periodically synthesized
+    // from their recent corpus. Direct sibling of `relational_stances` in
+    // both schema shape and refresh pattern. See 2026-04-24-0948 report
+    // for the experiment that confirmed explicit anchor-naming shifts
+    // character-specific behavior.
+    //
+    // anchor_label: short identifier like "DEVOTION" / "LANGUAGE" /
+    //   "FABRIC OF A LIFE" — the dimension the character weight-tests.
+    // anchor_body: the full second-person prompt-block injected into
+    //   the dialogue system prompt. Self-contained, ready to push into
+    //   the parts vec without further formatting.
+    // derivation_summary: one paragraph explaining how the anchor was
+    //   derived from the corpus. Inspectable; helps the user see WHY
+    //   this character got this anchor.
+    conn.execute_batch("
+        CREATE TABLE IF NOT EXISTS character_load_test_anchors (
+            anchor_id TEXT PRIMARY KEY,
+            character_id TEXT NOT NULL REFERENCES characters(character_id) ON DELETE CASCADE,
+            world_id TEXT NOT NULL REFERENCES worlds(world_id) ON DELETE CASCADE,
+            anchor_label TEXT NOT NULL,
+            anchor_body TEXT NOT NULL,
+            derivation_summary TEXT NOT NULL DEFAULT '',
+            world_day_at_generation INTEGER,
+            source_message_count INTEGER NOT NULL DEFAULT 0,
+            refresh_trigger TEXT NOT NULL,
+            model_used TEXT NOT NULL DEFAULT '',
+            created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_load_test_anchors_char
+            ON character_load_test_anchors(character_id, created_at DESC);
+    ").ok();
+
     Ok(())
 }

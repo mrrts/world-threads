@@ -33,7 +33,7 @@ use serde_json::{json, Value as JsonValue};
 use std::path::PathBuf;
 
 use app_lib::ai::prompts::json_array_to_strings;
-use app_lib::ai::{openai, orchestrator, prompts, relational_stance};
+use app_lib::ai::{openai, orchestrator, prompts, relational_stance, load_test_anchor};
 use app_lib::db::{queries::*, Database};
 
 // ─── CLI surface ────────────────────────────────────────────────────────
@@ -179,6 +179,31 @@ enum Cmd {
         character_id: String,
         /// Override the model used for synthesis (default: memory_model
         /// from the user's settings — typically gpt-4o-mini).
+        #[arg(long)]
+        model: Option<String>,
+        /// Required when projected cost exceeds the per-call cap.
+        #[arg(long)]
+        confirm_cost: Option<f64>,
+    },
+
+    /// Show the latest load-test anchor for a character — the
+    /// architecture-level "what does this character weight-test the
+    /// world against?" synthesized from their recent corpus. Read-only.
+    ShowAnchor {
+        character_id: String,
+        #[arg(long, default_value_t = 1)]
+        history: i64,
+    },
+
+    /// Manually trigger a load-test-anchor synthesis for a character.
+    /// Uses the dialogue_model by default (sharper synthesis than
+    /// memory_model); pass --model to override. Architecture-level
+    /// anchor identified from the character's recent corpus. See
+    /// `reports/2026-04-24-0948-architecture-hypothesis-bites.md` for
+    /// the experiment that validated the approach.
+    RefreshAnchor {
+        character_id: String,
+        /// Override the model used for synthesis (default: dialogue_model).
         #[arg(long)]
         model: Option<String>,
         /// Required when projected cost exceeds the per-call cap.
@@ -1177,6 +1202,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )),
             };
             cmd_refresh_stance(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
+        }
+        Cmd::ShowAnchor { character_id, history } => cmd_show_anchor(&r, &character_id, history),
+        Cmd::RefreshAnchor { character_id, model, confirm_cost } => {
+            let api_key = match resolve_api_key(cli.api_key.as_deref()) {
+                Some(k) => k,
+                None => return Err(Box::<dyn std::error::Error>::from(
+                    "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
+                )),
+            };
+            cmd_refresh_anchor(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
         Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
@@ -3228,7 +3263,7 @@ async fn cmd_replay(
 
     // Load character + world context ONCE — this is the held-constant
     // side of the A/B. Only the overrides vary per ref.
-    let (world, character, user_profile, recent_journals, active_quests, stance_text, mut model_config) = {
+    let (world, character, user_profile, recent_journals, active_quests, stance_text, anchor_text, mut model_config) = {
         let conn = r.db.conn.lock().unwrap();
         let character = get_character(&conn, character_id)?;
         let world = get_world(&conn, &character.world_id)?;
@@ -3237,8 +3272,10 @@ async fn cmd_replay(
         let active_quests = list_active_quests(&conn, &character.world_id).unwrap_or_default();
         let latest_stance = latest_relational_stance(&conn, character_id).unwrap_or(None);
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
+        let latest_anchor = latest_load_test_anchor(&conn, character_id).unwrap_or(None);
+        let anchor_text: Option<String> = latest_anchor.as_ref().map(|a| a.anchor_body.clone());
         let model_config = orchestrator::load_model_config(&conn);
-        (world, character, user_profile, recent_journals, active_quests, stance_text, model_config)
+        (world, character, user_profile, recent_journals, active_quests, stance_text, anchor_text, model_config)
     };
     if let Some(m) = model_override { model_config.dialogue_model = m.to_string(); }
 
@@ -3250,6 +3287,7 @@ async fn cmd_replay(
         None, Some("Auto"), None, None, false, &[], None,
         &recent_journals, None, &[], None, &active_quests,
         stance_text.as_deref(),
+        anchor_text.as_deref(),
         Some(&per_ref_overrides[0].1),
     );
     let est_in = estimate_tokens(&sample_system) + estimate_tokens(prompt);
@@ -3297,6 +3335,7 @@ async fn cmd_replay(
             None, Some("Auto"), None, None, false, &[], None,
             &recent_journals, None, &[], None, &active_quests,
             stance_text.as_deref(),
+            anchor_text.as_deref(),
             Some(overrides),
         );
         let messages = vec![
@@ -4108,11 +4147,14 @@ async fn cmd_lab_scenario_run(
         let active_quests = list_active_quests(&conn, &character.world_id).unwrap_or_default();
         let latest_stance = latest_relational_stance(&conn, character_id).unwrap_or(None);
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
+        let latest_anchor = latest_load_test_anchor(&conn, character_id).unwrap_or(None);
+        let anchor_text: Option<String> = latest_anchor.as_ref().map(|a| a.anchor_body.clone());
         let system = app_lib::ai::prompts::build_dialogue_system_prompt(
             &world, &character, user_profile.as_ref(),
             None, Some("Auto"), None, None, false, &[], None,
             &recent_journals, None, &[], None, &active_quests,
             stance_text.as_deref(),
+            anchor_text.as_deref(),
         );
         let mc = orchestrator::load_model_config(&conn);
         let world_id = character.world_id.clone();
@@ -4623,6 +4665,114 @@ async fn cmd_refresh_stance(
     cmd_show_stance(r, character_id, 1)
 }
 
+// ─── Load-test anchor inspect + manual refresh ─────────────────────────
+
+fn cmd_show_anchor(r: &Resolved, character_id: &str, history: i64) -> Result<(), Box<dyn std::error::Error>> {
+    let _ = r.check_character(character_id)?;
+    let conn = r.db.conn.lock().unwrap();
+    let anchors = list_load_test_anchors(&conn, character_id, history)?;
+    let out: Vec<JsonValue> = anchors.iter().map(|a| json!({
+        "anchor_id": a.anchor_id,
+        "character_id": a.character_id,
+        "world_id": a.world_id,
+        "anchor_label": a.anchor_label,
+        "anchor_body": a.anchor_body,
+        "derivation_summary": a.derivation_summary,
+        "world_day_at_generation": a.world_day_at_generation,
+        "source_message_count": a.source_message_count,
+        "refresh_trigger": a.refresh_trigger,
+        "model_used": a.model_used,
+        "created_at": a.created_at,
+    })).collect();
+    if r.json {
+        emit(true, JsonValue::Array(out));
+    } else {
+        if anchors.is_empty() {
+            println!("No load-test anchor has been synthesized for this character yet.");
+            println!("Run `worldcli refresh-anchor {}` to generate the first one.", character_id);
+            return Ok(());
+        }
+        for (i, a) in anchors.iter().enumerate() {
+            if i > 0 { println!(); println!("───"); println!(); }
+            println!("anchor_id:   {}", a.anchor_id);
+            println!("label:       {}", a.anchor_label);
+            println!("created_at:  {}", a.created_at);
+            println!("world_day:   {}", a.world_day_at_generation.map(|d| d.to_string()).unwrap_or_else(|| "?".to_string()));
+            println!("source_msgs: {}", a.source_message_count);
+            println!("trigger:     {}", a.refresh_trigger);
+            println!("model:       {}", a.model_used);
+            println!();
+            println!("BODY (injected into dialogue system prompt):");
+            println!("{}", a.anchor_body);
+            if !a.derivation_summary.is_empty() {
+                println!();
+                println!("DERIVATION (how this anchor was identified):");
+                println!("{}", a.derivation_summary);
+            }
+        }
+    }
+    Ok(())
+}
+
+async fn cmd_refresh_anchor(
+    r: &Resolved,
+    api_key: &str,
+    character_id: &str,
+    model_override: Option<&str>,
+    confirm_cost: Option<f64>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let _ = r.check_character(character_id)?;
+
+    // Pick model + cap-check. Default is dialogue_model (sharper
+    // synthesis quality matters for anchor identification — see the
+    // 2026-04-24 discussion about memory_model vs dialogue_model cost
+    // tradeoff). User can override with --model gpt-4o-mini for a
+    // 30-50x cheaper run if they accept the quality risk.
+    let model_config = {
+        let conn = r.db.conn.lock().unwrap();
+        orchestrator::load_model_config(&conn)
+    };
+    let model = model_override.unwrap_or(&model_config.dialogue_model).to_string();
+
+    // Conservative pre-check: up to 8000 input tokens (30 corpus
+    // excerpts trimmed to 600 chars each + system + prior anchor) and
+    // ~1200 output tokens (JSON object with three fields).
+    let projected_usd = project_cost(&model, 8000, 1200, &r.cfg.model_pricing);
+    let per_call_cap = r.cfg.budget.per_call_usd;
+    let confirm = confirm_cost.unwrap_or(0.0);
+    if projected_usd > per_call_cap && confirm < projected_usd {
+        return Err(Box::new(CliError::Budget {
+            kind: "per_call".to_string(),
+            projected_usd,
+            cap_usd: per_call_cap,
+            confirm_at_least: (projected_usd * 1.05).max(0.01),
+        }));
+    }
+
+    if !r.json {
+        eprintln!(
+            "[worldcli] refreshing load-test anchor for {} via {} (projected≈${:.4})",
+            character_id, model, projected_usd
+        );
+    }
+
+    let base_url = model_config.chat_api_base();
+    let res: Result<(), String> = load_test_anchor::refresh_load_test_anchor(
+        r.db.conn.clone(),
+        base_url,
+        api_key.to_string(),
+        model,
+        character_id.to_string(),
+        "manual_cli".to_string(),
+    ).await;
+    if let Err(e) = res {
+        return Err(Box::<dyn std::error::Error>::from(e));
+    }
+
+    // Echo the freshly-written anchor.
+    cmd_show_anchor(r, character_id, 1)
+}
+
 // ─── Sample-windows (natural-experiment evaluation) ─────────────────────
 
 /// Resolve a git ref to (full_sha, committer_iso_date, subject) by
@@ -4925,12 +5075,15 @@ async fn cmd_ask(
         // (UI vs CLI) is asking the character to speak.
         let latest_stance = latest_relational_stance(&conn, character_id).unwrap_or(None);
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
+        let latest_anchor = latest_load_test_anchor(&conn, character_id).unwrap_or(None);
+        let anchor_text: Option<String> = latest_anchor.as_ref().map(|a| a.anchor_body.clone());
 
         let system_prompt = prompts::build_dialogue_system_prompt(
             &world, &character, user_profile.as_ref(),
             None, Some("Auto"), None, None, false, &[], None,
             &recent_journals, None, &[], None, &active_quests,
             stance_text.as_deref(),
+            anchor_text.as_deref(),
         );
         let mut model_config = orchestrator::load_model_config(&conn);
         if let Some(m) = model_override { model_config.dialogue_model = m.to_string(); }
