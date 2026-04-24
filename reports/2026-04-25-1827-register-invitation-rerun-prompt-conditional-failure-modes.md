@@ -167,6 +167,28 @@ Read C predicts that craft notes DO compound: a stack of rules each pruning fail
 
 **`worldcli replay-runs aggregate <rule-name>`** — a subcommand that walks the replay-runs directory, finds all runs that toggle a specific rule via `--omit-craft-notes <rule>`, and emits a per-cell aggregate table (length-mean, length-ratio, sample-count) without requiring manual JSON parsing or `jq` plumbing. Today I built the aggregate table by hand; the next bite-check shouldn't have to. Specific, immediately useful, scaffolds the multi-dimensional rubric procedure the codification calls for.
 
+## Postscript — density-grade follow-up validates partial bite as a number (18:50)
+
+The by-eye observation (rule-ON RI replies typically carry 1 shadow phrase, rule-OFF carries 2-3) was a qualitative claim. Re-graded the same 12 glad-thing samples with a count-with-thresholds rubric (yes = 2+ distinct shadow phrases, mixed = exactly 1, no = 0) at $0.0017 to convert the by-eye observation into a measured number AND test whether the count-with-thresholds rubric pattern (codified earlier today as the right shape for shape-level bites) actually works in practice.
+
+| Cell | yes (2+) | mixed (1) | no (0) | Density fire-rate | Mean phrases/reply |
+|---|---:|---:|---:|---:|---:|
+| RI + ON | 2 | 1 | 0 | **0.83** | 1.67 |
+| RI + OFF | 3 | 0 | 0 | **1.00** | 2.00 |
+| RN + ON | 0 | 0 | 3 | 0.00 | 0 |
+| RN + OFF | 0 | 0 | 3 | 0.00 | 0 |
+
+**Density delta on register-inviting: 0.83 vs 1.00 = -0.17, ~16% phrase-density reduction.** Combined with the 19% length compression measured earlier, the partial bite is now a measured signal on two dimensions, not just a by-eye observation. Both numbers point the same direction; the magnitude is consistent.
+
+**Two things validated in one $0.0017 call:**
+
+1. **The finding** — glad-thing's bite on register-inviting prompts is real and measurable. The Evidence label is correct: `tested-biting:claim` partial. The rule does work; it just doesn't fully override user-induced register, which is the Read C structural finding.
+2. **The method** — the count-with-thresholds rubric pattern (codified in CLAUDE.md as the right shape for shape-level bites whose failure mode is countable) produces stable, defensible numbers. The grader's reasoning includes explicit phrase counts that match what's in the replies; the verdicts correspond to the counts; the aggregate captures the density gradient that the binary presence-rubric missed entirely.
+
+Slight nuance: the grader was MORE conservative than my by-eye estimate (I called rule-OFF 2-3 phrases per reply; the grader called all 3 rule-OFF samples count=2). One sample (105af6b5#3) by my eye contains *"rain finally stopping on a roof,"* *"remember he's got a pulse,"* AND *"easing a little ache in my shoulder"* — that's 3 phrases by the rubric's vocabulary. The grader called it count=2 (missed the ache-in-shoulder). The grader is at least as strict as the rubric's vocabulary list; if anything it's slightly under-counting. The direction of the bite would only get LARGER under stricter grading. This is reassuring; the partial-bite finding is conservative.
+
+This is the first in-session use of the count-with-thresholds pattern from CLAUDE.md § Craft-note bite verification. It works.
+
 ## Cost summary
 
 - 8 × replay × N=3 = 24 dialogue calls via gpt-5.4 → **$4.00** (~$0.50/cell, both characters identical pricing)

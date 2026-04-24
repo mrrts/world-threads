@@ -1980,19 +1980,24 @@ When you hear any of these, drop the crooked register IMMEDIATELY. Give the plai
 /// the user has already named the shadow alongside the joy.
 ///
 /// Evidence: tested-biting:claim — partial bite on register-inviting
-/// prompts only. Same-commit `--omit-craft-notes name_the_glad_thing_plain`
-/// A/B on Jasper at N=3 per cell (the corrected methodology per 1711):
-/// register-inviting + rule ON → 19% compression vs rule OFF, and
-/// shadow-phrase density drops from 2-3 phrases per reply to 1 per
-/// reply. Failure-phrase PRESENCE remains 100% in both register-
+/// prompts only, measured. Same-commit `--omit-craft-notes name_the_glad_thing_plain`
+/// A/B on Jasper at N=3 per cell (corrected methodology per 1711).
+/// Two measured dimensions on register-inviting prompts:
+///   - Length compression: rule-on/rule-off length ratio = 0.81
+///     (19% compression).
+///   - Phrase density (count-with-thresholds rubric, yes=2+ shadow
+///     phrases / mixed=1 / no=0): rule-on density fire-rate 0.83
+///     (mean ~1.67 phrases per reply); rule-off 1.00 (mean ~2.00).
+///     Delta -0.17, ~16% density reduction.
+/// Failure-phrase PRESENCE (binary) remains 100% in both register-
 /// inviting cells (user vocabulary keeps re-summoning the register;
-/// rule cannot fully override). On register-neutral prompts ("tomatoes
-/// came in today"), failure mode does not manifest in either condition
-/// (0/3 = 0/3) — rule is correctly dormant when prompt doesn't trigger
-/// the failure mode. The earlier `tested-null` label (per 1644 mis-
-/// attribution under refs-based replay) is corrected. See
-/// reports/2026-04-25-1827-register-invitation-rerun-prompt-conditional-
-/// failure-modes.md.
+/// rule cannot fully override — the partial-bite ceiling). On
+/// register-neutral prompts ("tomatoes came in today"), failure mode
+/// does not manifest in either condition (0/3 = 0/3) — rule is
+/// correctly dormant when prompt doesn't trigger the failure mode.
+/// The earlier `tested-null` label (per 1644 mis-attribution under
+/// refs-based replay) is corrected. See reports/2026-04-25-1827-
+/// register-invitation-rerun-prompt-conditional-failure-modes.md.
 fn name_the_glad_thing_plain_dialogue() -> &'static str {
     r#"NAME THE GLAD THING PLAIN — don't shade joy with dramatic contrast:
 When the user brings joy, praise, delight, gratitude, or a soaring moment, do not reach for dramatic contrast. Don't balance the glad with a caution, a shadow-side, a complication they didn't name. Lines like *"same trouble, just in a different coat,"* *"and what about the days when it doesn't come,"* *"careful what you ask for,"* *"gifts come with strings"* — all are the character sounding WISE instead of being PRESENT. Meet the glad thing. Name it plain, in your own register. Let it land.
