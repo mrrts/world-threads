@@ -3272,8 +3272,7 @@ async fn cmd_replay(
         let active_quests = list_active_quests(&conn, &character.world_id).unwrap_or_default();
         let latest_stance = latest_relational_stance(&conn, character_id).unwrap_or(None);
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
-        let latest_anchor = latest_load_test_anchor(&conn, character_id).unwrap_or(None);
-        let anchor_text: Option<String> = latest_anchor.as_ref().map(|a| a.anchor_body.clone());
+        let anchor_text: Option<String> = combined_axes_block(&conn, character_id);
         let model_config = orchestrator::load_model_config(&conn);
         (world, character, user_profile, recent_journals, active_quests, stance_text, anchor_text, model_config)
     };
@@ -4147,8 +4146,7 @@ async fn cmd_lab_scenario_run(
         let active_quests = list_active_quests(&conn, &character.world_id).unwrap_or_default();
         let latest_stance = latest_relational_stance(&conn, character_id).unwrap_or(None);
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
-        let latest_anchor = latest_load_test_anchor(&conn, character_id).unwrap_or(None);
-        let anchor_text: Option<String> = latest_anchor.as_ref().map(|a| a.anchor_body.clone());
+        let anchor_text: Option<String> = combined_axes_block(&conn, character_id);
         let system = app_lib::ai::prompts::build_dialogue_system_prompt(
             &world, &character, user_profile.as_ref(),
             None, Some("Auto"), None, None, false, &[], None,
@@ -4757,20 +4755,36 @@ async fn cmd_refresh_anchor(
     }
 
     let base_url = model_config.chat_api_base();
-    let res: Result<(), String> = load_test_anchor::refresh_load_test_anchor(
+    let res = load_test_anchor::refresh_load_test_anchor(
         r.db.conn.clone(),
         base_url,
         api_key.to_string(),
-        model,
+        model.clone(),
         character_id.to_string(),
         "manual_cli".to_string(),
     ).await;
-    if let Err(e) = res {
-        return Err(Box::<dyn std::error::Error>::from(e));
+    let (axes_inserted, prompt_tokens, completion_tokens) = match res {
+        Ok(t) => t,
+        Err(e) => return Err(Box::<dyn std::error::Error>::from(e)),
+    };
+
+    // Log actual cost so worldcli status reflects the spend (fixes
+    // the cost-tracking-bypass bug noted in the 2026-04-24 reports).
+    let actual_usd = actual_cost(&model, prompt_tokens, completion_tokens, &r.cfg.model_pricing);
+    append_cost_log(&CostEntry {
+        timestamp: chrono::Utc::now().to_rfc3339(),
+        model: model.clone(),
+        prompt_tokens,
+        completion_tokens,
+        usd: actual_usd,
+    });
+    if !r.json {
+        eprintln!("[worldcli] axis synthesis: {} axes inserted, ${:.4} actual ({} in / {} out tok)",
+            axes_inserted, actual_usd, prompt_tokens, completion_tokens);
     }
 
-    // Echo the freshly-written anchor.
-    cmd_show_anchor(r, character_id, 1)
+    // Echo the latest axes (one per axis_kind).
+    cmd_show_anchor(r, character_id, axes_inserted as i64)
 }
 
 // ─── Sample-windows (natural-experiment evaluation) ─────────────────────
@@ -5075,8 +5089,7 @@ async fn cmd_ask(
         // (UI vs CLI) is asking the character to speak.
         let latest_stance = latest_relational_stance(&conn, character_id).unwrap_or(None);
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
-        let latest_anchor = latest_load_test_anchor(&conn, character_id).unwrap_or(None);
-        let anchor_text: Option<String> = latest_anchor.as_ref().map(|a| a.anchor_body.clone());
+        let anchor_text: Option<String> = combined_axes_block(&conn, character_id);
 
         let system_prompt = prompts::build_dialogue_system_prompt(
             &world, &character, user_profile.as_ref(),

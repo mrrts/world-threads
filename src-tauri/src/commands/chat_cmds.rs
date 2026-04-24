@@ -572,6 +572,10 @@ pub async fn send_message_cmd(
         latest_relational_stance(&conn, &character.character_id).unwrap_or(None)
     };
     let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
+    let anchor_text: Option<String> = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        combined_axes_block(&conn, &character.character_id)
+    };
     // Detect "first message of new in-world day" for this character —
     // current world_day greater than the day the latest stance was
     // generated against (or no stance at all → bootstrap).
@@ -613,7 +617,7 @@ pub async fn send_message_cmd(
     latest_meanwhile.as_ref(),
     active_quests.as_slice(),
     stance_text.as_deref(),
-    None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
+    anchor_text.as_deref(),
     );
     // Context for the reaction-emoji pick: the recent messages EXCLUDING
     // the user's brand-new one (which goes in the user-role slot). Gives
@@ -681,7 +685,7 @@ pub async fn send_message_cmd(
                             latest_meanwhile.as_ref(),
                             active_quests.as_slice(),
                             stance_text.as_deref(),
-                            None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
+                            anchor_text.as_deref(),
                         ).await {
                             Ok((corrected, corrected_usage)) => {
                                 log::info!("[Conscience] {} reply corrected after drift", character.display_name);
@@ -1027,6 +1031,10 @@ pub async fn prompt_character_cmd(
         latest_relational_stance(&conn, &character.character_id).unwrap_or(None)
     };
     let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
+    let anchor_text: Option<String> = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        combined_axes_block(&conn, &character.character_id)
+    };
     let current_world_day_for_stance: Option<i64> = dialogue_msgs.iter().rev()
         .find_map(|m| m.world_day);
     let stance_needs_refresh = match (latest_stance.as_ref(), current_world_day_for_stance) {
@@ -1065,7 +1073,7 @@ pub async fn prompt_character_cmd(
         latest_meanwhile.as_ref(),
         active_quests.as_slice(),
         stance_text.as_deref(),
-        None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
+        anchor_text.as_deref(),
     ).await?;
 
     // Conscience Pass: grade + regenerate-on-drift (see send_message_cmd).
@@ -1113,7 +1121,7 @@ pub async fn prompt_character_cmd(
                             latest_meanwhile.as_ref(),
                             active_quests.as_slice(),
                             stance_text.as_deref(),
-                            None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
+                            anchor_text.as_deref(),
                         ).await {
                             Ok((corrected, corrected_usage)) => {
                                 log::info!("[Conscience] {} (prompt) reply corrected after drift", character.display_name);
@@ -1364,6 +1372,10 @@ pub async fn try_proactive_ping_cmd(
     let illustration_captions = collect_illustration_captions(&db, &recent_msgs);
     let reactions_by_msg = collect_reactions_by_message(&db, &recent_msgs);
     let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
+    let anchor_text: Option<String> = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        combined_axes_block(&conn, &character.character_id)
+    };
     let current_world_day_for_stance: Option<i64> = recent_msgs.iter().rev()
         .find_map(|m| m.world_day);
     let stance_needs_refresh = match (latest_stance.as_ref(), current_world_day_for_stance) {
@@ -1398,7 +1410,7 @@ pub async fn try_proactive_ping_cmd(
         latest_meanwhile.as_ref(),
         active_quests.as_slice(),
         stance_text.as_deref(),
-        None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
+        anchor_text.as_deref(),
     ).await?;
 
     if reply_text.trim().is_empty() {
@@ -2150,6 +2162,10 @@ pub async fn reset_to_message_cmd(
             latest_relational_stance(&conn, &character.character_id).unwrap_or(None)
         };
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
+        let anchor_text: Option<String> = {
+            let conn = db.conn.lock().map_err(|e| e.to_string())?;
+            combined_axes_block(&conn, &character.character_id)
+        };
         let current_world_day_for_stance: Option<i64> = recent_msgs.iter().rev()
             .find_map(|m| m.world_day);
         let stance_needs_refresh = match (latest_stance.as_ref(), current_world_day_for_stance) {
@@ -2188,7 +2204,7 @@ pub async fn reset_to_message_cmd(
         latest_meanwhile.as_ref(),
         active_quests.as_slice(),
         stance_text.as_deref(),
-        None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
+        anchor_text.as_deref(),
         );
         let reaction_context: Vec<Message> = recent_msgs.iter()
             .rev().skip(1).take(4).rev().cloned().collect();
@@ -2241,7 +2257,7 @@ pub async fn reset_to_message_cmd(
                                 latest_meanwhile.as_ref(),
                                 active_quests.as_slice(),
                                 stance_text.as_deref(),
-                                None, // load_test_anchor (wire up in a follow-up commit; architecture test uses worldcli replay path which does read the anchor)
+                                anchor_text.as_deref(),
                             ).await {
                                 Ok((corrected, corrected_usage)) => {
                                     log::info!("[Conscience] {} (reset) reply corrected after drift", character.display_name);

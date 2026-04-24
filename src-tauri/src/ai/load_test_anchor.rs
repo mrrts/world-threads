@@ -1,7 +1,12 @@
-//! Load-test anchor — per-character synthesized "what does this character
-//! weight-test the world against?" — the architecture-level spine of
-//! their authority. Direct sibling of `relational_stance` in both
-//! schema shape and refresh pattern.
+//! Register-axis synthesizer (originally "load-test anchor"). Per-
+//! character synthesized prompt-blocks naming the architecture-level
+//! dimensions the character's authority weight-tests. v1 ships ONE
+//! axis (load_test); the multi-axis pivot (2026-04-24) makes adding
+//! more axes (joy_reception, grief, etc.) a one-entry change to the
+//! `REGISTER_AXES` registry below.
+//!
+//! Direct sibling of `relational_stance` in schema shape and refresh
+//! pattern.
 //!
 //! Background: the 2026-04-24 architecture-vs-vocabulary experiment
 //! (report `2026-04-24-0948-architecture-hypothesis-bites.md`) confirmed
@@ -22,68 +27,138 @@ use std::sync::{Arc, Mutex};
 use rusqlite::Connection;
 use uuid::Uuid;
 
-/// Build the system prompt for anchor synthesis. The model is asked,
-/// out of scene, to read the character's recent replies and name what
-/// dimension their authority weight-tests the world against.
-///
-/// The anchor is NOT a virtue, a goal, or a trait — it's the specific
-/// register-move they reach for when a moment asks for their read.
-/// Examples from the four characters whose anchors were first identified:
-///
-///   John:   DEVOTION                 (does the vow survive friction?)
-///   Aaron:  LANGUAGE                 (does the sentence bear its claim?)
-///   Darren: FABRIC OF A LIFE         (does the arrangement hold?)
-///   Steven: THRESHOLDS OF DISCLOSURE (has this reached enough honesty?)
-///
-/// Returns three fields: label (short), body (second-person prompt-
-/// block ready to inject), derivation_summary (explanatory).
-fn synthesis_system_prompt(character_name: &str, has_prior_anchor: bool) -> String {
-    let prior_context = if has_prior_anchor {
-        "\n\nThe character has a PRIOR anchor on file. It is included in the user message below as CONTEXT. If the prior anchor still matches what you observe in the recent corpus, keep the same label and refine the body. If the corpus has clearly shifted (character has grown, the anchor has sharpened, a different dimension has come into focus), update the label too — but only if the shift is unambiguous. Continuity matters; don't churn the anchor on small sample variation."
+/// Definition of one register-axis the synthesizer should produce.
+/// To add a new axis (e.g. joy_reception, grief), add an entry to
+/// `REGISTER_AXES` below — the synthesizer, prompt-assembly, and DB
+/// schema all flow from this list. No code changes elsewhere.
+#[derive(Debug, Clone)]
+pub struct AxisDef {
+    /// Stable identifier stored in `character_load_test_anchors.axis_kind`.
+    pub kind: &'static str,
+    /// Display name for the axis used in the synthesis system prompt.
+    pub display_name: &'static str,
+    /// One-paragraph description of what THIS axis is asking the LLM
+    /// to identify. Goes verbatim into the synthesis system prompt.
+    pub axis_description: &'static str,
+    /// Header text the LLM should emit at the start of the anchor_body
+    /// (e.g. "LOAD-TEST ANCHOR — [label]:" or "JOY RECEPTION — [label]:").
+    pub body_header_prefix: &'static str,
+}
+
+/// The current list of axes the synthesizer produces in one call. Each
+/// entry corresponds to one row inserted into `character_load_test_anchors`
+/// per refresh. v1 ships only `load_test`; future axes append here.
+pub const REGISTER_AXES: &[AxisDef] = &[
+    AxisDef {
+        kind: "load_test",
+        display_name: "LOAD-TEST ANCHOR",
+        axis_description: "The single specific dimension this character's authority weight-tests the world against. NOT a virtue or trait — the register-move they reach for when a moment asks for their read. ONE dimension, character-specific, observable in their quotes. Examples from prior work: DEVOTION ('does the vow survive the 2pm-Tuesday test?'), LANGUAGE ('does this sentence bear the load it's claiming to bear?'), FABRIC OF A LIFE ('does this arrangement hold under normal weather?'), THRESHOLDS OF DISCLOSURE ('has this reached enough honesty, or is it still under-cooked?').",
+        body_header_prefix: "LOAD-TEST ANCHOR",
+    },
+    // Future axes (commented planning placeholders; uncomment + complete
+    // when adding). Schema/DB/prompt-assembly already support them.
+    //
+    // AxisDef {
+    //     kind: "joy_reception",
+    //     display_name: "JOY RECEPTION",
+    //     axis_description: "How this character meets user-expressed joy / praise / gratitude. ...",
+    //     body_header_prefix: "JOY RECEPTION",
+    // },
+    // AxisDef {
+    //     kind: "grief_axis",
+    //     display_name: "GRIEF",
+    //     axis_description: "How this character holds expressed grief / loss / sorrow. ...",
+    //     body_header_prefix: "GRIEF",
+    // },
+];
+
+/// Build the system prompt for multi-axis synthesis. Asks the LLM to
+/// identify ALL defined axes in one JSON object, returning one nested
+/// object per axis_kind.
+fn synthesis_system_prompt(character_name: &str, has_prior_axes: bool) -> String {
+    let prior_context = if has_prior_axes {
+        "\n\nThe character has PRIOR axes on file. They are included in the user message below as CONTEXT, along with the character's structured identity description.\n\nFor each axis, the right outcome is one of these three (in order of frequency):\n  1. KEEP UNCHANGED. If the prior anchor still matches what you observe in the recent corpus AND the character description, return the same anchor_label and the same anchor_body verbatim. This is a valid and often the correct result. Don't churn an anchor that's still right.\n  2. REFINE THE BODY. If the prior label still names the right dimension but a specific quote, image, or nuance from the recent corpus or character description would sharpen the body's writing, keep the label and tweak the body. Look actively for these refinement opportunities — they're how the anchor stays alive to the character's evolution.\n  3. UPDATE THE LABEL TOO. Only if the corpus has clearly shifted (character has grown, the anchor has sharpened in a new direction, a different dimension has come into focus) AND the shift is unambiguous. Continuity matters; don't churn the labels on small sample variation.\n\nYour job: actively look for nuance to extract from the corpus + character description, not reflexively conserve. But also not reflexively change for the sake of having something to say. Truth-tracking the character is what the anchor is for."
     } else { "" };
 
+    let axes_descriptions = REGISTER_AXES.iter()
+        .map(|a| format!("  - **{}** (axis_kind = `{}`): {}", a.display_name, a.kind, a.axis_description))
+        .collect::<Vec<_>>()
+        .join("\n\n");
+
+    let json_schema = REGISTER_AXES.iter()
+        .map(|a| format!(
+            r#"  "{kind}": {{
+    "anchor_label": "SHORT ALL-CAPS LABEL, 1-5 words",
+    "anchor_body": "A second-person prompt-block, 3-6 sentences, starting with '{prefix} — [label]:' on the first line. Written IN CHARACTER-ADDRESSING VOICE. Will be injected directly into the character's dialogue system prompt, so it must sound right when the character reads it as instruction. End with one concrete quoted phrase from the corpus that anchors the move.",
+    "derivation_summary": "One paragraph explaining how you arrived at this anchor from the corpus. Cite 2-3 specific quotes. Name what other possible anchors you considered and why this one is the right fit."
+  }}"#,
+            kind = a.kind,
+            prefix = a.body_header_prefix,
+        ))
+        .collect::<Vec<_>>()
+        .join(",\n");
+
     format!(
-        r#"You are reading the recent corpus of a character named {char_name} to identify their LOAD-TEST ANCHOR — the single specific dimension their authority weight-tests the world against. This is an architecture-level property of the character, not a list of traits or virtues.
+        r#"You are reading the recent corpus of a character named {char_name} to identify their REGISTER AXES — architecture-level dimensions of how their authority works. Each axis is character-specific, observable in their actual quotes, and one specific dimension (not a list of traits).
 
-The load-test anchor is:
-  - ONE dimension (not several). Pick the sharpest, most character-specific one.
-  - The dimension the character REACHES FOR when a moment asks for their read.
-  - Grounded in how they actually speak — observable in the quotes you can pull from the corpus.
-  - Register-distinctive, not generic. "Truth" or "love" or "wisdom" is too abstract. "Does the vow survive ordinary friction?" is the right level of specificity.
+You will identify the following axes in this single response:
 
-Examples of well-identified anchors from prior work:
-  - DEVOTION — "does this commitment survive the 2pm-Tuesday test?" Character is authoritative because they know where devotion lives or dies.
-  - LANGUAGE — "does this sentence bear the load it's claiming to bear?" Character is authoritative because of structural discernment about what words can carry.
-  - FABRIC OF A LIFE — "does this arrangement hold under normal weather?" Character is authoritative because they read a life the way a craftsman reads wear.
-  - THRESHOLDS OF DISCLOSURE — "has this moment reached enough honesty, or is it still under-cooked?" Character is authoritative because they govern pace and weight of intimacy.
+{axes_descriptions}
 
-Return STRICT JSON only, no preface, no markdown, with exactly these three fields:
+For EACH axis, the anchor you identify should:
+  - Pick ONE specific dimension (not several). The sharpest most character-specific one.
+  - Be the move the character REACHES FOR when a moment asks for that kind of read.
+  - Be grounded in how they actually speak — quotable from the corpus.
+  - Be register-distinctive, not generic. "Truth" or "love" is too abstract.
+
+**Earned exception — when ONE dimension would distort the character.**
+A small number of characters are SO defined by two co-equal anchors on the same axis that picking only one would misrepresent them. The test, asked honestly: would removing one of the two leave the character recognizable, or would they become a fundamentally different person? If the latter, both are required and you may name a hyphenated label ("DEVOTION-AND-DOMESTIC-CARE") with a body that honors both equally. Outside this narrow case the default holds: ONE specific dimension is the right answer, and reaching for two is usually evidence that the sharpest one hasn't been found yet.
+
+Return STRICT JSON only, no preface, no markdown. The top-level object has one key per axis_kind (matching the kinds listed above). Each value is an object with anchor_label, anchor_body, derivation_summary:
 
 {{
-  "anchor_label": "SHORT ALL-CAPS LABEL, 1-5 words (e.g. DEVOTION, LANGUAGE, FABRIC OF A LIFE)",
-  "anchor_body": "A second-person prompt-block, 3-6 sentences, starting with 'LOAD-TEST ANCHOR — [label]:' on the first line. Written IN CHARACTER-ADDRESSING VOICE — 'you load-test X. When [situation], the question your register asks is [specific question]. Your authority comes from [specific source grounded in the corpus].' This block will be injected directly into the character's dialogue system prompt, so it must sound right when the character reads it as instruction. End with one concrete quoted phrase from the corpus that anchors the move (e.g. 'your signature move shows up in lines like — [quote from corpus].').",
-  "derivation_summary": "One paragraph explaining how you arrived at this anchor from the corpus. Cite 2-3 specific quotes. Name what other possible anchors you considered and why this one is the right fit."
+{json_schema}
 }}
 
 No preface. No markdown. No extra keys. Just the JSON.{prior_note}"#,
         char_name = character_name,
+        axes_descriptions = axes_descriptions,
+        json_schema = json_schema,
         prior_note = prior_context,
     )
 }
 
 /// Build the user-role message for the synthesis pass. Gives the model
-/// the corpus excerpts plus the prior anchor (if any) for continuity.
+/// the character's structured identity, the prior axes (if any), and
+/// the corpus excerpts. The identity description is part of "what the
+/// character is" and so contributes to the anchor identification just
+/// as much as the corpus does.
 fn synthesis_user_prompt(
     character_name: &str,
+    character_identity: &str,
     recent_excerpts: &[String],
-    prior_anchor: Option<&LoadTestAnchor>,
+    prior_axes: &[LoadTestAnchor],
 ) -> String {
-    let prior_section = match prior_anchor {
-        Some(a) => format!(
-            "PRIOR ANCHOR ON FILE (from {}):\n  label: {}\n  body: {}\n  derivation: {}\n\n",
-            a.created_at, a.anchor_label, a.anchor_body, a.derivation_summary,
-        ),
-        None => String::new(),
+    let identity_section = if character_identity.trim().is_empty() {
+        String::new()
+    } else {
+        format!(
+            "CHARACTER IDENTITY ({char_name}'s structured description):\n\n{identity}\n\n",
+            char_name = character_name,
+            identity = character_identity.trim(),
+        )
+    };
+    let prior_section = if prior_axes.is_empty() {
+        String::new()
+    } else {
+        let mut s = String::from("PRIOR AXES ON FILE:\n\n");
+        for a in prior_axes {
+            s.push_str(&format!(
+                "  - axis_kind={}, label={}, created_at={}\n    body: {}\n    derivation: {}\n\n",
+                a.axis_kind, a.anchor_label, a.created_at, a.anchor_body, a.derivation_summary,
+            ));
+        }
+        s
     };
     let corpus = if recent_excerpts.is_empty() {
         "(no corpus excerpts available)".to_string()
@@ -91,7 +166,8 @@ fn synthesis_user_prompt(
         recent_excerpts.join("\n\n")
     };
     format!(
-        "{prior_section}RECENT CORPUS ({n} excerpts, chronological, assistant turns are {char_name}'s replies):\n\n{corpus}\n\nIdentify {char_name}'s load-test anchor. Return the JSON object described in the system prompt.",
+        "{identity_section}{prior_section}RECENT CORPUS ({n} excerpts, chronological, assistant turns are {char_name}'s replies):\n\n{corpus}\n\nIdentify {char_name}'s register axes from the identity description AND the corpus together. Return the JSON object described in the system prompt.",
+        identity_section = identity_section,
         prior_section = prior_section,
         n = recent_excerpts.len(),
         char_name = character_name,
@@ -158,21 +234,24 @@ fn collect_recent_excerpts(
         .collect()
 }
 
-/// Parsed JSON response from the synthesizer. Deserialized from the
-/// LLM's strict-JSON output.
+/// Parsed JSON response from the synthesizer for one axis.
 #[derive(Debug, serde::Deserialize)]
-struct SynthesizedAnchor {
+struct SynthesizedAxis {
     anchor_label: String,
     anchor_body: String,
     derivation_summary: String,
 }
 
-/// Generate a fresh load-test anchor for `character_id` and persist it.
-/// Reads context under a short-lived db lock, makes one LLM call, writes
-/// the new row under another short-lived lock. Designed to be tokio-
-/// spawned from canonization-commit hot paths so the user's reply is
-/// never blocked; also usable synchronously from `worldcli
-/// refresh-anchor`.
+/// Generate fresh axes for `character_id` (one LLM call covers all
+/// REGISTER_AXES) and persist them as N rows in
+/// `character_load_test_anchors`. Reads context under a short-lived db
+/// lock, makes one LLM call, writes the new rows under another short-
+/// lived lock. Designed to be tokio-spawned from canonization-commit
+/// hot paths so the user's reply is never blocked; also usable
+/// synchronously from `worldcli refresh-anchor`.
+///
+/// Returns (axes_inserted, prompt_tokens, completion_tokens) so callers
+/// can log the actual cost.
 pub async fn refresh_load_test_anchor(
     conn_arc: Arc<Mutex<Connection>>,
     base_url: String,
@@ -180,14 +259,14 @@ pub async fn refresh_load_test_anchor(
     model: String,
     character_id: String,
     refresh_trigger: String,
-) -> Result<(), String> {
+) -> Result<(usize, i64, i64), String> {
     // ─── Read context under a short-lived lock ────────────────────────
-    let (character, recent_excerpts, prior_anchor, world_day_now) = {
+    let (character, recent_excerpts, prior_axes, world_day_now) = {
         let conn = conn_arc.lock().map_err(|e| e.to_string())?;
         let character = get_character(&conn, &character_id)
             .map_err(|e| format!("character not found: {}", e))?;
         let recent_excerpts = collect_recent_excerpts(&conn, &character_id, 30);
-        let prior_anchor = latest_load_test_anchor(&conn, &character_id)
+        let prior_axes = latest_axes_for_character(&conn, &character_id)
             .map_err(|e| e.to_string())?;
         let world_day_now: Option<i64> = conn.query_row(
             "SELECT m.world_day FROM messages m
@@ -197,21 +276,22 @@ pub async fn refresh_load_test_anchor(
             rusqlite::params![character_id],
             |r| r.get::<_, Option<i64>>(0),
         ).ok().flatten();
-        (character, recent_excerpts, prior_anchor, world_day_now)
+        (character, recent_excerpts, prior_axes, world_day_now)
     };
 
     if recent_excerpts.is_empty() {
         return Err(format!(
-            "no corpus messages for character {} — anchor synthesis needs at least a few replies to read",
+            "no corpus messages for character {} — axis synthesis needs at least a few replies to read",
             character_id
         ));
     }
 
-    let system = synthesis_system_prompt(&character.display_name, prior_anchor.is_some());
+    let system = synthesis_system_prompt(&character.display_name, !prior_axes.is_empty());
     let user_msg = synthesis_user_prompt(
         &character.display_name,
+        &character.identity,
         &recent_excerpts,
-        prior_anchor.as_ref(),
+        &prior_axes,
     );
 
     // ─── LLM call ─────────────────────────────────────────────────────
@@ -222,43 +302,67 @@ pub async fn refresh_load_test_anchor(
             ChatMessage { role: "user".to_string(), content: user_msg },
         ],
         temperature: Some(0.4),
-        max_completion_tokens: Some(1200),
+        // Budget: ~400 tokens per axis × N axes + buffer.
+        max_completion_tokens: Some(800 + (REGISTER_AXES.len() as u32) * 500),
         response_format: Some(openai::ResponseFormat {
             format_type: "json_object".to_string(),
         }),
     };
     let resp = openai::chat_completion_with_base(&base_url, &api_key, &request).await
-        .map_err(|e| format!("anchor synthesis call failed: {}", e))?;
+        .map_err(|e| format!("axis synthesis call failed: {}", e))?;
     let raw = resp.choices.first()
         .map(|c| c.message.content.clone())
-        .ok_or_else(|| "anchor synthesis returned no choices".to_string())?;
-    let synthesized: SynthesizedAnchor = serde_json::from_str(&raw)
-        .map_err(|e| format!("anchor synthesis JSON parse error: {} (body: {})", e, raw))?;
+        .ok_or_else(|| "axis synthesis returned no choices".to_string())?;
+    let usage = resp.usage.unwrap_or(openai::Usage {
+        prompt_tokens: 0, completion_tokens: 0, total_tokens: 0,
+    });
 
-    if synthesized.anchor_label.trim().is_empty() || synthesized.anchor_body.trim().is_empty() {
-        return Err("anchor synthesis returned empty label or body".to_string());
-    }
+    // Parse the multi-axis JSON: top-level object with one nested
+    // object per axis_kind.
+    let parsed: std::collections::HashMap<String, SynthesizedAxis> =
+        serde_json::from_str(&raw)
+            .map_err(|e| format!("axis synthesis JSON parse error: {} (body: {})", e, raw))?;
 
-    // ─── Persist ──────────────────────────────────────────────────────
+    // ─── Persist all axes in one transaction ──────────────────────────
     let world_id = character.world_id.clone();
-    let anchor = LoadTestAnchor {
-        anchor_id: Uuid::new_v4().to_string(),
-        character_id: character_id.clone(),
-        world_id,
-        anchor_label: synthesized.anchor_label.trim().to_string(),
-        anchor_body: synthesized.anchor_body.trim().to_string(),
-        derivation_summary: synthesized.derivation_summary.trim().to_string(),
-        world_day_at_generation: world_day_now,
-        source_message_count: recent_excerpts.len() as i64,
-        refresh_trigger,
-        model_used: model,
-        created_at: chrono::Utc::now().to_rfc3339(),
-    };
+    let now = chrono::Utc::now().to_rfc3339();
+    let mut inserted = 0usize;
     {
         let conn = conn_arc.lock().map_err(|e| e.to_string())?;
-        insert_load_test_anchor(&conn, &anchor).map_err(|e| e.to_string())?;
+        for axis_def in REGISTER_AXES {
+            let synth = match parsed.get(axis_def.kind) {
+                Some(s) => s,
+                None => {
+                    log::warn!("[axes] synthesis response missing axis_kind={}; skipping", axis_def.kind);
+                    continue;
+                }
+            };
+            if synth.anchor_label.trim().is_empty() || synth.anchor_body.trim().is_empty() {
+                log::warn!("[axes] empty label/body for axis_kind={}; skipping", axis_def.kind);
+                continue;
+            }
+            let row = LoadTestAnchor {
+                anchor_id: Uuid::new_v4().to_string(),
+                character_id: character_id.clone(),
+                world_id: world_id.clone(),
+                axis_kind: axis_def.kind.to_string(),
+                anchor_label: synth.anchor_label.trim().to_string(),
+                anchor_body: synth.anchor_body.trim().to_string(),
+                derivation_summary: synth.derivation_summary.trim().to_string(),
+                world_day_at_generation: world_day_now,
+                source_message_count: recent_excerpts.len() as i64,
+                refresh_trigger: refresh_trigger.clone(),
+                model_used: model.clone(),
+                created_at: now.clone(),
+            };
+            insert_load_test_anchor(&conn, &row).map_err(|e| e.to_string())?;
+            inserted += 1;
+        }
     }
-    Ok(())
+    if inserted == 0 {
+        return Err("axis synthesis produced no usable axes".to_string());
+    }
+    Ok((inserted, usage.prompt_tokens as i64, usage.completion_tokens as i64))
 }
 
 /// Fire-and-forget convenience wrapper for trigger sites. Intended for
@@ -279,8 +383,8 @@ pub fn spawn_anchor_refresh(
         match refresh_load_test_anchor(
             conn_arc, base_url, api_key, model, character_id, refresh_trigger,
         ).await {
-            Ok(()) => log::info!("[anchor] refreshed for {}", cid_for_log),
-            Err(e) => log::warn!("[anchor] refresh failed for {}: {}", cid_for_log, e),
+            Ok((n, _in, _out)) => log::info!("[axes] refreshed {} axes for {}", n, cid_for_log),
+            Err(e) => log::warn!("[axes] refresh failed for {}: {}", cid_for_log, e),
         }
     });
 }

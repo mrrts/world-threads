@@ -1690,5 +1690,24 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             ON character_load_test_anchors(character_id, created_at DESC);
     ").ok();
 
+    // Multi-axis pivot: add axis_kind column so the same table can hold
+    // multiple register-axes per character (load_test, joy_reception,
+    // grief, ...). Backwards-compatible: existing rows default to
+    // 'load_test'. ALTER TABLE ADD COLUMN with NOT NULL needs a default
+    // for the migration to succeed; we use 'load_test' as the floor.
+    let has_axis_kind: bool = conn.query_row(
+        "SELECT 1 FROM pragma_table_info('character_load_test_anchors') WHERE name = 'axis_kind'",
+        [],
+        |_| Ok(true),
+    ).unwrap_or(false);
+    if !has_axis_kind {
+        conn.execute_batch("
+            ALTER TABLE character_load_test_anchors
+                ADD COLUMN axis_kind TEXT NOT NULL DEFAULT 'load_test';
+            CREATE INDEX IF NOT EXISTS idx_load_test_anchors_char_axis
+                ON character_load_test_anchors(character_id, axis_kind, created_at DESC);
+        ").ok();
+    }
+
     Ok(())
 }
