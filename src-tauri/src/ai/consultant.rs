@@ -270,9 +270,13 @@ pub fn build_consultant_system_prompt(
 
     // ─── Lock 3 (backstage only): world-scoped extras — all
     // characters in the world, recent meanwhile events, the
-    // player's recent journal, and active quests. Immersive mode
-    // skips this load entirely.
-    let (world_cast_block, meanwhile_block, user_journal_block, active_quests_block) = if chat_mode == "backstage" {
+    // player's recent journal, active quests, and the per-character
+    // register-axes (the hidden spine of each character — synthesized
+    // from corpus + identity, normally invisible to the user but
+    // explicitly available in backstage mode for craft analysis).
+    // Immersive mode skips this entire load — the immersive Consultant
+    // never breaks frame to discuss craft mechanics.
+    let (world_cast_block, meanwhile_block, user_journal_block, active_quests_block, axes_block) = if chat_mode == "backstage" {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let all_chars = list_characters(&conn, &world.world_id).unwrap_or_default();
         let thread_ids: std::collections::HashSet<String> = characters.iter()
@@ -323,9 +327,41 @@ pub fn build_consultant_system_prompt(
             format!("\n\nACTIVE QUESTS (pursuits {user_name} has already accepted — do NOT propose duplicates of these):\n{}", lines.join("\n"))
         };
 
-        (cast_block, mw_block, uj_block, aq_block)
+        // Per-character register axes — the architecture-level "what
+        // does this character load-test?" plus any future axes
+        // (joy_reception, grief, etc.) the synthesizer has produced.
+        // Pulled for every character in the current chat so the user
+        // can analyze the hidden spine of who they're talking with.
+        let mut axis_lines: Vec<String> = Vec::new();
+        for c in characters.iter() {
+            let axes = latest_axes_for_character(&conn, &c.character_id).unwrap_or_default();
+            if axes.is_empty() { continue; }
+            axis_lines.push(format!("**{}** (character_id: {}):", c.display_name, c.character_id));
+            for a in &axes {
+                axis_lines.push(format!(
+                    "  - axis_kind=`{}`, label=**{}** (synthesized {}, source_msgs={}, model={})",
+                    a.axis_kind, a.anchor_label, &a.created_at[..10.min(a.created_at.len())],
+                    a.source_message_count, a.model_used,
+                ));
+                axis_lines.push(format!("    body: {}", a.anchor_body.trim().replace("\n", "\n    ")));
+                if !a.derivation_summary.trim().is_empty() {
+                    axis_lines.push(format!("    derivation: {}", a.derivation_summary.trim().replace("\n", "\n    ")));
+                }
+                axis_lines.push(String::new());
+            }
+        }
+        let ax_block = if axis_lines.is_empty() {
+            String::new()
+        } else {
+            format!(
+                "\n\nREGISTER AXES — the hidden spine of these characters (synthesized periodically by the LLM from each character's corpus + identity; injected into their dialogue system prompt as ambient architecture; normally invisible to {user_name}, available HERE for craft analysis):\n\n{}",
+                axis_lines.join("\n"),
+            )
+        };
+
+        (cast_block, mw_block, uj_block, aq_block, ax_block)
     } else {
-        (String::new(), String::new(), String::new(), String::new())
+        (String::new(), String::new(), String::new(), String::new(), String::new())
     };
 
     // Assemble the system prompt, branching on mode.
@@ -476,7 +512,7 @@ THE PEOPLE IN THE ACTIVE CHAT
 {user_block}
 
 {char_list}
-═══════════════════════════════════════════════{world_cast_block}{kept_block}{summary_block}{meanwhile_block}{user_journal_block}{active_quests_block}
+═══════════════════════════════════════════════{world_cast_block}{kept_block}{summary_block}{meanwhile_block}{user_journal_block}{active_quests_block}{axes_block}
 
 ═══════════════════════════════════════════════
 WHAT'S BEEN HAPPENING (most recent conversation in the active chat):
@@ -496,6 +532,7 @@ One last thing: end most replies with a small concrete suggestion or a quiet que
             meanwhile_block = meanwhile_block,
             user_journal_block = user_journal_block,
             active_quests_block = active_quests_block,
+            axes_block = axes_block,
             world_id = world.world_id,
             example_char_id = characters.first().map(|c| c.character_id.as_str()).unwrap_or("character-id-from-above"),
         )
