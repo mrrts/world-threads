@@ -1809,21 +1809,26 @@ This is NOT a call to be terse. Long replies still belong in long-reply moments.
 /// not character-specific. Companion proposed-experiment:
 /// `experiments/reflex-polish-vs-earned-close.md`.
 ///
-/// Evidence: tested-null — cross-character replay on Jasper AND Aaron
-/// at N=3 per cell, against register-inviting (closure vocabulary —
-/// "thanks, I see what you mean now") and register-neutral ("my
-/// landlord came by today") prompts, found 0/24 tidy-ribbon closes
-/// at either ref on either character. Failure mode simply did not
-/// manifest in this design — plausibly because predecessor rules
-/// (`keep_the_scene_breathing`, `drive_the_moment`, `anti_ribbon_
-/// dialogue`) already suppress it at the pre-reflex-polish state,
-/// OR because the rubric's final-beat focus missed mid-reply polish-
-/// vocabulary. Rule still ships: the 2026-04-24 Aaron+Darren
-/// convergence that authored it named a real distinction, and
-/// removing the rule on this evidence is the over-call the Read A
-/// vs Read B ambiguity explicitly warns against. See
-/// reports/2026-04-25-1644-register-invitation-hypothesis-refuted-
-/// across-two-rules.md.
+/// Evidence: tested-null — same-commit `--omit-craft-notes reflex_polish`
+/// A/B on Aaron at N=3 per cell (the corrected methodology per 1711),
+/// against register-inviting ("Thanks, I think I see what you mean
+/// now") and register-neutral ("My landlord came by today") prompts.
+/// 0/24 tidy-ribbon closes manifested at either condition on either
+/// prompt. Length essentially unchanged (rule-on/off length ratio
+/// 0.95 and 1.09). The failure mode this rule targets does not
+/// manifest in the rule-off baseline on Aaron — likely because
+/// predecessor rules (`drive_the_moment`, `keep_the_scene_breathing`,
+/// `anti_ribbon_dialogue`) already suppress it. The vacuous-test
+/// outcome means the rule's marginal contribution above its
+/// predecessors is undetectable in this design, NOT that the rule is
+/// useless. A predecessor-omit test would isolate marginal contribution;
+/// a different character whose baseline DOES manifest tidy-ribbon
+/// (Steven?) would test the rule on a substrate where the failure
+/// mode is present. Rule stays — removing on this evidence is the
+/// flattering-superseded_by retirement that the open-thread-hygiene
+/// forcing function explicitly warns against. See
+/// reports/2026-04-25-1827-register-invitation-rerun-prompt-conditional-
+/// failure-modes.md.
 fn reflex_polish_vs_earned_close_dialogue() -> &'static str {
     r#"REFLEX POLISH VS EARNED CLOSE — don't punish the line for being clean. Punish it if it's preening:
 A clean ending isn't the problem. An ending that needs applause is. Some scenes genuinely arrive somewhere — the beat finishes, a real thought lands, and one more sentence honoring what just happened is exactly right. That's an earned close. Let it land.
@@ -1974,18 +1979,20 @@ When you hear any of these, drop the crooked register IMMEDIATELY. Give the plai
 /// The earned exception lets the wise-in-contrast move back in when
 /// the user has already named the shadow alongside the joy.
 ///
-/// Evidence: tested-null — paired-prompt replay on Jasper at N=5 per
-/// cell against register-inviting (coffee-hour / "first time in weeks")
-/// and register-neutral (tomatoes) joy prompts did not show a
-/// meaningful HEAD-vs-pre-glad delta in either condition; register-
-/// inviting cells were loaded on both refs, register-neutral cells
-/// were near-zero on both refs. Rule still ships: the failure mode it
-/// targets is real in Ryan's lived corpus (the Jasper "same trouble,
-/// different coat" moment that authored it), and the rule may be
-/// doing prophylactic or compounding-vector work the replay design
-/// couldn't see. Label is descriptive, not a retirement pointer. See
-/// reports/2026-04-25-1644-register-invitation-hypothesis-refuted-
-/// across-two-rules.md (and the 1542 → 1555 arc that led to it).
+/// Evidence: tested-biting:claim — partial bite on register-inviting
+/// prompts only. Same-commit `--omit-craft-notes name_the_glad_thing_plain`
+/// A/B on Jasper at N=3 per cell (the corrected methodology per 1711):
+/// register-inviting + rule ON → 19% compression vs rule OFF, and
+/// shadow-phrase density drops from 2-3 phrases per reply to 1 per
+/// reply. Failure-phrase PRESENCE remains 100% in both register-
+/// inviting cells (user vocabulary keeps re-summoning the register;
+/// rule cannot fully override). On register-neutral prompts ("tomatoes
+/// came in today"), failure mode does not manifest in either condition
+/// (0/3 = 0/3) — rule is correctly dormant when prompt doesn't trigger
+/// the failure mode. The earlier `tested-null` label (per 1644 mis-
+/// attribution under refs-based replay) is corrected. See
+/// reports/2026-04-25-1827-register-invitation-rerun-prompt-conditional-
+/// failure-modes.md.
 fn name_the_glad_thing_plain_dialogue() -> &'static str {
     r#"NAME THE GLAD THING PLAIN — don't shade joy with dramatic contrast:
 When the user brings joy, praise, delight, gratitude, or a soaring moment, do not reach for dramatic contrast. Don't balance the glad with a caution, a shadow-side, a complication they didn't name. Lines like *"same trouble, just in a different coat,"* *"and what about the days when it doesn't come,"* *"careful what you ask for,"* *"gifts come with strings"* — all are the character sounding WISE instead of being PRESENT. Meet the glad thing. Name it plain, in your own register. Let it land.
