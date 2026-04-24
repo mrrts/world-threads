@@ -523,8 +523,13 @@ worldcli synthesize-runs search "<substring>"
 # invariants are NOT overridable.
 worldcli replay --refs <sha>,<sha>,... --character <id> \
     --prompt "<user message>" \
+    [--n <k>]                # samples per ref (default 1). --n 5 at temp 0.95
+                             # is the sketch→claim escalation for sampling-noise
+                             # ruling-out. grade-runs distinguishes samples as
+                             # ref#1, ref#2, ... so aggregate verdicts per ref
+                             # fall out naturally. Total calls = refs × N.
     [--model <override>] \
-    [--confirm-cost <usd>]   # replay fans out per ref; total cost adds up fast
+    [--confirm-cost <usd>]   # replay fans out per ref × N samples; cost adds up fast
 worldcli replay-runs list [--limit N]
 worldcli replay-runs show <id-or-prefix>
 worldcli replay-runs search "<substring>"

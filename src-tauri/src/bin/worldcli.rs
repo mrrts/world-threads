@@ -283,6 +283,18 @@ enum Cmd {
         /// the per-call cap. Passes through to each individual call.
         #[arg(long)]
         confirm_cost: Option<f64>,
+        /// Number of samples per ref (default 1). With N>1, each ref is
+        /// called K times with the SAME prompt and SAME overrides — the
+        /// only variable is stochastic draw at temperature 0.95. Use this
+        /// to rule out sampling-noise as the explanation for a direction-
+        /// match at N=1 (the sketch-to-claim escalation move in CLAUDE.md
+        /// § Evidentiary standards). Example: --refs pre,HEAD --n 5 runs
+        /// 10 total dialogue calls (5 samples × 2 refs). Cost scales
+        /// linearly: total ≈ per-ref × refs × N. Results are stored in
+        /// the run envelope with a sample_index field so grade-runs can
+        /// discriminate samples within the same ref.
+        #[arg(long, default_value_t = 1)]
+        n: u32,
         /// Git repo path for ref resolution + `git show`.
         #[arg(long)]
         repo: Option<PathBuf>,
@@ -1297,14 +1309,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             } else { None };
             cmd_lab(&r, action, api_key.as_deref()).await
         }
-        Cmd::Replay { refs, character, prompt, model, confirm_cost, repo, section_order, craft_notes_order, invariants_order, omit_craft_notes, omit_invariants, insert_file, insert_before, insert_after } => {
+        Cmd::Replay { refs, character, prompt, model, confirm_cost, n, repo, section_order, craft_notes_order, invariants_order, omit_craft_notes, omit_invariants, insert_file, insert_before, insert_after } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_replay(&r, &api_key, &refs, &character, &prompt, model.as_deref(), confirm_cost, repo.as_deref(), &section_order, &craft_notes_order, &invariants_order, &omit_craft_notes, &omit_invariants, insert_file.as_deref(), insert_before.as_deref(), insert_after.as_deref()).await
+            cmd_replay(&r, &api_key, &refs, &character, &prompt, model.as_deref(), confirm_cost, n, repo.as_deref(), &section_order, &craft_notes_order, &invariants_order, &omit_craft_notes, &omit_invariants, insert_file.as_deref(), insert_before.as_deref(), insert_after.as_deref()).await
         }
         Cmd::Consult { character_id, message, mode, session, model, confirm_cost, question_summary } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
@@ -2528,7 +2540,17 @@ fn extract_grade_items(path: &std::path::Path, kind: &'static str) -> Result<Vec
             let prompt = v.get("prompt").and_then(|x| x.as_str()).unwrap_or("").to_string();
             if let Some(results) = v.get("results").and_then(|x| x.as_array()) {
                 for (i, res) in results.iter().enumerate() {
-                    let sub_label = res.get("ref").and_then(|x| x.as_str()).unwrap_or("").to_string();
+                    let ref_label = res.get("ref").and_then(|x| x.as_str()).unwrap_or("").to_string();
+                    // When --n > 1, each ref produced multiple samples.
+                    // Disambiguate the sub_label so grade output shows
+                    // "0202651#1, 0202651#2, ..." instead of repeating.
+                    let sample_count = res.get("sample_count").and_then(|x| x.as_u64()).unwrap_or(1);
+                    let sub_label = if sample_count > 1 {
+                        let sample_idx = res.get("sample_index").and_then(|x| x.as_u64()).unwrap_or(0);
+                        format!("{}#{}", ref_label, sample_idx + 1)
+                    } else {
+                        ref_label
+                    };
                     let reply = res.get("reply").and_then(|x| x.as_str()).unwrap_or("").to_string();
                     out.push(GradeItem { run_id: run_id.clone(), run_kind: kind,
                         sub_index: i, sub_label, prompt: prompt.clone(), reply });
@@ -3683,6 +3705,7 @@ async fn cmd_replay(
     prompt: &str,
     model_override: Option<&str>,
     confirm_cost: Option<f64>,
+    n_samples: u32,
     repo: Option<&std::path::Path>,
     section_order_names: &[String],
     craft_notes_order_names: &[String],
@@ -3699,6 +3722,9 @@ async fn cmd_replay(
     }
     if prompt.trim().is_empty() {
         return Err(Box::<dyn std::error::Error>::from("prompt is empty".to_string()));
+    }
+    if n_samples < 1 {
+        return Err(Box::<dyn std::error::Error>::from("--n must be at least 1".to_string()));
     }
     let _ = r.check_character(character_id)?;
 
@@ -3906,7 +3932,8 @@ async fn cmd_replay(
     let est_in = estimate_tokens(&sample_system) + estimate_tokens(prompt);
     let est_out: i64 = 600;
     let per_ref_usd = project_cost(&model_config.dialogue_model, est_in, est_out, &r.cfg.model_pricing);
-    let total_projected = per_ref_usd * (refs.len() as f64);
+    let per_sample_usd = per_ref_usd; // one call per (ref, sample)
+    let total_projected = per_sample_usd * (refs.len() as f64) * (n_samples as f64);
 
     let daily_so_far = rolling_24h_total_usd();
     let daily_after = daily_so_far + total_projected;
@@ -3931,9 +3958,15 @@ async fn cmd_replay(
     }
 
     if !r.json {
-        eprintln!("[worldcli] replay {} refs against {} via {} — per-ref≈${:.4}, total≈${:.4}; 24h spent=${:.4}/${:.2}",
-            refs.len(), character.display_name, model_config.dialogue_model,
-            per_ref_usd, total_projected, daily_so_far, daily_cap);
+        if n_samples > 1 {
+            eprintln!("[worldcli] replay {} refs × {} samples against {} via {} — per-sample≈${:.4}, total≈${:.4}; 24h spent=${:.4}/${:.2}",
+                refs.len(), n_samples, character.display_name, model_config.dialogue_model,
+                per_sample_usd, total_projected, daily_so_far, daily_cap);
+        } else {
+            eprintln!("[worldcli] replay {} refs against {} via {} — per-ref≈${:.4}, total≈${:.4}; 24h spent=${:.4}/${:.2}",
+                refs.len(), character.display_name, model_config.dialogue_model,
+                per_ref_usd, total_projected, daily_so_far, daily_cap);
+        }
     }
 
     // Run each ref sequentially — same prompt, different override set.
@@ -3941,6 +3974,8 @@ async fn cmd_replay(
     let mut per_ref_results: Vec<JsonValue> = Vec::new();
     let mut total_in: i64 = 0;
     let mut total_out: i64 = 0;
+    let total_calls = refs.len() * (n_samples as usize);
+    let mut call_idx: usize = 0;
     for (i, (ref_input, overrides, found_keys)) in per_ref_overrides.iter().enumerate() {
         let (_input, sha, ts, subj) = &resolved_refs[i];
         let system_prompt = app_lib::ai::prompts::build_dialogue_system_prompt_with_overrides(
@@ -3951,40 +3986,50 @@ async fn cmd_replay(
             anchor_text.as_deref(),
             Some(overrides),
         );
-        let messages = vec![
-            openai::ChatMessage { role: "system".to_string(), content: system_prompt.clone() },
-            openai::ChatMessage { role: "user".to_string(), content: prompt.to_string() },
-        ];
-        let req = openai::ChatRequest {
-            model: model_config.dialogue_model.clone(),
-            messages,
-            temperature: Some(0.95),
-            max_completion_tokens: None,
-            response_format: None,
-        };
-        eprint!("\r[worldcli] replaying {}/{} — ref {}", i + 1, refs.len(), &sha[..8.min(sha.len())]);
-        let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await
-            .map_err(|e| format!("replay call for ref {} failed: {}", ref_input, e))?;
-        let reply = resp.choices.first()
-            .map(|c| c.message.content.clone())
-            .ok_or_else(|| "no choices returned".to_string())?;
-        let usage = resp.usage.unwrap_or(openai::Usage {
-            prompt_tokens: 0, completion_tokens: 0, total_tokens: 0,
-        });
-        total_in += usage.prompt_tokens as i64;
-        total_out += usage.completion_tokens as i64;
-        per_ref_results.push(json!({
-            "ref": ref_input,
-            "ref_resolved": sha,
-            "ref_timestamp": ts,
-            "ref_subject": subj,
-            "overrides_applied": found_keys,
-            "reply": reply,
-            "usage": {
-                "prompt_tokens": usage.prompt_tokens,
-                "completion_tokens": usage.completion_tokens,
-            },
-        }));
+        for sample_index in 0..n_samples {
+            call_idx += 1;
+            let messages = vec![
+                openai::ChatMessage { role: "system".to_string(), content: system_prompt.clone() },
+                openai::ChatMessage { role: "user".to_string(), content: prompt.to_string() },
+            ];
+            let req = openai::ChatRequest {
+                model: model_config.dialogue_model.clone(),
+                messages,
+                temperature: Some(0.95),
+                max_completion_tokens: None,
+                response_format: None,
+            };
+            if n_samples > 1 {
+                eprint!("\r[worldcli] replaying {}/{} — ref {} sample {}/{}   ",
+                    call_idx, total_calls, &sha[..8.min(sha.len())], sample_index + 1, n_samples);
+            } else {
+                eprint!("\r[worldcli] replaying {}/{} — ref {}", call_idx, total_calls, &sha[..8.min(sha.len())]);
+            }
+            let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await
+                .map_err(|e| format!("replay call for ref {} sample {} failed: {}", ref_input, sample_index, e))?;
+            let reply = resp.choices.first()
+                .map(|c| c.message.content.clone())
+                .ok_or_else(|| "no choices returned".to_string())?;
+            let usage = resp.usage.unwrap_or(openai::Usage {
+                prompt_tokens: 0, completion_tokens: 0, total_tokens: 0,
+            });
+            total_in += usage.prompt_tokens as i64;
+            total_out += usage.completion_tokens as i64;
+            per_ref_results.push(json!({
+                "ref": ref_input,
+                "ref_resolved": sha,
+                "ref_timestamp": ts,
+                "ref_subject": subj,
+                "sample_index": sample_index,
+                "sample_count": n_samples,
+                "overrides_applied": found_keys,
+                "reply": reply,
+                "usage": {
+                    "prompt_tokens": usage.prompt_tokens,
+                    "completion_tokens": usage.completion_tokens,
+                },
+            }));
+        }
     }
     eprintln!();
 
@@ -4042,6 +4087,7 @@ async fn cmd_replay(
         "character_name": character.display_name,
         "prompt": prompt,
         "model": model_config.dialogue_model,
+        "n_samples": n_samples,
         "section_order_override": section_order_json,
         "craft_notes_order_override": craft_notes_order_json,
         "invariants_order_override": invariants_order_json,
@@ -4107,7 +4153,14 @@ async fn cmd_replay(
             let subj = result["ref_subject"].as_str().unwrap_or("");
             let reply = result["reply"].as_str().unwrap_or("");
             let overrides_count = result["overrides_applied"].as_array().map(|a| a.len()).unwrap_or(0);
-            println!("─── ref: {} ({}) — {} craft-note override(s) applied ───", r_input, sha_short, overrides_count);
+            let sample_count = result["sample_count"].as_u64().unwrap_or(1);
+            if sample_count > 1 {
+                let sample_idx = result["sample_index"].as_u64().unwrap_or(0);
+                println!("─── ref: {} ({}) — sample {}/{} — {} craft-note override(s) applied ───",
+                    r_input, sha_short, sample_idx + 1, sample_count, overrides_count);
+            } else {
+                println!("─── ref: {} ({}) — {} craft-note override(s) applied ───", r_input, sha_short, overrides_count);
+            }
             println!("    commit: {}", subj);
             println!();
             println!("{}", reply);
