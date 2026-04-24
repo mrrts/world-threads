@@ -347,6 +347,22 @@ worldcli evaluate-runs list [--limit N]
 worldcli evaluate-runs show <id-or-prefix>
 worldcli evaluate-runs search "<substring>"
 
+# Generic "grade these elicited replies by rubric via LLM" primitive.
+# Use when testing whether a prompt-stack change moved behavior on
+# replies you already have from ask / replay / scenario runs, without
+# needing the natural-corpus before/after windowing that `evaluate`
+# requires. Each ask run yields 1 graded item; each replay run yields
+# N (one per ref); each scenario run yields N (one per variant).
+# Outputs per-item yes/no/mixed verdicts + aggregate effective-fire-
+# rate (yes=1.0, mixed=0.5, no=0.0). Cheap (~$0.001 per item via
+# memory_model). The instrument the architecture-effect A/B tests
+# needed before they were trustworthy — a strict register-vocabulary
+# rubric graded by an LLM is far more rigorous than hand-picked
+# markers (which carry cherry-pick risk).
+worldcli grade-runs <run_id>... \
+    (--rubric "<q>" | --rubric-ref <name> | --rubric-file <path>) \
+    [--model <override>] [--confirm-cost <usd>] [--json]
+
 # Mode B (qualitative synthesis) as a first-class command. Bundles
 # a corpus of before/after messages into ONE call to dialogue_model
 # and answers an open-ended question with prose, grounded in direct
