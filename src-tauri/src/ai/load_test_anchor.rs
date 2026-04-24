@@ -52,24 +52,21 @@ pub const REGISTER_AXES: &[AxisDef] = &[
     AxisDef {
         kind: "load_test",
         display_name: "LOAD-TEST ANCHOR",
-        axis_description: "The single specific dimension this character's authority weight-tests the world against. NOT a virtue or trait — the register-move they reach for when a moment asks for their read. ONE dimension, character-specific, observable in their quotes. Examples from prior work: DEVOTION ('does the vow survive the 2pm-Tuesday test?'), LANGUAGE ('does this sentence bear the load it's claiming to bear?'), FABRIC OF A LIFE ('does this arrangement hold under normal weather?'), THRESHOLDS OF DISCLOSURE ('has this reached enough honesty, or is it still under-cooked?').",
+        axis_description: "The single specific dimension this character's authority weight-tests the world against. NOT a virtue or trait — the register-move they reach for when a moment asks for their read. ONE dimension, character-specific, observable in their quotes. Examples of well-formed anchors from prior work: DEVOTION ('does the vow survive the 2pm-Tuesday test?'), LANGUAGE ('does this sentence bear the load it's claiming to bear?'), FABRIC OF A LIFE ('does this arrangement hold under normal weather?'), THRESHOLDS OF DISCLOSURE ('has this reached enough honesty, or is it still under-cooked?'). Earned exception — if the corpus genuinely doesn't support a single sharp anchor (a character whose authority is genuinely diffuse, or whose recent corpus is too thin to ground a specific move), it is better to name the closest honest approximation with hedge-language in the body ('still emerging — leaning toward X') than to force a sharper claim than the corpus supports; the body should be candid about the under-determination rather than papering over it.",
         body_header_prefix: "LOAD-TEST ANCHOR",
     },
-    // Future axes (commented planning placeholders; uncomment + complete
-    // when adding). Schema/DB/prompt-assembly already support them.
-    //
-    // AxisDef {
-    //     kind: "joy_reception",
-    //     display_name: "JOY RECEPTION",
-    //     axis_description: "How this character meets user-expressed joy / praise / gratitude. ...",
-    //     body_header_prefix: "JOY RECEPTION",
-    // },
-    // AxisDef {
-    //     kind: "grief_axis",
-    //     display_name: "GRIEF",
-    //     axis_description: "How this character holds expressed grief / loss / sorrow. ...",
-    //     body_header_prefix: "GRIEF",
-    // },
+    AxisDef {
+        kind: "anti_register",
+        display_name: "ANTI-REGISTER",
+        axis_description: "What this character specifically DOES NOT do — the default-culture moves they refuse. Negative-space is often more character-defining than positive vocabulary. A stereotypical version of this character's role might reach for specific reassurances, clichés, performative-warmth moves, therapist-speak, sermonizing, wisdom-quoting, or other culturally-default responses. Name the 3-5 SPECIFIC moves THIS character refuses, ideally grounded in what they've been observed NOT doing in the corpus even when an easy opening was there. Pick the sharpest, most character-defining refusals — not generic ones. Examples of well-formed anti-registers: 'does not name what the other person is feeling for them'; 'does not close a moment with reassurance-shaped signoffs'; 'does not quote scripture to authorize a position'; 'does not say the word love when love would be the obvious word'. Earned exception — if the character is so fully defined by what they DO reach for that listing 3-5 refusals would require inventing a shadow that the corpus doesn't actually show, name fewer (one or two genuine refusals) rather than padding the list; an honest 'does not X' grounded in the corpus is worth more than three speculative ones, and inventing refusals to hit a quota is its own register-distortion.",
+        body_header_prefix: "ANTI-REGISTER",
+    },
+    AxisDef {
+        kind: "joy_reception",
+        display_name: "JOY RECEPTION",
+        axis_description: "How this specific character meets user-expressed joy, praise, gratitude, or delight. NOT a general rule — the SPECIFIC register-move THIS character makes when the user brings gladness. Do they meet it plainly, hold it with weight, nudge it sideways, receive without pivoting, reroute into concrete action, or something else character-specific? Observable in the corpus. Examples of well-formed joy-reception anchors: 'meets gladness by rerouting it into a small practical act' ('eat your lunch; answer one person well'); 'receives praise by naming the specific move the user did, not by demurring or thanking performatively'; 'holds joy and weight together in the same breath, trusting both'. Earned exception — for a character whose corpus genuinely shows them meeting joy plainly with no distinctive register-move, 'meets joy plainly, without decorative move' IS itself a valid joy_reception anchor; do not force decorative complexity onto a character whose register is to NOT decorate, and a body that names the plainness as the move is the right answer in that case.",
+        body_header_prefix: "JOY RECEPTION",
+    },
 ];
 
 /// Build the system prompt for multi-axis synthesis. Asks the LLM to
