@@ -1,5 +1,10 @@
 # Simulated first-time user experience — Maggie Holloway, 42, English teacher
 
+> **Status: BASELINE — canonical reference for "ideal-normal first-time user experience."**
+> Designated 2026-04-25 by Ryan. This report is the shape a healthy first 60–90 minutes with WorldThreads should approximate for the user WorldThreads is actually for: a literate, skeptical, low-friction-tolerance adult who wants the small good pleasure of co-making a novel-shaped evening, not a companion and not a therapist. Future feature bets, prompt changes, and onboarding-flow decisions should be measured against this baseline — does the change make Maggie's arc *more* likely to land (refusal moment intact, specific-memory anchoring intact, earned close intact, no simulacrum-therapy drift), or less? When a design choice would visibly damage Maggie's experience, the default is: don't ship it. When a change would visibly strengthen it, that's a point in its favor.
+>
+> Methodological caveat preserved from the original: this is a SHARPENED HYPOTHESIS about the ideal, rendered by Claude-as-persona, not an observation from a real first-time user. A real first-time-user run remains the natural validating follow-up. Baseline status means "the target shape we're aiming at," not "verified ground truth."
+
 *2026-04-25, Mode C active elicitation at the user-experience level rather than at the character-voice level. Persona-simulation of a first-time user's 60–90 minutes with WorldThreads, followed by step-out analysis from Claude. This is a qualitative sibling to the Mode B synthesis and Mode A evaluate runs — what a real user's felt experience would be with the stack as currently tuned, rendered by staying in persona throughout.*
 
 ## Persona (committed before simulation)

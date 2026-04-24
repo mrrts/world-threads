@@ -14,6 +14,14 @@ W(t) \;&=\; \int_{0}^{t} \mathrm{specific}_c \;\cdot\; \mathrm{holds}_w \; d\mu_
 
 Create a vivid, excellent, surprising in-world experience that uplifts the user and provides engrossing, good, clean fun. Every design decision, prompt tweak, UX choice, and feature bet is measured against that. The craft stack (invariants, craft notes, conscience pass, inventories, snapshots, etc.) exists to serve that mission — characters that feel real, worlds that hold, scenes that are worth the visit and send the user back to their day nourished rather than hollowed.
 
+## Baseline user experience — the Maggie report
+
+`reports/2026-04-25-0300-simulated-first-time-user-experience-maggie.md` is the project's canonical reference for **ideal-normal first-time user experience**. It renders the shape a healthy first 60–90 minutes should approximate for the user WorldThreads is actually for: a literate, skeptical, low-friction-tolerance adult who wants the small good pleasure of co-making a novel-shaped evening — not a companion, not a therapist.
+
+Use it as a yardstick. When weighing a feature bet, prompt change, onboarding tweak, or UX decision, ask: *does this make Maggie's arc more likely to land, or less?* Specifically — does the refusal moment stay intact, does specific-memory anchoring stay intact, does the earned close stay intact, does simulacrum-therapy drift stay out? A change that would visibly damage that arc is off by default; a change that would visibly strengthen it earns a point.
+
+Caveat: the report is a sharpened hypothesis rendered by Claude-as-persona, not a real first-time-user observation. A real first-time-user run remains the natural validating follow-up. Baseline status means "target shape," not "verified ground truth." Treat it with the same seriousness as a claim-tier finding that has been cited, not a characterized one.
+
 ## DATABASE SAFETY — CRITICAL
 
 **NEVER drop, delete, or destroy database data during migrations.** This is the #1 rule.
