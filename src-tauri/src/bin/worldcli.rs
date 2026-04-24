@@ -532,6 +532,12 @@ enum Cmd {
         /// in the run log so future you can grep for prior explorations.
         #[arg(long)]
         question_summary: Option<String>,
+        /// Suppress the load-test-anchor block (and any other register
+        /// axes) from the dialogue system prompt for this call.
+        /// Used for A/B testing whether the anchor moves real-time
+        /// behavior. Default false (anchors injected as in production).
+        #[arg(long)]
+        no_anchor: bool,
     },
 
     // ── runs (read your own prior investigations) ──
@@ -1213,14 +1219,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_refresh_anchor(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
-        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary } => {
+        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_ask(&r, &api_key, &character_id, &message, session.as_deref(), model.as_deref(), confirm_cost, question_summary.as_deref()).await
+            cmd_ask(&r, &api_key, &character_id, &message, session.as_deref(), model.as_deref(), confirm_cost, question_summary.as_deref(), no_anchor).await
         }
         Cmd::RunsList { limit } => cmd_runs_list(&r, limit),
         Cmd::RunsShow { id } => cmd_runs_show(&r, &id),
@@ -5073,6 +5079,7 @@ async fn cmd_ask(
     model_override: Option<&str>,
     confirm_cost: Option<f64>,
     question_summary: Option<&str>,
+    no_anchor: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
 
@@ -5089,7 +5096,13 @@ async fn cmd_ask(
         // (UI vs CLI) is asking the character to speak.
         let latest_stance = latest_relational_stance(&conn, character_id).unwrap_or(None);
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
-        let anchor_text: Option<String> = combined_axes_block(&conn, character_id);
+        // Anchor read is suppressed when --no-anchor is passed (for A/B
+        // testing whether the synthesized anchors move real-time behavior).
+        let anchor_text: Option<String> = if no_anchor {
+            None
+        } else {
+            combined_axes_block(&conn, character_id)
+        };
 
         let system_prompt = prompts::build_dialogue_system_prompt(
             &world, &character, user_profile.as_ref(),
