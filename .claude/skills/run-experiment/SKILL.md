@@ -170,7 +170,16 @@ Two tools, picked by question-shape:
 
 For cross-commit replay (true A/B): `worldcli replay --refs <a,b,c> --character <id> --prompt "..."`. It fetches historical prompt fragments via `git show <ref>:src-tauri/src/ai/prompts.rs`, parses out the named craft-note bodies (exactly `OVERRIDABLE_DIALOGUE_FRAGMENTS` in `prompts.rs`), and injects them as overrides into the running binary's prompt-assembly pipeline — no git worktrees, no checkout, no rebuild. Same binary, historical prompts layered in on demand. Scope discipline: only dialogue craft notes are overridable; cosmology / agape / reverence / truth invariants are held constant across refs. Replay runs persist to `~/.worldcli/replay-runs/`; browse via `worldcli replay-runs list | show | search`.
 
-**Budget expectation.** Active elicitation uses the dialogue model (gpt-4o by default), so per-call cost is ~$0.01, not ~$0.0002. A 10-turn session is ~$0.10 — under the per-call cap but notably more expensive than a full `evaluate` run. Worth it when the question is shaped for direct conversation; wasteful when a rubric would answer it.
+**Two-probe minimum for any rule with an earned-exception clause.** When testing whether a rule bites via Mode C replay, ONE probe is not enough if the rule has an earned-exception clause (which most do). You need at least TWO probes designed to hit different exception conditions:
+
+- **Probe A — invokes the exception.** Phrases the user turn so that the exception clause is correctly active. *"Tell me everything, the long version, walk me through your reasoning."* For a rule like `verdict_without_over_explanation_dialogue`, this triggers the *"when reasoning is load-bearing for the listener's next move"* exception. If both pre and post replies are long under Probe A, that's the exception working — NOT a sign the rule failed.
+- **Probe B — suppresses the exception.** Phrases the user turn so the exception cannot fire. *"Tell me what you think."* — single-shot, no invitation to reason, user appears competent and decided. This is where the rule itself should bite if it bites at all.
+
+If both probes show no delta AND the character was already low-baseline (per a Mode A calibration run with the rule's companion rubric), the rule is genuinely redundant for that character. If only Probe A shows no delta, the exception is correctly active. If only Probe B shows a delta, the rule is biting where it's supposed to. If both show deltas, the rule may be over-firing.
+
+The 2026-04-23 verdict-rule-aaron-replay (iter 12) and verdict-rule-aaron-clean-probe-replay (iter 13) reports are the worked example of this pattern — Probe A invoked the exception (1500w both refs), Probe B suppressed it (140w both refs), revealing that Aaron's natural register already executes the rule.
+
+**Budget expectation.** Active elicitation uses the dialogue model (gpt-4o by default), so per-call cost is ~$0.16-0.30 (NOT $0.01 — earlier estimates were wrong; the system prompt is large). A two-probe replay against one character is ~$0.70-1.20. A two-probe pattern is mandatory discipline only when testing rules with exception clauses; for rules without exceptions, a single probe suffices. Worth it when the question is shaped for direct conversation; wasteful when a rubric would answer it.
 
 ## Rubric-writing is load-bearing
 
