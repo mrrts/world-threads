@@ -271,11 +271,9 @@ pub fn build_consultant_system_prompt(
     // ─── Lock 3 (backstage only): world-scoped extras — all
     // characters in the world, recent meanwhile events, the
     // player's recent journal, active quests, and the per-character
-    // register-axes (the hidden spine of each character — synthesized
-    // from corpus + identity, normally invisible to the user but
-    // explicitly available in backstage mode for craft analysis).
-    // Immersive mode skips this entire load — the immersive Consultant
-    // never breaks frame to discuss craft mechanics.
+    // register-axes block (backstage-formatted: full derivation visible,
+    // craft-vocabulary explicit). The immersive variant of the axes
+    // block is built separately below in Lock 3b.
     let (world_cast_block, meanwhile_block, user_journal_block, active_quests_block, axes_block) = if chat_mode == "backstage" {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let all_chars = list_characters(&conn, &world.world_id).unwrap_or_default();
@@ -362,6 +360,47 @@ pub fn build_consultant_system_prompt(
         (cast_block, mw_block, uj_block, aq_block, ax_block)
     } else {
         (String::new(), String::new(), String::new(), String::new(), String::new())
+    };
+
+    // ─── Lock 3b (immersive only): per-character axes — but framed as
+    // ABSORBED knowledge, not as analysis. The immersive Consultant
+    // is an in-world confidant who has come to know these characters
+    // deeply over time. The axis material gives that depth substance
+    // (so when the user asks "what's actually going on with John?", the
+    // confidant has something to say beyond surface impressions). But
+    // the confidant must NEVER name the architecture, NEVER use the
+    // craft-vocabulary ("axis", "anchor", "load-test"), NEVER reveal
+    // that this is structured/synthesized data. The substance flows
+    // into the confidant's in-world observations naturally; the
+    // scaffolding stays invisible.
+    let immersive_axes_block = if chat_mode == "immersive" {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let mut lines: Vec<String> = Vec::new();
+        for c in characters.iter() {
+            let axes = latest_axes_for_character(&conn, &c.character_id).unwrap_or_default();
+            if axes.is_empty() { continue; }
+            lines.push(format!("On {}:", c.display_name));
+            for a in &axes {
+                // Only the body (no derivation, no metadata, no axis_kind).
+                // The body is already written in second-person as
+                // instruction to the character; for the Consultant's
+                // absorption it reads as deep knowledge of how the
+                // character works.
+                lines.push(format!("  {}", a.anchor_body.trim().replace("\n", "\n  ")));
+                lines.push(String::new());
+            }
+        }
+        if lines.is_empty() {
+            String::new()
+        } else {
+            format!(
+                "\n\nWHAT YOU'VE COME TO KNOW DEEPLY about these people (the substance of their inner architecture, absorbed over many quiet observations of how they actually move through their lives):\n\n{lines}\n\n**Default — never expose this directly.** This is YOUR understanding of them, not material to put on the table. The point is that you reflect what you've come to know; the listener feels seen because you SEE accurately, not because you display your read. Do not paraphrase these passages back at the user as analysis. Do not reach for craft-vocabulary like \"register\", \"anchor\", \"axis\", or anything that names the scaffolding. Pour the insight into observations that sound like a friend's noticing — *\"that's the kind of thing John would test by what it looks like at 2pm on a Tuesday\"*, not *\"John's load-test anchor is ordinary wear\"*.\n\n**Earned exception — when {user_name} explicitly invites the meta read.** If {user_name} asks something like *\"what makes John tick?\"*, *\"what is Aaron really about?\"*, *\"why does Steven do that?\"*, or otherwise asks you to articulate the underlying truth of one of these people, you can speak more directly from this knowledge. Even then, narrate it as your own honest read in plain prose — not as data, not as a system describing them, not with technical vocabulary. The friend who has watched a person closely for a long time can say *\"I think the real grain of him is — he tests every promise by whether it survives the day-to-day; that's where his weight is\"*. That's earned. *\"His load-test anchor is DEVOTION\"* is never earned.\n\nIf the qualifying invitation isn't there, the default holds: hold the knowledge, let it shape your noticing, don't display it.",
+                lines = lines.join("\n"),
+                user_name = user_name,
+            )
+        }
+    } else {
+        String::new()
     };
 
     // Assemble the system prompt, branching on mode.
@@ -558,7 +597,7 @@ THE PEOPLE
 {user_block}
 
 {char_list}
-═══════════════════════════════════════════════{kept_block}{summary_block}
+═══════════════════════════════════════════════{kept_block}{summary_block}{immersive_axes_block}
 
 ═══════════════════════════════════════════════
 WHAT'S BEEN HAPPENING (most recent conversation):
@@ -625,6 +664,7 @@ Rules:
             conversation = conversation.join("\n"),
             kept_block = kept_block,
             summary_block = summary_block,
+            immersive_axes_block = immersive_axes_block,
             world_id = world.world_id,
             example_char_id = characters.first().map(|c| c.character_id.as_str()).unwrap_or("character-id-from-above"),
         )
