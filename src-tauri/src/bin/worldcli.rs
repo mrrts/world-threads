@@ -312,8 +312,40 @@ enum Cmd {
     /// context, and a structured JSON response format. Per-message
     /// judgments (yes / no / mixed + confidence + quote + one-line
     /// reasoning) aggregate into before/after counts so the user
-    /// can read whether the rule shipped in the commit actually
-    /// moved the corpus.
+    /// Grade arbitrary stored runs (ask, replay, scenario) against a
+    /// rubric via the memory_model. The generic "given these N texts
+    /// and a rubric, give me yes/no/mixed per text + aggregation"
+    /// primitive. Use when testing whether a prompt-stack change moved
+    /// behavior on replies you've already elicited via ask/replay/
+    /// scenario, without needing the natural-corpus before/after
+    /// windowing that `evaluate` requires.
+    GradeRuns {
+        /// One or more run_ids (or their short prefixes) from
+        /// ~/.worldcli/runs, ~/.worldcli/replay-runs, or
+        /// ~/.worldcli/scenario-runs. Each run's reply(ies) become
+        /// one or more graded items.
+        run_ids: Vec<String>,
+        /// The rubric question asked of each reply. Plain English.
+        #[arg(long)]
+        rubric: Option<String>,
+        /// Look up a named rubric from the library.
+        #[arg(long)]
+        rubric_ref: Option<String>,
+        /// Read rubric from a file.
+        #[arg(long)]
+        rubric_file: Option<PathBuf>,
+        /// Override the evaluator model (default: memory_model).
+        #[arg(long)]
+        model: Option<String>,
+        /// Required when projected cost exceeds the per-call cap.
+        #[arg(long)]
+        confirm_cost: Option<f64>,
+    },
+
+    /// Evaluate natural-corpus messages against a rubric on either
+    /// side of a git ref. The messages-x-commits primitive. `evaluate`
+    /// requires corpus messages; use `grade-runs` if you want to grade
+    /// elicited replies from ask/replay/scenario runs.
     Evaluate {
         /// Git ref marking the boundary commit. Messages before
         /// its timestamp form the "before" window; messages after
@@ -1158,6 +1190,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )),
             };
             cmd_evaluate(&r, &api_key, &git_ref, end_ref.as_deref(), limit, character.as_deref(), group_chat.as_deref(), rubric.as_deref(), rubric_file.as_deref(), rubric_ref.as_deref(), &role, context_turns, model.as_deref(), confirm_cost, repo.as_deref()).await
+        }
+        Cmd::GradeRuns { run_ids, rubric, rubric_ref, rubric_file, model, confirm_cost } => {
+            let api_key = match resolve_api_key(cli.api_key.as_deref()) {
+                Some(k) => k,
+                None => return Err(Box::<dyn std::error::Error>::from(
+                    "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
+                )),
+            };
+            cmd_grade_runs(&r, &api_key, &run_ids, rubric.as_deref(), rubric_ref.as_deref(), rubric_file.as_deref(), model.as_deref(), confirm_cost).await
         }
         Cmd::Synthesize { git_ref, end_ref, limit, character, group_chat, question, question_file, role, context_turns, model, confirm_cost, repo } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
@@ -2351,6 +2392,279 @@ fn active_settings_at(
         }
     }
     out
+}
+
+/// Graded item — one reply + its user prompt, extracted from a run file.
+/// Ask runs produce one item; replay and scenario runs can produce N.
+#[derive(Debug)]
+struct GradeItem {
+    run_id: String,
+    run_kind: &'static str, // "ask" | "replay" | "scenario"
+    sub_index: usize,       // 0 for ask; 0..N for replay (per ref) or scenario (per variant)
+    sub_label: String,      // "" for ask; ref name for replay; variant label for scenario
+    prompt: String,
+    reply: String,
+}
+
+/// Search the three run-log directories for a file matching the given
+/// id (or short prefix). Returns the full path + which kind of run it is.
+fn find_run_file(id: &str) -> Option<(PathBuf, &'static str)> {
+    let candidates: Vec<(PathBuf, &'static str)> = vec![
+        (runs_dir(), "ask"),
+        (replay_runs_dir(), "replay"),
+        (scenario_runs_dir(), "scenario"),
+    ];
+    for (dir, kind) in candidates {
+        if !dir.exists() { continue; }
+        // Try exact first.
+        let exact = dir.join(format!("{}.json", id));
+        if exact.exists() { return Some((exact, kind)); }
+        // Prefix match.
+        if let Ok(entries) = std::fs::read_dir(&dir) {
+            for entry in entries.flatten() {
+                let fname = entry.file_name().to_string_lossy().to_string();
+                if fname.starts_with(id) && fname.ends_with(".json") {
+                    return Some((entry.path(), kind));
+                }
+            }
+        }
+    }
+    None
+}
+
+/// Extract one or more GradeItems from a run file based on its kind.
+/// Ask = 1 item; replay = N items (one per ref); scenario = N items
+/// (one per variant).
+fn extract_grade_items(path: &std::path::Path, kind: &'static str) -> Result<Vec<GradeItem>, String> {
+    let raw = std::fs::read_to_string(path).map_err(|e| e.to_string())?;
+    let v: JsonValue = serde_json::from_str(&raw).map_err(|e| e.to_string())?;
+    let run_id = v.get("run_id").or_else(|| v.get("id"))
+        .and_then(|x| x.as_str())
+        .unwrap_or("?").to_string();
+    let mut out = Vec::new();
+    match kind {
+        "ask" => {
+            let prompt = v.get("prompt").and_then(|x| x.as_str()).unwrap_or("").to_string();
+            let reply = v.get("reply").and_then(|x| x.as_str()).unwrap_or("").to_string();
+            out.push(GradeItem { run_id, run_kind: kind, sub_index: 0,
+                sub_label: String::new(), prompt, reply });
+        }
+        "replay" => {
+            let prompt = v.get("prompt").and_then(|x| x.as_str()).unwrap_or("").to_string();
+            if let Some(results) = v.get("results").and_then(|x| x.as_array()) {
+                for (i, res) in results.iter().enumerate() {
+                    let sub_label = res.get("ref").and_then(|x| x.as_str()).unwrap_or("").to_string();
+                    let reply = res.get("reply").and_then(|x| x.as_str()).unwrap_or("").to_string();
+                    out.push(GradeItem { run_id: run_id.clone(), run_kind: kind,
+                        sub_index: i, sub_label, prompt: prompt.clone(), reply });
+                }
+            }
+        }
+        "scenario" => {
+            if let Some(variants) = v.get("variants").and_then(|x| x.as_array()) {
+                for (i, var) in variants.iter().enumerate() {
+                    let sub_label = var.get("label").and_then(|x| x.as_str()).unwrap_or("").to_string();
+                    let prompt = var.get("prompt").and_then(|x| x.as_str()).unwrap_or("").to_string();
+                    let reply = var.get("reply").and_then(|x| x.as_str()).unwrap_or("").to_string();
+                    out.push(GradeItem { run_id: run_id.clone(), run_kind: kind,
+                        sub_index: i, sub_label, prompt, reply });
+                }
+            }
+        }
+        _ => {}
+    }
+    Ok(out)
+}
+
+async fn cmd_grade_runs(
+    r: &Resolved,
+    api_key: &str,
+    run_ids: &[String],
+    rubric: Option<&str>,
+    rubric_ref: Option<&str>,
+    rubric_file: Option<&std::path::Path>,
+    model_override: Option<&str>,
+    confirm_cost: Option<f64>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    if run_ids.is_empty() {
+        return Err(Box::<dyn std::error::Error>::from(
+            "at least one run_id required".to_string()));
+    }
+
+    // Resolve rubric (same precedence as `evaluate`).
+    let sources = [rubric.is_some(), rubric_ref.is_some(), rubric_file.is_some()]
+        .iter().filter(|b| **b).count();
+    if sources != 1 {
+        return Err(Box::<dyn std::error::Error>::from(
+            "pass exactly one of --rubric, --rubric-ref, or --rubric-file".to_string()));
+    }
+    let (rubric_text, rubric_ref_name, rubric_ref_version) = if let Some(name) = rubric_ref {
+        let rb = load_rubric(name).map_err(Box::<dyn std::error::Error>::from)?;
+        (rb.prompt, Some(rb.name), Some(rb.version))
+    } else if let Some(p) = rubric_file {
+        (std::fs::read_to_string(p)?, None, None)
+    } else {
+        (rubric.unwrap().to_string(), None, None)
+    };
+
+    // Resolve all run_ids to GradeItems.
+    let mut items: Vec<GradeItem> = Vec::new();
+    for rid in run_ids {
+        let (path, kind) = find_run_file(rid).ok_or_else(|| Box::<dyn std::error::Error>::from(
+            format!("run '{}' not found in runs / replay-runs / scenario-runs", rid)))?;
+        let extracted = extract_grade_items(&path, kind)
+            .map_err(Box::<dyn std::error::Error>::from)?;
+        if extracted.is_empty() {
+            eprintln!("[worldcli] warning: run '{}' yielded zero gradeable items", rid);
+        }
+        items.extend(extracted);
+    }
+
+    if items.is_empty() {
+        return Err(Box::<dyn std::error::Error>::from(
+            "no gradeable items found across the given runs".to_string()));
+    }
+
+    // Model + cost projection.
+    let model_config = {
+        let conn = r.db.conn.lock().unwrap();
+        orchestrator::load_model_config(&conn)
+    };
+    let model = model_override.unwrap_or(&model_config.memory_model).to_string();
+
+    let rubric_tokens = estimate_tokens(&rubric_text);
+    let per_call_in = rubric_tokens + 400 /*reply*/ + 200 /*system*/ + 150 /*slack*/;
+    let per_call_out: i64 = 220;
+    let per_call_usd = project_cost(&model, per_call_in, per_call_out, &r.cfg.model_pricing);
+    let total_projected = per_call_usd * (items.len() as f64);
+    let per_call_cap = r.cfg.budget.per_call_usd;
+    let confirm = confirm_cost.unwrap_or(0.0);
+    if total_projected > per_call_cap && confirm < total_projected {
+        return Err(Box::new(CliError::Budget {
+            kind: "per_call (grade total)".to_string(),
+            projected_usd: total_projected,
+            cap_usd: per_call_cap,
+            confirm_at_least: (total_projected * 1.05).max(0.01),
+        }));
+    }
+
+    if !r.json {
+        eprintln!("[worldcli] grading {} items via {} — projected≈${:.4}",
+            items.len(), model, total_projected);
+        eprintln!("[worldcli] rubric: {}", rubric_text.lines().next().unwrap_or("").chars().take(100).collect::<String>());
+    }
+
+    // Grade each.
+    let base_url = model_config.chat_api_base();
+    let mut verdicts: Vec<JsonValue> = Vec::new();
+    let mut total_in_tokens: i64 = 0;
+    let mut total_out_tokens: i64 = 0;
+    for (i, item) in items.iter().enumerate() {
+        eprint!("\r[worldcli] graded {}/{}", i + 1, items.len());
+        // Use the preceding user-prompt as the "context" turn (one-turn
+        // scene). `evaluate_one` takes a list of (speaker, content) pairs.
+        let ctx = vec![("User".to_string(), item.prompt.clone())];
+        match evaluate_one(&base_url, api_key, &model, &rubric_text, &ctx, &item.reply).await {
+            Ok((v, u)) => {
+                total_in_tokens += u.prompt_tokens as i64;
+                total_out_tokens += u.completion_tokens as i64;
+                verdicts.push(json!({
+                    "run_id": item.run_id,
+                    "run_kind": item.run_kind,
+                    "sub_index": item.sub_index,
+                    "sub_label": item.sub_label,
+                    "judgment": v.judgment,
+                    "confidence": v.confidence,
+                    "quote": v.quote,
+                    "reasoning": v.reasoning,
+                    "reply_preview": item.reply.chars().take(200).collect::<String>(),
+                }));
+            }
+            Err(e) => {
+                verdicts.push(json!({
+                    "run_id": item.run_id,
+                    "run_kind": item.run_kind,
+                    "sub_index": item.sub_index,
+                    "sub_label": item.sub_label,
+                    "error": e,
+                }));
+            }
+        }
+    }
+    eprintln!();
+
+    let actual_usd = actual_cost(&model, total_in_tokens, total_out_tokens, &r.cfg.model_pricing);
+    append_cost_log(&CostEntry {
+        timestamp: chrono::Utc::now().to_rfc3339(),
+        model: model.clone(),
+        prompt_tokens: total_in_tokens,
+        completion_tokens: total_out_tokens,
+        usd: actual_usd,
+    });
+
+    // Aggregate.
+    let mut yes = 0; let mut no = 0; let mut mixed = 0; let mut err = 0;
+    for v in &verdicts {
+        match v.get("judgment").and_then(|x| x.as_str()) {
+            Some("yes") => yes += 1,
+            Some("no") => no += 1,
+            Some("mixed") => mixed += 1,
+            _ => err += 1,
+        }
+    }
+
+    let envelope = json!({
+        "run_ids": run_ids,
+        "item_count": items.len(),
+        "rubric": rubric_text,
+        "rubric_ref": rubric_ref_name,
+        "rubric_version": rubric_ref_version,
+        "model": model,
+        "cost": {
+            "prompt_tokens": total_in_tokens,
+            "completion_tokens": total_out_tokens,
+            "actual_usd": actual_usd,
+        },
+        "aggregate": {
+            "yes": yes, "no": no, "mixed": mixed, "errors": err,
+            "yes_rate": (yes as f64) / (items.len().max(1) as f64),
+            "effective_fire_rate": ((yes as f64) + 0.5 * (mixed as f64)) / (items.len().max(1) as f64),
+        },
+        "verdicts": verdicts,
+    });
+
+    if r.json {
+        emit(true, envelope);
+    } else {
+        println!("=== GRADE-RUNS ===");
+        println!("items:     {}", items.len());
+        println!("rubric:    {}", rubric_text.lines().next().unwrap_or(""));
+        println!("model:     {}", model);
+        println!();
+        println!("AGGREGATE: yes={} no={} mixed={} errors={}", yes, no, mixed, err);
+        println!("effective fire-rate: {:.3} (yes=1, mixed=0.5, no=0)",
+            ((yes as f64) + 0.5 * (mixed as f64)) / (items.len().max(1) as f64));
+        println!();
+        println!("Per-item verdicts:");
+        for v in &verdicts {
+            let rid = v.get("run_id").and_then(|x| x.as_str()).unwrap_or("?");
+            let rid_short = &rid[..8.min(rid.len())];
+            let label = v.get("sub_label").and_then(|x| x.as_str()).unwrap_or("");
+            let sub = if label.is_empty() { String::new() } else { format!(" [{}]", label) };
+            if let Some(err) = v.get("error").and_then(|x| x.as_str()) {
+                println!("  {rid_short}{sub} ERROR: {err}");
+                continue;
+            }
+            let j = v.get("judgment").and_then(|x| x.as_str()).unwrap_or("?");
+            let c = v.get("confidence").and_then(|x| x.as_str()).unwrap_or("?");
+            let reasoning = v.get("reasoning").and_then(|x| x.as_str()).unwrap_or("").chars().take(140).collect::<String>();
+            println!("  {rid_short}{sub}  {} ({}) — {}", j, c, reasoning);
+        }
+        println!();
+        eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok)",
+            actual_usd, total_in_tokens, total_out_tokens);
+    }
+    Ok(())
 }
 
 async fn cmd_evaluate(
