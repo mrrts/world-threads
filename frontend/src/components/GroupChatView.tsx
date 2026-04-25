@@ -797,7 +797,13 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
       </div>
 
       <div className="flex-1 relative overflow-hidden z-10">
-        <LocationOpener key={`opener-${chatId ?? "none"}`} location={currentLocation} loading={store.loadingChat} />
+        <LocationOpener
+          key={`opener-${chatId ?? "none"}`}
+          location={currentLocation}
+          worldDay={[...store.messages].reverse().find((m) => m.world_day != null)?.world_day ?? null}
+          worldTime={[...store.messages].reverse().find((m) => m.world_time)?.world_time ?? null}
+          loading={store.loadingChat}
+        />
         <ScrollArea ref={scrollRef} className="h-full px-4 py-3">
         <div>
         {store.messages.length === 0 && (
