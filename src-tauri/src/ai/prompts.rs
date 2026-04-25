@@ -5744,6 +5744,7 @@ pub fn build_chapter_from_image_system_prompt(
             let clipped: String = line.content.chars().take(280).collect();
             base.push_str(&format!("{}: {}\n", line.speaker, clipped));
         }
+        base.push_str("\n**Earned exception — when the chapter is picking up a moment just lived in chat.** If the captured image lands AT or VERY NEAR the most recent material above (the last beat or two of the chat), opening the chapter inside that moment — naming it directly, picking up its specific texture (a line that was just said, a posture that was just struck, the specific weather of the last exchange) — is not recap; it is the preferred novel-chapter shape. Novelists routinely open a chapter at the exact moment the prior chapter ended, with the page-break itself being the only narrative gap. Use that opening shape when the just-lived material IS the moment. Outside that — when the captured image is FURTHER back in the history, or when the moment was generated wholly anew by the inventor without reference to the recent beats — the default holds: do not recap; treat the history as where things stand right now and write forward.\n");
     }
 
     // Append the chat's current tone as a ruling-register directive
