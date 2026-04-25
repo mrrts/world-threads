@@ -1,7 +1,7 @@
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct ChatRequest {
     pub model: String,
     pub messages: Vec<ChatMessage>,
@@ -19,10 +19,45 @@ pub struct ChatMessage {
     pub content: String,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct ResponseFormat {
     #[serde(rename = "type")]
     pub format_type: String,
+}
+
+/// Sentinel substring uniquely present in MISSION_FORMULA_BLOCK. Used by
+/// `inject_mission_formula` to detect when the formula is already present
+/// (e.g., dialogue/consultant prompts where prompts.rs has already pushed
+/// it at top-position) so we never double-prefix.
+const MISSION_FORMULA_SENTINEL: &str = r"\mathrm{polish}(t)";
+
+/// Idempotently prepend the MISSION_FORMULA_BLOCK to the first system
+/// message in `messages`. If no system message exists, insert one at
+/// position 0. If the formula is already present anywhere in the first
+/// system message, do nothing.
+///
+/// Doctrine: the formula is the project's all-purpose tuning fork — an
+/// instant register-calibration that belongs at the head of every LLM
+/// call this app makes, not just the dialogue/consultant surfaces. The
+/// dialogue and consultant prompt builders in prompts.rs push it at
+/// top-position via their assembly pipelines; this helper guarantees it
+/// for every OTHER call (canonization classifier, journal generators,
+/// canon-weave, meanwhile events, scene invention, conscience, anchor
+/// synthesis, justification fill-ins, captions, selection prompts, etc.)
+/// without requiring each caller to opt in. Idempotent so the existing
+/// dialogue/consultant top-position push is preserved unchanged.
+pub fn inject_mission_formula(messages: &mut Vec<ChatMessage>) {
+    let formula = crate::ai::prompts::MISSION_FORMULA_BLOCK;
+    if let Some(first_system) = messages.iter_mut().find(|m| m.role == "system") {
+        if !first_system.content.contains(MISSION_FORMULA_SENTINEL) {
+            first_system.content = format!("{formula}\n\n{}", first_system.content);
+        }
+    } else {
+        messages.insert(0, ChatMessage {
+            role: "system".to_string(),
+            content: formula.to_string(),
+        });
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -150,7 +185,9 @@ pub async fn vision_completion_with_base(
 pub async fn chat_completion_with_base(base_url: &str, api_key: &str, request: &ChatRequest) -> Result<ChatResponse, String> {
     let client = Client::new();
     let url = format!("{base_url}/chat/completions");
-    let mut builder = client.post(&url).json(request);
+    let mut request = request.clone();
+    inject_mission_formula(&mut request.messages);
+    let mut builder = client.post(&url).json(&request);
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
@@ -326,7 +363,9 @@ pub async fn chat_completion_stream(
 
     let client = Client::new();
     let url = format!("{base_url}/chat/completions");
-    let mut builder = client.post(&url).json(request);
+    let mut request = request.clone();
+    inject_mission_formula(&mut request.messages);
+    let mut builder = client.post(&url).json(&request);
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
@@ -433,7 +472,9 @@ pub async fn chat_completion_stream_silent(
 
     let client = Client::new();
     let url = format!("{base_url}/chat/completions");
-    let mut builder = client.post(&url).json(request);
+    let mut request = request.clone();
+    inject_mission_formula(&mut request.messages);
+    let mut builder = client.post(&url).json(&request);
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
