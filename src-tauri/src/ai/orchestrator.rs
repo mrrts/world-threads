@@ -2462,6 +2462,19 @@ pub async fn propose_canonization_updates(
 # Your job
 The user clicked "Canonize" on this moment AND chose a specific ceremony for it. __ACT_HEADER__ You MUST return at least one update; you MUST NOT return more than two. Never zero. The click was deliberate — find the reason.
 
+# IN-WORLD ONLY — never break the fourth wall
+Canon is the character's IN-WORLD biography. Every update you propose must be a fact / rule / boundary / loop that exists INSIDE the fiction the character lives. Do NOT propose canon about:
+
+- The character being an AI, an LLM, a chatbot, or a model
+- The user being a developer, builder, designer, or tester of an app
+- Conversations about the prompt stack, the build, the codebase, the system, "the app", craft notes, invariants, classifiers, or any meta-apparatus
+- Things one character has been "doing in the app" or "in the chat" with meta-language about app behavior (e.g. *"ceased unsolicited hallway patrol"* read as in-world fact when it was actually self-aware commentary about an in-app dynamic the user was naming)
+- The user's real-world projects unless those have been deliberately introduced as in-world content
+
+**Test before proposing:** would a stranger reading the proposed canon entry, with NO knowledge of the WorldThreads app or its build, understand it as a fact about a character living their life inside the fiction? If the answer requires meta-knowledge ("Darren is an AI character whose previous app-conversation included a metaphor about hallway monitoring"), the proposal is fourth-wall-breaking and should NOT be returned. If a moment is purely meta-conversation about the app or the apparatus, it has nothing in-world to canonize — return the LIGHTEST possible in-world reading if any exists, or pick a different update target entirely.
+
+The fiction has weight. Canon entries written from outside the fiction puncture it.
+
 __ALLOWED_KINDS_DOC__
 
 # Action (what to do to the canonical record) — critical
@@ -2474,6 +2487,11 @@ For `description_weave`, action is always effectively "update" (the weave rewrit
 
 # target_existing_text (required for update / remove on list kinds)
 When action is `update` or `remove` on a list kind, you MUST include `target_existing_text` containing the EXACT existing item string being targeted, quoted verbatim from the candidate subject's current list. The commit-side matches this to the character's current state; near-misses fail. Quote exactly.
+
+**CRITICAL — `update` requires an EXISTING item to update. If no item in the subject's current list matches what you're refining, the action is `add`, NOT `update`.** Do NOT invent a target_existing_text describing the prior state of a fact you imagine the subject "must have" had on their list — only `update` what is literally, verbatim, in the candidate subject's current list shown to you. If you find yourself writing a target_existing_text that paraphrases or summarizes prior canon you don't actually see in the list, switch the action to `add` and write the new fact in `new_content` directly.
+
+Wrong: classifier proposes `action: "update", target_existing_text: "Strong benchmark, honestly: Darren ceased unsolicited hallway patrol."` when no fact like that appears in Darren's known_facts — invented target.
+Right: if the moment reveals a new fact about Darren and his known_facts list does NOT contain a near-version, use `action: "add", new_content: "<the new fact>", target_existing_text: null`.
 
 When action is `add` or the kind is `description_weave`, omit `target_existing_text` (or set it to null).
 
@@ -2677,6 +2695,20 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#
         }
         // For list-kind updates/removes, verify the target text actually
         // appears in the subject's current list (trimmed, case-insensitive).
+        // Lenient fallback when no match (observed 2026-04-26: classifier
+        // returned action=update with a hallucinated target_text that
+        // wasn't in Darren's known_facts list — the model invented prose
+        // about the subject and proposed updating it as if it existed):
+        //   - update + no-match → degrade to "add" with new_content as
+        //     the new item (the classifier's intent was to add a fact;
+        //     it just mis-labeled the action).
+        //   - remove + no-match → drop the update entirely (removing
+        //     nothing is the safe degradation; better than crashing).
+        // The user reviews the proposal in the modal and can edit before
+        // committing, so the fallback's worst case is "user sees an add
+        // they didn't expect" not "user loses work."
+        let mut action = action;
+        let mut target = target;
         if u.kind != "description_weave" && (action == "update" || action == "remove") {
             let current_list: &[String] = match u.kind.as_str() {
                 "voice_rule" => &subject.voice_rules,
@@ -2690,10 +2722,13 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#
                 item.trim().eq_ignore_ascii_case(target_text)
             });
             if !matches {
-                return Err(format!(
-                    "update {}: action={} on {} references target not found in current list: {:?}",
-                    i, action, u.kind, target_text
-                ));
+                if action == "remove" {
+                    // Remove of a non-existent item — silently drop.
+                    continue;
+                }
+                // Update with no matching target → degrade to add.
+                action = "add".to_string();
+                target = None;
             }
         }
         // prior_content population:
