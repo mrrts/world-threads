@@ -4531,15 +4531,6 @@ pub fn build_dialogue_messages(
         }
     }
 
-    // Per-chat current location — derived from the most recent
-    // location_change message in this thread's history. Anchored at
-    // the END of the system prompt so it sits in the high-attention
-    // tail right before the conversation. Replaced the old global
-    // world.state.location injection (which leaked across all chats).
-    if let Some(loc) = derive_current_location(recent_messages) {
-        system_content.push_str(&format!("\n\nCURRENT LOCATION: {loc}"));
-    }
-
     msgs.push(crate::ai::openai::ChatMessage {
         role: "system".to_string(),
         content: system_content,
@@ -4760,6 +4751,21 @@ pub fn build_dialogue_messages(
         msgs.push(crate::ai::openai::ChatMessage {
             role: if m.role == "narrative" || m.role == "context" || m.role == "dream" { "system".to_string() } else { m.role.clone() },
             content,
+        });
+    }
+
+    // Per-chat current location — anchored as the FINAL system message
+    // AFTER all chat history, so it sits in the highest-attention slot
+    // the model reads right before generating its reply. Earlier
+    // placement (end of system_content, before chat history) was
+    // getting drowned out as the conversation grew — characters
+    // started reaching back to the world's default ('Town Square')
+    // even after the user had moved the scene. This last-position
+    // anchor keeps the active scene grounded turn-by-turn.
+    if let Some(loc) = derive_current_location(recent_messages) {
+        msgs.push(crate::ai::openai::ChatMessage {
+            role: "system".to_string(),
+            content: format!("[CURRENT SCENE LOCATION: {loc}. The scene is happening here right now. Ground every body-anchor, sensory detail, and 'where you are' beat in this place. Do not drift back to a previously-mentioned location unless the user moves the scene again.]"),
         });
     }
 
