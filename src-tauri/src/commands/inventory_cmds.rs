@@ -601,10 +601,16 @@ async fn resolve_inventory_targets(
                 let picked_id = if direct.len() == 1 {
                     Some(direct[0].clone())
                 } else if !members.is_empty() {
+                    // Inventory caller: treats Collective AND Ambiguous
+                    // as "fall back to last speaker / first member" since
+                    // inventory updates infer per-character changes from
+                    // the user's message (no concept of "random pick" is
+                    // useful here). The into_option() helper collapses
+                    // Solo→Some, Collective/Ambiguous→None.
                     let llm_pick = group_chat_cmds::llm_pick_addressee(
                         api_key, &model_config, &content, &recent, &members, &user_name, 8,
                     ).await;
-                    llm_pick.or(sender_of_last_assistant).or_else(|| Some(members[0].character_id.clone()))
+                    llm_pick.into_option().or(sender_of_last_assistant).or_else(|| Some(members[0].character_id.clone()))
                 } else {
                     None
                 };

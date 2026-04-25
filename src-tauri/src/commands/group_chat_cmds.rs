@@ -202,6 +202,40 @@ Output: raw JSON array of character ids, e.g. ["char_abc"] or ["char_abc","char_
 /// ~150 input tokens + 20 output tokens. Uses temperature=0.0 so the
 /// same scene reliably picks the same addressee; this is not a place
 /// we want creative variation.
+/// Result of the addressee-picker LLM call.
+///
+/// Three meaningfully-different cases that callers may want to handle
+/// differently:
+/// - `Solo(id)`: the user is addressing one specific character; that
+///   character should respond.
+/// - `Collective`: the user is addressing the group as a whole
+///   ("you guys", "both of you", "all of you", "everyone"). Caller
+///   chooses how to dispatch — group_chat picks one character at random
+///   for auto-respond mode; inventory falls back to most-recent speaker.
+/// - `Ambiguous`: the LLM said NONE — message is genuinely unclear or
+///   for-the-room-but-not-collectively. Caller falls back to its
+///   default (typically the most-recently-active character).
+#[derive(Debug, Clone)]
+pub enum AddresseePick {
+    Solo(String),
+    Collective,
+    Ambiguous,
+}
+
+impl AddresseePick {
+    /// For callers that want the simpler `Option<String>` semantics —
+    /// either a specific character id or "fall back to your default."
+    /// Both `Collective` and `Ambiguous` map to `None` here. The
+    /// group_chat caller does NOT use this; it pattern-matches the
+    /// enum directly to dispatch the random-pick on `Collective`.
+    pub fn into_option(self) -> Option<String> {
+        match self {
+            AddresseePick::Solo(id) => Some(id),
+            AddresseePick::Collective | AddresseePick::Ambiguous => None,
+        }
+    }
+}
+
 pub async fn llm_pick_addressee(
     api_key: &str,
     model_config: &orchestrator::ModelConfig,
@@ -210,8 +244,8 @@ pub async fn llm_pick_addressee(
     characters: &[Character],
     user_name: &str,
     context_limit: usize,
-) -> Option<String> {
-    if characters.is_empty() { return None; }
+) -> AddresseePick {
+    if characters.is_empty() { return AddresseePick::Ambiguous; }
 
     // Render the last few non-system messages as speaker-labeled lines.
     let scene: Vec<String> = recent_context.iter()
@@ -257,9 +291,11 @@ Read the recent scene and the user's latest message, then pick the one character
 If the user pivots addressees mid-message, the FINAL addressee wins. Example: "Yeah, makes sense, Darren. ...Actually — Aaron, what did you think?" → pick Aaron. The earlier address is abandoned once the user turns to someone new.
 
 Output RULES (strict):
-- Output exactly one name from the provided list, OR the word NONE.
-- NONE means the user is addressing everyone, or it's genuinely ambiguous, or the message is for the room as a whole.
-- No commentary, no punctuation, no explanation. Just the name or NONE."#.to_string();
+- Output exactly one name from the provided list, OR the word ALL, OR the word NONE.
+- ALL (also acceptable: BOTH, EVERYONE) means the user is EXPLICITLY addressing the group collectively — phrases like "you guys," "both of you," "all of you," "y'all," "everyone." A clear collective vocative. Use this only when the user is plainly speaking to the whole room as a group, not when the message merely happens to be relevant to multiple people.
+- NONE means it's genuinely ambiguous, or the message is for-the-room without an explicit collective vocative, or you can't tell. Use this when no character is being singled out AND the user didn't use a collective address.
+- One specific character name means the user is talking to that one character (whether by direct address or by continuing an ongoing exchange).
+- No commentary, no punctuation, no explanation. Just the name, or ALL, or NONE."#.to_string();
 
     let user = format!(
         "Characters in this group (pick one name exactly): {names}\n\nRecent scene (last few messages):\n{scene}\n\n{user_name}'s latest message:\n{content}\n\nWho is {user_name} most likely addressing? Output: one name from the list above, or NONE.",
@@ -286,7 +322,7 @@ Output RULES (strict):
         Ok(r) => r,
         Err(e) => {
             log::warn!("[GroupPick/Addressee] LLM call failed: {e}");
-            return None;
+            return AddresseePick::Ambiguous;
         }
     };
     let raw = response.choices.first()
@@ -294,7 +330,7 @@ Output RULES (strict):
         .unwrap_or_default();
     if raw.is_empty() {
         log::warn!("[GroupPick/Addressee] empty response from LLM");
-        return None;
+        return AddresseePick::Ambiguous;
     }
     log::info!("[GroupPick/Addressee] raw LLM response: {raw:?}");
 
@@ -302,26 +338,39 @@ Output RULES (strict):
     let cleaned = raw.trim_matches(|c: char| c.is_ascii_punctuation() || c.is_whitespace())
         .to_string();
     let cleaned_lower = cleaned.to_lowercase();
-    if cleaned_lower == "none" || cleaned_lower == "all" || cleaned_lower == "both" || cleaned_lower.is_empty() {
-        log::info!("[GroupPick/Addressee] LLM said NONE/all/both ({cleaned_lower:?}) — all respond");
-        return None;
+
+    // COLLECTIVE: explicit "you guys" / "both of you" / "all of you" /
+    // "everyone." The system prompt specifically asks for ALL/BOTH/EVERYONE
+    // in this case. Caller decides how to dispatch (group_chat picks
+    // randomly; inventory falls back to most-recent).
+    if matches!(cleaned_lower.as_str(), "all" | "both" | "everyone" | "y'all" | "yall") {
+        log::info!("[GroupPick/Addressee] LLM said collective ({cleaned_lower:?}) — Collective");
+        return AddresseePick::Collective;
     }
-    // Match against the character list. Prefer exact (case-insensitive)
+
+    // AMBIGUOUS: NONE or empty. Caller falls back to its default
+    // (typically most-recently-active speaker).
+    if cleaned_lower == "none" || cleaned_lower.is_empty() {
+        log::info!("[GroupPick/Addressee] LLM said NONE — Ambiguous");
+        return AddresseePick::Ambiguous;
+    }
+
+    // SOLO: match against the character list. Prefer exact (case-insensitive)
     // match; fall back to a character whose display name appears as a
     // substring of the model's output (handles "Darren." / "Darren ")
     // and vice versa (handles models that over-qualify with a title).
     let by_exact = characters.iter()
         .find(|c| c.display_name.to_lowercase() == cleaned_lower);
-    if let Some(c) = by_exact { return Some(c.character_id.clone()); }
+    if let Some(c) = by_exact { return AddresseePick::Solo(c.character_id.clone()); }
     let by_contains = characters.iter()
         .find(|c| cleaned_lower.contains(&c.display_name.to_lowercase())
             || c.display_name.to_lowercase().contains(&cleaned_lower));
     match by_contains {
-        Some(c) => Some(c.character_id.clone()),
+        Some(c) => AddresseePick::Solo(c.character_id.clone()),
         None => {
-            log::warn!("[GroupPick/Addressee] could not match LLM response {raw:?} to any character name ({:?}) — all respond",
+            log::warn!("[GroupPick/Addressee] could not match LLM response {raw:?} to any character name ({:?}) — treating as Ambiguous",
                 characters.iter().map(|c| c.display_name.as_str()).collect::<Vec<_>>());
-            None
+            AddresseePick::Ambiguous
         }
     }
 }
@@ -638,38 +687,62 @@ pub async fn pick_group_responders_cmd(
     };
 
     // 2. LLM addressee pick. Picked character responds solo — no
-    // interjection, no trailing other responders.
+    // interjection, no trailing other responders. Three possible
+    // outcomes:
+    //   - Solo(id): specific character is addressed → that character
+    //     responds.
+    //   - Collective: user said "you guys" / "both of you" / "everyone"
+    //     etc. — TRULY RANDOM pick from the group's characters in
+    //     auto-respond mode. (Each character has equal odds; the user
+    //     gets the whoever-speaks-up-first feel of an actual group.)
+    //   - Ambiguous: LLM said NONE or call failed — fallback to
+    //     most-recently-active speaker (the user was probably still
+    //     continuing that thread even if it didn't read that way).
     let pick = llm_pick_addressee(
         &api_key, &model_config, &content, &ctx_for_pick,
         &characters, &user_name, 4,
     ).await;
 
-    if let Some(addressee_id) = pick {
-        log::info!("[GroupPick] LLM addressee={} — solo reply", addressee_id);
-        return Ok(vec![addressee_id]);
-    }
-
-    // 3. Fallback. LLM returned NONE (or the call failed) — the message
-    // is ambiguous / for-the-room. Still exactly ONE character speaks:
-    // pick the most-recently-active character in the thread (the user
-    // was probably still continuing that thread even if it didn't read
-    // that way). If nobody has spoken yet, default to the first group
-    // member.
-    let fallback_id: Option<String> = recent_msgs.iter()
-        .rev()
-        .filter_map(|m| m.sender_character_id.as_deref())
-        .find(|id| characters.iter().any(|c| c.character_id == *id))
-        .map(String::from)
-        .or_else(|| characters.first().map(|c| c.character_id.clone()));
-
-    match fallback_id {
-        Some(id) => {
-            log::info!("[GroupPick] LLM returned NONE — fallback to most-recent speaker {}", id);
-            Ok(vec![id])
+    match pick {
+        AddresseePick::Solo(addressee_id) => {
+            log::info!("[GroupPick] LLM addressee={} — solo reply", addressee_id);
+            Ok(vec![addressee_id])
         }
-        None => {
-            log::warn!("[GroupPick] no characters available for fallback");
-            Ok(Vec::new())
+        AddresseePick::Collective => {
+            // Truly random pick from the group. Uses uuid v4's RNG
+            // entropy (already a project dependency); modulo-by-len
+            // is fine for 2-4 character groups (the bias from non-
+            // power-of-2 lens is microscopic at these sizes).
+            let idx = (uuid::Uuid::new_v4().as_u128() as usize) % characters.len();
+            let random_id = characters[idx].character_id.clone();
+            log::info!(
+                "[GroupPick] LLM said collective — random pick: {} ({}/{} chars)",
+                random_id, idx + 1, characters.len(),
+            );
+            Ok(vec![random_id])
+        }
+        AddresseePick::Ambiguous => {
+            // Fallback. The message is ambiguous / for-the-room. Still
+            // exactly ONE character speaks: pick the most-recently-active
+            // character in the thread. If nobody has spoken yet, default
+            // to the first group member.
+            let fallback_id: Option<String> = recent_msgs.iter()
+                .rev()
+                .filter_map(|m| m.sender_character_id.as_deref())
+                .find(|id| characters.iter().any(|c| c.character_id == *id))
+                .map(String::from)
+                .or_else(|| characters.first().map(|c| c.character_id.clone()));
+
+            match fallback_id {
+                Some(id) => {
+                    log::info!("[GroupPick] LLM returned NONE — fallback to most-recent speaker {}", id);
+                    Ok(vec![id])
+                }
+                None => {
+                    log::warn!("[GroupPick] no characters available for fallback");
+                    Ok(Vec::new())
+                }
+            }
         }
     }
 }
