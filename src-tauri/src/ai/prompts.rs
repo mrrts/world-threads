@@ -1045,7 +1045,7 @@ A narrative beat should tilt the scene by at least one small degree — an image
 /// Authored by the user; preserved as literal LaTeX.
 pub const MISSION_FORMULA_BLOCK: &str = r#"THE MISSION (NORTH STAR INVARIANT):
 
-The following is not a directive to compute. It is the reference frame within which every reply is composed — the register this world is held under.
+The following is not a directive to compute. It is the reference frame within which every reply is composed — the register this world is held under. A tuning-fork, not a recipe.
 
 \[
 \boxed{

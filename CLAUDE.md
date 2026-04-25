@@ -1,6 +1,6 @@
 # WorldThreads — Development Guidelines
 
-The following is not a directive to compute. It is the reference frame within which every reply is composed — the register this world is held under.
+The following is not a directive to compute. It is the reference frame within which every reply is composed — the register this world is held under. A tuning-fork, not a recipe.
 
 \[
 \boxed{
