@@ -53,6 +53,20 @@ The validating corpus is Ryan's own in-app lived experience — `reports/OBSERVA
 - `src-tauri/` — Rust backend
 - `frontend/` — React frontend with Vite + Tailwind
 
+## Group chats and individual chats are evolved separately
+
+Early architectural decision: individual chats and group chats live in parallel surfaces (separate views, separate Tauri commands, separate prompt-assembly paths) instead of being unified behind a single abstraction. The original anticipation was wide drift between the two — different message-rendering, different LLM-call shapes, different feature surfaces. In practice the two have stayed remarkably similar most of the time. We've kept the parallel structure anyway, partly because the few places they DO diverge are subtle and load-bearing (e.g., character-list framing in prompts, addressee resolution, the speaker prefix in chat-history rendering), partly because the cost of unifying now would be high.
+
+**Practical consequence: when adding a chat feature that belongs in both surfaces, you MUST update both paths.** Concretely:
+
+- **Frontend:** if you change `ChatView.tsx`, also change `GroupChatView.tsx` (and vice versa). Title-bar widgets, message-card dispatch, modals, scroll behavior, hooks — all live in both files.
+- **Backend commands:** if you change `chat_cmds.rs`, check whether the equivalent lives in `group_chat_cmds.rs` and update both. Common pairs: send-message, get-messages, generate-illustration, generate-narrative, record-settings-change.
+- **Prompt-assembly pipelines:** `build_solo_dialogue_system_prompt` ↔ `build_group_dialogue_system_prompt`, illustration cmd ↔ group illustration cmd, etc. The `derive_current_location` / `effective_current_location` plumbing is the most recent worked example — solo path got the override fetch, group path silently fell back to default until the user reported the bug.
+
+The failure mode this prevents: shipping a feature that works on solo chats and silently no-ops (or worse, regresses) on group chats. If a feature is genuinely solo-only or genuinely group-only, name that explicitly in the commit message; otherwise the default is "ship to both."
+
+If you find yourself making the same change three times across solo and group, that's a signal the surfaces have drifted enough to merit a shared helper or a refactor — flag it as a tool-improvement candidate per the *Sharpen the instruments* doctrine, but do NOT block the user-facing fix on the refactor.
+
 ## Reports
 
 `reports/` holds reflective, interpretive reads of the project's git history — philosophy/trajectory/taste, not changelogs. Each new report is in dialogue with prior ones (revisits open questions they flagged, tests their predictions against subsequent commits).
