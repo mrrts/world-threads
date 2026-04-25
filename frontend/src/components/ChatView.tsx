@@ -715,43 +715,69 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         <div className="absolute inset-0 bg-background/60" />
       </div>
       <div className="px-4 py-3 border-b border-border flex items-center gap-3 relative z-30 bg-background">
-        {charPortrait?.data_url ? (
-          <div className="relative group flex-shrink-0">
-            <button
-              onClick={async () => {
-                const label = `portrait-${store.activeCharacter!.character_id.slice(0, 8)}`;
-                try {
-                  const existing = await WebviewWindow.getByLabel(label);
-                  if (existing) { await existing.setFocus(); return; }
-                } catch { /* not found, create new */ }
-                new WebviewWindow(label, {
-                  url: `index.html?portrait=${store.activeCharacter!.character_id}`,
-                  title: store.activeCharacter!.display_name,
-                  width: 420,
-                  height: 480,
-                  resizable: true,
-                  decorations: true,
-                  titleBarStyle: "overlay",
-                  hiddenTitle: true,
-                  alwaysOnTop: true,
-                });
-              }}
-              className="cursor-pointer"
-              title="Open portrait in window"
+        <div
+          className="relative flex items-center gap-3 flex-shrink-0"
+          onMouseEnter={() => store.activeCharacter?.identity && setShowIdentityPopover(true)}
+          onMouseLeave={() => setShowIdentityPopover(false)}
+        >
+          {charPortrait?.data_url ? (
+            <div className="relative group flex-shrink-0">
+              <button
+                onClick={async () => {
+                  const label = `portrait-${store.activeCharacter!.character_id.slice(0, 8)}`;
+                  try {
+                    const existing = await WebviewWindow.getByLabel(label);
+                    if (existing) { await existing.setFocus(); return; }
+                  } catch { /* not found, create new */ }
+                  new WebviewWindow(label, {
+                    url: `index.html?portrait=${store.activeCharacter!.character_id}`,
+                    title: store.activeCharacter!.display_name,
+                    width: 420,
+                    height: 480,
+                    resizable: true,
+                    decorations: true,
+                    titleBarStyle: "overlay",
+                    hiddenTitle: true,
+                    alwaysOnTop: true,
+                  });
+                }}
+                className="cursor-pointer"
+                title="Open portrait in window"
+              >
+                <img src={charPortrait.data_url} alt="" className="w-9 h-9 rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
+                <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-card border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ExternalLink size={8} />
+                </span>
+              </button>
+            </div>
+          ) : store.activeCharacter ? (
+            <span
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: store.activeCharacter?.avatar_color }}
+            />
+          ) : null}
+          <h1 className="font-semibold">{store.activeCharacter?.display_name}</h1>
+          {showIdentityPopover && store.activeCharacter?.identity && (
+            <div
+              className="absolute left-0 top-full mt-2 z-50 w-96 bg-card border border-border rounded-xl shadow-xl p-4 animate-in fade-in zoom-in-95 duration-150"
+              onMouseEnter={() => setShowIdentityPopover(true)}
+              onMouseLeave={() => setShowIdentityPopover(false)}
             >
-              <img src={charPortrait.data_url} alt="" className="w-9 h-9 rounded-full object-cover ring-2 ring-border hover:ring-primary/50 transition-all" />
-              <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-card border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <ExternalLink size={8} />
-              </span>
-            </button>
-          </div>
-        ) : store.activeCharacter ? (
-          <span
-            className="w-3 h-3 rounded-full"
-            style={{ backgroundColor: store.activeCharacter?.avatar_color }}
-          />
-        ) : null}
-        <h1 className="font-semibold">{store.activeCharacter?.display_name}</h1>
+              {charPortrait?.data_url && (
+                <img src={charPortrait.data_url} alt="" className="w-full rounded-lg object-cover aspect-square mb-3" />
+              )}
+              <p className="font-semibold text-sm mb-1">{store.activeCharacter?.display_name}</p>
+              <div className="max-h-48 overflow-y-auto">
+                <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">{store.activeCharacter?.identity}</p>
+              </div>
+              {store.activeCharacter?.inventory && store.activeCharacter.inventory.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-border/30 max-h-96 overflow-y-auto">
+                  <InventoryStrip inventory={store.activeCharacter.inventory} />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
         <div className="flex items-center gap-1 flex-shrink-0">
           <div className="relative group/locbtn">
             <button
@@ -768,37 +794,6 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
             </span>
           )}
         </div>
-        {store.activeCharacter?.identity && (
-          <div className="relative flex-1 min-w-0">
-            <span
-              className="text-xs text-muted-foreground truncate block cursor-default"
-              onMouseEnter={() => setShowIdentityPopover(true)}
-              onMouseLeave={() => setShowIdentityPopover(false)}
-            >
-              {store.activeCharacter?.identity.slice(0, 60)}...
-            </span>
-            {showIdentityPopover && (
-              <div
-                className="absolute left-0 top-full mt-2 z-50 w-96 bg-card border border-border rounded-xl shadow-xl p-4 animate-in fade-in zoom-in-95 duration-150"
-                onMouseEnter={() => setShowIdentityPopover(true)}
-                onMouseLeave={() => setShowIdentityPopover(false)}
-              >
-                {charPortrait?.data_url && (
-                  <img src={charPortrait.data_url} alt="" className="w-full rounded-lg object-cover aspect-square mb-3" />
-                )}
-                <p className="font-semibold text-sm mb-1">{store.activeCharacter?.display_name}</p>
-                <div className="max-h-48 overflow-y-auto">
-                  <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">{store.activeCharacter?.identity}</p>
-                </div>
-                {store.activeCharacter?.inventory && store.activeCharacter.inventory.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-border/30 max-h-96 overflow-y-auto">
-                    <InventoryStrip inventory={store.activeCharacter.inventory} />
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
         <div className="ml-auto relative group/gallery">
           <button
             onClick={() => openGallery()}
