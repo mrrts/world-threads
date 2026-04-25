@@ -174,7 +174,7 @@ pub fn build_cross_thread_snippet(
         return None;
     }
     Some(format!(
-        "PICKING UP WHERE YOU LEFT OFF — these are conversations you have actually been in elsewhere. The first block is the most recent; later blocks are older. Each block carries its own age tag ('vivid — just now', 'softened — days back', etc.) so you know how clearly you'd remember it. From the user's perspective, switching here from another chat is picking up a conversation they were just in — speak as someone who was just there, not as someone recalling a distant memory. When something here directly continues from another block, name it; otherwise let it stay as background.\n\n{}",
+        "PICKING UP WHERE YOU LEFT OFF — these are conversations you have actually been in elsewhere, arranged like chat history with OLDEST FIRST and MOST RECENT LAST (the conversation just below this block continues from the most-recent material right above it). Each block carries its own age tag ('vivid — just now', 'softened — days back', etc.) so you know how clearly you'd remember it. From the user's perspective, switching here from another chat is picking up a conversation they were just in — speak as someone who was just there, not as someone recalling a distant memory. When something here directly continues from another block, name it; otherwise let it stay as background.\n\n{}",
         blocks.iter().map(|b| b.rendered.clone()).collect::<Vec<_>>().join("\n\n"),
     ))
 }

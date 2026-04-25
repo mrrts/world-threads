@@ -91,9 +91,15 @@ pub fn list_cross_thread_recent_for_character(
         }
     }
 
-    // Newest-first, capped.
+    // Cap to max_other_threads, keeping the newest threads (sort
+    // newest-first first, take top N), then RE-SORT chronologically
+    // (oldest first) so the snippet reads like a chat history with
+    // the most-recent material closest to the end of the prompt — LLM
+    // attention is recency-weighted at the end, so what's freshest
+    // should land last.
     blocks.sort_by(|a, b| b.newest_at.cmp(&a.newest_at));
     blocks.truncate(max_other_threads);
+    blocks.sort_by(|a, b| a.newest_at.cmp(&b.newest_at));
     blocks
 }
 
