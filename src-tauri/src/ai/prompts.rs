@@ -5375,6 +5375,17 @@ pub fn build_scene_description_prompt(
         })
         .collect();
 
+    // Per-chat current location — anchor as a system message right
+    // before the user prompt so the scene director places the
+    // illustration in the active scene, not in a previously-mentioned
+    // setting from chat-history detail.
+    if let Some(loc) = derive_current_location(recent_messages) {
+        msgs.push(crate::ai::openai::ChatMessage {
+            role: "system".to_string(),
+            content: format!("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: {loc}. Place this illustration HERE. The conversation above may include vivid detail about previous locations — that detail belongs to past scenes; the illustration is grounded in {loc}.]"),
+        });
+    }
+
     msgs.push(crate::ai::openai::ChatMessage {
         role: "user".to_string(),
         content: format!(

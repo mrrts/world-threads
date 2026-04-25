@@ -3039,6 +3039,17 @@ pub async fn run_narrative_with_base(
         });
     }
 
+    // Per-chat current location — same anchor pattern as
+    // build_dialogue_messages. Sits as the final system message after
+    // chat history so the narrator grounds the beat in the current
+    // scene, not in a previously-mentioned location.
+    if let Some(loc) = prompts::derive_current_location(recent_messages) {
+        msgs.push(openai::ChatMessage {
+            role: "system".to_string(),
+            content: format!("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: {loc}. The beat is happening here. Chat history above may show vivid detail about previous locations — that belongs to past scenes; this beat is grounded in {loc}.]"),
+        });
+    }
+
     // Put custom instructions in the user message where the model prioritizes them
     let user_prompt = if let Some(instructions) = narration_instructions {
         if !instructions.is_empty() {
