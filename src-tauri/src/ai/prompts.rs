@@ -1246,6 +1246,10 @@ const _: () = {
         const_contains(TELL_THE_TRUTH_BLOCK, "stand plainly in the light"),
         "APP INVARIANT VIOLATED: tell_the_truth_block must frame the closing test as standing plainly in the light. See docs/INVARIANTS.md."
     );
+    assert!(
+        const_contains(TELL_THE_TRUTH_BLOCK, "you have to be near something specific to feel near at all"),
+        "APP INVARIANT VIOLATED: tell_the_truth_block must preserve the underlined Maggie line ('you have to be near something specific to feel near at all') verbatim. This is the positive twin of the counterfeit-intimacy ban — load-bearing as the generative shape the model reaches for, not only what to avoid. Source: reports/2026-04-25-0300-simulated-first-time-user-experience-maggie.md (the notebook moment)."
+    );
 };
 
 /// Front-load embodiment — the first-speech invariant.
