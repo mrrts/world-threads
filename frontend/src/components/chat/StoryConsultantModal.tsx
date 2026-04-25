@@ -487,7 +487,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
 
   return (<>
     <Dialog open={open} onClose={onClose} className="max-w-[90vw]">
-      <div className="flex h-[88vh] bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden relative">
+      <div className="flex h-[96vh] bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden relative">
         {/* World-image bg only renders in IMMERSIVE mode (background of the
             whole modal including sidebar). In backstage mode the world
             image is suppressed and the viewport itself carries the
