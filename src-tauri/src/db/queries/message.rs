@@ -12,14 +12,15 @@ pub struct Thread {
 }
 
 pub fn create_thread(conn: &Connection, t: &Thread) -> Result<(), rusqlite::Error> {
-    // current_location defaults to 'Town Square' for solo chats (group
-    // threads carry NULL — the group_chats row carries location for
-    // group surfaces). Schema migration backfills any pre-existing
-    // NULL solo-thread rows to 'Town Square'.
-    let default_loc = if t.character_id.is_some() { Some("Town Square") } else { None };
+    // create_thread is solo-only (Thread.character_id is String, never
+    // NULL). Group-chat shell threads are inserted directly in group.rs
+    // with character_id = NULL and no current_location (the group_chats
+    // row carries location for group surfaces). New solo chats default
+    // to 'Town Square'; the schema migration backfills any pre-existing
+    // NULL solo-thread rows to match.
     conn.execute(
-        "INSERT INTO threads (thread_id, character_id, world_id, created_at, current_location) VALUES (?1, ?2, ?3, ?4, ?5)",
-        params![t.thread_id, t.character_id, t.world_id, t.created_at, default_loc],
+        "INSERT INTO threads (thread_id, character_id, world_id, created_at, current_location) VALUES (?1, ?2, ?3, ?4, 'Town Square')",
+        params![t.thread_id, t.character_id, t.world_id, t.created_at],
     )?;
     Ok(())
 }
