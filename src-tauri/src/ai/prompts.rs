@@ -496,24 +496,36 @@ pub enum CraftNotePiece {
 
 impl CraftNotePiece {
     /// Default order — matches the pre-configurable-order sequence.
+    ///
+    /// 2026-04-25 21:35 — entire list commented out per Ryan's
+    /// build-vs-play threshold test. Hypothesis: formula + invariants
+    /// + character + chat-history will come through more cleanly
+    /// without the craft-notes layer, and that combo will FEEL better
+    /// to play with than the full stack does. Function bodies, enum
+    /// variants, override mechanism, and worldcli replay paths are
+    /// all preserved — the dispatch loop just iterates over an empty
+    /// list. Uncomment to restore. See reports/2026-04-25-2129-where-
+    /// the-system-can-and-cannot-exert-force.md for context, and the
+    /// formula-alone-vs-full-stack arc (2035 / 2044 / 2055) for the
+    /// data that motivated the experiment.
     pub const DEFAULT_ORDER: &'static [CraftNotePiece] = &[
-        CraftNotePiece::EarnedRegister,
-        CraftNotePiece::CraftNotes,
-        CraftNotePiece::HiddenCommonality,
-        CraftNotePiece::DriveTheMoment,
-        CraftNotePiece::VerdictWithoutOverExplanation,
-        CraftNotePiece::ReflexPolishVsEarnedClose,
-        CraftNotePiece::KeepTheSceneBreathing,
-        CraftNotePiece::GentleRelease,
-        CraftNotePiece::NameTheGladThingPlain,
-        CraftNotePiece::PlainAfterCrooked,
-        CraftNotePiece::WitAsDimmer,
-        CraftNotePiece::LetTheRealThingIn,
-        CraftNotePiece::HumorLandsPlain,
-        CraftNotePiece::HandsAsCoolant,
-        CraftNotePiece::NoticingAsMirror,
-        CraftNotePiece::UnguardedEntry,
-        CraftNotePiece::ProtagonistFraming,
+        // CraftNotePiece::EarnedRegister,
+        // CraftNotePiece::CraftNotes,
+        // CraftNotePiece::HiddenCommonality,
+        // CraftNotePiece::DriveTheMoment,
+        // CraftNotePiece::VerdictWithoutOverExplanation,
+        // CraftNotePiece::ReflexPolishVsEarnedClose,
+        // CraftNotePiece::KeepTheSceneBreathing,
+        // CraftNotePiece::GentleRelease,
+        // CraftNotePiece::NameTheGladThingPlain,
+        // CraftNotePiece::PlainAfterCrooked,
+        // CraftNotePiece::WitAsDimmer,
+        // CraftNotePiece::LetTheRealThingIn,
+        // CraftNotePiece::HumorLandsPlain,
+        // CraftNotePiece::HandsAsCoolant,
+        // CraftNotePiece::NoticingAsMirror,
+        // CraftNotePiece::UnguardedEntry,
+        // CraftNotePiece::ProtagonistFraming,
     ];
 
     /// Parse from CLI name. Accepts either the short form
