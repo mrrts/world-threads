@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MapPin, X, Trash2 } from "lucide-react";
+import { MapPin, X, Trash2, ChevronDown, Library } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
 import type { Message } from "@/lib/tauri";
 
@@ -8,6 +8,12 @@ interface SavedPlace {
   world_id: string;
   name: string;
   created_at: string;
+  // Forward-compatible optional fields. Backend doesn't ship these
+  // yet — when it does (image upload + description + facts), the
+  // dropdown rows below will pick them up without further refactor.
+  image_url?: string | null;
+  description?: string | null;
+  facts?: string[] | null;
 }
 
 interface ChatLocationResponse {
@@ -51,18 +57,34 @@ export function LocationModal({
   const [places, setPlaces] = useState<SavedPlace[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
     setInput(currentLocation ?? "");
     setSaveToLibrary(false);
     setError(null);
+    setDropdownOpen(false);
     invoke<SavedPlace[]>("list_saved_places_cmd", { worldId })
       .then(setPlaces)
       .catch((e) => setError(String(e)));
     setTimeout(() => inputRef.current?.focus(), 30);
   }, [open, worldId, currentLocation]);
+
+  // Close the dropdown when clicking outside its trigger / panel.
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (!dropdownRef.current) return;
+      if (!dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [dropdownOpen]);
 
   const trimmed = input.trim();
   const matchesSavedPlace = useMemo(
@@ -176,27 +198,40 @@ export function LocationModal({
               <label className="text-xs font-medium text-muted-foreground block mb-1.5">
                 Saved places
               </label>
-              <div className="max-h-40 overflow-y-auto rounded-md border border-border/50 divide-y divide-border/40">
-                {places.map((p) => (
-                  <div
-                    key={p.saved_place_id}
-                    className="group flex items-center justify-between px-3 py-1.5 text-sm hover:bg-accent/40 transition-colors"
-                  >
-                    <button
-                      onClick={() => setInput(p.name)}
-                      className="flex-1 text-left cursor-pointer text-foreground/85 hover:text-foreground"
-                    >
-                      {p.name}
-                    </button>
-                    <button
-                      onClick={() => handleDeletePlace(p.saved_place_id)}
-                      className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all p-1 cursor-pointer"
-                      title="Remove from saved places"
-                    >
-                      <Trash2 size={12} />
-                    </button>
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setDropdownOpen((v) => !v)}
+                  className="w-full flex items-center justify-between gap-2 px-3 py-2 text-sm rounded-md border border-border bg-background hover:bg-accent/40 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/40"
+                >
+                  <span className="flex items-center gap-2 text-muted-foreground/90">
+                    <Library size={14} className="text-emerald-400/80" />
+                    <span>Choose from {places.length} saved {places.length === 1 ? "place" : "places"}</span>
+                  </span>
+                  <ChevronDown
+                    size={14}
+                    className={`text-muted-foreground/60 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {dropdownOpen && (
+                  <div className="absolute left-0 right-0 top-full mt-1.5 z-30 rounded-lg border border-border bg-card shadow-2xl shadow-black/40 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150">
+                    <div className="max-h-72 overflow-y-auto py-1">
+                      {places.map((p) => (
+                        <SavedPlaceRow
+                          key={p.saved_place_id}
+                          place={p}
+                          onPick={() => {
+                            setInput(p.name);
+                            setDropdownOpen(false);
+                            inputRef.current?.focus();
+                          }}
+                          onDelete={() => handleDeletePlace(p.saved_place_id)}
+                        />
+                      ))}
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           )}
@@ -220,6 +255,74 @@ export function LocationModal({
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+/// Row inside the saved-places dropdown. Built rich enough to host
+/// future per-place metadata: a left-side image slot (square thumbnail
+/// or fallback colored monogram), the place name (always present),
+/// and a reserved area below for an optional one-line description and
+/// a row of fact-pill chips. When those backend fields ship, the row
+/// already has the layout to present them — no further refactor.
+function SavedPlaceRow({
+  place,
+  onPick,
+  onDelete,
+}: {
+  place: SavedPlace;
+  onPick: () => void;
+  onDelete: () => void;
+}) {
+  const monogram = (place.name.match(/[A-Za-z]/)?.[0] ?? "•").toUpperCase();
+  const description = place.description?.trim() || null;
+  const facts = (place.facts ?? []).filter((f) => f && f.trim().length > 0);
+
+  return (
+    <div className="group/row flex items-stretch gap-3 px-3 py-2 hover:bg-accent/40 transition-colors">
+      <button
+        type="button"
+        onClick={onPick}
+        className="flex-1 flex items-stretch gap-3 text-left cursor-pointer min-w-0"
+      >
+        <div className="flex-shrink-0 w-10 h-10 rounded-md bg-gradient-to-br from-emerald-700/30 to-emerald-900/40 border border-emerald-700/30 flex items-center justify-center overflow-hidden">
+          {place.image_url ? (
+            <img src={place.image_url} alt="" className="w-full h-full object-cover" />
+          ) : (
+            <span className="text-emerald-300/80 text-sm font-semibold">{monogram}</span>
+          )}
+        </div>
+        <div className="flex-1 min-w-0 flex flex-col justify-center">
+          <span className="text-sm text-foreground/90 truncate group-hover/row:text-foreground transition-colors">
+            {place.name}
+          </span>
+          {description && (
+            <span className="text-[11px] text-muted-foreground/80 truncate">
+              {description}
+            </span>
+          )}
+          {facts.length > 0 && (
+            <div className="mt-1 flex flex-wrap gap-1">
+              {facts.slice(0, 3).map((f, i) => (
+                <span
+                  key={i}
+                  className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-950/50 text-emerald-200/80 border border-emerald-700/30"
+                >
+                  {f}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </button>
+      <button
+        type="button"
+        onClick={onDelete}
+        className="flex-shrink-0 self-center opacity-0 group-hover/row:opacity-100 text-muted-foreground hover:text-destructive transition-all p-1.5 rounded cursor-pointer"
+        title="Remove from saved places"
+      >
+        <Trash2 size={13} />
+      </button>
     </div>
   );
 }
