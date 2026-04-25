@@ -293,8 +293,10 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
 
   // Scroll to bottom on mount / when chat changes / when messages first load
   const initialScrollDone = useRef(false);
+  const [initialScrollComplete, setInitialScrollComplete] = useState(false);
   useEffect(() => {
     initialScrollDone.current = false;
+    setInitialScrollComplete(false);
   }, [chatId]);
 
   useEffect(() => {
@@ -305,10 +307,23 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     if (!el) return;
     const scroll = () => { el.scrollTop = el.scrollHeight; };
     scroll();
-    const t1 = setTimeout(scroll, 200);
-    const t2 = setTimeout(scroll, 600);
-    const t3 = setTimeout(scroll, 1500);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    // Multiple retries because long histories with images / illustrations
+    // expand the scrollHeight progressively as DOM elements lay out.
+    // Each retry recomputes scrollHeight against the current DOM. The
+    // last retries cover slow long-history loads (Darren-tier).
+    const isAtBottomNow = () => el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+    const tryAndMaybeFinalize = () => {
+      scroll();
+      if (isAtBottomNow()) setInitialScrollComplete(true);
+    };
+    const timeouts = [50, 150, 300, 600, 1200, 2500, 4500].map((ms) =>
+      setTimeout(tryAndMaybeFinalize, ms),
+    );
+    // Always finalize after the last retry, even if scroll didn't quite
+    // reach bottom (e.g., user scrolled away mid-load) — opener should
+    // not wait forever.
+    const finalize = setTimeout(() => setInitialScrollComplete(true), 5000);
+    return () => { timeouts.forEach(clearTimeout); clearTimeout(finalize); };
   }, [chatId, store.messages.length]);
 
   // Scroll to bottom when sending/generating starts
@@ -387,6 +402,7 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     // State
     inputValueRef, hasInput, setHasInput,
     scrollRef,
+    initialScrollComplete,
     inputRef,
     userAvatarUrl, setUserAvatarUrl,
     copiedError, setCopiedError,

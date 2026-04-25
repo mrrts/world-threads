@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MapPin } from "lucide-react";
 
 interface Props {
@@ -8,26 +8,41 @@ interface Props {
   /// hold begins the moment `loading` flips to false (and `location`
   /// is set), so a slow load doesn't eat the show.
   loading?: boolean;
+  /// Unique key for the current chat. The show fires AT MOST ONCE
+  /// per chatKey — switching chats (new key) resets the gate so the
+  /// next chat earns a fresh appearance. Without this gate, a
+  /// `location` prop change mid-show (e.g., async location-load
+  /// resolving after stale carryover) would restart the timer.
+  chatKey: string;
 }
 
 /// Movie-title style location reorienter shown at the top of the chat
 /// viewport once the chat is fully loaded. Fades + slides DOWN into
 /// place, holds 5s, then fades + slides UP out. Non-dismissable —
-/// sized to read fast and get out of the way. Parent re-mounts via
-/// `key={chatId}` so switching chats triggers a fresh appearance.
+/// sized to read fast and get out of the way.
 ///
 /// Returns null when location is unset, while loading is true, or
 /// after the exit animation completes.
-export function LocationOpener({ location, loading = false }: Props) {
+export function LocationOpener({ location, loading = false, chatKey }: Props) {
   // Phases: "enter" (offscreen → on-screen), "hold" (visible 5s), "exit"
   // (on-screen → offscreen), "done" (unmounted). Total ~5.8s.
   const [phase, setPhase] = useState<"enter" | "hold" | "exit" | "done">("enter");
+  const shownForKey = useRef<string | null>(null);
+
+  // Reset the once-per-chat gate when chatKey changes. Done in render
+  // (cheap) so the effect below sees the fresh ref on the same render.
+  if (shownForKey.current !== null && shownForKey.current !== chatKey) {
+    shownForKey.current = null;
+    if (phase !== "enter") setPhase("enter");
+  }
 
   useEffect(() => {
-    // Don't start the show until BOTH the chat has finished loading
-    // AND we have a location to display. The effect re-runs on each
-    // dependency change, so whichever flips last starts the timer.
+    // Conditions to start the show: location is set, loading is false,
+    // and we haven't yet shown for this chat. Re-runs on every dep
+    // change, so whichever signal arrives last starts the timer.
     if (!location || loading) return;
+    if (shownForKey.current === chatKey) return;
+    shownForKey.current = chatKey;
     setPhase("enter");
     const tHold = setTimeout(() => setPhase("hold"), 30);
     const tExit = setTimeout(() => setPhase("exit"), 5000);
@@ -37,7 +52,7 @@ export function LocationOpener({ location, loading = false }: Props) {
       clearTimeout(tExit);
       clearTimeout(tDone);
     };
-  }, [location, loading]);
+  }, [location, loading, chatKey]);
 
   if (!location || phase === "done") return null;
 

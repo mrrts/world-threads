@@ -181,6 +181,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
   const {
     inputValueRef, hasInput, setHasInput,
     scrollRef,
+    initialScrollComplete,
     inputRef,
     userAvatarUrl,
     copiedError, setCopiedError,
@@ -411,12 +412,11 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
     return () => { cancelled = true; };
   }, [chatId]);
 
-  // Per-group-chat current location.
+  // Per-group-chat current location. Reset immediately on chat switch
+  // so the LocationOpener never carries stale data into the new chat.
   useEffect(() => {
-    if (!chatId) {
-      setCurrentLocation(null);
-      return;
-    }
+    setCurrentLocation(null);
+    if (!chatId) return;
     let cancelled = false;
     invoke<string | null>("get_chat_location_cmd", { groupChatId: chatId })
       .then((loc) => { if (!cancelled) setCurrentLocation(loc); })
@@ -798,7 +798,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
       </div>
 
       <div className="flex-1 relative overflow-hidden z-10">
-        <LocationOpener key={`opener-${chatId ?? "none"}`} location={currentLocation} loading={store.loadingChat} />
+        <LocationOpener chatKey={chatId ?? "none"} location={currentLocation} loading={store.loadingChat || !initialScrollComplete} />
         <ScrollArea ref={scrollRef} className="h-full px-4 py-3">
         <div>
         {store.messages.length === 0 && (

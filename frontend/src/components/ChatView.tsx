@@ -262,6 +262,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
   const {
     inputValueRef, hasInput, setHasInput,
     scrollRef,
+    initialScrollComplete,
     inputRef,
     userAvatarUrl,
     copiedError, setCopiedError,
@@ -466,11 +467,12 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
   }, [charId]);
 
   // Per-chat current location — loaded fresh on character switch.
+  // Reset to null IMMEDIATELY on charId change so the LocationOpener
+  // (and title-bar label) never carry stale data from the previous
+  // chat into the new one's load window.
   useEffect(() => {
-    if (!charId) {
-      setCurrentLocation(null);
-      return;
-    }
+    setCurrentLocation(null);
+    if (!charId) return;
     let cancelled = false;
     invoke<string | null>("get_chat_location_cmd", { characterId: charId })
       .then((loc) => { if (!cancelled) setCurrentLocation(loc); })
@@ -833,7 +835,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
       </div>
 
       <div className="flex-1 relative overflow-hidden z-10">
-        <LocationOpener key={`opener-${charId ?? "none"}`} location={currentLocation} loading={store.loadingChat} />
+        <LocationOpener chatKey={charId ?? "none"} location={currentLocation} loading={store.loadingChat || !initialScrollComplete} />
         <ScrollArea ref={scrollRef} className="h-full px-4 py-3">
         <div>
         {store.messages.length === 0 && (
