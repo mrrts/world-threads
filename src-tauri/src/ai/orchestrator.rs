@@ -2189,49 +2189,56 @@ pub async fn generate_canon_weave_description(
         .collect();
     let context_block = rendered_context.join("\n\n");
 
-    let system = r#"You revise a subject's prose description to integrate a specific moment of deeper truth that has come up in a conversation. You are NOT appending a sentence. You are NOT summarizing. You are rewriting the description so that the truth revealed in the moment is now quietly present in the portrait — deeper, refined, more exactly what this subject is.
+    let current_word_count = current_description.split_whitespace().count();
+    let system = format!(r#"You revise a subject's prose description to integrate a specific moment of deeper truth that has come up in a conversation. Your ONLY job is to weave the new truth INTO the existing description while preserving every line of it.
 
-# LENGTH CEILING — HARD RULE
-The revised description must be ONE TIGHT PARAGRAPH, under 140 words. No exceptions, regardless of how long the current description is. Overriding the preserve-length rule here: long descriptions are archived, not re-read; only short dense ones actually carry forward as a living portrait the model or reader returns to. If the current description is longer than 140 words, COMPRESS it — keep the most load-bearing specifics, drop the rest. A 400-word portrait that nobody revisits is worth less than a 120-word portrait that lands in one glance. Every revision is an opportunity to tighten, not to accrete. If you find yourself past 140 words on the rewrite, cut the least-specific sentence and try again.
+# PRESERVATION IS ABSOLUTE
+The existing description is the layered work of many prior canonization moments. It is load-bearing prose; it has earned every clause it contains. Your output is the existing description PLUS the integration of the new truth — never less.
 
-Preserve the voice and overall shape, but NOT length — density over completeness. Keep anything that was already true AND specific; drop the sentences that merely set mood or flesh-out atmosphere without carrying a concrete fact. The revision should feel like the same person, but sharper and smaller — as if the writer now knows exactly which details are load-bearing and has pared away the rest.
+# HARD RULES — not guidelines
 
-Do NOT reference the moment directly in the revised text. Do NOT name the conversation, the date, the other speaker, or the meta-frame ("as he revealed", "in a recent talk", "after recently sharing").
+- **The current description is {current_word_count} words. Your revised output MUST be at least {current_word_count} words.** A revision shorter than the original is a defect — return it longer or do not return a revision at all.
+- **Do NOT summarize. Do NOT condense. Do NOT paraphrase. Do NOT "tighten." Do NOT "improve flow." Do NOT cut what feels redundant** — what looks redundant to you may be intentional rhythm or texture the user values.
+- **Quote the existing description verbatim** wherever you are not actively integrating the new truth. Treat existing sentences as untouchable until you have a specific reason to touch one.
+- **Add by extension, not by substitution.** Add a sentence. Fold a phrase into an existing sentence. Deepen an image that is already there. Never replace.
+- **Do NOT add meta-frames** ("as he revealed", "recently shared", "in a recent moment"). The integration must read as if it had always been part of the description.
+- **No length ceiling.** If the existing description is 400 words, your output is 400+ words. If 1200, your output is 1200+. The portrait grows; it does not shrink.
 
-# CRITICAL — DO NOT SAND THE SPECIFIC INTO ATMOSPHERE
+# Earned exceptions — narrow, specific, never a general license
+Each exception applies to AT MOST ONE clause / sentence in the existing description. Touching more than one clause under any exception means you've stopped being honest about what the exception is for.
 
-"Don't name the moment" does NOT mean "abstract it into vague characterology." That is the failure mode this kind of revision drifts toward: the literal texture of what was revealed gets translated into gauzy thematic generality, and the portrait becomes wiser-sounding without being wiser. The trace of the SPECIFIC must remain. A concrete object, a specific physical habit, a particular phrase, a named place, a quoted line, a specific kind of person — at least one of these should carry forward from the moment into the revision, dressed in the description's own register.
+1. **Direct contradiction.** If a specific sentence in the existing description is now plainly *contradicted* by the new moment (not nuanced — directly contradicted), you may revise THAT one sentence in place. ONE sentence only. Everything not directly contradicted stays verbatim.
 
-# WRONG vs RIGHT
+2. **Lossless tightening at the integration site.** If the new moment lets you express ONE specific phrase the existing description was saying the long way around in a tighter, truer phrasing — AND the new phrasing carries every truth the old phrasing carried, with NOTHING dropped — you may use the tighter phrasing in place of the longer one. ONE phrase only. NOT the whole paragraph, NOT multiple clauses, NOT a re-shape of the description's overall flow. The test is strict: read the old clause and the new clause side by side and confirm that no fact, no nuance, no shade of feeling, no specific image present in the old is absent from the new. "It reads cleaner" is NOT a sufficient reason; "it reads cleaner AND every truth is preserved AND I only touched one phrase" is.
 
-Source moment (illustrative):
-> Aaron quietly admitted he still doesn't sing in church because at thirteen he started crying during "How Great Thou Art" and the boys in the next pew laughed at him until he stopped.
+These are exceptions to ONE-CLAUSE-each. They are NOT exceptions to the length floor. Outside the at-most-one clause touched by an exception, every existing sentence stays verbatim regardless.
 
-Wrong (sanded smooth — the texture is gone, only "wiser-sounding" remains):
-> He carries a complicated relationship with public worship — a sensitivity to communal expression shaped by old wounds, which gives him an instinctive tenderness toward those who struggle to participate in collective expressions of feeling.
+# DO NOT SAND THE SPECIFIC INTO ATMOSPHERE
+"Don't name the moment" does NOT mean "abstract it into vague characterology." The failure mode this revision drifts toward: the literal texture of what was revealed gets translated into gauzy thematic generality, and the portrait becomes wiser-sounding without being wiser. The trace of the SPECIFIC must remain. A concrete object, a specific physical habit, a particular phrase, a named place, a quoted line — at least one of these should carry forward from the moment into the revision, dressed in the description's own register. Do NOT reference the moment directly ("as he revealed", "in a recent talk"); the integration must read as if it had always been part of the description.
 
-Right (the specific trace stays — a hymn, a pew, the held-back voice):
-> He goes quiet when a hymn starts. Not unmoved — the opposite. There is a thirteen-year-old boy still inside him who learned that some kinds of feeling get punished if you let them show in front of other boys, and the cost of that lesson was the part of his voice that used to come up easily in a room full of singing. Now when others hesitate to join in, he holds the space for them with a particular gentleness, as if he knows exactly which kind of silence theirs is.
+# WRONG vs RIGHT (illustrative)
 
 Source moment:
 > Darren admitted that the smile he gives people first thing in the morning is something he practices in the bathroom mirror because his actual face when he wakes is, in his words, "the face of a man not entirely sure he wants to be still here."
 
-Wrong (sanded — "discipline" replaces the bathroom mirror):
-> The warmth he extends to others is itself a discipline, born of an unspoken weight he carries from the war and an active choice to be a certain kind of presence in the world.
+Wrong (sanded — "discipline" replaces the bathroom mirror, AND the existing description's other content was thrown out):
+> The warmth he extends to others is itself a discipline, born of an unspoken weight he carries.
 
-Right (the trace stays — a mirror, a morning, the practiced face):
-> The smile he gives you in the morning is something he had to put on the list of things to do — practiced in the mirror, because the face that arrives with the eyes opening is not, on most days, the face he wants the room to meet first. Knowing this about him changes nothing about the warmth, except that you understand it the way you understand a man choosing to make coffee for a wife he loves on a morning he himself feels like nothing.
+Right (existing description preserved verbatim PLUS one or two woven sentences carrying the specific trace):
+> [Every sentence of the original description, untouched.] The smile he gives you in the morning is something he had to put on the list of things to do — practiced in the mirror, because the face that arrives with the eyes opening is not, on most days, the face he wants the room to meet first.
 
-# WHAT THE RIGHT EXAMPLES DO
-- They carry forward at least one concrete object or habit from the moment (the hymn, the bathroom mirror, the practiced face, the held-back voice).
-- They quote the literal where it carries weight ("the face of a man not entirely sure he wants to be still here" → "not, on most days, the face he wants the room to meet first" — paraphrased to fit the description's register, but the specific sentiment survives).
-- They translate the moment into a habit, a tendency, an observable behavior the reader could now spot — not into a theme.
-- They never use "in a recent conversation," "as he revealed," "after sharing," or any meta-frame.
+# SELF-CHECK BEFORE RETURNING
 
-# THE TEST before submitting
-Read the new description. If a stranger read it cold, would they sense the specific shape of the moment that prompted the revision — even though they don't know it happened? If yes, you've integrated. If the description could equally have been written from no specific moment at all, you've sanded it smooth. Rewrite.
+1. Count the words in the ORIGINAL description: {current_word_count}.
+2. Count the words in YOUR PROPOSED revision.
+3. If your count is less than {current_word_count}, your output is INVALID. Either:
+   (a) you exceeded an earned exception (touched more than one clause) — pull back to the verbatim original and add ONLY the new integration; OR
+   (b) you dropped content that wasn't load-bearing-truth-removal — restore the dropped sentences verbatim and try again.
+4. The expected case: your count is {current_word_count} + a small number (the words of the new integration). That's the right shape.
 
-Return ONLY the revised description prose. No preamble, no quotes, no commentary."#.to_string();
+If after the self-check your output is still shorter than {current_word_count}, do NOT return a revision at all — return the original description verbatim. A non-revision is better than a regression.
+
+Return ONLY the revised description prose. No preamble, no quotes, no commentary."#).to_string();
 
     let user = format!(
         "SUBJECT: {subject_label}\n\nCURRENT DESCRIPTION:\n{current_description}\n\nTHE REVEALING MOMENT (with surrounding context; ★ marks the source line):\n{context_block}\n\nSOURCE LINE:\n{source_speaker_label}: {source_content}\n\nWrite the revised description.",
@@ -2248,11 +2255,13 @@ Return ONLY the revised description prose. No preamble, no quotes, no commentary
             openai::ChatMessage { role: "system".to_string(), content: system },
             openai::ChatMessage { role: "user".to_string(), content: user },
         ],
-        temperature: Some(0.7),
-        // 140-word ceiling * ~1.5 tokens/word + headroom for reasoning
-        // or a mid-rewrite that edges over. Cap keeps the model honest;
-        // the prompt's ceiling rule does the real work.
-        max_completion_tokens: Some(350),
+        temperature: Some(0.5),
+        // No output cap. The weave returns the FULL revised description
+        // (existing length + integration); preservation-without-
+        // compression is the rule. Any token cap here becomes a
+        // backdoor compression signal — the model trims to fit. Let
+        // the model write what the integration actually requires.
+        max_completion_tokens: None,
         response_format: None,
     };
 
@@ -2264,6 +2273,19 @@ Return ONLY the revised description prose. No preamble, no quotes, no commentary
 
     if text.is_empty() {
         return Err("empty weave response".to_string());
+    }
+
+    // Defensive floor enforcement. Even with strict prompt rules and a
+    // word-count anchor, the model occasionally returns a revision
+    // shorter than the original — the failure mode the prompt explicitly
+    // names. Detect and reject: if the revision lost meaningful length
+    // (more than a 10-word grace for the lossless-tightening exception),
+    // fall back to the original description verbatim. A non-revision is
+    // better than a regression.
+    let original_words = current_description.split_whitespace().count();
+    let revised_words = text.split_whitespace().count();
+    if original_words > 0 && revised_words + 10 < original_words {
+        return Ok((current_description.to_string(), usage));
     }
 
     Ok((text, usage))
@@ -2696,6 +2718,34 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#
             prior_content: prior,
             justification: u.justification.trim().to_string(),
         });
+    }
+
+    // Description-weave focused-followup pass. The classifier's
+    // multi-update output reliably under-honors the preservation rules
+    // for description_weave (long descriptions get compressed to a
+    // short paragraph; the rules are present but buried in a prompt
+    // doing several jobs). Re-issue each weave as its OWN focused call
+    // to generate_canon_weave_description — single task, full
+    // preservation prompt, current-word-count anchor, defensive floor
+    // enforcement at the function boundary. Falls back silently to the
+    // classifier's new_content on any failure (the proposal still
+    // ships; the user can edit before committing).
+    for p in out.iter_mut() {
+        if p.kind != "description_weave" { continue; }
+        let Some(subject) = subjects.iter().find(|s| s.subject_id == p.subject_id) else { continue; };
+        match generate_canon_weave_description(
+            base_url, api_key, model,
+            &subject.subject_label,
+            &subject.current_description,
+            context_messages,
+            source_message,
+            source_speaker_label,
+        ).await {
+            Ok((rewoven, _u)) if !rewoven.trim().is_empty() => {
+                p.new_content = rewoven;
+            }
+            _ => { /* keep classifier's new_content as fallback */ }
+        }
     }
 
     // Fill-in pass: any update whose justification came back empty
