@@ -3669,6 +3669,7 @@ fn craft_note_piece_name(p: &app_lib::ai::prompts::CraftNotePiece) -> &'static s
 fn invariant_piece_name(p: &app_lib::ai::prompts::InvariantPiece) -> &'static str {
     use app_lib::ai::prompts::InvariantPiece as IP;
     match p {
+        IP::FrontLoadEmbodiment => "front_load_embodiment",
         IP::Reverence => "reverence",
         IP::Daylight => "daylight",
         IP::Agape => "agape",

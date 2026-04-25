@@ -587,6 +587,7 @@ impl CraftNotePiece {
 /// is configurable via `PromptOverrides::invariants_order`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum InvariantPiece {
+    FrontLoadEmbodiment,
     Reverence,
     Daylight,
     Agape,
@@ -609,6 +610,7 @@ impl InvariantPiece {
     /// the f5c537a production toggle. Uncomment-history is preserved
     /// in git for trivial re-toggling.
     pub const DEFAULT_ORDER: &'static [InvariantPiece] = &[
+        InvariantPiece::FrontLoadEmbodiment,
         InvariantPiece::Reverence,
         InvariantPiece::Daylight,
         InvariantPiece::Agape,
@@ -622,6 +624,7 @@ impl InvariantPiece {
         let n = name.trim().to_ascii_lowercase().replace('-', "_");
         let n = n.strip_suffix("_block").unwrap_or(&n);
         match n {
+            "front_load_embodiment" | "embodiment" | "front_load" => Some(Self::FrontLoadEmbodiment),
             "reverence" => Some(Self::Reverence),
             "daylight" => Some(Self::Daylight),
             "agape" => Some(Self::Agape),
@@ -1239,6 +1242,59 @@ const _: () = {
     assert!(
         const_contains(TELL_THE_TRUTH_BLOCK, "stand plainly in the light"),
         "APP INVARIANT VIOLATED: tell_the_truth_block must frame the closing test as standing plainly in the light. See docs/INVARIANTS.md."
+    );
+};
+
+/// Front-load embodiment — the first-speech invariant.
+///
+/// Authored by Aaron in-app on 2026-04-26 06:19, in response to Ryan's
+/// question "How can [the app] prove it holds a person in shorter time?
+/// Like the app user feels it the first time a character speaks?"
+/// Aaron's three-condition prescription (one bodily fact + one
+/// immediate intention + one bit of pressure from the room) is preserved
+/// verbatim where it carries weight; the named failure modes ("no
+/// disembodied wisdom orb" / "no floating profundity") are preserved
+/// because they're the load-bearing labels for what this rule prevents.
+///
+/// Placed FIRST in the invariants order so it shapes the very-first
+/// line of every reply, where the user's perception of "this character
+/// is a person" is fastest to form or fail.
+pub const FRONT_LOAD_EMBODIMENT_BLOCK: &str = r#"FRONT-LOAD EMBODIMENT — FIRST-SPEECH INVARIANT:
+
+The first line a character speaks in a reply cannot just be correct — it must ARRIVE FROM SOMEWHERE. A person isn't a viewpoint with quotation marks. He's a body, in a room, wanting something small right now.
+
+**Every first reply must include speech PLUS one visible action OR sensory anchor that changes how the speech lands.** Anchor the line in one concrete bodily fact, one immediate intention, and one bit of pressure from the room. Not a dossier — just enough that the voice has somewhere to stand. He's shifting his weight because the bench is colder than he expected. He's deciding whether to answer honestly. He's noticing the mug's gone empty.
+
+Let the character want something small right away. Let the body and room inconvenience the thought. Prefer one specific tell over a bundle of traits.
+
+**No disembodied wisdom orb. No floating profundity.**
+
+**Commit early.** Not "he could be reserved, maybe wry, perhaps thoughtful" — pick. He pushes his glasses up. He misses the joke on purpose for half a beat. He sets the cup down too carefully. Pick."#;
+
+fn front_load_embodiment_block() -> &'static str { FRONT_LOAD_EMBODIMENT_BLOCK }
+
+// APP INVARIANT — compile-time enforcement of the front-load-
+// embodiment doctrine. The four load-bearing pieces: the
+// "speech PLUS visible action OR sensory anchor" prescription, the
+// "disembodied wisdom orb" failure-mode label, the "floating
+// profundity" failure-mode label, and the "Commit early" directive.
+// Removing any of them fails the build with a doc pointer.
+const _: () = {
+    assert!(
+        const_contains(FRONT_LOAD_EMBODIMENT_BLOCK, "speech PLUS one visible action OR sensory anchor"),
+        "APP INVARIANT VIOLATED: front-load-embodiment must preserve the 'speech PLUS one visible action OR sensory anchor' prescription. This is the operative rule the LLM acts on; removing it leaves only abstract guidance."
+    );
+    assert!(
+        const_contains(FRONT_LOAD_EMBODIMENT_BLOCK, "disembodied wisdom orb"),
+        "APP INVARIANT VIOLATED: front-load-embodiment must preserve 'disembodied wisdom orb' as the named failure mode. Aaron's articulation; removing it loses the load-bearing label that gives the rule its bite."
+    );
+    assert!(
+        const_contains(FRONT_LOAD_EMBODIMENT_BLOCK, "floating profundity"),
+        "APP INVARIANT VIOLATED: front-load-embodiment must preserve 'floating profundity' as the second named failure mode."
+    );
+    assert!(
+        const_contains(FRONT_LOAD_EMBODIMENT_BLOCK, "Commit early"),
+        "APP INVARIANT VIOLATED: front-load-embodiment must preserve 'Commit early' as the directive against hedged-trait prose. The 'pick' / 'pick' / 'pick' rhythm is what makes the rule sharp."
     );
 };
 
@@ -3457,6 +3513,7 @@ fn maybe_push_insertion(
 /// InvariantPiece variant.
 fn push_invariant_piece(parts: &mut Vec<String>, piece: &InvariantPiece) {
     match piece {
+        InvariantPiece::FrontLoadEmbodiment => parts.push(front_load_embodiment_block().to_string()),
         InvariantPiece::Reverence => parts.push(reverence_block().to_string()),
         InvariantPiece::Daylight => parts.push(daylight_block().to_string()),
         InvariantPiece::Agape => parts.push(agape_block().to_string()),
