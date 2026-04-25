@@ -8,12 +8,6 @@ interface Props {
   /// hold begins the moment `loading` flips to false (and `location`
   /// is set), so a slow load doesn't eat the show.
   loading?: boolean;
-  /// Unique key for the current chat. The show fires AT MOST ONCE
-  /// per chatKey — switching chats (new key) resets the gate so the
-  /// next chat earns a fresh appearance. Without this gate, a
-  /// `location` prop change mid-show (e.g., async location-load
-  /// resolving after stale carryover) would restart the timer.
-  chatKey: string;
 }
 
 /// Movie-title style location reorienter shown at the top of the chat
@@ -21,38 +15,29 @@ interface Props {
 /// place, holds 5s, then fades + slides UP out. Non-dismissable —
 /// sized to read fast and get out of the way.
 ///
-/// Returns null when location is unset, while loading is true, or
-/// after the exit animation completes.
-export function LocationOpener({ location, loading = false, chatKey }: Props) {
-  // Phases: "enter" (offscreen → on-screen), "hold" (visible 5s), "exit"
-  // (on-screen → offscreen), "done" (unmounted). Total ~5.8s.
+/// Once the show starts, it plays through to completion. The timers
+/// are tracked via refs and started exactly ONCE per mount — the
+/// effect bails on subsequent re-fires so dep-change cleanup never
+/// kills an in-flight show. Parent uses `key={chatKey}` to remount
+/// for fresh chats; that's the only path to restart the show.
+export function LocationOpener({ location, loading = false }: Props) {
+  // Phases: "enter" (offscreen — initial pre-show), "hold" (visible 5s),
+  // "exit" (on-screen → offscreen), "done" (unmounted).
   const [phase, setPhase] = useState<"enter" | "hold" | "exit" | "done">("enter");
-  const shownForKey = useRef<string | null>(null);
-
-  // Reset the once-per-chat gate when chatKey changes. Done in render
-  // (cheap) so the effect below sees the fresh ref on the same render.
-  if (shownForKey.current !== null && shownForKey.current !== chatKey) {
-    shownForKey.current = null;
-    if (phase !== "enter") setPhase("enter");
-  }
+  const startedRef = useRef(false);
 
   useEffect(() => {
-    // Conditions to start the show: location is set, loading is false,
-    // and we haven't yet shown for this chat. Re-runs on every dep
-    // change, so whichever signal arrives last starts the timer.
+    if (startedRef.current) return;
     if (!location || loading) return;
-    if (shownForKey.current === chatKey) return;
-    shownForKey.current = chatKey;
-    setPhase("enter");
-    const tHold = setTimeout(() => setPhase("hold"), 30);
-    const tExit = setTimeout(() => setPhase("exit"), 5000);
-    const tDone = setTimeout(() => setPhase("done"), 5800);
-    return () => {
-      clearTimeout(tHold);
-      clearTimeout(tExit);
-      clearTimeout(tDone);
-    };
-  }, [location, loading, chatKey]);
+    startedRef.current = true;
+    // Schedule the entire show right now, in real time. Timers are NOT
+    // returned for cleanup — once we've earned the start signal, the
+    // show plays through even if subsequent re-renders fire the effect
+    // again (which they won't, because startedRef short-circuits).
+    setTimeout(() => setPhase("hold"), 30);
+    setTimeout(() => setPhase("exit"), 5000);
+    setTimeout(() => setPhase("done"), 5800);
+  }, [location, loading]);
 
   if (!location || phase === "done") return null;
 

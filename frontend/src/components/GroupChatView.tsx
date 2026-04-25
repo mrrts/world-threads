@@ -798,7 +798,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
       </div>
 
       <div className="flex-1 relative overflow-hidden z-10">
-        <LocationOpener chatKey={chatId ?? "none"} location={currentLocation} loading={store.loadingChat || !initialScrollComplete} />
+        <LocationOpener key={`opener-${chatId ?? "none"}`} location={currentLocation} loading={store.loadingChat || !initialScrollComplete} />
         <ScrollArea ref={scrollRef} className="h-full px-4 py-3">
         <div>
         {store.messages.length === 0 && (
