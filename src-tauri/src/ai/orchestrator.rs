@@ -2608,8 +2608,17 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#
     let valid_actions = ["add", "update", "remove"];
     let mut out: Vec<ProposedCanonUpdate> = Vec::new();
     for (i, u) in parsed.updates.into_iter().take(2).enumerate() {
+        // Lenient subject lookup. The classifier occasionally hallucinates
+        // subject_type — putting the subject's NAME there instead of the
+        // literal "character" / "user" the schema requires (observed
+        // 2026-04-25: subject_type="Aaron" returned for an Aaron update).
+        // The subject_id is the load-bearing identifier; subject_type is
+        // redundant given a unique id. Try the strict match first, then
+        // fall back to id-only — the worst case is no match at all, which
+        // still surfaces as the same error.
         let subject = subjects.iter()
             .find(|s| s.subject_type == u.subject_type && s.subject_id == u.subject_id)
+            .or_else(|| subjects.iter().find(|s| s.subject_id == u.subject_id))
             .ok_or_else(|| format!("update {} references unknown subject ({}/{})", i, u.subject_type, u.subject_id))?;
         if !valid_kinds.contains(&u.kind.as_str()) {
             return Err(format!("update {} has unknown kind: {}", i, u.kind));
