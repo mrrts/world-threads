@@ -747,6 +747,19 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         CREATE INDEX IF NOT EXISTS idx_saved_places_world ON saved_places(world_id);
     ").ok();
 
+    // Add last_used_at to saved_places — drives 'most-recently-used on top'
+    // ordering in the location modal's dropdown. Backfilled to created_at
+    // for existing rows; updated on every set_chat_location_cmd call whose
+    // new name matches an existing saved place (case-insensitive).
+    let has_last_used: bool = conn.query_row(
+        "SELECT COUNT(*) FROM pragma_table_info('saved_places') WHERE name = 'last_used_at'",
+        [], |r| r.get::<_, i64>(0),
+    ).unwrap_or(0) > 0;
+    if !has_last_used {
+        conn.execute("ALTER TABLE saved_places ADD COLUMN last_used_at TEXT DEFAULT NULL", []).ok();
+        conn.execute("UPDATE saved_places SET last_used_at = created_at WHERE last_used_at IS NULL", []).ok();
+    }
+
     // Strip lingering world.state.location.* now that per-chat carries it.
     // The earlier migration only removed top-level `state.location` when
     // it was NULL-leaf; nested objects like {location: {current_scene: ...}}

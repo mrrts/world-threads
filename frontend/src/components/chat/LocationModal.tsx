@@ -8,6 +8,10 @@ interface SavedPlace {
   world_id: string;
   name: string;
   created_at: string;
+  /// Last time this place was set as a chat's current location. Backend
+  /// orders the dropdown by this DESC, so the most-recently-used place
+  /// always appears first.
+  last_used_at: string;
   // Forward-compatible optional fields. Backend doesn't ship these
   // yet — when it does (image upload + description + facts), the
   // dropdown rows below will pick them up without further refactor.

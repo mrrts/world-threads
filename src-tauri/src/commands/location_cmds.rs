@@ -74,11 +74,14 @@ pub fn set_chat_location_cmd(
         return Err("Either character_id or group_chat_id must be provided".to_string());
     };
 
+    let now = Utc::now().to_rfc3339();
+
     // No-op when unchanged. Still honor save_to_library so the user can
-    // promote the existing place into the library without churn.
+    // promote the existing place into the library without churn. Don't
+    // bump last_used_at on a no-op — the place wasn't freshly chosen.
     if previous.as_deref() == Some(trimmed.as_str()) {
         let saved_place = if save_to_library {
-            maybe_save_place(&conn, &world_id, &trimmed)?
+            maybe_save_place(&conn, &world_id, &trimmed, &now)?
         } else {
             None
         };
@@ -133,10 +136,16 @@ pub fn set_chat_location_cmd(
     }
 
     let saved_place = if save_to_library {
-        maybe_save_place(&conn, &world_id, &trimmed)?
+        maybe_save_place(&conn, &world_id, &trimmed, &now)?
     } else {
         None
     };
+
+    // Always touch last_used_at when an existing saved place matches
+    // (regardless of save_to_library). If save_to_library just CREATED
+    // the row, its last_used_at already equals created_at == now, so
+    // the touch is a harmless no-op on the same value.
+    touch_saved_place(&conn, &world_id, &trimmed, &now).map_err(|e| e.to_string())?;
 
     Ok(ChatLocationResponse {
         current_location: Some(trimmed),
@@ -149,6 +158,7 @@ fn maybe_save_place(
     conn: &rusqlite::Connection,
     world_id: &str,
     name: &str,
+    when: &str,
 ) -> Result<Option<SavedPlace>, String> {
     let existing = list_saved_places(conn, world_id).map_err(|e| e.to_string())?;
     if existing.iter().any(|p| p.name.eq_ignore_ascii_case(name)) {
@@ -158,7 +168,8 @@ fn maybe_save_place(
         saved_place_id: uuid::Uuid::new_v4().to_string(),
         world_id: world_id.to_string(),
         name: name.to_string(),
-        created_at: Utc::now().to_rfc3339(),
+        created_at: when.to_string(),
+        last_used_at: when.to_string(),
     };
     create_saved_place(conn, &place).map_err(|e| e.to_string())?;
     Ok(Some(place))
