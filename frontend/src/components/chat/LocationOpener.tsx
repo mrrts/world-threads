@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MapPin } from "lucide-react";
 
 interface Props {
@@ -69,17 +69,23 @@ export function LocationOpener({ location, loading = false }: Props) {
     setTimeout(() => { console.log(`${tag} -> done`); setPhase("done"); }, LEAD_IN + HOLD + EXIT);
   }, [location, loading]);
 
-  if (!location || phase === "done") return null;
+  const innerRef = useRef<HTMLDivElement | null>(null);
 
-  const isVisible = phase === "hold";
-  // Inline styles bypass Tailwind class compilation entirely — guarantees
-  // the transition runs from a known starting state to a known ending
-  // state regardless of class-purge / cascade quirks.
-  const innerStyle: React.CSSProperties = {
-    transform: isVisible ? "translateY(0)" : "translateY(-2rem)",
-    opacity: isVisible ? 1 : 0,
-    transition: "transform 700ms ease-out, opacity 700ms ease-out",
-  };
+  // Imperatively write the inline styles via useLayoutEffect every render
+  // — bypasses React style reconciliation entirely. setProperty with
+  // 'important' flag ensures nothing in the cascade can override.
+  useLayoutEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+    const isVisible = phase === "hold";
+    el.style.setProperty("transform", isVisible ? "translateY(0)" : "translateY(-2rem)", "important");
+    el.style.setProperty("opacity", isVisible ? "1" : "0", "important");
+    el.style.setProperty("transition", "transform 700ms ease-out, opacity 700ms ease-out", "important");
+    const t = Math.round(performance.now() - mountedAtRef.current);
+    console.log(`${tag} STYLE-WROTE t=${t}ms phase=${phase} cs.opacity=${window.getComputedStyle(el).opacity} cs.transform=${window.getComputedStyle(el).transform}`);
+  }, [phase]);
+
+  if (!location || phase === "done") return null;
 
   return (
     <div
@@ -95,7 +101,7 @@ export function LocationOpener({ location, loading = false }: Props) {
       className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none z-[100] px-6"
     >
       <div
-        style={innerStyle}
+        ref={innerRef}
         className="
           mt-10
           flex items-center gap-5
