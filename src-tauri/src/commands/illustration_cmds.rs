@@ -96,6 +96,13 @@ pub fn cleanup_orphaned_illustrations(
 }
 
 /// Delete a single illustration: message, gallery entry, and file on disk.
+///
+/// Handles BOTH solo (`messages`) and group (`group_messages`) tables —
+/// the message_id alone doesn't tell us which table holds the row, so
+/// we issue DELETE against both. SQLite no-ops the one that doesn't
+/// match. Critical: previous version only hit `messages`, so deleting
+/// a group-chat illustration silently failed (gallery + file were
+/// cleaned but the message row persisted, so reload showed it again).
 pub(crate) fn delete_illustration_inner(conn: &rusqlite::Connection, portraits_dir: &std::path::Path, message_id: &str) -> Result<(), String> {
     // Delete associated video file if one exists
     let video_file: Option<String> = conn.query_row(
@@ -117,11 +124,20 @@ pub(crate) fn delete_illustration_inner(conn: &rusqlite::Connection, portraits_d
     ).ok();
     conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![message_id])
         .map_err(|e| e.to_string())?;
-    // Delete FTS entry
+    // Delete FTS entries from both tables (one will no-op).
     conn.execute("DELETE FROM messages_fts WHERE message_id = ?1", params![message_id]).ok();
-    // Delete message
-    conn.execute("DELETE FROM messages WHERE message_id = ?1", params![message_id])
+    conn.execute("DELETE FROM group_messages_fts WHERE message_id = ?1", params![message_id]).ok();
+    // Delete message from both tables (one will no-op). At least one
+    // must succeed without error; collect both row-counts so we can
+    // detect the "no row found anywhere" case (silent corruption
+    // signal we want logged).
+    let solo_rows = conn.execute("DELETE FROM messages WHERE message_id = ?1", params![message_id])
         .map_err(|e| e.to_string())?;
+    let group_rows = conn.execute("DELETE FROM group_messages WHERE message_id = ?1", params![message_id])
+        .map_err(|e| e.to_string())?;
+    if solo_rows == 0 && group_rows == 0 {
+        log::warn!("[delete_illustration] no message row found in messages or group_messages for {message_id} (gallery + file still cleaned)");
+    }
     // Delete illustration image file
     if let Some(f) = file_name {
         let path = portraits_dir.join(&f);
