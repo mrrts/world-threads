@@ -181,7 +181,6 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
   const {
     inputValueRef, hasInput, setHasInput,
     scrollRef,
-    initialScrollComplete,
     inputRef,
     userAvatarUrl,
     copiedError, setCopiedError,

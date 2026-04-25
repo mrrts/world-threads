@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { MapPin } from "lucide-react";
 
 interface Props {
@@ -13,113 +13,41 @@ interface Props {
 /// Movie-title style location reorienter shown at the top of the chat
 /// viewport once the chat is fully loaded. Fades + slides DOWN into
 /// place, holds 5s, then fades + slides UP out. Non-dismissable —
-/// sized to read fast and get out of the way.
+/// sized to read fast and get out of the way. Parent re-mounts via
+/// `key={chatId}` so switching chats triggers a fresh appearance.
 ///
-/// Once the show starts, it plays through to completion. The timers
-/// are tracked via refs and started exactly ONCE per mount — the
-/// effect bails on subsequent re-fires so dep-change cleanup never
-/// kills an in-flight show. Parent uses `key={chatKey}` to remount
-/// for fresh chats; that's the only path to restart the show.
+/// Returns null when location is unset, while loading is true, or
+/// after the exit animation completes.
 export function LocationOpener({ location, loading = false }: Props) {
-  // Phases: "enter" (offscreen — initial pre-show), "hold" (visible 5s),
-  // "exit" (on-screen → offscreen), "done" (unmounted).
+  // Phases: "enter" (offscreen → on-screen), "hold" (visible 5s), "exit"
+  // (on-screen → offscreen), "done" (unmounted). Total ~5.8s.
   const [phase, setPhase] = useState<"enter" | "hold" | "exit" | "done">("enter");
-  const startedRef = useRef(false);
-  const mountedAtRef = useRef(performance.now());
-  const tag = `[LocationOpener]`;
 
-  // Mount log — fires once per fresh instance (key change in parent).
   useEffect(() => {
-    const t = Math.round(performance.now() - mountedAtRef.current);
-    console.log(`${tag} MOUNT t=${t}ms loc=${JSON.stringify(location)} loading=${loading}`);
+    // Don't start the show until BOTH the chat has finished loading
+    // AND we have a location to display. The effect re-runs on each
+    // dependency change, so whichever flips last starts the timer.
+    if (!location || loading) return;
+    setPhase("enter");
+    const tHold = setTimeout(() => setPhase("hold"), 30);
+    const tExit = setTimeout(() => setPhase("exit"), 5000);
+    const tDone = setTimeout(() => setPhase("done"), 5800);
     return () => {
-      const tt = Math.round(performance.now() - mountedAtRef.current);
-      console.log(`${tag} UNMOUNT t=${tt}ms`);
+      clearTimeout(tHold);
+      clearTimeout(tExit);
+      clearTimeout(tDone);
     };
-    // Intentional: log mount/unmount only; not tied to dep changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Per-render log — every render, with current props + state.
-  const tNow = Math.round(performance.now() - mountedAtRef.current);
-  console.log(`${tag} RENDER t=${tNow}ms loc=${JSON.stringify(location)} loading=${loading} phase=${phase} started=${startedRef.current}`);
-
-  useEffect(() => {
-    const t = Math.round(performance.now() - mountedAtRef.current);
-    console.log(`${tag} EFFECT t=${t}ms loc=${JSON.stringify(location)} loading=${loading} started=${startedRef.current}`);
-    if (startedRef.current) {
-      console.log(`${tag} bail: already started`);
-      return;
-    }
-    if (!location) {
-      console.log(`${tag} bail: no location`);
-      return;
-    }
-    if (loading) {
-      console.log(`${tag} bail: still loading`);
-      return;
-    }
-    console.log(`${tag} STARTING SHOW`);
-    startedRef.current = true;
-    // Lead-in delay so the opener doesn't appear simultaneously with
-    // messages/illustrations rendering — the user sees content land
-    // first, settles their eyes, THEN the opener slides in.
-    const LEAD_IN = 1200;
-    const HOLD = 5000;
-    const EXIT = 800;
-    setTimeout(() => { console.log(`${tag} -> hold`); setPhase("hold"); }, LEAD_IN);
-    setTimeout(() => { console.log(`${tag} -> exit`); setPhase("exit"); }, LEAD_IN + HOLD);
-    setTimeout(() => { console.log(`${tag} -> done`); setPhase("done"); }, LEAD_IN + HOLD + EXIT);
   }, [location, loading]);
-
-  const innerRef = useRef<HTMLDivElement | null>(null);
-
-  // First useLayoutEffect: set up the transition + initial enter-state
-  // exactly once on mount. The transition property must be on the
-  // element BEFORE any value change to trigger an animation.
-  useLayoutEffect(() => {
-    const el = innerRef.current;
-    if (!el) return;
-    el.style.setProperty("transition", "transform 700ms ease-out, opacity 700ms ease-out", "important");
-    el.style.setProperty("transform", "translateY(-2rem)", "important");
-    el.style.setProperty("opacity", "0", "important");
-    // Force a layout flush so the initial state actually paints before
-    // the next style update (otherwise the browser can batch initial
-    // state with the next change and skip the animation).
-    void el.offsetHeight;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Subsequent useLayoutEffect: respond to phase changes by updating
-  // only the value properties (transition is already established).
-  useLayoutEffect(() => {
-    const el = innerRef.current;
-    if (!el) return;
-    const isVisible = phase === "hold";
-    el.style.setProperty("transform", isVisible ? "translateY(0)" : "translateY(-2rem)", "important");
-    el.style.setProperty("opacity", isVisible ? "1" : "0", "important");
-    const t = Math.round(performance.now() - mountedAtRef.current);
-    console.log(`${tag} STYLE-WROTE t=${t}ms phase=${phase} cs.opacity=${window.getComputedStyle(el).opacity} cs.transform=${window.getComputedStyle(el).transform}`);
-  }, [phase]);
 
   if (!location || phase === "done") return null;
 
+  const isVisible = phase === "hold";
+  const transformClass = isVisible ? "translate-y-0 opacity-100" : "-translate-y-8 opacity-0";
+
   return (
-    <div
-      ref={(el) => {
-        if (el && phase === "hold") {
-          const r = el.getBoundingClientRect();
-          const inner = el.firstElementChild as HTMLElement | null;
-          const innerR = inner?.getBoundingClientRect();
-          const s = inner ? window.getComputedStyle(inner) : null;
-          console.log(`${tag} BBOX outer=(x:${Math.round(r.x)},y:${Math.round(r.y)},w:${Math.round(r.width)},h:${Math.round(r.height)}) inner=(x:${Math.round(innerR?.x ?? 0)},y:${Math.round(innerR?.y ?? 0)},w:${Math.round(innerR?.width ?? 0)},h:${Math.round(innerR?.height ?? 0)}) opacity=${s?.opacity} transform=${s?.transform} display=${s?.display} visibility=${s?.visibility} zIndex=${s?.zIndex} win=(${window.innerWidth}x${window.innerHeight})`);
-        }
-      }}
-      className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none z-[100] px-6"
-    >
+    <div className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none z-20 px-6">
       <div
-        ref={innerRef}
-        className="
+        className={`
           mt-10
           flex items-center gap-5
           px-10 py-6 rounded-2xl
@@ -128,7 +56,9 @@ export function LocationOpener({ location, loading = false }: Props) {
           backdrop-blur-md
           border-2 border-emerald-400/50
           shadow-[0_0_60px_rgba(16,185,129,0.55),0_0_120px_rgba(16,185,129,0.30),inset_0_0_30px_rgba(16,185,129,0.15)]
-        "
+          transition-all duration-700 ease-out
+          ${transformClass}
+        `}
       >
         <MapPin
           size={42}

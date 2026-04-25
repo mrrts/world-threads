@@ -293,10 +293,8 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
 
   // Scroll to bottom on mount / when chat changes / when messages first load
   const initialScrollDone = useRef(false);
-  const [initialScrollComplete, setInitialScrollComplete] = useState(false);
   useEffect(() => {
     initialScrollDone.current = false;
-    setInitialScrollComplete(false);
   }, [chatId]);
 
   useEffect(() => {
@@ -309,51 +307,27 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     const scroll = () => { el.scrollTop = el.scrollHeight; };
 
     // Initial scroll, then keep re-scrolling on every content-resize
-    // until the DOM stops growing for `STABLE_MS` AND we're at the
-    // bottom. A long-history chat with images/illustrations grows
-    // scrollHeight progressively as elements lay out — fixed-timeline
-    // retries miss tail growth. ResizeObserver catches every resize.
+    // until the DOM stops growing. Long-history chats with images /
+    // illustrations expand scrollHeight progressively as elements lay
+    // out — fixed-timeline retries miss tail growth. ResizeObserver
+    // catches every resize event.
     scroll();
-    const STABLE_MS = 400;
-    const HARD_CAP_MS = 8000;
-    const isAtBottomNow = () => el.scrollHeight - el.scrollTop - el.clientHeight < 40;
-
-    let stableTimer: ReturnType<typeof setTimeout> | null = null;
-    const armStable = () => {
-      if (stableTimer) clearTimeout(stableTimer);
-      stableTimer = setTimeout(() => {
-        if (isAtBottomNow()) setInitialScrollComplete(true);
-      }, STABLE_MS);
-    };
-    armStable();
-
     let observer: ResizeObserver | null = null;
     if (inner && typeof ResizeObserver !== "undefined") {
-      observer = new ResizeObserver(() => {
-        scroll();
-        armStable();
-      });
+      observer = new ResizeObserver(() => scroll());
       observer.observe(inner);
+      // Disconnect after 8s — by then either the DOM has settled or
+      // the user has begun interacting and we shouldn't fight scroll.
+      const cap = setTimeout(() => observer?.disconnect(), 8000);
+      return () => { observer?.disconnect(); clearTimeout(cap); };
     } else {
       // Fallback: fixed-timeline retries when ResizeObserver isn't
       // available (older WebView).
       const fallback = [100, 300, 700, 1500, 3000, 5000, 7000].map((ms) =>
-        setTimeout(() => { scroll(); armStable(); }, ms),
+        setTimeout(scroll, ms),
       );
-      const cleanup = () => fallback.forEach(clearTimeout);
-      const cap = setTimeout(() => setInitialScrollComplete(true), HARD_CAP_MS);
-      return () => { cleanup(); clearTimeout(cap); if (stableTimer) clearTimeout(stableTimer); };
+      return () => fallback.forEach(clearTimeout);
     }
-
-    // Hard cap: even if the DOM never settles, release the opener so
-    // it isn't blocked forever.
-    const cap = setTimeout(() => setInitialScrollComplete(true), HARD_CAP_MS);
-
-    return () => {
-      observer?.disconnect();
-      if (stableTimer) clearTimeout(stableTimer);
-      clearTimeout(cap);
-    };
   }, [chatId, store.messages.length]);
 
   // Scroll to bottom when sending/generating starts
@@ -432,7 +406,6 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     // State
     inputValueRef, hasInput, setHasInput,
     scrollRef,
-    initialScrollComplete,
     inputRef,
     userAvatarUrl, setUserAvatarUrl,
     copiedError, setCopiedError,
