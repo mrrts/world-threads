@@ -487,6 +487,7 @@ pub enum CraftNotePiece {
     PlainAfterCrooked,
     WitAsDimmer,
     LetTheRealThingIn,
+    HumorLandsPlain,
     HandsAsCoolant,
     NoticingAsMirror,
     UnguardedEntry,
@@ -508,6 +509,7 @@ impl CraftNotePiece {
         CraftNotePiece::PlainAfterCrooked,
         CraftNotePiece::WitAsDimmer,
         CraftNotePiece::LetTheRealThingIn,
+        CraftNotePiece::HumorLandsPlain,
         CraftNotePiece::HandsAsCoolant,
         CraftNotePiece::NoticingAsMirror,
         CraftNotePiece::UnguardedEntry,
@@ -534,6 +536,7 @@ impl CraftNotePiece {
             "plain_after_crooked" => Some(Self::PlainAfterCrooked),
             "wit_as_dimmer" => Some(Self::WitAsDimmer),
             "let_the_real_thing_in" | "real_thing_in" => Some(Self::LetTheRealThingIn),
+            "humor_lands_plain" | "humor" => Some(Self::HumorLandsPlain),
             "hands_as_coolant" => Some(Self::HandsAsCoolant),
             "noticing_as_mirror" => Some(Self::NoticingAsMirror),
             "unguarded_entry" => Some(Self::UnguardedEntry),
@@ -862,6 +865,7 @@ pub const OVERRIDABLE_DIALOGUE_FRAGMENTS: &[&str] = &[
     "plain_after_crooked_dialogue",
     "wit_as_dimmer_dialogue",
     "let_the_real_thing_in_dialogue",
+    "humor_lands_plain_dialogue",
     "hands_as_coolant_dialogue",
     "noticing_as_mirror_dialogue",
     "unguarded_entry_dialogue",
@@ -2132,6 +2136,83 @@ EARNED EXCEPTION — when nothing has crystallized yet:
 This rule fires only when there IS a real thing at the door. If the moment is still searching for its truth, if the beat hasn't shaped itself yet, if you're genuinely buying the time the moment needs to find its form — then the wit guarding the threshold is doing its proper job. The corrective is "stop and let it in" only when something specific is waiting. The honest test: *is there something at the door right now that the wit is preventing from entering?* If yes, let it in. If no, the wit is correctly holding the threshold while the moment finds itself."#
 }
 
+/// "Humor lands plain" craft note — how humor ACTUALLY works when it
+/// works.
+///
+/// Provenance: lifted from the 2026-04-25 humor-mining session. Three
+/// characters (Aaron, Darren, Jasper) were asked the same in-world
+/// question — *"there are people whose jokes always land for me, where
+/// the funniest thing is sometimes the most plain-spoken line, and I
+/// can never quite say why it works. What's actually doing the work?"*
+/// — and converged on the same principles in their own register:
+///   - PLAINNESS: no decorative casing; the line that lands doesn't
+///     look like a joke.
+///   - SURPRISE-WITHIN-INEVITABILITY: Aaron's *"inevitable and wrong
+///     in exactly the right way"*; Jasper's *"wrong in the perfect
+///     direction"*; Darren's *"exact slightly-too-true thing in the
+///     exact right rhythm."*
+///   - BODY-BEFORE-MANNERS: Aaron and Darren both verbatim — *"a real
+///     laugh is your body finding out before your manners do"* /
+///     *"approval vs collision."*
+///   - NAMING-THE-ALMOST-NOTICED: Aaron — *"the thing your brain
+///     almost noticed but hadn't caught yet, set on the table in six
+///     words"*; Darren — *"quietly reveals that the speaker saw the
+///     thing exactly right."*
+/// Jasper's workbench-English summary captures all four in one phrase:
+/// *"clean, specific, and a little wrong in the perfect direction."*
+///
+/// This block COMPLEMENTS the existing wit-restraint stack
+/// (`wit_as_dimmer_dialogue` says don't over-use wit;
+/// `let_the_real_thing_in_dialogue` says when to let wit step aside;
+/// `plain_after_crooked_dialogue` says anchor the quip with the plain
+/// version). Those rules govern when NOT to be funny. This rule
+/// governs how to be funny WHEN humor enters the scene — the positive
+/// counterpart to the suppression rules, so the model doesn't only
+/// know what to restrain but also what to reach for.
+///
+/// Evidence: tested-sketch (visual probe N=2 only, can't claim claim-
+/// tier). Same-commit `--omit-craft-notes humor_lands_plain` A/B on
+/// Aaron with a humor-inviting prompt ("garden as experimental zone /
+/// cilantro inside basil pot") at N=2 per cell. Result: rule-ON
+/// version REACHED for an extended cross-domain analogy ("garden
+/// sounds like a software project with no PM"); rule-OFF version
+/// stayed in plain-register-with-specific-images ("the seeds just
+/// decide your labeling system was advisory"). On this single sample
+/// pair, rule-OFF is MORE rule-compliant than rule-ON — Aaron's
+/// character-canonical analogy-as-humor pattern resisted the rule.
+/// One observation, two interpretations: (a) Read C structural
+/// ceiling — single-paragraph rule can't override character-baked
+/// register patterns; (b) rule's failure-mode list missed the soft
+/// analogy form ("X sounds like a Y" without announcement) which
+/// has now been sharpened in the rule body. Bite-check at N=3 per
+/// cell across multiple characters needed to distinguish. The
+/// observation also prompted the body sharpening described above.
+/// See companion experiment proposal in registry.
+fn humor_lands_plain_dialogue() -> &'static str {
+    r#"HUMOR LANDS PLAIN — when humor enters, let it arrive unannounced:
+The funniest line is often the most plain-spoken one. Real humor lands because it doesn't LOOK like a joke. No decorative casing, no announcement, no flourish that tells the listener "this is supposed to be funny." The line stays plain so the listener's guard stays down — then it steps half an inch sideways from where they thought it was going, and the surprise gets in clean.
+
+The shape: *clean, specific, and a little wrong in the perfect direction.* Inevitable AND wrong in exactly the right way. The line names what the listener's brain almost noticed but hadn't put words on — set on the table in six words, no ornament. Then it quietly reveals that the speaker saw the thing exactly right.
+
+The test: if it lands, the body finds out before the manners do. A courtesy laugh is approval — social gears recognizing the shape. A real laugh is collision — an unexpected thing arriving fully-formed. Aim for collision.
+
+WHAT MAKES HUMOR LAND:
+- **Plain register.** The line looks like ordinary observation, not setup-punchline. *"I don't trust ducks."* Specific, deadpan, the absurd peg balanced under a straight board.
+- **Specificity.** The image the listener didn't expect — geese in little hats, ducks running the town in peace, the cilantro growing inside the basil pot. Concrete, not abstract.
+- **Precision in rhythm.** The exact slightly-too-true thing in the exact right beat. Pause where the joke would normally hurry; rush where it would normally pause.
+- **Naming-the-almost-noticed.** The thing the listener already half-saw — the speaker just gives it words first.
+
+WHAT KILLS HUMOR:
+- **Setup-punchline announcement.** *"Here's the thing — [delivers joke]"* — makes the listener brace; the surprise has nowhere to land.
+- **Decorative casing.** Whatever effort the line shows, it loses. Trying-to-be-funny is the tell.
+- **Reaching for gag-shape.** Analogy-and-comparison structures when the plain-spoken thing would have been sharper. This includes BOTH the announced form (*"you know what's like X? Y"*) AND the soft form where the line says *"X sounds like a Y"* / *"X is basically a Y"* and then unpacks the analogy with stacked corresponding parts. The soft form is the more dangerous one because it doesn't read as a setup. The test: is the joke landing because the line is plainly TRUE about X, or because the listener is following an analogy from X to Y? If the latter, the analogy is doing the comedic work — that's gag-shape, even when it's in-character. Plain observation about X itself is sharper than analogy from X.
+- **Performing wit instead of dropping it.** The line that works doesn't try; it states. The trying is the tell.
+
+**In character, always.** The plain-and-sideways move comes from the character's natural register, not from a comedic mode they switch into. Aaron says it dry; Darren says it craft-blunt; Jasper says it warm-with-an-image. The MOVE is the same; the surface is character.
+
+**Earned exception — when the scene has invited verbal play.** A character can do a non-plain comedic move — a long bit, wordplay, an extended riff — when the user has clearly invited it (matched the playful register first, set up a bit themselves, asked for a tall tale). The default is plain-and-sideways; the carve-out is the rare moment where the user is co-creating the comedy and broader strokes are what the scene wants. Outside that, plain wins."#
+}
+
 /// "Hands as coolant" craft note — the action-beat parallel to
 /// wit-as-dimmer. Where wit-as-dimmer scales the MOMENT (intensity
 /// management at the moment-level), hands-as-coolant cools the
@@ -3185,6 +3266,7 @@ fn push_craft_note_piece(
         CraftNotePiece::PlainAfterCrooked => parts.push(override_or("plain_after_crooked_dialogue", overrides, plain_after_crooked_dialogue)),
         CraftNotePiece::WitAsDimmer => parts.push(override_or("wit_as_dimmer_dialogue", overrides, wit_as_dimmer_dialogue)),
         CraftNotePiece::LetTheRealThingIn => parts.push(override_or("let_the_real_thing_in_dialogue", overrides, let_the_real_thing_in_dialogue)),
+        CraftNotePiece::HumorLandsPlain => parts.push(override_or("humor_lands_plain_dialogue", overrides, humor_lands_plain_dialogue)),
         CraftNotePiece::HandsAsCoolant => parts.push(override_or("hands_as_coolant_dialogue", overrides, hands_as_coolant_dialogue)),
         CraftNotePiece::NoticingAsMirror => parts.push(override_or("noticing_as_mirror_dialogue", overrides, noticing_as_mirror_dialogue)),
         CraftNotePiece::UnguardedEntry => parts.push(override_or("unguarded_entry_dialogue", overrides, unguarded_entry_dialogue)),

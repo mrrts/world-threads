@@ -3657,6 +3657,7 @@ fn craft_note_piece_name(p: &app_lib::ai::prompts::CraftNotePiece) -> &'static s
         CN::PlainAfterCrooked => "plain_after_crooked",
         CN::WitAsDimmer => "wit_as_dimmer",
         CN::LetTheRealThingIn => "let_the_real_thing_in",
+        CN::HumorLandsPlain => "humor_lands_plain",
         CN::HandsAsCoolant => "hands_as_coolant",
         CN::NoticingAsMirror => "noticing_as_mirror",
         CN::UnguardedEntry => "unguarded_entry",
