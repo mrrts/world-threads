@@ -738,7 +738,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                       <>
                         <Drama size={36} className="mx-auto text-sky-300/80 mb-4 drop-shadow-[0_0_8px_rgba(125,211,252,0.5)]" />
                         <p className="text-lg text-sky-100/90">I've been watching from the wings.</p>
-                        <p className="text-base text-sky-200/60 mt-2">Behind the scenes, aware of the WorldThreads app and your story.</p>
+                        <p className="text-base text-sky-200/60 mt-2">I'm behind the scenes, aware of the WorldThreads app and your story.</p>
                       </>
                     ) : (
                       <>
