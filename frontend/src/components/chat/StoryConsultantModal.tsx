@@ -464,10 +464,25 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
     setDeleteChatId(null);
   };
 
+  const isBackstageMode = activeMode === "backstage";
+
   return (<>
     <Dialog open={open} onClose={onClose} className="max-w-[90vw]">
-      <div className="flex h-[88vh] bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden relative">
-        {worldImageUrl && (
+      <div
+        className={`flex h-[88vh] border rounded-xl overflow-hidden relative ${
+          isBackstageMode
+            ? "bg-amber-950/90 border-amber-600/50 shadow-2xl shadow-black/40 [box-shadow:inset_0_0_60px_rgba(252,211,77,0.35),0_25px_50px_-12px_rgba(0,0,0,0.4)]"
+            : "bg-card border-border shadow-2xl shadow-black/40"
+        }`}
+      >
+        {/* Background layer: world image (immersive) or deep-amber wash (backstage) */}
+        {isBackstageMode ? (
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            <div className="w-full h-full bg-gradient-to-br from-amber-900/60 via-amber-950/80 to-amber-900/60" />
+            {/* Inner gold glow vignette — keeps the backstage stage-light feel */}
+            <div className="absolute inset-0 [box-shadow:inset_0_0_120px_rgba(252,211,77,0.25)] pointer-events-none" />
+          </div>
+        ) : worldImageUrl && (
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
             <img src={worldImageUrl} alt="" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-background/75" />
