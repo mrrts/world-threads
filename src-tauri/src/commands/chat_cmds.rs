@@ -136,12 +136,24 @@ pub fn vector_search_memories(
     }
 }
 
-/// Build the "MEMORY FROM YOUR OTHER CHATS" retrieval snippet for a
-/// character — pulls their most-recent activity from each OTHER thread
-/// they're in (solo if we're in group, groups if we're in solo) and
-/// formats it as a single labeled block ready to push into the
-/// dialogue-retrieval context. Returns None when the character has no
-/// other threads or no activity in them.
+/// Build the cross-thread continuity snippet for a character — pulls
+/// their most-recent activity from each OTHER thread they're in (solo
+/// if we're in group, groups if we're in solo) and formats it as a
+/// labeled block ready to push into the dialogue-retrieval context.
+///
+/// Two framings depending on freshness:
+/// - When the most-recent OTHER-thread activity is within ~60 minutes
+///   ("vivid — just now"), uses **STILL IN THE AIR** framing — the
+///   character has just stepped out of that conversation and may
+///   reference it directly as continuing dialogue, raised per-thread
+///   limit (40 messages) and max threads (3) to preserve verbatim recent
+///   context. Continuity matters more than parsimony when the user is
+///   literally walking from one room to another mid-conversation.
+/// - Otherwise uses **MEMORY FROM YOUR OTHER CHATS** framing — older
+///   material the character carries but doesn't recite.
+///
+/// Returns None when the character has no other threads or no activity
+/// in them.
 pub fn build_cross_thread_snippet(
     db: &Database,
     character_id: &str,
@@ -150,21 +162,54 @@ pub fn build_cross_thread_snippet(
 ) -> Option<String> {
     let conn = db.conn.lock().ok()?;
     let user_name = user_profile.map(|p| p.display_name.as_str()).unwrap_or("the human");
-    let blocks = list_cross_thread_recent_for_character(
+
+    // First peek with the older default to check freshness; if the
+    // newest block is within 60 min, re-fetch with the wider window.
+    let preview = list_cross_thread_recent_for_character(
         &conn,
         character_id,
         current_thread_id,
-        20,  // per-thread limit — up from 6 so long conversations
-             // don't get truncated out of cross-thread memory.
-        2,   // max other-threads pulled
+        20,
+        2,
         user_name,
     );
-    if blocks.is_empty() {
+    if preview.is_empty() {
         return None;
     }
+    let fresh = preview.first().map(|b| {
+        chrono::DateTime::parse_from_rfc3339(&b.newest_at)
+            .map(|dt| {
+                chrono::Utc::now()
+                    .signed_duration_since(dt.with_timezone(&chrono::Utc))
+                    .num_minutes()
+                    < 60
+            })
+            .unwrap_or(false)
+    }).unwrap_or(false);
+
+    let blocks = if fresh {
+        list_cross_thread_recent_for_character(
+            &conn,
+            character_id,
+            current_thread_id,
+            40,  // verbatim recent context preserved when conversation is still warm
+            3,   // include more threads so a 3-way "between rooms" feels continuous
+            user_name,
+        )
+    } else {
+        preview
+    };
+
+    let header = if fresh {
+        "STILL IN THE AIR (you have JUST STEPPED OUT of this conversation — it's continuing in another room. You may reference it directly as continuing dialogue when the moment asks; speak as someone who was just there, not as someone recalling a memory):"
+    } else {
+        "MEMORY FROM YOUR OTHER CHATS (things you've actually lived through, elsewhere — carry them; when something here directly continues from that, name it; otherwise let it stay as background):"
+    };
+
     Some(format!(
-        "MEMORY FROM YOUR OTHER CHATS (things you've actually lived through, elsewhere — carry them; don't retell unless the moment asks):\n\n{}",
-        blocks.iter().map(|b| b.rendered.clone()).collect::<Vec<_>>().join("\n\n"),
+        "{header}\n\n{body}",
+        header = header,
+        body = blocks.iter().map(|b| b.rendered.clone()).collect::<Vec<_>>().join("\n\n"),
     ))
 }
 
