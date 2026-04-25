@@ -922,15 +922,47 @@ pub fn edit_message_content_cmd(
 }
 
 /// Delete a single message by ID.
+///
+/// If the message has a corresponding `world_images` entry (i.e., it
+/// was an illustration), the gallery row, the image file on disk, and
+/// any animation video file are also cleaned up. Without this, the
+/// gallery and the sticky-illustration thumbnail keep showing the
+/// "deleted" image because they both read from world_images, not the
+/// messages table.
 #[tauri::command]
 pub fn delete_message_cmd(
     db: State<'_, Database>,
+    portraits_dir: State<'_, crate::commands::portrait_cmds::PortraitsDir>,
     message_id: String,
     is_group: bool,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let table = if is_group { "group_messages" } else { "messages" };
     let fts_table = if is_group { "group_messages_fts" } else { "messages_fts" };
+
+    // Clean up world_images entry + file(s) on disk if this message had
+    // an illustration attached. world_images is keyed by image_id =
+    // message_id so this works for both individual + group illustrations.
+    let video_file: Option<String> = conn.query_row(
+        "SELECT video_file FROM world_images WHERE image_id = ?1",
+        rusqlite::params![message_id], |r| r.get(0),
+    ).ok();
+    let file_name: Option<String> = conn.query_row(
+        "SELECT file_name FROM world_images WHERE image_id = ?1",
+        rusqlite::params![message_id], |r| r.get(0),
+    ).ok();
+    conn.execute("DELETE FROM world_images WHERE image_id = ?1", rusqlite::params![message_id]).ok();
+    if let Some(ref vf) = video_file {
+        if !vf.is_empty() {
+            let p = portraits_dir.0.join(vf);
+            if p.exists() { let _ = std::fs::remove_file(&p); }
+        }
+    }
+    if let Some(ref f) = file_name {
+        let p = portraits_dir.0.join(f);
+        if p.exists() { let _ = std::fs::remove_file(&p); }
+    }
+
     conn.execute(&format!("DELETE FROM {} WHERE message_id = ?1", fts_table), rusqlite::params![message_id]).ok();
     conn.execute(&format!("DELETE FROM {} WHERE message_id = ?1", table), rusqlite::params![message_id])
         .map_err(|e| e.to_string())?;
