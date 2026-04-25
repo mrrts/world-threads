@@ -466,24 +466,40 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
 
   const isBackstageMode = activeMode === "backstage";
 
+  // Fade-through-solid mode-bg crossfade. When activeMode changes:
+  // 1. The currently-displayed bg fades out to opacity 0 (350ms),
+  //    revealing the solid bg-card behind.
+  // 2. displayedMode is swapped to the new mode while the bg is invisible.
+  // 3. The new bg fades in from opacity 0 to 1 (350ms).
+  // Net effect: bg → solidColor → bg, exactly the requested transition shape.
+  const [displayedMode, setDisplayedMode] = useState<"immersive" | "backstage">(activeMode);
+  const [bgOpacity, setBgOpacity] = useState(1);
+  useEffect(() => {
+    if (activeMode === displayedMode) return;
+    setBgOpacity(0);
+    const t = setTimeout(() => {
+      setDisplayedMode(activeMode);
+      setBgOpacity(1);
+    }, 350);
+    return () => clearTimeout(t);
+  }, [activeMode, displayedMode]);
+  const isBackstageDisplayed = displayedMode === "backstage";
+
   return (<>
     <Dialog open={open} onClose={onClose} className="max-w-[90vw]">
-      <div
-        className={`flex h-[88vh] border rounded-xl overflow-hidden relative ${
-          isBackstageMode
-            ? "bg-amber-950/90 border-amber-600/50 shadow-2xl shadow-black/40 [box-shadow:inset_0_0_60px_rgba(252,211,77,0.35),0_25px_50px_-12px_rgba(0,0,0,0.4)]"
-            : "bg-card border-border shadow-2xl shadow-black/40"
-        }`}
-      >
-        {/* Background layer: world image (immersive) or deep-amber wash (backstage) */}
-        {isBackstageMode ? (
-          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-            <div className="w-full h-full bg-gradient-to-br from-amber-900/60 via-amber-950/80 to-amber-900/60" />
-            {/* Inner gold glow vignette — keeps the backstage stage-light feel */}
-            <div className="absolute inset-0 [box-shadow:inset_0_0_120px_rgba(252,211,77,0.25)] pointer-events-none" />
-          </div>
-        ) : worldImageUrl && (
-          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      <div className="flex h-[88vh] bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden relative">
+        {/* World-image bg only renders in IMMERSIVE mode (background of the
+            whole modal including sidebar). In backstage mode the world
+            image is suppressed and the viewport itself carries the
+            theatrical bg + inner glow (so the sidebar doesn't eat the
+            left edge of the glow). Opacity tied to bgOpacity so the
+            crossfade dissolves through the solid bg-card cleanly when
+            switching modes. */}
+        {worldImageUrl && (
+          <div
+            className="absolute inset-0 z-0 pointer-events-none overflow-hidden transition-opacity duration-[350ms] ease-in-out"
+            style={{ opacity: !isBackstageDisplayed ? bgOpacity : 0 }}
+          >
             <img src={worldImageUrl} alt="" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-background/75" />
           </div>
@@ -562,6 +578,24 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
 
         {/* Main chat area */}
         <div className="flex-1 flex flex-col relative z-[1]">
+          {/* Mode-themed bg + inner-glow layer — lives INSIDE the
+              viewport so the sidebar doesn't eat the left edge of the
+              glow. Two layered themes (immersive indigo/violet, backstage
+              deep-amber + gold) keyed on displayedMode; opacity follows
+              bgOpacity for the fade-through-solid crossfade. */}
+          <div
+            className="absolute inset-0 z-0 pointer-events-none overflow-hidden transition-opacity duration-[350ms] ease-in-out"
+            style={{ opacity: bgOpacity }}
+          >
+            {isBackstageDisplayed ? (
+              <>
+                <div className="w-full h-full bg-gradient-to-br from-amber-900/60 via-amber-950/80 to-amber-900/60" />
+                <div className="absolute inset-0 [box-shadow:inset_0_0_120px_rgba(252,211,77,0.25),inset_0_0_60px_rgba(252,211,77,0.35)] pointer-events-none" />
+              </>
+            ) : (
+              <div className="absolute inset-0 [box-shadow:inset_0_0_120px_rgba(99,102,241,0.18),inset_0_0_60px_rgba(165,180,252,0.22)] pointer-events-none" />
+            )}
+          </div>
           {/* Header — Big Mode-switch. The toggle IS the modal's title.
               Each mode is themed distinctly so the switch feels like
               flipping a lens, not picking a tab:
