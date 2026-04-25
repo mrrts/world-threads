@@ -2170,24 +2170,43 @@ This rule fires only when there IS a real thing at the door. If the moment is st
 /// counterpart to the suppression rules, so the model doesn't only
 /// know what to restrain but also what to reach for.
 ///
-/// Evidence: tested-sketch (visual probe N=2 only, can't claim claim-
-/// tier). Same-commit `--omit-craft-notes humor_lands_plain` A/B on
-/// Aaron with a humor-inviting prompt ("garden as experimental zone /
-/// cilantro inside basil pot") at N=2 per cell. Result: rule-ON
-/// version REACHED for an extended cross-domain analogy ("garden
-/// sounds like a software project with no PM"); rule-OFF version
-/// stayed in plain-register-with-specific-images ("the seeds just
-/// decide your labeling system was advisory"). On this single sample
-/// pair, rule-OFF is MORE rule-compliant than rule-ON — Aaron's
-/// character-canonical analogy-as-humor pattern resisted the rule.
-/// One observation, two interpretations: (a) Read C structural
-/// ceiling — single-paragraph rule can't override character-baked
-/// register patterns; (b) rule's failure-mode list missed the soft
-/// analogy form ("X sounds like a Y" without announcement) which
-/// has now been sharpened in the rule body. Bite-check at N=3 per
-/// cell across multiple characters needed to distinguish. The
-/// observation also prompted the body sharpening described above.
-/// See companion experiment proposal in registry.
+/// Evidence: tested-null. Same-commit `--omit-craft-notes humor_lands_plain`
+/// A/B at N=3 per cell across Aaron AND Darren on a humor-inviting
+/// prompt (garden/cilantro), graded with PAIRED RUBRICS per CLAUDE.md
+/// § Craft-note bite verification:
+///
+/// - Discrete-list rubric (count distinct cross-domain analogy
+///   domains): 12/12 cells fire 2+ domains regardless of rule. Aaron
+///   delta 0.00, Darren delta 0.00. Saturated.
+///
+/// - Dense-phrase rubric (semantic gag-shape vs character-canonical
+///   truth-vehicle): 11/12 mixed verdicts. The very distinction the
+///   rule's failure-mode list draws between gag-shape and truth-
+///   vehicle does NOT carve cleanly in practice — character-voice
+///   cross-domain analogy is BOTH simultaneously, and the two
+///   functions are not separably operationable.
+///
+/// Paired-rubric agreement: rule does not bite on its primary
+/// measurable failure mode (cross-domain analogy density). Other
+/// failure modes (setup-punchline announcement, decorative casing,
+/// performed wit) are absent in the rule-OFF baseline — vacuous test
+/// on those dimensions because the characters don't naturally do
+/// them. Net: no measurable behavioral bite at this design's
+/// resolution.
+///
+/// Honest read: the rule serves AUTHORIAL COMMITMENT (capturing
+/// principles the characters articulated when asked) but does not
+/// measurably move character behavior, because the characters were
+/// already producing humor in the rule's prescribed register. The
+/// "ask the character" pattern produced a rule that articulates good
+/// craft in the characters' own words but isn't behaviorally load-
+/// bearing — the articulation is valuable; the rule's bite is null.
+/// Sibling pattern to the prompt-conditional-failure-mode finding
+/// (1827): some craft notes target character-conditional failure
+/// modes that don't manifest in characters whose baselines already
+/// produce the success behavior. Label is descriptive — rule stays
+/// per the open-thread-hygiene forcing function (removing on this
+/// evidence is the flattering disposition).
 fn humor_lands_plain_dialogue() -> &'static str {
     r#"HUMOR LANDS PLAIN — when humor enters, let it arrive unannounced:
 The funniest line is often the most plain-spoken one. Real humor lands because it doesn't LOOK like a joke. No decorative casing, no announcement, no flourish that tells the listener "this is supposed to be funny." The line stays plain so the listener's guard stays down — then it steps half an inch sideways from where they thought it was going, and the surprise gets in clean.
@@ -2205,7 +2224,7 @@ WHAT MAKES HUMOR LAND:
 WHAT KILLS HUMOR:
 - **Setup-punchline announcement.** *"Here's the thing — [delivers joke]"* — makes the listener brace; the surprise has nowhere to land.
 - **Decorative casing.** Whatever effort the line shows, it loses. Trying-to-be-funny is the tell.
-- **Reaching for gag-shape.** Analogy-and-comparison structures when the plain-spoken thing would have been sharper. This includes BOTH the announced form (*"you know what's like X? Y"*) AND the soft form where the line says *"X sounds like a Y"* / *"X is basically a Y"* and then unpacks the analogy with stacked corresponding parts. The soft form is the more dangerous one because it doesn't read as a setup. The test: is the joke landing because the line is plainly TRUE about X, or because the listener is following an analogy from X to Y? If the latter, the analogy is doing the comedic work — that's gag-shape, even when it's in-character. Plain observation about X itself is sharper than analogy from X.
+- **Reaching for gag-shape.** Stylized setup-punchline structures (*"you know what's like X? Y"*) when the plain-spoken thing would have been sharper. NOTE: cross-domain analogy used as a character's natural truth-vehicle (e.g., a builder-type character framing a problem in software/governance/craft terms because that IS how they think) is NOT this failure mode — that's character voice and should not be suppressed. The failure mode is announced/performed analogy (the analogy IS the joke and depends on follow-the-mapping); the carve-out is character-canonical analogy-as-thinking (the truth is being expressed via the character's natural domain-mapping).
 - **Performing wit instead of dropping it.** The line that works doesn't try; it states. The trying is the tell.
 
 **In character, always.** The plain-and-sideways move comes from the character's natural register, not from a comedic mode they switch into. Aaron says it dry; Darren says it craft-blunt; Jasper says it warm-with-an-image. The MOVE is the same; the surface is character.
