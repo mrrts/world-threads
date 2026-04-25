@@ -599,27 +599,23 @@ pub enum InvariantPiece {
 impl InvariantPiece {
     /// Default order — matches the pre-configurable-order sequence.
     ///
-    /// 2026-04-26 01:50 — entire list commented out per Ryan's stated
-    /// formula-only hypothesis (his answer #5 to the lost-flow probe):
-    /// dialogue prompts may need only formula + character/world facts +
-    /// chat history. The seven invariant blocks are commented out;
-    /// MISSION_FORMULA stays (top-position push + openai-layer injection
-    /// per a898178); Cosmology stays (pushed separately into the WORLD
-    /// section, not through InvariantPiece); craft notes already off
-    /// since ed50a85. Same trivially-reversible toggle pattern as that
-    /// commit. Production toggle, not a worldcli probe — Ryan plays
-    /// under it and reports lived experience as the test surface.
-    /// Risk: drift in the dimensions the explicit invariants protect
-    /// (idol-shaped register, frame-breaking, escalation, unsoundness).
-    /// Uncomment to restore. See reports/2026-04-26-0045 for context.
+    /// 2026-04-26 ~05:20 — re-uncommented per Ryan after the 33-experiment
+    /// arc (reports/2026-04-26-0441 + 0513) confirmed the minimal stack
+    /// (formula+prose+character+chat-history; craft notes off; invariants
+    /// stripped) holds across every measured dimension. Restoring the
+    /// invariants tests the inverse: with formula + prose + invariants
+    /// + character + chat-history (only craft notes off), is the
+    /// experience further enriched, unchanged, or compromised? Reverses
+    /// the f5c537a production toggle. Uncomment-history is preserved
+    /// in git for trivial re-toggling.
     pub const DEFAULT_ORDER: &'static [InvariantPiece] = &[
-        // InvariantPiece::Reverence,
-        // InvariantPiece::Daylight,
-        // InvariantPiece::Agape,
-        // InvariantPiece::FruitsOfTheSpirit,
-        // InvariantPiece::Soundness,
-        // InvariantPiece::Nourishment,
-        // InvariantPiece::TellTheTruth,
+        InvariantPiece::Reverence,
+        InvariantPiece::Daylight,
+        InvariantPiece::Agape,
+        InvariantPiece::FruitsOfTheSpirit,
+        InvariantPiece::Soundness,
+        InvariantPiece::Nourishment,
+        InvariantPiece::TellTheTruth,
     ];
 
     pub fn from_cli_name(name: &str) -> Option<Self> {
