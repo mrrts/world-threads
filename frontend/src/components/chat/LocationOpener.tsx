@@ -38,8 +38,8 @@ export function LocationOpener({ location, worldDay, worldTime, loading = false 
     if (!location || loading) return;
     setPhase("enter");
     const tHold = setTimeout(() => setPhase("hold"), 30);
-    const tExit = setTimeout(() => setPhase("exit"), 5000);
-    const tDone = setTimeout(() => setPhase("done"), 5800);
+    const tExit = setTimeout(() => setPhase("exit"), 7000);
+    const tDone = setTimeout(() => setPhase("done"), 7800);
     return () => {
       clearTimeout(tHold);
       clearTimeout(tExit);
