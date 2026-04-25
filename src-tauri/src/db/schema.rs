@@ -260,6 +260,23 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         conn.execute_batch("ALTER TABLE user_profiles ADD COLUMN avatar_file TEXT NOT NULL DEFAULT ''")?;
     }
 
+    // user_profiles.boundaries — added 2026-04-25 so the user-character
+    // can carry the same boundaries-shape data as regular characters.
+    // The canonizer's "Remember this" / "This changes them" flow proposes
+    // boundaries for the user when the moment fits; without this column
+    // the commit would have nowhere to write them.
+    let has_user_boundaries: bool = conn
+        .query_row(
+            "SELECT count(*) > 0 FROM pragma_table_info('user_profiles') WHERE name = 'boundaries'",
+            [],
+            |r| r.get(0),
+        )
+        .unwrap_or(false);
+
+    if !has_user_boundaries {
+        conn.execute_batch("ALTER TABLE user_profiles ADD COLUMN boundaries TEXT NOT NULL DEFAULT '[]'")?;
+    }
+
     let has_source: bool = conn
         .query_row(
             "SELECT count(*) > 0 FROM pragma_table_info('world_images') WHERE name = 'source'",

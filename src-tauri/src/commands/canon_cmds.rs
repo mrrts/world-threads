@@ -397,12 +397,17 @@ pub async fn propose_auto_canon_cmd(
                 subject_id: world_id.clone(),
                 subject_label: if profile.display_name.trim().is_empty() { "You".to_string() } else { profile.display_name.clone() },
                 current_description: profile.description.clone(),
-                // User profile doesn't carry these lists today; pass empty
-                // so the classifier treats the user as weave-only-eligible
-                // unless the moment genuinely fits another kind.
+                // User profile carries known_fact (UserProfile.facts —
+                // field name differs from Character.backstory_facts) and
+                // boundary (UserProfile.boundaries — same name). The
+                // classifier treats the user as eligible for these kinds;
+                // the commit-phase router below maps them to the correct
+                // user-side fields. Per 2026-04-25 fix: previously these
+                // were Vec::new() and the commit returned "kind not
+                // supported for user" — observed by Ryan in actual play.
                 voice_rules: Vec::new(),
-                boundaries: Vec::new(),
-                backstory_facts: Vec::new(),
+                boundaries: json_array_to_strings(&profile.boundaries),
+                backstory_facts: json_array_to_strings(&profile.facts),
                 open_loops: Vec::new(),
             });
         }
@@ -562,11 +567,44 @@ pub fn commit_auto_canon_cmd(
                 let id = write_kept_record(&conn, u, &trimmed, &request)?;
                 (Some(prior), Some(id))
             }
+            ("user", list_kind @ ("known_fact" | "boundary")) => {
+                // Per 2026-04-25 fix: route user-character known_fact and
+                // boundary to the correct UserProfile fields. Field names
+                // differ from Character on purpose: known_fact maps to
+                // UserProfile.facts (not backstory_facts — the user has
+                // lived facts, not biographical-fiction facts); boundary
+                // maps to UserProfile.boundaries (same name as Character).
+                let field = match list_kind {
+                    "boundary" => "boundaries",
+                    _ => "facts",
+                };
+                match action {
+                    "add" => {
+                        append_user_profile_list(&conn, &u.subject_id, field, &trimmed)?;
+                        let id = write_kept_record(&conn, u, &trimmed, &request)?;
+                        (None, Some(id))
+                    }
+                    "update" => {
+                        let target_text = target.as_deref().unwrap();
+                        replace_user_profile_list_item(&conn, &u.subject_id, field, target_text, &trimmed)?;
+                        let id = write_kept_record(&conn, u, &trimmed, &request)?;
+                        (Some(target_text.to_string()), Some(id))
+                    }
+                    "remove" => {
+                        let target_text = target.as_deref().unwrap();
+                        remove_user_profile_list_item(&conn, &u.subject_id, field, target_text)?;
+                        (Some(target_text.to_string()), None)
+                    }
+                    other => return Err(format!("unknown action: {other}")),
+                }
+            }
             ("user", _other) => {
-                // The user profile today doesn't carry voice_rules /
-                // boundaries / backstory_facts / open_loops.
+                // voice_rule and open_loop are not applicable to the user
+                // profile (no UI surface; not a user-character concept).
+                // known_fact and boundary are handled above; description_
+                // weave is handled above.
                 return Err(format!(
-                    "{} is not yet supported for subject_type=user — only description_weave is applicable to the user profile",
+                    "{} is not supported for subject_type=user — only description_weave, known_fact, and boundary apply",
                     kind
                 ));
             }
@@ -764,6 +802,102 @@ fn remove_character_list_item(
         &format!("UPDATE characters SET {field} = ?2, updated_at = datetime('now') WHERE character_id = ?1"),
         params![character_id, new_json],
     ).map_err(|e| format!("character update failed: {e}"))?;
+    Ok(())
+}
+
+/// User-profile analogues of the character-list helpers. field is one
+/// of {"facts","boundaries"} on the user_profiles table. Same semantics
+/// as the character helpers above (no dedupe on append; first-match
+/// replace/remove; loud failure on missing target).
+fn append_user_profile_list(
+    conn: &rusqlite::Connection,
+    world_id: &str,
+    field: &str,
+    value: &str,
+) -> Result<(), String> {
+    let current_json: String = conn.query_row(
+        &format!("SELECT {field} FROM user_profiles WHERE world_id = ?1"),
+        params![world_id], |r| r.get(0),
+    ).map_err(|e| format!("user_profile load failed: {e}"))?;
+    let mut arr: Vec<serde_json::Value> = serde_json::from_str(&current_json)
+        .unwrap_or_else(|_| Vec::new());
+    arr.push(serde_json::Value::String(value.to_string()));
+    let new_json = serde_json::to_string(&arr).map_err(|e| e.to_string())?;
+    conn.execute(
+        &format!("UPDATE user_profiles SET {field} = ?2, updated_at = datetime('now') WHERE world_id = ?1"),
+        params![world_id, new_json],
+    ).map_err(|e| format!("user_profile update failed: {e}"))?;
+    Ok(())
+}
+
+fn replace_user_profile_list_item(
+    conn: &rusqlite::Connection,
+    world_id: &str,
+    field: &str,
+    target: &str,
+    replacement: &str,
+) -> Result<(), String> {
+    let current_json: String = conn.query_row(
+        &format!("SELECT {field} FROM user_profiles WHERE world_id = ?1"),
+        params![world_id], |r| r.get(0),
+    ).map_err(|e| format!("user_profile load failed: {e}"))?;
+    let mut arr: Vec<serde_json::Value> = serde_json::from_str(&current_json)
+        .unwrap_or_else(|_| Vec::new());
+    let target_norm = target.trim().to_ascii_lowercase();
+    let mut replaced = false;
+    for v in arr.iter_mut() {
+        if let Some(s) = v.as_str() {
+            if s.trim().to_ascii_lowercase() == target_norm {
+                *v = serde_json::Value::String(replacement.to_string());
+                replaced = true;
+                break;
+            }
+        }
+    }
+    if !replaced {
+        return Err(format!("target not found in user_profile.{field}: {target:?}"));
+    }
+    let new_json = serde_json::to_string(&arr).map_err(|e| e.to_string())?;
+    conn.execute(
+        &format!("UPDATE user_profiles SET {field} = ?2, updated_at = datetime('now') WHERE world_id = ?1"),
+        params![world_id, new_json],
+    ).map_err(|e| format!("user_profile update failed: {e}"))?;
+    Ok(())
+}
+
+fn remove_user_profile_list_item(
+    conn: &rusqlite::Connection,
+    world_id: &str,
+    field: &str,
+    target: &str,
+) -> Result<(), String> {
+    let current_json: String = conn.query_row(
+        &format!("SELECT {field} FROM user_profiles WHERE world_id = ?1"),
+        params![world_id], |r| r.get(0),
+    ).map_err(|e| format!("user_profile load failed: {e}"))?;
+    let mut arr: Vec<serde_json::Value> = serde_json::from_str(&current_json)
+        .unwrap_or_else(|_| Vec::new());
+    let target_norm = target.trim().to_ascii_lowercase();
+    let before_len = arr.len();
+    let mut removed_once = false;
+    arr.retain(|v| {
+        if removed_once { return true; }
+        match v.as_str() {
+            Some(s) if s.trim().to_ascii_lowercase() == target_norm => {
+                removed_once = true;
+                false
+            }
+            _ => true,
+        }
+    });
+    if arr.len() == before_len {
+        return Err(format!("target not found in user_profile.{field}: {target:?}"));
+    }
+    let new_json = serde_json::to_string(&arr).map_err(|e| e.to_string())?;
+    conn.execute(
+        &format!("UPDATE user_profiles SET {field} = ?2, updated_at = datetime('now') WHERE world_id = ?1"),
+        params![world_id, new_json],
+    ).map_err(|e| format!("user_profile update failed: {e}"))?;
     Ok(())
 }
 
