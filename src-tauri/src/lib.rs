@@ -62,6 +62,19 @@ pub fn run() {
 
             let portraits_dir = app_dir.join("portraits");
             std::fs::create_dir_all(&portraits_dir).ok();
+
+            // One-shot orphan cleanup: drop world_images entries (and
+            // image+video files) for chat illustrations whose message
+            // rows are gone. Self-healing on every startup; fast no-op
+            // when nothing to clean.
+            if let Some(db) = app.try_state::<db::Database>() {
+                if let Ok(conn) = db.conn.lock() {
+                    if let Err(e) = commands::illustration_cmds::cleanup_orphaned_illustrations(&conn, &portraits_dir) {
+                        log::warn!("[startup] orphan-illustration cleanup failed: {e}");
+                    }
+                }
+            }
+
             app.manage(PortraitsDir(portraits_dir));
 
             let audio_dir = app_dir.join("audio");

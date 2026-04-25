@@ -49,6 +49,52 @@ pub fn png_aspect_ratio(bytes: &[u8]) -> f64 {
     }
 }
 
+/// One-shot startup cleanup: drop world_images entries (and their
+/// files on disk) whose source is 'illustration' but whose image_id
+/// no longer corresponds to any row in messages or group_messages.
+/// These are leftovers from the era before delete_message_cmd cleaned
+/// up world_images on illustration-message deletion. Cheap to run on
+/// every startup; logs a count when it does anything.
+///
+/// Source filter is critical: 'imagined_chapter' / 'crop' / 'generated'
+/// world_images entries are referenced via OTHER tables (imagined_
+/// chapters, etc.) and must not be touched by this cleanup.
+pub fn cleanup_orphaned_illustrations(
+    conn: &rusqlite::Connection,
+    portraits_dir: &std::path::Path,
+) -> Result<usize, String> {
+    let mut stmt = conn.prepare(
+        "SELECT image_id, file_name, video_file FROM world_images
+         WHERE source = 'illustration'
+           AND image_id NOT IN (SELECT message_id FROM messages)
+           AND image_id NOT IN (SELECT message_id FROM group_messages)"
+    ).map_err(|e| e.to_string())?;
+    let orphans: Vec<(String, String, String)> = stmt
+        .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
+        .map_err(|e| e.to_string())?
+        .filter_map(|r| r.ok())
+        .collect();
+    drop(stmt);
+
+    let count = orphans.len();
+    for (image_id, file_name, video_file) in orphans {
+        if !file_name.is_empty() {
+            let p = portraits_dir.join(&file_name);
+            if p.exists() { let _ = std::fs::remove_file(&p); }
+        }
+        if !video_file.is_empty() {
+            let p = portraits_dir.join(&video_file);
+            if p.exists() { let _ = std::fs::remove_file(&p); }
+        }
+        conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![image_id])
+            .map_err(|e| e.to_string())?;
+    }
+    if count > 0 {
+        log::info!("[illustration cleanup] Removed {count} orphaned world_images entries (no matching message)");
+    }
+    Ok(count)
+}
+
 /// Delete a single illustration: message, gallery entry, and file on disk.
 pub(crate) fn delete_illustration_inner(conn: &rusqlite::Connection, portraits_dir: &std::path::Path, message_id: &str) -> Result<(), String> {
     // Delete associated video file if one exists
