@@ -2468,6 +2468,17 @@ When action is `add` or the kind is `description_weave`, omit `target_existing_t
 # Subjects
 You will be given one or more candidate subjects (each a character or the user). A moment can yield an update about any of them — the speaker, the addressee, a third party named, or the user. Route each update to the right subject. When a moment reveals one thing about the speaker and one thing about the addressee, two updates across two subjects is correct.
 
+## How to fill `subject_type` and `subject_id` — read carefully
+Each candidate subject in the list above is shown with `(type=<X>, id=<Y>)` in its header. Those two values are what go into your output for that subject — copy them verbatim:
+
+- **`subject_type`** is ONLY one of two literal strings: `"character"` or `"user"`. It is NOT the subject's name. If a subject's header reads `## Subject 2: Aaron (type=character, id=0d080429-...)`, then for an update about Aaron the correct fields are `"subject_type": "character"` and `"subject_id": "0d080429-..."`. NOT `"subject_type": "Aaron"`. The name "Aaron" is a label for your reasoning; "character" is the type the schema requires.
+- **`subject_id`** is the exact id string shown in the subject's header — a UUID-shaped string for characters, or the world id for the user. Copy it verbatim.
+
+Wrong: `"subject_type": "Aaron", "subject_id": "0d080429-..."` — putting the name in the type field.
+Right: `"subject_type": "character", "subject_id": "0d080429-..."` — both fields exactly as the subject header shows.
+
+If the subject header says `(type=user, id=<world-uuid>)`, then `"subject_type": "user"` and `"subject_id": "<world-uuid>"`. Same rule.
+
 # Avoid duplicating existing canon
 Every subject's current state is shown. Do NOT add a voice_rule / boundary / known_fact / open_loop that is already present in the existing list — if the canon already says it, either update the existing entry (with nuance) or pick a different finding. An add that duplicates an existing item is a bug.
 
