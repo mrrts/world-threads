@@ -705,22 +705,6 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
             })}
           </div>
           <h1 className="font-semibold">{store.activeGroupChat?.display_name}</h1>
-          <div className="flex items-center gap-1 flex-shrink-0">
-            <div className="relative group/locbtn">
-              <button
-                onClick={() => setShowLocationModal(true)}
-                className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
-              >
-                <MapPin size={14} />
-              </button>
-              <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/locbtn:opacity-100 pointer-events-none transition-opacity z-50">{currentLocation ? "Change location" : "Set location"}</span>
-            </div>
-            {currentLocation && (
-              <span className="text-[11px] text-muted-foreground/80 max-w-[200px] truncate">
-                <span className="text-muted-foreground/50">Location:</span> <span className="text-foreground/70">{currentLocation}</span>
-              </span>
-            )}
-          </div>
           {showGroupPopover && (
             <div
               className="absolute left-0 top-full mt-2 z-50 w-[540px] bg-card border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-in fade-in zoom-in-95 duration-150"
@@ -757,6 +741,22 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                 })}
               </div>
             </div>
+          )}
+        </div>
+        <div className="flex items-center gap-1 flex-shrink-0">
+          <div className="relative group/locbtn">
+            <button
+              onClick={() => setShowLocationModal(true)}
+              className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
+            >
+              <MapPin size={14} />
+            </button>
+            <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/locbtn:opacity-100 pointer-events-none transition-opacity z-50">{currentLocation ? "Change location" : "Set location"}</span>
+          </div>
+          {currentLocation && (
+            <span className="text-[11px] text-muted-foreground/80 max-w-[200px] truncate">
+              <span className="text-muted-foreground/50">Location:</span> <span className="text-foreground/70">{currentLocation}</span>
+            </span>
           )}
         </div>
         <div className="ml-auto relative group/gallery">
