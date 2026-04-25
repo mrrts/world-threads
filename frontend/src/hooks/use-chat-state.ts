@@ -305,25 +305,55 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     lastMessageIdRef.current = store.messages[store.messages.length - 1]?.message_id ?? null;
     const el = scrollRef.current;
     if (!el) return;
+    const inner = el.firstElementChild as HTMLElement | null;
     const scroll = () => { el.scrollTop = el.scrollHeight; };
+
+    // Initial scroll, then keep re-scrolling on every content-resize
+    // until the DOM stops growing for `STABLE_MS` AND we're at the
+    // bottom. A long-history chat with images/illustrations grows
+    // scrollHeight progressively as elements lay out — fixed-timeline
+    // retries miss tail growth. ResizeObserver catches every resize.
     scroll();
-    // Multiple retries because long histories with images / illustrations
-    // expand the scrollHeight progressively as DOM elements lay out.
-    // Each retry recomputes scrollHeight against the current DOM. The
-    // last retries cover slow long-history loads (Darren-tier).
+    const STABLE_MS = 400;
+    const HARD_CAP_MS = 8000;
     const isAtBottomNow = () => el.scrollHeight - el.scrollTop - el.clientHeight < 40;
-    const tryAndMaybeFinalize = () => {
-      scroll();
-      if (isAtBottomNow()) setInitialScrollComplete(true);
+
+    let stableTimer: ReturnType<typeof setTimeout> | null = null;
+    const armStable = () => {
+      if (stableTimer) clearTimeout(stableTimer);
+      stableTimer = setTimeout(() => {
+        if (isAtBottomNow()) setInitialScrollComplete(true);
+      }, STABLE_MS);
     };
-    const timeouts = [50, 150, 300, 600, 1200, 2500, 4500].map((ms) =>
-      setTimeout(tryAndMaybeFinalize, ms),
-    );
-    // Always finalize after the last retry, even if scroll didn't quite
-    // reach bottom (e.g., user scrolled away mid-load) — opener should
-    // not wait forever.
-    const finalize = setTimeout(() => setInitialScrollComplete(true), 5000);
-    return () => { timeouts.forEach(clearTimeout); clearTimeout(finalize); };
+    armStable();
+
+    let observer: ResizeObserver | null = null;
+    if (inner && typeof ResizeObserver !== "undefined") {
+      observer = new ResizeObserver(() => {
+        scroll();
+        armStable();
+      });
+      observer.observe(inner);
+    } else {
+      // Fallback: fixed-timeline retries when ResizeObserver isn't
+      // available (older WebView).
+      const fallback = [100, 300, 700, 1500, 3000, 5000, 7000].map((ms) =>
+        setTimeout(() => { scroll(); armStable(); }, ms),
+      );
+      const cleanup = () => fallback.forEach(clearTimeout);
+      const cap = setTimeout(() => setInitialScrollComplete(true), HARD_CAP_MS);
+      return () => { cleanup(); clearTimeout(cap); if (stableTimer) clearTimeout(stableTimer); };
+    }
+
+    // Hard cap: even if the DOM never settles, release the opener so
+    // it isn't blocked forever.
+    const cap = setTimeout(() => setInitialScrollComplete(true), HARD_CAP_MS);
+
+    return () => {
+      observer?.disconnect();
+      if (stableTimer) clearTimeout(stableTimer);
+      clearTimeout(cap);
+    };
   }, [chatId, store.messages.length]);
 
   // Scroll to bottom when sending/generating starts
