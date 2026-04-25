@@ -2508,6 +2508,14 @@ When action is `add` or the kind is `description_weave`, omit `target_existing_t
 # Subjects
 You will be given one or more candidate subjects (each a character or the user). A moment can yield an update about any of them — the speaker, the addressee, a third party named, or the user. Route each update to the right subject. When a moment reveals one thing about the speaker and one thing about the addressee, two updates across two subjects is correct.
 
+**CRITICAL — the source line's SPEAKER is not necessarily the SUBJECT.** When a character is talking ABOUT the user (or about a third party), the canonization belongs to the person being TALKED ABOUT, not to the speaker. Examples:
+
+- Aaron says about the user: *"You've got that look where you're still productive but your judgment starts making private deals with momentum."* → this is canon about the USER (an observed pattern of theirs), NOT about Aaron. Route to subject_type=user.
+- Darren says about the user: *"What are your tells when you've crossed from 'alive' into 'running hot'?"* and the user answers with their tell. → if the user's answer is the canonization-worthy moment, the subject is the user. If Darren's question reveals something about Darren's diagnostic register, that's an Aaron/Darren-side update — but only if the question's MOMENT is about the speaker, not about the person they're asking.
+- A character speaks about another character ("Steven's been carrying that look since the hearing") → subject is Steven, not the speaker.
+
+**Default rule: ask "who does this moment reveal something about?" — that's the subject. The speaker is just the messenger.** Only route to the speaker when the moment reveals something about the SPEAKER themselves (their voice, their boundary, their own backstory, their own register move). When the speaker is naming, observing, or characterizing someone else, the subject is that someone else.
+
 ## How to fill `subject_type` and `subject_id` — read carefully
 Each candidate subject in the list above is shown with `(type=<X>, id=<Y>)` in its header. Those two values are what go into your output for that subject — copy them verbatim:
 
