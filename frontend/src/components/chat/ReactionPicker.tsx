@@ -35,6 +35,7 @@ export function ReactionPicker({
         width={320}
         lazyLoadEmojis
         searchPlaceholder="Search emoji..."
+        previewConfig={{ showPreview: false }}
       />
     </div>
   );

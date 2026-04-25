@@ -493,6 +493,7 @@ export function CharacterEditor({ store }: Props) {
                           width={320}
                           lazyLoadEmojis
                           searchPlaceholder="Search emoji..."
+                          previewConfig={{ showPreview: false }}
                         />
                       </div>
                     )}
