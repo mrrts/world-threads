@@ -22,8 +22,8 @@ export function LocationOpener({ location }: Props) {
     if (!location) return;
     setPhase("enter");
     const tHold = setTimeout(() => setPhase("hold"), 30);
-    const tExit = setTimeout(() => setPhase("exit"), 3000);
-    const tDone = setTimeout(() => setPhase("done"), 3700);
+    const tExit = setTimeout(() => setPhase("exit"), 5000);
+    const tDone = setTimeout(() => setPhase("done"), 5800);
     return () => {
       clearTimeout(tHold);
       clearTimeout(tExit);
@@ -34,29 +34,35 @@ export function LocationOpener({ location }: Props) {
   if (!location || phase === "done") return null;
 
   const isVisible = phase === "hold";
-  const transformClass = isVisible ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0";
+  const transformClass = isVisible ? "translate-y-0 opacity-100" : "-translate-y-8 opacity-0";
 
   return (
-    <div className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none z-20">
+    <div className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none z-20 px-6">
       <div
         className={`
-          mt-6
-          flex items-center gap-3
-          px-6 py-3.5 rounded-full
-          bg-gradient-to-br from-emerald-950/90 via-emerald-900/85 to-emerald-950/90
+          mt-10
+          flex items-center gap-5
+          px-10 py-6 rounded-2xl
+          w-full max-w-2xl
+          bg-gradient-to-br from-emerald-950/95 via-emerald-900/90 to-emerald-950/95
           backdrop-blur-md
-          border border-emerald-400/30
-          shadow-2xl shadow-emerald-950/40
+          border-2 border-emerald-400/50
+          shadow-[0_0_60px_rgba(16,185,129,0.55),0_0_120px_rgba(16,185,129,0.30),inset_0_0_30px_rgba(16,185,129,0.15)]
           transition-all duration-700 ease-out
           ${transformClass}
         `}
       >
-        <MapPin size={22} className="text-emerald-300 drop-shadow-[0_0_6px_rgba(110,231,183,0.6)]" />
-        <div className="flex flex-col leading-tight">
-          <span className="text-[10px] uppercase tracking-[0.2em] text-emerald-300/70 font-semibold">
+        <MapPin
+          size={42}
+          className="text-emerald-300 flex-shrink-0 drop-shadow-[0_0_14px_rgba(110,231,183,0.95)]"
+        />
+        <div className="flex flex-col leading-tight min-w-0">
+          <span className="text-[12px] uppercase tracking-[0.32em] text-emerald-300/85 font-semibold drop-shadow-[0_0_6px_rgba(110,231,183,0.5)]">
             Location
           </span>
-          <span className="text-base text-emerald-50 font-medium">{location}</span>
+          <span className="text-3xl text-emerald-50 font-semibold tracking-tight truncate drop-shadow-[0_0_10px_rgba(167,243,208,0.55)]">
+            {location}
+          </span>
         </div>
       </div>
     </div>
