@@ -629,6 +629,7 @@ pub async fn send_message_cmd(
     active_quests.as_slice(),
     stance_text.as_deref(),
     anchor_text.as_deref(),
+    None,
     );
     // Context for the reaction-emoji pick: the recent messages EXCLUDING
     // the user's brand-new one (which goes in the user-role slot). Gives
@@ -697,6 +698,7 @@ pub async fn send_message_cmd(
                             active_quests.as_slice(),
                             stance_text.as_deref(),
                             anchor_text.as_deref(),
+                        None,
                         ).await {
                             Ok((corrected, corrected_usage)) => {
                                 log::info!("[Conscience] {} reply corrected after drift", character.display_name);
@@ -1085,6 +1087,7 @@ pub async fn prompt_character_cmd(
         active_quests.as_slice(),
         stance_text.as_deref(),
         anchor_text.as_deref(),
+    None,
     ).await?;
 
     // Conscience Pass: grade + regenerate-on-drift (see send_message_cmd).
@@ -1133,6 +1136,7 @@ pub async fn prompt_character_cmd(
                             active_quests.as_slice(),
                             stance_text.as_deref(),
                             anchor_text.as_deref(),
+                        None,
                         ).await {
                             Ok((corrected, corrected_usage)) => {
                                 log::info!("[Conscience] {} (prompt) reply corrected after drift", character.display_name);
@@ -1449,6 +1453,7 @@ pub async fn try_proactive_ping_cmd(
         active_quests.as_slice(),
         stance_text.as_deref(),
         anchor_text.as_deref(),
+    None,
     ).await?;
 
     if reply_text.trim().is_empty() {
@@ -1726,6 +1731,7 @@ pub async fn generate_narrative_cmd(
         narration_tone.as_deref(),
         merged_instructions.as_deref(),
         &illustration_captions,
+    None,
     ).await?;
 
     // Store as a "narrative" role message
@@ -2243,6 +2249,7 @@ pub async fn reset_to_message_cmd(
         active_quests.as_slice(),
         stance_text.as_deref(),
         anchor_text.as_deref(),
+        None,
         );
         let reaction_context: Vec<Message> = recent_msgs.iter()
             .rev().skip(1).take(4).rev().cloned().collect();
@@ -2296,6 +2303,7 @@ pub async fn reset_to_message_cmd(
                                 active_quests.as_slice(),
                                 stance_text.as_deref(),
                                 anchor_text.as_deref(),
+                            None,
                             ).await {
                                 Ok((corrected, corrected_usage)) => {
                                     log::info!("[Conscience] {} (reset) reply corrected after drift", character.display_name);

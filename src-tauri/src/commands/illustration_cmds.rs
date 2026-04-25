@@ -143,7 +143,7 @@ pub async fn generate_illustration_cmd(
     previous_illustration_id: Option<String>,
     include_scene_summary: Option<bool>,
 ) -> Result<IllustrationResult, String> {
-    let (world, character, thread_id, recent_msgs, model_config, user_profile) = {
+    let (world, character, thread_id, recent_msgs, model_config, user_profile, current_loc) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
         let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
@@ -151,7 +151,8 @@ pub async fn generate_illustration_cmd(
         let model_config = orchestrator::load_model_config(&conn);
         let recent_msgs = list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?;
         let user_profile = get_user_profile(&conn, &character.world_id).ok();
-        (world, character, thread.thread_id, recent_msgs, model_config, user_profile)
+        let current_loc = get_thread_location(&conn, &thread.thread_id).ok().flatten();
+        (world, character, thread.thread_id, recent_msgs, model_config, user_profile, current_loc)
     };
 
     // Load reference portraits: user avatar first, then character's active portrait
@@ -254,6 +255,7 @@ pub async fn generate_illustration_cmd(
         include_scene_summary.unwrap_or(true),
         None,
         None,
+        current_loc.as_deref(),
     ).await?;
 
     // Caption: user's instructions verbatim when provided; otherwise
@@ -762,6 +764,7 @@ pub async fn preview_backstage_illustration_cmd(
         all_names,
         names_map,
         list_for_thread_msg_id_set,
+        current_loc,
     ): (
         World,
         Character,
@@ -772,6 +775,7 @@ pub async fn preview_backstage_illustration_cmd(
         Vec<String>,
         Option<std::collections::HashMap<String, String>>,
         std::collections::HashSet<String>,
+        Option<String>,
     ) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         if let Some(gc_id) = group_chat_id.as_deref() {
@@ -801,8 +805,9 @@ pub async fn preview_backstage_illustration_cmd(
             let names_map: std::collections::HashMap<String, String> = characters.iter()
                 .map(|c| (c.character_id.clone(), c.display_name.clone()))
                 .collect();
+            let current_loc = get_group_chat_location(&conn, gc_id).ok().flatten();
             (world, primary, additional, recent_msgs, model_config, user_profile,
-             all_names, Some(names_map), std::collections::HashSet::new())
+             all_names, Some(names_map), std::collections::HashSet::new(), current_loc)
         } else {
             let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
             let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
@@ -810,8 +815,9 @@ pub async fn preview_backstage_illustration_cmd(
             let model_config = orchestrator::load_model_config(&conn);
             let recent_msgs = list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?;
             let user_profile = get_user_profile(&conn, &character.world_id).ok();
+            let current_loc = get_thread_location(&conn, &thread.thread_id).ok().flatten();
             (world, character, Vec::new(), recent_msgs, model_config, user_profile,
-             Vec::new(), None, std::collections::HashSet::new())
+             Vec::new(), None, std::collections::HashSet::new(), current_loc)
         }
     };
     let _ = list_for_thread_msg_id_set;
@@ -880,6 +886,7 @@ pub async fn preview_backstage_illustration_cmd(
         true,  // include_scene_summary
         if all_names.is_empty() { None } else { Some(&all_names) },
         names_map_ref,
+        current_loc.as_deref(),
     ).await?;
 
     let caption = match custom_instructions.as_deref() {

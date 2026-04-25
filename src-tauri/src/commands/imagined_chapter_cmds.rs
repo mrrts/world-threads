@@ -421,6 +421,7 @@ pub async fn generate_imagined_chapter_cmd(
         false, // include_scene_summary — we already have the description
         if all_names.is_empty() { None } else { Some(&all_names[..]) },
         None,
+    None,
     ).await?;
 
     if let Some(u) = &image_chat_usage {

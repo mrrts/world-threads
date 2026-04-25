@@ -4207,6 +4207,11 @@ pub const DEFAULT_CHAT_LOCATION: &str = "Town Square";
 /// Falls back to `DEFAULT_CHAT_LOCATION` when no location_change
 /// exists yet. Used by build_dialogue_messages to anchor the system
 /// prompt's CURRENT LOCATION line.
+///
+/// PREFER `effective_current_location` at call sites that have access
+/// to the chat row's current_location field — that value is the real
+/// source of truth, while message-walking only finds rows still in
+/// the loaded window.
 pub fn derive_current_location(recent_messages: &[Message]) -> Option<String> {
     for m in recent_messages.iter().rev() {
         if m.role == "location_change" {
@@ -4223,6 +4228,24 @@ pub fn derive_current_location(recent_messages: &[Message]) -> Option<String> {
         }
     }
     Some(DEFAULT_CHAT_LOCATION.to_string())
+}
+
+/// Returns the effective current location for prompt-building.
+/// Precedence: explicit override (the chat row's current_location)
+/// → walk messages → DEFAULT_CHAT_LOCATION. The chat row carries the
+/// authoritative value; message-walking is only a backstop for paths
+/// where the override isn't passed through.
+pub fn effective_current_location(
+    override_loc: Option<&str>,
+    recent_messages: &[Message],
+) -> Option<String> {
+    if let Some(s) = override_loc {
+        let trimmed = s.trim();
+        if !trimmed.is_empty() {
+            return Some(trimmed.to_string());
+        }
+    }
+    derive_current_location(recent_messages)
 }
 
 pub fn render_imagined_chapter_for_prompt(content: &str) -> String {
@@ -4520,6 +4543,7 @@ pub fn build_dialogue_messages(
     illustration_captions: &HashMap<String, String>,
     reactions_by_msg: &HashMap<String, Vec<Reaction>>,
     user_display_name: Option<&str>,
+    current_location_override: Option<&str>,
 ) -> Vec<crate::ai::openai::ChatMessage> {
     let mut msgs = Vec::new();
 
@@ -4764,7 +4788,7 @@ pub fn build_dialogue_messages(
     // resist correction even when the user explicitly says otherwise.
     // The directive below names that pattern explicitly and asserts
     // the user's authority as scene-leader.
-    if let Some(loc) = derive_current_location(recent_messages) {
+    if let Some(loc) = effective_current_location(current_location_override, recent_messages) {
         msgs.push(crate::ai::openai::ChatMessage {
             role: "system".to_string(),
             content: format!(
@@ -4891,6 +4915,7 @@ pub fn build_proactive_ping_messages(
     illustration_captions: &HashMap<String, String>,
     reactions_by_msg: &HashMap<String, Vec<Reaction>>,
     user_display_name: Option<&str>,
+    current_location_override: Option<&str>,
 ) -> Vec<crate::ai::openai::ChatMessage> {
     let mut msgs = build_dialogue_messages(
         system_prompt,
@@ -4901,6 +4926,7 @@ pub fn build_proactive_ping_messages(
         illustration_captions,
         reactions_by_msg,
         user_display_name,
+        current_location_override,
     );
     let hint = elapsed_hint.unwrap_or("Some time has passed.");
     // The angle sets the subject of the message — not the words. It goes
@@ -5257,6 +5283,7 @@ pub fn build_scene_description_prompt(
     // assistant messages in the conversation history so the scene director
     // can tell speakers apart.
     character_names: Option<&HashMap<String, String>>,
+    current_location_override: Option<&str>,
 ) -> Vec<crate::ai::openai::ChatMessage> {
     let user_name = user_profile
         .map(|p| p.display_name.as_str())
@@ -5379,7 +5406,7 @@ pub fn build_scene_description_prompt(
     // before the user prompt so the scene director places the
     // illustration in the active scene, not in a previously-mentioned
     // setting from chat-history detail.
-    if let Some(loc) = derive_current_location(recent_messages) {
+    if let Some(loc) = effective_current_location(current_location_override, recent_messages) {
         msgs.push(crate::ai::openai::ChatMessage {
             role: "system".to_string(),
             content: format!("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: {loc}. Place this illustration HERE. The conversation above may include vivid detail about previous locations — that detail belongs to past scenes; the illustration is grounded in {loc}.]"),

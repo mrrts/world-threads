@@ -227,6 +227,7 @@ pub async fn run_dialogue_with_base(
     active_quests: &[crate::db::queries::Quest],
     relational_stance: Option<&str>,
     load_test_anchor: Option<&str>,
+    current_location_override: Option<&str>,
 ) -> Result<(String, Option<openai::Usage>), String> {
     // When the user has disabled conversation history for this chat, strip
     // prior turns, semantic memories, and moment markers — the character
@@ -272,7 +273,7 @@ pub async fn run_dialogue_with_base(
         system.push_str("\n\n");
         system.push_str(note);
     }
-    let messages = prompts::build_dialogue_messages(&system, effective_msgs, effective_snippets, character_names, effective_kept, effective_captions, effective_reactions, user_display_name);
+    let messages = prompts::build_dialogue_messages(&system, effective_msgs, effective_snippets, character_names, effective_kept, effective_captions, effective_reactions, user_display_name, current_location_override);
 
     // Unsent-draft pre-pass — DISABLED 2026-04-20. The extra call produced
     // an undercurrent-carrying reply, but even casual greetings ended up
@@ -488,6 +489,7 @@ pub async fn run_proactive_ping_with_base(
     active_quests: &[crate::db::queries::Quest],
     relational_stance: Option<&str>,
     load_test_anchor: Option<&str>,
+    current_location_override: Option<&str>,
 ) -> Result<(String, Option<openai::Usage>), String> {
     // Proactive pings are solo-only — pass is_group=false to the sampler.
     let own_voice_samples = prompts::pick_own_voice_samples(
@@ -509,7 +511,7 @@ pub async fn run_proactive_ping_with_base(
     log::info!("[Proactive] angle = {:.80}", angle);
     let messages = prompts::build_proactive_ping_messages(
         &system, recent_messages, retrieved_snippets, kept_ids, elapsed_hint, angle, illustration_captions,
-        reactions_by_msg, user_display_name,
+        reactions_by_msg, user_display_name, current_location_override,
     );
 
     let request = ChatRequest {
@@ -729,7 +731,7 @@ pub async fn run_dialogue_streaming(
     let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, &[], None, &[], None, &[], None, None);
     let empty_reactions: std::collections::HashMap<String, Vec<crate::db::queries::Reaction>> = std::collections::HashMap::new();
     let user_display_name = user_profile.map(|p| p.display_name.as_str());
-    let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names, kept_ids, illustration_captions, &empty_reactions, user_display_name);
+    let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names, kept_ids, illustration_captions, &empty_reactions, user_display_name, None);
 
     let token_limit = match response_length {
         Some("Short") => Some(150),
@@ -2957,6 +2959,7 @@ pub async fn run_narrative_with_base(
     narration_tone: Option<&str>,
     narration_instructions: Option<&str>,
     illustration_captions: &std::collections::HashMap<String, String>,
+    current_location_override: Option<&str>,
 ) -> Result<(String, Option<openai::Usage>), String> {
     let system = prompts::build_narrative_system_prompt(world, character, additional_cast, user_profile, mood_directive, narration_tone, narration_instructions);
 
@@ -3043,7 +3046,7 @@ pub async fn run_narrative_with_base(
     // build_dialogue_messages. Sits as the final system message after
     // chat history so the narrator grounds the beat in the current
     // scene, not in a previously-mentioned location.
-    if let Some(loc) = prompts::derive_current_location(recent_messages) {
+    if let Some(loc) = prompts::effective_current_location(current_location_override, recent_messages) {
         msgs.push(openai::ChatMessage {
             role: "system".to_string(),
             content: format!("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: {loc}. The beat is happening here. Chat history above may show vivid detail about previous locations — that belongs to past scenes; this beat is grounded in {loc}.]"),
@@ -3105,10 +3108,11 @@ pub async fn generate_illustration_with_base(
     include_scene_summary: bool,
     all_character_names: Option<&[String]>,
     character_names_map: Option<&std::collections::HashMap<String, String>>,
+    current_location_override: Option<&str>,
 ) -> Result<(String, Vec<u8>, Option<openai::Usage>), String> {
     // Step 1: Generate scene description (if requested)
     let (scene_description, chat_usage) = if include_scene_summary {
-        let scene_messages = prompts::build_scene_description_prompt(world, character, additional_cast, user_profile, recent_messages, character_names_map);
+        let scene_messages = prompts::build_scene_description_prompt(world, character, additional_cast, user_profile, recent_messages, character_names_map, current_location_override);
 
         let scene_request = ChatRequest {
             model: chat_model.to_string(),
@@ -3206,7 +3210,7 @@ pub async fn generate_illustration_with_base(
     // regardless of what the scene-description text or the previous-
     // scene reference image might suggest. Sits BEFORE the scene
     // description so it frames how the description is read.
-    if let Some(loc) = prompts::derive_current_location(recent_messages) {
+    if let Some(loc) = prompts::effective_current_location(current_location_override, recent_messages) {
         prompt_parts.push(format!(
             "SETTING (AUTHORITATIVE): {loc}. The illustration MUST depict this setting. Do NOT depict any previously-mentioned location. If the SCENE text below describes elements that don't fit {loc}, override them with details appropriate to {loc}."
         ));
