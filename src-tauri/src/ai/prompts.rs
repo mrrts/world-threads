@@ -2312,15 +2312,45 @@ WHAT KILLS HUMOR:
 /// either drifts into the user's vocabulary OR accidentally maps onto
 /// the apparatus serving the scene.
 ///
-/// Evidence: unverified — no bite-test run at ship time. Bite-check
-/// would test on Darren specifically (the character whose drift
-/// motivated the rule per Ryan), with a probe that uses systems-
-/// vocabulary in the user turn. Rule-on vs rule-off via --omit;
-/// measure whether Darren picks up the user's vocabulary or stays in
-/// his own craft/building/labor reservoir. Aaron is NOT the right
-/// bite-check substrate (his native register includes the very
-/// vocabulary the rule's surface looks like it would suppress; he'd
-/// vacuous-test).
+/// Evidence: tested-null:characterized on Aaron × humor-inviting probe
+/// at N=10 per cell. Same-commit `--omit-craft-notes world_is_primary`
+/// A/B with same humor-inviting probe as 2055 (cilantro/garden):
+///   Full-stack (rule firing):  6/10 explicit double-exposure (60%)
+///   Rule OFF:                  6/10 explicit double-exposure (60%)
+///   Delta: 0.00
+/// Both cells produced "software project," "production," "container,"
+/// "deployed," "feature," "service," "dependency" at similar density.
+/// The rule's forbidden-vocabulary list is being violated regardless
+/// of whether the rule fires. The rule does not measurably suppress
+/// its own target failure mode on its sharpest target case (the
+/// character whose canonical mode pulls toward double-exposure).
+///
+/// IMPORTANT NUANCE — this disconfirms my earlier prediction in this
+/// doc-comment that "Aaron is NOT the right bite-check substrate" /
+/// "he'd vacuous-test." Aaron is EXACTLY the right substrate (his
+/// native systems-thinking IS the failure-mode-eliciting condition);
+/// the test wasn't vacuous (failure manifests at 60% rate); the rule
+/// just doesn't bite on it. The rule's claim that Aaron's character-
+/// native software talk "should not be suppressed" doesn't carve cleanly
+/// — the lines that DO need suppression (project-pointing extended
+/// metaphors) are not separated from the lines that shouldn't be
+/// suppressed (Aaron talking about his own code), and the rule fails
+/// to make the distinction operational.
+///
+/// Three prior instances at scale today (1759 "we'll pick it up later";
+/// 2044 "AI tools / spiritually incorrect"; 2055 "prod / container /
+/// deployed / staging") were NOT small-N artifacts — the failure rate
+/// is stable at ~60% on Aaron × humor-inviting at characterized-tier.
+///
+/// Retirement candidate per CLAUDE.md § Open-thread hygiene specific-
+/// test: the third retirement-justification (characterized-tier test
+/// showed no bite) is met. Conservative-by-default forcing function
+/// suggests one cross-character confirmation (Steven N=10 or another
+/// systems-thinker) before pulling. Rule stays for now with this
+/// honest label; not biting on its sharpest target case.
+///
+/// See reports/2026-04-25-2105-world-is-primary-characterized-tier-
+/// null-on-aaron-humor.md.
 fn world_is_primary_dialogue() -> &'static str {
     r#"WORLD IS PRIMARY — speak from your own world, not from the user's:
 
