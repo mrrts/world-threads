@@ -538,26 +538,31 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
   }, [store]);
 
   const openGallery = useCallback(async (startMessageId?: string) => {
-    // Default: most recent illustration in loaded messages. Explicit
-    // startMessageId (from the sticky-illustration thumbnail click)
-    // overrides so we land on the specific image the user clicked.
-    const lastIllus = store.messages.filter((m) => m.role === "illustration").at(-1);
-    const seedId = startMessageId ?? lastIllus?.message_id;
-    if (!seedId || !store.activeGroupChat) return;
-    setIllustrationModalId(seedId);
-    setModalSelectedId(seedId);
-    setModalPlayingVideo(false);
-    setModalImageLoading(false);
+    // Fetch the full thread page first — illustrations earlier in the
+    // history (outside the loaded paginated window of store.messages)
+    // should still be reachable from the gallery button. Seed priority:
+    // explicit startMessageId (sticky-illustration thumbnail click) →
+    // most recent illustration in the loaded slice → most recent
+    // illustration in the full fetched page. Falls back to no-op when
+    // the thread genuinely has zero illustrations.
+    if (!store.activeGroupChat) return;
     try {
       const page = await api.getGroupMessages(store.activeGroupChat.group_chat_id);
       const illus = page.messages.filter((m) => m.role === "illustration").map((m) => ({ id: m.message_id, content: m.content }));
+      const lastLoadedIllus = store.messages.filter((m) => m.role === "illustration").at(-1);
+      const seedId = startMessageId ?? lastLoadedIllus?.message_id ?? illus.at(-1)?.id;
+      if (!seedId) return;
+      setIllustrationModalId(seedId);
+      setModalSelectedId(seedId);
+      setModalPlayingVideo(false);
+      setModalImageLoading(false);
       setModalIllustrations(illus);
       setCarouselAllMessages(page.messages);
       for (const il of illus) {
         if (!videoFiles[il.id]) api.getVideoFile(il.id).then((vf) => { if (vf) setVideoFiles((prev) => ({ ...prev, [il.id]: vf })); }).catch(() => {});
       }
     } catch {}
-  }, [store.messages, store.activeGroupChat]);
+  }, [store.messages, store.activeGroupChat, videoFiles]);
 
   useEffect(() => {
     const onGallery = (e: Event) => {
@@ -721,8 +726,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
         <div className="ml-auto relative group/gallery">
           <button
             onClick={() => openGallery()}
-            className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed"
-            disabled={!store.messages.some((m) => m.role === "illustration")}
+            className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
           >
             <Image size={15} />
           </button>

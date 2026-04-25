@@ -614,27 +614,31 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
   }, [store]);
 
   const openGallery = useCallback(async (startMessageId?: string) => {
-    // Default entry point: the most recent illustration in loaded
-    // messages. Explicit startMessageId (from e.g. the sticky-
-    // illustration thumbnail) overrides so we land on the specific
-    // image the user clicked — even if it's older than the default.
-    const lastIllus = store.messages.filter((m) => m.role === "illustration").at(-1);
-    const seedId = startMessageId ?? lastIllus?.message_id;
-    if (!seedId || !store.activeCharacter) return;
-    setIllustrationModalId(seedId);
-    setModalSelectedId(seedId);
-    setModalPlayingVideo(false);
-    setModalImageLoading(false);
+    // Fetch the full thread page first — illustrations earlier in the
+    // history (outside the loaded paginated window of store.messages)
+    // should still be reachable from the gallery button. Seed priority:
+    // explicit startMessageId (sticky-illustration thumbnail) → most
+    // recent illustration in the loaded slice → most recent
+    // illustration in the full fetched page. Falls back to no-op when
+    // the thread genuinely has zero illustrations.
+    if (!store.activeCharacter) return;
     try {
       const page = await api.getMessages(store.activeCharacter.character_id);
       const illus = page.messages.filter((m) => m.role === "illustration").map((m) => ({ id: m.message_id, content: m.content }));
+      const lastLoadedIllus = store.messages.filter((m) => m.role === "illustration").at(-1);
+      const seedId = startMessageId ?? lastLoadedIllus?.message_id ?? illus.at(-1)?.id;
+      if (!seedId) return;
+      setIllustrationModalId(seedId);
+      setModalSelectedId(seedId);
+      setModalPlayingVideo(false);
+      setModalImageLoading(false);
       setModalIllustrations(illus);
       setCarouselAllMessages(page.messages);
       for (const il of illus) {
         if (!videoFiles[il.id]) api.getVideoFile(il.id).then((vf) => { if (vf) setVideoFiles((prev) => ({ ...prev, [il.id]: vf })); }).catch(() => {});
       }
     } catch {}
-  }, [store.messages, store.activeCharacter]);
+  }, [store.messages, store.activeCharacter, videoFiles]);
 
   useEffect(() => {
     const onGallery = (e: Event) => {
@@ -762,8 +766,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
         <div className="ml-auto relative group/gallery">
           <button
             onClick={() => openGallery()}
-            className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed"
-            disabled={!store.messages.some((m) => m.role === "illustration")}
+            className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
           >
             <Image size={15} />
           </button>
