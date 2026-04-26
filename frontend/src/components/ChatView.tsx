@@ -1321,8 +1321,10 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                     />
                     {/* Character-is-reacting placeholder — shown on the user's most recent
                         message while sendMessage is in flight (covers both reply generation
-                        and the emoji-pick LLM call). Disappears when the real reaction lands. */}
-                    {isUser && isSending && msgIdx === filteredMsgs.length - 1 && (
+                        and the emoji-pick LLM call). Disappears when the real reaction lands.
+                        Suppressed when reactions are toggled off — otherwise the throbbing
+                        pill misleads the user into thinking a reaction is incoming. */}
+                    {isUser && isSending && msgIdx === filteredMsgs.length - 1 && reactionsEnabled && (
                       <span
                         className="inline-flex items-center gap-1.5 text-sm rounded-full px-3 py-1.5 animate-pulse text-white shadow-md"
                         style={{ background: "linear-gradient(90deg, #f472b6 0%, #a78bfa 50%, #60a5fa 100%)" }}

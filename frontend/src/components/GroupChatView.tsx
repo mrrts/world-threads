@@ -1274,7 +1274,9 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                       characterNameById={Object.fromEntries(groupCharacters.map((c) => [c.character_id, c.display_name]))}
                       userDisplayName={store.userProfile?.display_name || "You"}
                     />
-                    {isUser && isSending && msgIdx === filteredMsgs.length - 1 && (
+                    {/* Suppressed when reactions are toggled off — otherwise the throbbing
+                        pill misleads the user into thinking a reaction is incoming. */}
+                    {isUser && isSending && msgIdx === filteredMsgs.length - 1 && reactionsEnabled && (
                       <span
                         className="inline-flex items-center gap-1.5 text-sm rounded-full px-3 py-1.5 animate-pulse text-white shadow-md"
                         style={{ background: "linear-gradient(90deg, #f472b6 0%, #a78bfa 50%, #60a5fa 100%)" }}
