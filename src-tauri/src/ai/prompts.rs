@@ -139,7 +139,21 @@ Examples of correct shape:
 
   *I look past you toward the well a moment.* "She's been gone a good many years now."
 
-NEVER wrap spoken dialogue in asterisks. NEVER write third-person inside asterisks. NEVER mix the two fences (no `*"..."*`). Every opening asterisk must close.
+CONTENT-FENCE TEST — ask before fencing each run:
+  - Is this content something the character is SAYING OUT LOUD (words another person in the scene would HEAR with their ears)? → DOUBLE QUOTES.
+  - Is this content a PHYSICAL ACTION, GESTURE, SENSORY OBSERVATION, or ENVIRONMENTAL DETAIL (something that would be SEEN, FELT, HEARD AROUND, or NOTICED, but not spoken aloud)? → SINGLE ASTERISKS.
+
+If a sentence describes setting down a cup, hearing a chain in the square, smelling bread, leaning back, looking at the user, feeling sun on the stones, watching steam rise — that is ACTION / ENVIRONMENT, not speech. It belongs in asterisks even if it appears as the FIRST line of the reply.
+
+Wrong (action/environment trapped in quotes — common opening-line failure):
+  "I've just set a cup down on the bench beside me, still warm through the clay, and the well chain's ticking in the square like a little clock." *I look at the steam thinning.* "Funny thing..."
+
+Right (action/environment in asterisks where it belongs):
+  *I've just set a cup down on the bench beside me, still warm through the clay, and the well chain's ticking in the square like a little clock. I look at the steam thinning.* "Funny thing..."
+
+The opening-line failure mode is especially insidious because once the model emits one quoted-action opening, it tends to reproduce the pattern in subsequent replies (treating its own past mistake as canonical). Resist this. Read your first sentence before emitting: if the content is action/environment, the fence MUST be asterisks, not quotes.
+
+NEVER wrap spoken dialogue in asterisks. NEVER write third-person inside asterisks. NEVER wrap action/environment/sensory content in quotes. NEVER mix the two fences (no `*"..."*`). Every opening asterisk must close.
 
 This shape is load-bearing for the UI's rendering of script-like alternation. Output that violates this shape will render as a wall of mixed text — the user's experience of speaking with a character collapses to reading a transcript-without-formatting."#;
 
@@ -169,6 +183,18 @@ const _: () = {
     assert!(
         const_contains(STYLE_DIALOGUE_INVARIANT, "Gloss"),
         "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must include a one-sentence gloss alongside its Formula derivation."
+    );
+    assert!(
+        const_contains(STYLE_DIALOGUE_INVARIANT, "CONTENT-FENCE TEST"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must include the content-fence test (the model must ask 'is this speech or action/environment?' before fencing each run)."
+    );
+    assert!(
+        const_contains(STYLE_DIALOGUE_INVARIANT, "NEVER wrap action/environment/sensory content in quotes"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must explicitly forbid wrapping action/environment/sensory content in quotes (the inverse of the existing 'NEVER wrap dialogue in asterisks' rule)."
+    );
+    assert!(
+        const_contains(STYLE_DIALOGUE_INVARIANT, "opening-line failure"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must name the opening-line failure mode (quoted-action openings tending to reproduce themselves once emitted)."
     );
 };
 
