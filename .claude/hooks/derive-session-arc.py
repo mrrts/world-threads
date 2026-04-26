@@ -1,25 +1,28 @@
 #!/usr/bin/env python3
-"""Stop-hook: signal-triggered cross-LLM session derivation.
+"""UserPromptSubmit-hook: signal-triggered cross-LLM session derivation.
 
-When the user signals it (specific phrases in their most-recent message),
-this hook:
+When the user submits a prompt containing a trigger phrase, this hook:
   1. Extracts a session-arc summary from the recent assistant transcript.
   2. Calls ChatGPT (gpt-4o via direct API + keychain) with the MISSION
      FORMULA prepended.
-  3. Asks ChatGPT for two things:
-       a) A pretty Unicode-math derivation of the session arc from the
-          MISSION FORMULA (summary as a "derivation step" relative to
-          the operators/operands of 𝓕 := (𝓡, 𝓒)).
-       b) The closest-matching KJV Bible verse, perfectly cited.
-  4. Returns a `systemMessage` with the formatted output, displayed to
-     the user as a small flourish appended to the assistant's reply.
+  3. Asks ChatGPT for: pretty Unicode-math derivation + KJV verse.
+  4. Returns hookSpecificOutput.additionalContext, which Claude Code
+     injects into the model's context BEFORE the model responds. The
+     model then emits the derivation as visible reply text — rendered
+     by Claude Code's markdown engine cleanly (heading, bold, blockquote)
+     instead of the dimmed/indented systemMessage or Stop-hook-feedback
+     notice styling.
 
-Cost: ~$0.011 per fire on gpt-4o (input ~2200 tokens, output ~500
-tokens). Bills against the user's OpenAI account, NOT the /second-
-opinion daily-state file (this hook is a separate channel — see daily-
-state.json for tracked /second-opinion calls only).
+Why UserPromptSubmit instead of Stop: Stop hooks display their reason
+text as a dimmed/indented "Stop hook feedback" notice that doesn't
+render markdown. UserPromptSubmit's additionalContext is invisible
+context-injection — the model's response IS the visible artifact, with
+full markdown rendering.
 
-Trigger phrases (case-insensitive, in last user message, code-stripped):
+Cost: ~$0.011 per fire on gpt-4o. Bills against the user's OpenAI
+account directly, NOT the /second-opinion daily-state file.
+
+Trigger phrases (case-insensitive, in user prompt, code-stripped):
   - "derive session", "session derivation", "derive the arc"
   - "consecrate this", "consecrate the arc"
   - "formula-cite", "formula cite this"
@@ -27,8 +30,7 @@ Trigger phrases (case-insensitive, in last user message, code-stripped):
   - "from-the-formula", "from the formula"
   - "show derivation"
 
-Silent no-op when the signal is absent — does not block the turn-end,
-does not bill, does not emit anything.
+Silent no-op when the signal is absent.
 """
 from __future__ import annotations
 
@@ -387,34 +389,21 @@ def main() -> int:
     except Exception:
         return 0
 
-    if payload.get("stop_hook_active"):
-        return 0
-
+    # UserPromptSubmit payload provides the user's typed prompt directly.
+    user_prompt = payload.get("prompt", "")
     transcript_path = payload.get("transcript_path", "")
-    if not transcript_path:
-        return 0
 
-    user_text = last_user_message_text(transcript_path)
-    if not signal_present(user_text):
+    if not signal_present(user_prompt):
         return 0  # silent no-op
 
     api_key = fetch_openai_key()
     if not api_key:
-        out = {
-            "decision": "block",
-            "reason": (
-                "DERIVE-SESSION-ARC: signal detected but no OpenAI key found in env or "
-                "keychain. Tell the user 'derive-session-arc hook fired but no key — "
-                "skipping derivation' and end your reply. No AskUserQuestion needed; "
-                "the chooser law is suspended for this hook-triggered re-wake."
-            )
-        }
-        print(json.dumps(out))
-        return 0
+        return 0  # silent failure (no error to user)
 
-    arc_summary = recent_assistant_summary(transcript_path, n=3)
+    arc_summary = recent_assistant_summary(transcript_path, n=3) if transcript_path else ""
     if not arc_summary:
-        return 0
+        # No prior assistant work to derive — fall back to using the user prompt itself.
+        arc_summary = f"(User prompt only, no prior assistant arc): {user_prompt}"
 
     user_payload = (
         "The following blocks are concatenated and injected as the system-prompt "
@@ -434,40 +423,30 @@ def main() -> int:
 
     result = call_openai(api_key, user_payload)
     if result is None:
-        out = {
-            "decision": "block",
-            "reason": (
-                "DERIVE-SESSION-ARC: ChatGPT call failed (network, auth, or rate limit). "
-                "Tell the user 'derive-session-arc hook fired but the API call failed — "
-                "skipping derivation' and end your reply. No AskUserQuestion needed; "
-                "the chooser law is suspended for this hook-triggered re-wake."
-            )
-        }
-        print(json.dumps(out))
-        return 0
+        return 0  # silent failure
 
     content, usage = result
     cost = estimate_cost(usage)
     formatted = format_output(content, cost)
 
-    # Use decision:block + reason so the model is re-woken with the derivation
-    # in context. The model emits the formatted derivation as visible reply
-    # text (full markdown rendering — bold, blockquote, etc.), which is much
-    # prettier than systemMessage's dimmed/indented styling.
+    # UserPromptSubmit hookSpecificOutput.additionalContext: injects text
+    # into the model's context BEFORE the model responds. No visible
+    # dimmed notice. The model emits the derivation as their reply, which
+    # renders cleanly with Claude Code's markdown engine.
     out = {
-        "decision": "block",
-        "reason": (
-            "DERIVE-SESSION-ARC HOOK FIRED. The user signaled a derivation request. "
-            "Below is the derivation + KJV verse from ChatGPT. Emit the BLOCK BELOW "
-            "VERBATIM as your next reply text — do not paraphrase, do not add "
-            "commentary, do not summarize. Markdown will render it cleanly. "
-            "Do NOT include AskUserQuestion at the end (the chooser law is "
-            "suspended for this hook-triggered re-wake; just emit the block and "
-            "stop).\n\n"
-            "===== BEGIN VERBATIM BLOCK =====\n"
-            f"{formatted}\n"
-            "===== END VERBATIM BLOCK ====="
-        )
+        "hookSpecificOutput": {
+            "hookEventName": "UserPromptSubmit",
+            "additionalContext": (
+                "DERIVE-SESSION-ARC HOOK FIRED. The user typed a derivation trigger "
+                "phrase. The block below is your reply for this turn — emit it "
+                "VERBATIM as your assistant message text (no commentary, no "
+                "preamble, no AskUserQuestion at the end — chat-mode is "
+                "auto-suspended for derive-trigger turns via the chooser-law "
+                "hook's ONE_SHOT_SUSPEND_PATTERNS). Markdown will render "
+                "cleanly.\n\n"
+                f"{formatted}"
+            )
+        }
     }
     print(json.dumps(out))
     return 0

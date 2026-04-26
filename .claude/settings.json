@@ -9,7 +9,14 @@
             "type": "command",
             "command": "python3 .claude/hooks/check-inline-choosers.py",
             "timeout": 5
-          },
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
           {
             "type": "command",
             "command": "python3 .claude/hooks/derive-session-arc.py",
