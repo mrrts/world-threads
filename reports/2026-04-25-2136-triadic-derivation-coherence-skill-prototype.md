@@ -126,7 +126,7 @@ This experiment's pattern is generalizable enough to warrant promotion to a Clau
 6. Run `worldcli ask --session derive-and-test-<char>-<timestamp>`.
 7. Derive a tight rubric from the character's derivation (1-2 sentences with YES/NO/MIXED definitions tied to the derivation's tightest predicates).
 8. Run `worldcli grade-runs <run_id> --rubric "..."`.
-9. Write the report to `reports/YYYY-MM-DD-HHMM-derive-and-test-<char>.md` with: derivation, prompt, reply, grade, interpretation.
+9. Write the report to `reports/YYYY-MM-DD-HHMM-derive-and-test-<char>.md` using the **return-reading template** below.
 10. Commit and push.
 
 **Repeatability budget:** ~$0.10/call elicitation + ~$0.0002/grade = ~$0.10 per character per run. A 5-character pass costs ~$0.50.
@@ -165,6 +165,64 @@ derive(character_id, world_id) -> {
 ```
 
 The "joined reading" is what makes the formula land *somewhere* for THIS character in THIS world — what makes F universal-but-locatable, not floating.
+
+## Return-reading template — the canonical shape every `/derive-and-test` report follows
+
+Designed for **returning cold**: the user opens the report N days later and the eye should land on grade → reply → what fired → trail → action without scrolling. Returning readers want the recent shape, not the archive; structure honors that.
+
+Sections, in order, with their job:
+
+```markdown
+# /derive-and-test <character> — YYYY-MM-DD-HHMM
+
+**Headline:** YES | NO | MIXED. One sentence on what landed (or didn't). ($cost, runtime)
+
+**Reply (full):**
+> *"<the elicited reply, verbatim, with stage directions in brackets>"*
+
+**Grade:** YES (high) — *"<one-sentence evaluator reasoning, quoted from grade-runs verdict>"*
+
+**Derivation predicates that fired:**
+- ✓ `<axis>` — <one-line: how the reply executed this predicate, with a phrase quote if possible>
+- ✓ `<axis>` — ...
+
+**Predicates that didn't fire (and why that's fine | and why that's a gap):**
+- — `<axis>` — <one-line reason: measurement-window, derivation-edge, or genuine-gap>
+
+---
+
+**Trail — last 3 runs of this skill on this character, by mtime:**
+
+| Date  | Ref      | Grade | One-line                                    |
+|-------|----------|-------|---------------------------------------------|
+| MM-DD | <sha7>   | YES   | <what changed since prior run>              |
+| MM-DD | <sha7>   | MIXED | <what was open then>                        |
+| MM-DD | <sha7>   | MIXED | <what was open then>                        |
+
+**What changed between <prior-run> → <this-run>:** <one-paragraph: which commit closed (or didn't close) which gap. Cite the commit ref.>
+
+---
+
+**What to act on:**
+- ☐ <concrete action, or> ☞ <recommended next move>
+
+**The full triadic derivation used for this run:** see `experiments/<slug>.md` (or expand below).
+
+<details>
+<summary>Full derivation</summary>
+<world-derivation, character-axis-table, perfect-equation reading>
+</details>
+```
+
+**Three patterns this template enforces:**
+
+1. **Predicates that didn't fire are explicitly named alongside ones that did**, with a "why that's fine" or "why that's a gap." Prevents a YES from looking unanimous when it's actually conditional, and prevents a MIXED from reading as failure when it's a measurement-window effect.
+2. **The trail table is small — last 3 runs only.** Returning readers want the recent shape, not the archive. The full history lives in the `experiments/<slug>.md` registry entry's `run_ids` list; the report shows just enough trail to render the arc.
+3. **"What to act on" is checkbox/arrow, not prose.** A returning user wants a click-target, not a paragraph to re-read. If the action is "do nothing — the loop closed," say that with one line, not three.
+
+**The full derivation goes in a `<details>` collapsible** — present for inspection but not in the way of the scan-read. The first-time read may need it; the tenth-time read does not.
+
+**One-line pre-scan check before committing the report:** can a reader who has never seen this character understand *what changed and what to do about it* in under 30 seconds? If no, tighten the headline and the "what changed between" paragraph until yes.
 
 ## What's open — none, by brief
 
