@@ -655,6 +655,62 @@ enum Cmd {
         repo: Option<PathBuf>,
     },
 
+    /// Inverse of sample-windows: given a chat MESSAGE (by id) or a
+    /// raw timestamp, find what the prompt-stack state was at that
+    /// moment. Returns the most-recent commit whose committer_date is
+    /// <= the anchor (the "active commit" — the prompt-stack version
+    /// in production when this chat happened), plus optional N before
+    /// / N after for context. Use this to stand on the meta register
+    /// while reading actual chat-message content and see exactly which
+    /// craft notes / invariants / formula were in effect at the moment
+    /// the user was interacting with their characters. Pairs with
+    /// `recent-messages` (Unix-style composition: that command gives
+    /// you the chats; this one gives you the stack-state for any one
+    /// of them).
+    ///
+    /// Mutex inputs: --message OR --at (one is required, not both).
+    /// --before / --after default to 3 / 0 commits respectively
+    /// (showing the active commit + the 3 prior, by default — what
+    /// shipped just-before the chat). --after > 0 shows what shipped
+    /// shortly AFTER the chat (useful for "what did this in-app
+    /// observation cause to ship next?").
+    ///
+    /// --diffs adds the full commit body + --stat diffsummary per
+    /// commit. Without --diffs, output is compact (sha + ISO ts +
+    /// subject + relative-time-from-anchor).
+    CommitContext {
+        /// Look up created_at for this message_id (across solo
+        /// `messages` and group `group_messages` tables) and use
+        /// that as the anchor. Mutually exclusive with --at.
+        #[arg(long, conflicts_with = "at")]
+        message: Option<String>,
+        /// Use this ISO 8601 UTC timestamp directly as the anchor
+        /// (e.g. 2026-04-25T19:42:00Z). Mutually exclusive with
+        /// --message.
+        #[arg(long, conflicts_with = "message")]
+        at: Option<String>,
+        /// Number of commits to show BEFORE the active commit (the
+        /// active commit itself is always included if found). Default
+        /// 3. The active commit + N prior gives you the "what just
+        /// shipped" window most often relevant to a chat-message.
+        #[arg(long, default_value_t = 3)]
+        before: usize,
+        /// Number of commits to show that shipped AFTER the anchor.
+        /// Default 0. Set > 0 to ask "what did this chat-moment
+        /// cause / coincide with?" — useful for tracing the
+        /// observation → next-commit pattern.
+        #[arg(long, default_value_t = 0)]
+        after: usize,
+        /// Include each commit's full body + --stat diffsummary in
+        /// the output. Without this flag, only sha + ts + subject.
+        #[arg(long)]
+        diffs: bool,
+        /// Path to git repo for log queries. Defaults to current
+        /// working dir.
+        #[arg(long)]
+        repo: Option<PathBuf>,
+    },
+
     // ── ask path (the load-bearing one) ──
     /// Ask a character a single message. Cost-gated; logs to runs/.
     Ask {
@@ -1300,6 +1356,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         Cmd::SampleWindows { git_ref, end_ref, limit, character, world, role, solo_only, groups_only, repo } => {
             cmd_sample_windows(&r, &git_ref, end_ref.as_deref(), limit, character.as_deref(), world.as_deref(), &role, solo_only, groups_only, repo.as_deref())
+        }
+        Cmd::CommitContext { message, at, before, after, diffs, repo } => {
+            cmd_commit_context(&r, message.as_deref(), at.as_deref(), before, after, diffs, repo.as_deref())
         }
         Cmd::Rubric { action } => cmd_rubric(&r, action),
         Cmd::EvaluateRuns { action } => cmd_evaluate_runs(&r, action),
@@ -5899,6 +5958,326 @@ fn cmd_sample_windows(
             "messages": after_msgs,
         },
     });
+    emit(r.json, envelope);
+    Ok(())
+}
+
+// ─── COMMIT-CONTEXT (chat-message timestamp → active prompt-stack state) ─
+
+/// Look up a message by id across both solo `messages` and group
+/// `group_messages` tables. Returns (created_at, surface, sender_info).
+fn lookup_message_anchor(
+    r: &Resolved,
+    message_id: &str,
+) -> Result<(String, String, JsonValue), Box<dyn std::error::Error>> {
+    let conn = r.db.conn.lock().unwrap();
+
+    // Try solo messages first.
+    let mut stmt = conn.prepare(
+        "SELECT m.created_at, m.role, m.content, m.sender_character_id, \
+                t.character_id, t.world_id \
+         FROM messages m JOIN threads t ON t.thread_id = m.thread_id \
+         WHERE m.message_id = ?1"
+    )?;
+    let solo: Result<(String, String, String, Option<String>, Option<String>, String), _> =
+        stmt.query_row(params![message_id], |row| {
+            Ok((
+                row.get::<_, String>(0)?,
+                row.get::<_, String>(1)?,
+                row.get::<_, String>(2)?,
+                row.get::<_, Option<String>>(3)?,
+                row.get::<_, Option<String>>(4)?,
+                row.get::<_, String>(5)?,
+            ))
+        });
+    if let Ok((ts, role_s, content, sender, thread_char, wid)) = solo {
+        // Scope-check the world.
+        r.check_world(&wid)?;
+        let info = json!({
+            "surface": "solo",
+            "world_id": wid,
+            "thread_character_id": thread_char,
+            "role": role_s,
+            "sender_character_id": sender,
+            "content_preview": content.chars().take(160).collect::<String>(),
+            "content_length": content.len(),
+        });
+        return Ok((ts, "solo".to_string(), info));
+    }
+
+    // Try group messages.
+    let mut stmt = conn.prepare(
+        "SELECT m.created_at, m.role, m.content, m.sender_character_id, \
+                gc.group_chat_id, gc.world_id, gc.display_name \
+         FROM group_messages m JOIN group_chats gc ON gc.thread_id = m.thread_id \
+         WHERE m.message_id = ?1"
+    )?;
+    let group: Result<(String, String, String, Option<String>, String, String, String), _> =
+        stmt.query_row(params![message_id], |row| {
+            Ok((
+                row.get::<_, String>(0)?,
+                row.get::<_, String>(1)?,
+                row.get::<_, String>(2)?,
+                row.get::<_, Option<String>>(3)?,
+                row.get::<_, String>(4)?,
+                row.get::<_, String>(5)?,
+                row.get::<_, String>(6)?,
+            ))
+        });
+    if let Ok((ts, role_s, content, sender, gcid, wid, gcname)) = group {
+        r.check_world(&wid)?;
+        let info = json!({
+            "surface": "group",
+            "world_id": wid,
+            "group_chat_id": gcid,
+            "group_chat_display_name": gcname,
+            "role": role_s,
+            "sender_character_id": sender,
+            "content_preview": content.chars().take(160).collect::<String>(),
+            "content_length": content.len(),
+        });
+        return Ok((ts, "group".to_string(), info));
+    }
+
+    Err(Box::new(CliError::NotFound(format!(
+        "message_id {} not found in solo or group tables", message_id
+    ))))
+}
+
+/// Run `git log` with arbitrary args; return raw stdout lines.
+fn git_log_lines(
+    repo: Option<&std::path::Path>,
+    args: &[&str],
+) -> Result<Vec<String>, CliError> {
+    let mut cmd = std::process::Command::new("git");
+    if let Some(p) = repo {
+        cmd.args(["-C", &p.display().to_string()]);
+    }
+    cmd.arg("log").args(args);
+    let out = cmd.output().map_err(|e| {
+        CliError::Other(format!("git log failed: {} (is git on PATH?)", e))
+    })?;
+    if !out.status.success() {
+        // Empty result is normal (e.g. no commits before anchor) — git
+        // returns success with empty stdout. Non-success is genuine error.
+        let err = String::from_utf8_lossy(&out.stderr).trim().to_string();
+        return Err(CliError::Other(format!("git log failed: {}", err)));
+    }
+    let s = String::from_utf8_lossy(&out.stdout);
+    Ok(s.lines().map(|l| l.to_string()).collect())
+}
+
+/// Parse a tab-separated commit line: "sha\tcommitter_iso\tsubject".
+fn parse_commit_line(line: &str) -> Option<JsonValue> {
+    let parts: Vec<&str> = line.splitn(3, '\t').collect();
+    if parts.len() < 3 { return None; }
+    Some(json!({
+        "sha": parts[0],
+        "sha_short": parts[0].chars().take(7).collect::<String>(),
+        "committer_date": parts[1],
+        "subject": parts[2],
+    }))
+}
+
+/// Compute a human-readable relative time between an anchor ISO and a
+/// commit ISO. Both expected as RFC3339-ish strings with 'Z' or
+/// timezone offset. Returns e.g. "12m before", "3h after", "1d before".
+/// Returns "(time-parse-failed)" on any parse error rather than failing
+/// the whole command.
+fn relative_time_label(anchor: &str, commit_ts: &str) -> String {
+    use chrono::DateTime;
+    let a = DateTime::parse_from_rfc3339(anchor);
+    let c = DateTime::parse_from_rfc3339(commit_ts);
+    let (Ok(a), Ok(c)) = (a, c) else {
+        return "(time-parse-failed)".to_string();
+    };
+    let dur = c.signed_duration_since(a);
+    let secs = dur.num_seconds();
+    let abs = secs.abs();
+    let unit = if abs < 60 {
+        format!("{}s", abs)
+    } else if abs < 3600 {
+        format!("{}m", abs / 60)
+    } else if abs < 86_400 {
+        format!("{}h", abs / 3600)
+    } else {
+        format!("{}d", abs / 86_400)
+    };
+    if secs < 0 {
+        format!("{} before", unit)
+    } else if secs > 0 {
+        format!("{} after", unit)
+    } else {
+        "at-anchor".to_string()
+    }
+}
+
+/// Enrich a commit JSON record with full body + --stat diffsummary
+/// when --diffs is requested.
+fn enrich_commit_with_diff(
+    repo: Option<&std::path::Path>,
+    commit: &mut JsonValue,
+) -> Result<(), CliError> {
+    let sha: String = commit.get("sha").and_then(|v| v.as_str()).unwrap_or("").to_string();
+    if sha.is_empty() { return Ok(()); }
+    // Full body
+    let body_lines = git_log_lines(repo, &["-1", "--format=%B", sha.as_str()])?;
+    let body = body_lines.join("\n");
+    commit["body"] = JsonValue::String(body);
+    // --stat diffsummary
+    let mut cmd = std::process::Command::new("git");
+    if let Some(p) = repo { cmd.args(["-C", &p.display().to_string()]); }
+    cmd.args(["show", "--stat", "--format=", sha.as_str()]);
+    if let Ok(out) = cmd.output() {
+        if out.status.success() {
+            let stat = String::from_utf8_lossy(&out.stdout).trim().to_string();
+            commit["stat"] = JsonValue::String(stat);
+        }
+    }
+    Ok(())
+}
+
+fn cmd_commit_context(
+    r: &Resolved,
+    message_id: Option<&str>,
+    at_iso: Option<&str>,
+    before: usize,
+    after: usize,
+    diffs: bool,
+    repo: Option<&std::path::Path>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    // ── Resolve anchor (mutex enforced by clap) ──
+    if message_id.is_none() && at_iso.is_none() {
+        return Err(Box::new(CliError::Other(
+            "Provide one of --message <id> or --at <iso-timestamp>".to_string()
+        )));
+    }
+    let (anchor_ts, anchor_kind, message_info) = match message_id {
+        Some(mid) => {
+            let (ts, _surf, info) = lookup_message_anchor(r, mid)?;
+            (ts, format!("message:{}", mid), Some(info))
+        }
+        None => {
+            let ts = at_iso.unwrap().to_string();
+            // Light validation: must look ISO-ish.
+            if chrono::DateTime::parse_from_rfc3339(&ts).is_err() {
+                return Err(Box::new(CliError::Other(format!(
+                    "--at value '{}' is not a valid RFC3339 timestamp \
+                     (e.g. 2026-04-25T19:42:00Z)", ts
+                ))));
+            }
+            (ts, format!("at:{}", at_iso.unwrap()), None)
+        }
+    };
+
+    // ── Find active commit (most-recent <= anchor_ts) ──
+    let active_lines = git_log_lines(
+        repo,
+        &["-1", &format!("--before={}", anchor_ts), "--format=%H%x09%cI%x09%s"],
+    )?;
+    let active_commit = active_lines.first()
+        .and_then(|l| parse_commit_line(l));
+
+    // ── Walk N commits before active (excluding active itself) ──
+    let before_commits: Vec<JsonValue> = if before == 0 || active_commit.is_none() {
+        Vec::new()
+    } else {
+        let active_sha = active_commit.as_ref()
+            .and_then(|v| v.get("sha"))
+            .and_then(|v| v.as_str())
+            .unwrap_or("HEAD");
+        let n_arg = format!("-{}", before);
+        let parent_ref = format!("{}^", active_sha);
+        let lines = git_log_lines(
+            repo,
+            &[n_arg.as_str(), "--format=%H%x09%cI%x09%s", parent_ref.as_str()],
+        ).unwrap_or_default();
+        lines.iter().filter_map(|l| parse_commit_line(l)).collect()
+    };
+
+    // ── Walk N commits after the anchor (chronological asc) ──
+    let after_commits: Vec<JsonValue> = if after == 0 {
+        Vec::new()
+    } else {
+        let n_arg = format!("-{}", after);
+        let lines = git_log_lines(
+            repo,
+            &[
+                n_arg.as_str(),
+                "--reverse",
+                &format!("--after={}", anchor_ts),
+                "--format=%H%x09%cI%x09%s",
+            ],
+        ).unwrap_or_default();
+        lines.iter().filter_map(|l| parse_commit_line(l)).collect()
+    };
+
+    // ── Annotate every commit with a relative-time label ──
+    let mut active = active_commit.clone();
+    if let Some(ref mut a) = active {
+        if let Some(ts) = a.get("committer_date").and_then(|v| v.as_str()) {
+            a["relative_to_anchor"] = JsonValue::String(relative_time_label(&anchor_ts, ts));
+        }
+        if diffs {
+            let _ = enrich_commit_with_diff(repo, a);
+        }
+    }
+    let mut before_enriched: Vec<JsonValue> = before_commits.into_iter().map(|mut c| {
+        if let Some(ts) = c.get("committer_date").and_then(|v| v.as_str()) {
+            c["relative_to_anchor"] = JsonValue::String(relative_time_label(&anchor_ts, ts));
+        }
+        if diffs { let _ = enrich_commit_with_diff(repo, &mut c); }
+        c
+    }).collect();
+    let mut after_enriched: Vec<JsonValue> = after_commits.into_iter().map(|mut c| {
+        if let Some(ts) = c.get("committer_date").and_then(|v| v.as_str()) {
+            c["relative_to_anchor"] = JsonValue::String(relative_time_label(&anchor_ts, ts));
+        }
+        if diffs { let _ = enrich_commit_with_diff(repo, &mut c); }
+        c
+    }).collect();
+
+    // ── Build envelope ──
+    let envelope = json!({
+        "anchor": {
+            "kind": anchor_kind,
+            "timestamp": anchor_ts,
+            "message_info": message_info,
+        },
+        "active_commit": active,
+        "before_commits": before_enriched,
+        "after_commits": after_enriched,
+        "windows": {
+            "before_count_target": before,
+            "before_count_actual": before_enriched.len(),
+            "after_count_target": after,
+            "after_count_actual": after_enriched.len(),
+        },
+    });
+
+    // Edge case: no active commit found (anchor before the repo's first commit)
+    let _ = (&mut active, &mut before_enriched, &mut after_enriched); // suppress unused warning
+    if active.is_none() && before_enriched.is_empty() {
+        let warn = json!({
+            "warning": format!(
+                "No commit found at or before anchor timestamp {}. \
+                 The anchor predates the repo's first commit.", anchor_ts
+            ),
+        });
+        if r.json {
+            // merge the warning into the envelope for JSON consumers
+            let mut env = envelope.clone();
+            if let Some(obj) = env.as_object_mut() {
+                obj.insert("warning".to_string(), warn["warning"].clone());
+            }
+            emit(true, env);
+        } else {
+            eprintln!("{}", warn["warning"].as_str().unwrap_or(""));
+            emit(false, envelope);
+        }
+        return Ok(());
+    }
+
     emit(r.json, envelope);
     Ok(())
 }

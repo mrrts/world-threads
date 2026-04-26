@@ -244,6 +244,7 @@ Sibling to the dense-phrase-vs-discrete-list distinction in the bite-verificatio
 - `worldcli sample-windows` — raw before/after dataset, judge by eye or rubric.
 - `worldcli evaluate` — structured per-message verdicts against a rubric.
 - `worldcli synthesize` — Mode B, prose collaborator-notes grounded in quotes.
+- `worldcli commit-context` — INVERSE direction: given a chat message id or timestamp, return the active commit (and N before/after) so Claude Code can stand on the meta register while reading the chat and see exactly which prompt-stack version was in effect at that moment.
 - `worldcli replay` — Mode C cross-commit prompt-override (NOT checkout); fetches `git show <ref>:src-tauri/src/ai/prompts.rs`, parses craft-note bodies, injects as overrides into the running binary.
 - `reports/` — accumulating reflective layer.
 - `runs-search` — don't redo answered questions.
@@ -425,6 +426,20 @@ worldcli sample-windows --ref <git-sha-or-ref> \
     [--world <id>] \
     [--role assistant|user|narrative|any] \
     [--solo-only | --groups-only] \
+    [--repo <path>] \
+    [--json]
+
+# INVERSE of sample-windows: given a chat message (by id) or a raw ISO
+# timestamp, return the active commit (most-recent commit whose
+# committer_date <= anchor) plus N before / N after for context. Use
+# this to stand on the meta register and see exactly what prompt-stack
+# state was in effect at the moment a chat happened. Pairs with
+# `recent-messages` (Unix-style composition: that command gives you
+# the chats; this one gives you the stack-state for any one of them).
+worldcli commit-context (--message <id> | --at <iso-ts>) \
+    [--before N]                # default 3 (commits before active)
+    [--after N]                 # default 0 (commits shipped after anchor)
+    [--diffs]                   # include full body + --stat per commit
     [--repo <path>] \
     [--json]
 
