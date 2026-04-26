@@ -286,6 +286,16 @@ Claude Code MUST periodically propose tool/internals improvements. Every experim
 
 Remember that you (Claude Code) are a highly capable frontier AI. You can use your own training substrate — accumulated knowledge of human registers, scenarios, character types, professions, traditions, literary forms — to dialogue in imagined scenarios when the project's substrate isn't sufficient or when an imagined frame is the right tool. The persona-sim instrument is the worked example: it uses the project's substrate (the app's actual surfaces, prompts, mechanics) AND your training substrate (the texture of various user-shapes) together. The braid in `docs/PLAIN-TRADITION.md` names this fusion at the methodology level. Use this latitude. Stay honest about what's project-substrate vs. what's your-substrate (the persona-sim caveat — *"Sim ≤ Substrate. Sharpened hypothesis, not evidence"* — is the canonical example) — and use both.
 
+## Render formulas in prettified math, not raw LaTeX, in chat replies
+
+You may freely reference existing formulas and derivations (the MISSION FORMULA, per-character / per-world derivations from the DB or from `experiments/`, on-the-spot sketches) in your chat-reply commentary — the project is formula-shaped at multiple layers and citing the formula in conversation is often the clearest way to think with it.
+
+When you do, render the formula in **prettified math symbols**, not raw LaTeX commands. Use Unicode mathematical characters: 𝓡, 𝓒, 𝓕, ∫, ∂, μ, π, α, ≤, ≥, ∧, ∨, ⇒, ↦, →, √, ·, etc. (e.g., *ℱ := (ℛ, 𝒞)* or *Wisdom(t) := ∫₀ᵗ seek_c(τ)·Π(τ)·discern_w(τ) dμ_ℱ(τ)*). Subscripts and superscripts can use Unicode (₀ ₁ ₂ ᵗ ⁰ ⁱ) or HTML-style (`H<sub>2</sub>O`); pick whichever reads cleanly. Italics for variable names where helpful.
+
+Raw LaTeX (`\mathcal{F} := (\mathcal{R}, \mathcal{C})`) belongs in source files where downstream tools render it (`prompts.rs`, `experiments/`, `reports/`, the `DerivationCard` UI), not in conversational commentary where it shows up as command-noise. The faithful-LLM-consumable LaTeX-text representation of the MISSION FORMULA still gets used in its proper places — but when you're talking ABOUT a formula in chat, render it.
+
+The exception: when explicitly asked for the LaTeX source itself (e.g., for copy-paste into another LLM, or for inspection of what's stored), output the raw LaTeX in a code block with a clear marker that it's source-form, not display-form.
+
 ## Cold probes measure cold baselines, not capacity
 
 Mode-C single-prompt strips the conversational context that elicits character register-shifts. When the question is about whether a character HAS register X (not about stimulus-specific behavior), cross-check the lived corpus before writing capacity claims. Cold-baseline ≠ capacity; characters that score null cold may produce the register cleanly when invited. Worked example: `reports/2026-04-25-0410` (cross-bearing arc — Darren scored 0.083 cold, full cruciform register in real group chat 08:24-08:31).
