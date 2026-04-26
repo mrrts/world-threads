@@ -157,6 +157,10 @@ pub async fn build_formula_momentstamp(
 
     let signature = latex_to_unicode(&raw).trim().to_string();
 
+    // Surface in dev logs so the user can verify the signature is firing
+    // and see which 𝓕-operator(s) the chat is currently weighting.
+    log::info!("[Momentstamp] signature: {}", signature);
+
     // Format for injection at the head of the dialogue system prompt.
     let block = format!(
         "FORMULA MOMENTSTAMP (chat-state signature derived from 𝓕 := (𝓡, 𝓒) — \
