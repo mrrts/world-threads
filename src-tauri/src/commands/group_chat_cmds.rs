@@ -1091,6 +1091,20 @@ pub async fn send_group_message_cmd(
                 "first_message_new_day".to_string(),
             );
         }
+
+        // Reactions=off depth-signal reward (group surface, flow 1).
+        // Build a Formula momentstamp when reactions are off.
+        let formula_momentstamp_text: Option<String> = if reactions_mode == "off" {
+            crate::ai::momentstamp::build_formula_momentstamp(
+                &model_config.chat_api_base(),
+                &api_key,
+                &model_config.memory_model,
+                &dialogue_msgs,
+            ).await.ok().flatten()
+        } else {
+            None
+        };
+
         let (raw_reply, usage) = orchestrator::run_dialogue_with_base(
             &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
             if !model_config.is_local() { Some(&model_config.memory_model) } else { None },
@@ -1116,6 +1130,7 @@ pub async fn send_group_message_cmd(
             stance_text.as_deref(),
             anchor_text.as_deref(),
         None,
+        formula_momentstamp_text.as_deref(),
         ).await?;
 
         // Strip own prefix and truncate any other-character dialogue
@@ -1177,6 +1192,7 @@ pub async fn send_group_message_cmd(
                                 stance_text.as_deref(),
                                 anchor_text.as_deref(),
                             None,
+                            formula_momentstamp_text.as_deref(),
                             ).await {
                                 Ok((corrected_raw, corrected_usage)) => {
                                     log::info!("[Conscience] {} (group) reply corrected after drift", character.display_name);
@@ -1482,6 +1498,19 @@ pub async fn prompt_group_character_cmd(
             "first_message_new_day".to_string(),
         );
     }
+
+    // Reactions=off depth-signal reward (group surface, flow 2).
+    let formula_momentstamp_text2: Option<String> = if reactions_mode == "off" {
+        crate::ai::momentstamp::build_formula_momentstamp(
+            &base,
+            &api_key,
+            &model_config.memory_model,
+            &dialogue_msgs,
+        ).await.ok().flatten()
+    } else {
+        None
+    };
+
     let dialogue_fut = orchestrator::run_dialogue_with_base(
         &base, &api_key, &model_config.dialogue_model,
         if !model_config.is_local() { Some(&model_config.memory_model) } else { None },
@@ -1507,6 +1536,7 @@ pub async fn prompt_group_character_cmd(
         stance_text.as_deref(),
         anchor_text.as_deref(),
     None,
+    formula_momentstamp_text2.as_deref(),
     );
     let (dialogue_res, reaction_res) = if reactions_mode != "off" {
         let reaction_fut = orchestrator::pick_character_reaction_via_llm(
@@ -1571,6 +1601,7 @@ pub async fn prompt_group_character_cmd(
                             stance_text.as_deref(),
                             anchor_text.as_deref(),
                         None,
+                        formula_momentstamp_text2.as_deref(),
                         ).await {
                             Ok((corrected_raw, corrected_usage)) => {
                                 log::info!("[Conscience] {} (group-prompt) reply corrected after drift", character.display_name);

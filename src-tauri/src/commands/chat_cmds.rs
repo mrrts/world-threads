@@ -632,6 +632,25 @@ pub async fn send_message_cmd(
             "first_message_new_day".to_string(),
         );
     }
+
+    // Reactions=off as depth-signal reward: build a Formula momentstamp
+    // when the user has chosen quiet over reactive surface. The signature
+    // gets injected at the head of the dialogue system prompt so the
+    // character is conditioned on where this chat sits in 𝓕 := (𝓡, 𝓒)
+    // right now. Cost ~$0.005-0.015 per dialogue call; conceptually the
+    // saved emoji-reaction budget redirects into this deeper-attention
+    // call. Silent skip on any failure (never blocks the dialogue).
+    let formula_momentstamp_text: Option<String> = if reactions_mode == "off" {
+        crate::ai::momentstamp::build_formula_momentstamp(
+            &base,
+            &api_key,
+            &model_config.memory_model,
+            &recent_msgs,
+        ).await.ok().flatten()
+    } else {
+        None
+    };
+
     let dialogue_fut = orchestrator::run_dialogue_with_base(
         &base, &api_key, &model_config.dialogue_model,
         if !model_config.is_local() { Some(&model_config.memory_model) } else { None },
@@ -655,6 +674,7 @@ pub async fn send_message_cmd(
     stance_text.as_deref(),
     anchor_text.as_deref(),
     None,
+    formula_momentstamp_text.as_deref(),
     );
     // Context for the reaction-emoji pick: the recent messages EXCLUDING
     // the user's brand-new one (which goes in the user-role slot). Gives
@@ -730,6 +750,7 @@ pub async fn send_message_cmd(
                             stance_text.as_deref(),
                             anchor_text.as_deref(),
                         None,
+                        formula_momentstamp_text.as_deref(),
                         ).await {
                             Ok((corrected, corrected_usage)) => {
                                 log::info!("[Conscience] {} reply corrected after drift", character.display_name);
@@ -1175,6 +1196,7 @@ pub async fn prompt_character_cmd(
         stance_text.as_deref(),
         anchor_text.as_deref(),
     None,
+    None, // formula_momentstamp
     ).await?;
 
     // Conscience Pass: grade + regenerate-on-drift (see send_message_cmd).
@@ -1224,6 +1246,7 @@ pub async fn prompt_character_cmd(
                             stance_text.as_deref(),
                             anchor_text.as_deref(),
                         None,
+                        None, // formula_momentstamp
                         ).await {
                             Ok((corrected, corrected_usage)) => {
                                 log::info!("[Conscience] {} (prompt) reply corrected after drift", character.display_name);
@@ -2343,6 +2366,7 @@ pub async fn reset_to_message_cmd(
         stance_text.as_deref(),
         anchor_text.as_deref(),
         None,
+        None, // formula_momentstamp
         );
         let reaction_context: Vec<Message> = recent_msgs.iter()
             .rev().skip(1).take(4).rev().cloned().collect();
@@ -2401,6 +2425,7 @@ pub async fn reset_to_message_cmd(
                                 stance_text.as_deref(),
                                 anchor_text.as_deref(),
                             None,
+                            None, // formula_momentstamp
                             ).await {
                                 Ok((corrected, corrected_usage)) => {
                                     log::info!("[Conscience] {} (reset) reply corrected after drift", character.display_name);

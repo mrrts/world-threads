@@ -228,6 +228,11 @@ pub async fn run_dialogue_with_base(
     relational_stance: Option<&str>,
     load_test_anchor: Option<&str>,
     current_location_override: Option<&str>,
+    // Pre-built FORMULA MOMENTSTAMP block to inject at the head of the
+    // dialogue system prompt. Populated by callers when the chat's
+    // reactions_mode is "off" — see ai::momentstamp::build_formula_
+    // momentstamp. None when reactions are enabled (no injection).
+    formula_momentstamp: Option<&str>,
 ) -> Result<(String, Option<openai::Usage>), String> {
     // When the user has disabled conversation history for this chat, strip
     // prior turns, semantic memories, and moment markers — the character
@@ -265,6 +270,17 @@ pub async fn run_dialogue_with_base(
         6,
     );
     let mut system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, recent_journals, latest_reading, &own_voice_samples, latest_meanwhile, active_quests, relational_stance, load_test_anchor);
+    // Formula momentstamp (reactions=off "depth signal" reward): when the
+    // caller pre-built a chat-state signature derived from 𝓕 := (𝓡, 𝓒),
+    // prepend it at the HEAD of the system prompt so the conditioning
+    // applies before any other block. See ai::momentstamp.
+    if let Some(stamp) = formula_momentstamp {
+        let mut prefixed = String::with_capacity(stamp.len() + system.len() + 4);
+        prefixed.push_str(stamp);
+        prefixed.push_str("\n\n");
+        prefixed.push_str(&system);
+        system = prefixed;
+    }
     // Conscience-pass retry path: a prior draft drifted on an invariant,
     // and the grader returned a concrete correction note. Append it at the
     // end of the system block so it sits in the high-attention tail right

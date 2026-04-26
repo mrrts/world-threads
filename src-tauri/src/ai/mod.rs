@@ -1,5 +1,6 @@
 pub mod conscience;
 pub mod google;
+pub mod momentstamp;
 pub mod mood;
 pub mod openai;
 pub mod orchestrator;
