@@ -821,7 +821,7 @@ pub async fn send_group_message_cmd(
     // content + mood_reduction + recent-scene context, none of which
     // depend on replies. We await it at the end — saves N × reaction-
     // latency on group turns.
-    let (reduction_snapshot, reaction_context) = {
+    let (reduction_snapshot, reaction_context, reactions_enabled) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let r = get_thread_mood_reduction(&conn, &gc.thread_id);
         // Last 4 messages before the user's brand-new one.
@@ -829,20 +829,34 @@ pub async fn send_group_message_cmd(
         let ctx: Vec<Message> = all.into_iter()
             .filter(|m| m.message_id != user_msg.message_id)
             .collect();
-        (r, ctx)
+        // Per-chat reactions toggle (group-scoped). Default ON when
+        // missing — matches solo behavior and matches what the
+        // frontend displays as default.
+        let reactions_enabled = get_setting(&conn, &format!("reactions_enabled.{}", gc.group_chat_id))
+            .ok().flatten()
+            .map(|v| v != "false" && v != "off")
+            .unwrap_or(true);
+        (r, ctx, reactions_enabled)
     };
-    let reaction_base = model_config.chat_api_base();
-    let reaction_model = model_config.dialogue_model.clone();
-    let reaction_content = content.clone();
-    let reaction_reduction = reduction_snapshot.clone();
-    let reaction_api_key = api_key.clone();
-    let reaction_ctx = reaction_context.clone();
-    let reaction_handle = tokio::spawn(async move {
-        orchestrator::pick_character_reaction_via_llm(
-            &reaction_base, &reaction_api_key, &reaction_model,
-            &reaction_content, &reaction_reduction, &reaction_ctx,
-        ).await
-    });
+    // Skip launching the reaction LLM call entirely when reactions are
+    // disabled — this is the cost+latency saving the user wants, not a
+    // UI hide. Use Option to keep the same await-shape downstream.
+    let reaction_handle = if reactions_enabled {
+        let reaction_base = model_config.chat_api_base();
+        let reaction_model = model_config.dialogue_model.clone();
+        let reaction_content = content.clone();
+        let reaction_reduction = reduction_snapshot.clone();
+        let reaction_api_key = api_key.clone();
+        let reaction_ctx = reaction_context.clone();
+        Some(tokio::spawn(async move {
+            orchestrator::pick_character_reaction_via_llm(
+                &reaction_base, &reaction_api_key, &reaction_model,
+                &reaction_content, &reaction_reduction, &reaction_ctx,
+            ).await
+        }))
+    } else {
+        None
+    };
 
     // Read the per-group "first speaker" setting and reorder the
     // characters list so the chosen character leads. Others follow in
@@ -1225,22 +1239,26 @@ pub async fn send_group_message_cmd(
     }
 
     // Await the parallel reaction pick (launched before the character loop).
-    let reaction_emoji = match reaction_handle.await {
-        Ok(Ok(e)) => e,
-        _ => {
-            let chain = prompts::pick_mood_chain(Some(&reduction_snapshot));
-            prompts::pick_character_reaction_emoji(&chain)
-        }
-    };
-    // Batch flow (unused by current frontend but kept for completeness) —
-    // attribute to None since we don't know which specific character
-    // produced the single reaction here.
-    let _ = chat_cmds::emit_character_reaction(
-        &db,
-        &user_msg.message_id,
-        &reaction_emoji,
-        None,
-    );
+    // Skipped entirely when reactions_enabled is false — no LLM call
+    // happened above, no emit happens here.
+    if let Some(handle) = reaction_handle {
+        let reaction_emoji = match handle.await {
+            Ok(Ok(e)) => e,
+            _ => {
+                let chain = prompts::pick_mood_chain(Some(&reduction_snapshot));
+                prompts::pick_character_reaction_emoji(&chain)
+            }
+        };
+        // Batch flow (unused by current frontend but kept for completeness) —
+        // attribute to None since we don't know which specific character
+        // produced the single reaction here.
+        let _ = chat_cmds::emit_character_reaction(
+            &db,
+            &user_msg.message_id,
+            &reaction_emoji,
+            None,
+        );
+    }
 
     Ok(SendGroupMessageResult {
         user_message: user_msg,
@@ -1310,14 +1328,18 @@ pub async fn prompt_group_character_cmd(
 
     // Load settings first so the just-before-turn nudge can include the
     // length reminder as a late-position reaffirmation.
-    let (response_length, narration_tone, leader) = {
+    let (response_length, narration_tone, leader, reactions_enabled) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let rl = get_setting(&conn, &format!("response_length.{}", gc.group_chat_id))
             .ok().flatten()
             .or_else(|| Some("Short".to_string()));
         let nt = get_setting(&conn, &format!("narration_tone.{}", gc.group_chat_id)).ok().flatten();
         let leader = get_setting(&conn, &format!("leader.{}", gc.group_chat_id)).ok().flatten();
-        (rl, nt, leader)
+        let reactions_enabled = get_setting(&conn, &format!("reactions_enabled.{}", gc.group_chat_id))
+            .ok().flatten()
+            .map(|v| v != "false" && v != "off")
+            .unwrap_or(true);
+        (rl, nt, leader, reactions_enabled)
     };
 
     // Add a nudge directing who the character should address
@@ -1476,11 +1498,15 @@ pub async fn prompt_group_character_cmd(
         anchor_text.as_deref(),
     None,
     );
-    let reaction_fut = orchestrator::pick_character_reaction_via_llm(
-        &base, &api_key, &model_config.dialogue_model,
-        &reaction_user_content, &mood_reduction2, &reaction_context,
-    );
-    let (dialogue_res, reaction_res) = tokio::join!(dialogue_fut, reaction_fut);
+    let (dialogue_res, reaction_res) = if reactions_enabled {
+        let reaction_fut = orchestrator::pick_character_reaction_via_llm(
+            &base, &api_key, &model_config.dialogue_model,
+            &reaction_user_content, &mood_reduction2, &reaction_context,
+        );
+        tokio::join!(dialogue_fut, reaction_fut)
+    } else {
+        (dialogue_fut.await, Err("reactions disabled".to_string()))
+    };
     let (raw_reply, usage) = dialogue_res?;
 
     let other_names: Vec<&str> = characters.iter()
@@ -1611,13 +1637,14 @@ pub async fn prompt_group_character_cmd(
     // group turn accumulates multiple emoji reactions on the user's
     // message — one per responder. Different emojis render as distinct
     // bubbles; same emoji dedupes via the (msg, emoji, 'assistant') key.
-    let ai_reactions: Vec<Reaction> = match reaction_target_id {
-        Some(target_id) => {
+    // Skipped entirely when reactions_enabled is false.
+    let ai_reactions: Vec<Reaction> = match (reactions_enabled, reaction_target_id) {
+        (true, Some(target_id)) => {
             let reaction_emoji = reaction_res
                 .unwrap_or_else(|_| prompts::pick_character_reaction_emoji(&mood_chain2));
             chat_cmds::emit_character_reaction(&db, &target_id, &reaction_emoji, Some(&character.character_id))
         }
-        None => Vec::new(),
+        _ => Vec::new(),
     };
 
     Ok(PromptGroupCharacterResult {

@@ -83,6 +83,7 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
   const [narrationTone, setNarrationTone] = useState("Cinematic");
   const [narrationInstructions, setNarrationInstructions] = useState("");
   const [responseLength, setResponseLength] = useState("Short");
+  const [reactionsEnabled, setReactionsEnabled] = useState(true);
   const [narrationDirty, setNarrationDirty] = useState(false);
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const [loopVideo, setLoopVideo] = useState<Record<string, boolean>>({});
@@ -122,10 +123,14 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
       api.getSetting(`narration_tone.${chatId}`),
       api.getSetting(`narration_instructions.${chatId}`),
       api.getSetting(`response_length.${chatId}`),
-    ]).then(([tone, instructions, length]) => {
+      api.getSetting(`reactions_enabled.${chatId}`),
+    ]).then(([tone, instructions, length, reactions]) => {
       setNarrationTone(tone || "Cinematic");
       setNarrationInstructions(instructions || "");
       setResponseLength(length || "Short");
+      // Reactions default ON when missing (matches backend default).
+      // Stored as "true"/"false"; absent means use default.
+      setReactionsEnabled(reactions !== "false" && reactions !== "off");
       setNarrationDirty(false);
     });
   }, [chatId]);
@@ -445,6 +450,7 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     narrationTone, setNarrationTone,
     narrationInstructions, setNarrationInstructions,
     responseLength, setResponseLength,
+    reactionsEnabled, setReactionsEnabled,
     narrationDirty, setNarrationDirty,
     playingVideo, setPlayingVideo,
     loopVideo, setLoopVideo,

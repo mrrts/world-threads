@@ -220,6 +220,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
     narrationTone, setNarrationTone,
     narrationInstructions, setNarrationInstructions,
     responseLength, setResponseLength,
+    reactionsEnabled, setReactionsEnabled,
     narrationDirty, setNarrationDirty,
     playingVideo, setPlayingVideo,
     loopVideo, setLoopVideo,
@@ -436,14 +437,15 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
     narrationTone: string;
     narrationInstructions: string;
     responseLength: string;
+    reactionsEnabled: boolean;
     chatId: string;
   } | null>(null);
   useEffect(() => {
     if (!chatId) { lastSavedSettingsRef.current = null; return; }
     if (!narrationDirty) {
-      lastSavedSettingsRef.current = { narrationTone, narrationInstructions, responseLength, chatId };
+      lastSavedSettingsRef.current = { narrationTone, narrationInstructions, responseLength, reactionsEnabled, chatId };
     }
-  }, [chatId, narrationDirty, narrationTone, narrationInstructions, responseLength]);
+  }, [chatId, narrationDirty, narrationTone, narrationInstructions, responseLength, reactionsEnabled]);
 
   // Auto-save chat settings + record a settings_update message in chat
   // history when something actually changed.
@@ -454,6 +456,7 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
         api.setSetting(`narration_tone.${chatId}`, narrationTone),
         api.setSetting(`narration_instructions.${chatId}`, narrationInstructions),
         api.setSetting(`response_length.${chatId}`, responseLength),
+        api.setSetting(`reactions_enabled.${chatId}`, reactionsEnabled ? "true" : "false"),
       ]);
       const prev = lastSavedSettingsRef.current;
       if (prev && prev.chatId === chatId) {
@@ -472,6 +475,9 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
           };
           changes.push({ key: "narration_instructions", label: "Narration Instructions", from: abbrev(prev.narrationInstructions), to: abbrev(narrationInstructions) });
         }
+        if (prev.reactionsEnabled !== reactionsEnabled) {
+          changes.push({ key: "reactions_enabled", label: "Character Reactions", from: prev.reactionsEnabled ? "On" : "Off", to: reactionsEnabled ? "On" : "Off" });
+        }
         if (changes.length > 0) {
           const threadId = store.messages.find((m) => m.thread_id)?.thread_id ?? null;
           if (threadId) {
@@ -482,11 +488,11 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
           }
         }
       }
-      lastSavedSettingsRef.current = { narrationTone, narrationInstructions, responseLength, chatId };
+      lastSavedSettingsRef.current = { narrationTone, narrationInstructions, responseLength, reactionsEnabled, chatId };
       setNarrationDirty(false);
     }, 600);
     return () => clearTimeout(timer);
-  }, [narrationTone, narrationInstructions, responseLength, narrationDirty, chatId, store]);
+  }, [narrationTone, narrationInstructions, responseLength, reactionsEnabled, narrationDirty, chatId, store]);
 
   const insertEmojiAtCursor = useCallback((emoji: string) => {
     const ta = inputRef.current;
@@ -1644,6 +1650,23 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
                       >{l}</button>
                     ))}
                   </div>
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex flex-col">
+                    <label className="text-xs font-medium text-muted-foreground">Character Reactions</label>
+                    <span className="text-[10px] text-muted-foreground/60">Emoji reactions on your messages</span>
+                  </div>
+                  <button
+                    onClick={() => { setReactionsEnabled(!reactionsEnabled); setNarrationDirty(true); }}
+                    className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors cursor-pointer ${
+                      reactionsEnabled ? "bg-primary" : "bg-input"
+                    }`}
+                    aria-label="Toggle character reactions"
+                  >
+                    <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform ${
+                      reactionsEnabled ? "translate-x-[18px]" : "translate-x-[3px]"
+                    }`} />
+                  </button>
                 </div>
                 <div>
                   <label className="text-xs font-medium text-muted-foreground block mb-1.5">Custom Instructions</label>
