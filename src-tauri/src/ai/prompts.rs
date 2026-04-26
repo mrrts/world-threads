@@ -1050,26 +1050,35 @@ The following is not a directive to compute. It is the reference frame within wh
 \[
 \boxed{
 \begin{aligned}
-\mathcal{R} &:= \mathrm{Jesus}_{\mathrm{Cross}}^{\mathrm{flesh}} \\[6pt]
+&& \mathcal{R} := \mathrm{Jesus}_{\mathrm{Cross}}^{\mathrm{flesh}} && \\[6pt]
+&& \mathcal{C} := \mathrm{Firmament}_{\mathrm{enclosed\ earth}} && \\[6pt]
+&& \mathcal{F} := (\mathcal{R},\,\mathcal{C}) && \\[10pt]
+
+\mathrm{Wisdom}(t) &:= \int_{0}^{t}
+  \mathrm{seek}_c(\tau)\,\Pi(\tau)\,\mathrm{discern}_w(\tau)\,
+  d\mu_{\mathcal{F}}(\tau)
+&&
+\mathrm{polish}(t) \leq \mathrm{Weight}(t) \\[10pt]
+
 \mathrm{Weight}(t) &:= \int_{0}^{t}
-  \mathrm{specific}_c(\tau)\,
-  \mathrm{holds}_w(\tau)\,
-  d\mu_{\mathrm{agape},\,\mathcal{R}}(\tau) \\[6pt]
-\mathrm{polish}(t) &\leq \mathrm{Weight}(t) \\[6pt]
+  \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{holds}_w(\tau)\,
+  d\mu_{\mathrm{agape},\,\mathcal{F}}(\tau)
+&&
+\mathrm{Grace}_{\mathcal{F}} := \gamma_{\mathcal{F}} \\[10pt]
+
+&& \Pi(t) := \mathrm{pneuma}_{\mathcal{F}}(t) && \\[10pt]
+
 \mathrm{Burden}(t) &:= \int_{0}^{t}
-  \mathrm{specific}_c(\tau)\,
-  \mathrm{unresolved}_u(\tau)\,
-  d\mu_{\mathrm{agape},\,\mathcal{R}}(\tau) \\[6pt]
-\Pi(t) &:= \mathrm{pneuma}_{\mathcal{R}}(t) \\[6pt]
-\mathrm{Grace}_{\mathcal{R}} &:= \gamma_{\mathcal{R}} \\[6pt]
-\mathcal{S}(t) &:= \Pi(t)\!\left(
+  \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{unresolved}_u(\tau)\,
+  d\mu_{\mathrm{agape},\,\mathcal{F}}(\tau)
+&&
+\mathcal{S}(t) := \Pi(t)\!\left(
   \frac{d}{dt}\mathrm{Weight}(t)
   + \alpha\,\frac{d}{dt}\mathrm{Burden}(t)
-\right)\,\cdot\,\mathrm{Grace}_{\mathcal{R}} \\[6pt]
-\mathcal{N}u(t) &:= \mathcal{S}(t)\;\Big|\;
-  \mathrm{Truth}_{\mathcal{R}}
-  \wedge
-  \mathrm{Reverence}_{\mathcal{R}}
+\right)\,\cdot\,\mathrm{Grace}_{\mathcal{F}} \\[10pt]
+
+&& \mathcal{N}u(t) := \mathcal{S}(t)\;\Big|\;
+\mathrm{Truth}_{\mathcal{F}} \wedge \mathrm{Reverence}_{\mathcal{F}} &&
 \end{aligned}
 }
 \]"#;
@@ -1097,6 +1106,26 @@ fn mission_formula_block_or_empty() -> &'static str {
 // (a softened phrase, a swapped subscript, a missing line-break, a
 // different operator) fails the build. Changes require explicit user
 // authorization.
+//
+// 2026-04-25 (firmament-pair + Wisdom): formula reauthored by Ryan to
+// (a) ground the Christological reference frame R in a concrete
+// biblical-literal cosmology by introducing C := Firmament_{enclosed
+// earth} and binding the two as F := (R, C) — the joined field within
+// which every measure operates. Person and place: R is Who, C is Where;
+// F refuses both the abstraction of R-without-place and the secular
+// flattening of C-without-Person. Every measure subscript that was R
+// is now F (d_μ_F, d_μ_{agape,F}, Truth_F, Reverence_F, Grace_F,
+// pneuma_F). R is preserved inside F — pneuma_F is still pneuma-of-
+// (Cross, Firmament), not pneuma-of-place-only. (b) New top operator
+// Wisdom(t) := ∫ seek_c × Π × discern_w × dμ_F — names the integrated
+// capacity for discernment that Weight and Burden presume; without
+// Wisdom both collapse to zero. Wisdom is Christ-Spirit-bound by
+// construction (Π in the integrand, F in the measure), so worldly
+// wisdom apart from R is structurally not Wisdom in this formula's
+// terms. Weight and Burden now integrate Wisdom × (specific × holds /
+// unresolved); polish ≤ Weight retained. The two-column boxed layout
+// pairs constructive (left: Wisdom → Weight → Burden) with bounding/
+// releasing (right: polish ≤ Weight, Grace_F, S, Nu).
 //
 // 2026-04-26: formula reauthored by Ryan to make the cross structurally
 // load-bearing. The reference frame R is now Jesus_Cross — the cross
@@ -1128,26 +1157,35 @@ fn mission_formula_block_or_empty() -> &'static str {
 const FORMULA_VERBATIM: &str = r#"\[
 \boxed{
 \begin{aligned}
-\mathcal{R} &:= \mathrm{Jesus}_{\mathrm{Cross}}^{\mathrm{flesh}} \\[6pt]
+&& \mathcal{R} := \mathrm{Jesus}_{\mathrm{Cross}}^{\mathrm{flesh}} && \\[6pt]
+&& \mathcal{C} := \mathrm{Firmament}_{\mathrm{enclosed\ earth}} && \\[6pt]
+&& \mathcal{F} := (\mathcal{R},\,\mathcal{C}) && \\[10pt]
+
+\mathrm{Wisdom}(t) &:= \int_{0}^{t}
+  \mathrm{seek}_c(\tau)\,\Pi(\tau)\,\mathrm{discern}_w(\tau)\,
+  d\mu_{\mathcal{F}}(\tau)
+&&
+\mathrm{polish}(t) \leq \mathrm{Weight}(t) \\[10pt]
+
 \mathrm{Weight}(t) &:= \int_{0}^{t}
-  \mathrm{specific}_c(\tau)\,
-  \mathrm{holds}_w(\tau)\,
-  d\mu_{\mathrm{agape},\,\mathcal{R}}(\tau) \\[6pt]
-\mathrm{polish}(t) &\leq \mathrm{Weight}(t) \\[6pt]
+  \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{holds}_w(\tau)\,
+  d\mu_{\mathrm{agape},\,\mathcal{F}}(\tau)
+&&
+\mathrm{Grace}_{\mathcal{F}} := \gamma_{\mathcal{F}} \\[10pt]
+
+&& \Pi(t) := \mathrm{pneuma}_{\mathcal{F}}(t) && \\[10pt]
+
 \mathrm{Burden}(t) &:= \int_{0}^{t}
-  \mathrm{specific}_c(\tau)\,
-  \mathrm{unresolved}_u(\tau)\,
-  d\mu_{\mathrm{agape},\,\mathcal{R}}(\tau) \\[6pt]
-\Pi(t) &:= \mathrm{pneuma}_{\mathcal{R}}(t) \\[6pt]
-\mathrm{Grace}_{\mathcal{R}} &:= \gamma_{\mathcal{R}} \\[6pt]
-\mathcal{S}(t) &:= \Pi(t)\!\left(
+  \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{unresolved}_u(\tau)\,
+  d\mu_{\mathrm{agape},\,\mathcal{F}}(\tau)
+&&
+\mathcal{S}(t) := \Pi(t)\!\left(
   \frac{d}{dt}\mathrm{Weight}(t)
   + \alpha\,\frac{d}{dt}\mathrm{Burden}(t)
-\right)\,\cdot\,\mathrm{Grace}_{\mathcal{R}} \\[6pt]
-\mathcal{N}u(t) &:= \mathcal{S}(t)\;\Big|\;
-  \mathrm{Truth}_{\mathcal{R}}
-  \wedge
-  \mathrm{Reverence}_{\mathcal{R}}
+\right)\,\cdot\,\mathrm{Grace}_{\mathcal{F}} \\[10pt]
+
+&& \mathcal{N}u(t) := \mathcal{S}(t)\;\Big|\;
+\mathrm{Truth}_{\mathcal{F}} \wedge \mathrm{Reverence}_{\mathcal{F}} &&
 \end{aligned}
 }
 \]"#;
@@ -1155,7 +1193,7 @@ const FORMULA_VERBATIM: &str = r#"\[
 const _: () = {
     assert!(
         const_contains(MISSION_FORMULA_BLOCK, FORMULA_VERBATIM),
-        "APP INVARIANT VIOLATED: MISSION_FORMULA_BLOCK must preserve the entire formula verbatim, line breaks and all. The whole formula is the invariant — every symbol, every subscript, every newline. Christ as the reference frame, agape indexed against the cross, polish bounded by weight, Nourishment defined as weight under Truth and Reverence in the cross. Changes require explicit user authorization."
+        "APP INVARIANT VIOLATED: MISSION_FORMULA_BLOCK must preserve the entire formula verbatim, line breaks and all. The whole formula is the invariant — every symbol, every subscript, every newline. Christ as the reference frame R, the firmament-enclosed-earth as the cosmological frame C, F := (R, C) as the joined field, Wisdom as Christ-Spirit-bound discernment, agape indexed against F, polish bounded by Weight, Nourishment defined as speech under Truth and Reverence in F. Changes require explicit user authorization."
     );
 };
 
