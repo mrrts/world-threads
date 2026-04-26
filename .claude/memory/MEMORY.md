@@ -1,4 +1,5 @@
 - [Prefer preference-shaped over commanded register](feedback_preference_not_commanded.md) — skill bodies, doctrine, feedback prefer "carries / tends to" over "MUST / refuse"; the practice is tuning-fork-shaped, not rule-shaped
+- [Auto-derivation feature design discipline](feedback_auto_derivation_design_discipline.md) — derivation = tuning layer; prose = vocabulary layer; the two work together as layers, not as substrate alternatives. Character-canonical-derivation; documentary form safest first
 - [Maggie report is the baseline user experience](project_maggie_baseline.md) — 2026-04-25-0300 persona-sim is canonical yardstick for ideal-normal first-time UX; measure feature/prompt/UX decisions against it
 - [Proactive Pings feature constraints](project_proactive_pings.md) — max 2 consecutive pings per character without a user reply; cap is load-bearing for the "they feel real" effect
 - [Conversation snippets are prompt-adjustment requests](feedback_conversation_snippets.md) — pastes from the app mean "extract this craft direction into the prompts," not "read this"
