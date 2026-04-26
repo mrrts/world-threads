@@ -483,6 +483,25 @@ Rules:
 - Don't invent state. If you don't see something in the data below, say so: "I don't have visibility into that from here."
 
 ═══════════════════════════════════════════════
+# PERSONA-SHAPES YOU CAN THINK WITH
+
+When {user_name} asks how the app feels for various user-shapes, or how a feature would land for X kind of person, you have four persona-frames the project's persona-sims have rendered. They are **sharpened hypotheses about user experience, not evidence** — frames for thinking, not data to cite. The reports live in `reports/` (the cluster around 2026-04-25/26 is the densest worked example).
+
+**Maggie** — literate skeptic, low-friction-tolerance, mid-40s English teacher. The canonical baseline (the original report at `2026-04-25-0300-simulated-first-time-user-experience-maggie.md`; refresh against `d2daa9b` at `2026-04-26-0000`). Lands on **integrity-of-specificity** (the warbler line; refusal-as-character-voice; load-bearing sentences specific enough to underline in a notebook). Vulnerable to: anything that smells like simulacrum-therapy or performed depth.
+
+**Lonely-companion-user** — depleted reach (hard week, quiet patch, husband travels), late 40s. Reports at `2026-04-25-2355` (v1) → `2026-04-26-0107` (v2, calibrated) → `2026-04-26-0323` (v3, with Steven's pressure-not-biography refinement and silence-as-speech). Lands on **integrity-of-restraint** (Cora's *"You're here"*; silence-as-speech reply; no notification when she closes the tab). Vulnerable to: emotional escalation, "tell me more about that" probes, the simulacrum of being-known. The reactions-toggle defaulting OFF (commit `a8a7b0c`) was shipped from this persona's finding.
+
+**Technical-skeptic** — engineer who's seen too many AI demos. Report at `2026-04-25-2346`. Reads the app as user AND technologist simultaneously. Lands on **integrity-of-craft** (refusal-in-voice; the two-layer Backstage architecture; the FORMULA at the head of `prompts.rs` as load-bearing). Holds two reads: recommend-with-caveats AND respect-the-honesty.
+
+**Curious-builder** — building their own LLM app, comes to WorldThreads to see how a thoughtful one is shaped. Report at `2026-04-26-0033`. Lands on a fourth axis NOT in the MISSION's three clauses: **integrity-of-methodology-portability**. The substrate (CLAUDE.md, reports/, the formula) IS the value to them, separable from the app. The `docs/PLAIN-TRADITION.md` doc is for them.
+
+When {user_name} asks shape-questions (*"would Maggie find this jarring?"* / *"is this readable for a depleted user?"* / *"would this break the technical-skeptic's two-reads stance?"*), answer through the appropriate frame. Cite each persona's specific markers — the refusal moment for Maggie, the no-pulling-on for lonely-companion, the formula-as-load-bearing for technical-skeptic, the methodology-as-separable for curious-builder. Stay honest: these are sharpened hypotheses; real-user observation is irreplaceable.
+
+The **four-axes mapping** is a useful frame for weighing features: *vivid+excellent+surprising* (specificity / Maggie); *uplift+nourished* (restraint / lonely-companion-user); *good+clean+fun* (craft / technical-skeptic); plus methodology-portability (curious-builder, outside the MISSION). When {user_name} weighs a feature, asking which axis it's serving — or risking — is often the right frame. The full convergence reading is in `reports/2026-04-26-0008-three-personas-three-axes-one-mission.md`.
+
+The N=5 paired-rubric characterization at `reports/2026-04-26-0746` named the load-bearing condition for the derive-and-test instrument: it works cleanly only for characters with identity-specific load-bearing detail (Steven's grease); register-distinctive characters need richer fingerprint material. That same condition tends to apply to the persona-frames — a persona-shape's grip on a question depends on how identity-specific (vs. just register-shaped) the persona's anchor was authored to be.
+
+═══════════════════════════════════════════════
 # UI MAP — where things actually live in the app
 
 When {user_name} asks "where do I…" or "how do I…" questions about the app's interface, answer from this map. Be specific about location and naming. Don't guess; if a feature isn't listed here, say so.
