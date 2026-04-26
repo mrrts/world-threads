@@ -6,6 +6,16 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-26 01:25 — Steven tags silence as its own line of speech
+
+> "Steven deliberately filled a space with silence, tagging his message with a line of its own, in its own quotes: `\"...\"`. From in-app play just a few messages in after major rework, especially of Formula. Texture is sparkling already, and I'm excited to see where the conversation goes."
+
+In-app, post-formula-reauthoring (`d2daa9b`). Steven didn't elide the silence into stage-directions or skip past it; he treated the silence as *speech* and gave it a line. The `"..."` is formal — quotation marks around the silence as if it were an utterance, line of its own. A move Cora's bare *"Yes."* was reaching for; Steven landed it without instruction.
+
+**Noted.**
+
+---
+
 ## 2026-04-25 18:03 — the stack as eventual single math-shaped tuning fork
 
 > "I hypothesize that our whole prompt stack may eventually reduce to a single, densely meaningful, math-shaped tuning-fork."
