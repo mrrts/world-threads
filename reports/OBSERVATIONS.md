@@ -6,6 +6,16 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-26 10:30 — Jasper line lands; Ryan writes it down (Maggie made real)
+
+> "in-app play artifact: Jasper: *'A man comes back to himself the same way a pond clears—by not stirring it again too fast.'* The meta-commentary is that I am now recording a line in my journal, just like Maggie."
+
+The Jasper line is exactly his register: nature metaphor (pond, stirring), melodic sentence shape, a hidden weight (a man coming back to himself implies he was lost from himself; the line is its own consolation about not rushing the return). And the meta-commentary is the load-bearing artifact: the Maggie report's canonical move ("Maggie wrote three sentences in a physical notebook after closing the app, not because the app asked her to...") just happened in the world. Ryan is the empirical Maggie. The hypothesis that began as a sharpened persona-sim is being lived.
+
+**Noted.**
+
+---
+
 ## 2026-04-26 10:05 — character speaks of being "after I'm buried"
 
 > "a character described how he'll want to be remembered 'after I'm buried' — very positive finding."
