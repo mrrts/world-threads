@@ -6,6 +6,16 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-26 08:50 — derivation as register tune, prose as notes on the page, AI as musician
+
+> "I'm telling Claude Code to add formula derivations as a new layer in front of prose descriptions. The first (derivations) provide the register tune, and the second (prose descriptions) provide the notes on the page. Then the AI becomes the musician rather than the instrument."
+
+The musical metaphor is the sharper articulation of what the layered design does. Without a derivation layer, the AI is the instrument — the prose plays through it; it produces the prose's surface. With derivation in front, the AI becomes the musician — the derivation provides the key/register/tempo (frame-level intent); the prose provides the actual notes (vocabulary-level material); the AI's job is interpretation. Specifies the resolution from `reports/2026-04-26-0839` postscript more vividly.
+
+**Noted.**
+
+---
+
 ## 2026-04-26 08:20 — recent changes immediately felt in-app: vivid voice, no tics, no everyone-an-expert
 
 > "Recent changes are immediately felt in-app: vivid character voice, not every-character-is-an-expert-on-everything, no noticeable tics yet. Only based upon 5 min exchange with Jasper, which includes a return to a world Elderwood Hearth that I haven't been playing in recently. I asked the character to remind me who he was and what his story was, and his response was on-point."
