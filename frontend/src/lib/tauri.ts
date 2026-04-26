@@ -505,6 +505,7 @@ async function migrateApiKeyToVault(): Promise<string> {
 export const api = {
   createWorld: (name: string) => invoke<World>("create_world_cmd", { name }),
   getWorld: (worldId: string) => invoke<World>("get_world_cmd", { worldId }),
+  getWorldDerivation: (worldId: string) => invoke<string | null>("get_world_derivation_cmd", { worldId }),
   listWorlds: () => invoke<World[]>("list_worlds_cmd"),
   updateWorld: (world: World) => invoke<void>("update_world_cmd", { world }),
   deleteWorld: (worldId: string) => invoke<void>("delete_world_cmd", { worldId }),
@@ -527,6 +528,7 @@ export const api = {
 
   listCharacters: (worldId: string) => invoke<Character[]>("list_characters_cmd", { worldId }),
   getCharacter: (characterId: string) => invoke<Character>("get_character_cmd", { characterId }),
+  getCharacterDerivation: (characterId: string) => invoke<string | null>("get_character_derivation_cmd", { characterId }),
   updateCharacter: (character: Character) => invoke<void>("update_character_cmd", { character }),
   createCharacter: (worldId: string, displayName: string) => invoke<Character>("create_character_cmd", { worldId, displayName }),
   deleteCharacter: (characterId: string) => invoke<void>("delete_character_cmd", { characterId }),

@@ -11,6 +11,7 @@ import { Save, Plus, X, Trash2, AlertTriangle, ImagePlus, Loader2, Check, BookTe
 import type { useAppStore } from "@/hooks/use-app-store";
 import { api, type World, type WorldState, type WorldImageInfo } from "@/lib/tauri";
 import { WORLD_TEMPLATES, type WorldTemplate } from "@/lib/world-templates";
+import { DerivationCard } from "@/components/DerivationCard";
 
 interface Props {
   store: ReturnType<typeof useAppStore>;
@@ -202,6 +203,14 @@ export function WorldCanonEditor({ store }: Props) {
                 </div>
               </div>
             </FieldGroup>
+
+            {world && (
+              <DerivationCard
+                label="World Formula"
+                load={() => api.getWorldDerivation(world.world_id)}
+                refetchKey={world.world_id}
+              />
+            )}
 
             <Field label="Description" hint="Setting, mood, atmosphere, history — everything that defines your world">
               <Textarea

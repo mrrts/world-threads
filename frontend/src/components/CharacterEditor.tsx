@@ -11,6 +11,7 @@ import { CHARACTER_TEMPLATES, type CharacterTemplate } from "@/lib/character-tem
 import { api, type Character, type PortraitInfo, type GalleryItem, type InventoryItem, type JournalEntry } from "@/lib/tauri";
 import type { useAppStore } from "@/hooks/use-app-store";
 import { InventoryEditor } from "@/components/character/InventoryEditor";
+import { DerivationCard } from "@/components/DerivationCard";
 
 interface Props {
   store: ReturnType<typeof useAppStore>;
@@ -522,6 +523,13 @@ export function CharacterEditor({ store }: Props) {
             </FieldGroup>
 
             <FieldGroup label="Identity & Voice">
+              {ch && (
+                <DerivationCard
+                  label="Character Formula"
+                  load={() => api.getCharacterDerivation(ch.character_id)}
+                  refetchKey={ch.character_id}
+                />
+              )}
               <Field label="Identity" hint="Core personality, demeanor, how they see the world">
                 <Textarea
                   className="min-h-[120px]"

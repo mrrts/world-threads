@@ -23,6 +23,21 @@ pub fn get_character_cmd(db: State<Database>, character_id: String) -> Result<Ch
     get_character(&conn, &character_id).map_err(|e| e.to_string())
 }
 
+/// Read the documentary `derived_formula` for a character. Read-only
+/// for now (per the auto-derivation feature design discipline:
+/// editing requires careful UI design that's not too LaTeX-y; defer
+/// to a later iteration). Populated via worldcli derive-character.
+/// Returns Some(text) if populated, None otherwise.
+#[tauri::command]
+pub fn get_character_derivation_cmd(db: State<Database>, character_id: String) -> Result<Option<String>, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let derived: Option<String> = conn.query_row(
+        "SELECT derived_formula FROM characters WHERE character_id = ?1",
+        rusqlite::params![character_id], |r| r.get(0),
+    ).map_err(|e| e.to_string())?;
+    Ok(derived)
+}
+
 #[tauri::command]
 pub fn update_character_cmd(db: State<Database>, character: Character) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;

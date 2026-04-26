@@ -80,6 +80,18 @@ pub fn get_world_cmd(db: State<Database>, world_id: String) -> Result<World, Str
     get_world(&conn, &world_id).map_err(|e| e.to_string())
 }
 
+/// Read the documentary `derived_formula` for a world. Same shape
+/// and rationale as get_character_derivation_cmd. Read-only for now.
+#[tauri::command]
+pub fn get_world_derivation_cmd(db: State<Database>, world_id: String) -> Result<Option<String>, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let derived: Option<String> = conn.query_row(
+        "SELECT derived_formula FROM worlds WHERE world_id = ?1",
+        rusqlite::params![world_id], |r| r.get(0),
+    ).map_err(|e| e.to_string())?;
+    Ok(derived)
+}
+
 #[tauri::command]
 pub fn list_worlds_cmd(db: State<Database>) -> Result<Vec<World>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
