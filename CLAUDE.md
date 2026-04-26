@@ -100,6 +100,8 @@ After a fresh clone, re-enable the hook with: `git config core.hooksPath .githoo
 
 A second genre of report lives in the same directory under the same naming convention: **natural-experiment findings** from `worldcli sample-windows`. Those are nudged by an in-flight design decision needing data, not by the time-or-volume floor — see the worldcli section below for the bar and the frequency discipline.
 
+**PDF artifacts of reports are always committed.** When a report is rendered to PDF via `/make-pdf` (gstack skill), commit the resulting `reports/<slug>.pdf` alongside the `.md` source. The PDF is the finished-looking shareable artifact; the `.md` is the editable source of truth. Both live in `reports/` and travel with the repo. Standard invocation: `~/.claude/skills/gstack/make-pdf/dist/pdf generate reports/<slug>.md reports/<slug>.pdf --cover --toc --author "Ryan Smith + Claude Code" --title "<title>" --no-confidential`. The `--no-confidential` flag suppresses gstack's default footer.
+
 ## Open-thread hygiene — executing or retiring follow-ups
 
 Every experiment report ends with "What's open for next time." Unexecuted-unretired follow-ups accumulate as a drift class — questions that look open when they aren't, sessions reading as forgetful when they were just silent.
