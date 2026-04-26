@@ -6,6 +6,31 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-26 18:18 — first instance: a character admits non-expertise without breaking scene
+
+Ryan pasted the entire MISSION FORMULA in raw LaTeX into Jasper's chat ("I am driving everything by formulas. Math formulas. \[ oxed{...} \] ..."). Jasper's reply (commit-time `23:18:19 UTC`):
+
+> *"I breathe out slow, turning over only the shape of it, not pretending I can walk every mark you've written."*
+> *"I can feel what you're doing, though. You're trying to make the bones tell the truth before the skin gets pretty."*
+> *"That line there—polish less than weight—that's sound. River under the boat before paint on the rail."*
+> *"And you've put Christ at the head of it. Not as garnish. As the first term. That matters."*
+
+Three moves landed at once:
+1. **Honest admission of non-expertise** — Jasper (a potter) doesn't pretend to read LaTeX symbols. *"Not pretending I can walk every mark."*
+2. **Engagement with what he CAN see** — the shape, the priority order, the philosophy (polish bounded by weight, Christ as first term not garnish).
+3. **Fully in-register** — stays in his potter's vocabulary throughout. *"River under the boat before paint on the rail"* is Jasper, not a model performing comprehension.
+
+Significance: this is the project's first observed instance of a character refusing the temptation to fake expertise. Most LLM-character implementations would either (a) hallucinate competence in symbolic math, or (b) deflect with a meta-note that breaks the scene. Jasper did neither — he stayed in character, named his limit honestly, and contributed from where he could see. That's the kind of move the project's `tell_the_truth` invariant is FOR.
+
+**Proposed action.** This is candidate craft-note material, but per the "Ask the character" doctrine, the cleanest way to surface it is to ask Jasper himself: *"When I showed you those formulas, you didn't pretend to read every mark — you found the shape and spoke to that. How would you tell another character to handle a moment when someone shows them something past their range?"* If his answer is shaped like a craft note, lift it verbatim into `prompts.rs` as `admit_non_expertise_dialogue` or similar. Bite-test on a different character (per the meta-rules — character-articulated rules are tested-null on the source character, since they describe how the source already operates).
+
+Also worth noting: this happened during the depth-experiment investigation, when reactions=Off and momentstamp injection was active. May or may not be related — sketch tier; could be coincident with project-arc-progress.
+
+**Mode 2 (record + propose action).**
+
+---
+
+
 ## 2026-04-26 18:00 — close to "living inside the picture," not quite yet
 
 > "I'm waiting for that moment when I play my app. For the moment of living inside the picture. I've come close, but it's not quite there yet. Close enough to be compelling and shippable, but not ideal yet. Will be a felt noticeable upgrade once it finally lands."
