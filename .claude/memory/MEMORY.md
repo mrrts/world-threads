@@ -24,3 +24,4 @@
 - [Formula + invariants already do the carve-out work](feedback_formula_does_carveout_work.md) — before drafting an earned-exception carve-out, check whether the formula+invariants are already producing the discrimination; often they are, and no carve-out is needed
 - [Every turn ends with AskUserQuestion](feedback_choosers_via_askuserquestion.md) — strengthened project law: every assistant turn ends with an AskUserQuestion chooser; default fallback {Continue, Exit}; compile-time-enforced by Stop hook
 - [Default to /second-opinion offload while budget is active](feedback_offload_high_reasoning.md) — when today's budget has headroom, default to ChatGPT consult for high-reasoning tasks (debugging, design review, comprehension) rather than grinding in-session
+- [One paid API surface beside Claude/Claude Code](feedback_one_paid_api_surface.md) — currently OpenAI; don't propose adding Grok / Gemini / etc. without explicit user authorization that overrides the principle
