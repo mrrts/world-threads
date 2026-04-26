@@ -1700,7 +1700,7 @@ export function ChatView({ store, onNavigateToCharacter }: Props) {
                   <div className="inline-flex border border-input bg-background rounded-lg">
                     {([
                       { mode: "off" as const,        glyph: "🚫",     title: "Off — no reactions" },
-                      { mode: "occasional" as const, glyph: "😀",     title: "Occasionally — text-message-realistic, ~1-in-4 messages" },
+                      { mode: "occasional" as const, glyph: "😀",     title: "Occasionally — Text Message Mode" },
                       { mode: "always" as const,     glyph: "😀😀😀", title: "Always — every message gets a reaction" },
                     ]).map(({ mode, glyph, title }, idx, arr) => (
                       <div
