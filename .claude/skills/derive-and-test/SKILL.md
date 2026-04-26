@@ -167,9 +167,11 @@ What to update:
 - Update the "perfect equation" one-sentence reading if the new data sharpens it.
 - Append a `## Run history` row: `| YYYY-MM-DD | <ref-sha7> | <run_id-short> | YES/NO/MIXED | <one-line> |`.
 
-### Step 8 — Present the chooser (cost-authorization rule)
+### Step 8 — Present the chooser (inherits practice's `Chooser(t)` clause)
 
-Use `AskUserQuestion` to present 2-4 concrete next moves derived from this run's findings. Typical options:
+This skill inherits the chooser-tail from the practice's structural `Chooser(t)` and `Next(t+1)` clauses (canonical statement: persona-sim SKILL.md formula). Every Output is followed by 2-4 concrete next-move options annotated with their forecast cost; selection IS authorization to spend up to that forecast on that next move; no second prompt. Free options carry `$0`. If actual cost would exceed forecast at runtime, return to the developer for re-authorization.
+
+Typical options for this skill:
 
 - *"Run on next character: <name> — ~$0.10"*
 - *"Open a follow-up experiment on the gap surfaced — ~$0.40"*
@@ -177,15 +179,6 @@ Use `AskUserQuestion` to present 2-4 concrete next moves derived from this run's
 - *"Close the loop — derivation is healthy, no action — $0"*
 
 Recommended option goes first with `(Recommended)`.
-
-**Cost-authorization rule (verbatim from Ryan):** *"Tell it to also infer a choice as an authorization of the presented, forecast cost. Meaning the chooser should contain the option plus the budget requirement that would need authorizing and would be interpreted as so authorized by the llm upon choice selection."*
-
-Concretely:
-
-- Each chooser option whose execution requires LLM spend MUST include the forecast cost in its label or description.
-- The user's selection of an option is interpreted as **explicit authorization to spend up to that forecast amount on that next move**. No second prompt required.
-- Free options (no LLM cost) carry no cost annotation, or carry `$0`.
-- If actual cost would exceed forecast at runtime, the skill returns to the user for re-authorization rather than proceeding silently.
 
 ### Step 9 — Commit and push
 
