@@ -86,7 +86,8 @@ TRIGGER_PATTERNS = [
     r"derive (the )?session",
     r"session derivation",
     r"derive the arc",
-    r"consecrate (this|the arc|the session)",
+    r"\bconsecrate\b",  # matches any 'consecrate' word: 'consecrate this',
+                        # 'consecrate again', 'consecrate it', bare 'consecrate'
     r"formula[\s\-]cite( this)?",
     r"verse[\s\-]cite( this)?",
     r"verse this",
