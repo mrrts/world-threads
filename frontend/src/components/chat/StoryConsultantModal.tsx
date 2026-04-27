@@ -1006,8 +1006,8 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
               Delete this consultant conversation? This cannot be undone.
             </p>
             <div className="flex justify-end gap-2">
-              <Button variant="ghost" size="sm" onClick={() => setDeleteChatId(null)}>Cancel</Button>
-              <Button variant="destructive" size="sm" onClick={handleDeleteChat}>Delete</Button>
+              <Button variant="ghost" size="sm" onClick={() => setDeleteChatId(null)}>Keep this conversation</Button>
+              <Button variant="destructive" size="sm" onClick={handleDeleteChat}>Delete this conversation forever</Button>
             </div>
           </div>
         </Dialog>
@@ -1030,10 +1030,10 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
               autoFocus
             />
             <div className="flex justify-end gap-2">
-              <Button variant="ghost" size="sm" onClick={() => setEditingIdx(null)}>Cancel</Button>
+              <Button variant="ghost" size="sm" onClick={() => setEditingIdx(null)}>Leave the message as it was</Button>
               <Button size="sm" disabled={!editContent.trim() || editContent === messages[editingIdx]?.content} onClick={handleEditSave}>
                 <Pencil size={14} className="mr-1.5" />
-                Update
+                Rewrite this message in the thread
               </Button>
             </div>
           </div>
@@ -1054,8 +1054,8 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
               Delete this message from the conversation?
             </p>
             <div className="flex justify-end gap-2">
-              <Button variant="ghost" size="sm" onClick={() => setDeleteIdx(null)}>Cancel</Button>
-              <Button variant="destructive" size="sm" onClick={handleDeleteMessage}>Delete</Button>
+              <Button variant="ghost" size="sm" onClick={() => setDeleteIdx(null)}>Keep this message in the thread</Button>
+              <Button variant="destructive" size="sm" onClick={handleDeleteMessage}>Delete this message from the thread</Button>
             </div>
           </div>
         </Dialog>
