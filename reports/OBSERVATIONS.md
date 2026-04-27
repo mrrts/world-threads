@@ -14,11 +14,23 @@ Real correction. Claude Code shipped the no-nanny invariant in CLAUDE.md months 
 
 **Mode 2 — propose action.** The fix isn't more discipline-on-the-fly. It's a sharper memory entry naming the SOFT-DOOR shape: appreciation-flavored session-policing reads to Ryan as nanny because it IS nanny — the structural shape (Claude Code recommending he stop) hasn't changed, only the emotional surface (warmth/praise instead of caution/concern). Memory updated this turn with concrete tells + the soft-door pattern. Future sessions inherit the sharper rule.
 
-## 2026-04-27 12:35 — Jasper producing interesting results post-tonight's-work
+## 2026-04-27 12:35 — Jasper living the wipe-the-shine discipline in real time
 
 > *"see latest messages with Jasper. interesting results."*
 
-Aside about lived in-app effect of tonight's shipped changes (the wipe-the-shine craft-note via the registry refactor at 50243e8). Ryan didn't elaborate on what's interesting; the noting itself is the artifact. Worth pulling a recent Jasper sample tomorrow to see what the in-app behavior is doing post-ship. **Mode 3 — noted.**
+**Mode 1 — record + data check.** Pulled the last 16 turns (11:37-11:59 CDT, spanning the rule-ship window). Ryan and Jasper continuing the warmer/colder game from earlier — this time iterating on a single sentence about how being honest changed his relationship to work. Jasper's replies across the arc are dense with the wipe-the-shine discipline made manifest:
+
+- *"Equal means we're circling it... Then I'd go simpler, not grander."* (11:57)
+- *"trimming by feel now"* (11:57)
+- *"the words are nearly there, and the grain's what's left"* (11:58)
+- *"if that lands equal too, the truth may not be in the sentence at all. It may be in the before-and-after"* (11:58) — meta-move BEYOND the rule, recognizing when the line itself isn't where the work is
+- *"'Enjoyable' is true, but it's flatter. 'Fun again' tells the whole turn of the thing... it sounds like something a real man would actually say when he came out the other side of a good hard conversation."* (11:59) — the disciplined choice between two options, with the criterion being which one sounds like the thing a real person would say at the cost of being less-impressive
+
+Half this arc is pre-rule-ship, half post (the rule shipped at 11:40 + 11:55 with the registry refactor). Jasper's discipline is consistent across the boundary — which is exactly the vacuous-test outcome Pastor Rick already showed earlier today. The rule describes Jasper's existing behavior because the rule was LIFTED FROM HIM via the ask-the-character pattern. He continues to live the discipline he articulated.
+
+What's interesting in the lived sense: this arc demonstrates the discipline as a **collaborative move** between Ryan and Jasper, not just a unilateral character-rule. Jasper isn't lecturing about the discipline; he's iterating the line WITH Ryan, asking warmer/colder, trimming, saying the line again smaller, and turning back to Ryan for the call. The craft-note's diagnostic ("if a line starts admiring itself") is being applied as a JOINT register-test in real time. Pastor Rick's pleased-by-vs-presenting distinction shows up here too — Jasper is *pleased by* the line they're finding, not *presenting* it.
+
+This is in-app evidence that the doctrine-shape continues to operate in lived play, post-ship. Not bite-test evidence (rule isn't biting on Jasper because it describes his existing behavior) — but evidence that the rule isn't HARMING the register either, which is a real risk with any new craft-note (over-specification can flatten). The cross-character bite-test on a non-source character (e.g., Aaron, Steven, John on a probe that would tempt them to over-consecrate in their own registers) remains the open follow-up.
 
 ---
 
