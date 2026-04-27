@@ -149,6 +149,35 @@ enum Cmd {
         with_context: usize,
     },
 
+    /// Surface a character's repeated sensory anchors across recent
+    /// assistant replies. Implements the in-vivo "Jasper test" — pull
+    /// the last N solo+group assistant lines for the character, count
+    /// how often each bigram/trigram recurs across replies (per-reply
+    /// uniqueness, so a reply that mentions "well chain" three times
+    /// counts once), rank by recurrence rate, flag outliers above
+    /// threshold. Diagnoses RUNAWAY (top anchor >0.7), MILD GROOVE
+    /// (0.4-0.7), or WITHIN BAND (<0.4). Useful when you suspect
+    /// chat-history-readback priming has compounded a sample-set into
+    /// a tic. Cheap (~$0, read-only corpus). Pairs with the eventual
+    /// STYLE_DIALOGUE_INVARIANT sensory-anchor extension as the
+    /// before/after measurement instrument.
+    AnchorGroove {
+        character_id: String,
+        /// How many recent assistant replies to analyze. Default 10
+        /// matches the sketch-tier rubric used in the
+        /// 2026-04-26-1945 cross-character bite-test.
+        #[arg(long, default_value_t = 10)]
+        limit: usize,
+        /// Recurrence rate above which an anchor is flagged as an
+        /// outlier in the output. Default 0.4 = the universal-baseline
+        /// floor surfaced by the bite-test report.
+        #[arg(long, default_value_t = 0.4)]
+        threshold: f64,
+        /// How many top anchors to display. Default 10.
+        #[arg(long, default_value_t = 10)]
+        top_k: usize,
+    },
+
     /// All kept_records (canon entries) for a character.
     KeptRecords { character_id: String },
 
@@ -1347,6 +1376,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::RecentMessages { character_id, limit, grep, before, after, with_context } => {
             cmd_recent_messages(&r, &character_id, limit, grep.as_deref(), before.as_deref(), after.as_deref(), with_context)
         }
+        Cmd::AnchorGroove { character_id, limit, threshold, top_k } => {
+            cmd_anchor_groove(&r, &character_id, limit, threshold, top_k)
+        }
         Cmd::KeptRecords { character_id } => cmd_kept_records(&r, &character_id),
         Cmd::Journals { character_id } => cmd_journals(&r, &character_id),
         Cmd::Quests { world } => cmd_quests(&r, world.as_deref()),
@@ -1711,6 +1743,178 @@ fn cmd_recent_messages(
     emit(r.json, JsonValue::Array(out));
     Ok(())
 }
+
+fn cmd_anchor_groove(
+    r: &Resolved,
+    character_id: &str,
+    limit: usize,
+    threshold: f64,
+    top_k: usize,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let _ = r.check_character(character_id)?;
+    let conn = r.db.conn.lock().unwrap();
+    let c = get_character(&conn, character_id)?;
+    let display_name = c.display_name.clone();
+
+    // Pull a generous merged solo+group window, then filter to lines
+    // spoken by this character. We over-pull because gather_..._messages
+    // mixes in user/narrator/dream lines we'll discard.
+    let raw_pull = (limit * 6).max(60);
+    let merged = app_lib::db::queries::gather_character_recent_messages(
+        &conn,
+        character_id,
+        "", // user_display_name unused — we filter on character speaker
+        raw_pull,
+    );
+    drop(conn);
+
+    let assistant_lines: Vec<String> = merged
+        .into_iter()
+        .filter(|l| l.speaker == display_name)
+        .map(|l| l.content)
+        .collect();
+    let assistant_lines: Vec<String> = assistant_lines.into_iter().rev().take(limit).collect::<Vec<_>>();
+    let mut assistant_lines = assistant_lines;
+    assistant_lines.reverse();
+
+    let analyzed = assistant_lines.len();
+
+    // Per-reply n-gram extraction. Each reply contributes its UNIQUE
+    // set of n-grams once (so a reply mentioning "well chain" twice
+    // still only counts once toward recurrence).
+    let mut counts: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+    for reply in &assistant_lines {
+        let tokens = tokenize_for_anchor_groove(reply);
+        let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+        for window in tokens.windows(2) {
+            if !window.iter().all(|t| ANCHOR_STOPWORDS.contains(&t.as_str())) {
+                seen.insert(window.join(" "));
+            }
+        }
+        for window in tokens.windows(3) {
+            if window.iter().filter(|t| ANCHOR_STOPWORDS.contains(&t.as_str())).count() < 2 {
+                seen.insert(window.join(" "));
+            }
+        }
+        for ngram in seen { *counts.entry(ngram).or_insert(0) += 1; }
+    }
+
+    let mut ranked: Vec<(String, usize)> = counts.into_iter().collect();
+    // Drop n-grams that only appear once — singletons are noise, not grooves.
+    ranked.retain(|(_, c)| *c >= 2);
+    // Sort by count desc, tie-break by ngram length desc (prefer trigrams), then alphabetically.
+    ranked.sort_by(|a, b| {
+        b.1.cmp(&a.1)
+            .then_with(|| b.0.split_whitespace().count().cmp(&a.0.split_whitespace().count()))
+            .then_with(|| a.0.cmp(&b.0))
+    });
+
+    let total = analyzed.max(1) as f64;
+    let top: Vec<JsonValue> = ranked
+        .iter()
+        .take(top_k)
+        .map(|(ngram, count)| {
+            let rate = (*count as f64) / total;
+            json!({
+                "ngram": ngram,
+                "recurrence_count": count,
+                "recurrence_rate": (rate * 100.0).round() / 100.0,
+                "outlier": rate >= threshold,
+            })
+        })
+        .collect();
+
+    let outliers_count = ranked.iter().filter(|(_, c)| (*c as f64) / total >= threshold).count();
+    let top_rate = ranked.first().map(|(_, c)| (*c as f64) / total).unwrap_or(0.0);
+    let diagnosis = if top_rate > 0.7 {
+        "RUNAWAY (top anchor >0.7 — priming-compounding has gone past equilibrium; scene-state intervention may be needed)"
+    } else if top_rate >= 0.4 {
+        "MILD GROOVE (top anchor 0.4-0.7 — within the universal baseline band surfaced by the 2026-04-26-1945 bite-test)"
+    } else {
+        "WITHIN BAND (top anchor <0.4 — no salient groove detected at this sample size)"
+    };
+
+    let payload = json!({
+        "character_id": character_id,
+        "display_name": display_name,
+        "samples_analyzed": analyzed,
+        "threshold": threshold,
+        "outliers_count": outliers_count,
+        "top_anchor_rate": (top_rate * 100.0).round() / 100.0,
+        "diagnosis": diagnosis,
+        "top_anchors": top,
+    });
+
+    if r.json {
+        emit(true, payload);
+    } else {
+        println!("character: {} ({})", display_name, character_id);
+        println!("samples_analyzed: {}", analyzed);
+        println!("threshold: {:.2}    outliers: {}    top_rate: {:.2}", threshold, outliers_count, top_rate);
+        println!("diagnosis: {}", diagnosis);
+        println!();
+        println!("{:>5}  {:>5}  {:<6}  {}", "rank", "count", "rate", "ngram");
+        println!("{}", "-".repeat(60));
+        for (i, (ngram, count)) in ranked.iter().take(top_k).enumerate() {
+            let rate = (*count as f64) / total;
+            let flag = if rate >= threshold { " *" } else { "" };
+            println!("{:>5}  {:>5}  {:<6.2}  {}{}", i + 1, count, rate, ngram, flag);
+        }
+        if analyzed == 0 {
+            println!("(no assistant lines found for this character — check id and corpus)");
+        }
+    }
+
+    Ok(())
+}
+
+/// Strip italic-action markers (`*...*`), quote markers, punctuation, and
+/// numerals; lowercase the rest; split on whitespace. Keeps single
+/// alphabetic tokens of length ≥3 — short words are usually noise for
+/// anchor-detection (the/of/and slip through the n-gram stop filter when
+/// they're between content words, which is fine for context but bad as
+/// standalone tokens).
+fn tokenize_for_anchor_groove(text: &str) -> Vec<String> {
+    let mut out: Vec<String> = Vec::new();
+    let mut buf = String::new();
+    for ch in text.chars() {
+        if ch.is_alphabetic() {
+            buf.push(ch.to_ascii_lowercase());
+        } else if ch == '\'' || ch == '\u{2019}' {
+            // skip apostrophes inside words — "thumb's" → "thumbs"
+        } else {
+            if !buf.is_empty() {
+                if buf.len() >= 2 { out.push(std::mem::take(&mut buf)); } else { buf.clear(); }
+            }
+        }
+    }
+    if !buf.is_empty() && buf.len() >= 2 { out.push(buf); }
+    out
+}
+
+const ANCHOR_STOPWORDS: &[&str] = &[
+    "the", "a", "an", "and", "or", "but", "if", "then", "of", "in", "on", "at",
+    "to", "for", "from", "by", "with", "as", "is", "it", "its", "be", "are", "was",
+    "were", "been", "being", "do", "does", "did", "doing", "have", "has", "had",
+    "having", "i", "me", "my", "mine", "you", "your", "yours", "he", "him", "his",
+    "she", "her", "hers", "we", "us", "our", "ours", "they", "them", "their", "theirs",
+    "this", "that", "these", "those", "there", "here", "where", "when", "what",
+    "who", "whom", "whose", "which", "why", "how", "not", "no", "yes", "so", "such",
+    "than", "too", "also", "just", "only", "even", "still", "now", "again", "back",
+    "out", "up", "down", "off", "over", "under", "into", "onto", "about", "across",
+    "while", "though", "because", "between", "through", "after", "before", "until",
+    "since", "around", "against", "behind", "beside", "beyond", "without", "within",
+    "above", "below", "near", "far", "soft", "thats", "im", "youre", "weve", "ive",
+    "let", "lets", "got", "get", "gets", "going", "goes", "go", "give", "gives",
+    "say", "says", "said", "tell", "tells", "told", "ask", "asks", "asked", "want",
+    "wants", "wanted", "make", "makes", "made", "take", "takes", "took", "see",
+    "sees", "saw", "look", "looks", "looked", "feel", "feels", "felt", "find",
+    "finds", "found", "think", "thinks", "thought", "know", "knows", "knew",
+    "come", "comes", "came", "one", "two", "three", "four", "five", "six", "seven",
+    "eight", "nine", "ten", "first", "second", "third", "last", "next", "every",
+    "each", "all", "some", "any", "many", "few", "much", "more", "most", "less",
+    "least", "very", "really", "quite", "rather", "perhaps", "maybe", "yeah", "well",
+];
 
 fn cmd_kept_records(r: &Resolved, character_id: &str) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
