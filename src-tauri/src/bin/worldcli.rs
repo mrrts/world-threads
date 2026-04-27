@@ -856,6 +856,14 @@ enum Cmd {
         #[arg(long)]
         json: bool,
     },
+    /// Print catalog-at-a-glance: rule count by tier. Useful for tracking
+    /// the registry's growth-shape and the project's tier-distribution
+    /// pattern (per CLAUDE.md, expect EnsembleVacuous-majority because
+    /// most rules are part of load-bearing multiplicities).
+    RegistryStats {
+        #[arg(long)]
+        json: bool,
+    },
 }
 
 #[derive(Subcommand)]
@@ -1582,6 +1590,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::SessionList => cmd_session_list(&r),
         Cmd::ListCraftRules { json } => cmd_list_craft_rules(json),
         Cmd::ShowCraftRule { name, json } => cmd_show_craft_rule(&name, json),
+        Cmd::RegistryStats { json } => cmd_registry_stats(json),
     }
 }
 
@@ -1609,6 +1618,44 @@ fn cmd_list_craft_rules(json: bool) -> Result<(), Box<dyn std::error::Error>> {
             }
             println!("({} rules in registry; use `worldcli show-craft-rule <name>` for full body)", CRAFT_RULES_DIALOGUE.len());
         }
+    }
+    Ok(())
+}
+
+fn cmd_registry_stats(json: bool) -> Result<(), Box<dyn std::error::Error>> {
+    use app_lib::ai::prompts::CRAFT_RULES_DIALOGUE;
+    use std::collections::BTreeMap;
+    let mut counts: BTreeMap<&'static str, usize> = BTreeMap::new();
+    // Seed all known tiers so 0-counts render too (easier to scan)
+    for tier in ["unverified", "sketch", "claim", "characterized", "tested-null", "vacuous-test", "accumulated", "ensemble-vacuous"] {
+        counts.insert(tier, 0);
+    }
+    for r in CRAFT_RULES_DIALOGUE {
+        *counts.entry(r.evidence_tier.as_str()).or_insert(0) += 1;
+    }
+    let total = CRAFT_RULES_DIALOGUE.len();
+    if json {
+        let v = json!({
+            "total": total,
+            "by_tier": counts.iter().collect::<BTreeMap<_, _>>(),
+        });
+        println!("{}", serde_json::to_string_pretty(&v)?);
+    } else {
+        println!("Craft-rules registry stats");
+        println!("==========================");
+        println!("Total rules: {total}");
+        println!();
+        println!("By tier:");
+        // Print ordered by typical evidentiary-strength sequence
+        for tier in ["characterized", "claim", "sketch", "ensemble-vacuous", "vacuous-test", "tested-null", "accumulated", "unverified"] {
+            if let Some(&c) = counts.get(tier) {
+                println!("  {:20} {}", tier, c);
+            }
+        }
+        println!();
+        println!("(use `worldcli list-craft-rules` for full provenance,");
+        println!("  `worldcli show-craft-rule <name>` for body + tier + provenance,");
+        println!("  `worldcli ask <character> <probe> --omit-craft-rule <name>` to bite-test)");
     }
     Ok(())
 }
