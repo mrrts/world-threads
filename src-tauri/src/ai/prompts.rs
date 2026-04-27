@@ -3734,6 +3734,21 @@ fn build_solo_dialogue_system_prompt(
         if !user_boundaries.is_empty() {
             user_parts.push(format!("Boundaries they've named for themselves (respect these the way you'd respect a friend's stated lines — honor fully, without comment, no exceptions):\n{}", user_boundaries.iter().map(|b| format!("- {b}")).collect::<Vec<_>>().join("\n")));
         }
+        // User's frame on 𝓕 — the user's self-construction of their
+        // lens / posture / craft register, authored by the user as part
+        // of their per-world Me-character. Characters READ this as the
+        // user's chosen self-representation. The boundary that holds is
+        // USER AGENCY: the user authors it; characters never override
+        // or reinterpret what the user has chosen to say about
+        // themselves.
+        if let Some(d) = profile.derived_formula.as_deref() {
+            let trimmed = d.trim();
+            if !trimmed.is_empty() {
+                user_parts.push(format!(
+                    "How they've chosen to derive themselves on 𝓕 in this world (their self-construction; respect it as authored):\n  ⟨𝓕-derivation⟩ {trimmed}"
+                ));
+            }
+        }
         // Anchor against third-person drift: anywhere else in this
         // prompt where the model encounters this name, it must read
         // it as referring to the person on the other side of THIS
@@ -4083,6 +4098,18 @@ fn build_group_dialogue_system_prompt(
         if !facts.is_empty() {
             block.push_str("\n\nFacts about them:\n");
             block.push_str(&facts.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n"));
+        }
+        // User's frame on 𝓕 — documentary-metadata-shaped, distinct from
+        // character-derivation type. Read this to know how the user is
+        // positioned toward the world; do NOT use it to model their
+        // behavior. The user is real, not a construction.
+        if let Some(d) = profile.derived_formula.as_deref() {
+            let trimmed = d.trim();
+            if !trimmed.is_empty() {
+                block.push_str(&format!(
+                    "\n\nTheir lens on 𝓕 (how they read the world; not a model of their behavior):\n  ⟨𝓕-derivation⟩ {trimmed}"
+                ));
+            }
         }
         block.push_str(&format!("\n\nMessages from {user_name} appear with the role \"user\"."));
         // Anchor against third-person drift — see solo prompt for

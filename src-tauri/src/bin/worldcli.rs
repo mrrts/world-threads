@@ -110,6 +110,19 @@ enum Cmd {
     /// feedback_auto_derivation_design_discipline.md): derivations
     /// are documentary; not injected at the dialogue prompt-stack
     /// layer. Read by Backstage Consultant when present.
+    /// Get or set the documentary `derived_formula` on the user's
+    /// profile for a world. The user-derivation is documentary-metadata-
+    /// shaped, distinct from character-derivation type — characters
+    /// READ it to know how the user is positioned toward 𝓕, but it is
+    /// explicitly NOT used to model the user's behavior. Pass --text
+    /// to set; omit to read. With no text, prints the current value
+    /// (or null).
+    DeriveUser {
+        world_id: String,
+        #[arg(long)]
+        text: Option<String>,
+    },
+
     DeriveWorld {
         world_id: String,
         #[arg(long)]
@@ -1371,6 +1384,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::ListCharacters { world } => cmd_list_characters(&r, world.as_deref()),
         Cmd::ShowCharacter { character_id } => cmd_show_character(&r, &character_id),
         Cmd::ShowWorld { world_id } => cmd_show_world(&r, &world_id),
+        Cmd::DeriveUser { world_id, text } => cmd_derive_user(&r, &world_id, text.as_deref()),
         Cmd::DeriveWorld { world_id, text } => cmd_derive_world(&r, &world_id, text.as_deref()),
         Cmd::DeriveCharacter { character_id, text } => cmd_derive_character(&r, &character_id, text.as_deref()),
         Cmd::RecentMessages { character_id, limit, grep, before, after, with_context } => {
@@ -1607,6 +1621,33 @@ fn cmd_show_world(r: &Resolved, world_id: &str) -> Result<(), Box<dyn std::error
         "state": w.state,
     });
     emit(r.json, v);
+    Ok(())
+}
+
+/// Get or set the documentary derived_formula on the user's profile
+/// for a given world. Distinct from character-derivation in TYPE
+/// (lens, not behavior model) but identical in storage shape.
+fn cmd_derive_user(r: &Resolved, world_id: &str, text: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
+    r.check_world(world_id)?;
+    let conn = r.db.conn.lock().unwrap();
+    match text {
+        Some(new_text) => {
+            conn.execute(
+                "UPDATE user_profiles SET derived_formula = ?2, updated_at = datetime('now') WHERE world_id = ?1",
+                params![world_id, new_text],
+            )?;
+            let v = json!({"world_id": world_id, "derived_formula": new_text, "updated": true});
+            emit(r.json, v);
+        }
+        None => {
+            let derived: Option<String> = conn.query_row(
+                "SELECT derived_formula FROM user_profiles WHERE world_id = ?1",
+                params![world_id], |r| r.get(0),
+            ).ok().flatten();
+            let v = json!({"world_id": world_id, "derived_formula": derived});
+            emit(r.json, v);
+        }
+    }
     Ok(())
 }
 

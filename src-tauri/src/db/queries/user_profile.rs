@@ -16,7 +16,10 @@ pub struct UserProfile {
     /// vs. the user's lived facts the characters know about them.
     pub facts: Value,
     /// Boundaries the user has set for themselves in-world — analogous
-    /// to Character.boundaries. Same field name as on Character.
+    /// to Character.boundaries. Note: the user_profile is itself a
+    /// per-world Me-character construction the user authors and may
+    /// represent themselves however they choose; user agency is the
+    /// load-bearing constraint we don't break. Same field name as on Character.
     /// Added 2026-04-25 so the canonizer's "Remember this" flow can
     /// route boundary-shaped proposals here. Characters read these the
     /// same way they read each other's: "this is a thing they've named
@@ -41,11 +44,23 @@ pub struct UserProfile {
     pub boundaries: Value,
     pub avatar_file: String,
     pub updated_at: String,
+    /// User-authored derivation of the user's frame on 𝓕 = (𝓡, 𝓒) —
+    /// the user's self-construction of their lens / theology / craft
+    /// register / posture toward the world, written by the user as
+    /// part of their per-world Me-character. Characters see this in
+    /// their dialogue prompt as the user's chosen self-representation
+    /// in this world. The boundary that must hold is USER AGENCY:
+    /// the user authors this themselves, can update or remove it
+    /// anytime, and characters never override or reinterpret what
+    /// the user has chosen to say about themselves. Stored optional;
+    /// NULL means no derivation has been authored.
+    #[serde(default)]
+    pub derived_formula: Option<String>,
 }
 
 pub fn get_user_profile(conn: &Connection, world_id: &str) -> Result<UserProfile, rusqlite::Error> {
     conn.query_row(
-        "SELECT world_id, display_name, description, facts, boundaries, avatar_file, updated_at FROM user_profiles WHERE world_id = ?1",
+        "SELECT world_id, display_name, description, facts, boundaries, avatar_file, updated_at, derived_formula FROM user_profiles WHERE world_id = ?1",
         params![world_id],
         |row| Ok(UserProfile {
             world_id: row.get(0)?,
@@ -55,15 +70,16 @@ pub fn get_user_profile(conn: &Connection, world_id: &str) -> Result<UserProfile
             boundaries: serde_json::from_str(&row.get::<_, String>(4)?).unwrap_or_else(|_| serde_json::json!([])),
             avatar_file: row.get(5)?,
             updated_at: row.get(6)?,
+            derived_formula: row.get(7).ok(),
         }),
     )
 }
 
 pub fn upsert_user_profile(conn: &Connection, p: &UserProfile) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO user_profiles (world_id, display_name, description, facts, boundaries, avatar_file, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, datetime('now'))
-         ON CONFLICT(world_id) DO UPDATE SET display_name=?2, description=?3, facts=?4, boundaries=?5, avatar_file=?6, updated_at=datetime('now')",
-        params![p.world_id, p.display_name, p.description, p.facts.to_string(), p.boundaries.to_string(), p.avatar_file],
+        "INSERT INTO user_profiles (world_id, display_name, description, facts, boundaries, avatar_file, updated_at, derived_formula) VALUES (?1, ?2, ?3, ?4, ?5, ?6, datetime('now'), ?7)
+         ON CONFLICT(world_id) DO UPDATE SET display_name=?2, description=?3, facts=?4, boundaries=?5, avatar_file=?6, updated_at=datetime('now'), derived_formula=?7",
+        params![p.world_id, p.display_name, p.description, p.facts.to_string(), p.boundaries.to_string(), p.avatar_file, p.derived_formula],
     )?;
     Ok(())
 }
