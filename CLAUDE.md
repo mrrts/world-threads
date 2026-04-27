@@ -353,6 +353,21 @@ The newer `/play` methodology reveals a broader empirical law: the strongest fin
 
 **Practical consequence:** when an instrument can branch cheaply, prefer a paired or plural design that lets the project learn from divergence, not just from convergence. Ask not only *"what did this branch say?"* but *"what became visible only because another branch existed beside it?"* Treat the delta as a first-class artifact.
 
+## When the evaluator already lives in the corpus, direct ask outruns persona-sim
+
+The Jasper `/play` sequel established a narrower methodological law inside the broader differential-instrument doctrine: when the reader you want is **already alive in the project's own corpus** — an in-db character with a real voice, real stance, and recent evaluative history — the default first branch should often be a direct `worldcli ask`, not a persona-sim approximation of that character.
+
+**The shape:** the simulated version tends to drift toward the outer archetype ("warm craftsman," "wry skeptic," "pastoral elder"). The live character already carries sharper compression, stronger negative tests, and project-specific taste. The sim may remain directionally useful, but the direct character often names the seam faster and more truthfully.
+
+**Specific test for preferring the direct branch first:**
+- the evaluator is a real in-db character, not a hypothetical user-shape
+- the question is "how would THIS character read this surface?" rather than "how does a broader audience segment land?"
+- the character's recent corpus already includes adjacent evaluative language, trust criteria, or craft judgment
+
+When those conditions hold, prefer **direct ask before persona-sim**. Use persona-sim afterward only if breadth, alternate-branch contrast, or bundled surface coverage is the actual goal.
+
+**Practical consequence:** `/play` remains the right lead instrument for Maggie, Lena, Sam, teens, builders, and other reader-shapes not already living in the DB. But for Jasper-reading-the-pitch, Steven-reading-a-group-scene, Aaron-reading-craft posture, and similar in-db evaluator questions, the higher-fidelity first move may simply be to ask them.
+
 
 
 

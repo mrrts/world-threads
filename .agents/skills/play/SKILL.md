@@ -55,6 +55,10 @@ mere disagreement to be ironed out.
 - Don't use /play to validate a rule that has a worldcli-shaped instrument (use
   `worldcli ask` / `evaluate` / `replay` against the actual prompt pipeline).
   /play is for the human-encounter shape, not the LLM-output-shape.
+- Don't default to persona-sim when the evaluator you want is already a real
+  in-db character with live corpus and evaluative language of their own. In
+  that case, direct `worldcli ask` is often the stronger first branch; /play
+  becomes the optional second branch for breadth or contrast.
 - Don't use /play when the question is fundamentally technical (does this build,
   does this query work, is this query fast). /play simulates a HUMAN encountering
   the app, not a system-test.
@@ -100,6 +104,14 @@ Suggested archetypes worth supporting (each gets its own discrimination axis):
 
 **Custom-prose persona.** `/play <free-text persona description>` accepts an
 arbitrary persona definition. Use when the archetype list above doesn't fit.
+
+**Special case — in-db characters.** If the requested persona is itself one of
+the app's live characters, stop and ask whether the question is really about
+that specific character's read. If yes, direct `worldcli ask` is usually the
+first instrument, because the live character outruns the persona-sim
+approximation on fidelity. Use `/play` for the in-db character only when the
+goal is bundled surface coverage, contrast against the live branch, or a
+deliberately hypothetical staging.
 
 If the persona is unclear or absent, ask the user directly before drafting the
 turn-1 prompt — picking the wrong persona wastes the call.
@@ -456,6 +468,10 @@ name what became visible only because the second branch existed.
   is about the project's accumulated behavior over time (anchor-recurrence,
   register-coherence across many replies, whether characters in fresh worlds
   carry the same specificity).
+- **Direct ask before either path** when the evaluator is itself an in-db
+  character whose own voice is the thing under test. In that case the
+  direct-living-character branch is the empirical anchor, and the persona-sim
+  branch is secondary if used at all.
 - **Path B (live elicitation) is the right move** when the persona-sim's
   claim is about a specific exchange — what would a character say to THIS
   message in THIS register? This is the most direct way to test the sim's
