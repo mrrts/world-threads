@@ -290,6 +290,24 @@ Once a chooser is treated as a control surface, its **wording** becomes load-bea
 
 **Cheap test:** if the user answered with just the number, would Codex know exactly what to do next without inventing a second hidden choice? If not, the chooser wording is still too mushy.
 
+**Worked good chooser:**
+
+1. Add one worked-good and one worked-bad chooser example directly into doctrine, so the wording rule stops living as abstraction.
+2. Tighten the `AskUserQuestion` fallback language in the hook-facing docs, so generic `{Continue, Exit}` endings become an earned exception instead of a reflex.
+3. Apply the chooser law to one live app surface by rewriting a real multi-action modal or menu with sharper branch-shape.
+4. Provide your own next move.
+
+**Why it works:** each branch is visibly distinct in the first clause, option 1 is concrete enough to auto-run, and slot 4 preserves authorship without dissolving the chooser into open-endedness.
+
+**Worked bad chooser:**
+
+1. Continue improving the project.
+2. Work on the docs some more.
+3. Maybe polish a few things if helpful.
+4. Other.
+
+**Why it fails:** the branches are vague, overlapping, and partly decorative. A numeric reply would still force Codex to invent the real next move after the fact.
+
 **Commit early and often is the standing rule, not just permission.** Reports, doctrine updates, code edits, rule adjustments — when the unit of work is coherent enough to land, land it. Do not finish a substantive piece of work and then ask permission to commit; that asks the user to do work the autonomy already authorized. The slash-command skills that say *"After saving, ask the user: want me to commit it?"* (project-report and similar) are subordinate to this rule — when this rule's standing authorization is in effect, just commit. Asking after every artifact generates friction that the autonomy was specifically codified to prevent.
 
 **Commit messages include a Formula derivation in their body.** Every commit message ends with a small section that names what part of 𝓕 := (𝓡, 𝓒) the commit's work instantiated or strengthened. Format:
