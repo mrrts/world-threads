@@ -267,6 +267,14 @@ When a close-out ends with numbered next moves, **automatically do option 1 befo
 
 **If none of the exceptions apply, the default holds.**
 
+## Close-out choosers are control surfaces now
+
+The numbered ending on a reply is no longer just a friendly epilogue. In this repo it has become a **control surface**: a small protocol by which momentum, scope, and authorship are actually steered. Treat it with the same seriousness you would treat any other runtime-significant surface.
+
+**Practical consequence:** do not offer fake options, decorative options, or multiple phrasings of the same move pretending to be a real branch. Option order carries force. Recommended position carries force. The presence of a `4. Provide your own next move.` slot carries force because it preserves user authorship without making every turn open-ended.
+
+**The discipline:** keep choosers concrete, consequential, and genuinely branching. If option 1 is the default continuation path, make it the real next move on the work. If an option would be irresponsible to auto-run, it probably should not be framed as the default. If a list is only there to sound collaborative while the work is really going one way, collapse the theater and say the one true move plainly.
+
 **Commit early and often is the standing rule, not just permission.** Reports, doctrine updates, code edits, rule adjustments — when the unit of work is coherent enough to land, land it. Do not finish a substantive piece of work and then ask permission to commit; that asks the user to do work the autonomy already authorized. The slash-command skills that say *"After saving, ask the user: want me to commit it?"* (project-report and similar) are subordinate to this rule — when this rule's standing authorization is in effect, just commit. Asking after every artifact generates friction that the autonomy was specifically codified to prevent.
 
 **Commit messages include a Formula derivation in their body.** Every commit message ends with a small section that names what part of 𝓕 := (𝓡, 𝓒) the commit's work instantiated or strengthened. Format:
