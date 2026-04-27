@@ -19,6 +19,14 @@ pub struct ConversationLine {
     /// or chronology markers if they want.
     #[allow(dead_code)]
     pub created_at: String,
+    /// Per-message momentstamp signature (the Unicode-math expression
+    /// computed by `momentstamp::build_formula_momentstamp` against the
+    /// MISSION FORMULA at the moment this message landed). NULL for
+    /// pre-momentstamp messages and for non-assistant rows. Renderers
+    /// inject `[⟨momentstamp: ...⟩]` prefixes when populated so
+    /// downstream LLM calls (inventory updates, journals, etc.) see the
+    /// same chain visibility the dialogue path already gets.
+    pub formula_signature: Option<String>,
 }
 
 /// Gather recent messages from every thread the character participates
@@ -99,7 +107,7 @@ pub fn gather_character_recent_messages(
     if let Some(tid) = solo_thread.as_deref() {
         let lim = (limit as i64).max(1);
         if let Ok(mut stmt) = conn.prepare(
-            "SELECT role, content, created_at, sender_character_id FROM messages
+            "SELECT role, content, created_at, sender_character_id, formula_signature FROM messages
              WHERE thread_id = ?1 AND role NOT IN ('illustration', 'video', 'system', 'context', 'inventory_update', 'imagined_chapter')
              ORDER BY created_at DESC LIMIT ?2",
         ) {
@@ -109,13 +117,15 @@ pub fn gather_character_recent_messages(
                     r.get::<_, String>(1)?,
                     r.get::<_, String>(2)?,
                     r.get::<_, Option<String>>(3)?,
+                    r.get::<_, Option<String>>(4)?,
                 ))
             }) {
-                for (role, content, created_at, sender_id) in rows.flatten() {
+                for (role, content, created_at, sender_id, formula_signature) in rows.flatten() {
                     all.push(ConversationLine {
                         speaker: label_for(&role, sender_id.as_deref(), &names, &my_name, user_display_name),
                         content,
                         created_at,
+                        formula_signature,
                     });
                 }
             }
@@ -126,7 +136,7 @@ pub fn gather_character_recent_messages(
     for tid in &group_threads {
         let lim = (limit as i64).max(1);
         if let Ok(mut stmt) = conn.prepare(
-            "SELECT role, content, created_at, sender_character_id FROM group_messages
+            "SELECT role, content, created_at, sender_character_id, formula_signature FROM group_messages
              WHERE thread_id = ?1 AND role NOT IN ('illustration', 'video', 'system', 'context', 'inventory_update', 'imagined_chapter')
              ORDER BY created_at DESC LIMIT ?2",
         ) {
@@ -136,13 +146,15 @@ pub fn gather_character_recent_messages(
                     r.get::<_, String>(1)?,
                     r.get::<_, String>(2)?,
                     r.get::<_, Option<String>>(3)?,
+                    r.get::<_, Option<String>>(4)?,
                 ))
             }) {
-                for (role, content, created_at, sender_id) in rows.flatten() {
+                for (role, content, created_at, sender_id, formula_signature) in rows.flatten() {
                     all.push(ConversationLine {
                         speaker: label_for(&role, sender_id.as_deref(), &names, &my_name, user_display_name),
                         content,
                         created_at,
+                        formula_signature,
                     });
                 }
             }
@@ -403,7 +415,7 @@ pub fn gather_character_messages_for_world_day(
 
     if let Some(tid) = solo_thread.as_deref() {
         if let Ok(mut stmt) = conn.prepare(
-            "SELECT role, content, created_at, sender_character_id FROM messages
+            "SELECT role, content, created_at, sender_character_id, formula_signature FROM messages
              WHERE thread_id = ?1
                AND world_day = ?2
                AND role NOT IN ('illustration', 'video', 'system', 'context', 'inventory_update', 'imagined_chapter')
@@ -415,13 +427,15 @@ pub fn gather_character_messages_for_world_day(
                     r.get::<_, String>(1)?,
                     r.get::<_, String>(2)?,
                     r.get::<_, Option<String>>(3)?,
+                    r.get::<_, Option<String>>(4)?,
                 ))
             }) {
-                for (role, content, created_at, sender_id) in rows.flatten() {
+                for (role, content, created_at, sender_id, formula_signature) in rows.flatten() {
                     all.push(ConversationLine {
                         speaker: label_for(&role, sender_id.as_deref(), &names, &my_name, user_display_name),
                         content,
                         created_at,
+                        formula_signature,
                     });
                 }
             }
@@ -430,7 +444,7 @@ pub fn gather_character_messages_for_world_day(
 
     for tid in &group_threads {
         if let Ok(mut stmt) = conn.prepare(
-            "SELECT role, content, created_at, sender_character_id FROM group_messages
+            "SELECT role, content, created_at, sender_character_id, formula_signature FROM group_messages
              WHERE thread_id = ?1
                AND world_day = ?2
                AND role NOT IN ('illustration', 'video', 'system', 'context', 'inventory_update', 'imagined_chapter')
@@ -442,13 +456,15 @@ pub fn gather_character_messages_for_world_day(
                     r.get::<_, String>(1)?,
                     r.get::<_, String>(2)?,
                     r.get::<_, Option<String>>(3)?,
+                    r.get::<_, Option<String>>(4)?,
                 ))
             }) {
-                for (role, content, created_at, sender_id) in rows.flatten() {
+                for (role, content, created_at, sender_id, formula_signature) in rows.flatten() {
                     all.push(ConversationLine {
                         speaker: label_for(&role, sender_id.as_deref(), &names, &my_name, user_display_name),
                         content,
                         created_at,
+                        formula_signature,
                     });
                 }
             }

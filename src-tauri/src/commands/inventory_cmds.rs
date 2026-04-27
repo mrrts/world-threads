@@ -283,7 +283,7 @@ fn fetch_run_up_before(
 ) -> Vec<crate::db::queries::ConversationLine> {
     let table = if anchor.is_group { "group_messages" } else { "messages" };
     let sql = format!(
-        "SELECT role, content, sender_character_id, created_at
+        "SELECT role, content, sender_character_id, created_at, formula_signature
          FROM {} WHERE thread_id = ?1 AND created_at < ?2
            AND role NOT IN ('illustration','video','system','context','inventory_update')
          ORDER BY created_at DESC LIMIT ?3",
@@ -298,9 +298,10 @@ fn fetch_run_up_before(
                 r.get::<_, String>(1)?,
                 r.get::<_, Option<String>>(2)?,
                 r.get::<_, String>(3)?,
+                r.get::<_, Option<String>>(4)?,
             )),
         ) {
-            for (role, content, sender, created_at) in rows.flatten() {
+            for (role, content, sender, created_at, formula_signature) in rows.flatten() {
                 // Resolve speaker the same way the anchor label does so the
                 // run-up and the anchor quote are written in consistent
                 // registers.
@@ -321,6 +322,7 @@ fn fetch_run_up_before(
                     speaker,
                     content,
                     created_at,
+                    formula_signature,
                 });
             }
         }

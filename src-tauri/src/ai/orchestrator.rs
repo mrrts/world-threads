@@ -1084,7 +1084,12 @@ fn render_history_for_inventory(history: &[crate::db::queries::ConversationLine]
     history.iter()
         .map(|line| {
             let clipped: String = line.content.chars().take(280).collect();
-            format!("{}: {}", line.speaker, clipped)
+            match line.formula_signature.as_deref() {
+                Some(sig) if !sig.trim().is_empty() => {
+                    format!("[⟨momentstamp: {}⟩] {}: {}", sig.trim(), line.speaker, clipped)
+                }
+                _ => format!("{}: {}", line.speaker, clipped),
+            }
         })
         .collect::<Vec<_>>()
         .join("\n")
