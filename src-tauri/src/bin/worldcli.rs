@@ -815,6 +815,13 @@ enum Cmd {
         /// reports/2026-04-26-0815 for the worked motivation.
         #[arg(long)]
         world_description_override: Option<String>,
+        /// Omit a single named rule from the dialogue craft-rules
+        /// registry (CRAFT_RULES_DIALOGUE in prompts.rs). Repeatable
+        /// for multi-rule omits. Used for fine-grained bite-tests of
+        /// individual rules — run the same probe with and without the
+        /// rule, compare outputs. Names: see `worldcli list-craft-rules`.
+        #[arg(long, value_name = "NAME")]
+        omit_craft_rule: Vec<String>,
     },
 
     // ── runs (read your own prior investigations) ──
@@ -1558,14 +1565,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_refresh_anchor(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
-        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override } => {
+        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_ask(&r, &api_key, &character_id, &message, session.as_deref(), model.as_deref(), confirm_cost, question_summary.as_deref(), no_anchor, world_description_override.as_deref()).await
+            cmd_ask(&r, &api_key, &character_id, &message, session.as_deref(), model.as_deref(), confirm_cost, question_summary.as_deref(), no_anchor, world_description_override.as_deref(), omit_craft_rule).await
         }
         Cmd::RunsList { limit } => cmd_runs_list(&r, limit),
         Cmd::RunsShow { id } => cmd_runs_show(&r, &id),
@@ -7011,6 +7018,7 @@ async fn cmd_ask(
     question_summary: Option<&str>,
     no_anchor: bool,
     world_description_override: Option<&str>,
+    omit_craft_rules: Vec<String>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
 
@@ -7045,12 +7053,20 @@ async fn cmd_ask(
             combined_axes_block(&conn, character_id)
         };
 
-        let system_prompt = prompts::build_dialogue_system_prompt(
+        let overrides_for_prompt = if !omit_craft_rules.is_empty() {
+            let mut ov = prompts::PromptOverrides::new();
+            ov.set_omit_craft_rules(omit_craft_rules.clone());
+            Some(ov)
+        } else {
+            None
+        };
+        let system_prompt = prompts::build_dialogue_system_prompt_with_overrides(
             &world, &character, user_profile.as_ref(),
             None, Some("Auto"), None, None, false, &[], None,
             &recent_journals, None, &[], None, &active_quests,
             stance_text.as_deref(),
             anchor_text.as_deref(),
+            overrides_for_prompt.as_ref(),
         );
         let mut model_config = orchestrator::load_model_config(&conn);
         if let Some(m) = model_override { model_config.dialogue_model = m.to_string(); }

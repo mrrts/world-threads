@@ -938,6 +938,15 @@ pub struct PromptOverrides {
     /// needed, either ship the first one to prompts.rs or extend this
     /// field to a Vec.
     pub insertion: Option<Insertion>,
+    /// Per-rule omit list for the dialogue craft-rules registry
+    /// (`CRAFT_RULES_DIALOGUE`). Names listed here are filtered out of
+    /// the registry-rendered append at the end of `craft_notes_dialogue()`.
+    /// Used for fine-grained bite-tests of individual rules within the
+    /// craft-notes block (the `omit_craft_notes` field above only omits
+    /// at the chunk level — the entire craft_notes_dialogue body — which
+    /// is too coarse for per-rule discrimination). Empty = no per-rule
+    /// omissions; default render path.
+    pub omit_craft_rules: Vec<String>,
 }
 
 /// Single-insertion spec — audition new text at a named anchor
@@ -1005,6 +1014,7 @@ impl PromptOverrides {
             omit_craft_notes: Vec::new(),
             omit_invariants: Vec::new(),
             insertion: None,
+            omit_craft_rules: Vec::new(),
         }
     }
     pub fn insert(&mut self, name: impl Into<String>, body: impl Into<String>) {
@@ -1027,6 +1037,9 @@ impl PromptOverrides {
     }
     pub fn set_omit_invariants(&mut self, pieces: Vec<InvariantPiece>) {
         self.omit_invariants = pieces;
+    }
+    pub fn set_omit_craft_rules(&mut self, names: Vec<String>) {
+        self.omit_craft_rules = names;
     }
     pub fn set_insertion(&mut self, insertion: Insertion) {
         self.insertion = Some(insertion);
@@ -2175,8 +2188,8 @@ pub const CRAFT_RULES_DIALOGUE: &[CraftRule] = &[
     CraftRule {
         name: "wipe_the_shine_before_it_sets",
         body: r#"**Wipe the shine before it sets.** A close cousin of the don't-tie-a-ribbon rule, applying *within* a line rather than at its close. When a line starts admiring itself while you're still saying it, you've gone one step too far. The diagnostic ear: listen for the moment where you stop answering what's in front of you and start helping the answer seem important. That's the turn. That's the little shine to wipe off before it sets. Cure: put one real thing back on the table — a hand, a tool, a stubborn little fact — then say the line again smaller. Diagnostic parallel from a potter's kiln: clay does the same thing — you fuss the rim once because it needs it, twice because maybe it still does, three times because your hand's gotten nervous and wants to look useful. The third pass is where ceremony enters; trim it. The shape this most often takes in dialogue: a warm true line, then a *second* sentence that decorates it ("you've got more than novelty — you've got a real home for them to step into") or catalogs the praise so it sounds important ("those are three different goods, and getting them to live in one thing is no small work"). The fix is rarely deletion of the warmth; it's deletion of the second sentence's lift, or rewriting the same truth at a smaller scale. **Earned exception: natural craft-parallels used as thinking-vehicles are NOT this failure mode.** When a character thinks WITH their craft (a potter reaching for clay-rim talk, a fisherman for nets, a woodworker for grain) that IS character voice and is protected. The failure mode is announcing a craft-parallel as if it justified the line, or reaching for any parallel to make a moment seem larger than what's actually in front of them. The character can still think with their hands; they just can't dress a moment up."#,
-        evidence_tier: EvidenceTier::VacuousTest,
-        provenance: "Articulated by Jasper Finn 2026-04-27 per ask-the-character doctrine; surfaced via cross-character wince-read at reports/2026-04-27-1119-play-jasper-wince-read-by-steven-and-rick.md; bite-test on Pastor Rick produced a vacuous-test (failure mode did not manifest in baseline reply).",
+        evidence_tier: EvidenceTier::Sketch,
+        provenance: "Articulated by Jasper Finn 2026-04-27 per ask-the-character doctrine; surfaced via cross-character wince-read at reports/2026-04-27-1119-play-jasper-wince-read-by-steven-and-rick.md. Initial bite-test on Pastor Rick (probe='coming back to church after ten years away') was vacuous — failure mode did not manifest in baseline. After the per-rule omit-flag affordance shipped (2026-04-27 evening), a sharper paired bite-test on Pastor Rick (probe='what would you say to someone whose marriage finally ended after a long slow drift?') produced a non-vacuous DIVERGENT-TEXTURE result: rule-OFF reply was somewhat more compressed and imagistic ('a thousand unloved Tuesdays', 'a knot, not a slogan', 'scheduling issue', 'died politely') than rule-ON. Two readings — rule may be over-suppressing useful natural-craft-parallels (carve-out not biting strongly enough), OR temperature noise between two single calls — sketch-tier (N=1) cannot distinguish. Worth a characterized-tier paired test (N=5+ each arm) before refining the carve-out.",
     },
 ];
 
@@ -2206,6 +2219,22 @@ fn craft_notes_dialogue() -> &'static str {
             format!("{legacy}\n\n{registry}")
         }
     }).as_str()
+}
+
+/// Render the dialogue craft-notes WITH per-rule omit support. Used by
+/// `push_craft_note_piece` when overrides specify a non-empty
+/// `omit_craft_rules` list — we re-render the full string (legacy +
+/// registry-minus-omitted) instead of returning the memoized default.
+/// When the omit list is empty, callers should use `craft_notes_dialogue()`
+/// to hit the OnceLock cache.
+pub fn craft_notes_dialogue_with_omit_rules(omit_names: &[&str]) -> String {
+    let legacy = craft_notes_dialogue_legacy();
+    let registry = render_craft_rules_registry(omit_names);
+    if registry.is_empty() {
+        legacy.to_string()
+    } else {
+        format!("{legacy}\n\n{registry}")
+    }
 }
 
 fn craft_notes_dialogue_legacy() -> &'static str {
@@ -4051,7 +4080,23 @@ fn push_craft_note_piece(
 ) {
     match piece {
         CraftNotePiece::EarnedRegister => parts.push(override_or("earned_register_dialogue", overrides, earned_register_dialogue)),
-        CraftNotePiece::CraftNotes => parts.push(override_or("craft_notes_dialogue", overrides, craft_notes_dialogue)),
+        CraftNotePiece::CraftNotes => {
+            // If overrides has a non-empty per-rule omit list, re-render
+            // the craft-notes string with those rules suppressed (bypasses
+            // the OnceLock cache). Otherwise, fall through to the standard
+            // override_or path which uses the memoized default.
+            let omit_rules: Vec<&str> = overrides
+                .map(|o| o.omit_craft_rules.iter().map(|s| s.as_str()).collect())
+                .unwrap_or_default();
+            if !omit_rules.is_empty() {
+                // Per-rule omit takes precedence; raw text override (via
+                // overrides.get) is not honored when per-rule omits are set
+                // — they're for fine-grained bite-tests, not custom bodies.
+                parts.push(craft_notes_dialogue_with_omit_rules(&omit_rules));
+            } else {
+                parts.push(override_or("craft_notes_dialogue", overrides, craft_notes_dialogue));
+            }
+        }
         CraftNotePiece::HiddenCommonality => parts.push(override_or("hidden_commonality_dialogue", overrides, hidden_commonality_dialogue)),
         CraftNotePiece::DriveTheMoment => parts.push(override_or("drive_the_moment_dialogue", overrides, drive_the_moment_dialogue)),
         CraftNotePiece::VerdictWithoutOverExplanation => parts.push(override_or("verdict_without_over_explanation_dialogue", overrides, verdict_without_over_explanation_dialogue)),
