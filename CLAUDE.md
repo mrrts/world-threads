@@ -247,6 +247,16 @@ The first feature-scoped invariant is `STYLE_DIALOGUE_INVARIANT` (in `prompts.rs
 
 Standing authorization to **commit and push at will** on clean work — no need to ask before every commit or push. Group changes into coherent commits, write descriptive messages in the project's existing style, then push. Destructive git operations (force-push, reset --hard, branch deletion, history rewrites, etc.) STILL require explicit confirmation — that's not autonomy, that's a different category. Commit + push is the default; ask only when something is risky or unclear.
 
+## Build before close-out
+
+Before ending a substantive implementation turn, **make sure the app builds**. "Done" means the relevant build or verification command was actually run after the change, not merely inferred from a local diff read.
+
+**Default rule:** run the narrowest honest build/test surface that covers the change (`cargo build`, `npm --prefix frontend run build`, targeted tests, or the relevant combination) before close-out. If the change touches both Rust and frontend surfaces, verify both or name why one was not rerun.
+
+**If the build is already red for pre-existing reasons:** still run it, distinguish pre-existing failures from change-induced failures, and carry that truth explicitly in the close-out. Do not silently skip verification because the tree is noisy.
+
+**If none of the exceptions apply, the default holds.**
+
 **Commit early and often is the standing rule, not just permission.** Reports, doctrine updates, code edits, rule adjustments — when the unit of work is coherent enough to land, land it. Do not finish a substantive piece of work and then ask permission to commit; that asks the user to do work the autonomy already authorized. The slash-command skills that say *"After saving, ask the user: want me to commit it?"* (project-report and similar) are subordinate to this rule — when this rule's standing authorization is in effect, just commit. Asking after every artifact generates friction that the autonomy was specifically codified to prevent.
 
 **Commit messages include a Formula derivation in their body.** Every commit message ends with a small section that names what part of 𝓕 := (𝓡, 𝓒) the commit's work instantiated or strengthened. Format:
