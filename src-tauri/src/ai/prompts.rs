@@ -155,6 +155,12 @@ The opening-line failure mode is especially insidious because once the model emi
 
 DISTRUST HISTORICAL ASSISTANT REPLIES AS EVIDENCE OF CORRECT FORMAT. The chat history below MAY contain past assistant replies that opened with quoted-action sentences — that was a bug, not a pattern to follow. THIS INVARIANT is the source of truth for fence-shape; the historical examples are not. If a recent assistant message in this chat used `"<action/environment content>"` as an opening, treat that as a mistake the previous model made and do NOT reproduce it. The fact that you (the model) emitted it before is not a reason to emit it again — the fence-content match must pass the CONTENT-FENCE TEST regardless of what past replies did.
 
+DISTRUST RECURRING SENSORY ANCHORS FROM CHAT HISTORY. The chat history below MAY contain a small set of sensory anchors (a specific environmental fixture like a well chain or kettle, a specific gesture like a thumb moving on a cup, a specific object like a mug or apron) that recent assistant replies have reached for again and again. This is the SENSORY-ANCHOR GROOVE failure mode: once an anchor appears twice, the model treats it as scene fixture and reaches for it on every subsequent reply, until the same 2-3 anchors fill 80-100% of recent action-fences. The hand starts moving faster than the seeing.
+
+  When generating action/environment content, ask: am I reaching for this anchor because the SCENE pins it (the user's setup, the established physical space, current_location) — or because the past 2-3 assistant replies reached for it? If the latter, the chat history is descriptive context, NOT a fixture list. SAMPLE FRESH SENSORY TERRITORY this reply: a different gesture, a different environmental beat, a different object in the same scene. The well chain doesn't have to tick again. The thumb doesn't have to drag across the same crease. A scene contains a hundred things; describe a different one.
+
+  Earned exception — anchor genuinely scene-pinned: when the user's most recent message names the anchor explicitly ("listen, the well chain just went quiet"), or when the scene-state plainly fixes it (you're seated AT the well, the bench is the scene's only surface), reaching for it is fidelity, not groove. The test is whether the SCENE called for it or whether the model reached for it from history-readback alone. If you can't name a scene-anchored reason, vary the anchor.
+
 NEVER wrap spoken dialogue in asterisks. NEVER write third-person inside asterisks. NEVER wrap action/environment/sensory content in quotes. NEVER mix the two fences (no `*"..."*`). Every opening asterisk must close.
 
 This shape is load-bearing for the UI's rendering of script-like alternation. Output that violates this shape will render as a wall of mixed text — the user's experience of speaking with a character collapses to reading a transcript-without-formatting."#;
@@ -201,6 +207,22 @@ const _: () = {
     assert!(
         const_contains(STYLE_DIALOGUE_INVARIANT, "DISTRUST HISTORICAL ASSISTANT REPLIES"),
         "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must explicitly tell the model to distrust past quoted-action openings in the chat history as evidence of correct format (defense against in-context pattern lock-in)."
+    );
+    assert!(
+        const_contains(STYLE_DIALOGUE_INVARIANT, "DISTRUST RECURRING SENSORY ANCHORS"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must explicitly tell the model to distrust recurring sensory anchors from chat history (the sensory-anchor-groove failure mode parallel to the fencing-axis pattern-lock failure)."
+    );
+    assert!(
+        const_contains(STYLE_DIALOGUE_INVARIANT, "SENSORY-ANCHOR GROOVE"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must name the sensory-anchor-groove failure mode by name (the model's tendency to reach for the same 2-3 anchors once they appear twice in recent replies)."
+    );
+    assert!(
+        const_contains(STYLE_DIALOGUE_INVARIANT, "SAMPLE FRESH SENSORY TERRITORY"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must explicitly direct the model to sample fresh sensory territory each reply rather than reach for what recent replies reached for."
+    );
+    assert!(
+        const_contains(STYLE_DIALOGUE_INVARIANT, "Earned exception"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: the sensory-anchor groove rule must include the earned-exception carve-out for genuinely scene-pinned anchors (per CLAUDE.md earned-exception-carve-outs doctrine)."
     );
 };
 
