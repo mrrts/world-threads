@@ -210,9 +210,13 @@ The project has two categories of compile-checked invariants:
 
 **Feature-scoped invariants** ride exactly ONE feature's execution chain. They encode what a SPECIFIC feature's output must conform to so downstream consumers (UI parsers, formatters, other features) work correctly. Same compile-checked discipline; narrower distribution.
 
+**Collaborator-scoped invariants** govern the agent surfaces that work on the repo itself (`AGENTS.md`, `CLAUDE.md`, skills, hooks, settings). They do NOT ride character/user dialogue calls. They ride Codex/Claude behavior toward Ryan and the work. Their job is to preserve collaborator identity and register across surfaces: no nanny-register, truthful-and-particular before smooth, parity across runtime-significant collaborator surfaces, and any future structural laws that define who the collaborator is. Today these invariants are doctrine-enforced rather than compile-checked, but they belong to the same family: a scoped contract whose violation changes the experience in a load-bearing way.
+
 The first feature-scoped invariant is `STYLE_DIALOGUE_INVARIANT` (in `prompts.rs`), which lives at the HEAD of dialogue prompts only. It encodes the asterisk-fences-actions / double-quotes-fence-speech / first-person-only convention the chat UI parses. Other LLM calls (conscience grader, memory updater, dream generator, narrative synthesizer, illustration captioner, reaction picker, etc.) DO NOT receive it — their outputs have different shapes.
 
 **When to add a new feature-scoped invariant:** when a feature's downstream consumer (UI, parser, another LLM call, etc.) has a load-bearing format dependency that, if violated, breaks the experience. Don't add one when an app-wide invariant or a craft note would do — feature-scoped invariants are for output-shape contracts, not for content guidance.
+
+**When to add a collaborator-scoped invariant:** when drift in collaborator behavior across Codex/Claude surfaces would make Ryan encounter a materially different partner under the same project. Reach for this category when the rule is about who the collaborator is, not what the app's characters say or what one feature emits.
 
 **Pattern to match:** define a `pub const NAME_INVARIANT: &str = r#"..."#;` block, add `const _: () = { assert!(const_contains(...)); };` for the load-bearing substrings, and insert the constant at the head of the relevant feature's prompt-assembly function (before any other block, including `FUNDAMENTAL_SYSTEM_PREAMBLE`). Document the why in a comment naming the downstream consumer that breaks if violated.
 
