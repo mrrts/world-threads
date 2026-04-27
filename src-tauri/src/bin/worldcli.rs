@@ -5080,6 +5080,98 @@ fn push_list(out: &mut String, key: &str, items: &[String]) {
     }
 }
 
+fn truncate_chars(s: &str, max_chars: usize) -> String {
+    let char_count = s.chars().count();
+    if char_count <= max_chars {
+        s.to_string()
+    } else {
+        let clipped: String = s.chars().take(max_chars).collect();
+        format!("{}…", clipped)
+    }
+}
+
+fn run_summary_from_manifest_entry(kind: &str, entry: &JsonValue) -> Option<JsonValue> {
+    let run_id = entry.get("run_id")?.as_str()?.to_string();
+    let run_timestamp = entry.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("").to_string();
+    let cost_usd = entry.get("cost_usd").and_then(|v| v.as_f64());
+    match kind {
+        "evaluate" => {
+            let scope_label = entry.get("scope_label").and_then(|v| v.as_str()).unwrap_or("?").to_string();
+            let rubric = entry.get("rubric_ref")
+                .and_then(|v| v.as_str())
+                .filter(|s| !s.is_empty())
+                .map(|s| s.to_string())
+                .or_else(|| entry.get("rubric_preview").and_then(|v| v.as_str()).map(|s| truncate_chars(s, 90)))
+                .unwrap_or_else(|| "<inline>".to_string());
+            let before = entry.get("before_totals");
+            let after = entry.get("after_totals");
+            let fmt_totals = |t: Option<&JsonValue>| -> String {
+                t.map(|t| format!(
+                    "y{}/n{}/m{}",
+                    t.get("yes").and_then(|v| v.as_i64()).unwrap_or(0),
+                    t.get("no").and_then(|v| v.as_i64()).unwrap_or(0),
+                    t.get("mixed").and_then(|v| v.as_i64()).unwrap_or(0),
+                )).unwrap_or_else(|| "?".to_string())
+            };
+            Some(json!({
+                "run_id": run_id,
+                "kind": kind,
+                "run_timestamp": run_timestamp,
+                "scope_label": scope_label,
+                "cost_usd": cost_usd,
+                "headline": format!("rubric={}  B:{}  A:{}", rubric, fmt_totals(before), fmt_totals(after)),
+            }))
+        }
+        "synthesize" => {
+            let scope_label = entry.get("scope_label").and_then(|v| v.as_str()).unwrap_or("?").to_string();
+            let question = entry.get("question_preview").and_then(|v| v.as_str()).unwrap_or("");
+            let before = entry.get("before_count").and_then(|v| v.as_i64()).unwrap_or(0);
+            let after = entry.get("after_count").and_then(|v| v.as_i64()).unwrap_or(0);
+            Some(json!({
+                "run_id": run_id,
+                "kind": kind,
+                "run_timestamp": run_timestamp,
+                "scope_label": scope_label,
+                "cost_usd": cost_usd,
+                "headline": format!("B:{} A:{}  — {}", before, after, truncate_chars(question, 120)),
+            }))
+        }
+        "replay" => {
+            let scope_label = entry.get("character_name").and_then(|v| v.as_str()).unwrap_or("?").to_string();
+            let refs = entry.get("refs").and_then(|v| v.as_array()).map(|a| a.len()).unwrap_or(0);
+            let prompt = entry.get("prompt_preview").and_then(|v| v.as_str()).unwrap_or("");
+            Some(json!({
+                "run_id": run_id,
+                "kind": kind,
+                "run_timestamp": run_timestamp,
+                "scope_label": scope_label,
+                "cost_usd": cost_usd,
+                "headline": format!("refs×{}  — {}", refs, truncate_chars(prompt, 120)),
+            }))
+        }
+        _ => None,
+    }
+}
+
+fn summarize_experiment_run(run_id_or_prefix: &str) -> Option<JsonValue> {
+    for entry in read_evaluate_runs_manifest() {
+        if entry.get("run_id").and_then(|v| v.as_str()).map(|id| id.starts_with(run_id_or_prefix)).unwrap_or(false) {
+            return run_summary_from_manifest_entry("evaluate", &entry);
+        }
+    }
+    for entry in read_synthesize_runs_manifest() {
+        if entry.get("run_id").and_then(|v| v.as_str()).map(|id| id.starts_with(run_id_or_prefix)).unwrap_or(false) {
+            return run_summary_from_manifest_entry("synthesize", &entry);
+        }
+    }
+    for entry in read_replay_runs_manifest() {
+        if entry.get("run_id").and_then(|v| v.as_str()).map(|id| id.starts_with(run_id_or_prefix)).unwrap_or(false) {
+            return run_summary_from_manifest_entry("replay", &entry);
+        }
+    }
+    None
+}
+
 async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
     match action {
         LabAction::List { status } => {
@@ -5152,6 +5244,13 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
         }
         LabAction::Show { slug } => {
             let exp = load_experiment(&slug).map_err(Box::<dyn std::error::Error>::from)?;
+            let run_summaries: Vec<JsonValue> = exp.run_ids.iter()
+                .map(|rid| summarize_experiment_run(rid).unwrap_or_else(|| json!({
+                    "run_id": rid,
+                    "kind": "unknown",
+                    "headline": "run manifest not found",
+                })))
+                .collect();
             if r.json {
                 emit(true, json!({
                     "slug": exp.slug,
@@ -5165,12 +5264,74 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                     "scope_characters": exp.scope_characters,
                     "scope_group_chats": exp.scope_group_chats,
                     "run_ids": exp.run_ids,
+                    "run_summaries": run_summaries,
                     "follow_ups": exp.follow_ups,
                     "reports": exp.reports,
                     "body": exp.body,
                 }));
             } else {
-                println!("{}", exp.raw);
+                println!("Experiment: {}  [{} | {}]", exp.slug, exp.status, exp.mode);
+                println!("Path: {}", exp.path.display());
+                if !exp.created_at.is_empty() { println!("Created: {}", exp.created_at); }
+                if !exp.resolved_at.is_empty() { println!("Resolved: {}", exp.resolved_at); }
+                if !exp.git_ref.is_empty() { println!("Ref: {}", exp.git_ref); }
+                if !exp.rubric_ref.is_empty() { println!("Rubric: {}", exp.rubric_ref); }
+                println!();
+                println!("Hypothesis:");
+                println!("  {}", exp.hypothesis.replace('\n', "\n  "));
+                println!();
+                println!("Prediction:");
+                println!("  {}", exp.prediction.replace('\n', "\n  "));
+                if !exp.summary.is_empty() {
+                    println!();
+                    println!("Summary:");
+                    println!("  {}", exp.summary.replace('\n', "\n  "));
+                }
+                if !exp.scope_characters.is_empty() || !exp.scope_group_chats.is_empty() {
+                    println!();
+                    println!("Scope:");
+                    for c in &exp.scope_characters {
+                        println!("  character: {}", c);
+                    }
+                    for g in &exp.scope_group_chats {
+                        println!("  group-chat: {}", g);
+                    }
+                }
+                println!();
+                println!("Attached evidence:");
+                if run_summaries.is_empty() {
+                    println!("  none");
+                } else {
+                    for summary in &run_summaries {
+                        let run_id = summary.get("run_id").and_then(|v| v.as_str()).unwrap_or("");
+                        let kind = summary.get("kind").and_then(|v| v.as_str()).unwrap_or("unknown");
+                        let ts = summary.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("");
+                        let ts_short = &ts[..19.min(ts.len())];
+                        let scope = summary.get("scope_label").and_then(|v| v.as_str()).unwrap_or("?");
+                        let headline = summary.get("headline").and_then(|v| v.as_str()).unwrap_or("");
+                        let cost = summary.get("cost_usd").and_then(|v| v.as_f64());
+                        let cost_str = cost.map(|c| format!("  ${:.4}", c)).unwrap_or_default();
+                        println!("  - {}  {}  [{}]  {}{}", &run_id[..8.min(run_id.len())], ts_short, kind, scope, cost_str);
+                        println!("    {}", headline);
+                    }
+                }
+                println!();
+                println!("Braid links:");
+                if exp.follow_ups.is_empty() && exp.reports.is_empty() {
+                    println!("  none");
+                } else {
+                    for f in &exp.follow_ups {
+                        println!("  follow-up: {}", f);
+                    }
+                    for rp in &exp.reports {
+                        println!("  report: {}", rp);
+                    }
+                }
+                if !exp.body.trim().is_empty() {
+                    println!();
+                    println!("Notes:");
+                    println!("{}", exp.body.trim());
+                }
             }
         }
         LabAction::Search { query } => {
