@@ -136,6 +136,8 @@ This is the same shape as the solo/group-chat doctrine above. Multiple collabora
 
 If a change is genuinely surface-specific, name that explicitly in the commit message. Otherwise the default is: preserve collaborator parity across surfaces. If you find yourself making the same doctrinal or skill change repeatedly in two trees, that's a signal for a shared-source or generation workflow — flag it as a tool-improvement candidate, but do NOT delay the parity fix while designing the perfect substrate.
 
+**The deeper rule:** once a surface is runtime-significant, its parity is no longer just a discipline-to-remember. It becomes an **enforcement candidate**. The project already learned this pattern on the character side: rules that matter structurally want compile-time invariants, hooks, or generated sources, not goodwill alone. Collaborator-surface parity has now crossed that threshold. The immediate duty is still "mirror the change"; the emerging infrastructure duty is "look for the cheapest structural mechanism that makes future drift harder." Shared-source skill generation, parity checks, mirrored-file tests, or other structural aids now count as natural next instruments, not speculative nice-to-haves.
+
 ## Reports
 
 `reports/` holds reflective, interpretive reads of the project's git history — philosophy/trajectory/taste, not changelogs. Each new report is in dialogue with prior ones (revisits open questions they flagged, tests their predictions against subsequent commits).
