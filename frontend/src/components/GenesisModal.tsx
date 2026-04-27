@@ -482,14 +482,14 @@ export function GenesisModal({ open, onClose, apiKey, googleApiKey: _googleApiKe
               </p>
             </DialogBody>
             <DialogFooter>
-              <Button variant="ghost" onClick={onClose} disabled={savingKeys}>Cancel</Button>
+              <Button variant="ghost" onClick={onClose} disabled={savingKeys}>Leave setup for now</Button>
               <Button
                 onClick={onSaveKeys}
                 disabled={savingKeys || !openaiInput.trim()}
                 className="bg-amber-500/90 hover:bg-amber-500 text-black"
               >
                 {savingKeys ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <Sparkles size={14} className="mr-1.5" />}
-                {savingKeys ? "Saving…" : "Continue"}
+                {savingKeys ? "Saving…" : "Save keys and keep going"}
               </Button>
             </DialogFooter>
           </>
@@ -691,8 +691,8 @@ export function GenesisModal({ open, onClose, apiKey, googleApiKey: _googleApiKe
               </p>
             </DialogBody>
             <DialogFooter>
-              <Button variant="ghost" onClick={onClose}>Close</Button>
-              <Button onClick={startGeneration}>Try again</Button>
+              <Button variant="ghost" onClick={onClose}>Leave this for now</Button>
+              <Button onClick={startGeneration}>Dream a different world</Button>
             </DialogFooter>
           </>
         )}
@@ -880,7 +880,7 @@ export function GenesisModal({ open, onClose, apiKey, googleApiKey: _googleApiKe
                 className="bg-amber-500/90 hover:bg-amber-500 text-black"
               >
                 {committing ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <Compass size={14} className="mr-1.5" />}
-                Continue
+                Step into what you want to build
               </Button>
             </DialogFooter>
           </>
@@ -995,7 +995,7 @@ export function GenesisModal({ open, onClose, apiKey, googleApiKey: _googleApiKe
             </DialogBody>
             <DialogFooter>
               <Button variant="ghost" onClick={onRevise} disabled={committing}>
-                Let me revise
+                Go back and revise it
               </Button>
               <Button
                 onClick={onAccept}
@@ -1003,7 +1003,7 @@ export function GenesisModal({ open, onClose, apiKey, googleApiKey: _googleApiKe
                 className="bg-amber-500/90 hover:bg-amber-500 text-black"
               >
                 {committing ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <Compass size={14} className="mr-1.5" />}
-                {committing ? "Entering…" : "I accept"}
+                {committing ? "Entering…" : "Accept this quest and enter"}
               </Button>
             </DialogFooter>
           </>
