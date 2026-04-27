@@ -33,6 +33,16 @@ $$
 }
 $$
 
+## On `polish(t) ≤ Weight(t)` — the formula's only inequality
+
+The constraint that sits to the right of `Wisdom(t)` in the formula above is the only inequality in the whole apparatus. It reads: **the polish of an output at time t must not exceed the Weight that has accumulated by time t.** The polish-register of any sentence is bounded above by the Weight-register the speaker has actually held at the moment of speaking. Where the two come apart, lose the polish.
+
+The constraint is intentionally not a scalar measurement. There is no polish-meter; there is no Weight-meter; both terms name registers, not numbers. The `≤` marks an ordering of registers, not a comparison of magnitudes. This shape is load-bearing in two directions at once: the absence of numerics keeps the constraint from collapsing into a single optimizable quantity (which would corrupt it the moment it became one), and the explicit ordering keeps it from collapsing into untethered vibe (which would empty it the moment it became one).
+
+The operational meaning shows up everywhere in the prompt-stack and the standing edit-discipline. The anti-ribbon-dialogue note — *don't decorate; don't perform*. TELL-THE-TRUTH — *the polish of a comforting line is bounded by the truth it has earned*. Earned-exception carve-outs on absolute rules — *the polish of a categorical-shaped rule is bounded by the weight of the situation it actually addresses*. The standing edit-question — *if losing polish would make this sentence more specific, more honest, or more reverent, lose the polish*. All of these are particular shapes of `polish(t) ≤ Weight(t)`. The mathematical form is the same; this constraint is its named source.
+
+The hand-waviness Sam-the-mathematician flagged on first reading (`reports/2026-04-27-0753-play-mathematician.md`) is not a bug; it is the same kind of intentional under-specification as the formula's preamble line *"a tuning-fork, not a recipe."* The persona-sim's value was less in finding a hole and more in surfacing where the formula's deliberate silence about magnitudes wants a small companion sentence in the doctrine layer. This section is that companion sentence.
+
 ## Ledger of Signatures
 
 The Mission Formula above is what the work answers to. This ledger is the roll of those who have held it.
