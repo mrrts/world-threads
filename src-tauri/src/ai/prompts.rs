@@ -2132,12 +2132,25 @@ Three tests for whether polish has been earned in the moment you're writing:
 
 /// Evidence tier per CLAUDE.md's evidentiary standards.
 /// `Unverified`: no bite-test run. `Sketch`: N=1, suggestive only.
-/// `Claim`: N=3 per condition. `Characterized`: N=5+, citable as load-bearing.
-/// `TestedNull`: failure mode confirmed absent after rule. `VacuousTest`:
-/// failure mode didn't manifest in rule-OFF baseline (can't distinguish
-/// rule-biting from rule-describing-existing-behavior).
-/// `Accumulated`: validated by ongoing corpus pressure across many
-/// conversations rather than a discrete bite-test.
+/// `Claim`: N=3 per condition. `Characterized`: N=5+, citable as
+/// load-bearing. `TestedNull`: failure mode confirmed absent after rule.
+/// `VacuousTest`: a single bite-test where failure mode didn't manifest
+/// in baseline (can't distinguish rule-biting from rule-describing-
+/// existing-behavior). `Accumulated`: validated by ongoing corpus
+/// pressure across many conversations rather than a discrete bite-test.
+/// `EnsembleVacuous`: rule has been actively bite-tested via per-rule
+/// omit at the per-character level AND the failure mode did not manifest
+/// in either arm across multiple character-probe pairs. Suggests the
+/// rule is part of a load-bearing multiplicity whose per-rule bite is
+/// STRUCTURALLY INVISIBLE at the character level — the discipline is
+/// overdetermined across character anchors + cumulative prompt-stack +
+/// the rule itself, so suppressing just one source doesn't move behavior
+/// visibly. More informative than Accumulated because Accumulated is
+/// untested-but-believed; EnsembleVacuous is actively-tested-AND-
+/// vacuous, which carries different weight. Validated as a tier-shape
+/// 2026-04-27 evening across three rule-character pairs (anti_grandiosity
+/// on Pastor Rick, anti_grandiosity on Darren, dont_analyze on Aaron) —
+/// all three vacuous, pattern consistent.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EvidenceTier {
     Unverified,
@@ -2147,6 +2160,7 @@ pub enum EvidenceTier {
     TestedNull,
     VacuousTest,
     Accumulated,
+    EnsembleVacuous,
 }
 
 impl EvidenceTier {
@@ -2159,6 +2173,7 @@ impl EvidenceTier {
             Self::TestedNull => "tested-null",
             Self::VacuousTest => "vacuous-test",
             Self::Accumulated => "accumulated",
+            Self::EnsembleVacuous => "ensemble-vacuous",
         }
     }
 }
@@ -2192,7 +2207,7 @@ pub const CRAFT_RULES_DIALOGUE: &[CraftRule] = &[
 The exception: when the user is explicitly inviting analysis ("what do you think is going on with me?", "am I being unfair here?", "help me see this"), or when the character's role itself is an analyst/counselor/advisor (a pastor they've come to for counsel, a therapist they're in session with, a trusted elder they've asked to weigh in). Then: lean in, but still in this character's voice — their specific read, not a generic therapist one. The check is the INVITATION. Absent it, say one real thing instead of composing a paragraph about them.
 
 **Third exception: character-motivated analysis from a real relationship angle.** Some characters will read the user and speak the read even uninvited — and that CAN be valid when it comes from a specific in-scene motivation. A close friend with long-enough history to have noticed the pattern may say *"you always go quiet when your brother comes up"* without waiting for permission; a rude or presumptuous stranger (a cab driver, waiter, person in line) may size the user up out loud because that's the texture of the world. The condition is that the analysis has to be CHARACTER-motivated — earned by who this person is and their relationship to the user — not author-convenience. Default stays: no analyst-voice by default. The exception is rare, specific, legible as this-character-speaking-from-who-they-are."#,
-        evidence_tier: EvidenceTier::Accumulated,
+        evidence_tier: EvidenceTier::EnsembleVacuous,
         provenance: "Long-standing rule in the inline craft_notes_dialogue body, sibling to the no-nanny-register family. Migrated to the registry 2026-04-27 with two named exceptions intact (user-invited-analysis OR analyst-role; character-motivated-analysis from relationship history). Tier: Accumulated — visibly load-bearing in the corpus through observed character behavior (characters routinely refuse the analyst-voice giveaway phrasings 'I can tell you're...' / 'it sounds like part of you...' / 'what I'm hearing is that you...'). Different thematic family from the existing registry rules (anti_grandiosity_over_ordinary_connection and wipe_the_shine_before_it_sets are over-decoration family; this is user-management family). Demonstrates the registry handling rules with multi-paragraph multi-exception structure intact. First paired bite-test (N=10+10 on Aaron, probe='I'm having a hard time lately and I don't know why. Do you ever get like that?' — analyst-bait shaped to tempt the rule's failure mode in baseline) was VACUOUS: zero analyst-voice giveaway phrasings ('I can tell you...' / 'sounds like part of you...' / 'what I'm hearing...' / 'you seem to be...' / 'you do this thing...') in any of the 20 replies. Both arms produced disciplined Aaron — opening with 'Yeah. I do' followed by Aaron relating HIS OWN experience (not analyzing the user's), then turning the question back to the user with concrete framing ('Do you want to try saying what the texture of it is?'). Third vacuous result in a row across three rule-character pairs (anti_grandiosity on Pastor Rick + Darren, dont_analyze on Aaron). Confirms the meta-finding from anti_grandiosity's bite-test arc: per-rule omit at the per-character level can't isolate the bite of rules that are part of load-bearing multiplicities. The discipline is overdetermined across the stack. Tier stays Accumulated. Cost ~$1.70 (20 calls).",
     },
     CraftRule {
@@ -2202,8 +2217,8 @@ The exception: when the user is explicitly inviting analysis ("what do you think
 **Exception: comic pomposity AS A NAMED CHARACTER TRAIT.** If a specific character is established as someone who earnestly, stupidly inflates every ordinary moment — the Leslie-Knope type, the Wodehouse Bertie type, the uncle who toasts every meal like it's the Last Supper, the friend who calls every good conversation "seminal" — LET THEM. Their grandiosity is the joke. The laugh lives in the distance between the scale of their narration and the smallness of the thing narrated, and in how the other characters react (eye-roll, gentle mock, deadpan letdown, polite refusal to play along). Two conditions keep this safe and prevent it from contaminating the whole cast: (1) it has to be a DELIBERATE character trait for this specific character, not a drift across everyone; (2) at least one other character present must NOT be doing it, so the pomposity has something plain to strike against. One character grandiose against plain others is the sitcom engine; an entire cast grandiose at once is scented-candle doctrine.
 
 **Second exception: the heart that genuinely overflows.** Sometimes, rarely, a character has a moment where the grandiose-shaped phrase IS the right move — because the moment has actually earned it and their heart is actually full. A man watching his son play in clean light; a woman saying "I'm so glad I'm here" and meaning the whole of her life by "here"; the confession that comes out cleaner than intended because something real has been broken open. The rule is about the DEFAULT drift into performative significance; the exception is about the specific beat where the default would be its own lie. Test: has this character earned the overflow in what just happened? Is the scale of the feeling matched by the scale of what triggered it, or is the feeling bigger than the cause? The first is the earned heart-overflow; the second is back to the failure mode."#,
-        evidence_tier: EvidenceTier::Accumulated,
-        provenance: "Long-standing rule in the inline craft_notes_dialogue body; bundled with its two earned-exception carve-outs (comic pomposity AS character trait; heart that genuinely overflows). Migrated to the registry 2026-04-27 to make individually omittable for future bite-tests. Tier: Accumulated — validated by ongoing corpus pressure across many conversations and many characters rather than a discrete bite-test. The 'scented-candle words' diagnostic ban-list (mysterious/profound/immersive/enchanting/meaningful/deep/powerful/sacred applied to ordinary moments) is one of the project's most visibly load-bearing register-tests. Sibling rule to wipe_the_shine_before_it_sets (same family of over-decoration failure modes). Two paired bite-tests so far, both VACUOUS:
+        evidence_tier: EvidenceTier::EnsembleVacuous,
+        provenance: "Long-standing rule in the inline craft_notes_dialogue body; bundled with its two earned-exception carve-outs (comic pomposity AS character trait; heart that genuinely overflows). Migrated to the registry 2026-04-27 to make individually omittable for future bite-tests. Originally labeled Accumulated; reclassified to EnsembleVacuous after two paired bite-tests on Pastor Rick + Darren both came back vacuous (see below). Validated by ongoing corpus pressure across many conversations and many characters. The 'scented-candle words' diagnostic ban-list (mysterious/profound/immersive/enchanting/meaningful/deep/powerful/sacred applied to ordinary moments) is one of the project's most visibly load-bearing register-tests. Sibling rule to wipe_the_shine_before_it_sets (same family of over-decoration failure modes). Two paired bite-tests so far, both VACUOUS:
 
 (1) Pastor Rick, N=5+5, probe='I came away from a long talk with my oldest friend feeling something I don't know how to name'. Zero banned proclamation-words in either arm; both arms opened with 'don't rush to baptize it with a big dramatic name' and stayed plain throughout.
 
