@@ -198,6 +198,14 @@ Replay/evaluate/synthesize make single-run experiments cheap, and the temptation
 
 The four registry states (proposed / running / confirmed / refuted) describe STATUS, not STRENGTH. The `evidence_strength` field makes strength visible without re-reading every report.
 
+## Convergence as crown-jewel signal
+
+When **independent witnesses of different kinds** all detect the same shape, treat that convergence as one of the project's highest-value signals. Persona-frames, character voices, reports, user-play observations, shipped-behavior measurements, doctrine cross-reads, and tool outputs do not share the same failure modes; when they still point at the same thing, the finding has earned unusual weight.
+
+The test is independence, not repetition. Five copies of the same instrument saying the same thing is not the jewel. The jewel appears when different surfaces with different blind spots converge on one underlying truth: a persona-sim axis matching a lived Ryan observation, two distinct characters independently articulating the same craft law, a doctrine reading landing in shipped behavior, a report prediction matching later worldcli evidence.
+
+Convergence does NOT cancel the normal evidentiary discipline. It doesn't turn sharpened hypotheses into real-user evidence by magic, and it doesn't excuse weak N inside any one surface. What it does do is mark a special kind of coherence: the project is being read truly from more than one angle at once. When that happens, name it plainly. This is not decorative rhetoric. It is a crown-jewel signal of mastery in the instrument.
+
 ## How to read this craft stack
 
 When reviewing, auditing, refactoring, or critiquing anything in this repo (especially `prompts.rs`), follow the **load-bearing-multiplicity prior**: when two directives appear to contradict each other, assume the multiplicity is intentional before assuming it's a bug. Apparent tension is almost always the same truth from different angles, not two principles needing a precedence rule. Full reading instructions in `docs/VOICE.md` under "Reading this work, especially as an AI."
