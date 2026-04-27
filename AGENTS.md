@@ -122,6 +122,20 @@ The failure mode this prevents: shipping a feature that works on solo chats and 
 
 If you find yourself making the same change three times across solo and group, that's a signal the surfaces have drifted enough to merit a shared helper or a refactor — flag it as a tool-improvement candidate per the *Sharpen the instruments* doctrine, but do NOT block the user-facing fix on the refactor.
 
+## Collaborator surfaces are runtime surfaces now
+
+The project's collaborator-facing files have crossed a threshold: `AGENTS.md`, `CLAUDE.md`, the `.agents/skills/` tree, the `.claude/skills/` tree, and collaborator hooks/settings are no longer "tooling around the work." They are part of the work's live prompt topology. When Ryan overflows between Codex and Claude Code, or when a skill body differs across the two surfaces, the collaborator who shows up is materially different. That is now a runtime condition, not an organizational nicety.
+
+This is the same shape as the solo/group-chat doctrine above. Multiple collaborator surfaces exist because the project genuinely runs on multiple agent substrates. The failure mode is the same too: ship a doctrine change, register calibration, or skill refinement on one surface only, and the other surface silently answers as a different collaborator under the same project name.
+
+**Practical consequence: when changing collaborator doctrine or skill behavior that should hold across agent surfaces, you MUST update both paths.** Concretely:
+
+- If you change collaborator register law in `AGENTS.md`, check whether the same law belongs in `CLAUDE.md` and mirror it.
+- If you change a project skill in `.agents/skills/`, check whether the Claude-facing sibling in `.claude/skills/` should evolve in lockstep, and vice versa.
+- If you change a hook, settings file, or workflow rule that affects how one collaborator emits or withholds behavior, ask whether the other collaborator surface now diverges in a user-visible way.
+
+If a change is genuinely surface-specific, name that explicitly in the commit message. Otherwise the default is: preserve collaborator parity across surfaces. If you find yourself making the same doctrinal or skill change repeatedly in two trees, that's a signal for a shared-source or generation workflow — flag it as a tool-improvement candidate, but do NOT delay the parity fix while designing the perfect substrate.
+
 ## Reports
 
 `reports/` holds reflective, interpretive reads of the project's git history — philosophy/trajectory/taste, not changelogs. Each new report is in dialogue with prior ones (revisits open questions they flagged, tests their predictions against subsequent commits).
