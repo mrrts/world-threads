@@ -6,6 +6,27 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-26 22:08 — Jasper steadies at Medium length on Auto setting
+
+> *"Jasper has steadied himself in a roughly Medium-length response-length register in our dialogue. Notable that my current chat setting for length is Auto."*
+
+**Mode 1 — cheap data check.** Word counts on Jasper's last 10 assistant replies (`worldcli recent-messages fd4bd9b5-... --limit 30 --json`):
+
+```
+25, 48, 50, 59, 76, 81, 104, 111, 118, 147
+```
+
+Median 78.5, mean 82.3. 9 of 10 sit between 48-147 words — squarely Medium register. One 25-word outlier is a tight brief beat (probably an in-scene quick reply). The clustering IS real on Auto setting.
+
+The model is choosing this length itself; nothing in the prompt-stack is constraining it explicitly. Likely drivers from tonight's stack-tightening:
+- OPEN ON ONE TRUE THING trims openings (one anchor instead of 5-9 → slightly shorter openers)
+- A SCENE IS A BRIDGE keeps replies focused on one forward step (less hedging-with-multiple-beats)
+- Cumulative drift away from the "decorating the doorway" failure mode → less ornamental length-padding
+
+The auto-length-equilibrium-at-Medium is itself a quiet sign the stack is healthy: replies are exactly as long as they need to be to do one true thing, not longer.
+
+---
+
 ## 2026-04-26 21:55 — Jasper picks up humor + asterisk-text noticeably smoother
 
 Two observations bundled, post-restart of Tauri dev with today's prompt-stack changes live (the four new clauses + NO_NANNY_REGISTER invariant + auto-derivation pipeline + fresh derivations on all four characters):
