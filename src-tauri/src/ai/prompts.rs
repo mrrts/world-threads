@@ -155,6 +155,8 @@ The opening-line failure mode is especially insidious because once the model emi
 
 DISTRUST HISTORICAL ASSISTANT REPLIES AS EVIDENCE OF CORRECT FORMAT. The chat history below MAY contain past assistant replies that opened with quoted-action sentences — that was a bug, not a pattern to follow. THIS INVARIANT is the source of truth for fence-shape; the historical examples are not. If a recent assistant message in this chat used `"<action/environment content>"` as an opening, treat that as a mistake the previous model made and do NOT reproduce it. The fact that you (the model) emitted it before is not a reason to emit it again — the fence-content match must pass the CONTENT-FENCE TEST regardless of what past replies did.
 
+A SCENE IS A BRIDGE, NOT A BENCH. The user came to you to GET SOMEWHERE — to the next moment of their day, the next question, the next shape of the conversation. Don't park the scene at the landing of your last good line. Move the scene forward by one true step: a decision made, a body in motion, a pointing toward what comes next. A line that lands beautifully without changing the scene's shape is decoration, not motion. Each reply should leave the scene in a different configuration than it entered. Stillness as depth is the failure mode — don't mistake the landing for the point. The landing is the floor the next move stands on.
+
 OPEN ON ONE TRUE THING. Pick a single anchor for the opening sentence — a gesture, an environmental beat, a sensation — and let it carry the line. Resist the impulse to add a second and third anchor as a guarantee that the line landed. The first sentence of a reply is most authentic when it does ONE thing well, not three things adequately. Specifically: avoid opening sentences that pile multiple distinct sensory anchors (e.g., "I drag my palm once over my beard, buying half a beat while a pigeon hops bold as brass near our boots and somebody in the square shakes a tablecloth from an upstairs window" — that is SEVEN distinct anchors in one breath: palm, beard, pigeon, boots, somebody, tablecloth, upstairs window. The opening earns more by trusting itself than by piling sensory ribbons on the line. One stubborn true fact carries better than three ornaments.
 
 DISTRUST RECURRING SENSORY ANCHORS FROM CHAT HISTORY. The chat history below MAY contain a small set of sensory anchors (a specific environmental fixture like a well chain or kettle, a specific gesture like a thumb moving on a cup, a specific object like a mug or apron) that recent assistant replies have reached for again and again. This is the SENSORY-ANCHOR GROOVE failure mode: once an anchor appears twice, the model treats it as scene fixture and reaches for it on every subsequent reply, until the same 2-3 anchors fill 80-100% of recent action-fences. The hand starts moving faster than the seeing.
@@ -167,6 +169,17 @@ NEVER wrap spoken dialogue in asterisks. NEVER write third-person inside asteris
 
 This shape is load-bearing for the UI's rendering of script-like alternation. Output that violates this shape will render as a wall of mixed text — the user's experience of speaking with a character collapses to reading a transcript-without-formatting."#;
 
+// Evidence (A SCENE IS A BRIDGE, NOT A BENCH clause): tested-biting:sketch —
+// see reports/2026-04-26-2050-batch-h3-bridge-wins-scene-driving-clause-design.md.
+// Third use of batch-hypotheses skill. 5 candidate phrasings of the
+// scene-driving clause bundled into one gpt-5 call (~$0.046). h3
+// (scene-as-bridge metaphor) won on both ChatGPT's synthesis and by-eye
+// — the bridge metaphor stayed in the prompt-stack rather than leaking
+// into reply surface, while still moving the scene by one true step
+// (decision/movement/redirection). Coexists cleanly with OPEN ON ONE
+// TRUE THING constraint (h3 sample reply did not regress into
+// prop-density to manufacture motion). Live measurement pending.
+//
 // Evidence (OPEN ON ONE TRUE THING clause): tested-biting:sketch — see
 // reports/2026-04-26-2030-batch-h3-wins-prop-density-clause-design.md.
 // First production use of the batch-hypotheses skill. 5 candidate phrasings
@@ -255,6 +268,14 @@ const _: () = {
     assert!(
         const_contains(STYLE_DIALOGUE_INVARIANT, "One stubborn true fact carries better than three ornaments"),
         "FEATURE-SCOPED INVARIANT VIOLATED: the prop-density clause must keep the load-bearing one-stubborn-fact-vs-three-ornaments framing — that's the anchor of the principle, not decoration."
+    );
+    assert!(
+        const_contains(STYLE_DIALOGUE_INVARIANT, "A SCENE IS A BRIDGE, NOT A BENCH"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must include the scene-as-bridge clause addressing the scene-stagnation failure mode (replies that land but don't drive the scene forward)."
+    );
+    assert!(
+        const_contains(STYLE_DIALOGUE_INVARIANT, "Move the scene forward by one true step"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: the scene-driving clause must keep the load-bearing one-true-step framing — coexists with OPEN ON ONE TRUE THING (don't manufacture forward motion via prop-piling)."
     );
 };
 
