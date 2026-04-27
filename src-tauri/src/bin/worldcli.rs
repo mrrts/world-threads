@@ -205,6 +205,17 @@ enum Cmd {
         /// How many top anchors to display. Default 10.
         #[arg(long, default_value_t = 10)]
         top_k: usize,
+        /// When set, ALSO compute opening-sentence prop-density per
+        /// reply: how many distinct sensory anchors appear in the
+        /// FIRST asterisk-fenced action of each reply. The OPEN ON
+        /// ONE TRUE THING clause shipped at 2026-04-26 ~20:30 targets
+        /// this axis specifically; the rule's prediction is opener-
+        /// density ≤2 anchors. This flag adds a per-reply opener-
+        /// density distribution to the output (mean, median, max,
+        /// per-reply counts) so the prop-density rule can be
+        /// instrument-measured rather than hand-counted.
+        #[arg(long, default_value_t = false)]
+        opening_density: bool,
     },
 
     /// All kept_records (canon entries) for a character.
@@ -1436,8 +1447,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::RecentMessages { character_id, limit, grep, before, after, with_context } => {
             cmd_recent_messages(&r, &character_id, limit, grep.as_deref(), before.as_deref(), after.as_deref(), with_context)
         }
-        Cmd::AnchorGroove { character_id, limit, threshold, top_k } => {
-            cmd_anchor_groove(&r, &character_id, limit, threshold, top_k)
+        Cmd::AnchorGroove { character_id, limit, threshold, top_k, opening_density } => {
+            cmd_anchor_groove(&r, &character_id, limit, threshold, top_k, opening_density)
         }
         Cmd::KeptRecords { character_id } => cmd_kept_records(&r, &character_id),
         Cmd::Journals { character_id } => cmd_journals(&r, &character_id),
@@ -1928,6 +1939,7 @@ fn cmd_anchor_groove(
     limit: usize,
     threshold: f64,
     top_k: usize,
+    opening_density: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
     let conn = r.db.conn.lock().unwrap();
@@ -2012,7 +2024,43 @@ fn cmd_anchor_groove(
         "WITHIN BAND (top anchor <0.4 — no salient groove detected at this sample size)"
     };
 
-    let payload = json!({
+    // Opening-density measurement (per --opening-density flag). Counts
+    // distinct sensory anchors in the FIRST asterisk-fenced action of
+    // each reply. The OPEN ON ONE TRUE THING clause (commit eeaea95)
+    // targets this axis directly; rule-prediction is opener-density
+    // ≤2 anchors per reply.
+    let opening_densities: Vec<usize> = if opening_density {
+        assistant_lines.iter().map(|reply| count_opener_anchors(reply)).collect()
+    } else {
+        Vec::new()
+    };
+    let opener_mean = if opening_densities.is_empty() { 0.0 } else {
+        opening_densities.iter().sum::<usize>() as f64 / opening_densities.len() as f64
+    };
+    let opener_max = opening_densities.iter().max().copied().unwrap_or(0);
+    let mut opener_sorted = opening_densities.clone();
+    opener_sorted.sort();
+    let opener_median = if opener_sorted.is_empty() { 0.0 } else {
+        let mid = opener_sorted.len() / 2;
+        if opener_sorted.len() % 2 == 0 {
+            (opener_sorted[mid-1] + opener_sorted[mid]) as f64 / 2.0
+        } else {
+            opener_sorted[mid] as f64
+        }
+    };
+    let over_two = opening_densities.iter().filter(|&&n| n > 2).count();
+    let opening_diagnosis = if !opening_density {
+        "(not measured)".to_string()
+    } else if opener_mean <= 1.5 {
+        "TIGHT (≤1.5 anchors/opener — OPEN ON ONE TRUE THING biting cleanly)".to_string()
+    } else if opener_mean <= 2.5 {
+        "WITHIN BAND (1.5-2.5 anchors/opener — rule predicts ≤2; mild overshoot)".to_string()
+    } else {
+        format!("OVERFLOW (>{:.1} anchors/opener — prop-density failure mode active; {} of {} replies above the 2-anchor cap)",
+            opener_mean, over_two, opening_densities.len())
+    };
+
+    let mut payload = json!({
         "character_id": character_id,
         "display_name": display_name,
         "samples_analyzed": analyzed,
@@ -2022,6 +2070,16 @@ fn cmd_anchor_groove(
         "diagnosis": diagnosis,
         "top_anchors": top,
     });
+    if opening_density {
+        payload["opening_density"] = json!({
+            "per_reply": opening_densities,
+            "mean": (opener_mean * 100.0).round() / 100.0,
+            "median": opener_median,
+            "max": opener_max,
+            "over_two_anchors": over_two,
+            "diagnosis": opening_diagnosis,
+        });
+    }
 
     if r.json {
         emit(true, payload);
@@ -2041,9 +2099,52 @@ fn cmd_anchor_groove(
         if analyzed == 0 {
             println!("(no assistant lines found for this character — check id and corpus)");
         }
+        if opening_density {
+            println!();
+            println!("opening-density (per-reply anchors in first asterisk-fenced action):");
+            println!("  per_reply: {opening_densities:?}");
+            println!("  mean: {opener_mean:.2}    median: {opener_median:.1}    max: {opener_max}    over_two: {over_two}");
+            println!("  diagnosis: {opening_diagnosis}");
+        }
     }
 
     Ok(())
+}
+
+/// Count distinct sensory anchors in the FIRST asterisk-fenced action
+/// of a reply. Anchor-counting heuristic: split the action's content
+/// on coordinating conjunctions ("and", "while", commas) and count
+/// resulting noun-bearing fragments. Each fragment is one "anchor"
+/// in the prop-density sense — a thumb-on-clay is one, a thumb-AND-
+/// a-pigeon-AND-a-tablecloth is three.
+///
+/// Heuristic, not perfect: counts comma/and/while-separated noun
+/// fragments inside the first asterisk-fenced run. False positives
+/// possible (a fragment without a noun); false negatives possible
+/// (anchors joined by other conjunctions). Good enough for a
+/// per-reply distribution that surfaces the prop-density signal.
+fn count_opener_anchors(reply: &str) -> usize {
+    let trimmed = reply.trim_start();
+    if !trimmed.starts_with('*') { return 0; }
+    let after_star = &trimmed[1..];
+    let Some(close_idx) = after_star.find('*') else { return 0; };
+    let opener = &after_star[..close_idx];
+    // Split on ", " / " and " / " while " / "; " — coordinating
+    // separators typical for piled-anchor opening sentences.
+    let mut count = 0;
+    let mut buf = opener.to_string();
+    for sep in [", and ", " and ", ", while ", " while ", ", ", "; "] {
+        buf = buf.replace(sep, "|");
+    }
+    for fragment in buf.split('|') {
+        let trimmed = fragment.trim();
+        if trimmed.is_empty() { continue; }
+        // Count fragment as an anchor if it has at least 3 alphabetic
+        // chars (excludes pure punctuation / single articles).
+        let alpha_count = trimmed.chars().filter(|c| c.is_alphabetic()).count();
+        if alpha_count >= 3 { count += 1; }
+    }
+    count
 }
 
 /// Strip italic-action markers (`*...*`), quote markers, punctuation, and
