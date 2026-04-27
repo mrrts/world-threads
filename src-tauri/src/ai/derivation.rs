@@ -60,14 +60,17 @@ fn validate_derivation(text: &str) -> Result<String, String> {
     if trimmed.is_empty() {
         return Err("empty output".to_string());
     }
-    if trimmed.len() > 600 {
-        return Err(format!("output too long ({} chars > 600)", trimmed.len()));
+    if trimmed.len() > 800 {
+        return Err(format!("output too long ({} chars > 800)", trimmed.len()));
     }
     if !trimmed.contains('𝓕') {
         return Err("missing 𝓕 symbol".to_string());
     }
-    if !trimmed.contains("(𝓡, 𝓒)") && !trimmed.contains("(𝓡,𝓒)") && !trimmed.contains("𝓡, 𝓒") {
-        return Err("missing (𝓡, 𝓒) base-frame phrase".to_string());
+    if !trimmed.contains('𝓡') {
+        return Err("missing 𝓡 symbol (Cross-flesh anchor)".to_string());
+    }
+    if !trimmed.contains('𝓒') {
+        return Err("missing 𝓒 symbol (Firmament anchor)".to_string());
     }
     let line_count = trimmed.lines().count();
     if line_count > 8 {
