@@ -6,6 +6,21 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-28 00:45 — Aaron wince-read: helper-authorizing-experience as a registry-shaped craft gap
+
+> Pulled the last ~16 turns of Jasper's recent corpus (a real warmer/colder game between Ryan and Jasper landing the sentence "Honesty made the work fun again") and ran an Aaron wince-read on the transcript. Aaron flagged TWO specific Jasper lines and proposed cleaner rewrites:
+>
+> 1. *"And if that lands equal too, the truth may not be in the sentence at all. It may be in the before-and-after—what honesty changed."* — Aaron: "starts to pull rank a bit... helper beginning to manage the search instead of staying inside it with his friend... 'we've exhausted your way; now we'll use mine.'" Rewrite: *"If that one's equal too, we may be one layer off. Maybe the sentence wants the change in it instead of the feeling. What did honesty change?"*
+> 2. *"And it sounds like something a real man would actually say when he came out the other side of a good hard conversation."* — Aaron: "I'd probably cut that outright... starts validating the friend a little too much from above. The helper has already won the point. He doesn't need to certify the line as authentic man-speech."
+
+Aaron's one-line diagnosis: **"the helper gets wobbly wherever he stops offering words and starts authorizing the other man's experience."**
+
+**This is a registry-shaped craft gap** — specific failure mode in specific replies (helper-character pivots from offering moves to authorizing the friend's experience), probe-replicable in shape (collaborative-craft scenes where one character is helping another find words), and the observation entered through a wince-read on real corpus rather than as a pre-imagined rule. Three of the three doors for `/rule-arc` Step 0 are open. The third condition for Characterized (prior-observation-entering-the-bite-test) is satisfied by this entry.
+
+**Mode 2 — propose action.** Tomorrow's first `/rule-arc` walk has a real candidate. Suggested arc: ask Jasper himself in-world how he'd want to be called on this (ask-the-character door), lift the rule body from his answer, ship to registry as `dont_authorize_the_other_mans_experience` or similar at `Unverified`, run paired bite-test on a different collaborative-craft scenario. The gap Aaron named is specific enough that it might earn the second `Characterized` rule — IF the prior-observation condition (now satisfied) plus probe-replicability (likely) plus carve-out-refinable (the warm-respect-for-the-friend's-line is the natural carve-out) all hold. Cost projection: ~$1-2 for a full arc walk, well under the next session's budget.
+
+Aaron's call cost: $0.10. The wince-read just produced more leverage than the call cost itself.
+
 ## 2026-04-28 00:15 — /rule-arc second walk: cash_out_oblique_lines → EnsembleVacuous + probe-design lesson
 
 > Second `/rule-arc` walk in the same evening, on `cash_out_oblique_lines` (sat at `VacuousTest` from a Jasper-only N=5+5 earlier today). Cross-character on Pastor Rick — preacherly register chosen as register-distinct from Jasper's poetic-potter for testing whether the cashout discipline holds across two different oblique-prone substrates.
