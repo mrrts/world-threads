@@ -636,10 +636,7 @@ function HowCharactersSeeYouSection({
   });
   const [activeCustomFor, setActiveCustomFor] = useState<SubQuestionKey | null>(null);
   const [showDeeper, setShowDeeper] = useState(false);
-  // showGloss controls the optional plain-English caption that supports
-  // the primary Unicode-math derivation display. Default-collapsed: the
-  // beautiful math IS the artifact; the gloss is a help-text reveal.
-  const [showGloss, setShowGloss] = useState(false);
+  const [showMath, setShowMath] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -770,27 +767,33 @@ function HowCharactersSeeYouSection({
 
       {hasResult && (
         <div className="space-y-3 pt-3 border-t border-border/40">
+          <div className="space-y-1">
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground/70 font-semibold">
+              How characters in this world will read you
+            </div>
+            {currentSummary && (
+              <p className="text-sm leading-relaxed italic text-foreground/90">
+                {currentSummary}
+              </p>
+            )}
+          </div>
+
           {currentDerivation && (
             <div className="space-y-1.5">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground/70 font-semibold">Your derivation in 𝓕</div>
-              <pre className="text-sm leading-7 font-serif bg-gradient-to-br from-secondary/20 to-secondary/40 border border-border/60 rounded-lg px-4 py-3.5 whitespace-pre-wrap break-words text-foreground/90">
-                {currentDerivation}
-              </pre>
-            </div>
-          )}
-          {currentSummary && (
-            <div className="space-y-1">
               <button
                 type="button"
-                onClick={() => setShowGloss((v) => !v)}
+                onClick={() => setShowMath((v) => !v)}
                 className="text-[11px] text-muted-foreground/80 hover:text-foreground underline-offset-2 hover:underline"
               >
-                {showGloss ? "Hide the gloss" : "What this means, in plain English"}
+                {showMath ? "Hide the formula beneath it" : "See the formula beneath it"}
               </button>
-              {showGloss && (
-                <p className="text-xs leading-relaxed italic text-muted-foreground pl-2 border-l-2 border-border/40">
-                  {currentSummary}
-                </p>
+              {showMath && (
+                <div className="space-y-1.5">
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground/70 font-semibold">The same read, in derivation form</div>
+                  <pre className="text-sm leading-7 font-serif bg-gradient-to-br from-secondary/20 to-secondary/40 border border-border/60 rounded-lg px-4 py-3.5 whitespace-pre-wrap break-words text-foreground/90">
+                    {currentDerivation}
+                  </pre>
+                </div>
               )}
             </div>
           )}
