@@ -522,6 +522,8 @@ export const api = {
 
   getUserProfile: (worldId: string) => invoke<UserProfile | null>("get_user_profile_cmd", { worldId }),
   updateUserProfile: (profile: UserProfile) => invoke<void>("update_user_profile_cmd", { profile }),
+  regenerateCharacterDerivation: (apiKey: string, characterId: string) =>
+    invoke<{ derivation: string; summary: string }>("regenerate_character_derivation_cmd", { apiKey, characterId }),
   regenerateUserDerivation: (apiKey: string, worldId: string, choices: {
     way_of_being?: string;
     place?: string;

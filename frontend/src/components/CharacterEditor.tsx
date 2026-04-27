@@ -21,6 +21,9 @@ export function CharacterEditor({ store }: Props) {
   const ch = store.activeCharacter;
   const [form, setForm] = useState<Partial<Character>>({});
   const [dirty, setDirty] = useState(false);
+  // Bumped after regenerate_character_derivation_cmd succeeds so the
+  // DerivationCard's refetchKey changes and the card re-runs its load.
+  const [derivationVersion, setDerivationVersion] = useState(0);
   const [showTemplates, setShowTemplates] = useState(false);
   const [templateSearch, setTemplateSearch] = useState("");
   const [portraits, setPortraits] = useState<PortraitInfo[]>([]);
@@ -525,9 +528,14 @@ export function CharacterEditor({ store }: Props) {
             <FieldGroup label="Identity & Voice">
               {ch && (
                 <DerivationCard
-                  label="Character Formula"
+                  label="Their derivation in 𝓕"
                   load={() => api.getCharacterDerivation(ch.character_id)}
-                  refetchKey={ch.character_id}
+                  refetchKey={`${ch.character_id}:${derivationVersion}`}
+                  onRegenerate={async () => {
+                    if (!store.apiKey) throw new Error("Need an OpenAI API key in Settings to regenerate.");
+                    await api.regenerateCharacterDerivation(store.apiKey, ch.character_id);
+                    setDerivationVersion((v) => v + 1);
+                  }}
                 />
               )}
               <Field label="Identity" hint="Core personality, demeanor, how they see the world">

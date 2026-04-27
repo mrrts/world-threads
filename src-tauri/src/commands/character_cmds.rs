@@ -38,6 +38,51 @@ pub fn get_character_derivation_cmd(db: State<Database>, character_id: String) -
     Ok(derived)
 }
 
+#[derive(Debug, serde::Serialize)]
+pub struct CharacterDerivationResult {
+    pub derivation: String,
+    pub summary: String,
+}
+
+/// Regenerate a character's derived_formula + derived_summary from the
+/// character's substrate (identity / voice_rules / backstory / boundaries)
+/// + recent corpus. Two-output synthesis: returns both fields and
+/// persists both. Bypasses the staleness check (this is user-initiated
+/// regeneration via the DerivationCard onRegenerate button — the user
+/// asked for a refresh, so refresh).
+#[tauri::command]
+pub async fn regenerate_character_derivation_cmd(
+    db: State<'_, Database>,
+    api_key: String,
+    character_id: String,
+) -> Result<CharacterDerivationResult, String> {
+    if api_key.trim().is_empty() {
+        return Err("regenerate_character_derivation: no API key".to_string());
+    }
+    // Build the prompt + load model config in a sync scope so the
+    // Connection lock doesn't span the async LLM call.
+    let (prompt, base_url, model) = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let _ = get_character(&conn, &character_id).map_err(|e| format!("character not found: {e}"))?;
+        let model_config = crate::ai::orchestrator::load_model_config(&conn);
+        let prompt = crate::ai::derivation::build_character_prompt(&conn, &character_id)?;
+        (prompt, model_config.chat_api_base(), model_config.memory_model.clone())
+    };
+    let (derivation, summary) = crate::ai::derivation::synthesize_two_output_from_prompt(
+        &base_url,
+        &api_key,
+        &model,
+        prompt,
+    ).await?;
+    {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        crate::ai::derivation::persist_character_derivation_two_output(
+            &conn, &character_id, &derivation, &summary,
+        ).map_err(|e| e.to_string())?;
+    }
+    Ok(CharacterDerivationResult { derivation, summary })
+}
+
 #[tauri::command]
 pub fn update_character_cmd(db: State<Database>, character: Character) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;

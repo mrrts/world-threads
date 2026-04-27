@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Markdown from "react-markdown";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, RefreshCw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { markdownComponents, remarkPlugins, rehypePlugins } from "./chat/formatMessage";
 
@@ -31,6 +31,12 @@ interface Props {
   /** Re-fetch dependency — pass character_id or world_id so the component
    * refreshes when the editor switches subject. */
   refetchKey: string;
+  /** Optional regenerate callback. When provided, a "Regenerate" button
+   * appears in the header. Implementations should call the appropriate
+   * Tauri command (regenerate_character_derivation_cmd /
+   * regenerate_user_derivation_cmd / etc.) and refresh the parent's
+   * data so the card receives the new text on next render. */
+  onRegenerate?: () => Promise<void>;
 }
 
 /**
@@ -50,10 +56,12 @@ interface Props {
  * that's not too LaTeX-y, and is deferred. Authoring happens via worldcli
  * derive-character / derive-world for now.
  */
-export function DerivationCard({ label, load, refetchKey }: Props) {
+export function DerivationCard({ label, load, refetchKey, onRegenerate }: Props) {
   const [text, setText] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
+  const [regenError, setRegenError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -72,7 +80,40 @@ export function DerivationCard({ label, load, refetchKey }: Props) {
   }, [refetchKey]);
 
   if (loading) return null;
-  if (!text || text.trim().length === 0) return null;
+  if (!text || text.trim().length === 0) {
+    // No derivation yet, but if regenerate is available, show a small
+    // "Generate one now" affordance so the card surface is discoverable.
+    if (!onRegenerate) return null;
+    return (
+      <div className="mb-6 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 px-5 py-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col">
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-primary/90">{label}</h3>
+            <span className="text-[11px] italic text-primary/60 mt-0.5">— not yet derived</span>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={async () => {
+              setRegenerating(true);
+              setRegenError(null);
+              try { await onRegenerate(); } catch (e: any) {
+                setRegenError(typeof e === "string" ? e : (e?.message ?? "Regenerate failed"));
+              } finally { setRegenerating(false); }
+            }}
+            disabled={regenerating}
+            className="h-8 text-xs gap-1.5 border-primary/40 text-primary hover:bg-primary/10"
+          >
+            {regenerating ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+            {regenerating ? "Generating…" : "Generate"}
+          </Button>
+        </div>
+        {regenError && (
+          <p className="mt-2 text-xs text-destructive bg-destructive/10 rounded px-2 py-1">{regenError}</p>
+        )}
+      </div>
+    );
+  }
 
   const onCopy = async () => {
     try {
@@ -95,17 +136,41 @@ export function DerivationCard({ label, load, refetchKey }: Props) {
             — a one-of-a-kind shorthand of how characters in this world hold you
           </span>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onCopy}
-          className="h-7 gap-1.5 text-xs text-primary/80 hover:text-primary hover:bg-primary/10 flex-shrink-0"
-          title="Copy raw derivation (LaTeX + plain English) to paste into another LLM"
-        >
-          {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-          {copied ? "Copied" : "Copy raw"}
-        </Button>
+        <div className="flex items-center gap-1 flex-shrink-0">
+          {onRegenerate && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={async () => {
+                setRegenerating(true);
+                setRegenError(null);
+                try { await onRegenerate(); } catch (e: any) {
+                  setRegenError(typeof e === "string" ? e : (e?.message ?? "Regenerate failed"));
+                } finally { setRegenerating(false); }
+              }}
+              disabled={regenerating}
+              className="h-7 gap-1.5 text-xs text-primary/80 hover:text-primary hover:bg-primary/10"
+              title="Regenerate the derivation from this entity's substrate + recent corpus"
+            >
+              {regenerating ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+              {regenerating ? "Regenerating…" : "Regenerate"}
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onCopy}
+            className="h-7 gap-1.5 text-xs text-primary/80 hover:text-primary hover:bg-primary/10"
+            title="Copy raw derivation (LaTeX + plain English) to paste into another LLM"
+          >
+            {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+            {copied ? "Copied" : "Copy raw"}
+          </Button>
+        </div>
       </div>
+      {regenError && (
+        <p className="mb-2 text-xs text-destructive bg-destructive/10 rounded px-2 py-1">{regenError}</p>
+      )}
       <div className="prose prose-sm max-w-none text-foreground/95">
         <Markdown components={markdownComponents} remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
           {normalizeMathDelimiters(text)}

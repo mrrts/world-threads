@@ -126,6 +126,7 @@ pub fn run() {
             list_characters_cmd,
             get_character_cmd,
             get_character_derivation_cmd,
+            regenerate_character_derivation_cmd,
             update_character_cmd,
             create_character_cmd,
             delete_character_cmd,

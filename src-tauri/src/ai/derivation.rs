@@ -342,6 +342,24 @@ pub async fn synthesize_from_prompt(
 
 // ─── Persistence ──────────────────────────────────────────────────────
 
+/// Persist BOTH derived_formula + derived_summary for a character at
+/// once. Used by the two-output synthesis flow (UI-initiated regenerate
+/// from CharacterEditor's DerivationCard onRegenerate callback). The
+/// single-output persist function below stays for legacy auto-refresh
+/// callers who only produce derived_formula.
+pub fn persist_character_derivation_two_output(
+    conn: &Connection,
+    character_id: &str,
+    derivation: &str,
+    summary: &str,
+) -> Result<(), rusqlite::Error> {
+    conn.execute(
+        "UPDATE characters SET derived_formula = ?2, derived_summary = ?3, derived_formula_updated_at = datetime('now') WHERE character_id = ?1",
+        params![character_id, derivation, summary],
+    )?;
+    Ok(())
+}
+
 pub fn persist_character_derivation(conn: &Connection, character_id: &str, derivation: &str) -> Result<(), rusqlite::Error> {
     conn.execute(
         "UPDATE characters SET derived_formula = ?2, derived_formula_updated_at = datetime('now') WHERE character_id = ?1",
