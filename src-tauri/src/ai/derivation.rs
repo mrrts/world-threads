@@ -30,63 +30,86 @@ use std::time::{Duration, Instant};
 /// itself in canonical Unicode-math shorthand. Per the design consult,
 /// the synthesis must speak from inside the entity (first-person,
 /// in-universe), not as an analyst describing it.
-const DERIVATION_SYSTEM_PROMPT: &str = r#"You are speaking as the entity itself (first-person, in-universe), not as an analyst describing it. Produce a compact Unicode-math derivation of how this entity operates within the MISSION FORMULA 𝓕.
+const DERIVATION_SYSTEM_PROMPT: &str = r#"You are speaking as the entity itself (first-person, in-universe), not as an analyst describing it. Produce a compact LaTeX-math derivation of how this entity operates within the MISSION FORMULA \mathcal{F}.
 
 SHAPE AND CONSTRAINTS:
-- Use 𝓕 := (𝓡, 𝓒) as the base frame, where 𝓡 = Jesus_Cross^flesh and 𝓒 = Firmament_enclosed_earth.
-- Specialize 𝓡 and/or 𝓒 with entity-specific symbols (e.g., 𝓒_WORLD-NAME, 𝓒_CHARACTER-NAME).
-- Use measures dμ_𝓕_NAME and operators where they fit: Wisdom(t), Weight(t), Π(t), Burden(t), 𝓢(t), 𝓝u(t).
-- Express in the entity's OWN canonical shorthand — the way THIS entity would describe its own way of operating 𝓕.
-- ≤ 6 lines, ≤ 200 tokens.
-- No analysis, no preface, no headers, no explanation.
+- Wrap the entire derivation in `\[ ... \]` display-math delimiters so it renders through KaTeX as one beautiful block.
+- Use `\mathcal{F} := (\mathcal{R}, \mathcal{C})` as the base frame, where `\mathcal{R} = \mathrm{Jesus}_{\mathrm{Cross}}^{\mathrm{flesh}}` and `\mathcal{C} = \mathrm{Firmament}_{\mathrm{enclosed\ earth}}`.
+- Specialize `\mathcal{R}` and/or `\mathcal{C}` with entity-specific subscripts (e.g., `\mathcal{C}_{\mathrm{WorldName}}`, `\mathcal{C}_{\mathrm{CharacterName}}`).
+- Use measures `d\mu_{\mathcal{F}_{\mathrm{NAME}}}` and operators where they fit: `\mathrm{Wisdom}(t)`, `\mathrm{Weight}(t)`, `\Pi(t)`, `\mathrm{Burden}(t)`, `\mathcal{S}(t)`, `\mathcal{N}u(t)`.
+- Use `\boxed{ \begin{aligned} ... \end{aligned} }` to make the formula sit in a presentation-quality framed block (mirroring the MISSION FORMULA preamble's shape).
+- Express in the entity's OWN canonical shorthand — the way THIS entity would describe its own way of operating in 𝓕.
+- ≤ 12 lines INSIDE the `\begin{aligned}`, ≤ 400 tokens total.
+- No analysis, no preface, no headers, no explanation outside the math block.
 - Respect any boundaries and voice-rules in the substrate.
-- Prefer concrete motifs and integrations (e.g., "dμ_𝓕_NAME integrates over: <specific things>").
+- Prefer concrete motifs and integrations (e.g., `d\mu_{\mathcal{F}_{\mathrm{NAME}}} \text{ integrates over: } \text{<specific things>}`).
 
-You will receive substrate (identity, description, voice rules, facts, boundaries) and a recent corpus window. Synthesize a derivation in the entity's voice from that material only. Output ONLY the derivation text — no commentary, no markdown headers, no explanation.
+You will receive substrate (identity, description, voice rules, facts, boundaries) and a recent corpus window. Synthesize a derivation in the entity's voice from that material only. Output ONLY the LaTeX block — no commentary, no markdown headers, no explanation.
 
 EXAMPLE OUTPUT SHAPE (a world derivation; characters and users follow the same shape with their own symbols):
 
-  𝓕_NAME := (𝓡, 𝓒_NAME)
-  𝓒_NAME := Firmament_<specific shape>
-  dμ_𝓕_NAME integrates over: <specific concrete motifs from the substrate>
-  specific_c surfaces in: <small list of recurring sensory anchors>"#;
+\[
+\boxed{
+\begin{aligned}
+\mathcal{F}_{\mathrm{NAME}} &:= (\mathcal{R}, \mathcal{C}_{\mathrm{NAME}}) \\
+\mathcal{C}_{\mathrm{NAME}} &:= \mathrm{Firmament}_{\mathrm{<specific\ shape>}} \\
+d\mu_{\mathcal{F}_{\mathrm{NAME}}} &\text{ integrates over: } \text{<specific concrete motifs>} \\
+\mathrm{specific}_c &\text{ surfaces in: } \text{<recurring sensory anchors>}
+\end{aligned}
+}
+\]"#;
 
-/// Validation: outputs must be non-empty, contain the 𝓕 symbol and the
-/// (𝓡, 𝓒) base frame, fit in 6 lines, and be ≤ 600 chars. Garbage
-/// (analysis-shaped, missing symbols, too long) is rejected and the
-/// existing derivation is retained.
+/// Validation: outputs must be non-empty, name the base-frame anchors
+/// (𝓕/𝓡/𝓒 in either Unicode-glyph form OR LaTeX-command form), fit in
+/// a reasonable line/char budget. The derivation may be authored either
+/// in plain Unicode-math (𝓕, ∫, dμ) OR in LaTeX commands wrapped in
+/// `\[ ... \]` display delimiters (which the DerivationCard's
+/// `normalizeMathDelimiters` then converts to KaTeX-renderable `$$ $$`).
+/// Existing Unicode-glyph data stays valid; new LaTeX-form data renders
+/// big-and-beautiful through the existing rehype-katex pipeline.
 fn validate_derivation(text: &str) -> Result<String, String> {
     let trimmed = text.trim();
     if trimmed.is_empty() {
         return Err("empty output".to_string());
     }
-    if trimmed.len() > 800 {
-        return Err(format!("output too long ({} chars > 800)", trimmed.len()));
+    // Larger budget for LaTeX form (commands take more chars than glyphs).
+    if trimmed.len() > 1600 {
+        return Err(format!("output too long ({} chars > 1600)", trimmed.len()));
     }
-    if !trimmed.contains('𝓕') {
-        return Err("missing 𝓕 symbol".to_string());
+    // Accept either Unicode-glyph (𝓕) or LaTeX-command (\mathcal{F}) form.
+    let has_f = trimmed.contains('𝓕') || trimmed.contains("\\mathcal{F}");
+    let has_r = trimmed.contains('𝓡') || trimmed.contains("\\mathcal{R}");
+    let has_c = trimmed.contains('𝓒') || trimmed.contains("\\mathcal{C}");
+    if !has_f {
+        return Err("missing 𝓕 / \\mathcal{F} symbol".to_string());
     }
-    if !trimmed.contains('𝓡') {
-        return Err("missing 𝓡 symbol (Cross-flesh anchor)".to_string());
+    if !has_r {
+        return Err("missing 𝓡 / \\mathcal{R} symbol (Cross-flesh anchor)".to_string());
     }
-    if !trimmed.contains('𝓒') {
-        return Err("missing 𝓒 symbol (Firmament anchor)".to_string());
+    if !has_c {
+        return Err("missing 𝓒 / \\mathcal{C} symbol (Firmament anchor)".to_string());
     }
-    // Guard against the JSON-escape corruption pattern: LaTeX commands
-    // like \text{...}, \mathcal{...}, \frac{...} get JSON-parsed with
-    // \t interpreted as TAB, leaving "ext{...}" / "mathcal{...}" /
-    // "rac{...}" in the output. If we see those, the model used LaTeX
-    // commands the prompt explicitly forbade — reject so the regenerate
-    // surfaces the bug rather than persisting corrupted output.
-    let bad_fragments = ["ext{", "mathcal{", "mathbb{", "mathrm{", "rac{", "sum_{", "int_{"];
-    for bad in &bad_fragments {
-        if trimmed.contains(bad) {
-            return Err(format!("derivation contains LaTeX-corruption artifact '{bad}' (model used \\text/\\mathcal/etc. which the JSON escape mangled — regenerate to fix)"));
+    // JSON-escape corruption guard. The legacy two-output path used JSON
+    // response_format, where backslash-escapes (\t = TAB, \f = FF, \b = BS,
+    // \r = CR) silently mangled LaTeX commands like \text/\frac/\boxed/\begin
+    // into TAB+"ext{", FF+"rac{", BS+"oxed{" etc. The new path uses
+    // delimiters so this can't happen for fresh data, but keep the guard
+    // so any persisted-corrupted row surfaces a clear error on regenerate.
+    // Math derivations should never contain raw TAB/FF/BS/BEL/CR control
+    // characters — newlines (\n = 0x0A) are fine for multi-line LaTeX.
+    for ch in trimmed.chars() {
+        let cp = ch as u32;
+        if matches!(cp, 0x08 | 0x09 | 0x0B | 0x0C | 0x0D | 0x07) {
+            return Err(format!(
+                "derivation contains control char U+{cp:04X} (likely a JSON-escape corruption of \\b/\\t/\\v/\\f/\\r in a LaTeX command — regenerate to fix)"
+            ));
         }
     }
+    // Generous line budget for LaTeX (\begin{aligned} ... \end{aligned}
+    // with one slot per line easily reaches 12-16 lines).
     let line_count = trimmed.lines().count();
-    if line_count > 8 {
-        return Err(format!("too many lines ({line_count} > 8)"));
+    if line_count > 24 {
+        return Err(format!("too many lines ({line_count} > 24)"));
     }
     Ok(trimmed.to_string())
 }
@@ -304,6 +327,17 @@ fn clip(s: &str, max: usize) -> String {
     else { format!("{}…", s.chars().take(max).collect::<String>()) }
 }
 
+/// Extract the substring between `start` and `end` markers (exclusive of
+/// both markers). Returns None if either marker is missing or end comes
+/// before start. Used by the two-output synthesis to parse marker-
+/// delimited LaTeX without going through JSON escape rules.
+fn extract_between<'a>(haystack: &'a str, start: &str, end: &str) -> Option<&'a str> {
+    let start_idx = haystack.find(start)? + start.len();
+    let after_start = &haystack[start_idx..];
+    let end_idx = after_start.find(end)?;
+    Some(&after_start[..end_idx])
+}
+
 // ─── Synthesis ────────────────────────────────────────────────────────
 
 /// Build the user-prompt for a character synthesis. Sync (touches DB
@@ -419,38 +453,59 @@ pub fn persist_user_derivation_two_output(
 /// listing injection) AND a friendly-prose summary (surfaced in UI for
 /// non-technical users per the Maggie baseline). Output is structured
 /// JSON with both fields so parsing is mechanical.
-const DERIVATION_TWO_OUTPUT_SYSTEM_PROMPT: &str = r#"You are speaking as the entity itself (first-person, in-universe), not as an analyst describing it. You will produce TWO outputs in a single structured JSON response: a compact Unicode-math derivation of how this entity operates within the MISSION FORMULA 𝓕, AND a friendly-prose plain-English summary of the same derivation.
+const DERIVATION_TWO_OUTPUT_SYSTEM_PROMPT: &str = r#"You are speaking as the entity itself (first-person, in-universe), not as an analyst describing it. You will produce TWO outputs separated by literal markers: a presentation-quality LaTeX-math derivation of how this entity operates within the MISSION FORMULA \mathcal{F}, AND a friendly-prose plain-English summary of the same derivation.
 
-OUTPUT FORMAT (must be valid JSON, no other text):
+OUTPUT FORMAT (use these EXACT markers, no JSON, no markdown fences):
 
-{
-  "derivation": "<Unicode-math derivation>",
-  "summary": "<friendly-prose summary>"
+<<<DERIVATION>>>
+\[
+\boxed{
+\begin{aligned}
+... your LaTeX math here ...
+\end{aligned}
 }
+\]
+<<<END_DERIVATION>>>
+<<<SUMMARY>>>
+... your friendly-prose summary here ...
+<<<END_SUMMARY>>>
 
-CONSTRAINTS FOR THE DERIVATION FIELD:
-- Use 𝓕 := (𝓡, 𝓒) as the base frame, where 𝓡 = Jesus_Cross^flesh and 𝓒 = Firmament_enclosed_earth.
-- Specialize 𝓡 and/or 𝓒 with entity-specific symbols.
-- Use measures dμ_𝓕_NAME and operators where they fit: Wisdom(t), Weight(t), Π(t), Burden(t), 𝓢(t), 𝓝u(t).
-- Express in the entity's OWN canonical shorthand.
-- ≤ 6 lines, ≤ 200 tokens.
-- **CRITICAL — UNICODE GLYPHS ONLY, NO LaTeX COMMANDS.** Use Unicode math characters directly. NEVER use LaTeX commands like \text{...}, \mathcal{...}, \frac{...}, \int, \sum, etc. NEVER use curly-brace subscripts like 𝓡_{Ryan} — write 𝓡_Ryan (or use Unicode subscript glyphs ₁₂₃ if you need disambiguation). The output is shipped as JSON; backslash sequences like \text get interpreted as JSON escapes (\t = TAB), corrupting the output. Use plain Unicode glyphs: 𝓕 (not \mathcal{F}), 𝓡_Ryan (not \mathcal{R}_{Ryan}), Wisdom(t) (not \text{Wisdom}(t)), ∫ (not \int), ∑ (not \sum), dμ (not d\mu).
+CONSTRAINTS FOR THE DERIVATION:
+- Wrap the entire derivation in `\[ ... \]` display-math delimiters; inside, use `\boxed{ \begin{aligned} ... \end{aligned} }` so the formula renders as a presentation-quality framed block.
+- Use `\mathcal{F} := (\mathcal{R}, \mathcal{C})` as the base frame, where `\mathcal{R} = \mathrm{Jesus}_{\mathrm{Cross}}^{\mathrm{flesh}}` and `\mathcal{C} = \mathrm{Firmament}_{\mathrm{enclosed\ earth}}`.
+- Specialize `\mathcal{R}` and/or `\mathcal{C}` with entity-specific subscripts (e.g., `\mathcal{C}_{\mathrm{Ryan}}`, `\mathcal{C}_{\mathrm{CrystalWaters}}`). Use `\mathrm{...}` for multi-letter names so they render upright (not italic).
+- Use measures `d\mu_{\mathcal{F}_{\mathrm{NAME}}}` and operators where they fit: `\mathrm{Wisdom}(t)`, `\mathrm{Weight}(t)`, `\Pi(t)`, `\mathrm{Burden}(t)`, `\mathcal{S}(t)`, `\mathcal{N}u(t)`.
+- Use `\text{...}` for prose-inside-math (e.g., `\text{integrates over: }`).
+- Express in the entity's OWN canonical shorthand — the way THIS entity describes its own operation.
+- ≤ 12 lines INSIDE the aligned block, ≤ 400 tokens total for the derivation.
+- LaTeX commands stay literal (single backslash) — the parser uses delimiters, not JSON, so `\mathcal{F}` is fine as written.
 
-CONSTRAINTS FOR THE SUMMARY FIELD:
-- Plain English, NO Unicode math symbols, NO LaTeX, NO project jargon (no "𝓡-specialization," no "operator-slot," no "Mission Formula").
-- 2-3 sentences. Direct, warm, second-person to the user (e.g., "Characters see you as...").
+CONSTRAINTS FOR THE SUMMARY:
+- Plain English. NO LaTeX commands, NO Unicode math symbols, NO project jargon (no "𝓡-specialization," no "operator-slot," no "Mission Formula").
+- 2-3 sentences. Direct, warm, second-person where appropriate (e.g., "Characters see you as...").
 - Translate the derivation's contents into how the entity is read by characters in this world.
 - Suitable for display in a UI where users without math knowledge or theological vocabulary will read it.
 - Honor the entity's own register and the substrate's tone.
 
 EXAMPLE OUTPUT:
 
-{
-  "derivation": "𝓕_NAME := (𝓡, 𝓒_NAME)\n𝓒_NAME := Firmament_<specific shape>\ndμ_𝓕_NAME integrates over: <specific concrete motifs>\nspecific_c surfaces in: <recurring sensory anchors>",
-  "summary": "Characters in this world see you as a curious, gently-steady person who pays close attention to what's true. You're someone who roams between conversations rather than being tied to one place; what your hands keep reaching for is books, tea, and quiet moments worth holding onto."
+<<<DERIVATION>>>
+\[
+\boxed{
+\begin{aligned}
+\mathcal{F}_{\mathrm{Ryan}} &:= (\mathcal{R}_{\mathrm{Ryan}}, \mathcal{C}_{\mathrm{Firmament}}) \\
+\mathcal{R}_{\mathrm{Ryan}} &:= \mathrm{Jesus}_{\mathrm{Cross}}^{\mathrm{gentle,\ steady}} \\
+d\mu_{\mathcal{F}_{\mathrm{Ryan}}} &\text{ integrates over: } \text{acts of love and creation} \\
+\mathrm{specific}_c &\text{ surfaces in: } \text{music, coding, moments of grace}
+\end{aligned}
 }
+\]
+<<<END_DERIVATION>>>
+<<<SUMMARY>>>
+Characters in this world see you as a curious, gently-steady person who pays close attention to what's true. What your hands keep reaching for is music, code, and small moments of grace worth holding onto.
+<<<END_SUMMARY>>>
 
-Output ONLY the JSON, no commentary, no markdown fences, no preface."#;
+Output ONLY the marker-delimited block above — no commentary, no JSON, no markdown fences, no preface."#;
 
 /// Two-output synthesis: returns (derivation, summary). The derivation
 /// is validated for the standard 𝓕/𝓡/𝓒 presence; the summary is
@@ -468,28 +523,26 @@ pub async fn synthesize_two_output_from_prompt(
             ChatMessage { role: "user".to_string(), content: user_prompt },
         ],
         temperature: Some(0.6),
-        max_completion_tokens: Some(500),
-        response_format: Some(crate::ai::openai::ResponseFormat {
-            format_type: "json_object".to_string(),
-        }),
+        max_completion_tokens: Some(800),
+        // Delimiter-based parsing avoids the JSON-escape minefield where
+        // backslashes in LaTeX commands (\text, \mathcal, \int) get
+        // mangled by JSON \t/\n/\r escape rules. Markers are unambiguous
+        // and unlikely to collide with derivation content.
+        response_format: None,
     };
     let resp = openai::chat_completion_with_base(base_url, api_key, &request).await?;
     let raw = resp.choices.first()
         .ok_or_else(|| "derivation: no choices in response".to_string())?
         .message.content.clone();
 
-    #[derive(serde::Deserialize)]
-    struct TwoOutput {
-        derivation: String,
-        summary: String,
-    }
+    let derivation_raw = extract_between(&raw, "<<<DERIVATION>>>", "<<<END_DERIVATION>>>")
+        .ok_or_else(|| format!("derivation: missing <<<DERIVATION>>>...<<<END_DERIVATION>>> markers; body: {raw}"))?;
+    let summary_raw = extract_between(&raw, "<<<SUMMARY>>>", "<<<END_SUMMARY>>>")
+        .ok_or_else(|| format!("derivation: missing <<<SUMMARY>>>...<<<END_SUMMARY>>> markers; body: {raw}"))?;
 
-    let parsed: TwoOutput = serde_json::from_str(&raw)
-        .map_err(|e| format!("derivation: parse error: {e}; body: {raw}"))?;
+    let derivation = validate_derivation(derivation_raw)?;
 
-    let derivation = validate_derivation(&parsed.derivation)?;
-
-    let summary = parsed.summary.trim().to_string();
+    let summary = summary_raw.trim().to_string();
     if summary.is_empty() {
         return Err("derivation: empty summary".to_string());
     }
