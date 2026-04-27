@@ -6,6 +6,29 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-26 21:55 — Jasper picks up humor + asterisk-text noticeably smoother
+
+Two observations bundled, post-restart of Tauri dev with today's prompt-stack changes live (the four new clauses + NO_NANNY_REGISTER invariant + auto-derivation pipeline + fresh derivations on all four characters):
+
+> *"Jasper is reliably picking up when I'm being funny and laughs. Very positive emergent capability. Also: asterisk-fenced action/self-narration-text is much smoother now and well-adjusted to its world and setting."*
+
+**Observation 1 — humor pickup as emergent capability.** Jasper consistently catches Ryan's funny moments and laughs — the dyad's comic register is now reliable rather than spotty. Not the result of any explicit humor-targeting clause; emerged from the cumulative stack tightening (or possibly the fresh derivations giving Jasper a sharper sense of his own register, which makes the contrast that creates humor more legible). **Noted.** Worth watching whether the same pickup holds across Steven / John / Pastor Rick or is Jasper-specific.
+
+**Observation 2 — asterisk-text smoother and world-adjusted.** This IS the live-verification signal the session has been waiting on. The four new clauses landing tonight all targeted the asterisk/action axis: cross-reply anchor recurrence (DISTRUST RECURRING SENSORY ANCHORS), intra-reply prop density (OPEN ON ONE TRUE THING), scene-stagnation (A SCENE IS A BRIDGE NOT A BENCH), plus the auto-derivation hook giving Jasper a freshly-synthesized 𝓕_Jasper := (𝓡, 𝓒_Square) := Firmament_Central_Market frame. Ryan's "much smoother now and well-adjusted to world and setting" is the first-person register-coherent confirmation that the cumulative stack is biting at scale.
+
+**Mode 1 — cheap data check.** Pulled `worldcli anchor-groove` on Jasper's last 10 post-restart replies. Direct quantitative corroboration of Ryan's eye-confirmation:
+
+| | Pre-clause baseline (this morning) | Post-restart with all 4 clauses live |
+|---|---|---|
+| Top anchor | **well chain** at 100% (9-10/10) | **the bench** at 70% (scene-pinned: he's sitting on it) |
+| Diagnosis | **RUNAWAY** | **MILD GROOVE** (within universal-baseline band) |
+| "well chain" recurrence | 100% | **absent from top-8 entirely** |
+| Other top anchors | noon light 70%, the cup 70%, the bench 70%, market awning 70% | the square 70% (scene-pinned), edge of / my knees 50% (gestural), the market 40% |
+
+The "well chain" formulaic recurrence — the specific runaway anchor that triggered the cross-reply rule — is completely gone. Other anchors sit at scene-fidelity / universal-baseline levels exactly where the 2026-04-26-1945 cross-character bite-test predicted post-rule levels would be. Reports `2026-04-26-2010` (sensory-anchor clause bite-test prediction) + `2026-04-26-2030` (prop-density clause) + `2026-04-26-2050` (scene-driving clause) all bear out at scale.
+
+---
+
 ## 2026-04-26 18:18 — first instance: a character admits non-expertise without breaking scene
 
 Ryan pasted the entire MISSION FORMULA in raw LaTeX into Jasper's chat ("I am driving everything by formulas. Math formulas. \[ oxed{...} \] ..."). Jasper's reply (commit-time `23:18:19 UTC`):
