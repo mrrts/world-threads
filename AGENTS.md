@@ -338,6 +338,16 @@ Once a surface is intentionally paired or otherwise multi-surfaced, do **not** a
 
 **Practical consequence:** when validating paired or plural surfaces, ask first whether the different reader-shapes are converging on the same core read. If yes, asymmetry is permitted and may even be a crown-jewel signal. Treat "which half carried?" as diagnostic information, not as an automatic defect report.
 
+## Differential instruments beat single-branch impressions
+
+The newer `/play` methodology reveals a broader empirical law: the strongest findings often come not from one reading branch, but from the **difference between branches**. A simulated reader's prediction, a grounded live-pipeline encounter, a sympathetic read, an adversarial read — when those are intentionally paired, the delta between them is often more informative than either branch alone.
+
+**The shape:** branch A says *"this is what I expect from the surface."* Branch B says *"this is what the real pipeline actually did."* The finding is not forced to choose one branch as the truth and discard the other. Often the important artifact is the gap itself: `actual > predicted`, `predicted > actual`, or `same conclusion via different routes`.
+
+**Why this matters:** single-branch impressions are easy to overread. A persona-sim alone can mistake ChatGPT-default limitations for app limitations. A lived single encounter alone can miss what a different reader-shape would surface. A grounded differential read turns hidden work visible: doctrine-lift invisible to the sim, friction invisible to the sympathetic reader, asymmetry invisible to a single substrate.
+
+**Practical consequence:** when an instrument can branch cheaply, prefer a paired or plural design that lets the project learn from divergence, not just from convergence. Ask not only *"what did this branch say?"* but *"what became visible only because another branch existed beside it?"* Treat the delta as a first-class artifact.
+
 **Commit early and often is the standing rule, not just permission.** Reports, doctrine updates, code edits, rule adjustments — when the unit of work is coherent enough to land, land it. Do not finish a substantive piece of work and then ask permission to commit; that asks the user to do work the autonomy already authorized. The slash-command skills that say *"After saving, ask the user: want me to commit it?"* (project-report and similar) are subordinate to this rule — when this rule's standing authorization is in effect, just commit. Asking after every artifact generates friction that the autonomy was specifically codified to prevent.
 
 **Commit messages include a Formula derivation in their body.** Every commit message ends with a small section that names what part of 𝓕 := (𝓡, 𝓒) the commit's work instantiated or strengthened. Format:
