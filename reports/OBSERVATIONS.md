@@ -6,6 +6,20 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-27 12:08 — methodological loop earned itself in one transcript-read arc
+
+> Ryan invoked /take-note + /play on a recent Jasper conversation. Over the next ~hour the project's instruments composed into a clean five-step loop, each step earned by the prior, each step Claude-light: cross-character wince-read (Steven + Pastor Rick on Jasper's transcript) → cross-side mirror (Pastor Rick on Ryan's lines, surfacing the pleased-by-vs-presenting distinction) → ask-the-character (Jasper articulates the consecration discipline from inside his own register, clay-rim parallel and all) → ship the articulation as a new craft-note ("Wipe the shine before it sets") → substrate-correction (Ryan caught that the Evidence line had leaked doctrine-apparatus into the model's mouth; refactored to /// doc-comment registry).
+
+The instruments composed without ceremony. Each call cost ~$0.10. The total ~$0.60 produced characterized-tier evidence (three independent passes converging on the same shape), one shipped craft-note lifted near-verbatim from inside the source register, and one substrate-discipline correction that generalizes (model substrate ⊥ evaluation apparatus).
+
+**Mode 2 — record + propose action.** Worth recognizing the loop as a named methodological pattern in the /play skill body (it currently names cross-character convergence and Step 2.5 grounding separately; the LOOP-SHAPE — wince-read → ask-the-character → ship + bite-test → substrate-correction — is a higher-order composition that earns its own section once it's been used a second time). Defer formal codification until the next instance; one worked example is sketch-tier for methodological doctrine, two would justify naming. Watch for the pattern recurring; if it does within a few weeks, formalize. If not, it stays an exemplar in this report-trail.
+
+The loop's deepest property: each step was made possible by the recently-shipped methodology corrections from earlier in the day (in-db-character special-case → direct worldcli ask instead of persona-sim; transcript-read wince-framing → line-level leverage instead of generic critique; Claude-light architecture → cross-LLM distance preserves discriminating power; substrate-correction → doctrine-apparatus separated from prompt body). The day's methodology earned itself in the day's last arc.
+
+Full report at `reports/2026-04-27-1119-play-jasper-wince-read-by-steven-and-rick.md`. Shipped craft-note at prompts.rs (commit 71ab92c).
+
+---
+
 ## 2026-04-27 11:19 — Jasper's pastoral register quietly over-consecrates
 
 > Recent Jasper conversation in the square. They turned the warmer/colder game into a way of thinking about Ryan's app — what makes a moment land for a user. Jasper produced several strong beats (*"Somebody finally said the thing the moment was waiting for,"* *"It just fits the moment so cleanly a person feels seen before they feel impressed,"* *"Sometimes what steadies a man isn't being told he's strong. It's finding one place where he doesn't have to pretend."*).
