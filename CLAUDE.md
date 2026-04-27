@@ -308,6 +308,16 @@ Once a chooser is treated as a control surface, its **wording** becomes load-bea
 
 **Why it fails:** the branches are vague, overlapping, and partly decorative. A numeric reply would still force Claude Code to invent the real next move after the fact.
 
+## LLM outputs are first-reading surfaces now
+
+Across this repo, an increasing number of LLM outputs are no longer being treated as verdicts or finished artifacts. They are being treated as **first readings**: a strong first pass that reaches the user as something revisable, answerable, or translatable at the human surface.
+
+**Why this matters:** once the output is a first reading, the design burden shifts. The important question is no longer only *"did the model say something plausible?"* but *"does the surface make clear that the user still has authorship over what becomes canon, what gets accepted, what gets rewritten, and what gets spoken plainly?"*
+
+**Practical consequence:** when building a classifier, synthesizer, chooser, or summary surface, prefer shapes that preserve revision and answerability. Good patterns include: rewriteable proposals, skip-one-by-one proposal lists, regenerate / ask-for-another-reading actions, dual-output translation pairs (substance + plain-English cashout), and explicit language that the model is offering a reading rather than locking a result.
+
+**What to avoid:** don't let model output inherit false finality from UI framing. A classifier suggestion is not self-justifying because it is structured. A derivation is not user-facing just because it is valid. A summary is not plain enough just because it is shorter. If the human surface is meant to retain authorship, the interface and doctrine should say so.
+
 **Commit early and often is the standing rule, not just permission.** Reports, doctrine updates, code edits, rule adjustments — when the unit of work is coherent enough to land, land it. Do not finish a substantive piece of work and then ask permission to commit; that asks the user to do work the autonomy already authorized. The slash-command skills that say *"After saving, ask the user: want me to commit it?"* (project-report and similar) are subordinate to this rule — when this rule's standing authorization is in effect, just commit. Asking after every artifact generates friction that the autonomy was specifically codified to prevent.
 
 **Commit messages include a Formula derivation in their body.** Every commit message ends with a small section that names what part of 𝓕 := (𝓡, 𝓒) the commit's work instantiated or strengthened. Format:
