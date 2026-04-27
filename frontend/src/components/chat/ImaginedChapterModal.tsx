@@ -646,14 +646,14 @@ export function ImaginedChapterModal({
                         onClick={() => setConfirmingClose(null)}
                         disabled={canonizing}
                       >
-                        Cancel
+                        Keep the chapter open
                       </Button>
                       <Button
                         variant="outline"
                         onClick={() => { setConfirmingClose(null); onClose(); }}
                         disabled={canonizing}
                       >
-                        Close without canonizing
+                        Close it and leave it outside the story
                       </Button>
                       <Button
                         onClick={async () => {
@@ -667,7 +667,7 @@ export function ImaginedChapterModal({
                         className="bg-amber-700 hover:bg-amber-800 text-amber-50"
                       >
                         {canonizing ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <ScrollText size={14} className="mr-2" />}
-                        Canonize
+                        Canonize it into the story
                       </Button>
                     </div>
                   </div>
@@ -687,7 +687,7 @@ export function ImaginedChapterModal({
                     </p>
                     <div className="flex justify-end gap-2 pt-2">
                       <Button variant="ghost" onClick={() => setBulkResetConfirm(false)} disabled={canonizing}>
-                        Cancel
+                        Leave canonization as it is
                       </Button>
                       <Button
                         onClick={bulkResetCanonization}
@@ -695,7 +695,7 @@ export function ImaginedChapterModal({
                         variant="destructive"
                       >
                         {canonizing ? <Loader2 size={14} className="animate-spin mr-1.5" /> : null}
-                        Reset all
+                        Decanonize every chapter in this chat
                       </Button>
                     </div>
                   </div>
