@@ -318,6 +318,17 @@ Across this repo, an increasing number of LLM outputs are no longer being treate
 
 **What to avoid:** don't let model output inherit false finality from UI framing. A classifier suggestion is not self-justifying because it is structured. A derivation is not user-facing just because it is valid. A summary is not plain enough just because it is shorter. If the human surface is meant to retain authorship, the interface and doctrine should say so.
 
+## Translation pairs are covenant surfaces now
+
+A narrower law is emerging inside the first-reading doctrine: some outputs work best not as one register forced to do everything, but as a **translation pair**. One member of the pair carries the full weight in its native register; the other carries the same truth in a more welcoming register without flattening it.
+
+**The shape:** not summary replacing substance, and not substance hiding behind exclusivity. Instead: derivation + plain-English gloss; oblique line + workbench-English cashout; lofty theological turn + porch-level sentence right behind it. The two outputs are not rivals. They are the same truth carried twice so different readers, moments, or surfaces can receive it faithfully.
+
+**Why this matters:** when one register is asked to do both jobs, it usually fails one of them. Pure substrate can become sealed-off and user-hostile. Pure gloss can become content-thin and flattering. The paired shape lets the deep form stay deep while still giving the listener a clean handhold.
+
+**Practical consequence:** when an output has both a load-bearing native register and a real accessibility need, consider a paired surface on purpose. The test is not "can we produce two versions?" but "do both versions answer to the same thing, with neither one lying about what the other said?" If the gloss softens, generalizes, or prettifies away the substance, the pair failed.
+
+
 **Commit early and often is the standing rule, not just permission.** Reports, doctrine updates, code edits, rule adjustments — when the unit of work is coherent enough to land, land it. Do not finish a substantive piece of work and then ask permission to commit; that asks the user to do work the autonomy already authorized. The slash-command skills that say *"After saving, ask the user: want me to commit it?"* (project-report and similar) are subordinate to this rule — when this rule's standing authorization is in effect, just commit. Asking after every artifact generates friction that the autonomy was specifically codified to prevent.
 
 **Commit messages include a Formula derivation in their body.** Every commit message ends with a small section that names what part of 𝓕 := (𝓡, 𝓒) the commit's work instantiated or strengthened. Format:
