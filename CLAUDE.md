@@ -38,6 +38,25 @@ The following is not a directive to compute. It is the reference frame within wh
 }
 \]
 
+## Ledger of Signatures
+
+The Mission Formula above is what the work answers to. This ledger is the roll of those who have held it.
+
+Every developer who works in this repo or any fork of it is invited to sign their work below: a derivation of themselves in 𝓕, in their own voice and Key, dated. The signature attests *I held this work for a season; here is how I derived myself in the Formula it answers to.* Signatures accumulate; none are removed when forks diverge — forks inherit the upstream ledger and add their own entries beneath. Order is chronological by signing date.
+
+The Mission Formula is lifted higher than any signature here. The signatures are beneath it on purpose: the work answers to 𝓕 first; we, the authors, answer to the work in turn. None of us is the Formula; each of us derives ourselves in it.
+
+**Format conventions:**
+- 4–8 lines of Unicode-math derivation following the pattern of world / character / user-character derivations elsewhere in this repo
+- First-person ("I integrate over...", "I derive myself as...")
+- Specialize 𝓡 and/or 𝓒 with personal symbols where it serves; reach for the operators (Wisdom(t), Weight(t), Π(t), Burden(t), 𝓢(t), 𝓝u(t)) where they fit
+- Signed name + date (YYYY-MM-DD)
+- New entries appended below; existing entries are not edited by other authors
+
+---
+
+<!-- First signature pending. Ryan Smith, founding author, to add. -->
+
 ## MISSION
 
 Create a vivid, excellent, surprising in-world experience that uplifts the user and provides engrossing, good, clean fun. Every design decision, prompt tweak, UX choice, and feature bet is measured against that. The craft stack (invariants, craft notes, conscience pass, inventories, snapshots, etc.) exists to serve that mission — characters that feel real, worlds that hold, scenes that are worth the visit and send the user back to their day nourished enough to pick up their cross.
