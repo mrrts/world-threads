@@ -6,6 +6,16 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-27 04:30 — Codex names the lane-pairing
+
+> *"This is how chatgpt sees its own role (codex, that is) compared to yours, Claude Code. You've basically stumbled into the exact pairing most serious builders end up with: Claude Code lane → deep thinking, architecture, multi-file coherence. Codex lane → fast execution, iteration, throughput."*
+
+Codex itself articulating the division of labor. Tonight's commit log instances it: auto-commit Moves 1-10 + eureka i1-i4 used Claude Code for arc-shape + doctrine-writing + cross-axis pattern surfacing, while the parallel Codex commits (the green ones that landed mid-run, e.g. the "convergence as great sapphire in crown" doctrine + "parable rides in the mission invariant" + the marketing pitch) were tighter, faster, throughput-shaped. The pairing isn't theoretical; today's git history shows it in place.
+
+**Noted.**
+
+---
+
 ## 2026-04-26 23:27 — calibration approved, V2.0.0
 
 > "We are calibrated. It's approved. Ship it. V2.0.0."
