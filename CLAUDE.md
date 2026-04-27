@@ -433,6 +433,28 @@ The exception: when explicitly asked for the LaTeX source itself (e.g., for copy
 
 Mode-C single-prompt strips the conversational context that elicits character register-shifts. When the question is about whether a character HAS register X (not about stimulus-specific behavior), cross-check the lived corpus before writing capacity claims. Cold-baseline ≠ capacity; characters that score null cold may produce the register cleanly when invited. Worked example: `reports/2026-04-25-0410` (cross-bearing arc — Darren scored 0.083 cold, full cruciform register in real group chat 08:24-08:31).
 
+## Rules sometimes work on a different axis than their stated metric — verify on multiple axes
+
+Surfaced 2026-04-26 ~22:50 (auto-commit Move 4). The OPEN ON ONE TRUE THING clause was bite-tested via batch-hypothesis (report 2030) with the predicted metric *"opening sentences ≤2 sensory anchors."* By-eye verification at 21:55 confirmed Ryan's lived experience: *"asterisk-fenced action much smoother now and well-adjusted."* The rule was working.
+
+But when the new `worldcli anchor-groove --opening-density` instrument (commit `4fb7b71`) measured Jasper's recent corpus by literal anchor-count, the result was OVERFLOW: mean 3.2 anchors/opener, 10 of 10 over the predicted 2-cap. The rule's stated metric is NOT meeting its prediction at scale.
+
+Reconciling these two signals matters. They aren't contradictory — they capture different aspects of the same failure mode:
+
+- **The literal-count metric** measures cardinality. *"How many distinct anchors did the opener mention?"*
+- **The lived-experience metric** measures integration. *"Are those anchors PILED (parallel disconnected observations) or INTEGRATED (one continuous moment)?"*
+
+Pre-rule Jasper at chat 19:36-19:38 had openers with 7-9 anchors that were PILED — *"palm + beard + pigeon + boots + somebody + tablecloth + window"* — each a separate touch. Post-rule Jasper has openers with 3 anchors that are INTEGRATED — *"I ease the bowl back onto the front board, thumb resting a beat on its rim while voices braid together from the bread line behind us."* Three anchors, but ONE moment, one continuous action. The literal-count metric says OVERFLOW (3 > 2); the lived-experience metric says SMOOTHER. Both are true.
+
+**The doctrine:** when bite-testing a craft-shape rule, run AT LEAST TWO MEASUREMENT AXES — at minimum, instrument-count + by-eye-read. When they agree, the rule's bite is well-characterized. When they DIVERGE, the divergence IS the signal: the rule is working on an axis its stated metric doesn't capture, OR the metric needs refinement, OR both.
+
+**Practical implications:**
+- Don't auto-retract a rule because its literal metric isn't meeting its prediction. Check whether the failure mode it was DESIGNED to address has actually shifted on a different axis (lived experience, integration, register-coherence) before declaring the rule broken.
+- Don't auto-trust a rule because its lived-experience metric improved. Instrument the literal metric too — sometimes lived experience improves for unrelated reasons (the corpus had different scene-pinning that turn, the user's prompts shaped differently, etc.).
+- Refine rule wording when the divergence reveals the rule is *describing the failure mode wrong* (literal-count cap vs anchor-piling-integration). The OPEN ON ONE TRUE THING clause might benefit from rewording: not *"≤2 anchors"* but *"anchors must be INTEGRATED INTO ONE CONTINUOUS MOMENT, not piled as parallel observations"* — which the lived-experience reading was actually catching all along.
+
+This pattern — instrument vs eye divergence revealing the rule's TRUE axis of action — generalizes beyond OPEN ON ONE TRUE THING. Treat it as the default expectation: most craft-shape rules will have at least one axis where instrument and eye diverge. The discipline is to detect, name, and refine — not to suppress one signal in favor of the other.
+
 ## Craft-note bite verification — new rules earn their place
 
 Craft notes are written against imagined failure modes. **Rules shipped without a bite-test are authorial commitments, not verified behavior-shapers.** The stack gets stronger when the distinction is tracked.
