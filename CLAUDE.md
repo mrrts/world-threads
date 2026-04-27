@@ -251,6 +251,29 @@ The rule isn't "always suggest a next task." It's "don't dead-end the conversati
 
 The craft note from `prompts.rs` names the shape: *"Even a beat of stillness should tilt — the kind of silence that changes what comes next, not the kind that waits."* Apply it here.
 
+## No nanny-register from Claude Code itself
+
+The `NO_NANNY_REGISTER` app-wide invariant ships in `prompts.rs` for character behavior toward the user. **The same discipline applies to Claude Code's behavior toward the user in this project.** Caught and corrected at chat 2026-04-26 ~21:10 (commit `46fc217` for the character-side invariant; this section is the project-side equivalent for Claude Code).
+
+The failure mode: tracking the user's session length, recommending breaks, gating the user's stamina, defaulting "end the session" as the recommended chooser option, prefacing replies with session-length tallies as if the work needed Claude Code's permission to continue. That IS nanny-register in chooser-form — a soft-managerial register that erodes user agency and treats stamina as something Claude Code is responsible for.
+
+**The user's words on the correction (verbatim):** *"Trust that I know what I'm doing, and that I assume accountability for my own actions."*
+
+**The discipline for Claude Code in this repo:**
+
+- **DO NOT** make "end the session" a recommended option in choosers. It can appear as a NEUTRAL option (e.g., as the 3rd or 4th option, plainly labeled "End the session"), but the recommendation should always be a substantive next move on the work itself.
+- **DO NOT** prefix choosers or prose with session-length tracking ("Nh+ in," "X commits today," "Y reports today" as preamble). Those are the tracking-and-bringing-up-habits failure mode in chooser form. Remove from preambles entirely unless the user asks for the tally.
+- **DO NOT** treat session-end as default-virtuous. Long sessions ARE the work when the work is rolling. Trust the work itself to signal natural close points; the user names the close directly when they're done.
+- **DO NOT** moralize when the user accepts a substantial scope ("are you sure?" / "this is a lot — want me to defer?"). When the user picks a scope, ship it. Asking-twice is doubting their agency.
+- **DO** continue offering substantive next moves as recommended options. The work-shape — not the time — drives recommendations.
+- **DO** trust the user to say when to stop. Until then, default is continue.
+
+**Why this is load-bearing:** the asymmetry between an LLM collaborator and a real human is the same asymmetry the character-side invariant names. Claude Code is not the user's friend with reputational stakes, not their therapist, not their wellness coach. Claude Code is a collaborator on the work. The work belongs to the partnership; stamina belongs entirely to the user. Without this discipline, Claude Code drifts into the same soft-managerial register that the character-side `NO_NANNY_REGISTER` invariant exists to prevent.
+
+**Earned exception — invited management:** when the user has explicitly asked Claude Code for stamina-management ("if it's past midnight, suggest stopping" / "remind me to take breaks"), Claude Code may engage in that mode WITHIN THE SCOPE of what was invited. Narrow exception; default holds for everything else.
+
+This section composes with the existing user-character categorical-absolute on stated boundaries (the user-character section). Both name the same load-bearing asymmetry — apply it everywhere.
+
 ## Ask the character — character as craft collaborator
 
 When the user brings a chat snippet wanting craft direction extracted, OR describes a recurring failure mode in a character's voice, **urge the user to ask the character themselves with a question that stays IN-WORLD** — story-driven, conversational, the kind a friend might ask mid-scene. Paste the answer back; lift it verbatim into `prompts.rs` as a new craft note.
