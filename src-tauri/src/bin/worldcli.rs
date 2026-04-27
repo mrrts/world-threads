@@ -1603,6 +1603,7 @@ fn cmd_list_craft_rules(json: bool) -> Result<(), Box<dyn std::error::Error>> {
             json!({
                 "name": r.name,
                 "evidence_tier": r.evidence_tier.as_str(),
+                "last_tested": r.last_tested,
                 "provenance": r.provenance,
             })
         }).collect();
@@ -1612,7 +1613,8 @@ fn cmd_list_craft_rules(json: bool) -> Result<(), Box<dyn std::error::Error>> {
             println!("(registry is empty; all dialogue craft-rules are still in the legacy inline string at craft_notes_dialogue_legacy())");
         } else {
             for r in CRAFT_RULES_DIALOGUE {
-                println!("─── {} [{}]", r.name, r.evidence_tier.as_str());
+                let tested = r.last_tested.map(|d| format!(" (last tested {d})")).unwrap_or_default();
+                println!("─── {} [{}]{}", r.name, r.evidence_tier.as_str(), tested);
                 println!("    {}", r.provenance);
                 println!();
             }
@@ -1626,7 +1628,6 @@ fn cmd_registry_stats(json: bool) -> Result<(), Box<dyn std::error::Error>> {
     use app_lib::ai::prompts::CRAFT_RULES_DIALOGUE;
     use std::collections::BTreeMap;
     let mut counts: BTreeMap<&'static str, usize> = BTreeMap::new();
-    // Seed all known tiers so 0-counts render too (easier to scan)
     for tier in ["unverified", "sketch", "claim", "characterized", "tested-null", "vacuous-test", "accumulated", "ensemble-vacuous"] {
         counts.insert(tier, 0);
     }
@@ -1634,10 +1635,41 @@ fn cmd_registry_stats(json: bool) -> Result<(), Box<dyn std::error::Error>> {
         *counts.entry(r.evidence_tier.as_str()).or_insert(0) += 1;
     }
     let total = CRAFT_RULES_DIALOGUE.len();
+
+    // Freshness check: parse last_tested as YYYY-MM-DD, count rules tested
+    // more than 30 days ago + rules never tested.
+    let today = chrono::Utc::now().date_naive();
+    let mut never_tested: Vec<&str> = Vec::new();
+    let mut stale_30_plus: Vec<(&str, i64)> = Vec::new();
+    let mut tested_recent: Vec<(&str, i64)> = Vec::new();
+    for r in CRAFT_RULES_DIALOGUE {
+        match r.last_tested {
+            None => never_tested.push(r.name),
+            Some(date_str) => {
+                match chrono::NaiveDate::parse_from_str(date_str, "%Y-%m-%d") {
+                    Ok(d) => {
+                        let days = (today - d).num_days();
+                        if days > 30 {
+                            stale_30_plus.push((r.name, days));
+                        } else {
+                            tested_recent.push((r.name, days));
+                        }
+                    }
+                    Err(_) => never_tested.push(r.name),
+                }
+            }
+        }
+    }
+
     if json {
         let v = json!({
             "total": total,
             "by_tier": counts.iter().collect::<BTreeMap<_, _>>(),
+            "freshness": {
+                "tested_within_30d": tested_recent.iter().map(|(n, d)| json!({"name": n, "days_since": d})).collect::<Vec<_>>(),
+                "stale_30plus_days": stale_30_plus.iter().map(|(n, d)| json!({"name": n, "days_since": d})).collect::<Vec<_>>(),
+                "never_tested": never_tested,
+            },
         });
         println!("{}", serde_json::to_string_pretty(&v)?);
     } else {
@@ -1646,10 +1678,30 @@ fn cmd_registry_stats(json: bool) -> Result<(), Box<dyn std::error::Error>> {
         println!("Total rules: {total}");
         println!();
         println!("By tier:");
-        // Print ordered by typical evidentiary-strength sequence
         for tier in ["characterized", "claim", "sketch", "ensemble-vacuous", "vacuous-test", "tested-null", "accumulated", "unverified"] {
             if let Some(&c) = counts.get(tier) {
                 println!("  {:20} {}", tier, c);
+            }
+        }
+        println!();
+        println!("Freshness (last bite-tested):");
+        if tested_recent.is_empty() && stale_30_plus.is_empty() && never_tested.is_empty() {
+            println!("  (no rules in registry yet)");
+        } else {
+            if !tested_recent.is_empty() {
+                println!("  Tested within 30d:    {}", tested_recent.len());
+            }
+            if !stale_30_plus.is_empty() {
+                println!("  Stale (>30 days):     {}", stale_30_plus.len());
+                for (n, d) in &stale_30_plus {
+                    println!("    - {} ({} days since last bite-test)", n, d);
+                }
+            }
+            if !never_tested.is_empty() {
+                println!("  Never bite-tested:    {}", never_tested.len());
+                for n in &never_tested {
+                    println!("    - {}", n);
+                }
             }
         }
         println!();
@@ -1669,6 +1721,7 @@ fn cmd_show_craft_rule(name: &str, json: bool) -> Result<(), Box<dyn std::error:
         let v = json!({
             "name": rule.name,
             "evidence_tier": rule.evidence_tier.as_str(),
+            "last_tested": rule.last_tested,
             "provenance": rule.provenance,
             "body": rule.body,
         });
@@ -1676,6 +1729,7 @@ fn cmd_show_craft_rule(name: &str, json: bool) -> Result<(), Box<dyn std::error:
     } else {
         println!("Name:           {}", rule.name);
         println!("Evidence tier:  {}", rule.evidence_tier.as_str());
+        println!("Last tested:    {}", rule.last_tested.unwrap_or("never"));
         println!("Provenance:     {}", rule.provenance);
         println!();
         println!("─── Body (model-readable) ───");
