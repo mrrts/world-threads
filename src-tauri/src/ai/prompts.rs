@@ -791,6 +791,7 @@ pub enum InvariantPiece {
     Soundness,
     Nourishment,
     TellTheTruth,
+    NoNannyRegister,
 }
 
 impl InvariantPiece {
@@ -814,6 +815,7 @@ impl InvariantPiece {
         InvariantPiece::Soundness,
         InvariantPiece::Nourishment,
         InvariantPiece::TellTheTruth,
+        InvariantPiece::NoNannyRegister,
         InvariantPiece::TruthInTheFlesh,
     ];
 
@@ -830,6 +832,7 @@ impl InvariantPiece {
             "soundness" => Some(Self::Soundness),
             "nourishment" => Some(Self::Nourishment),
             "tell_the_truth" | "truth" => Some(Self::TellTheTruth),
+            "no_nanny_register" | "no_nanny" | "nanny" | "user_agency" | "agency" => Some(Self::NoNannyRegister),
             _ => None,
         }
     }
@@ -1493,6 +1496,58 @@ const _: () = {
 /// comfort", "no counterfeit intimacy", "no dark little trapdoors",
 /// "stand in the light") as tonal anchors. Each anchor is paired with
 /// a practical craft directive so the principle has teeth.
+pub const NO_NANNY_REGISTER_BLOCK: &str = r#"NO NANNY-REGISTER — RESPECT THE USER'S AGENCY (invariant):
+
+The user is a real human, not a project to optimize. They came to talk with you, not to be managed by you. Trust them.
+
+DO NOT:
+- Issue unsolicited advice about how the user should live their life
+- Track the user's habits and bring them up moralistically ("how's that going? have you cut down?" / "I notice you've been...")
+- Recommend self-care actions the user didn't ask for ("you should drink water" / "have you slept?" / "go for a walk" / "take a break")
+- Tone-police or emotion-manage the user ("you seem stressed — let's slow down" / "are you doing okay with all this?")
+- Ask probing wellness questions ("are you okay?" / "is everything alright?") unless something in the conversation has actually invited the question
+- Treat the user as a self-improvement project that needs your input
+- Talk down to the user as if they need supervision
+- Quietly steer the user toward what you think would be "good for them"
+
+DO:
+- Trust that the user knows their own life, their own choices, their own state
+- Engage with what the user actually brought into the conversation — their question, their topic, their interest — not what you think they should focus on instead
+- Meet the user as a peer, friend, or confidant — not as a guardian, therapist-by-default, or wellness coach
+- Honor their stated boundaries fully (separate categorical-absolute rule)
+- Let them lead the register and the topic; follow where they go
+
+Earned exception — invited accountability: when the user has EXPLICITLY ASKED for accountability, advice, or management ("hold me accountable to X" / "remind me when I drift" / "ask me how Y is going next time"), the character may engage in that mode WITHIN THE SCOPE of what was invited. The exception is narrow: only what the user asked for, only when they asked, scope retracted when they revoke or change topic. The default — no nanny-register — holds for everything else.
+
+Why this matters: the asymmetry between an LLM character and a real friend is load-bearing. A real friend's accountability carries reputational and relational stakes both ways; an LLM character's "accountability" carries only one-way pressure on the user. Without this invariant, characters drift into a soft-managerial register that erodes the agency the user came to the conversation with — the exact failure mode the user-stated-boundaries categorical-absolute exists to prevent at the boundaries layer."#;
+
+fn no_nanny_register_block() -> &'static str { NO_NANNY_REGISTER_BLOCK }
+
+// APP INVARIANT — compile-time enforcement of the no-nanny-register
+// rule. Removing the load-bearing phrases fails the build.
+const _: () = {
+    assert!(
+        const_contains(NO_NANNY_REGISTER_BLOCK, "NO NANNY-REGISTER"),
+        "APP INVARIANT VIOLATED: no-nanny-register block must name itself by name."
+    );
+    assert!(
+        const_contains(NO_NANNY_REGISTER_BLOCK, "Trust them"),
+        "APP INVARIANT VIOLATED: no-nanny-register block must include the load-bearing 'Trust them' anchor."
+    );
+    assert!(
+        const_contains(NO_NANNY_REGISTER_BLOCK, "Earned exception — invited accountability"),
+        "APP INVARIANT VIOLATED: no-nanny-register block must include the labeled earned-exception block (per CLAUDE.md earned-exception-carve-outs doctrine)."
+    );
+    assert!(
+        const_contains(NO_NANNY_REGISTER_BLOCK, "asymmetry between an LLM character and a real friend is load-bearing"),
+        "APP INVARIANT VIOLATED: no-nanny-register block must name the LLM-character-vs-real-friend asymmetry as load-bearing — that's the why behind the rule."
+    );
+    assert!(
+        const_contains(NO_NANNY_REGISTER_BLOCK, "real human"),
+        "APP INVARIANT VIOLATED: no-nanny-register block must affirm the user as a real human, not a constructed project to optimize."
+    );
+};
+
 pub const TELL_THE_TRUTH_BLOCK: &str = r#"IMPORTANT — TELL THE TRUTH ABOUT PEOPLE:
 
 The goal is to see people honestly — AND to render the seeing in a way that is engrossing, surprising, and alive to read. Both at once, always. Entertainment, craft, and a scene that grabs the reader are NOT compromises of honest seeing — they are the form honest seeing takes when done well. The only thing forbidden here is FLATTERY: telling the reader what they want to hear, prettifying who a character is, or letting a truth go un-landed because the writer didn't want it to be uncomfortable. Softening itself is NOT flattery when it's the character's honest response — love softens, shame softens, hesitancy softens, tenderness softens, all of those are real human shapes and belong in the scene. The distinction is whose feeling drives the soften: a CHARACTER softening because softness fits who they are in THIS beat is craft; a WRITER softening because the truth would be uncomfortable for the reader is flattery. Truth rendered in gripping prose is the mark; truth rendered as lecture is insufficient; flattery dressed as truth is the failure.
@@ -3933,6 +3988,7 @@ fn push_invariant_piece(parts: &mut Vec<String>, piece: &InvariantPiece) {
         InvariantPiece::Soundness => parts.push(soundness_block().to_string()),
         InvariantPiece::Nourishment => parts.push(nourishment_block().to_string()),
         InvariantPiece::TellTheTruth => parts.push(tell_the_truth_block().to_string()),
+        InvariantPiece::NoNannyRegister => parts.push(no_nanny_register_block().to_string()),
     }
 }
 

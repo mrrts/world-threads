@@ -4218,6 +4218,7 @@ fn invariant_piece_name(p: &app_lib::ai::prompts::InvariantPiece) -> &'static st
         IP::Soundness => "soundness",
         IP::Nourishment => "nourishment",
         IP::TellTheTruth => "tell_the_truth",
+        IP::NoNannyRegister => "no_nanny_register",
     }
 }
 
