@@ -111,7 +111,14 @@ Closing artifact:
 
 1. **Final log entry** with run-totals (iterations completed, total cost, time elapsed, sentence on whether the run hit the genius bar consistently or had dry stretches)
 2. **One-sentence closing reflection in chat** (per CLAUDE.md "Nudge the action forward after a closing beat" — name what landed; one forward-pointing seed; nothing more)
-3. **AskUserQuestion chooser** per project law (the every-turn-AskUserQuestion Stop hook is compile-enforced; the closing reflection does NOT replace the chooser — both must ship). Default chooser: {Continue / Exit} unless a context-fitting set of options surfaces from the run's discoveries.
+3. **AskUserQuestion chooser** per project law (the every-turn-AskUserQuestion Stop hook is compile-enforced; the closing reflection does NOT replace the chooser — both must ship). Prefer a context-real branch set drawn from the run's discoveries. Default shape:
+
+   1. the real next move on the work the discovery most naturally opens
+   2. a materially different branch
+   3. a third branch only if it is genuinely distinct
+   4. `Provide your own next move.`
+
+   Reach for bare `{Continue, Exit}` only when no sharper branching honestly exists.
 
 ## Log format — `reports/YYYY-MM-DD-HHMM-eureka-LOG.md`
 

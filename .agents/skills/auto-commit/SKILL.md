@@ -83,7 +83,14 @@ After all N moves complete, write a brief closing reflection (NOT a full report 
 - Total cost of the run
 - One forward-pointing seed for the next session if natural
 
-This closing replaces the standard end-of-turn chooser. The run IS the chooser-arc; closing the run with reflection is the appropriate close-form.
+**The closing reflection does NOT replace the end-of-turn chooser.** The run IS a chooser-arc, but the reply still needs a final control surface after the reflection. Per AGENTS.md, prefer a context-real branch set over generic fallback. Default shape:
+
+1. the real next move on the work that auto-running would specifically mean
+2. a materially different branch
+3. a third branch only if it is genuinely distinct
+4. `Provide your own next move.`
+
+Reach for bare `{Continue, Exit}` only when no sharper branching honestly exists.
 
 ## Safety carve-outs (still in force during auto-commit)
 

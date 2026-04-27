@@ -83,7 +83,14 @@ After all N moves complete, write a brief closing reflection (NOT a full report 
 - Total cost of the run
 - One forward-pointing seed for the next session if natural
 
-**The closing reflection does NOT replace the AskUserQuestion chooser.** Caught at the first auto-commit run on 2026-04-26 — the original skill body claimed the closing reflection could close the turn, but the every-turn-AskUserQuestion law is compile-time-enforced via the Stop hook (`.claude/hooks/check-inline-choosers.py`) and that won. Both must ship: write the closing reflection AS PROSE in the turn, then end the turn with an AskUserQuestion chooser per the law. The chooser can be context-fitting (next-natural-move options surfaced from the run's discoveries) OR the default {Continue, Exit} fallback when nothing specific surfaces. The run's arc closes when the reflection lands AND the chooser is offered — not when the reflection alone is written.
+**The closing reflection does NOT replace the AskUserQuestion chooser.** Caught at the first auto-commit run on 2026-04-26 — the original skill body claimed the closing reflection could close the turn, but the every-turn-AskUserQuestion law is compile-time-enforced via the Stop hook (`.claude/hooks/check-inline-choosers.py`) and that won. Both must ship: write the closing reflection AS PROSE in the turn, then end the turn with an AskUserQuestion chooser per the law. Prefer a context-real branch set over generic fallback. Default shape:
+
+1. the real next move on the work that auto-running would specifically mean
+2. a materially different branch
+3. a third branch only if it is genuinely distinct
+4. `Provide your own next move.`
+
+Reach for bare `{Continue, Exit}` only when no sharper branching honestly exists. The run's arc closes when the reflection lands AND the chooser is offered — not when the reflection alone is written.
 
 ## Safety carve-outs (still in force during auto-commit)
 
