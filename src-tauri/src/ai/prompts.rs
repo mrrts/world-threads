@@ -947,6 +947,15 @@ pub struct PromptOverrides {
     /// is too coarse for per-rule discrimination). Empty = no per-rule
     /// omissions; default render path.
     pub omit_craft_rules: Vec<String>,
+    /// When true, includes documentary-tier rules (currently
+    /// EnsembleVacuous) in the craft-notes render. Default false matches
+    /// the substrate ⊥ apparatus discipline: tier label is metadata,
+    /// EnsembleVacuous rules don't ship to the model. Override for
+    /// ensemble re-tests where the caller specifically wants to verify
+    /// the documentary rules' bodies are still part of the rendered
+    /// prompt (e.g., re-checking whether the ensemble would still
+    /// suppress the failure mode if those bodies were absent).
+    pub include_documentary_craft_rules: bool,
 }
 
 /// Single-insertion spec — audition new text at a named anchor
@@ -1015,6 +1024,7 @@ impl PromptOverrides {
             omit_invariants: Vec::new(),
             insertion: None,
             omit_craft_rules: Vec::new(),
+            include_documentary_craft_rules: false,
         }
     }
     pub fn insert(&mut self, name: impl Into<String>, body: impl Into<String>) {
@@ -1040,6 +1050,9 @@ impl PromptOverrides {
     }
     pub fn set_omit_craft_rules(&mut self, names: Vec<String>) {
         self.omit_craft_rules = names;
+    }
+    pub fn set_include_documentary_craft_rules(&mut self, include: bool) {
+        self.include_documentary_craft_rules = include;
     }
     pub fn set_insertion(&mut self, insertion: Insertion) {
         self.insertion = Some(insertion);
@@ -2176,6 +2189,17 @@ impl EvidenceTier {
             Self::EnsembleVacuous => "ensemble-vacuous",
         }
     }
+
+    /// Whether a rule at this tier ships to the model by default. Substrate ⊥
+    /// apparatus made structural at the dispatch layer: rules whose paired
+    /// bite-tests showed no isolable bite (EnsembleVacuous) are documentary —
+    /// their place in the registry is the provenance + label, not the prompt
+    /// body shipped to the model. Override with PromptOverrides
+    /// `include_documentary_craft_rules: true` (or worldcli
+    /// `--include-documentary-rules`) for ensemble re-tests.
+    pub fn ships_to_model(&self) -> bool {
+        !matches!(self, Self::EnsembleVacuous)
+    }
 }
 
 /// A named, evidence-tier-annotated dialogue craft rule. The `body` is
@@ -2269,13 +2293,18 @@ Cost ~$1.70 across 20 calls. Two distinct character-types tested; result consist
 ];
 
 /// Render the dialogue craft-rules registry as a single concatenated
-/// markdown string, optionally omitting rules by name. Used by
-/// `craft_notes_dialogue()` to append registry rules to the legacy
-/// inline string. Future per-rule bite-tests will pass non-empty
-/// `omit_names` to suppress the rule under test.
-pub fn render_craft_rules_registry(omit_names: &[&str]) -> String {
+/// markdown string. By default, rules whose `evidence_tier.ships_to_model()`
+/// returns false (EnsembleVacuous) are filtered out — their place is
+/// documentary, not behavioral. Pass `include_documentary: true` to render
+/// every rule regardless of tier (used by ensemble re-tests where the
+/// caller specifically wants to see whether removing the documentary rules
+/// still preserves the overdetermined discipline).
+///
+/// `omit_names` filters by name on top of the tier filter.
+pub fn render_craft_rules_registry(omit_names: &[&str], include_documentary: bool) -> String {
     CRAFT_RULES_DIALOGUE
         .iter()
+        .filter(|r| include_documentary || r.evidence_tier.ships_to_model())
         .filter(|r| !omit_names.contains(&r.name))
         .map(|r| r.body)
         .collect::<Vec<_>>()
@@ -2287,7 +2316,7 @@ fn craft_notes_dialogue() -> &'static str {
     static RENDERED: OnceLock<String> = OnceLock::new();
     RENDERED.get_or_init(|| {
         let legacy = craft_notes_dialogue_legacy();
-        let registry = render_craft_rules_registry(&[]);
+        let registry = render_craft_rules_registry(&[], false);
         if registry.is_empty() {
             legacy.to_string()
         } else {
@@ -2296,15 +2325,16 @@ fn craft_notes_dialogue() -> &'static str {
     }).as_str()
 }
 
-/// Render the dialogue craft-notes WITH per-rule omit support. Used by
-/// `push_craft_note_piece` when overrides specify a non-empty
-/// `omit_craft_rules` list — we re-render the full string (legacy +
-/// registry-minus-omitted) instead of returning the memoized default.
-/// When the omit list is empty, callers should use `craft_notes_dialogue()`
+/// Render the dialogue craft-notes WITH per-rule omit support and
+/// per-call documentary inclusion. Used by `push_craft_note_piece` when
+/// overrides specify a non-empty `omit_craft_rules` list OR
+/// `include_documentary_craft_rules: true` — we re-render the full string
+/// (legacy + filtered registry) instead of returning the memoized default.
+/// When both are at default values, callers should use `craft_notes_dialogue()`
 /// to hit the OnceLock cache.
-pub fn craft_notes_dialogue_with_omit_rules(omit_names: &[&str]) -> String {
+pub fn craft_notes_dialogue_with_omit_rules(omit_names: &[&str], include_documentary: bool) -> String {
     let legacy = craft_notes_dialogue_legacy();
-    let registry = render_craft_rules_registry(omit_names);
+    let registry = render_craft_rules_registry(omit_names, include_documentary);
     if registry.is_empty() {
         legacy.to_string()
     } else {
@@ -4138,18 +4168,22 @@ fn push_craft_note_piece(
     match piece {
         CraftNotePiece::EarnedRegister => parts.push(override_or("earned_register_dialogue", overrides, earned_register_dialogue)),
         CraftNotePiece::CraftNotes => {
-            // If overrides has a non-empty per-rule omit list, re-render
-            // the craft-notes string with those rules suppressed (bypasses
-            // the OnceLock cache). Otherwise, fall through to the standard
-            // override_or path which uses the memoized default.
+            // If overrides has a non-empty per-rule omit list OR an
+            // include-documentary flip, re-render the craft-notes string
+            // (bypasses the OnceLock cache). Otherwise, fall through to
+            // the standard override_or path which uses the memoized default.
             let omit_rules: Vec<&str> = overrides
                 .map(|o| o.omit_craft_rules.iter().map(|s| s.as_str()).collect())
                 .unwrap_or_default();
-            if !omit_rules.is_empty() {
-                // Per-rule omit takes precedence; raw text override (via
-                // overrides.get) is not honored when per-rule omits are set
-                // — they're for fine-grained bite-tests, not custom bodies.
-                parts.push(craft_notes_dialogue_with_omit_rules(&omit_rules));
+            let include_documentary = overrides
+                .map(|o| o.include_documentary_craft_rules)
+                .unwrap_or(false);
+            if !omit_rules.is_empty() || include_documentary {
+                // Per-rule omit / documentary-include takes precedence;
+                // raw text override (via overrides.get) is not honored
+                // here — these flags are for fine-grained bite-tests,
+                // not custom bodies.
+                parts.push(craft_notes_dialogue_with_omit_rules(&omit_rules, include_documentary));
             } else {
                 parts.push(override_or("craft_notes_dialogue", overrides, craft_notes_dialogue));
             }

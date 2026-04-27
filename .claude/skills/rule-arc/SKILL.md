@@ -288,12 +288,19 @@ is green.
 
 If a rule walks the arc and earns `EnsembleVacuous`, the temptation is to
 delete it. Resist. The honest place for an `EnsembleVacuous` rule is in the
-registry with its tier label and provenance, NOT in `prompts.rs` shipped to
-the model AND NOT deleted from history. The 5:1 ratio means most rules earn
-this tier; deleting them collapses the registry's documentary value. The
-substrate ⊥ apparatus separation makes "rule sits in registry, label says
-EnsembleVacuous, body does not ship" a valid resting state — implement that
-when needed (it didn't exist 2026-04-27; an honest follow-up).
+registry with its tier label and provenance — the body does NOT ship to the
+model under default render (per `EvidenceTier::ships_to_model()`, since
+2026-04-27 commit landing this affordance), AND the rule is NOT deleted
+from history. The 5:1 ratio means most rules earn this tier; deleting them
+collapses the registry's documentary value, and the substrate ⊥ apparatus
+discipline keeps the body absent from the model's prompt without losing the
+provenance trail.
+
+**For ensemble re-tests:** pass `--include-documentary-rules` to `worldcli
+ask` (or `PromptOverrides::set_include_documentary_craft_rules(true)`
+programmatically) to render with EnsembleVacuous bodies INCLUDED — useful
+when checking whether the prior vacuous-finding still holds under the
+leaner ensemble.
 
 ## Origin
 

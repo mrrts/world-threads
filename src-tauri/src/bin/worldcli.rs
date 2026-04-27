@@ -840,6 +840,16 @@ enum Cmd {
         /// Mutually exclusive with --session.
         #[arg(long, value_name = "PATH", conflicts_with = "session")]
         synthetic_history: Option<PathBuf>,
+        /// Include documentary-tier craft rules (currently EnsembleVacuous)
+        /// in the rendered prompt. Default: documentary rules don't ship
+        /// to the model — their place in the registry is the provenance +
+        /// label, not the body. Use this flag for ensemble re-tests
+        /// where you specifically want to verify whether the documentary
+        /// rules' bodies are still part of the rendered prompt (e.g., to
+        /// check whether removing them would still leave the failure mode
+        /// suppressed by the rest of the ensemble).
+        #[arg(long)]
+        include_documentary_rules: bool,
     },
 
     // ── runs (read your own prior investigations) ──
@@ -1591,14 +1601,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_refresh_anchor(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
-        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history } => {
+        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_ask(&r, &api_key, &character_id, &message, session.as_deref(), model.as_deref(), confirm_cost, question_summary.as_deref(), no_anchor, world_description_override.as_deref(), omit_craft_rule, synthetic_history.as_deref()).await
+            cmd_ask(&r, &api_key, &character_id, &message, session.as_deref(), model.as_deref(), confirm_cost, question_summary.as_deref(), no_anchor, world_description_override.as_deref(), omit_craft_rule, synthetic_history.as_deref(), include_documentary_rules).await
         }
         Cmd::RunsList { limit } => cmd_runs_list(&r, limit),
         Cmd::RunsShow { id } => cmd_runs_show(&r, &id),
@@ -1725,7 +1735,9 @@ fn cmd_registry_stats(json: bool) -> Result<(), Box<dyn std::error::Error>> {
         println!();
         println!("(use `worldcli list-craft-rules` for full provenance,");
         println!("  `worldcli show-craft-rule <name>` for body + tier + provenance,");
-        println!("  `worldcli ask <character> <probe> --omit-craft-rule <name>` to bite-test)");
+        println!("  `worldcli ask <character> <probe> --omit-craft-rule <name>` to bite-test,");
+        println!("  `worldcli ask <character> <probe> --include-documentary-rules` to render");
+        println!("    with EnsembleVacuous bodies INCLUDED (for ensemble re-tests; default omits).)");
     }
     Ok(())
 }
@@ -7139,6 +7151,7 @@ async fn cmd_ask(
     world_description_override: Option<&str>,
     omit_craft_rules: Vec<String>,
     synthetic_history: Option<&std::path::Path>,
+    include_documentary_rules: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
 
@@ -7173,9 +7186,14 @@ async fn cmd_ask(
             combined_axes_block(&conn, character_id)
         };
 
-        let overrides_for_prompt = if !omit_craft_rules.is_empty() {
+        let overrides_for_prompt = if !omit_craft_rules.is_empty() || include_documentary_rules {
             let mut ov = prompts::PromptOverrides::new();
-            ov.set_omit_craft_rules(omit_craft_rules.clone());
+            if !omit_craft_rules.is_empty() {
+                ov.set_omit_craft_rules(omit_craft_rules.clone());
+            }
+            if include_documentary_rules {
+                ov.set_include_documentary_craft_rules(true);
+            }
             Some(ov)
         } else {
             None
