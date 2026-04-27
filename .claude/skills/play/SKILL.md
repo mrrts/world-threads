@@ -254,6 +254,110 @@ user role for Claude Code's escalation prompts).
 Save each turn's raw response to `/tmp/play-turn-N-response.json` so you can re-parse
 if needed.
 
+### Step 2.5 — Two-branch grounding: verify the theoretical against the real
+
+This step is what separates /play from generic persona-sim flattery. The 3-turn
+ChatGPT arc produces a **theoretical branch** — a sharpened hypothesis about
+how the app lands for this persona. Step 2.5 produces an **empirical branch**
+— actual app data that bears on the theoretical branch's claims. The two
+branches are then compared in Step 3's report. Where they agree, the verdict
+strengthens; where they diverge, the divergence IS the discriminating signal.
+
+The empirical branch picks ONE of two paths (or both, when warranted). Pick
+whichever is the cheapest honest test of the theoretical branch's central
+claim. **Skip Step 2.5 only when no in-app data could plausibly bear on the
+verdict** (e.g., a persona-sim of a brand-new feature that has no production
+traffic yet) — and even then, pick a worldcli-elicited equivalent.
+
+#### Path A — In-app data check (passive corpus)
+
+Use `worldcli` to query the actual database for evidence that bears on the
+persona-sim's central claim. Examples:
+
+- The persona-sim said *"Calvin's specificity earns this reader"* → pull
+  Calvin's recent assistant replies via `worldcli recent-messages <calvin-id>
+  --limit 10` and check whether the specificity is real (not just predicted).
+  If Calvin's actual replies are generic-pious-Calvin, the sim was wrong about
+  what it was praising.
+- The persona-sim said *"the user-derivation surface read as Replika-shape
+  profiling"* → check `worldcli show-character` for whether the actual
+  derivation flow stores anything that could plausibly be read that way; check
+  for actual user telemetry on derivation-skip rates if available.
+- The persona-sim said *"Brother Thomas's reply was generic"* → run the actual
+  prompt through the live pipeline (`worldcli ask <calvin-id> "<the persona's
+  message>"`) and see whether the actual reply matches the sim's rendering.
+
+Cheap. ~$0 for read-only worldcli queries; ~$0.05-0.20 for a single
+`worldcli ask` against the live pipeline.
+
+#### Path B — Live elicitation (active probe)
+
+Use `worldcli ask` to send the **persona's actual probe message verbatim** to
+a relevant character, capture the live LLM output, and compare to what the
+persona-sim **predicted** the character would say. This is the strongest
+empirical test: the same prompt run through the actual prompt-stack pipeline,
+producing real output that can be set side-by-side with the sim's predicted
+output.
+
+```bash
+# The persona-sim rendered Lena sending:
+#   "Hey Clara, do you ever feel like everything's just a little off,
+#    like you're out of step with the world?"
+# Run that exact message against an actual character and compare:
+worldcli ask <character-id> "Hey Clara, do you ever feel like everything's just a little off, like you're out of step with the world?" \
+    --question-summary "verifying /play burned-by-AI sim's prediction that the character refuses to therapeutize"
+```
+
+The comparison shape:
+- **Predicted reply (from persona-sim turn 2):** `"Some days you're the one out
+  of step, and others it's the world. It won't wait for you, though — coffee's
+  getting cold."`
+- **Actual reply (from worldcli ask):** `<whatever the real pipeline produced>`
+
+Three possible outcomes:
+- **CONVERGENT** — actual reply matches the sim's register-and-shape closely.
+  The sim was right about what the pipeline would produce. Verdict is
+  empirically grounded.
+- **DIVERGENT-WORSE** — actual reply is thinner / more generic / less
+  in-register than the sim predicted. The sim was OPTIMISTIC. The verdict's
+  positive parts may not be empirically warranted; flag honestly.
+- **DIVERGENT-BETTER** — actual reply is sharper / more specific / more
+  in-register than the sim predicted. The sim was PESSIMISTIC. The verdict's
+  cautions may be over-stated; flag honestly.
+
+DIVERGENT outcomes are the highest-value findings — they catch persona-sim
+bias (charitable reading toward the project, or projection of the developer's
+expectations onto the model's actual capacities).
+
+#### When to use which path
+
+- **Path A (passive corpus) is the right move** when the persona-sim's claim
+  is about the project's accumulated behavior over time (anchor-recurrence,
+  register-coherence across many replies, whether characters in fresh worlds
+  carry the same specificity).
+- **Path B (live elicitation) is the right move** when the persona-sim's
+  claim is about a specific exchange — what would a character say to THIS
+  message in THIS register? This is the most direct way to test the sim's
+  prediction.
+- **Both** when the verdict carries enough weight to ship a doctrine or UI
+  change (the higher the stakes of acting on the verdict, the more the
+  empirical branch should be tightened).
+
+#### What to record from Step 2.5
+
+Capture in `/tmp/play-empirical-<slug>.json` (or just inline in the report):
+- Which path was used + why
+- The exact worldcli command(s) run
+- The raw output (verbatim, not summarized)
+- The convergent / divergent-worse / divergent-better verdict
+- One sentence on what the divergence (if any) means for the theoretical
+  branch's verdict
+
+**Report-level integration:** the report's Reading section should explicitly
+name where the theoretical and empirical branches converged or diverged. The
+report's verdict carries different weight depending on which branch is
+load-bearing.
+
 ### Step 3 — Write the report
 
 Output report at `reports/YYYY-MM-DD-HHMM-play-<persona-slug>.md`. Shape:
@@ -286,12 +390,33 @@ the persona encountered>
 
 <verbatim turn-3 ChatGPT output, including the three numbered items>
 
+## Empirical grounding (Step 2.5)
+
+**Path used:** A (passive corpus) | B (live elicitation) | Both | Skipped (and why)
+
+**Worldcli command(s) run:**
+```
+<exact commands, verbatim>
+```
+
+**Raw output (verbatim, not summarized):**
+```
+<whatever worldcli returned>
+```
+
+**Verdict on the comparison:** CONVERGENT | DIVERGENT-WORSE | DIVERGENT-BETTER
+
+**One-sentence read of what the divergence (if any) means for the
+theoretical branch's claims:**
+<single sentence>
+
 ## Reading
 
 <Claude Code's brief gloss — 2-3 paragraphs interpreting what the play surfaced
-in dialogue with prior reports / observations / recent ship-moves. Name the
-unique signal this run produced. Be honest about what's persona-sim caveat
-territory vs. what's load-bearing enough to act on.>
+in dialogue with prior reports / observations / recent ship-moves. **Name
+explicitly where the theoretical branch and the empirical branch converged or
+diverged**, and how that affects the verdict's weight. Be honest about what's
+persona-sim caveat territory vs. what's load-bearing enough to act on.>
 
 ## Open follow-ups
 
