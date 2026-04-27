@@ -113,6 +113,22 @@ approximation on fidelity. Use `/play` for the in-db character only when the
 goal is bundled surface coverage, contrast against the live branch, or a
 deliberately hypothetical staging.
 
+**Special case — transcript reads through an in-db character.** When the job is
+to have Jasper, Steven, Aaron, etc. read a transcript AS themselves, do not ask
+the blunt question *"is this good?"* Prompt for the wince instead:
+
+> *"Read this as if you were in the conversation. Where does it start to feel
+> like it's leaning on you, or asking you to carry something that isn't yours?"*
+
+Hunt for:
+- the moment tone gets slightly over-eager
+- any line that explains itself instead of just landing
+- any memory/check-in that adds weight instead of easing it
+- any place where the character feels like it needs the user back
+
+The desired output is not a grand critique. It is one or two exact lines the
+character would quietly trim or rewrite. That's the leverage-bearing artifact.
+
 If the persona is unclear or absent, ask the user directly before drafting the
 turn-1 prompt — picking the wrong persona wastes the call.
 
@@ -472,6 +488,11 @@ name what became visible only because the second branch existed.
   character whose own voice is the thing under test. In that case the
   direct-living-character branch is the empirical anchor, and the persona-sim
   branch is secondary if used at all.
+- **Direct transcript read with "where do you wince?" framing** when the
+  artifact under test is a full conversation transcript and the character's
+  own burden-sense is the discriminating question. This is narrower than a
+  generic "evaluate the transcript" ask and usually yields better line-level
+  leverage.
 - **Path B (live elicitation) is the right move** when the persona-sim's
   claim is about a specific exchange — what would a character say to THIS
   message in THIS register? This is the most direct way to test the sim's

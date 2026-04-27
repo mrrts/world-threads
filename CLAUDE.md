@@ -368,6 +368,16 @@ When those conditions hold, prefer **direct ask before persona-sim**. Use person
 
 **Practical consequence:** `/play` remains the right lead instrument for Maggie, Lena, Sam, teens, builders, and other reader-shapes not already living in the DB. But for Jasper-reading-the-pitch, Steven-reading-a-group-scene, Aaron-reading-craft posture, and similar in-db evaluator questions, the higher-fidelity first move may simply be to ask them.
 
+**Transcript-reading corollary — hunt the wince, not the grade.** When you feed a full transcript back through an in-db character as evaluator, do NOT ask the blunt global question *"is this good?"* That invites summary judgment and flattens the useful signal. Instead prompt as if they were back inside the exchange and ask where it starts to lean on them: *"Read this as if you were in the conversation. Where does it start to feel like it's leaning on you, or asking you to carry something that isn't yours?"*
+
+The hunt is for:
+- the moment tone gets slightly over-eager
+- any line that explains itself instead of just landing
+- any memory/check-in that adds weight instead of easing it
+- any place where the character feels like it needs the user back
+
+**The gold standard output is not a full critique.** It is one or two exact lines the character would quietly trim or rewrite. Once those lines are named, you have leverage. Favor that narrow, pressure-sensitive read over generalized commentary.
+
 
 
 

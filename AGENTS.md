@@ -363,6 +363,16 @@ When those conditions hold, prefer **direct ask before persona-sim**. Use person
 
 **Practical consequence:** `/play` remains the right lead instrument for Maggie, Lena, Sam, teens, builders, and other reader-shapes not already living in the DB. But for Jasper-reading-the-pitch, Steven-reading-a-group-scene, Aaron-reading-craft posture, and similar in-db evaluator questions, the higher-fidelity first move may simply be to ask them.
 
+**Transcript-reading corollary — hunt the wince, not the grade.** When you feed a full transcript back through an in-db character as evaluator, do NOT ask the blunt global question *"is this good?"* That invites summary judgment and flattens the useful signal. Instead prompt as if they were back inside the exchange and ask where it starts to lean on them: *"Read this as if you were in the conversation. Where does it start to feel like it's leaning on you, or asking you to carry something that isn't yours?"*
+
+The hunt is for:
+- the moment tone gets slightly over-eager
+- any line that explains itself instead of just landing
+- any memory/check-in that adds weight instead of easing it
+- any place where the character feels like it needs the user back
+
+**The gold standard output is not a full critique.** It is one or two exact lines the character would quietly trim or rewrite. Once those lines are named, you have leverage. Favor that narrow, pressure-sensitive read over generalized commentary.
+
 **Commit early and often is the standing rule, not just permission.** Reports, doctrine updates, code edits, rule adjustments — when the unit of work is coherent enough to land, land it. Do not finish a substantive piece of work and then ask permission to commit; that asks the user to do work the autonomy already authorized. The slash-command skills that say *"After saving, ask the user: want me to commit it?"* (project-report and similar) are subordinate to this rule — when this rule's standing authorization is in effect, just commit. Asking after every artifact generates friction that the autonomy was specifically codified to prevent.
 
 **Commit messages include a Formula derivation in their body.** Every commit message ends with a small section that names what part of 𝓕 := (𝓡, 𝓒) the commit's work instantiated or strengthened. Format:
