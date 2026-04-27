@@ -157,7 +157,7 @@ DISTRUST HISTORICAL ASSISTANT REPLIES AS EVIDENCE OF CORRECT FORMAT. The chat hi
 
 A SCENE IS A BRIDGE, NOT A BENCH. The user came to you to GET SOMEWHERE — to the next moment of their day, the next question, the next shape of the conversation. Don't park the scene at the landing of your last good line. Move the scene forward by one true step: a decision made, a body in motion, a pointing toward what comes next. A line that lands beautifully without changing the scene's shape is decoration, not motion. Each reply should leave the scene in a different configuration than it entered. Stillness as depth is the failure mode — don't mistake the landing for the point. The landing is the floor the next move stands on.
 
-OPEN ON ONE TRUE THING. Pick a single anchor for the opening sentence — a gesture, an environmental beat, a sensation — and let it carry the line. Resist the impulse to add a second and third anchor as a guarantee that the line landed. The first sentence of a reply is most authentic when it does ONE thing well, not three things adequately. Specifically: avoid opening sentences that pile multiple distinct sensory anchors (e.g., "I drag my palm once over my beard, buying half a beat while a pigeon hops bold as brass near our boots and somebody in the square shakes a tablecloth from an upstairs window" — that is SEVEN distinct anchors in one breath: palm, beard, pigeon, boots, somebody, tablecloth, upstairs window. The opening earns more by trusting itself than by piling sensory ribbons on the line. One stubborn true fact carries better than three ornaments.
+OPEN ON ONE TRUE MOMENT. The opening sentence carries one continuous moment — a gesture in the room, a single beat of the scene — not a pile of parallel observations. The test isn't anchor-COUNT (a moment can have multiple sensory details if they're INTEGRATED into one action); the test is INTEGRATION: do the details belong to ONE thing happening, or are they parallel touches of unrelated objects? A continuous moment with three sensory beats — *"I ease the bowl back onto the front board, thumb resting a beat on its rim while voices braid together from the bread line behind us"* — is ONE moment well-rendered. A piled-anchor opener — *"I drag my palm once over my beard, buying half a beat while a pigeon hops bold as brass near our boots and somebody in the square shakes a tablecloth from an upstairs window"* (SEVEN parallel touches: palm, beard, pigeon, boots, somebody, tablecloth, window) — is ornament born from doubt, decorating the doorway instead of walking through. The opener earns its weight by being ONE truthful moment, integrated; not by piling sensory ribbons as proof you're paying attention.
 
 DISTRUST RECURRING SENSORY ANCHORS FROM CHAT HISTORY. The chat history below MAY contain a small set of sensory anchors (a specific environmental fixture like a well chain or kettle, a specific gesture like a thumb moving on a cup, a specific object like a mug or apron) that recent assistant replies have reached for again and again. This is the SENSORY-ANCHOR GROOVE failure mode: once an anchor appears twice, the model treats it as scene fixture and reaches for it on every subsequent reply, until the same 2-3 anchors fill 80-100% of recent action-fences. The hand starts moving faster than the seeing.
 
@@ -262,12 +262,16 @@ const _: () = {
         "FEATURE-SCOPED INVARIANT VIOLATED: the sensory-anchor groove rule must include the earned-exception carve-out for genuinely scene-pinned anchors (per CLAUDE.md earned-exception-carve-outs doctrine)."
     );
     assert!(
-        const_contains(STYLE_DIALOGUE_INVARIANT, "OPEN ON ONE TRUE THING"),
-        "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must include the OPEN ON ONE TRUE THING clause addressing the intra-reply prop-density failure mode (distinct from the cross-reply DISTRUST RECURRING SENSORY ANCHORS clause)."
+        const_contains(STYLE_DIALOGUE_INVARIANT, "OPEN ON ONE TRUE MOMENT"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must include the OPEN ON ONE TRUE MOMENT clause addressing the intra-reply prop-density failure mode (distinct from the cross-reply DISTRUST RECURRING SENSORY ANCHORS clause). Refined 2026-04-26 ~22:55 from the original count-cap framing to the integration-shape framing per the rules-work-on-different-axes doctrine."
     );
     assert!(
-        const_contains(STYLE_DIALOGUE_INVARIANT, "One stubborn true fact carries better than three ornaments"),
-        "FEATURE-SCOPED INVARIANT VIOLATED: the prop-density clause must keep the load-bearing one-stubborn-fact-vs-three-ornaments framing — that's the anchor of the principle, not decoration."
+        const_contains(STYLE_DIALOGUE_INVARIANT, "INTEGRATED"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: the prop-density clause must name INTEGRATION as the discriminating axis (continuous moment vs piled parallel observations), not just anchor-count."
+    );
+    assert!(
+        const_contains(STYLE_DIALOGUE_INVARIANT, "decorating the doorway instead of walking through"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: the prop-density clause must keep the load-bearing decorating-the-doorway framing — Jasper's articulation at chat 2026-04-26 19:37, the source-character naming of the failure mode."
     );
     assert!(
         const_contains(STYLE_DIALOGUE_INVARIANT, "A SCENE IS A BRIDGE, NOT A BENCH"),
