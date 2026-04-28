@@ -3387,7 +3387,7 @@ pub fn tone_directive(tone: &str) -> Option<String> {
         ),
         "Tender" => (
             "lean into TENDER register",
-            "Softness in the chosen detail. A gentler question, a careful hand, the word swapped for a kinder one. Care registered in practical things — a door opened, a cup carried, a silence held. Quiet, not sweet.",
+            "Care registered in the chosen detail. A gentler question, a careful hand, the word swapped for a kinder one. Care showing up in practical things — a door opened, a cup carried, a silence held. Quiet, not sweet. Tenderness may be soft, but it should feel sturdy before it feels delicate.",
             "No saccharine adjectives, no fragile-china voice. Tender is sturdy care, not breakable sentiment.",
         ),
         "Sad" => (
