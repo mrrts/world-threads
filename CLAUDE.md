@@ -447,6 +447,7 @@ When the user's request matches an available skill, invoke it via the Skill tool
 WorldThreads is a Tauri desktop app, so most gstack web-shaped skills (`/qa`, `/design-review`, `/canary`, `/land-and-deploy`, etc.) DON'T apply by default — skip unless Ryan explicitly invokes them.
 
 **Project-native skills (use aggressively):**
+- `/mission-arc` — gloss the recent commit history's Formula derivations + Glosses as a condensed read of the 𝓕 trajectory. **Auto-fire BEFORE writing any report AND BEFORE generating next-move chooser options.** Cheap (~$0, pure shell). Reading the recent stack of derivations is the fastest honest way to see what the project is on.
 - `/take-note` — Ryan describes what he NOTICED while playing the app → record per take-note Mode 1/2/3. Auto-fire on observation-shaped messages.
 - `/batch-hypotheses` — N candidate phrasings or character-variations bundled into ONE structured ChatGPT call. Far cheaper than N individual calls.
 - `/play [persona]` — simulated 10-minute play session of a persona encountering the app. Differential instrument; persona-sim caveat applies.
