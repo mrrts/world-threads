@@ -41,31 +41,71 @@ function MainApp() {
   const [view, setView] = useState<View>("chat");
   const lastChatCharRef = useRef<string | null>(null);
 
-  // Focus mode: collapses the left-rail nav + Sidebar and clamps the chat
-  // transcript column to a 68-72ch measure for long-form reading. Toggled
-  // with the "F" key (when no input is focused). Substrate-derived from the
-  // designer-evaluator /play (reports/2026-04-28-0610-...) which proposed
-  // a single-key Focus mode as one craft-defensible move from typographic
-  // principles. Lives in chat-view only — toggling F outside chat is a
-  // no-op (focus mode only makes sense for the transcript).
+  // Focus mode + Context Peek: collapses the left-rail nav + Sidebar and
+  // clamps the chat transcript column to a 68-72ch measure for long-form
+  // reading. Press F to toggle Focus on/off; hold F (250ms threshold) while
+  // Focus is on to PEEK the Sidebar back as a translucent overlay (releases
+  // on key-up). Substrate-derived from the designer-evaluator /play
+  // (reports/2026-04-28-0610-...) which proposed Focus mode and the Maggie-
+  // focus-mode-critique /play (reports/2026-04-28-0810-...) which proposed
+  // the hold-F Context Peek as v2 to address the all-or-nothing-mode-switch
+  // friction the v1 created. Pattern: Vim chord-shapes / Apple Quick Look —
+  // peek without state-loss. Lives in chat-view only.
   const [focusMode, setFocusMode] = useState(false);
+  const [peekMode, setPeekMode] = useState(false);
+  // Refs so the keydown/keyup handlers see latest state without re-registering.
+  const focusModeRef = useRef(focusMode);
+  useEffect(() => { focusModeRef.current = focusMode; }, [focusMode]);
+  const peekTimerRef = useRef<number | null>(null);
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'f' && e.key !== 'F') return;
-      // Ignore if user is typing in an input, textarea, or contenteditable.
+    const isFKey = (e: KeyboardEvent) => e.key === 'f' || e.key === 'F';
+    const isInputTarget = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
-      if (!t) return;
+      if (!t) return true;
       const tag = t.tagName?.toLowerCase();
-      if (tag === 'input' || tag === 'textarea' || t.isContentEditable) return;
-      // Only fires when no modifiers (so Cmd-F, Ctrl-F still open browser find).
+      return tag === 'input' || tag === 'textarea' || t.isContentEditable;
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (!isFKey(e)) return;
+      if (e.repeat) return; // ignore OS key-repeat from holding
+      if (isInputTarget(e)) return;
       if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
-      // Only fires in chat view (Focus mode only meaningful for transcript).
       if (view !== 'chat') return;
       e.preventDefault();
-      setFocusMode((f) => !f);
+      // Schedule hold-detection. If still pressed at threshold AND focusMode is
+      // on, enter Peek. If released before threshold, the keyup handler treats
+      // it as a press (toggles focusMode).
+      if (peekTimerRef.current !== null) {
+        clearTimeout(peekTimerRef.current);
+      }
+      peekTimerRef.current = window.setTimeout(() => {
+        if (focusModeRef.current) {
+          setPeekMode(true);
+        }
+        peekTimerRef.current = null;
+      }, 250);
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (!isFKey(e)) return;
+      // Always clear peek on F release.
+      setPeekMode(false);
+      if (peekTimerRef.current !== null) {
+        // Released before hold-threshold → treat as press; toggle focusMode.
+        clearTimeout(peekTimerRef.current);
+        peekTimerRef.current = null;
+        setFocusMode((f) => !f);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+      if (peekTimerRef.current !== null) {
+        clearTimeout(peekTimerRef.current);
+        peekTimerRef.current = null;
+      }
+    };
   }, [view]);
 
   // Background novelization: fires after 20 minutes of idle time (no user
@@ -292,8 +332,23 @@ function MainApp() {
 
       {!focusMode && <Sidebar store={store} onNavigate={handleNavigate} />}
 
+      {focusMode && peekMode && (
+        // Context Peek: transient sidebar overlay shown while F is held.
+        // Translucent + backdrop-blur so it reads as a peek-not-mode-switch.
+        // Slides in from left; auto-dismisses on F-key release. No state-loss,
+        // no clicks, no commitment. Pattern: Vim chord-shapes / Apple Quick Look.
+        // Substrate-derived from the Maggie-focus-mode-critique /play
+        // (reports/2026-04-28-0810-...) which named the all-or-nothing-mode-
+        // switch friction the v1 created.
+        <div className="absolute left-0 top-0 bottom-0 z-40 animate-in slide-in-from-left fade-in duration-150">
+          <div className="bg-background/95 backdrop-blur-md shadow-2xl border-r border-border h-full">
+            <Sidebar store={store} onNavigate={handleNavigate} />
+          </div>
+        </div>
+      )}
+
       {focusMode && view === "chat" && (
-        // Subtle indicator that Focus is on. Hover reveals the exit hint.
+        // Subtle indicator that Focus is on. Hover reveals exit + peek hints.
         // Positioned bottom-right so it doesn't compete with the transcript.
         // No modal, no toast — just a small reminder consistent with the
         // app's no-nag posture.
@@ -301,10 +356,10 @@ function MainApp() {
           type="button"
           onClick={() => setFocusMode(false)}
           className="group fixed bottom-4 right-4 z-30 px-3 py-1.5 rounded-full text-xs font-medium bg-muted/80 backdrop-blur text-muted-foreground hover:text-foreground border border-border/50 transition-colors"
-          title="Exit Focus mode (F)"
+          title="Exit Focus mode (F) · hold F to peek context"
         >
           <span className="opacity-70">Focus</span>
-          <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">· press F to exit</span>
+          <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">· F to exit · hold F to peek</span>
         </button>
       )}
 
