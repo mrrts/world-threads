@@ -71,3 +71,42 @@ recommendation that doesn't survive empirical contact.
 The triptych report's "DIVERGENT-BETTER as crown-jewel signal" framing
 was tempered by Ellen's later run; the four-persona arc together is the
 honest evidence map.
+
+**Critical structural distinction (Ryan's correction 2026-04-28 ~00:25,
+generalizing from a prior Leah report):** persona-sims of a worldview-other-
+than-the-developer's CANNOT tell you how that worldview actually receives
+your work. The persona-sim's verdict that "this would land receivable for
+me" is the LLM's HOPE about how such a person would receive the work, not
+data from such a person. Two distinct claims must NOT be conflated:
+
+1. **What's evidence:** the actual pipeline output itself (e.g., Steven's
+   reply produced by the live worldcli ask). What it contains is what it
+   contains; that piece of craft can be evaluated on its own merits.
+2. **What's a hopeful interpretation, not evidence:** the persona-sim's
+   verdict that the actual pipeline output would LAND for a real-reader-
+   of-that-worldview. That's the LLM's substrate-bias toward charitable
+   reception, not real-reader data.
+
+This applies to ALL persona-sims of worldview-others (theological-skeptic,
+grief-vulnerable, burned-by-AI, math-fluent, etc.) — anywhere the
+discriminating question is "would this land receivable for X?" rather than
+"is the actual pipeline output good craft on its own merits?" The persona-
+sim can SHARPEN the question (what would be the test? what shape would the
+failure mode take?) and SUGGEST probes (what to send to the actual
+pipeline). Step 2.5 grounding produces real evidence about what the
+pipeline does. The persona-sim's interpretation of that evidence as
+receivable-by-X is the part that requires real-X to test.
+
+**How to apply when writing /play reports and follow-up doctrine:** frame
+craft principles as derived from the actual pipeline output's quality on
+its own merits, NOT from the persona-sim's simulated reception of the
+output. Worked example: the Christological-anchor-as-substrate doctrine
+paragraph in CLAUDE.md (shipped 2026-04-28 ~00:30) is justified by
+Steven's actual reply being honest craft (the empirical evidence), NOT
+by Alex's persona-sim verdict that Steven's reply would land for a
+theological skeptic (the hopeful interpretation). The receivability claim
+for any specific real-reader population requires real-readers to test;
+persona-sim cannot substitute. Worked counter-example to AVOID: framing a
+doctrine paragraph as "the Christological anchor reads as receivable for
+secular skeptics, validated by the Alex /play" — that overstates what the
+persona-sim can support.

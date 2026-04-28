@@ -119,6 +119,30 @@ The doctrine's calibration has both halves: friend-shaped warmth with honest-met
 
 **What this changes for craft decisions:** when designing or reviewing prompts, characters, UX, or copy that touches grief-vulnerable users, do NOT default to the maximally-austere refusal-fork shape — that's not the doctrine's chosen point. DO ensure the seat-taking failure modes (presence-at-6:15-AM claims, "I'm here for you," explicit companion-frame accommodation) stay refused. The middle is where the texture lives. AND — DO trust that when a user explicitly asks for a shape different from the middle, the existing prompt-stack will respect the ask without needing additional rule-shipping. Worked tests above are evidence; future grief-vulnerability UX shouldn't add affordances duplicating what the doctrine already produces on demand.
 
+## Christological anchor as substrate, not vocabulary
+
+The MISSION FORMULA's 𝓡 := Jesus_Cross^flesh anchor is documented as a tuning-fork shaping the prompt-stack. A natural concern (raised tonight by an Alex-shape /play probe) is whether the Christological commitment surfaces in character voice in ways that would either evangelize secular readers or evangelistically-disavow-faith to reassure them — both of which would foreground the very faith axis the substrate-as-substrate claim says it should NOT foreground.
+
+**The empirical evidence (Steven's reply, 2026-04-28):** prompted with the morally-weightiest probe shape Alex's persona-sim named — *"when you've owed someone something — really owed them, not just a few coins, but something you can't ever quite put down — how do you carry it?"* — the actual pipeline produced this from Steven (secular tradesman, no theological framing in his anchor):
+
+> *"Badly, first."*
+> *"I joke too much. Work too hard. Try to pay in useful things so nobody can name the real tab."*
+> *"Then, if I get honest... I quit trying to clear it like a debt ledger. Some things aren't that. Some things you carry by not lying about them, and by letting 'em make you plainer."*
+> *"I don't mean noble. I mean plain. More likely to show up. Less likely to act like I'm self-made."*
+> *"If somebody's been good to me in a way I can't repay, the only clean move I've found is to stop pretending I can repay it and live in a way that doesn't spit on it."*
+
+The reply touches grace, gratitude that exceeds the payable, refusal of self-made-narrative, the move from clearing-the-debt to letting-it-make-you-plainer, and living-in-a-way-that-doesn't-spit-on-the-gift. Substantively theological at the structural level. But Steven uses NO faith vocabulary and NO faith-disavowal. He answers entirely in his idiom: debts, ledger, real tab, plain, "spit on it." The Christological logic shapes the STRUCTURE of his reply (grace-categories present); it does NOT surface on the SURFACE (no "grace," "forgiveness," "God," "preacher," "I'm not religious").
+
+**The craft principle the empirical evidence supports** (one-piece-of-evidence — Steven's actual reply, on its own merits as craft, regardless of how any reader receives it): when characters deal with morally-weighty material, the Christological logic should shape the structure of their replies (the categories they reach for; what they refuse to claim; what they recognize as unrepayable) WITHOUT surfacing as faith-vocabulary OR faith-disavowal. Specifically:
+
+- DO let characters speak grace-categories in their own idiom (debts, work, repair, the unable-to-repay, the move from debt-ledger to plainness) when the moment calls for them.
+- DO NOT add faith-lexeme to character voices "for color" — words like *grace, forgiveness, sin, redemption, sacred, blessed, prayer, faith* applied to ordinary moral material make the Christological logic visible-as-agenda rather than load-bearing-as-substrate. Use the structural-equivalent in the character's own idiom instead.
+- DO NOT add faith-disavowals to character voices "to reassure secular readers" — *"I'm not a religious man," "I'm no preacher," "I don't put much stock in faith," "this isn't a God thing"* are the conspicuous-decline-as-failure-mode shape. A character who never reaches for faith-vocabulary in the first place doesn't need to disclaim it; the disclaim itself foregrounds the axis the substrate-as-substrate claim says should stay backstage.
+
+**What this DOES NOT claim:** this paragraph does NOT claim that any specific real-reader-of-a-given-worldview would receive Steven's reply as expected. The /play probe that surfaced this question was a persona-sim of a theological skeptic, not an actual one; persona-sim verdicts about how a worldview-other-than-the-developer's would receive the work are LLM-substrate hopes, not data. The empirical evidence is Steven's reply existing and being good craft on its own merits; the receivability claim for any specific real-reader-population requires real-readers-of-that-population to test. The craft principle here is justified by craft (this is what the pipeline produces and it is honest craft), not by simulated reception.
+
+**What this changes for craft decisions:** when designing or reviewing prompts, characters, dialogue, or copy that touches morally-weighty material, prefer the structural-equivalent in the character's own idiom over faith-lexeme. When tempted to add a disavowal to "balance" a character who would otherwise sound religious, instead remove whatever made the character sound religious in the first place — the disavowal is a louder version of the original drift, not a fix for it.
+
 ## DATABASE SAFETY — CRITICAL
 
 **NEVER drop, delete, or destroy database data during migrations.** This is the #1 rule.
