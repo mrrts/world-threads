@@ -25,6 +25,8 @@ Scalars:
 - `mode`: `passive` | `qualitative` | `active`
 - `ref`: git sha/tag/branch the experiment pivots on
 - `rubric_ref`: name from `reports/rubrics/` (for Mode A passive runs)
+- `evidence_strength`: evidentiary-tier label preserved across `worldcli lab`
+  rewrites
 - `created_at`: ISO 8601
 - `resolved_at`: ISO 8601 (set when status becomes confirmed/refuted/open)
 

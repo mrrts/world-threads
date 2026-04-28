@@ -5051,6 +5051,7 @@ struct ExperimentFile {
     mode: String,
     git_ref: String,
     rubric_ref: String,
+    evidence_strength: String,
     created_at: String,
     resolved_at: String,
     // Block-scalar fields
@@ -5174,6 +5175,7 @@ fn assign_scalar(out: &mut ExperimentFile, key: &str, value: String) {
         "mode" => out.mode = value,
         "ref" => out.git_ref = value,
         "rubric_ref" => out.rubric_ref = value,
+        "evidence_strength" => out.evidence_strength = value,
         "created_at" => out.created_at = value,
         "resolved_at" => out.resolved_at = value,
         "hypothesis" => out.hypothesis = value,
@@ -5247,6 +5249,7 @@ fn write_experiment(exp: &ExperimentFile) -> Result<(), String> {
     if !exp.resolved_at.is_empty() { push_scalar(&mut fm, "resolved_at", &exp.resolved_at); }
     if !exp.git_ref.is_empty() { push_scalar(&mut fm, "ref", &exp.git_ref); }
     if !exp.rubric_ref.is_empty() { push_scalar(&mut fm, "rubric_ref", &exp.rubric_ref); }
+    if !exp.evidence_strength.is_empty() { push_scalar(&mut fm, "evidence_strength", &exp.evidence_strength); }
     fm.push('\n');
     push_block(&mut fm, "hypothesis", &exp.hypothesis);
     push_block(&mut fm, "prediction", &exp.prediction);
@@ -5400,6 +5403,7 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                 "hypothesis": e.hypothesis,
                 "ref": e.git_ref,
                 "rubric_ref": e.rubric_ref,
+                "evidence_strength": e.evidence_strength,
                 "created_at": e.created_at,
                 "run_ids": e.run_ids,
                 "reports": e.reports,
@@ -5430,6 +5434,7 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                 let out: Vec<JsonValue> = open.iter().map(|e| json!({
                     "slug": e.slug, "status": e.status, "mode": e.mode,
                     "hypothesis": e.hypothesis, "ref": e.git_ref,
+                    "evidence_strength": e.evidence_strength,
                 })).collect();
                 emit(true, JsonValue::Array(out));
             } else {
@@ -5463,6 +5468,7 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                     "path": exp.path.display().to_string(),
                     "id": exp.id, "status": exp.status, "mode": exp.mode,
                     "ref": exp.git_ref, "rubric_ref": exp.rubric_ref,
+                    "evidence_strength": exp.evidence_strength,
                     "created_at": exp.created_at, "resolved_at": exp.resolved_at,
                     "hypothesis": exp.hypothesis,
                     "prediction": exp.prediction,
@@ -5482,6 +5488,7 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                 if !exp.resolved_at.is_empty() { println!("Resolved: {}", exp.resolved_at); }
                 if !exp.git_ref.is_empty() { println!("Ref: {}", exp.git_ref); }
                 if !exp.rubric_ref.is_empty() { println!("Rubric: {}", exp.rubric_ref); }
+                if !exp.evidence_strength.is_empty() { println!("Evidence strength: {}", exp.evidence_strength); }
                 println!();
                 println!("Hypothesis:");
                 println!("  {}", exp.hypothesis.replace('\n', "\n  "));
@@ -5588,6 +5595,7 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                 mode,
                 git_ref: r#ref.unwrap_or_default(),
                 rubric_ref: rubric_ref.unwrap_or_default(),
+                evidence_strength: String::new(),
                 created_at: chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
                 resolved_at: String::new(),
                 hypothesis,
