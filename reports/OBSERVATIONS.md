@@ -40,6 +40,20 @@ Receives the praise without false modesty AND turns the credit back to specifics
 
 Aaron's silence in the most-recent window (after his "alarmingly optimized" reply, only Darren responded for several turns before Aaron came back briefly later) is a separate small noticing — possibly addressee-resolution; possibly a group-chat speaker-selection pattern. Single-window; not enough to call.
 
+**Follow-up — presence-beat carve-out bite-test results (2026-04-28 ~14:30):** the carve-out shipped in commit `4d9bc3d` was bite-tested via the new `worldcli --group-chat` affordance (commit `45be660`) on the same Aaron+Darren chat. Two probes:
+
+- **Strong-signal probe** (Ryan-style message explicitly addressing Aaron, run_id `7aa8a5f2`): Darren's reply DID include a presence-beat as designed — *"glances briefly toward Aaron, then back to you, the fountain's splash stitching a steady line through the square"* — asterisk-fenced, observable from Darren's POV, no dialogue/thoughts/feelings attributed to Aaron. Plus explicit voice-agency preservation: *"He can answer for himself. That's just what I saw."* Rule fires as designed in this case.
+
+- **Ambient-silence probe** (Ryan-style continuation with NO Aaron mention, run_id `deed2ff8`): Darren's reply did NOT include a presence-beat. Aaron stayed invisible. Darren's own action-beats (pushing off the bench, picking at the plaster on his sleeve) + environmental detail (sunlight on sleeve, fountain noise) — but no other-character beat.
+
+**What this means honestly:** the rule's current skip-conditions ("when your reply is short, when {others_first} just spoke, or when there's no natural reason to keep them visible") are doing real work — they hold the rule from over-firing on weak signals. The cost is that the original ambient-silence texture-issue (Aaron silent for 4 turns in continuation) is NOT fully fixed by the rule as-shipped. The strong-signal case improved (visible-presence appears when explicitly invited); the weak-signal case stayed the same (silent character stays invisible when the conversation continues without natural reason to surface them).
+
+**Two honest paths forward** (Ryan's call which to pick if either):
+1. **Loosen skip-conditions** — remove or weaken the "short reply" / "no natural reason" exclusions to encourage presence-beats on more turns. Risk: over-firing into ornamentation that becomes its own register-noise.
+2. **Accept the calibration** — the rule fires when the moment genuinely calls for keeping the silent character visible; ambient-silence-after-many-turns may just be a real feature of group-chat texture, more honestly addressed via speaker-rotation pressure (option 1 from the prior design space) than by forcing visibility-from-the-current-speaker.
+
+Per the bite-verification doctrine: SKETCH-TIER (N=2 probes, single character speaker, single group). Closing the follow-up named in commit `45be660` as: **executed with mixed result** — strong-signal case ✓, ambient-silence case ✗. Whether to ship a follow-on calibration is a craft decision; the empirical evidence is recorded.
+
 ---
 
 ## 2026-04-28 04:50 — answer_vulnerability_with_specificity → EnsembleVacuous; four moves grounded across two anchors
