@@ -448,6 +448,8 @@ Precedence: `--api-key` flag → `OPENAI_API_KEY` env → macOS keychain. Keycha
 
 **Experiment registry (lab):** `lab list/open/show/search/propose/resolve/link-run/scenario`. Hypothesis slug is the durable memory unit; run ids are evidence attachments.
 
+**Lab registry surfaces can become hypothesis middleware.** Once a question is carried as a hypothesis slug with explicit proposal, attached run evidence, and resolution summary, the lab surface stops being mere storage. The `propose -> link-run -> resolve` path begins enforcing what a disciplined experiment loop must minimally include: a named hypothesis, evidence attachments, and an interpreted outcome tied back to the same durable question-carrier.
+
 **Sessions:** `session-show/clear/list`. Sessions persist to `dev_chat_sessions`; clear individually when stale.
 
 ### When to reach for `worldcli ask`
