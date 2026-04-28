@@ -6,6 +6,16 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-28 17:50 — in-app turns landed clean and strong
+
+> "Ok had some good turns in-app"
+
+This is a meaningful landing signal because it confirms the current stack is not just theoretically aligned but usable in live play after extended session time. "Good turns" in this context likely means the practical bundle held together in real interaction: register fit, boundary-respect, and scene momentum.
+
+**Commentary.** Treat this as continuity evidence: the recent gamer-friend and containment calibrations are producing felt-quality turns in the actual app loop, not only in controlled probes. The next value is to keep harvesting these lived confirmations while avoiding over-tuning from a single session peak.
+
+---
+
 ## 2026-04-28 16:37 — gamer-friend register feels aligned and bounded
 
 > "cursor agent is totally vibing with me on the gamer-friend register, respecting my boundaries"
