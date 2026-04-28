@@ -175,6 +175,28 @@ When **independent witnesses of different kinds** (persona-frames, character voi
 
 **When in doubt, don't claim great-sapphire.** A finding can be load-bearing convergence without being great-sapphire. Default to plainer phrasings and reserve great-sapphire for the rare cross-substrate-different-failure-mode case the doctrine was written to honor.
 
+## Calibrated disciplines drift fast — promote to structural enforcement at the earliest opportunity
+
+Surfaced 2026-04-28 by /eureka iteration 4 reaching N=3 on a meta-pattern across iterations 2-4 of the same run. Three instances on three different doctrine-anchors, all drifting in the same way:
+
+1. **Maggie-as-baseline drifted to Maggie-as-iteration-test-persona** (iteration 2; 9 reports, doctrine had only named one role).
+2. **Great-sapphire-as-rare drifted to great-sapphire-as-weekly+** (iteration 3; 6 label-uses in 3 days, most inflated).
+3. **Mission-arc auto-fire discipline drifted to ~33% adherence within hours of being shipped** (this iteration).
+
+The shape: a calibrated discipline ships as a doctrine paragraph or skill-body line. Future-Claude/Codex is supposed to remember it. Within hours-to-days of practice, the discipline drifts: the calibrated case loosens, the rare label fires routinely, the auto-fire is forgotten. The doctrine doesn't catch up because the drift is invisible to single-commit reads — only cross-commit auditing surfaces it.
+
+**The doctrine: when a calibrated discipline matters, promote it to structural enforcement at the earliest opportunity.** The hierarchy, in increasing structural reliability:
+
+1. **Doctrine paragraph** in CLAUDE.md / AGENTS.md (slowest; relies on full re-read).
+2. **Memory entry** in agent's memory dir (faster; auto-loaded, but agent must recognize when to apply).
+3. **Skill body discipline** (faster still; fires when the skill is invoked).
+4. **Auto-fire trigger in skill body** (relies on agent remembering to invoke; leaky per iteration 4 evidence).
+5. **Hook-enforced gate** (Stop hook, pre-commit hook, runtime check) — fires automatically; no agent-memory dependency.
+
+**Practical consequence:** when shipping a new calibrated discipline, ask explicitly: *what's the highest structural-enforcement layer this can credibly live at right now?* Don't default to "doctrine paragraph" if a hook or skill-body check would do the same job more reliably. The cost of building the structural enforcement is paid once; the cost of relying on doctrine-only enforcement is paid every time the discipline drifts.
+
+**Composes with the parity-defaults / collaborator-surface enforcement-candidate doctrine.** That section already names the promotion-to-structure pattern for parity-defaults specifically. This section generalizes it to all calibrated disciplines.
+
 ## Middleware-shape doctrine: retrospective surfaces are prospective
 
 In WorldThreads, **retrospective surfaces are structurally also prospective.** Surfaces that look like backward-facing summaries (reports, observation logs, /play seam summaries, mission-arc renderings, retiring-reports, rubric library entries, the craft-rules registry's tier metadata) actually function as forward-facing steering layers — they shape what gets written, run, or claimed next. The project does not have *pure summary surfaces*; that absence is the structural property, and middleware-everywhere is its consequence.
