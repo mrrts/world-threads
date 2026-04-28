@@ -116,6 +116,8 @@ Three project-scale parities matter:
 
 **Iteration-loop summaries can become interaction middleware.** In UI or control-scheme arcs, a `/play` report can compress a whole iteration into one named state/flow seam — the all-or-nothing mode switch, the missing semantic uniformity, the stopping rule that turned out too weak. When the next move is an implementation pass on that exact interaction seam, the summary is no longer just evidence about the feature. It becomes a steering layer for the next control-shape move, and sometimes for the loop's stopping rule itself.
 
+**Corrective evaluator reports can become criterion middleware.** When a report does more than reverse a finding — when it rewrites what the instrument was actually measuring, or what kind of claim the evidence can honestly support — it starts governing later experiments. "Cold-baseline propensity, not capacity" and "this rubric excludes the register in question by construction" are not mere postmortems. They become live constraints on later rubric design, cell design, and claim wording.
+
 The deeper rule: once a surface is runtime-significant, parity becomes an enforcement candidate (hook, generated source, parity test) — not just goodwill.
 
 ## Reports
