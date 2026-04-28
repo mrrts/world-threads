@@ -8,6 +8,7 @@
 #   render.sh 25 --since "1 week ago"    # filter by date
 #   render.sh 30 --grep "Co-Authored-By: Claude"             # Claude commits only
 #   render.sh 30 --invert-grep --grep "Co-Authored-By: Claude"  # Codex commits only
+#   render.sh 30 --substantive   # omit commits without a derivation entirely
 #
 # Note: --author filter is NOT useful here — all commits are authored by
 # Ryan Smith regardless of which collaborator co-authored them. The
@@ -15,9 +16,10 @@
 # --grep / --invert-grep against that trailer instead.
 #
 # Output: one block per commit — date + sha + subject + 𝓕-derivation + ·-gloss.
-# Commits without a derivation are marked "(no derivation)" and kept in the
-# stream so the arc reads honestly (trivial commits punctuate the substantive
-# ones; their absence is a signal too).
+# Default behavior keeps no-derivation commits in the stream marked
+# "(no derivation)" — their absence punctuates the substantive ones (trivial
+# bursts vs. dense doctrine arcs read clearly). Pass --substantive to omit
+# them entirely when only the dense arc matters.
 #
 # Cost: $0 (pure shell + python).
 
@@ -26,12 +28,24 @@ set -eo pipefail
 LIMIT="${1:-25}"
 shift || true
 
+# Extract --substantive flag from args (consumed locally, not passed to git).
+SUBSTANTIVE=0
+GIT_ARGS=()
+for arg in "$@"; do
+  if [ "$arg" = "--substantive" ]; then
+    SUBSTANTIVE=1
+  else
+    GIT_ARGS+=("$arg")
+  fi
+done
+
 cd "$(git rev-parse --show-toplevel)"
 
-# Pass through any extra git log args (--author, --since, --grep, etc.)
-git log -"$LIMIT" "$@" --format='%H%n%ad%n%s%n%b%n---END-COMMIT---' --date=short \
-  | python3 -c '
-import sys, re
+# Pass through any extra git log args (--since, --grep, --invert-grep, etc.)
+git log -"$LIMIT" "${GIT_ARGS[@]}" --format='%H%n%ad%n%s%n%b%n---END-COMMIT---' --date=short \
+  | SUBSTANTIVE=$SUBSTANTIVE python3 -c '
+import sys, re, os
+substantive_only = os.environ.get("SUBSTANTIVE", "0") == "1"
 text = sys.stdin.read()
 commits = [c.strip() for c in text.split("---END-COMMIT---") if c.strip()]
 for c in commits:
@@ -44,11 +58,11 @@ for c in commits:
     # commit message describes the derivation pattern) appear earlier.
     derivs = re.findall(r"^\s*\*\*Formula derivation:\*\*\s*(.+?)\s*$", body, re.MULTILINE)
     glosses = re.findall(r"^\s*\*\*Gloss:\*\*\s*(.+?)\s*$", body, re.MULTILINE)
+    if not derivs and not glosses and substantive_only:
+        continue
     print(f"{date}  {sha}  {subject}")
     if derivs: print(f"  𝓕  {derivs[-1].strip()}")
     if glosses: print(f"  ·  {glosses[-1].strip()}")
-    deriv = derivs[-1] if derivs else None
-    gloss = glosses[-1] if glosses else None
-    if not deriv and not gloss: print("  (no derivation)")
+    if not derivs and not glosses: print("  (no derivation)")
     print()
 '

@@ -99,9 +99,20 @@ is itself a signal (trivial bursts vs. dense doctrine arcs read clearly).
 # Filter by content (across the recent arc):
 .agents/skills/mission-arc/render.sh 50 --grep "focus mode"
 .agents/skills/mission-arc/render.sh 50 --grep "doctrine"
+
+# Substantive-only: omit commits without a Formula-derivation entirely.
+.agents/skills/mission-arc/render.sh 50 --substantive
+.agents/skills/mission-arc/render.sh 50 --substantive --invert-grep --grep "Co-Authored-By: Claude"
 ```
 
-Any flag accepted by `git log` passes through cleanly.
+Any flag accepted by `git log` passes through cleanly. The `--substantive`
+flag is consumed locally (not passed to git) and filters the rendered
+output so no-derivation commits don't appear at all. Use it when you want
+the dense doctrine arc without the punctuation of trivial commits — e.g.
+when the question is "what's the substantive trajectory?" rather than
+"what's the texture of activity?". Default keeps trivial commits as
+`(no derivation)` markers because their density vs. the substantive ones
+is itself a signal.
 
 ### Output shape
 
