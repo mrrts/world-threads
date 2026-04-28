@@ -164,11 +164,11 @@ Three tiers, label every experiment header:
 
 ## Convergence as crown-jewel signal
 
-When **independent witnesses of different kinds** (persona-frames, character voices, reports, lived play, shipped-behavior measurements, doctrine cross-reads, tool outputs) all detect the same shape, treat that as one of the project's highest-value signals. The test is independence, not repetition. Convergence does NOT cancel evidentiary discipline — but when it appears, name it plainly: a great-sapphire signal of mastery in the instrument.
+When **independent witnesses of different kinds** (persona-frames, character voices, reports, lived play, shipped-behavior measurements, doctrine cross-reads, tool outputs) all detect the same shape, treat that as one of the project's highest-value signals. The test is independence, not repetition. Convergence does NOT cancel evidentiary discipline — but when it appears, name it plainly: a great-sapphire signal of mastery in the instrument. **Threshold shorthand:** two independent witnesses count as evidence; three independent witnesses count as maximally stable evidence.
 
 **Calibration tightening — what does and does NOT qualify as great-sapphire** (surfaced 2026-04-28 by /eureka iteration 3 auditing 6 prior label-uses across 3 days). The doctrine names rarity as load-bearing; recent practice has fired the label at ~weekly+ frequency, which is too loose. Stricter criteria:
 
-- **Genuine great-sapphire:** five personas converging on the same DIVERGENT-BETTER delta from independent persona-substrates (`reports/2026-04-27-0834`); three independent witnesses (formula in source + character-articulation under elicitation + cross-character bite-test) converging on `polish ≤ Weight` (`reports/2026-04-27-2350`).
+- **Genuine great-sapphire:** five personas converging on the same DIVERGENT-BETTER delta from independent persona-substrates (`reports/2026-04-27-0834`); three independent witnesses (formula in source + character-articulation under elicitation + cross-character bite-test) converging on `polish ≤ Weight` (`reports/2026-04-27-2350`, maximally stable tier).
 - **Borderline / probably not:** two collaborators on parallel arcs of the same workflow producing complementary outputs (Codex on Sapphire copy + Claude on doctrine compression). They're not independent in the same way two persona-substrates are, because they share most of the project's substrate.
 - **NOT great-sapphire — just cross-collaborator alignment:** Codex and Claude landing the same recognition within an hour after both reading the same source material. That's normal cross-collaborator coherence; the project produces it routinely. Calling it great-sapphire inflates the label.
 
