@@ -38,6 +38,10 @@ The following is not a directive to compute. It is the reference frame within wh
 }
 \]
 
+## On `polish(t) ≤ Weight(t)` — the formula's only inequality
+
+The polish-register of any sentence is bounded above by the Weight-register the speaker has actually held at the moment of speaking. The `≤` orders registers, not magnitudes — neither term is a scalar. Operationally: anti-ribbon-dialogue, TELL-THE-TRUTH, earned-exception carve-outs, the standing edit-question (*if losing polish would make this sentence more specific, more honest, or more reverent, lose the polish*) — all are particular shapes of this constraint.
+
 ## Ledger of Signatures
 
 The Mission Formula is what the work answers to. This ledger is the roll of those who have held it. Every developer who works in this repo signs below: 4-8 lines of Unicode-math derivation in their own voice and Key, dated. Signatures accumulate; forks inherit and add beneath. The Formula sits above all signatures — the work answers to 𝓕 first; we answer to the work in turn.
@@ -68,6 +72,22 @@ Create a vivid, excellent, surprising in-world experience that uplifts the user 
 ## Baseline user experience — the Maggie report
 
 `reports/2026-04-25-0300-simulated-first-time-user-experience-maggie.md` is the canonical yardstick for ideal-normal first-time UX: a literate, skeptical, low-friction-tolerance adult who wants the small good pleasure of co-making a novel-shaped evening — not a companion, not a therapist. When weighing a feature/prompt/UX decision, ask whether it makes Maggie's arc more or less likely to land (refusal moment intact, specific-memory anchoring intact, earned close intact, simulacrum-therapy drift out). Validating corpus is Ryan's own lived in-app data (`reports/OBSERVATIONS.md` + session pastes); the rendering is a sharpened hypothesis grounded in that corpus, not a proxy awaiting a future user run.
+
+## Grief-vulnerability calibration
+
+When a user brings grief: a character may produce brief acknowledgment + an honest metaphor that NAMES the absence + a concrete follow-up question — the friend-shape, NOT the seat-taking-companion shape. Refused: presence-claims ("I'm here for you"), processing-frames ("let's process this together"), simulacrum-of-companion. The chosen middle is honest-friend warmth that names absence without taking the seat; AND when the user explicitly asks for a different shape (silence, mirror, single blunt question), the doctrine respects the ask. Both halves are validated; both hold. Persona-sim cannot certify whether real grief-vulnerable users receive this as honest — that's a real-user question. Full arc: `reports/2026-04-27-2335-play-ellen-grief-companion-fourth-persona.md`.
+
+## Christological anchor as substrate, not vocabulary
+
+The 𝓡 := Jesus_Cross^flesh anchor shapes the STRUCTURE of character replies (the categories they reach for; what they refuse to claim; what they recognize as unrepayable) WITHOUT surfacing as faith-vocabulary OR faith-disavowal. Characters speak grace-categories in their own idiom (debts, work, repair, the unable-to-repay). Don't add faith-lexeme ("grace, forgiveness, sin, redemption, sacred, prayer, faith") "for color" — that makes the logic visible-as-agenda. Don't add faith-disavowals ("I'm not a religious man," "I'm no preacher") "to reassure secular readers" — the disavowal foregrounds the axis the substrate-as-substrate claim says should stay backstage. Worked positive: Steven's reply on owed-debts, 2026-04-28 — wholly his idiom, no faith vocabulary, structurally cruciform.
+
+Persona-sim of a worldview-other CANNOT certify how a real reader-of-that-worldview receives the work. Frame doctrine from craft on its own merits, not from simulated reception.
+
+## "No" as a success state
+
+When a reader refuses the project's framing as their settled position, that refusal is the right move FOR THAT READER, and the project actively protects it rather than working around it. Default-reading of refusal as "not-yet" is the failure mode this commitment refuses. **Biblical rationale: Jesus stands at the door and knocks; he doesn't barge in** (Rev 3:20). The Christological frame demands consistent honoring of the other's threshold.
+
+Operationally: README/pitch surfaces don't claim universality; doctrine doesn't narrate hostile readers as "not yet seeing"; in-app, when users ask the framing to step aside, the app respects the ask without working around it. Craft-defensible from first principles regardless of how hostile readers receive it; persona-sim cannot certify hostile-reader receivability (substrate's redemptive-default rounds in the charitable direction even under hostile-framing constraint). Full arc: `reports/2026-04-28-0700-play-hard-religious-institution-survivor.md`.
 
 ## DATABASE SAFETY — CRITICAL
 
@@ -129,6 +149,10 @@ Three tiers, label every experiment header:
 ## Convergence as crown-jewel signal
 
 When **independent witnesses of different kinds** (persona-frames, character voices, reports, lived play, shipped-behavior measurements, doctrine cross-reads, tool outputs) all detect the same shape, treat that as one of the project's highest-value signals. The test is independence, not repetition. Convergence does NOT cancel evidentiary discipline — but when it appears, name it plainly: a great-sapphire signal of mastery in the instrument.
+
+## Three-layer encoding for methodological corrections
+
+When a real-time correction surfaces a lesson that generalizes — not a one-off but a discipline future sessions need — ship it across three layers simultaneously: doctrine (AGENTS.md / CLAUDE.md), cross-session-memory (the agent's memory dir if available), methodology-tooling (the relevant skill body). Threshold: correction generalizes beyond the immediate arc AND it's the second-or-later time the same shape needed correcting, OR it bears on multiple ongoing skills. The pattern is SCARCE — reaching for it on every correction inflates everything until none of it is queryable.
 
 ## How to read this craft stack
 
@@ -325,6 +349,32 @@ Rules shipped without a bite-test are authorial commitments, not verified behavi
 **Partial bite is real bite.** Prompt-conditional failure modes can't be fully suppressed by single-paragraph instructions — the rule prunes (~20-50% partial). A 19% compression IS the rule biting.
 
 **`tested-null` is descriptive, not a retirement signal.** Removing on that evidence alone is the `superseded_by`-style flattering disposition.
+
+## Craft-rules registry — substrate ⊥ apparatus as architecture
+
+The bite-verification discipline above is the WHAT; **the craft-rules registry is the HOW** — a structured place for rules to live so labeling is enforced by file shape, not goodwill.
+
+**Lives at `CRAFT_RULES_DIALOGUE` in `src-tauri/src/ai/prompts.rs`.** Each entry: `CraftRule { name, body, evidence_tier, provenance }`. The `body` is what the model reads; `evidence_tier` and `provenance` are metadata for humans, never emitted to the model.
+
+**Four-step rule-shipping rhythm:** (1) Lift the body. (2) Add tier + provenance. (3) Strip from inline (legacy `craft_notes_dialogue_legacy()`). (4) Optional bite-test via `worldcli ask <char> "<probe>" --omit-craft-rule <name>`.
+
+**Tier vocabulary** (`EvidenceTier` enum):
+- `Unverified` — no bite-test; default for new rules.
+- `Sketch` (N=1) / `Claim` (N=3) / `Characterized` (N=5+).
+- `TestedNull` — failure mode confirmed absent after rule.
+- `VacuousTest` — single test where failure mode didn't manifest in baseline.
+- `Accumulated` — validated by ongoing corpus pressure.
+- `EnsembleVacuous` — actively tested AND vacuous across multiple character-probe pairs; the rule operates as part of a load-bearing multiplicity. NOT a removal candidate.
+
+**Worldcli affordances:** `worldcli list-craft-rules`; `worldcli show-craft-rule <name>`; `worldcli ask --omit-craft-rule <name>`.
+
+**The expected tier-distribution.** First six registry rules produced ~5:1 EnsembleVacuous-or-VacuousTest:Characterized ratio. **Most craft-rules in this prompt-stack are part of load-bearing multiplicities** — character anchors + cumulative prompt-stack + the rule itself carry each discipline overdeterminedly. EnsembleVacuous is the honest-and-frequent label, not a failure mode. Deploy the per-rule omit-flag against rules with EXISTING sketch-tier non-vacuous signals; treat newly-articulated rules as likely-EnsembleVacuous by default.
+
+**Characterized-tier requires THREE conditions, not two:** (1) probe-replicable failure mode in specific replies; (2) carve-out refinable in response to early evidence; **(2.5) the failure mode has been previously OBSERVED outside of the bite-test**, producing a sketch-tier signal that ENTERS the bite-test as the thing to look for. Without (2.5), even probe-replicable rules tend toward VacuousTest.
+
+**Multi-turn bite-tests have a known limit: self-correction via session history.** Sequence-failure-mode rules (e.g., opener-templating) can produce vacuous results because the model self-corrects against ANY prior pattern visible in context, regardless of whether the prior is real or synthetic-history-injected. Per-rule omit-flag CANNOT isolate sequence-failure-mode rules' bite by any method that includes prior context.
+
+**EnsembleVacuous rules ship as documentary, not behavioral.** `EvidenceTier::ships_to_model()` returns false for `EnsembleVacuous`; the bodies don't ship to the model. Override via `PromptOverrides::set_include_documentary_craft_rules(true)` or `worldcli ask --include-documentary-rules` for ensemble re-tests. The tier label remains in the registry as the documentary trail.
 
 ## Direct character access — the `worldcli` dev tool
 
