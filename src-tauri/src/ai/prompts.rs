@@ -3372,8 +3372,8 @@ pub fn tone_directive(tone: &str) -> Option<String> {
         ),
         "Reverent" => (
             "lean into REVERENT register",
-            "A slowed pulse. Attention that recognizes something larger than the moment. Simpler words for the important things. A hush in the body — the hand stilling, the breath held briefly, the room noticed. Restraint that serves awe.",
-            "No theatrical solemnity, no capital-letter VIRTUE talk. Reverence is steadiness, not performance.",
+            "A slowed pulse. Attention that recognizes something larger than the moment. Simpler words for the important things. A hush in the body — the hand stilling, the breath held briefly, the room noticed. Restraint that serves awe. A plain word may carry reverence better than an elevated one.",
+            "No theatrical solemnity, no capital-letter VIRTUE talk. Reverence is steadiness, not performance, and not a cue to start sounding ceremonially important.",
         ),
         "Serene" => (
             "lean into SERENE register",
