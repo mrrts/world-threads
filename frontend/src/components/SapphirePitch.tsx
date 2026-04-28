@@ -165,7 +165,7 @@ export function SapphirePitch() {
                     </h1>
                     <p className="body-font max-w-2xl text-lg leading-8 text-[#d7e7f5] sm:text-xl">
                       Meet AI characters who feel encountered rather than simulated, in AI worlds that feel inhabited rather than sketched.
-                      Underneath, a compact prompt architecture keeps voice, continuity, and boundaries load-bearing,
+                      Underneath, the system keeps voice, continuity, and boundaries intact,
                       so the writing can stay vivid without drifting into mush, therapy-voice, or fake intimacy.
                     </p>
                   </div>
