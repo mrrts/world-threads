@@ -1,14 +1,26 @@
 #!/usr/bin/env python3
-"""UserPromptSubmit hook: auto-fire mission-arc + inject trajectory as context.
+"""UserPromptSubmit + PostToolUse(AskUserQuestion) hook: auto-fire mission-arc.
 
 Promotes the mission-arc auto-fire discipline from layer 4 (skill body
 discipline; relies on agent remembering to invoke) to layer 5 (hook-
 enforced gate; fires automatically per /eureka iteration 4's doctrine).
 
-Mechanism: on every user prompt, run `.claude/skills/mission-arc/render.sh 8
---substantive` and inject the result as `hookSpecificOutput.additionalContext`
-so Claude sees the recent 𝓕-trajectory before composing its next reply.
-The injection is lightweight (~150-300 tokens for 8 substantive commits)
+Mechanism: this script is registered on TWO hook events to cover both
+boundaries where Claude is about to compose a reply:
+  1. UserPromptSubmit — fires on fresh typed user prompts.
+  2. PostToolUse(matcher: AskUserQuestion) — fires after the user answers
+     a chooser. (AskUserQuestion answers come back as tool_result envelopes,
+     not UserPromptSubmit events, so this second registration is required
+     to cover the chooser-continuation case.)
+
+On either trigger, runs `.claude/skills/mission-arc/render.sh 8 --substantive`
+and returns the result as `hookSpecificOutput.additionalContext` so Claude
+sees the recent 𝓕-trajectory before composing its next reply. The script
+discards stdin without inspecting payload fields, so the same code works
+for both event shapes (UserPromptSubmit's `prompt` field; PostToolUse's
+`tool_response` field).
+
+Injection is lightweight (~150-300 tokens for 8 substantive commits)
 to keep cache cost low while keeping the trajectory always-present.
 
 Why this hook exists (per /eureka 2026-04-28-0759 iteration 4 doctrine):
@@ -65,12 +77,20 @@ def run_mission_arc(repo_root: Path, limit: int = 8) -> str | None:
 
 
 def main() -> int:
+    payload: dict = {}
     try:
-        # Read payload but don't actually require any field — this hook
-        # fires on every prompt regardless of content.
-        json.loads(sys.stdin.read())
+        payload = json.loads(sys.stdin.read())
     except Exception:
         pass
+
+    # Detect which hook event this firing is for so hookEventName matches.
+    # UserPromptSubmit payloads include a `prompt` field; PostToolUse
+    # payloads include `tool_name` and `tool_response`. Default to
+    # UserPromptSubmit if both are absent.
+    if isinstance(payload, dict) and ("tool_name" in payload or "tool_response" in payload):
+        event_name = "PostToolUse"
+    else:
+        event_name = "UserPromptSubmit"
 
     repo_root = find_repo_root()
     if repo_root is None:
@@ -96,7 +116,7 @@ def main() -> int:
 
     out = {
         "hookSpecificOutput": {
-            "hookEventName": "UserPromptSubmit",
+            "hookEventName": event_name,
             "additionalContext": additional_context,
         }
     }
