@@ -871,6 +871,13 @@ enum Cmd {
         /// Valid forms: same as --inject-before.
         #[arg(long, value_name = "ANCHOR", conflicts_with = "inject_before", action = clap::ArgAction::Append)]
         inject_after: Vec<String>,
+        /// Optional ordering of the three main dialogue prompt sections.
+        /// Comma-separated. Valid names (case-insensitive, hyphens or
+        /// underscores): agency-and-behavior / agency / behavior;
+        /// craft-notes / craft / notes; invariants / invariant.
+        /// Must include exactly one of each.
+        #[arg(long, value_delimiter = ',')]
+        section_order: Vec<String>,
         /// Send the message in the context of an existing GROUP CHAT.
         /// When set, the `character_id` arg becomes the SPEAKER (which
         /// must be a member of this group); the prompt builder swaps to
@@ -1668,7 +1675,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_refresh_anchor(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
-        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, group_chat } => {
+        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, group_chat } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
@@ -1694,6 +1701,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &inject_file,
                     &inject_before,
                     &inject_after,
+                    &section_order,
                 ).await
             } else {
                 cmd_ask(
@@ -1713,6 +1721,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &inject_file,
                     &inject_before,
                     &inject_after,
+                    &section_order,
                 ).await
             }
         }
@@ -7674,6 +7683,31 @@ fn parse_cli_insertions(
     Ok(out)
 }
 
+fn parse_section_order_override(
+    section_order_names: &[String],
+) -> Result<Option<Vec<app_lib::ai::prompts::DialoguePromptSection>>, Box<dyn std::error::Error>> {
+    if section_order_names.is_empty() {
+        return Ok(None);
+    }
+    let mut parsed: Vec<app_lib::ai::prompts::DialoguePromptSection> = Vec::new();
+    for name in section_order_names {
+        match app_lib::ai::prompts::DialoguePromptSection::from_cli_name(name) {
+            Some(sec) => parsed.push(sec),
+            None => return Err(Box::<dyn std::error::Error>::from(format!(
+                "unknown section name '{}' in --section-order. Valid names: agency-and-behavior, craft-notes, invariants.",
+                name
+            ))),
+        }
+    }
+    if !app_lib::ai::prompts::DialoguePromptSection::is_valid_permutation(&parsed) {
+        return Err(Box::<dyn std::error::Error>::from(format!(
+            "--section-order must include exactly one of each: agency-and-behavior, craft-notes, invariants. Got: {:?}",
+            parsed
+        )));
+    }
+    Ok(Some(parsed))
+}
+
 async fn cmd_ask(
     r: &Resolved,
     api_key: &str,
@@ -7691,6 +7725,7 @@ async fn cmd_ask(
     inject_file_paths: &[std::path::PathBuf],
     inject_before_anchors: &[String],
     inject_after_anchors: &[String],
+    section_order_names: &[String],
 ) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
 
@@ -7726,7 +7761,8 @@ async fn cmd_ask(
         };
 
         let insertions = parse_cli_insertions(inject_file_paths, inject_before_anchors, inject_after_anchors)?;
-        let overrides_for_prompt = if !omit_craft_rules.is_empty() || include_documentary_rules || !insertions.is_empty() {
+        let section_order_override = parse_section_order_override(section_order_names)?;
+        let overrides_for_prompt = if !omit_craft_rules.is_empty() || include_documentary_rules || !insertions.is_empty() || section_order_override.is_some() {
             let mut ov = prompts::PromptOverrides::new();
             if !omit_craft_rules.is_empty() {
                 ov.set_omit_craft_rules(omit_craft_rules.clone());
@@ -7736,6 +7772,9 @@ async fn cmd_ask(
             }
             if !insertions.is_empty() {
                 ov.set_insertions(insertions);
+            }
+            if let Some(order) = section_order_override {
+                ov.set_section_order(order);
             }
             Some(ov)
         } else {
@@ -7965,6 +8004,7 @@ async fn cmd_group_ask(
     inject_file_paths: &[std::path::PathBuf],
     inject_before_anchors: &[String],
     inject_after_anchors: &[String],
+    section_order_names: &[String],
 ) -> Result<(), Box<dyn std::error::Error>> {
     use app_lib::ai::prompts::{GroupContext, OtherCharacter};
 
@@ -8025,7 +8065,8 @@ async fn cmd_group_ask(
         let anchor_text: Option<String> = combined_axes_block(&conn, speaker_id);
 
         let insertions = parse_cli_insertions(inject_file_paths, inject_before_anchors, inject_after_anchors)?;
-        let overrides_for_prompt = if !omit_craft_rules.is_empty() || include_documentary_rules || !insertions.is_empty() {
+        let section_order_override = parse_section_order_override(section_order_names)?;
+        let overrides_for_prompt = if !omit_craft_rules.is_empty() || include_documentary_rules || !insertions.is_empty() || section_order_override.is_some() {
             let mut ov = prompts::PromptOverrides::new();
             if !omit_craft_rules.is_empty() {
                 ov.set_omit_craft_rules(omit_craft_rules.clone());
@@ -8035,6 +8076,9 @@ async fn cmd_group_ask(
             }
             if !insertions.is_empty() {
                 ov.set_insertions(insertions);
+            }
+            if let Some(order) = section_order_override {
+                ov.set_section_order(order);
             }
             Some(ov)
         } else {
