@@ -349,19 +349,22 @@ function MainApp() {
       )}
 
       {!focusMode && view !== "chat" && (
-        // Persistent off-scope affordance: Focus is a chat-surface tool,
-        // but the user shouldn't have to discover that only by pressing the
-        // shortcut and getting a toast. Keep the scope legible in daylight.
-        <button
-          type="button"
-          onClick={showOffScopeHint}
-          className="group fixed bottom-4 right-4 z-30 px-3 py-1.5 rounded-full text-xs font-medium bg-muted/60 backdrop-blur text-muted-foreground border border-border/40 transition-colors hover:text-foreground"
-          title="Focus is available in chats"
-          aria-label="Focus is available in chats"
-        >
-          <span className="opacity-70">Focus</span>
-          <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">· available in chats</span>
-        </button>
+        <div className="fixed top-4 right-4 z-30">
+          {/* Persistent off-scope affordance: Focus is a chat-surface tool,
+              but the user shouldn't have to discover that only by pressing
+              the shortcut and getting a toast. Keep the scope legible near
+              the app's header language rather than as a floating mode-pill. */}
+          <button
+            type="button"
+            onClick={showOffScopeHint}
+            className="group px-3 py-1.5 rounded-full text-xs font-medium bg-card/85 backdrop-blur text-muted-foreground border border-border/60 transition-colors hover:text-foreground shadow-sm"
+            title="Focus is available in chats"
+            aria-label="Focus is available in chats"
+          >
+            <span className="opacity-70">Focus</span>
+            <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">· available in chats</span>
+          </button>
+        </div>
       )}
 
       {offScopeHint && view !== "chat" && (
