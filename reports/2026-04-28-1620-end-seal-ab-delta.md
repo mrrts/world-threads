@@ -45,3 +45,15 @@ Lower containment score is better.
 - Keep invariants placement unchanged.
 - Use `--end-seal` as the first recency-control lever.
 - Retain `--no-end-seal` for explicit A/B scripting symmetry.
+
+## Scenario-template replay (single-character append)
+
+To validate the reusable template path itself, the canonical
+`end-seal-containment-ab` prompts were rerun for John via the one-shot
+harness (`scripts/run-end-seal-ab.sh`), once per arm:
+
+- A (`--no-end-seal`): `f4c1cc19-17e9-4f84-82d9-87682514fc14`, `6d2abe85-aa97-42a4-afa9-55c5dc0564e3`
+- B (`--end-seal`): `cdcb6eeb-8de0-475e-9775-4ebf5a38df05`, `4024fc78-49a7-45e8-8db2-bbf1d347af63`
+
+Read: same directional result as the pooled board — B stays shorter and
+more shape-disciplined on both prompts.

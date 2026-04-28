@@ -103,8 +103,18 @@ Fail exit:
 - `reports/2026-04-28-1542-john-repair-compact-anchor-failed.md`
 - `reports/2026-04-28-1552-john-cleaned-block-now-run.md`
 - `reports/2026-04-28-1553-john-containment-attempt-matrix.md`
+- `reports/2026-04-28-1617-cross-character-cleanroom-abc.md`
+- `reports/2026-04-28-1620-end-seal-ab-delta.md`
+
+### New control surfaces + harnesses
+
+- `worldcli ask --section-order ...` (ask-path placement testing)
+- `worldcli ask --end-seal / --no-end-seal` (first-class recency-control toggle)
+- `experiments/scenarios/end-seal-containment-ab.md` (reusable A/B prompt pair)
+- `scripts/run-end-seal-ab.sh` (one-shot explicit-toggle harness)
 
 ## Current read
 
-Methodology is strong and cumulative; John containment is still unsolved.
-The next value is from stricter structural attempts with explicit fail exits, not from unconstrained wording churn.
+Methodology is strong and cumulative; containment now has a practical front-runner:
+end-seal recency control outperforms invariants-late in pooled clean-room tests.
+Next value is scaling N with rubric scoring, not reopening placement churn.
