@@ -107,6 +107,7 @@ Fail exit:
 - `reports/2026-04-28-1620-end-seal-ab-delta.md`
 - `reports/2026-04-28-1628-gamer-register-uptake-aaron-rick.md`
 - `reports/2026-04-28-1629-arc-scoreboard-day.md`
+- `reports/2026-04-28-1631-gamer-friend-chaos-qa-and-variation-playbook.md`
 
 ### New control surfaces + harnesses
 
