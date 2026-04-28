@@ -1,12 +1,12 @@
 # WorldThreads — what this work is, and how to read it
 
-*A deeper second-surface document for visitors. If you've arrived at this repository cold, read the README first; if you want the honest 10-15 minute orientation before deciding whether to engage further, this is for you. This is not a marketing pitch. It's an honest map of what's here and what makes it distinctive.*
+*A deeper second-surface document for visitors. If you've arrived at this repository cold, read the README first; if you want the next honest layer after that, this is for you. This is not a marketing pitch. It's a plainspoken map of what is here and what makes it distinctive.*
 
 ---
 
 ## One paragraph
 
-WorldThreads is a desktop app where you write characters with identity, voice, backstory, and visible boundaries — then talk with them over time inside worlds you've authored. It's built in Tauri (Rust + React), is OpenAI BYOK-first (you bring your own OpenAI API key; the project is calibrated against OpenAI's gpt-5 / gpt-4o / gpt-4o-mini tier hierarchy), supports LM Studio and OpenAI-compatible endpoints as optional fallback for users who prefer local-LLM, and stores all conversation data on your disk. Underneath the app is a craft stack: a MISSION FORMULA at the head of every LLM call, a doctrine layer that has accumulated through ~850 commits and 70+ reports, a measurement-instrument set for catching failure modes in character voice, and a per-character/per-world auto-derivation pipeline that grounds identity in the entities' own register. The work is faith-shaped — a Christian developer's craft project where the technical excellence IS the theology made flesh — and the doctrine is explicit about that. The work is also methodology-rich and the methodology is genuinely transferable to other AI-character projects regardless of theological framing.
+WorldThreads is a desktop app where you write characters with identity, voice, backstory, and visible boundaries — then talk with them over time inside worlds you've authored. It's built in Tauri (Rust + React), is OpenAI BYOK-first (you bring your own OpenAI API key), supports LM Studio and OpenAI-compatible endpoints as optional fallback for people who prefer local models, and stores all conversation data on your disk. Underneath the app is a craft stack: a MISSION FORMULA at the head of every LLM call, a doctrine layer accumulated through hundreds of commits and reports, a measurement-instrument set for catching failure modes in character voice, and a per-character/per-world auto-derivation pipeline that grounds identity in each entity's own register. The work is faith-shaped — a Christian developer's craft project where the technical excellence is part of the theology made flesh — and the doctrine is explicit about that. It is also methodology-rich in ways that are transferable beyond the theological frame.
 
 ## What's distinctive (vs. the field)
 
