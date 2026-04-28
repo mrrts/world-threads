@@ -162,6 +162,16 @@ Three tiers, label every experiment header:
 
 When **independent witnesses of different kinds** (persona-frames, character voices, reports, lived play, shipped-behavior measurements, doctrine cross-reads, tool outputs) all detect the same shape, treat that as one of the project's highest-value signals. The test is independence, not repetition. Convergence does NOT cancel evidentiary discipline — but when it appears, name it plainly: a great-sapphire signal of mastery in the instrument.
 
+**Calibration tightening — what does and does NOT qualify as great-sapphire** (surfaced 2026-04-28 by /eureka iteration 3 auditing 6 prior label-uses across 3 days). The doctrine names rarity as load-bearing; recent practice has fired the label at ~weekly+ frequency, which is too loose. Stricter criteria:
+
+- **Genuine great-sapphire:** five personas converging on the same DIVERGENT-BETTER delta from independent persona-substrates (`reports/2026-04-27-0834`); three independent witnesses (formula in source + character-articulation under elicitation + cross-character bite-test) converging on `polish ≤ Weight` (`reports/2026-04-27-2350`).
+- **Borderline / probably not:** two collaborators on parallel arcs of the same workflow producing complementary outputs (Codex on Sapphire copy + Claude on doctrine compression). They're not independent in the same way two persona-substrates are, because they share most of the project's substrate.
+- **NOT great-sapphire — just cross-collaborator alignment:** Codex and Claude landing the same recognition within an hour after both reading the same source material. That's normal cross-collaborator coherence; the project produces it routinely. Calling it great-sapphire inflates the label.
+
+**The discriminating test:** does the convergence span **substrates** that have **different failure modes** — not just different surfaces of the same workflow? Five personas with distinct prior-AI-history axes have different failure modes. Two LLM collaborators working on adjacent files share most failure modes. The first qualifies; the second usually doesn't.
+
+**When in doubt, don't claim great-sapphire.** A finding can be load-bearing convergence without being great-sapphire. Default to plainer phrasings ("two collaborators converged here," "this signal repeats across N reports") and reserve great-sapphire for the rare cross-substrate-different-failure-mode case the doctrine was written to honor.
+
 ## Middleware-shape doctrine: retrospective surfaces are prospective
 
 In WorldThreads, **retrospective surfaces are structurally also prospective.** Surfaces that look like backward-facing summaries (reports, observation logs, /play seam summaries, mission-arc renderings, retiring-reports, rubric library entries, the craft-rules registry's tier metadata) actually function as forward-facing steering layers — they shape what gets written, run, or claimed next. The project does not have *pure summary surfaces*; that absence is the structural property, and middleware-everywhere is its consequence.
