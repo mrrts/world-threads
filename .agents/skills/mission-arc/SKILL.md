@@ -73,10 +73,12 @@ is itself a signal (trivial bursts vs. dense doctrine arcs read clearly).
 # Last 50 commits (broader arc):
 .agents/skills/mission-arc/render.sh 50
 
-# Filter by author (mine vs. Claude's vs. Ryan's):
-.agents/skills/mission-arc/render.sh 30 --author "Codex"
-.agents/skills/mission-arc/render.sh 30 --author "Claude"
-.agents/skills/mission-arc/render.sh 30 --author "Ryan Smith"
+# Filter by collaborator (Codex vs. Claude). All commits are authored by
+# Ryan Smith regardless of which collaborator drove the work — the real
+# distinction lives in the Co-Authored-By trailer. So use --grep against
+# that trailer, NOT --author:
+.agents/skills/mission-arc/render.sh 30 --invert-grep --grep "Co-Authored-By: Claude"  # Codex commits
+.agents/skills/mission-arc/render.sh 30 --grep "Co-Authored-By: Claude"             # Claude commits
 
 # Filter by date:
 .agents/skills/mission-arc/render.sh 50 --since "1 week ago"

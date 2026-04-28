@@ -5,8 +5,14 @@
 # Usage:
 #   render.sh                # last 25 commits
 #   render.sh 50             # last 50 commits
-#   render.sh 25 --author "Ryan Smith"   # filter by author
 #   render.sh 25 --since "1 week ago"    # filter by date
+#   render.sh 30 --grep "Co-Authored-By: Claude"             # Claude commits only
+#   render.sh 30 --invert-grep --grep "Co-Authored-By: Claude"  # Codex commits only
+#
+# Note: --author filter is NOT useful here — all commits are authored by
+# Ryan Smith regardless of which collaborator co-authored them. The
+# Claude/Codex distinction lives in the Co-Authored-By trailer; use
+# --grep / --invert-grep against that trailer instead.
 #
 # Output: one block per commit — date + sha + subject + 𝓕-derivation + ·-gloss.
 # Commits without a derivation are marked "(no derivation)" and kept in the
