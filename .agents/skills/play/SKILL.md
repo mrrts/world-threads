@@ -46,6 +46,13 @@ The strongest `/play` findings now come from what only becomes visible when thos
 branches are held beside each other. Treat the gap as first-class evidence, not as
 mere disagreement to be ironed out.
 
+In copy-work arcs, one more threshold now matters: when a `/play` report or
+direct-witness read compresses the full differential run into **one named live
+seam**, that summary can become a **precomposition surface**. At that point the
+report is no longer just evidence stored for later; it is actively steering the
+next wording move. Treat the seam-summary sentence itself as load-bearing until
+the copy arc closes.
+
 ## When this skill does NOT fit
 
 - Persona-sim evidence is **not real-user evidence**. Per `docs/PLAIN-TRADITION.md`

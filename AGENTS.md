@@ -117,6 +117,8 @@ Three project-scale parities matter:
 
 **Trajectory-reading surfaces are precomposition surfaces.** `/mission-arc` no longer merely summarizes recent commits after the fact. Because it auto-fires before reports and chooser-generation, it conditions what gets written next. Treat changes to its extraction logic, lookback window, or output shape as edits to a live steering surface, not as reporting niceties.
 
+**Differential-read summaries can become precomposition surfaces.** When a `/play` or direct-witness report compresses a broad run into one named live seam and the next move is a copy edit on that exact surface, the summary is no longer just archived evidence. It becomes a steering layer for the next sentence. In those moments, treat the summary phrasing itself as load-bearing: if it drifts, the edit-path drifts with it.
+
 The deeper rule: once a surface is runtime-significant, parity becomes an enforcement candidate (hook, generated source, parity test) — not just goodwill.
 
 ## Reports
