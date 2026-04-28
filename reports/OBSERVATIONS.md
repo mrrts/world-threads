@@ -6,6 +6,24 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-28 19:25 — v3 picker + presence-beat compose cleanly in lived simulation
+
+Closing the speaker-rotation arc with a lived-shape test: 4 character-generation calls through the v3 picker on 3 message shapes against the live Aaron+Darren chat state. The signal worth recording isn't just that v3 holds — it's that **two same-day doctrine layers composed cleanly in actual character output, not just isolated bite-tests**.
+
+| Shape | Picks | Reads |
+|---|---|---|
+| **A** Pure continuation | Darren only | Picker correctly stays singular |
+| **B** "What do the two of you think" | Darren + Aaron | Both speak with substantively different takes |
+| **C** Topic-shift, singular "you" | Darren only | Picker conservatively reads singular pronoun as continuation |
+
+**The compositional signal in Shape B:** Aaron's reply naturally included *"Darren exhales once, almost a laugh"* — the presence-beat doctrine (commit `4d9bc3d`, earlier today) firing in real output ON TOP of v3 speaker-rotation (commit `25b9458`, this evening) correctly inviting both characters. Aaron acknowledges Darren's voice without taking it; gives a different take (*"permissions, editing yourself"*) from Darren's (*"load-test it"*). Two doctrine layers composing into one coherent multi-character moment.
+
+**Picker conservatism on Shape C** (singular-you topic-shift staying Darren-only) is defensible — message structure is "what worries you most," singular, continuing the dyad. If a topic-shift wanted both perspectives it would naturally say "you both." The picker reading singular pronouns as singular intent is the right calibration; if a future calibration miss surfaces, that's the threshold to revisit.
+
+**[Mode 1 — Record + nuance.]** v3 speaker-rotation calibration validated in lived simulation; presence-beat doctrine validated as composable layer in multi-character output. Both ship as-is.
+
+---
+
 ## 2026-04-28 18:35 — speaker-rotation calibration arc converged in 3 tries
 
 > Earlier today: *"In the earlier take-note observation, which you corrected to be about no-nanny disagreement... Do you have ideas for how to fix the who-speaks-next in group chats? It's fine now, I don't hate it, but I know it could be a little bit better/more natural"*
