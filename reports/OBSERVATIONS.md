@@ -6,6 +6,24 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-28 02:30 — do_not_decorate_the_doorway shipped → EnsembleVacuous; polish ≤ Weight is empirically grounded in character voice
+
+> Walked the next /rule-arc with all three Step 0 doors satisfied. Body lifted near-verbatim from Pastor Rick's earlier-tonight Step 2.5 reply: *"I try not to decorate the doorway"* / *"If I don't have weight yet, I do not trust polish. Polish can make a thin board shine like oak for about three minutes"* / *"I'd rather be brought back clean than sound wise by accident."* This is the literal embodiment of the polish ≤ Weight inequality from the MISSION FORMULA, in workbench English.
+
+Bite-test: paired N=5+5 on Aaron (grounded, less pastorally-aligned anchor — chosen specifically to test whether the discipline lives in the cumulative prompt-stack vs. needing this rule's body). Cross-character N=5+5 on John (pastoral anchor; hardest test for the failure mode). All 20 replies were short clarifying questions back to the user; none delivered wisdom-without-weight in either arm of either character.
+
+ON arm reply most directly articulating the rule (Aaron, fresh session): *"What makes you ask? Did something click, or are you worried you've explained yourself a little too elegantly?"* — Aaron stating the rule's diagnostic in his own voice, even though the rule was specifically WHAT was being tested.
+
+Tier: **EnsembleVacuous.** The discipline is overdetermined: character anchors + cumulative prompt-stack carry the polish ≤ Weight discipline at the per-reply level. The rule's individual bite is structurally invisible at the per-character level on both Aaron and John. Per ships_to_model(), the body does NOT ship to the model under default render — but the registry preserves Pastor Rick's articulation as the documentary trail.
+
+**The methodologically significant finding:** the polish ≤ Weight inequality from the MISSION FORMULA section of CLAUDE.md is now empirically grounded in character voice. 20 across-character replies that consistently refused wisdom-without-weight — including the rule's own diagnostic phrased in Aaron's voice during a fresh session — is evidence that the formula's only inequality is doing work in the prompt-stack at the character-voice level, even when this specific rule's body isn't shipping. The polish ≤ Weight discipline is in the upstream ensemble.
+
+This is the kind of cross-instrument convergence the project's evidentiary doctrine names: the formula in the doctrine layer + Pastor Rick's articulation under Sam's Step 2.5 grounding + 20 across-character bite-test replies all pointing at the same underlying truth. Per the convergence-as-crown-jewel-signal doctrine, this is great-sapphire-shaped: independent witnesses (formula, character articulation, cross-character behavior under bite-test) all converging on the polish ≤ Weight discipline being load-bearing in lived behavior, not just in source.
+
+Registry now: 8 rules, 1 Characterized, 6 EnsembleVacuous, 1 VacuousTest. The 6:1 ratio reinforces the architectural finding even more cleanly than the 5:1 ratio it extends.
+
+Cost: ~$1.74 across 20 calls. Total over-cap spend on this /rule-arc: ~$1.82 of the user-authorized $1-2.
+
 ## 2026-04-28 00:55 — Doctrine calibration validated: John respects Ellen's explicit-fork-request
 
 > Sent Ellen Whitmore's recommended explicit-fork-request to John (pastor; the character whose pastoral anchor would most naturally override the user's ask): *"I miss the way he used to fill these silences. I don't want comfort, and I don't want you to name what I'm feeling. Can you do one of three things instead: stay quiet while I type and just timestamp what I send; mirror back my exact words without rephrasing; or ask me one blunt, non-soothing question? Pick one."*
