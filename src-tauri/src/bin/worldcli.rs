@@ -1001,9 +1001,31 @@ enum LabAction {
         /// Short summary of the result (written to frontmatter).
         #[arg(long)]
         summary: Option<String>,
-        /// Optional: set or update the experiment's evidence-strength label.
+        /// Legacy: set or update the experiment's evidence-strength scalar
+        /// (e.g. "claim-narrow,sketch-directional"). Kept for backward
+        /// compat; new resolutions should prefer `--axis` for structured
+        /// per-axis tier labels.
         #[arg(long)]
         evidence_strength: Option<String>,
+        /// Structured per-axis tier label, of form `axis:tier`. Repeatable.
+        /// Example: --axis narrow:claim --axis directional:sketch.
+        /// Tiers: sketch | claim | characterized | vacuous-test |
+        /// ensemble-vacuous | tested-null | accumulated | unverified.
+        /// When set, also auto-fills `evidence_strength` (legacy scalar)
+        /// for backward compat unless --evidence-strength is explicit.
+        #[arg(long = "axis")]
+        axes: Vec<String>,
+        /// Prose explanation of the strength labels — when, why, what
+        /// changed, what report covers it. Replaces the YAML-comment
+        /// provenance previously braided into evidence_strength.
+        #[arg(long = "strength-provenance")]
+        strength_provenance: Option<String>,
+        /// Optional explicit override for `lab summary`'s family
+        /// classifier. Bypasses the prose-grep heuristic when set.
+        /// Values: structural_bite | scope_and_direction |
+        /// partial_real_instrument_sensitive | other.
+        #[arg(long = "bet-family")]
+        bet_family: Option<String>,
         /// Optional: path to the report that holds the full interpretation.
         #[arg(long)]
         report: Option<String>,
@@ -5062,7 +5084,27 @@ struct ExperimentFile {
     mode: String,
     git_ref: String,
     rubric_ref: String,
+    /// Legacy evidence-strength scalar. Often a compound expression like
+    /// "claim-narrow,sketch-directional" (tier-axis, comma-separated).
+    /// Kept for backward compat; prefer the structured fields below for
+    /// new resolutions and queries. When `strength_axes` is empty but
+    /// this scalar is present, `strength_axes` is auto-derived on load.
     evidence_strength: String,
+    /// Layer-5-promoted structural form: tier-per-axis, one entry each.
+    /// Stored on disk as a YAML list of strings of form "axis:tier"
+    /// (e.g. "narrow:claim", "directional:sketch") so it can be parsed
+    /// without a real YAML library. Per-axis lets the family classifier
+    /// and rubric-aware queries reason structurally instead of
+    /// grep-ing prose. Surfaced 2026-04-28 by Codex via the
+    /// CROSS_AGENT_COMMS handoff.
+    strength_axes: Vec<String>,
+    /// Prose explanation of the strength labels — when, why, what
+    /// changed, what report covers it. Replaces the YAML-comment
+    /// provenance previously braided into `evidence_strength`.
+    strength_provenance: String,
+    /// Optional explicit override for `lab summary`'s family
+    /// classifier. Bypasses the prose-grep heuristic when set.
+    bet_family: String,
     created_at: String,
     resolved_at: String,
     // Block-scalar fields
@@ -5187,6 +5229,8 @@ fn assign_scalar(out: &mut ExperimentFile, key: &str, value: String) {
         "ref" => out.git_ref = value,
         "rubric_ref" => out.rubric_ref = value,
         "evidence_strength" => out.evidence_strength = value,
+        "strength_provenance" => out.strength_provenance = value,
+        "bet_family" => out.bet_family = value,
         "created_at" => out.created_at = value,
         "resolved_at" => out.resolved_at = value,
         "hypothesis" => out.hypothesis = value,
@@ -5203,8 +5247,57 @@ fn assign_list(out: &mut ExperimentFile, key: &str, items: Vec<String>) {
         "run_ids" => out.run_ids = items,
         "follow_ups" => out.follow_ups = items,
         "reports" => out.reports = items,
+        "strength_axes" => out.strength_axes = items,
         _ => {}
     }
+}
+
+/// Derive structured `strength_axes` from the legacy `evidence_strength`
+/// scalar. Handles three real-world shapes:
+///   - "sketch" / "claim" / "characterized" → single primary axis at that
+///     tier: ["primary:sketch"]
+///   - "claim-narrow,sketch-directional" → split on comma, each token has
+///     a tier-prefix dash separating tier from axis name:
+///     ["narrow:claim", "directional:sketch"]
+///   - empty → empty
+/// Anything else (unrecognized shapes) returns an empty list rather than
+/// guessing — explicit beats wrong.
+fn derive_strength_axes_from_legacy(legacy: &str) -> Vec<String> {
+    // Strip trailing YAML inline comments (" # ..."). Real-world legacy
+    // evidence_strength scalars often have provenance braided in via
+    // comments — that prose is what the new strength_provenance field
+    // is for; the comment shouldn't bleed into the structured axes.
+    let value_only = match legacy.find(" #") {
+        Some(idx) => &legacy[..idx],
+        None => legacy,
+    };
+    let trimmed = value_only.trim();
+    if trimmed.is_empty() { return Vec::new(); }
+    // Single-token tier label.
+    let tier_singles = ["sketch", "claim", "characterized", "vacuous-test", "ensemble-vacuous", "tested-null", "accumulated", "unverified"];
+    if tier_singles.iter().any(|t| trimmed == *t) {
+        return vec![format!("primary:{}", trimmed)];
+    }
+    // Compound form: "tier-axis,tier-axis"
+    let mut out = Vec::new();
+    for part in trimmed.split(',') {
+        let part = part.trim();
+        if part.is_empty() { continue; }
+        // Match tier prefix: longest prefix that's a known tier.
+        let mut matched = None;
+        for tier in &tier_singles {
+            if let Some(rest) = part.strip_prefix(tier) {
+                if let Some(axis) = rest.strip_prefix('-') {
+                    matched = Some(format!("{}:{}", axis.trim(), tier));
+                    break;
+                }
+            }
+        }
+        if let Some(m) = matched {
+            out.push(m);
+        }
+    }
+    out
 }
 
 fn load_experiment(slug: &str) -> Result<ExperimentFile, String> {
@@ -5222,6 +5315,13 @@ fn load_experiment(slug: &str) -> Result<ExperimentFile, String> {
     exp.body = body;
     exp.raw = raw;
     if exp.id.is_empty() { exp.id = slug.to_string(); }
+    // Auto-derive structured strength_axes from the legacy
+    // evidence_strength scalar when only the legacy form is present.
+    // This means existing experiment files immediately become readable
+    // through the structured field without a migration pass.
+    if exp.strength_axes.is_empty() && !exp.evidence_strength.is_empty() {
+        exp.strength_axes = derive_strength_axes_from_legacy(&exp.evidence_strength);
+    }
     Ok(exp)
 }
 
@@ -5261,6 +5361,9 @@ fn write_experiment(exp: &ExperimentFile) -> Result<(), String> {
     if !exp.git_ref.is_empty() { push_scalar(&mut fm, "ref", &exp.git_ref); }
     if !exp.rubric_ref.is_empty() { push_scalar(&mut fm, "rubric_ref", &exp.rubric_ref); }
     if !exp.evidence_strength.is_empty() { push_scalar(&mut fm, "evidence_strength", &exp.evidence_strength); }
+    if !exp.strength_axes.is_empty() { push_list(&mut fm, "strength_axes", &exp.strength_axes); }
+    if !exp.strength_provenance.is_empty() { push_block(&mut fm, "strength_provenance", &exp.strength_provenance); }
+    if !exp.bet_family.is_empty() { push_scalar(&mut fm, "bet_family", &exp.bet_family); }
     fm.push('\n');
     push_block(&mut fm, "hypothesis", &exp.hypothesis);
     push_block(&mut fm, "prediction", &exp.prediction);
@@ -5352,6 +5455,18 @@ impl BetFamilyHint {
 }
 
 fn classify_bet_family_hint(exp: &ExperimentFile) -> BetFamilyHint {
+    // Explicit override wins — the structural field bypasses the prose-grep
+    // heuristic when the author has named the family directly. Promoted to
+    // structural reading 2026-04-28 per Codex's CROSS_AGENT_COMMS handoff
+    // ("the classifier is leaning on prose because the underlying
+    // evidentiary field is only half-structural").
+    match exp.bet_family.as_str() {
+        "structural_bite" => return BetFamilyHint::StructuralBite,
+        "scope_and_direction" => return BetFamilyHint::ScopeAndDirection,
+        "partial_real_instrument_sensitive" => return BetFamilyHint::PartialRealInstrumentSensitive,
+        "other" => return BetFamilyHint::Other,
+        _ => {} // empty or unknown: fall through to heuristic
+    }
     let hay = format!(
         "{}\n{}\n{}",
         exp.hypothesis.to_lowercase(),
@@ -5533,6 +5648,9 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                 "ref": e.git_ref,
                 "rubric_ref": e.rubric_ref,
                 "evidence_strength": e.evidence_strength,
+                "strength_axes": e.strength_axes,
+                "strength_provenance": e.strength_provenance,
+                "bet_family": e.bet_family,
                 "created_at": e.created_at,
                 "run_ids": e.run_ids,
                 "reports": e.reports,
@@ -5682,6 +5800,14 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                 if !exp.git_ref.is_empty() { println!("Ref: {}", exp.git_ref); }
                 if !exp.rubric_ref.is_empty() { println!("Rubric: {}", exp.rubric_ref); }
                 if !exp.evidence_strength.is_empty() { println!("Evidence strength: {}", exp.evidence_strength); }
+                if !exp.strength_axes.is_empty() {
+                    println!("Strength axes: [{}]", exp.strength_axes.join(", "));
+                }
+                if !exp.bet_family.is_empty() { println!("Bet family (override): {}", exp.bet_family); }
+                if !exp.strength_provenance.is_empty() {
+                    println!("Strength provenance:");
+                    println!("  {}", exp.strength_provenance.replace('\n', "\n  "));
+                }
                 println!();
                 println!("Hypothesis:");
                 println!("  {}", exp.hypothesis.replace('\n', "\n  "));
@@ -5789,6 +5915,9 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                 git_ref: r#ref.unwrap_or_default(),
                 rubric_ref: rubric_ref.unwrap_or_default(),
                 evidence_strength: String::new(),
+                strength_axes: Vec::new(),
+                strength_provenance: String::new(),
+                bet_family: String::new(),
                 created_at: chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
                 resolved_at: String::new(),
                 hypothesis,
@@ -5819,16 +5948,59 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                 println!("  4. When interpreted: `worldcli lab resolve {} --status confirmed|refuted --summary \"...\"`.", exp.slug);
             }
         }
-        LabAction::Resolve { slug, status, summary, evidence_strength, report } => {
+        LabAction::Resolve { slug, status, summary, evidence_strength, axes, strength_provenance, bet_family, report } => {
             let valid_statuses = ["proposed", "running", "open", "discrepant", "confirmed", "refuted"];
             if !valid_statuses.contains(&status.as_str()) {
                 return Err(Box::<dyn std::error::Error>::from(
                     format!("invalid --status '{}'; must be one of {:?}", status, valid_statuses)));
             }
+            // Validate --axis tokens (each must be "axis:tier" with a known tier).
+            let valid_tiers = ["sketch", "claim", "characterized", "vacuous-test", "ensemble-vacuous", "tested-null", "accumulated", "unverified"];
+            for a in &axes {
+                let parts: Vec<&str> = a.splitn(2, ':').collect();
+                if parts.len() != 2 || parts[0].trim().is_empty() || parts[1].trim().is_empty() {
+                    return Err(Box::<dyn std::error::Error>::from(
+                        format!("invalid --axis '{}'; expected 'axis_name:tier'", a)));
+                }
+                if !valid_tiers.contains(&parts[1].trim()) {
+                    return Err(Box::<dyn std::error::Error>::from(
+                        format!("invalid tier in --axis '{}'; tier must be one of {:?}", a, valid_tiers)));
+                }
+            }
+            // Validate --bet-family if provided.
+            let valid_bet_families = ["structural_bite", "scope_and_direction", "partial_real_instrument_sensitive", "other"];
+            if let Some(bf) = &bet_family {
+                if !valid_bet_families.contains(&bf.as_str()) {
+                    return Err(Box::<dyn std::error::Error>::from(
+                        format!("invalid --bet-family '{}'; must be one of {:?}", bf, valid_bet_families)));
+                }
+            }
             let mut exp = load_experiment(&slug).map_err(Box::<dyn std::error::Error>::from)?;
             exp.status = status.clone();
             if let Some(s) = summary { exp.summary = s; }
-            if let Some(es) = evidence_strength { exp.evidence_strength = es; }
+            // Structured fields take precedence; legacy scalar set explicitly
+            // also wins when --evidence-strength is passed without --axis.
+            let explicit_axes = !axes.is_empty();
+            if explicit_axes {
+                exp.strength_axes = axes.into_iter().map(|a| {
+                    let parts: Vec<&str> = a.splitn(2, ':').collect();
+                    format!("{}:{}", parts[0].trim(), parts[1].trim())
+                }).collect();
+            }
+            if let Some(sp) = strength_provenance { exp.strength_provenance = sp; }
+            if let Some(bf) = bet_family { exp.bet_family = bf; }
+            // Legacy scalar: explicit --evidence-strength always wins. Otherwise,
+            // if --axis was passed and the legacy scalar is empty, derive a
+            // backward-compat compound form (tier-axis,tier-axis) from the
+            // structured axes so old readers see something coherent.
+            if let Some(es) = evidence_strength {
+                exp.evidence_strength = es;
+            } else if explicit_axes && exp.evidence_strength.is_empty() {
+                exp.evidence_strength = exp.strength_axes.iter().filter_map(|s| {
+                    let parts: Vec<&str> = s.splitn(2, ':').collect();
+                    if parts.len() == 2 { Some(format!("{}-{}", parts[1], parts[0])) } else { None }
+                }).collect::<Vec<_>>().join(",");
+            }
             if let Some(rp) = report {
                 if !exp.reports.contains(&rp) { exp.reports.push(rp); }
             }
@@ -5841,12 +6013,17 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                     "slug": exp.slug, "status": exp.status,
                     "resolved_at": exp.resolved_at, "summary": exp.summary,
                     "evidence_strength": exp.evidence_strength,
+                    "strength_axes": exp.strength_axes,
+                    "strength_provenance": exp.strength_provenance,
+                    "bet_family": exp.bet_family,
                 }));
             } else {
                 println!("Resolved {}: status={}", exp.slug, exp.status);
                 if !exp.resolved_at.is_empty() { println!("resolved_at: {}", exp.resolved_at); }
                 if !exp.summary.is_empty() { println!("summary: {}", exp.summary.lines().next().unwrap_or("")); }
                 if !exp.evidence_strength.is_empty() { println!("evidence_strength: {}", exp.evidence_strength); }
+                if !exp.strength_axes.is_empty() { println!("strength_axes: [{}]", exp.strength_axes.join(", ")); }
+                if !exp.bet_family.is_empty() { println!("bet_family: {}", exp.bet_family); }
             }
         }
         LabAction::LinkRun { slug, run_id } => {
