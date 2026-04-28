@@ -43,29 +43,41 @@ function MainApp() {
 
   // Focus mode v5 — Cmd+Shift+F shortcut + discoverable title-bar button.
   //
-  // Per Ryan's v5 directives:
-  // - Shortcut becomes Cmd+Shift+F (matches app convention; F-alone was
-  //   non-standard and conflicted with input-typing avoidance overhead).
-  // - Drop the hold-to-peek behavior entirely (the title-bar button replaces
-  //   its discoverability function; users no longer need a hidden gesture
-  //   to recover the sidebar).
-  // - Title-bar button (added in ChatView/GroupChatView) gives users a
-  //   non-keyboard escape from accidentally-triggered Focus mode — a real
-  //   accessibility + discoverability fix.
+  // Scope: chat-only. Focus is a chat-surface affordance (clamp + chrome
+  // hidden + sidebar hidden). Navigating away from chat clears focusMode;
+  // the shortcut on non-chat surfaces shows a brief hint and is otherwise
+  // a no-op. Closes the cross-surface scope gap surfaced by the v5-followup
+  // /play (`reports/2026-04-28-0632-…-stopping-rule-still-incomplete.md`):
+  // before this, focusMode persisted across navigation but Focus chrome only
+  // rendered in chat, leaving an inconsistent "I'm in Focus but it doesn't
+  // look like it" state on World/Character/Settings/Summary.
   //
   // Behavior:
-  // - Cmd+Shift+F (Ctrl+Shift+F on Windows/Linux): toggle Focus on/off
-  // - Title-bar sidebar-toggle button: also toggles Focus (alternative path)
+  // - Cmd+Shift+F (Ctrl+Shift+F on Win/Linux) in chat: toggle Focus
+  // - Cmd+Shift+F off-chat: brief "Focus is available in chats" pill (~2.5s)
+  // - Title-bar sidebar-toggle button: alternative toggle path (chat only)
   // - Esc when Focus is on: exit Focus
-  // - Focus = chat clamped to 72ch + chrome hidden + sidebar hidden
-  //
-  // v5 dramatically simpler than v4: no hold-detection, no peekActive state,
-  // no overlay rendering, no F-key timer, no opacity-toggling. Just a single
-  // boolean state with three discoverable toggle paths (shortcut, button, Esc).
+  // - Navigating away from chat: Focus auto-clears
   const [focusMode, setFocusMode] = useState(false);
   const focusModeRef = useRef(focusMode);
   useEffect(() => { focusModeRef.current = focusMode; }, [focusMode]);
   const toggleFocus = useCallback(() => setFocusMode((f) => !f), []);
+
+  // Off-scope keystroke hint — surfaces ~2.5s pill when Cmd+Shift+F is
+  // pressed on non-chat surfaces, so the gesture isn't a silent no-op.
+  const [offScopeHint, setOffScopeHint] = useState(false);
+  const offScopeHintTimer = useRef<number | null>(null);
+  const showOffScopeHint = useCallback(() => {
+    setOffScopeHint(true);
+    if (offScopeHintTimer.current !== null) window.clearTimeout(offScopeHintTimer.current);
+    offScopeHintTimer.current = window.setTimeout(() => setOffScopeHint(false), 2500);
+  }, []);
+
+  // Chat-scoped persistence: clear Focus when navigating away from chat.
+  useEffect(() => {
+    if (view !== 'chat' && focusMode) setFocusMode(false);
+  }, [view, focusMode]);
+
   useEffect(() => {
     const isInputTarget = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
@@ -80,17 +92,21 @@ function MainApp() {
         setFocusMode(false);
         return;
       }
-      // Cmd+Shift+F (or Ctrl+Shift+F): toggle Focus mode.
+      // Cmd+Shift+F (or Ctrl+Shift+F): toggle Focus mode (chat only).
       if ((e.key === 'f' || e.key === 'F') && e.shiftKey && (e.metaKey || e.ctrlKey)) {
         if (isInputTarget(e)) return; // don't hijack chord typing in inputs
-        if (view !== 'chat') return;
+        if (view !== 'chat') {
+          e.preventDefault();
+          showOffScopeHint();
+          return;
+        }
         e.preventDefault();
         setFocusMode((f) => !f);
       }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [view]);
+  }, [view, showOffScopeHint]);
 
   // Background novelization: fires after 20 minutes of idle time (no user
   // activity and no window focus), iterates through un-novelized days, and
@@ -330,6 +346,19 @@ function MainApp() {
           <span className="opacity-70">Focus</span>
           <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">· Cmd+Shift+F or Esc to exit</span>
         </button>
+      )}
+
+      {offScopeHint && view !== "chat" && (
+        // Off-scope keystroke feedback: Cmd+Shift+F on non-chat surfaces
+        // shows this pill for ~2.5s instead of being a silent no-op. Per the
+        // v5-followup /play, the silent no-op was a real cross-surface scope
+        // crack; this is the lightweight feedback that closes it.
+        <div
+          className="fixed bottom-4 right-4 z-30 px-3 py-1.5 rounded-full text-xs font-medium bg-muted/80 backdrop-blur text-muted-foreground border border-border/50 pointer-events-none animate-in fade-in slide-in-from-bottom-2"
+          role="status"
+        >
+          Focus mode is available in chats
+        </div>
       )}
 
       <main className="flex-1 flex flex-col min-w-0">
