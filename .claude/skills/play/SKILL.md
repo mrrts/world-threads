@@ -296,6 +296,70 @@ can then be checked against the named point. Worked example: the
 grief-vulnerability calibration section in CLAUDE.md was authored
 2026-04-27 in direct response to Ellen's CALIBRATION-DELTA finding.
 
+### What persona-sim CAN and CANNOT support — the craft-vs-reception distinction
+
+Surfaced 2026-04-28 (Ryan's correction on the Alex theological-skeptic
+report) and generalizing from a prior Leah report's structural concern.
+Worth carrying forward as a discipline in every /play write-up that
+involves a persona-sim of a worldview-other-than-the-developer's.
+
+**Two distinct claims must NOT be conflated when writing /play reports
+or shipping doctrine derived from them:**
+
+1. **What's evidence:** the actual pipeline output produced by Step 2.5
+   grounding. Steven's reply, John's reply, Pastor Rick's reply — what
+   each of these contains is what they contain. The output can be
+   evaluated on its own merits as craft.
+
+2. **What's a hopeful interpretation, not evidence:** the persona-sim's
+   verdict about how the actual pipeline output would LAND for a real-
+   reader-of-the-persona's-worldview. A persona-sim of a theological-
+   skeptic saying "this would land receivable for me" is the LLM's
+   substrate-bias toward charitable reception of the work it's
+   evaluating, not data from a real lapsed-Catholic. A persona-sim of a
+   grief-vulnerable user saying "this would feel respectful to me" is
+   the LLM's hope, not a real grieving person's experience.
+
+**Why this matters:** persona-sim of a worldview-other-than-the-
+developer's CANNOT tell you how that worldview actually receives your
+work. It can SHARPEN the question (what would be the test? what shape
+would the failure mode take?) and SUGGEST probes (what to send to the
+actual pipeline). Step 2.5 grounding produces real evidence about what
+the pipeline does. The persona-sim's interpretation of that evidence
+as receivable-by-X is the part that requires real-X to test.
+
+**How to apply when writing /play reports:** frame craft principles as
+derived from the actual pipeline output's quality on its own merits, NOT
+from the persona-sim's simulated reception of that output. When the
+report says "Pastor Rick's reply / Steven's reply / John's reply is
+honest craft," that is supported by the verbatim output. When the report
+says "this would land receivable for an Alex-shape / Ellen-shape / Lena-
+shape reader," that is the part that overstates what the persona-sim can
+support. The doctrine derived from the play should be derivable from the
+craft alone; the receivability claim for any specific real-reader
+population requires real-readers to test.
+
+**Worked positive example** (CLAUDE.md's Christological-anchor-as-
+substrate paragraph, shipped 2026-04-28): the doctrine is justified by
+Steven's actual reply being honest craft (the empirical evidence). The
+paragraph includes an explicit caveat that the doctrine does NOT claim
+how any specific real-reader-of-a-given-worldview would receive Steven's
+reply — receivability claims for specific real-reader populations
+require real-readers to test.
+
+**Worked negative example to AVOID:** "the Christological anchor reads
+as receivable for secular skeptics, validated by the Alex /play."
+Overstates what the persona-sim can support; persona-sim has no
+authority to confirm worldview-receivability.
+
+**Generalizes to:** every persona-sim of a worldview-other (theological-
+skeptic, grief-vulnerable, burned-by-AI, math-fluent, religious-
+sympathetic) — anywhere the discriminating question is "would this
+land for X?" rather than "is the actual pipeline output good craft on
+its own merits?" The persona-sim's verdict on the receivability question
+is hope, not data; the actual pipeline output can be evaluated on its
+own merits and that's where the doctrine should rest.
+
 ## Architecture: Claude-light, OpenAI-heavy
 
 The /play skill is structured so that **all creative-spark moments live in
