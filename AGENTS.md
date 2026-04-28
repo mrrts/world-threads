@@ -423,6 +423,8 @@ Precedence: `--api-key` flag → `OPENAI_API_KEY` env → macOS keychain. Keycha
 
 **Rubric library:** `rubric list/show/search` against `reports/rubrics/`. Use `--rubric-ref <name>` to auto-append run history.
 
+**Rubric refs can carry criterion middleware.** When a corrective report sharpens what a rubric is honestly allowed to count, and that boundary gets embodied in a named rubric under `reports/rubrics/`, later `worldcli evaluate --rubric-ref <name>` calls inherit the corrected criterion automatically. At that point the worldcli surface is no longer just executing an evaluator; it is carrying forward a prior methodological correction.
+
 **Experiment registry (lab):** `lab list/open/show/search/propose/resolve/link-run/scenario`. Hypothesis slug is the durable memory unit; run ids are evidence attachments.
 
 **Sessions:** `session-show/clear/list`. Sessions persist to `dev_chat_sessions`; clear individually when stale.
