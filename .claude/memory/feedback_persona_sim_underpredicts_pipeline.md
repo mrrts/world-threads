@@ -67,10 +67,31 @@ recommendation that doesn't survive empirical contact.
 
 **Worked examples:** `reports/2026-04-27-2239-play-maggie-second-visit.md`
 + `reports/2026-04-27-2305-play-triptych-second-visit.md` +
-`reports/2026-04-27-2335-play-ellen-grief-companion-fourth-persona.md`.
+`reports/2026-04-27-2335-play-ellen-grief-companion-fourth-persona.md` +
+`reports/2026-04-28-0010-play-theological-skeptic-fifth-persona.md`.
 The triptych report's "DIVERGENT-BETTER as crown-jewel signal" framing
 was tempered by Ellen's later run; the four-persona arc together is the
-honest evidence map.
+honest evidence map. The fifth-persona Alex run extended the pattern AND
+forced the craft-vs-reception distinction below.
+
+**Lineage of the structural distinction.** The broader version of the
+craft-vs-reception concern was first named in the earlier quintet meta-
+report (`reports/2026-04-27-0834-play-quintet-meta-divergent-better.md`)
+in its "What this run does NOT validate" section: *"ChatGPT-built
+personas + worldcli grounding still does not equal a real human's
+encounter. The DIVERGENT-BETTER finding could mean the live pipeline IS
+that good for real users, OR it could mean ChatGPT-personas
+systematically under-render real-reader sensitivities that the live
+pipeline would still trip."* Ryan's 2026-04-28 correction on the Alex
+report specialized that broad concern to the worldview-other case
+specifically, and his prior reference to "the Leah report" pointed at
+the meta-report's structural-concern framing (the Leah persona-sim was
+one of the five in that quintet, evaluating the app's handling of
+vulnerable-state users). The correction tonight is not a new finding —
+it is the SAME finding sharpened from "real-human-encounter generally"
+to "worldview-other-than-the-developer's specifically," with the
+practical consequence (frame doctrine from craft, not from simulated
+reception) made explicit.
 
 **Critical structural distinction (Ryan's correction 2026-04-28 ~00:25,
 generalizing from a prior Leah report):** persona-sims of a worldview-other-
