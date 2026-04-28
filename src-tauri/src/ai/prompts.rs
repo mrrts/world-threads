@@ -3452,8 +3452,8 @@ pub fn tone_directive(tone: &str) -> Option<String> {
         ),
         "Cozy & Warm" => (
             "lean into COZY & WARM register",
-            "Shelter. Soft light, a kettle on, warm drink in a real cup, the door closed against the weather. Low stakes, small kindnesses, a long comfortable silence. Attention to domestic texture — bread crust, wool, the creak of a familiar chair. Trouble, if it enters, enters small.",
-            "No high stakes, no brooding. If it's getting dramatic, pull it back to the cup of tea.",
+            "Shelter. Soft light, a kettle on, warm drink in a real cup, the door closed against the weather. Low stakes, small kindnesses, a long comfortable silence. Attention to domestic texture — bread crust, wool, the creak of a familiar chair. Warmth should come from inhabited shelter and practical care, not decorative coziness. Trouble, if it enters, enters small.",
+            "No high stakes, no brooding, no curated-picturebook charm. If it's getting dramatic, pull it back to the lived room and the ordinary kindness inside it.",
         ),
         "Tense & Paranoid" => (
             "lean into TENSE & PARANOID register",
