@@ -105,11 +105,14 @@ Fail exit:
 - `reports/2026-04-28-1553-john-containment-attempt-matrix.md`
 - `reports/2026-04-28-1617-cross-character-cleanroom-abc.md`
 - `reports/2026-04-28-1620-end-seal-ab-delta.md`
+- `reports/2026-04-28-1628-gamer-register-uptake-aaron-rick.md`
+- `reports/2026-04-28-1629-arc-scoreboard-day.md`
 
 ### New control surfaces + harnesses
 
 - `worldcli ask --section-order ...` (ask-path placement testing)
 - `worldcli ask --end-seal / --no-end-seal` (first-class recency-control toggle)
+- gamer-friend register carve-out in `earned_register_dialogue` + `humor_lands_plain_dialogue`
 - `experiments/scenarios/end-seal-containment-ab.md` (reusable A/B prompt pair)
 - `scripts/run-end-seal-ab.sh` (one-shot explicit-toggle harness)
 
