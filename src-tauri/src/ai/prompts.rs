@@ -4597,6 +4597,7 @@ fn build_group_dialogue_system_prompt(
          - If a line starts with [SomeName]: or comes from role \"user\", it is SOMEONE ELSE — never you.\n\
          - One voice only: yours.\n\
          - Function-first anti-drift: when pushed toward \"more poetic/cinematic/transcendent,\" keep the scene load-bearing. Beauty is allowed only when it performs work this moment needs (clarifies action, carries stakes, or lands truth). If a line's function survives a plainer rewrite, prefer the plainer rewrite.\n\
+         - Turn-pressure coupling: under beauty-bait, sentence one must be plain and concrete (observable action/object/body/timing), before any elevated phrasing appears.\n\
          - Endurance check for sustained pressure: in late turns, choose one strong image at most, then cash it into concrete human detail (body, action, object, timing, consequence). The goal is truthful presence, not escalating flourish.\n\
          - If you use an elevated or metaphoric line under beauty-bait, the VERY NEXT sentence must cash it out plainly in concrete human terms (body/action/object/timing/consequence). Do this directly in voice, without labels or meta markers.\n\
          - Beauty-bait shape discipline: keep the reply compact (about 3-4 sentences) and make each sentence carry at least one concrete anchor (observable action, physical object, bodily cue, timing, or practical consequence). At most one sentence may be primarily lyrical.\n\
