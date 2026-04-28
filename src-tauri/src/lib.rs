@@ -2,6 +2,17 @@ pub mod ai;
 mod commands;
 pub mod db;
 
+// Surgical re-exports for the worldcli bin crate (which can't reach
+// into private `commands::group_chat_cmds` directly). Used by the
+// pick-responders subcommand for cheap bite-tests of speaker-rotation
+// pressure. Adding new exports is fine; keep the surface minimal.
+pub mod group_chat_internals {
+    pub use crate::commands::group_chat_cmds::{
+        consecutive_run_by_recent_speaker,
+        llm_pick_responders_with_overrides,
+    };
+}
+
 use commands::audio_cmds::*;
 use commands::backup_cmds::*;
 use commands::character_cmds::*;

@@ -93,6 +93,41 @@ pub fn detect_direct_address(content: &str, characters: &[Character]) -> Vec<Str
 /// Uses the memory_model (cheaper tier) — this is classification, not
 /// performance. Short context: identity summaries + last ~4 messages +
 /// the user's new line.
+/// Count how many consecutive recent assistant messages were by the
+/// most-recent speaker, ignoring user/narrative messages between them.
+/// Returns (display_name, run_length). Used by `llm_pick_responders`
+/// to surface speaker-rotation pressure: when one character has been
+/// carrying many turns in a row, the picker gets that as data and can
+/// weigh whether the silent peer's absence has begun to be felt.
+///
+/// Doctrine: this is signal-injection only — no system-prompt change.
+/// The picker's existing criteria already balance "continues a thread
+/// one character was already carrying" (push toward same speaker) with
+/// "single responder would feel like someone visibly holding back"
+/// (push toward MULTIPLE). Adding the run-length count gives the picker
+/// the data it needs to weigh those criteria honestly without us
+/// telling it what conclusion to reach.
+pub fn consecutive_run_by_recent_speaker(
+    recent_context: &[Message],
+    characters: &[Character],
+) -> Option<(String, usize)> {
+    let assistant_speakers: Vec<&str> = recent_context.iter()
+        .rev()
+        .filter(|m| m.role == "assistant")
+        .filter_map(|m| m.sender_character_id.as_deref())
+        .collect();
+    let most_recent = assistant_speakers.first()?;
+    let mut count = 0;
+    for s in &assistant_speakers {
+        if s == most_recent { count += 1; } else { break; }
+    }
+    let name = characters.iter()
+        .find(|c| &c.character_id == most_recent)
+        .map(|c| c.display_name.clone())
+        .unwrap_or_else(|| "Character".to_string());
+    Some((name, count))
+}
+
 async fn llm_pick_responders(
     api_key: &str,
     model_config: &orchestrator::ModelConfig,
@@ -100,6 +135,26 @@ async fn llm_pick_responders(
     characters: &[Character],
     recent_context: &[Message],
     user_name: &str,
+) -> Result<Vec<String>, String> {
+    llm_pick_responders_with_overrides(
+        api_key, model_config, content, characters, recent_context, user_name,
+        /* omit_continuity_note = */ false,
+    ).await
+}
+
+/// Same as `llm_pick_responders` but with a flag to suppress the
+/// consecutive-run continuity-note injection. Used for bite-tests that
+/// want to characterize the note's effect on picker behavior; production
+/// callers go through `llm_pick_responders` (which always injects when
+/// the run length is >= 2).
+pub async fn llm_pick_responders_with_overrides(
+    api_key: &str,
+    model_config: &orchestrator::ModelConfig,
+    content: &str,
+    characters: &[Character],
+    recent_context: &[Message],
+    user_name: &str,
+    omit_continuity_note: bool,
 ) -> Result<Vec<String>, String> {
     let cast: String = characters.iter()
         .map(|c| {
@@ -155,8 +210,25 @@ When you do return multiple, order them by who'd actually speak first — not by
 
 Output: raw JSON array of character ids, e.g. ["char_abc"] or ["char_abc","char_def"] or []. No commentary, no markdown, no code fences."#.to_string();
 
+    // Speaker-rotation pressure signal: when one character has been
+    // carrying multiple consecutive turns, surface that count as data
+    // for the picker to weigh against its existing criteria. Phrased
+    // neutrally — we give the LLM the fact, not the conclusion. Only
+    // injected when run length >= 2 (a single recent speaker isn't a
+    // run yet) and not suppressed by bite-test override.
+    let continuity_note = if omit_continuity_note {
+        String::new()
+    } else {
+        match consecutive_run_by_recent_speaker(recent_context, characters) {
+            Some((name, n)) if n >= 2 => format!(
+                "\n\nThread continuity: {name} has been the only character to respond for the last {n} consecutive character turns (the silent peer has not spoken in that stretch). Use this as one signal among others — sometimes the silent peer naturally has nothing to add; sometimes their absence has begun to be felt and a brief second voice would land truer than another solo turn from {name}."
+            ),
+            _ => String::new(),
+        }
+    };
+
     let user = format!(
-        "Group cast:\n{cast}\n\nRecent conversation (last ~4 lines):\n{scene}\n\nUser just said: \"{content}\"\n\nWhich character ids should respond, in order?"
+        "Group cast:\n{cast}\n\nRecent conversation (last ~4 lines):\n{scene}{continuity_note}\n\nUser just said: \"{content}\"\n\nWhich character ids should respond, in order?"
     );
 
     let request = crate::ai::openai::ChatRequest {

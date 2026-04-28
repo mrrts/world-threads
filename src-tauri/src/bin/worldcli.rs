@@ -1,19 +1,18 @@
-//! worldcli — direct character access for craft work.
+//! worldcli — query the lived WorldThreads corpus for craft work.
 //!
-//! Out-of-band tool used by Claude Code to converse with the user's
-//! characters and inspect db state WITHOUT the exchange appearing in
-//! the UI. Designed for AGENT ergonomics, not human ergonomics:
-//! machine-readable JSON output, structured errors with retry hints,
-//! per-call cost surfacing, persisted run logs so prior investigations
-//! can be searched.
+//! Out-of-band tool used by Claude Code to inspect worlds, characters,
+//! messages, runs, and experiments WITHOUT the exchange appearing in
+//! the UI. Built for agent ergonomics: machine-readable JSON output,
+//! structured errors with retry hints, explicit scope and cost surfacing,
+//! and persisted run logs that can be searched later.
 //!
 //! ## Roles in the project
 //!
 //! Three reflective surfaces ship in this repo:
 //! - `reports/` — interpretive reads of the project's git history
 //! - the harness — automated testing of prompt behavior
-//! - **this CLI** — empirical querying of the user's lived corpus,
-//!   queryable on demand to ground prompt work in real data
+//! - **this CLI** — direct querying of the user's lived corpus to
+//!   ground prompt work in real data
 //!
 //! ## Safety posture
 //!
@@ -42,11 +41,11 @@ use app_lib::db::{queries::*, Database};
 #[derive(Parser)]
 #[command(
     name = "worldcli",
-    about = "Direct character access for craft work (Claude Code dev tool)",
-    long_about = "A third reflective surface alongside reports/ and the harness — \
-                  empirical querying of the user's lived WorldThreads corpus, on demand. \
-                  Designed for agent ergonomics: --json output, scope gating, cost surfacing, \
-                  persisted run logs."
+    about = "Query the lived WorldThreads corpus for craft work",
+    long_about = "Query the lived WorldThreads corpus from the command line. Read worlds, \
+                  characters, messages, runs, and experiments; run evaluations and replays; \
+                  emit JSON when needed. Scope and cost are surfaced explicitly, and run logs \
+                  are kept for later comparison."
 )]
 struct Cli {
     /// Path to worldthreads.db. Defaults to the macOS app data dir.
@@ -98,6 +97,26 @@ enum Cmd {
     ShowAuthorAnchor {
         #[arg(long)]
         world: Option<String>,
+    },
+
+    /// Run the group-chat responder picker (memory-tier LLM, ~$0.003/call)
+    /// without doing the full character generation. Used for cheap
+    /// bite-tests of speaker-rotation pressure: construct a hypothetical
+    /// user message, see who the picker would invite to respond. Pulls
+    /// recent group messages from the db as context. Pass
+    /// --omit-continuity-note to suppress the consecutive-run signal
+    /// injection (for A/B characterization of what that signal does).
+    PickResponders {
+        #[arg(long)]
+        group_chat: String,
+        #[arg(long)]
+        message: String,
+        #[arg(long)]
+        omit_continuity_note: bool,
+        #[arg(long)]
+        confirm_cost: Option<f64>,
+        #[arg(long)]
+        question_summary: Option<String>,
     },
 
     // ── read commands ──
@@ -1569,6 +1588,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match cli.cmd {
         Cmd::Status => cmd_status(&r),
         Cmd::ShowAuthorAnchor { world } => cmd_show_author_anchor(&r, world.as_deref()),
+        Cmd::PickResponders { group_chat, message, omit_continuity_note, confirm_cost, question_summary } => {
+            let api_key = resolve_api_key(cli.api_key.as_deref())
+                .ok_or_else(|| Box::<dyn std::error::Error>::from("pick-responders: no OpenAI API key resolved (env / keychain / --api-key)"))?;
+            cmd_pick_responders(&r, &api_key, &group_chat, &message, omit_continuity_note,
+                confirm_cost, question_summary.as_deref()).await
+        }
         Cmd::ConfigTemplate => { println!("{}", config_template_text()); Ok(()) }
         Cmd::ListWorlds => cmd_list_worlds(&r),
         Cmd::ListCharacters { world } => cmd_list_characters(&r, world.as_deref()),
@@ -1944,6 +1969,83 @@ fn cmd_status(r: &Resolved) -> Result<(), Box<dyn std::error::Error>> {
         eprintln!("\nNote: config file does not exist at {}.", config_path().display());
         eprintln!("Run `worldcli config-template > {}` then edit to set scope.", config_path().display());
     }
+    Ok(())
+}
+
+async fn cmd_pick_responders(
+    r: &Resolved,
+    api_key: &str,
+    group_chat_id: &str,
+    message: &str,
+    omit_continuity_note: bool,
+    confirm_cost: Option<f64>,
+    question_summary: Option<&str>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let (members, recent_context, user_name, model_config) = {
+        let conn = r.db.conn.lock().unwrap();
+        let gc = get_group_chat(&conn, group_chat_id)
+            .map_err(|e| format!("group_chat '{}' not found: {}", group_chat_id, e))?;
+        let member_ids: Vec<String> = gc.character_ids.as_array()
+            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+            .unwrap_or_default();
+        let members: Vec<Character> = member_ids.iter()
+            .filter_map(|id| get_character(&conn, id).ok())
+            .collect();
+        let recent_context: Vec<Message> = list_group_messages(&conn, &gc.thread_id, 6)
+            .unwrap_or_default();
+        let user_profile = get_user_profile(&conn, &gc.world_id).ok();
+        let user_name = user_profile.map(|p| p.display_name).unwrap_or_else(|| "the human".to_string());
+        let model_config = orchestrator::load_model_config(&conn);
+        (members, recent_context, user_name, model_config)
+    };
+
+    let projected_in: i64 = 250;
+    let projected_out: i64 = 80;
+    let projected_usd = actual_cost(&model_config.memory_model, projected_in, projected_out, &r.cfg.model_pricing);
+    let daily_so_far = rolling_24h_total_usd();
+    let cap = r.cfg.budget.per_call_usd;
+    let daily_cap = r.cfg.budget.daily_usd;
+    let needs_confirm = projected_usd > cap || daily_so_far + projected_usd > daily_cap;
+    if needs_confirm && confirm_cost.is_none() {
+        return Err(format!(
+            "Budget gate: projected ~${:.4} per call (24h spent ${:.2} of ${:.2}); pass --confirm-cost {:.2} to proceed",
+            projected_usd, daily_so_far, daily_cap, projected_usd * 1.5
+        ).into());
+    }
+    eprintln!(
+        "[worldcli pick-responders] model={} omit_continuity_note={} projected≈${:.4}",
+        model_config.memory_model, omit_continuity_note, projected_usd
+    );
+
+    let picks = app_lib::group_chat_internals::llm_pick_responders_with_overrides(
+        api_key, &model_config, message, &members, &recent_context, &user_name, omit_continuity_note,
+    ).await.map_err(|e| Box::<dyn std::error::Error>::from(e))?;
+
+    let pick_names: Vec<String> = picks.iter()
+        .filter_map(|id| members.iter().find(|c| &c.character_id == id).map(|c| c.display_name.clone()))
+        .collect();
+    let continuity = app_lib::group_chat_internals::consecutive_run_by_recent_speaker(&recent_context, &members);
+
+    append_cost_log(&CostEntry {
+        timestamp: chrono::Utc::now().to_rfc3339(),
+        model: model_config.memory_model.clone(),
+        prompt_tokens: projected_in,
+        completion_tokens: projected_out,
+        usd: projected_usd,
+    });
+
+    let v = json!({
+        "group_chat_id": group_chat_id,
+        "user_message": message,
+        "picks": picks,
+        "pick_names": pick_names,
+        "consecutive_run": continuity.map(|(name, n)| json!({"name": name, "count": n})),
+        "continuity_note_omitted": omit_continuity_note,
+        "question_summary": question_summary,
+        "model": model_config.memory_model,
+        "projected_usd": projected_usd,
+    });
+    emit(r.json, v);
     Ok(())
 }
 
