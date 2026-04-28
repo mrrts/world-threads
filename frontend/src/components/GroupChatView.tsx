@@ -6,7 +6,7 @@ import { InlineQuestProposalCard } from "@/components/chat/InlineQuestProposalCa
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
-import { Send, Loader2, X, BookOpen, MessageSquare, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, ChevronRight, ChevronDown, Play, Volume2, ArrowRight, Smile, SmilePlus, ScrollText, Package, Sparkles, MessageCircleQuestion, List, MapPin } from "lucide-react";
+import { Send, Loader2, X, BookOpen, MessageSquare, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, ChevronRight, ChevronDown, Play, Volume2, ArrowRight, Smile, SmilePlus, ScrollText, Package, Sparkles, MessageCircleQuestion, List, MapPin, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
 import { ReactionBubbles } from "@/components/chat/ReactionBubbles";
 import { ReactionPicker } from "@/components/chat/ReactionPicker";
@@ -55,15 +55,18 @@ import { InventoryStrip } from "@/components/chat/InventoryStrip";
 interface Props {
   store: ReturnType<typeof useAppStore>;
   onNavigateToCharacter?: (characterId: string) => void;
-  /** Focus mode (toggle "F" at app-level): clamps the transcript column to a
-   *  68-72ch measure for long-form reading. App.tsx hides Sidebar + nav-rail
-   *  when this is on; GroupChatView's job is just to apply the column-clamp.
-   *  Mirrored from ChatView per the parallel-surfaces doctrine. */
+  /** Focus mode (toggle Cmd+Shift+F at app-level): clamps the transcript column
+   *  to a 72ch measure. App.tsx hides Sidebar + nav-rail when this is on;
+   *  GroupChatView's job is to apply the column-clamp AND render the
+   *  discoverable title-bar toggle button. Mirrored from ChatView per the
+   *  parallel-surfaces doctrine. */
   focusMode?: boolean;
+  /** Toggle Focus mode from the title-bar button. Mirrored from ChatView. */
+  onToggleFocus?: () => void;
 }
 
 
-export function GroupChatView({ store, onNavigateToCharacter, focusMode = false }: Props) {
+export function GroupChatView({ store, onNavigateToCharacter, focusMode = false, onToggleFocus }: Props) {
   // ── Group-specific state ─────────────────────────────────────────────
   const [pickerMessageId, setPickerMessageId] = useState<string | null>(null);
   const [keepTargetId, setKeepTargetId] = useState<string | null>(null);
@@ -805,6 +808,17 @@ export function GroupChatView({ store, onNavigateToCharacter, focusMode = false 
           </button>
           <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/consultant:opacity-100 pointer-events-none transition-opacity">Consultant</span>
         </div>
+        {onToggleFocus && (
+          <div className="relative group/focus">
+            <button
+              onClick={onToggleFocus}
+              className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
+            >
+              {focusMode ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
+            </button>
+            <span className="absolute top-full right-0 mt-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/focus:opacity-100 pointer-events-none transition-opacity">{focusMode ? "Show sidebar (Cmd+Shift+F)" : "Hide sidebar / Focus mode (Cmd+Shift+F)"}</span>
+          </div>
+        )}
       </div>
 
       <div className="flex-1 relative overflow-hidden z-10">

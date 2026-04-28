@@ -41,44 +41,32 @@ function MainApp() {
   const [view, setView] = useState<View>("chat");
   const lastChatCharRef = useRef<string | null>(null);
 
-  // Focus mode v4 — single-key control scheme; iteration loop's stopping point.
+  // Focus mode v5 — Cmd+Shift+F shortcut + discoverable title-bar button.
   //
-  // Behavior (the trivially-expressible mental model the v3-followup /play's
-  // verdict named as the loop's stopping rule, reports/2026-04-28-0950-...):
+  // Per Ryan's v5 directives:
+  // - Shortcut becomes Cmd+Shift+F (matches app convention; F-alone was
+  //   non-standard and conflicted with input-typing avoidance overhead).
+  // - Drop the hold-to-peek behavior entirely (the title-bar button replaces
+  //   its discoverability function; users no longer need a hidden gesture
+  //   to recover the sidebar).
+  // - Title-bar button (added in ChatView/GroupChatView) gives users a
+  //   non-keyboard escape from accidentally-triggered Focus mode — a real
+  //   accessibility + discoverability fix.
   //
-  //   "Hold F to peek; tap F to toggle Focus; Esc to exit."
+  // Behavior:
+  // - Cmd+Shift+F (Ctrl+Shift+F on Windows/Linux): toggle Focus on/off
+  // - Title-bar sidebar-toggle button: also toggles Focus (alternative path)
+  // - Esc when Focus is on: exit Focus
+  // - Focus = chat clamped to 72ch + chrome hidden + sidebar hidden
   //
-  // - TAP F (short, < 250ms): toggle Focus on/off. Focus = chat clamped to
-  //   72ch + chrome hidden + Sidebar shown as OPAQUE persistent overlay.
-  // - HOLD F (≥ 250ms) when Focus is OFF: transient TRANSLUCENT Sidebar
-  //   overlay shown while held; auto-dismisses on F release. Use-case: glance
-  //   at sidebar without committing to chat-clamping.
-  // - HOLD F when Focus is ON: no-op (the sidebar overlay is already shown
-  //   opaque; nothing to peek to).
-  // - Esc when Focus is ON: exit Focus.
-  //
-  // v4 changes from v3:
-  // - Removes the F+Space chord (Space was high-conflict — users hit
-  //   reflexively for scroll/play/pause; would misfire as lock-trigger).
-  // - Removes the separate lockedPeek state. The persistent overlay IS Focus
-  //   mode now; tap F enters that state directly.
-  // - Removes the discoverability-tax of having to learn a chord.
-  // - Single-sentence mental model: "Hold F to peek; tap to toggle Focus;
-  //   Esc to exit." Per the v3-followup verdict's stopping-rule heuristic:
-  //   "stop when the interaction can be expressed in a single short
-  //   sentence; remaining tweaks are aesthetic, not state/flow comprehension."
-  //
-  // Pattern: composability via key-semantic-multiplexing on a single key
-  // (tap vs hold), no chord, no second key. Vim's single-leader pattern
-  // simplified.
+  // v5 dramatically simpler than v4: no hold-detection, no peekActive state,
+  // no overlay rendering, no F-key timer, no opacity-toggling. Just a single
+  // boolean state with three discoverable toggle paths (shortcut, button, Esc).
   const [focusMode, setFocusMode] = useState(false);
-  const [peekActive, setPeekActive] = useState(false);
-  // Refs so the keydown/keyup handlers see latest state without re-registering.
   const focusModeRef = useRef(focusMode);
   useEffect(() => { focusModeRef.current = focusMode; }, [focusMode]);
-  const peekTimerRef = useRef<number | null>(null);
+  const toggleFocus = useCallback(() => setFocusMode((f) => !f), []);
   useEffect(() => {
-    const isFKey = (e: KeyboardEvent) => e.key === 'f' || e.key === 'F';
     const isInputTarget = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
       if (!t) return true;
@@ -92,49 +80,16 @@ function MainApp() {
         setFocusMode(false);
         return;
       }
-      if (!isFKey(e)) return;
-      if (e.repeat) return; // ignore OS key-repeat from holding
-      if (isInputTarget(e)) return;
-      if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
-      if (view !== 'chat') return;
-      e.preventDefault();
-      // Schedule hold-detection. Released before threshold → tap (toggles Focus).
-      // Held past threshold → peek (only meaningful when Focus is off).
-      if (peekTimerRef.current !== null) {
-        clearTimeout(peekTimerRef.current);
-      }
-      peekTimerRef.current = window.setTimeout(() => {
-        // Hold detected. Show peek only if Focus is OFF (when Focus is on,
-        // the opaque sidebar overlay is already showing; peek would be a no-op
-        // visual change). Keeps the mental model simple: peek = "show
-        // sidebar without committing to Focus."
-        if (!focusModeRef.current) {
-          setPeekActive(true);
-        }
-        peekTimerRef.current = null;
-      }, 250);
-    };
-    const onKeyUp = (e: KeyboardEvent) => {
-      if (!isFKey(e)) return;
-      // Always clear peek on F release.
-      setPeekActive(false);
-      if (peekTimerRef.current !== null) {
-        // Released before hold-threshold → tap; toggle Focus.
-        clearTimeout(peekTimerRef.current);
-        peekTimerRef.current = null;
+      // Cmd+Shift+F (or Ctrl+Shift+F): toggle Focus mode.
+      if ((e.key === 'f' || e.key === 'F') && e.shiftKey && (e.metaKey || e.ctrlKey)) {
+        if (isInputTarget(e)) return; // don't hijack chord typing in inputs
+        if (view !== 'chat') return;
+        e.preventDefault();
         setFocusMode((f) => !f);
       }
     };
     window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
-    return () => {
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
-      if (peekTimerRef.current !== null) {
-        clearTimeout(peekTimerRef.current);
-        peekTimerRef.current = null;
-      }
-    };
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, [view]);
 
   // Background novelization: fires after 20 minutes of idle time (no user
@@ -359,42 +314,21 @@ function MainApp() {
         </div>
       )}
 
-      {!focusMode && !peekActive && <Sidebar store={store} onNavigate={handleNavigate} />}
-
-      {(focusMode || peekActive) && (
-        // Sidebar overlay: shown both when Focus is committed (opaque, persistent)
-        // AND when peeking (translucent, while F held). Same JSX structure for
-        // both states — only the className differs — so the Sidebar component
-        // instance is preserved across peek↔Focus transitions, which preserves
-        // its internal scroll state. The structurally-verified scroll-state
-        // preservation finding from the v3 implementation carries forward to v4.
-        // Slides in from left; Sidebar contents are the existing Sidebar
-        // component (no reinvention).
-        <div className="absolute left-0 top-0 bottom-0 z-40 animate-in slide-in-from-left fade-in duration-150">
-          <div className={
-            peekActive
-              ? "bg-background/95 backdrop-blur-md shadow-2xl border-r border-border h-full" // translucent during transient peek
-              : "bg-background shadow-2xl border-r border-border h-full" // opaque when Focus is committed
-          }>
-            <Sidebar store={store} onNavigate={handleNavigate} />
-          </div>
-        </div>
-      )}
+      {!focusMode && <Sidebar store={store} onNavigate={handleNavigate} />}
 
       {focusMode && view === "chat" && (
-        // Subtle indicator that Focus is on. Hover reveals the v4 single-sentence
-        // mental model: "Hold F to peek; tap to toggle Focus; Esc to exit."
-        // Per the v3-followup verdict's stopping rule for the iteration loop:
-        // the trivially-expressible control scheme is the goal state; remaining
-        // tweaks are aesthetic, not flow comprehension.
+        // Subtle indicator that Focus is on. Esc to exit; the title-bar
+        // sidebar-toggle button (in ChatView/GroupChatView header) is the
+        // discoverable non-keyboard escape — added per Ryan's v5 directive
+        // so users who accidentally trigger Focus aren't keyboard-trapped.
         <button
           type="button"
           onClick={() => setFocusMode(false)}
           className="group fixed bottom-4 right-4 z-30 px-3 py-1.5 rounded-full text-xs font-medium bg-muted/80 backdrop-blur text-muted-foreground hover:text-foreground border border-border/50 transition-colors"
-          title="Tap F or Esc to exit Focus · hold F (when off) to peek sidebar"
+          title="Cmd+Shift+F or Esc to exit Focus"
         >
           <span className="opacity-70">Focus</span>
-          <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">· F or Esc to exit</span>
+          <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">· Cmd+Shift+F or Esc to exit</span>
         </button>
       )}
 
@@ -420,8 +354,8 @@ function MainApp() {
         {view === "chat" && (
           <DeferredMount key="chat">
             {store.activeGroupChat
-              ? <GroupChatView store={store} focusMode={focusMode} onNavigateToCharacter={(id) => { store.selectCharacter(store.characters.find((c) => c.character_id === id)!); setViewTracked("character"); }} />
-              : <ChatView store={store} focusMode={focusMode} onNavigateToCharacter={(id) => { store.selectCharacter(store.characters.find((c) => c.character_id === id)!); setViewTracked("character"); }} />}
+              ? <GroupChatView store={store} focusMode={focusMode} onToggleFocus={toggleFocus} onNavigateToCharacter={(id) => { store.selectCharacter(store.characters.find((c) => c.character_id === id)!); setViewTracked("character"); }} />
+              : <ChatView store={store} focusMode={focusMode} onToggleFocus={toggleFocus} onNavigateToCharacter={(id) => { store.selectCharacter(store.characters.find((c) => c.character_id === id)!); setViewTracked("character"); }} />}
           </DeferredMount>
         )}
         {view === "world" && (
