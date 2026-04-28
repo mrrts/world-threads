@@ -55,10 +55,15 @@ import { InventoryStrip } from "@/components/chat/InventoryStrip";
 interface Props {
   store: ReturnType<typeof useAppStore>;
   onNavigateToCharacter?: (characterId: string) => void;
+  /** Focus mode (toggle "F" at app-level): clamps the transcript column to a
+   *  68-72ch measure for long-form reading. App.tsx hides Sidebar + nav-rail
+   *  when this is on; GroupChatView's job is just to apply the column-clamp.
+   *  Mirrored from ChatView per the parallel-surfaces doctrine. */
+  focusMode?: boolean;
 }
 
 
-export function GroupChatView({ store, onNavigateToCharacter }: Props) {
+export function GroupChatView({ store, onNavigateToCharacter, focusMode = false }: Props) {
   // ── Group-specific state ─────────────────────────────────────────────
   const [pickerMessageId, setPickerMessageId] = useState<string | null>(null);
   const [keepTargetId, setKeepTargetId] = useState<string | null>(null);
@@ -811,7 +816,11 @@ export function GroupChatView({ store, onNavigateToCharacter }: Props) {
           loading={store.loadingChat}
         />
         <ScrollArea ref={scrollRef} className="h-full px-4 py-3">
-        <div>
+        {/* Focus mode: clamp the transcript to a 72ch column for long-form
+            readability. Mirrored from ChatView per the parallel-surfaces
+            doctrine — chat features that touch the message list must
+            update both surfaces. */}
+        <div className={focusMode ? "max-w-[72ch] mx-auto" : undefined}>
         {store.messages.length === 0 && (
           store.loadingChat ? (
             <div className="flex items-center justify-center py-16">

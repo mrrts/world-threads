@@ -41,6 +41,33 @@ function MainApp() {
   const [view, setView] = useState<View>("chat");
   const lastChatCharRef = useRef<string | null>(null);
 
+  // Focus mode: collapses the left-rail nav + Sidebar and clamps the chat
+  // transcript column to a 68-72ch measure for long-form reading. Toggled
+  // with the "F" key (when no input is focused). Substrate-derived from the
+  // designer-evaluator /play (reports/2026-04-28-0610-...) which proposed
+  // a single-key Focus mode as one craft-defensible move from typographic
+  // principles. Lives in chat-view only — toggling F outside chat is a
+  // no-op (focus mode only makes sense for the transcript).
+  const [focusMode, setFocusMode] = useState(false);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'f' && e.key !== 'F') return;
+      // Ignore if user is typing in an input, textarea, or contenteditable.
+      const t = e.target as HTMLElement | null;
+      if (!t) return;
+      const tag = t.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || t.isContentEditable) return;
+      // Only fires when no modifiers (so Cmd-F, Ctrl-F still open browser find).
+      if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
+      // Only fires in chat view (Focus mode only meaningful for transcript).
+      if (view !== 'chat') return;
+      e.preventDefault();
+      setFocusMode((f) => !f);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [view]);
+
   // Background novelization: fires after 20 minutes of idle time (no user
   // activity and no window focus), iterates through un-novelized days, and
   // writes chapters silently. Any user activity or window focus aborts the
@@ -253,15 +280,33 @@ function MainApp() {
         </div>
       )}
 
-      <div className="w-16 flex-shrink-0 bg-card border-r border-border flex flex-col items-center py-4 gap-2">
-        <NavButton icon={<BookOpen size={20} />} active={view === "summary"} onClick={() => setViewTracked("summary")} title="Summary" description="World overview and conversation recaps for each character." />
-        <NavButton icon={<Scroll size={20} />} active={view === "world"} onClick={() => setViewTracked("world")} title="World Canon" description="Edit your world's name, description, tone, and rules." />
-        <div className="flex-1" />
-        <UsageBadge sending={!!store.sending} />
-        <NavButton icon={<Settings size={20} />} active={view === "settings"} onClick={() => setViewTracked("settings")} title="Settings" description="API key, model config, and app preferences." />
-      </div>
+      {!focusMode && (
+        <div className="w-16 flex-shrink-0 bg-card border-r border-border flex flex-col items-center py-4 gap-2">
+          <NavButton icon={<BookOpen size={20} />} active={view === "summary"} onClick={() => setViewTracked("summary")} title="Summary" description="World overview and conversation recaps for each character." />
+          <NavButton icon={<Scroll size={20} />} active={view === "world"} onClick={() => setViewTracked("world")} title="World Canon" description="Edit your world's name, description, tone, and rules." />
+          <div className="flex-1" />
+          <UsageBadge sending={!!store.sending} />
+          <NavButton icon={<Settings size={20} />} active={view === "settings"} onClick={() => setViewTracked("settings")} title="Settings" description="API key, model config, and app preferences." />
+        </div>
+      )}
 
-      <Sidebar store={store} onNavigate={handleNavigate} />
+      {!focusMode && <Sidebar store={store} onNavigate={handleNavigate} />}
+
+      {focusMode && view === "chat" && (
+        // Subtle indicator that Focus is on. Hover reveals the exit hint.
+        // Positioned bottom-right so it doesn't compete with the transcript.
+        // No modal, no toast — just a small reminder consistent with the
+        // app's no-nag posture.
+        <button
+          type="button"
+          onClick={() => setFocusMode(false)}
+          className="group fixed bottom-4 right-4 z-30 px-3 py-1.5 rounded-full text-xs font-medium bg-muted/80 backdrop-blur text-muted-foreground hover:text-foreground border border-border/50 transition-colors"
+          title="Exit Focus mode (F)"
+        >
+          <span className="opacity-70">Focus</span>
+          <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">· press F to exit</span>
+        </button>
+      )}
 
       <main className="flex-1 flex flex-col min-w-0">
         {!store.apiKey && view === "chat" && (
@@ -285,8 +330,8 @@ function MainApp() {
         {view === "chat" && (
           <DeferredMount key="chat">
             {store.activeGroupChat
-              ? <GroupChatView store={store} onNavigateToCharacter={(id) => { store.selectCharacter(store.characters.find((c) => c.character_id === id)!); setViewTracked("character"); }} />
-              : <ChatView store={store} onNavigateToCharacter={(id) => { store.selectCharacter(store.characters.find((c) => c.character_id === id)!); setViewTracked("character"); }} />}
+              ? <GroupChatView store={store} focusMode={focusMode} onNavigateToCharacter={(id) => { store.selectCharacter(store.characters.find((c) => c.character_id === id)!); setViewTracked("character"); }} />
+              : <ChatView store={store} focusMode={focusMode} onNavigateToCharacter={(id) => { store.selectCharacter(store.characters.find((c) => c.character_id === id)!); setViewTracked("character"); }} />}
           </DeferredMount>
         )}
         {view === "world" && (
