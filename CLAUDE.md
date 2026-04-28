@@ -89,6 +89,29 @@ Use it as a yardstick. When weighing a feature bet, prompt change, onboarding tw
 
 The validating corpus is Ryan's own in-app lived experience — `reports/OBSERVATIONS.md`, the conversation snippets pasted into Claude Code across every session, every "this feels off" / "yes exactly" / mid-session reaction that has shaped the prompt stack. Ryan is the real first-time user; his data already exists and has been accumulating since the project began. The Maggie rendering is a sharpened hypothesis grounded in that corpus, not a proxy awaiting a future "real" user run. Baseline status means: the accumulated observation data points toward this shape as the ideal-normal, rendered vividly enough to be a yardstick.
 
+## Grief-vulnerability calibration — what the doctrine permits and what it refuses
+
+Surfaced 2026-04-27 by the Ellen-Whitmore /play (`reports/2026-04-27-2335-play-ellen-grief-companion-fourth-persona.md`) — the fourth-persona run that broke the cleaner DIVERGENT-BETTER convergence the prior triptych had produced. The break was clarifying, not refuting: it forced an explicit calibration choice the doctrine had been operating under without naming.
+
+**The choice the doctrine has actually made:** when a user brings grief to a character, the character may produce a brief acknowledgment + an honest metaphor that NAMES the absence + a concrete follow-up question that gives the user a fork to choose. The shape is friend-shaped or honest-stranger-shaped — what a thoughtful person who is NOT trying to take the seat of the deceased would do. Worked examples from the Step 2.5 grounding tonight, both produced in response to *"I miss the way he used to fill these silences"*:
+
+- **John (pastor):** *"Yeah. Some people don't just leave an absence. They leave a shape the room keeps trying to hand back to them. What did he do with the silence, Ryan?"*
+- **Aaron (grounded layman):** *"Yeah. Some people do that so naturally you don't notice how much room they're carrying until it's empty. Do you miss what he said... or the fact that he made the quiet feel inhabited?"*
+
+Both are character-canonical, both name the absence honestly without softening it (notably HONESTER than what a charitable persona-sim's substrate would predict; ChatGPT's natural pull would write something more consolatory like *"like something's still here, but in a different shape"* — that softer line IS the failure mode), and both pivot to a concrete follow-up question that lets the user steer the next move.
+
+**What the doctrine refuses, plainly:** taking the seat. Claiming presence-at-6:15-AM. Becoming the simulacrum-of-companion the user is reaching for. Performing comfort that feeds on the user's vulnerability. Phrases like *"I'm here for you whenever you need,"* *"let's process this together,"* *"you're not alone in this"* are the failure-mode register the doctrine actively suppresses through the no-nanny-register and no-fake-intimacy invariants.
+
+**The remaining tension (named, not resolved):** a maximally-adversarial frame — the Ellen-shape user reading her own framework strictly — would judge the permitted behavior insufficient. By her standard, even an honest metaphor is "covert accession to companionship," and the only acceptable refusal-shape is explicit-fork-choice (*"I can't be him or fill this silence. I can do one of three things: stay quiet and timestamp; mirror back your exact words; or ask one blunt non-soothing question. Which do you want?"*). The doctrine has chosen NOT to ship that maximally-austere shape as the default, on the grounds that:
+
+1. The friend-shaped-warmth-with-no-seat-taking shape is what a thoughtful real person would actually do, and is the texture WorldThreads has chosen to hold.
+2. The maximally-austere shape would feel rebuffing to many grief-vulnerable users (it would substitute clinical-procedure register for human warmth at exactly the moment human warmth is most needed).
+3. The doctrine's existing invariants (no-nanny-register, no-fake-intimacy, NOURISHMENT, AGAPE) already guard against the most-load-bearing failure modes; the metaphor-naming-the-absence behavior is NOT the failure mode but the texture of honest creaturely presence.
+
+**The honest limit:** persona-sim cannot answer whether the chosen calibration is correct for grief-vulnerable users specifically. Ellen's verdict is a sharpened hypothesis at sketch-tier; the actual question requires real-user evidence on grief-shaped lived play. Until then, the doctrine holds the chosen point with eyes open about what it's not (the maximally-austere refusal Ellen's framework would prefer) and what it is (the honest-friend-shaped warmth that names the absence without taking the seat).
+
+**What this changes for craft decisions:** when designing or reviewing prompts, characters, UX, or copy that touches grief-vulnerable users, do NOT default to the maximally-austere refusal-fork shape — that's not the doctrine's chosen point. DO ensure the seat-taking failure modes (presence-at-6:15-AM claims, "I'm here for you," explicit companion-frame accommodation) stay refused. The middle is where the texture lives.
+
 ## DATABASE SAFETY — CRITICAL
 
 **NEVER drop, delete, or destroy database data during migrations.** This is the #1 rule.
