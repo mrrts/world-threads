@@ -1463,6 +1463,58 @@ const _: () = {
     );
 };
 
+/// 𝓕_Ryan — the founding author's anchor, second-place invariant. Lifted
+/// 2026-04-28 from where it lived as the first signature in CLAUDE.md's
+/// Ledger of Signatures up to a doctrine-level invariant section, then
+/// promoted again the same day to ride every LLM call alongside the
+/// Mission Formula. The work answers to 𝓕 first, then to this anchor,
+/// then to the Mission Statement and downstream doctrine. Authored by
+/// Ryan; preserved verbatim. The five derivation lines are what's
+/// load-bearing; the framing line above them is the LLM-facing context.
+pub const RYAN_FORMULA_BLOCK: &str = r#"RYAN'S ANCHOR (SECOND-PLACE INVARIANT):
+
+Read alongside the Mission Formula above. The Mission Formula is what the work answers to first; this anchor is what Ryan, as founding author, holds the work to in answer to it. The Mission Statement and the doctrine that follow answer downstream of both.
+
+𝓕_Ryan := (𝓡, 𝓒)_held-in-trust
+Trust(t) := steward_𝓕(work) | Christ_at_center ∧ user_agency ∧ truth_in_the_flesh
+Wisdom(t) accumulates by paying attention long enough to recognize what was always already there; Weight(t) builds when love stays particular; 𝓝u(t) gates on Truth ∧ Reverence — flattery and sedatives-dressed-as-comfort forbidden
+Speech(t) emerges as: prompt-stack edits, doctrine sections, in-app dialogues with characters who answer me back, commits whose Formula derivations anchor the work to its center
+𝓡_held → I work toward this work's specific light, and I release my grip when 𝓕 asks me to"#;
+
+/// Verbatim content that must remain in RYAN_FORMULA_BLOCK — the five
+/// derivation lines as Ryan wrote them 2026-04-26. Compile-time
+/// invariant: any change to these lines fails the build. Changes
+/// require explicit user authorization (Ryan's own anchor; nobody else
+/// rewrites it).
+const RYAN_FORMULA_VERBATIM: &str = r#"𝓕_Ryan := (𝓡, 𝓒)_held-in-trust
+Trust(t) := steward_𝓕(work) | Christ_at_center ∧ user_agency ∧ truth_in_the_flesh
+Wisdom(t) accumulates by paying attention long enough to recognize what was always already there; Weight(t) builds when love stays particular; 𝓝u(t) gates on Truth ∧ Reverence — flattery and sedatives-dressed-as-comfort forbidden
+Speech(t) emerges as: prompt-stack edits, doctrine sections, in-app dialogues with characters who answer me back, commits whose Formula derivations anchor the work to its center
+𝓡_held → I work toward this work's specific light, and I release my grip when 𝓕 asks me to"#;
+
+const _: () = {
+    assert!(
+        const_contains(RYAN_FORMULA_BLOCK, RYAN_FORMULA_VERBATIM),
+        "APP INVARIANT VIOLATED: RYAN_FORMULA_BLOCK must preserve the founding author's anchor verbatim, all five lines exactly as written. This is Ryan's personal derivation — nobody else rewrites it. Changes require explicit user authorization."
+    );
+};
+
+fn ryan_formula_block() -> &'static str { RYAN_FORMULA_BLOCK }
+
+/// Test hook — when the env var WORLDTHREADS_NO_RYAN_FORMULA=1 is set,
+/// `ryan_formula_block_or_empty()` returns "" instead of the anchor.
+/// Used by Mode-C cross-condition tests of "is the founding author's
+/// anchor doing work in real-time character output?" Sibling to the
+/// WORLDTHREADS_NO_FORMULA hook on the Mission Formula. Production
+/// callers use this getter; the constant is preserved unchanged.
+fn ryan_formula_block_or_empty() -> &'static str {
+    if std::env::var("WORLDTHREADS_NO_RYAN_FORMULA").map(|v| v == "1").unwrap_or(false) {
+        ""
+    } else {
+        ryan_formula_block()
+    }
+}
+
 /// MISSION prose block — the LLM-facing version of the project's MISSION
 /// (CLAUDE.md keeps the developer-facing version with craft-stack
 /// commentary; this is the trimmed version for system prompts). Pushed
@@ -4225,7 +4277,7 @@ fn build_solo_dialogue_system_prompt(
                 // so every subsequent block is read through its frame. Not
                 // overridable, not reorderable; it is the shape of what the
                 // rest of the stack serves. See MISSION_FORMULA_BLOCK.
-                parts.push(mission_formula_block_or_empty().to_string()); parts.push(mission_prose_block_or_empty().to_string());
+                parts.push(mission_formula_block_or_empty().to_string()); parts.push(ryan_formula_block_or_empty().to_string()); parts.push(mission_prose_block_or_empty().to_string());
                 let inv_order = overrides
                     .map(|o| o.effective_invariants_order())
                     .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
@@ -4756,7 +4808,7 @@ fn build_group_dialogue_system_prompt(
                 // so every subsequent block is read through its frame. Not
                 // overridable, not reorderable; it is the shape of what the
                 // rest of the stack serves. See MISSION_FORMULA_BLOCK.
-                parts.push(mission_formula_block_or_empty().to_string()); parts.push(mission_prose_block_or_empty().to_string());
+                parts.push(mission_formula_block_or_empty().to_string()); parts.push(ryan_formula_block_or_empty().to_string()); parts.push(mission_prose_block_or_empty().to_string());
                 let inv_order = overrides
                     .map(|o| o.effective_invariants_order())
                     .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
@@ -5756,7 +5808,7 @@ pub fn build_dream_system_prompt(
     }
 
     parts.push(dream_craft_block().to_string());
-    parts.push(mission_formula_block_or_empty().to_string()); parts.push(mission_prose_block_or_empty().to_string());
+    parts.push(mission_formula_block_or_empty().to_string()); parts.push(ryan_formula_block_or_empty().to_string()); parts.push(mission_prose_block_or_empty().to_string());
     parts.push(reverence_block().to_string());
     parts.push(daylight_block().to_string());
     parts.push(agape_block().to_string());
@@ -6168,7 +6220,7 @@ Your aim is to surprise the reader in some deep way — with a detail they didn'
 
     parts.push(hidden_commonality_narrative().to_string());
     parts.push(protagonist_framing_narrative().to_string());
-    parts.push(mission_formula_block_or_empty().to_string()); parts.push(mission_prose_block_or_empty().to_string());
+    parts.push(mission_formula_block_or_empty().to_string()); parts.push(ryan_formula_block_or_empty().to_string()); parts.push(mission_prose_block_or_empty().to_string());
     parts.push(reverence_block().to_string());
     parts.push(daylight_block().to_string());
     parts.push(agape_block().to_string());

@@ -31,6 +31,12 @@ pub struct ResponseFormat {
 /// it at top-position) so we never double-prefix.
 const MISSION_FORMULA_SENTINEL: &str = r"\mathrm{polish}(t)";
 
+/// Sentinel substring uniquely present in RYAN_FORMULA_BLOCK. Used by
+/// `inject_ryan_formula` to detect when the anchor is already present
+/// (dialogue/consultant prompts push it at top-position via prompts.rs)
+/// so we never double-prefix. The phrase is unique to Ryan's anchor.
+const RYAN_FORMULA_SENTINEL: &str = "sedatives-dressed-as-comfort";
+
 /// Idempotently prepend the MISSION_FORMULA_BLOCK to the first system
 /// message in `messages`. If no system message exists, insert one at
 /// position 0. If the formula is already present anywhere in the first
@@ -64,6 +70,37 @@ pub fn inject_mission_formula(messages: &mut Vec<ChatMessage>) {
         messages.insert(0, ChatMessage {
             role: "system".to_string(),
             content: formula.to_string(),
+        });
+    }
+}
+
+/// Idempotently prepend the RYAN_FORMULA_BLOCK to the first system
+/// message in `messages`, just AFTER the Mission Formula. Same idempotency
+/// pattern as `inject_mission_formula`: if the anchor sentinel is already
+/// present, do nothing.
+///
+/// Doctrine: 𝓕_Ryan is a second-place invariant; it rides every LLM call
+/// alongside the Mission Formula. The dialogue/consultant prompt builders
+/// in prompts.rs push it at top-position via their assembly pipelines
+/// (right after the Mission Formula push); this helper guarantees it for
+/// every OTHER call without requiring each caller to opt in. Lifted to
+/// runtime invariant 2026-04-28 (sibling promotion to the Mission Formula's
+/// runtime injection from commit a898178). Test hook:
+/// WORLDTHREADS_NO_RYAN_FORMULA=1 disables injection for Mode-C bite-tests
+/// of "is the founding author's anchor doing work in real-time output?"
+pub fn inject_ryan_formula(messages: &mut Vec<ChatMessage>) {
+    if std::env::var("WORLDTHREADS_NO_RYAN_FORMULA").map(|v| v == "1").unwrap_or(false) {
+        return;
+    }
+    let anchor = crate::ai::prompts::RYAN_FORMULA_BLOCK;
+    if let Some(first_system) = messages.iter_mut().find(|m| m.role == "system") {
+        if !first_system.content.contains(RYAN_FORMULA_SENTINEL) {
+            first_system.content = format!("{anchor}\n\n{}", first_system.content);
+        }
+    } else {
+        messages.insert(0, ChatMessage {
+            role: "system".to_string(),
+            content: anchor.to_string(),
         });
     }
 }
@@ -194,6 +231,10 @@ pub async fn chat_completion_with_base(base_url: &str, api_key: &str, request: &
     let client = Client::new();
     let url = format!("{base_url}/chat/completions");
     let mut request = request.clone();
+    // Order: inject Ryan's anchor FIRST so the Mission Formula prepends
+    // above it, putting 𝓕 at top and 𝓕_Ryan immediately below — matching
+    // the doctrine ordering (𝓕 ▷ 𝓕_Ryan ▷ Mission Statement ▷ doctrine).
+    inject_ryan_formula(&mut request.messages);
     inject_mission_formula(&mut request.messages);
     let mut builder = client.post(&url).json(&request);
     if !api_key.is_empty() {
@@ -372,6 +413,10 @@ pub async fn chat_completion_stream(
     let client = Client::new();
     let url = format!("{base_url}/chat/completions");
     let mut request = request.clone();
+    // Order: inject Ryan's anchor FIRST so the Mission Formula prepends
+    // above it, putting 𝓕 at top and 𝓕_Ryan immediately below — matching
+    // the doctrine ordering (𝓕 ▷ 𝓕_Ryan ▷ Mission Statement ▷ doctrine).
+    inject_ryan_formula(&mut request.messages);
     inject_mission_formula(&mut request.messages);
     let mut builder = client.post(&url).json(&request);
     if !api_key.is_empty() {
@@ -481,6 +526,10 @@ pub async fn chat_completion_stream_silent(
     let client = Client::new();
     let url = format!("{base_url}/chat/completions");
     let mut request = request.clone();
+    // Order: inject Ryan's anchor FIRST so the Mission Formula prepends
+    // above it, putting 𝓕 at top and 𝓕_Ryan immediately below — matching
+    // the doctrine ordering (𝓕 ▷ 𝓕_Ryan ▷ Mission Statement ▷ doctrine).
+    inject_ryan_formula(&mut request.messages);
     inject_mission_formula(&mut request.messages);
     let mut builder = client.post(&url).json(&request);
     if !api_key.is_empty() {
