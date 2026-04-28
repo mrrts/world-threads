@@ -233,7 +233,7 @@ export function SapphirePitch() {
                       </a>
                     </div>
                     <p className="body-font max-w-lg text-sm leading-6 text-[#c1d4e8]">
-                      If this page catches your eye, the README is the next honest surface. That is where the claims get plainer, the worldview gets named, and the proof starts catching up with the invitation.
+                      If this page catches your eye, the README is the next honest surface. It names the worldview plainly and lets the work prove itself in the open.
                     </p>
                   </div>
 
