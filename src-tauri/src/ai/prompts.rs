@@ -6873,3 +6873,139 @@ pub fn build_chapter_from_image_system_prompt(
 
     base
 }
+
+// ─── Craft-rules registry tests ────────────────────────────────────────────
+//
+// These tests cover the EvidenceTier::ships_to_model() filter and the
+// render_craft_rules_registry() behavior — the architectural promise that
+// EnsembleVacuous rules sit in the registry as documentary metadata
+// without their bodies shipping to the model. Per CLAUDE.md's "Christological
+// anchor as substrate" / "Three-layer encoding" / craft-rules-registry doctrine,
+// the substrate ⊥ apparatus separation is enforced at the dispatch layer; these
+// tests verify that enforcement holds in code, not just in doctrine.
+//
+// Provenance: added 2026-04-28 in response to a /play pragmatic-builder
+// (`reports/2026-04-28-0530-play-pragmatic-builder-reflexive-discipline-test.md`)
+// where the persona-sim hallucinated test coverage for ships_to_model() and
+// Step 2.5 verification caught the fabrication. The honest finding was that
+// the methodology layer was real at the manual elicitation level (bite-tests
+// + provenance + run-ids) but lacked automated-test backstop. This test
+// module closes that gap as craft-action.
+
+#[cfg(test)]
+mod craft_rules_registry_tests {
+    use super::*;
+
+    #[test]
+    fn ships_to_model_excludes_only_ensemble_vacuous() {
+        assert!(!EvidenceTier::EnsembleVacuous.ships_to_model(),
+            "EnsembleVacuous rules must not ship to the model under default render");
+        assert!(EvidenceTier::Unverified.ships_to_model());
+        assert!(EvidenceTier::Sketch.ships_to_model());
+        assert!(EvidenceTier::Claim.ships_to_model());
+        assert!(EvidenceTier::Characterized.ships_to_model());
+        assert!(EvidenceTier::TestedNull.ships_to_model());
+        assert!(EvidenceTier::VacuousTest.ships_to_model());
+        assert!(EvidenceTier::Accumulated.ships_to_model());
+    }
+
+    #[test]
+    fn registry_has_at_least_one_ensemble_vacuous_rule() {
+        // Sanity check: the filter test below is meaningful only if the
+        // registry actually contains EnsembleVacuous rules to filter out.
+        // If the registry's distribution shifts (e.g., all rules earn
+        // Characterized via future bite-tests), this assertion will fire
+        // as a reminder to re-evaluate whether the filter behavior still
+        // matters for default render.
+        let count = CRAFT_RULES_DIALOGUE
+            .iter()
+            .filter(|r| matches!(r.evidence_tier, EvidenceTier::EnsembleVacuous))
+            .count();
+        assert!(count > 0,
+            "registry has no EnsembleVacuous rules; filter behavior is currently a no-op (expected at least 1)");
+    }
+
+    #[test]
+    fn default_render_omits_ensemble_vacuous_bodies() {
+        let with_filter = render_craft_rules_registry(&[], false);
+        let without_filter = render_craft_rules_registry(&[], true);
+        // The override-included render should be strictly longer than the
+        // filtered render, because the filter removes at least one body
+        // (per the previous test).
+        assert!(without_filter.len() > with_filter.len(),
+            "include_documentary=true render should be longer than default; default={} chars, override={} chars",
+            with_filter.len(), without_filter.len());
+
+        // Pick the first EnsembleVacuous rule in the registry and verify
+        // its body appears in the override-render but NOT in the default render.
+        let docrule = CRAFT_RULES_DIALOGUE.iter()
+            .find(|r| matches!(r.evidence_tier, EvidenceTier::EnsembleVacuous))
+            .expect("registry must contain at least one EnsembleVacuous rule (covered by separate test)");
+        // Use a substring of the body that is unique enough to discriminate
+        // (the first 80 chars of the body, which by construction starts with
+        // a character-distinctive opening).
+        let body_marker: String = docrule.body.chars().take(80).collect();
+        assert!(without_filter.contains(&body_marker),
+            "include_documentary=true render must contain EnsembleVacuous rule '{}' body marker",
+            docrule.name);
+        assert!(!with_filter.contains(&body_marker),
+            "default render must NOT contain EnsembleVacuous rule '{}' body marker (substrate ⊥ apparatus)",
+            docrule.name);
+    }
+
+    #[test]
+    fn omit_names_filter_excludes_by_name_independent_of_tier() {
+        // Pick a rule that DOES ship by default (any non-EnsembleVacuous tier).
+        let shipping_rule = CRAFT_RULES_DIALOGUE.iter()
+            .find(|r| r.evidence_tier.ships_to_model())
+            .expect("registry must contain at least one shipping rule");
+        let body_marker: String = shipping_rule.body.chars().take(80).collect();
+
+        // Without omit: the body should appear in the default render.
+        let baseline = render_craft_rules_registry(&[], false);
+        assert!(baseline.contains(&body_marker),
+            "shipping rule '{}' must appear in default render before omit",
+            shipping_rule.name);
+
+        // With omit by name: the body should NOT appear in the render.
+        let omitted = render_craft_rules_registry(&[shipping_rule.name], false);
+        assert!(!omitted.contains(&body_marker),
+            "rule '{}' must be omitted when its name is in the omit list",
+            shipping_rule.name);
+    }
+
+    #[test]
+    fn craft_notes_dialogue_with_omit_rules_respects_both_filters() {
+        // Standard render (no omits, no documentary include).
+        let standard = craft_notes_dialogue_with_omit_rules(&[], false);
+        // Documentary-included (override the ships_to_model filter).
+        let with_documentary = craft_notes_dialogue_with_omit_rules(&[], true);
+        // Documentary-included render should be longer (includes EnsembleVacuous bodies).
+        assert!(with_documentary.len() > standard.len(),
+            "craft_notes_dialogue_with_omit_rules with documentary should be longer; std={} doc={}",
+            standard.len(), with_documentary.len());
+
+        // Both should contain the legacy craft_notes_dialogue_legacy() text
+        // (the inline rules that haven't migrated to the registry).
+        let legacy = craft_notes_dialogue_legacy();
+        let legacy_marker: String = legacy.chars().take(80).collect();
+        assert!(standard.contains(&legacy_marker),
+            "standard render must include the legacy inline craft-notes");
+        assert!(with_documentary.contains(&legacy_marker),
+            "documentary-included render must also include the legacy inline craft-notes");
+    }
+
+    #[test]
+    fn registry_rule_names_are_unique() {
+        // Architectural invariant: every rule has a unique name. The omit-
+        // by-name affordance and the `worldcli show-craft-rule <name>` lookup
+        // both rely on this. If a future ship accidentally introduces a
+        // duplicate name, this test catches it.
+        let mut seen: Vec<&str> = Vec::with_capacity(CRAFT_RULES_DIALOGUE.len());
+        for rule in CRAFT_RULES_DIALOGUE.iter() {
+            assert!(!seen.contains(&rule.name),
+                "duplicate rule name in registry: '{}'", rule.name);
+            seen.push(rule.name);
+        }
+    }
+}
