@@ -16,6 +16,17 @@ the evidence leaves attached to that question.
 
 See `worldcli lab --help` for the CLI surface.
 
+Two useful registry reads now exist side by side:
+
+- `worldcli lab open` — the unfinished queue
+- `worldcli lab summary` — the shelf-level read by status and heuristic
+  bet-family hints
+
+The summary view is intentionally suggestive rather than canonical. It helps the
+reader notice whether the shelf is clustering around structural-bite bets,
+scope-and-direction bets, or partial-real / instrument-sensitive bets, but the
+reports remain the final interpretive surface.
+
 ## Frontmatter schema
 
 Scalars:

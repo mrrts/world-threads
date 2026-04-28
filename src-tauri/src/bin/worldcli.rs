@@ -30,6 +30,7 @@ use clap::{Parser, Subcommand, ValueEnum};
 use rusqlite::params;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value as JsonValue};
+use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 use app_lib::ai::prompts::json_array_to_strings;
@@ -950,6 +951,13 @@ enum LabAction {
         /// Filter by status: proposed | running | open | discrepant | confirmed | refuted.
         #[arg(long)]
         status: Option<String>,
+    },
+    /// Summarize the registry by status and bet-family hints.
+    /// Bet-family hints are heuristic, not canonical labels.
+    Summary {
+        /// Restrict the family read to resolved experiments only.
+        #[arg(long, default_value_t = true)]
+        resolved_only: bool,
     },
     /// List just the non-resolved experiments (proposed | running | open).
     /// The "what's still open" view future sessions use to pick up threads.
@@ -5302,6 +5310,124 @@ fn truncate_chars(s: &str, max_chars: usize) -> String {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+enum BetFamilyHint {
+    StructuralBite,
+    ScopeAndDirection,
+    PartialRealInstrumentSensitive,
+    Other,
+}
+
+impl BetFamilyHint {
+    fn key(self) -> &'static str {
+        match self {
+            BetFamilyHint::StructuralBite => "structural-bite",
+            BetFamilyHint::ScopeAndDirection => "scope-and-direction",
+            BetFamilyHint::PartialRealInstrumentSensitive => "partial-real-instrument-sensitive",
+            BetFamilyHint::Other => "other",
+        }
+    }
+
+    fn label(self) -> &'static str {
+        match self {
+            BetFamilyHint::StructuralBite => "structural bite",
+            BetFamilyHint::ScopeAndDirection => "scope and direction",
+            BetFamilyHint::PartialRealInstrumentSensitive => "partial real / instrument sensitive",
+            BetFamilyHint::Other => "other / unclassified",
+        }
+    }
+
+    fn description(self) -> &'static str {
+        match self {
+            BetFamilyHint::StructuralBite =>
+                "asks whether a rule, stack layer, or instrument exerts real force at all",
+            BetFamilyHint::ScopeAndDirection =>
+                "asks whether a real effect generalizes cleanly across characters, registers, or readings in the predicted direction",
+            BetFamilyHint::PartialRealInstrumentSensitive =>
+                "the phenomenon looks partly real, but instruments or reading levels disagree about how to name it",
+            BetFamilyHint::Other =>
+                "does not cleanly match the current family hints",
+        }
+    }
+}
+
+fn classify_bet_family_hint(exp: &ExperimentFile) -> BetFamilyHint {
+    let hay = format!(
+        "{}\n{}\n{}",
+        exp.hypothesis.to_lowercase(),
+        exp.prediction.to_lowercase(),
+        exp.summary.to_lowercase(),
+    );
+
+    let structural_markers = [
+        " bite",
+        " bites",
+        "validation",
+        "redundancy",
+        "toggle",
+        "rule-on",
+        "rule-off",
+        " omit",
+        "omitted",
+        "real force",
+        "does what it claims",
+    ];
+    let scope_markers = [
+        "cross-character",
+        "generalization",
+        "register",
+        "scope",
+        "across ",
+        "direction",
+        "narrow reading",
+        "broad reading",
+        "at least one character",
+        ">=5/6",
+        "6/6",
+        "5/6",
+        " versus ",
+        " vs ",
+    ];
+    let instrument_markers = [
+        "instrument",
+        "paired-rubric disagreement",
+        "paired-rubric",
+        "qualitative read",
+        "diverge",
+        "disagree",
+        "partial generalization",
+        "vacuous-test",
+        "mixed",
+        "ambigu",
+    ];
+
+    let structural_score = structural_markers.iter().filter(|m| hay.contains(**m)).count();
+    let scope_score = scope_markers.iter().filter(|m| hay.contains(**m)).count();
+    let instrument_score = instrument_markers.iter().filter(|m| hay.contains(**m)).count();
+
+    if exp.status == "discrepant" || instrument_score >= 2 {
+        return BetFamilyHint::PartialRealInstrumentSensitive;
+    }
+
+    if exp.status == "confirmed" && structural_score > 0 {
+        return BetFamilyHint::StructuralBite;
+    }
+
+    if structural_score >= 2 && (exp.status == "confirmed" || structural_score > scope_score) {
+        return BetFamilyHint::StructuralBite;
+    }
+
+    if scope_score > 0 {
+        return BetFamilyHint::ScopeAndDirection;
+    }
+
+    if structural_score > 0 {
+        return BetFamilyHint::StructuralBite;
+    }
+
+    BetFamilyHint::Other
+}
+
 fn run_summary_from_manifest_entry(kind: &str, entry: &JsonValue) -> Option<JsonValue> {
     let run_id = entry.get("run_id")?.as_str()?.to_string();
     let run_timestamp = entry.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("").to_string();
@@ -5426,6 +5552,70 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                         println!("           {}", truncated);
                     }
                 }
+            }
+        }
+        LabAction::Summary { resolved_only } => {
+            let mut experiments = list_experiments().map_err(Box::<dyn std::error::Error>::from)?;
+            if resolved_only {
+                experiments.retain(|e| matches!(e.status.as_str(), "confirmed" | "refuted" | "discrepant"));
+            }
+
+            let mut status_counts: BTreeMap<String, usize> = BTreeMap::new();
+            let mut family_buckets: BTreeMap<BetFamilyHint, Vec<&ExperimentFile>> = BTreeMap::new();
+            for exp in &experiments {
+                *status_counts.entry(exp.status.clone()).or_insert(0) += 1;
+                family_buckets.entry(classify_bet_family_hint(exp)).or_default().push(exp);
+            }
+
+            if r.json {
+                let family_json: Vec<JsonValue> = family_buckets.iter().map(|(family, exps)| {
+                    json!({
+                        "key": family.key(),
+                        "label": family.label(),
+                        "description": family.description(),
+                        "count": exps.len(),
+                        "experiments": exps.iter().map(|e| json!({
+                            "slug": e.slug,
+                            "status": e.status,
+                            "mode": e.mode,
+                            "hypothesis": e.hypothesis,
+                            "summary": e.summary,
+                        })).collect::<Vec<_>>(),
+                    })
+                }).collect();
+                emit(true, json!({
+                    "resolved_only": resolved_only,
+                    "status_counts": status_counts,
+                    "family_hints": family_json,
+                    "note": "Bet-family hints are heuristic and meant to help read the shelf, not replace the reports.",
+                }));
+            } else {
+                println!("Lab registry summary{}", if resolved_only { " (resolved only)" } else { "" });
+                println!();
+                println!("Status counts:");
+                for (status, count) in &status_counts {
+                    println!("  {:<10} {}", status, count);
+                }
+                println!();
+                println!("Bet-family hints:");
+                for family in [
+                    BetFamilyHint::StructuralBite,
+                    BetFamilyHint::ScopeAndDirection,
+                    BetFamilyHint::PartialRealInstrumentSensitive,
+                    BetFamilyHint::Other,
+                ] {
+                    let exps = family_buckets.get(&family).map(Vec::as_slice).unwrap_or(&[]);
+                    println!("  {} ({})", family.label(), exps.len());
+                    println!("    {}", family.description());
+                    for e in exps.iter().take(8) {
+                        println!("    - [{}] {}", e.status, e.slug);
+                    }
+                    if exps.len() > 8 {
+                        println!("    - … {} more", exps.len() - 8);
+                    }
+                    println!();
+                }
+                println!("  note: family hints are heuristic. Use `worldcli lab show <slug>` and the linked reports to interpret edge cases.");
             }
         }
         LabAction::Open => {
