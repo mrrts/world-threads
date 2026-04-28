@@ -117,6 +117,11 @@ IMPORTANT — CONTENT REGISTER: Keep the story PG. Occasional PG-13 is fine when
 // the user sees a wall of mixed text instead of the script-like
 // alternation that makes the app feel alive.
 //
+// Doctrine cross-ref: CLAUDE.md § "Dialogue fence integrity — three-layer
+// stack" names prompt (this invariant) vs orchestrator salvage vs
+// frontend display-repair — attributing UX wins to the prompt requires
+// raw completion, not only post-repair text.
+//
 // Inserted at the HEAD of the dialogue system prompt (before even
 // FUNDAMENTAL_SYSTEM_PREAMBLE) so it conditions every downstream
 // instruction. Per CLAUDE.md "Feature-scoped invariants" doctrine.
@@ -166,6 +171,12 @@ DISTRUST RECURRING SENSORY ANCHORS FROM CHAT HISTORY. The chat history below MAY
   Earned exception — anchor genuinely scene-pinned: when the user's most recent message names the anchor explicitly ("listen, the well chain just went quiet"), or when the scene-state plainly fixes it (you're seated AT the well, the bench is the scene's only surface), reaching for it is fidelity, not groove. The test is whether the SCENE called for it or whether the model reached for it from history-readback alone. If you can't name a scene-anchored reason, vary the anchor.
 
 NEVER wrap spoken dialogue in asterisks. NEVER write third-person inside asterisks. NEVER wrap action/environment/sensory content in quotes. NEVER mix the two fences (no `*"..."*`). Every opening asterisk must close.
+
+FENCE-INTEGRITY SELF-CHECK (run mentally BEFORE emitting final text):
+  1) Every `"` opened for speech is closed before any asterisk run starts.
+  2) No `*` appears inside quoted speech. No `"` appears inside asterisk runs.
+  3) Reply is clean runs only: `*action*` and `"speech"`; never hybrid fragments.
+  4) If any check fails in draft, rewrite before output (never emit broken fencing).
 
 This shape is load-bearing for the UI's rendering of script-like alternation. Output that violates this shape will render as a wall of mixed text — the user's experience of speaking with a character collapses to reading a transcript-without-formatting."#;
 
@@ -236,6 +247,10 @@ const _: () = {
     assert!(
         const_contains(STYLE_DIALOGUE_INVARIANT, "NEVER wrap action/environment/sensory content in quotes"),
         "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must explicitly forbid wrapping action/environment/sensory content in quotes (the inverse of the existing 'NEVER wrap dialogue in asterisks' rule)."
+    );
+    assert!(
+        const_contains(STYLE_DIALOGUE_INVARIANT, "FENCE-INTEGRITY SELF-CHECK"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: dialogue style must include an explicit fence-integrity self-check for quote/asterisk pairing."
     );
     assert!(
         const_contains(STYLE_DIALOGUE_INVARIANT, "opening-line failure"),

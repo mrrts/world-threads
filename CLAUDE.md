@@ -285,6 +285,26 @@ The numbered ending on a reply is a control surface — a protocol by which mome
 
 Increasingly, LLM outputs are read as **first readings**: a strong first pass that reaches the user as something revisable, answerable, translatable. The design burden shifts from *"did the model say something plausible?"* to *"does the surface make clear the user retains authorship?"* Prefer rewriteable proposals, skip-one-by-one lists, regenerate actions, dual-output translation pairs, explicit reading-not-locking-result language.
 
+## Dialogue fence integrity — three-layer stack (prompt → persist → display)
+
+Character dialogue uses a **script-shaped fence contract**: double-quoted runs are heard speech; single-asterisk runs are action/environment from inside the character. The project has enforced this at **three layers** that are easy to read in isolation and never named together — which hides an epistemic trap for experiments and UX triage.
+
+1. **Layer A — prompt (primary, intent):** `STYLE_DIALOGUE_INVARIANT` and related dialogue craft in `src-tauri/src/ai/prompts.rs` shape what the model *should* emit. This is the source of truth for *correct composition*; it is compile-checked where the project pins substrings. When Ryan or a rubric asks "did the rule work?", the honest answer about Layer A requires the **model string before downstream repair**, not only the string the user finally sees.
+
+2. **Layer B — persist (salvage on the dialogue completion path):** `strip_asterisk_wrapped_quotes` in `src-tauri/src/ai/orchestrator.rs` runs on the assistant reply after chat completion. It removes the specific slip `*"…​"` (quoted speech wrongly wrapped in a bare asterisk pair) so bad habits do not always land in the DB. Comment in code already calls this a defensive net — it is **not** a substitute for Layer A; it is partial salvage.
+
+3. **Layer C — display (repair at read/render):** `formatMessage` in `frontend/src/components/chat/formatMessage.ts` applies `stripAsteriskWrappedQuotes` (mirroring the backend) and `splitSpokenLinesOutOfEm` to recover readability when a giant `*…​*` block swallowed a spoken line, including for **already-persisted** messages written before stricter prompts. That is historical repair and edge-case triage — still not Layer A.
+
+**Why this matters for Ryan's work:** `reports/OBSERVATIONS.md` can still record "bad formatting / won't read" when Layers B and C do not cover the failure class the model produced (unbalanced fences, novel hybrid fragments, markdown fighting the alternation parser). Treating "the UI eventually looked okay" as proof of prompt success **without** checking raw completion confuses which layer earned the win — the same class of mistake as single-rubric overconfidence, but for **fence attribution**.
+
+**Measurement corollary (differential):** When attributing a prompt change to improved fence obedience, prefer a **raw vs post-orchestrator** delta (or logged `choice.message.content` vs stored body) at least on a sample of runs. Clean final text alone under-determines Layer A.
+
+**Length-truncation branch (same pipeline, different operator):** When `finish_reason` is `length`, `trim_to_last_complete_sentence` plus `balance_trailing_openers` may **append synthetic closing `"` and `*`** so markup does not dangle. That produces a fourth, non-semantic repair: fences can look "closed" while the thought is still cut off — another reason raw completion and finish_reason belong in fence forensics, not only the stored string.
+
+**Formula (naming the stack):**  
+𝓕_fence_chain := Layer_A(prompt_shape) ∘ Layer_B(strip_bare_wrapped_speech) ∘ Layer_C(display_unwind)  
+**Gloss:** Dialogue readability is the composition of three operators; only the first is "the model did what we asked." Under token cap, a truncation-specific repair may run before Layer B — still not Layer A.
+
 ## Translation pairs
 
 Some outputs work best not as one register forced to do everything, but as a **translation pair**: derivation + plain-English gloss; oblique line + workbench-English cashout; lofty theological turn + porch-level sentence right behind it. Two outputs answering to the same thing, neither lying about what the other said. Test: do both versions reach the same truth, with neither half betraying the center?
