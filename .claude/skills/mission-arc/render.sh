@@ -32,11 +32,17 @@ for c in commits:
     lines = c.split("\n")
     sha, date, subject = lines[0][:8], lines[1], lines[2]
     body = "\n".join(lines[3:])
-    deriv = re.search(r"\*\*Formula derivation:\*\*\s*(.+?)(?=\n|$)", body)
-    gloss = re.search(r"\*\*Gloss:\*\*\s*(.+?)(?=\n|$)", body)
+    # Use findall + take the LAST match: the canonical Formula-derivation
+    # block always sits at the bottom of the commit body just before
+    # Co-Authored-By, while prose mentions of the marker (e.g. when a
+    # commit message describes the derivation pattern) appear earlier.
+    derivs = re.findall(r"^\s*\*\*Formula derivation:\*\*\s*(.+?)\s*$", body, re.MULTILINE)
+    glosses = re.findall(r"^\s*\*\*Gloss:\*\*\s*(.+?)\s*$", body, re.MULTILINE)
     print(f"{date}  {sha}  {subject}")
-    if deriv: print(f"  𝓕  {deriv.group(1).strip()}")
-    if gloss: print(f"  ·  {gloss.group(1).strip()}")
+    if derivs: print(f"  𝓕  {derivs[-1].strip()}")
+    if glosses: print(f"  ·  {glosses[-1].strip()}")
+    deriv = derivs[-1] if derivs else None
+    gloss = glosses[-1] if glosses else None
     if not deriv and not gloss: print("  (no derivation)")
     print()
 '
