@@ -21,14 +21,14 @@ See `worldcli lab --help` for the CLI surface.
 Scalars:
 
 - `id`: slug (matches filename)
-- `status`: `proposed` | `running` | `open` | `confirmed` | `refuted`
+- `status`: `proposed` | `running` | `open` | `discrepant` | `confirmed` | `refuted`
 - `mode`: `passive` | `qualitative` | `active`
 - `ref`: git sha/tag/branch the experiment pivots on
 - `rubric_ref`: name from `reports/rubrics/` (for Mode A passive runs)
 - `evidence_strength`: evidentiary-tier label preserved across `worldcli lab`
   rewrites
 - `created_at`: ISO 8601
-- `resolved_at`: ISO 8601 (set when status becomes confirmed/refuted/open)
+- `resolved_at`: ISO 8601 (set when status becomes confirmed/refuted/open/discrepant)
 
 Block scalars (multi-line prose):
 
@@ -53,6 +53,8 @@ Flat string-lists:
   only the chosen one advances to `running`.
 - **running**: the experiment is in flight (an LLM run has been initiated).
 - **open**: executed but result is ambiguous — more data needed.
+- **discrepant**: executed and interpreted, but instrument families disagree in a
+  way the registry should preserve honestly rather than flatten into `open`.
 - **confirmed**: prediction held.
 - **refuted**: prediction did not hold (this is a real result, not a failure).
 

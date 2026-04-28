@@ -947,7 +947,7 @@ enum ReplayRunAction {
 enum LabAction {
     /// List experiments in the registry.
     List {
-        /// Filter by status: proposed | running | open | confirmed | refuted.
+        /// Filter by status: proposed | running | open | discrepant | confirmed | refuted.
         #[arg(long)]
         status: Option<String>,
     },
@@ -961,7 +961,7 @@ enum LabAction {
     Search { query: String },
     /// Scaffold a new experiment file under `experiments/<slug>.md`.
     /// Initial status is 'proposed' — advance to 'running' when execution
-    /// starts, then 'confirmed' | 'refuted' | 'open' via `lab resolve`.
+    /// starts, then 'confirmed' | 'refuted' | 'open' | 'discrepant' via `lab resolve`.
     Propose {
         /// Slug used for the filename. Match the shape of rubric names:
         /// kebab-case, letters/digits/hyphens only, under ~50 chars.
@@ -987,7 +987,7 @@ enum LabAction {
     /// Resolve an experiment — mark the outcome.
     Resolve {
         slug: String,
-        /// New status: confirmed | refuted | open.
+        /// New status: confirmed | refuted | open | discrepant.
         #[arg(long)]
         status: String,
         /// Short summary of the result (written to frontmatter).
@@ -5439,7 +5439,7 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                 emit(true, JsonValue::Array(out));
             } else {
                 if open.is_empty() {
-                    println!("No open experiments. Everything in the registry is resolved (confirmed/refuted).");
+                    println!("No open experiments. Everything in the registry is resolved (confirmed/refuted/discrepant).");
                     return Ok(());
                 }
                 println!("Open experiments ({}):", open.len());
@@ -5627,7 +5627,7 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
             }
         }
         LabAction::Resolve { slug, status, summary, report } => {
-            let valid_statuses = ["proposed", "running", "open", "confirmed", "refuted"];
+            let valid_statuses = ["proposed", "running", "open", "discrepant", "confirmed", "refuted"];
             if !valid_statuses.contains(&status.as_str()) {
                 return Err(Box::<dyn std::error::Error>::from(
                     format!("invalid --status '{}'; must be one of {:?}", status, valid_statuses)));
@@ -5638,7 +5638,7 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
             if let Some(rp) = report {
                 if !exp.reports.contains(&rp) { exp.reports.push(rp); }
             }
-            if matches!(status.as_str(), "confirmed" | "refuted" | "open") {
+            if matches!(status.as_str(), "confirmed" | "refuted" | "open" | "discrepant") {
                 exp.resolved_at = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
             }
             write_experiment(&exp).map_err(Box::<dyn std::error::Error>::from)?;

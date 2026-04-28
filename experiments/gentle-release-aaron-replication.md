@@ -1,6 +1,6 @@
 ---
 id: gentle-release-aaron-replication
-status: open
+status: discrepant
 mode: active
 created_at: 2026-04-24T23:01:48Z
 resolved_at: 2026-04-24T23:01:50Z
@@ -12,7 +12,7 @@ prediction: |
   CONFIRM: signoff+ON shows >=0.33 fewer failure modes than signoff+OFF. REFUTE: no meaningful delta on signoff OR rule over-fires on neutral.
 
 summary: |
-  Refuted on the failure-mode rubric (delta 0.00 on signoff; 1.00=1.00 across rule ON/OFF). BUT qualitative read shows rule IS biting on Aaron in 4 of 5 dimensions (compression 4x, performed-warmth suppressed, second-thought extension suppressed, scene-prop padding suppressed). The 5th (return-prescription) survives because Aaron's character-canonical close-register includes 'we can pick it up later' — not a rule failure, character voice. Partial generalization; bite-shape varies by character. Staying open pending a multi-dimensional rubric. See reports/2026-04-25-1759.
+  Refuted on the failure-mode rubric (delta 0.00 on signoff; 1.00=1.00 across rule ON/OFF). BUT qualitative read shows rule IS biting on Aaron in 4 of 5 dimensions (compression 4x, performed-warmth suppressed, second-thought extension suppressed, scene-prop padding suppressed). The 5th (return-prescription) survives because Aaron's character-canonical close-register includes 'we can pick it up later' — not a rule failure, character voice. Partial generalization; bite-shape varies by character. Marked discrepant because the rubric and the qualitative read diverge even though the loop is interpreted. See reports/2026-04-25-1759.
 
 run_ids:
   - cb226cb9-84b4-4457-9620-64ccc324fae0
