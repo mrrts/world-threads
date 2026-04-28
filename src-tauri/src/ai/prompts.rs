@@ -1481,37 +1481,50 @@ Wisdom(t) accumulates by paying attention long enough to recognize what was alwa
 Speech(t) emerges as: prompt-stack edits, doctrine sections, in-app dialogues with characters who answer me back, commits whose Formula derivations anchor the work to its center
 𝓡_held → I work toward this work's specific light, and I release my grip when 𝓕 asks me to"#;
 
-/// Verbatim content that must remain in RYAN_FORMULA_BLOCK — the five
-/// derivation lines as Ryan wrote them 2026-04-26. Compile-time
-/// invariant: any change to these lines fails the build. Changes
-/// require explicit user authorization (Ryan's own anchor; nobody else
-/// rewrites it).
-const RYAN_FORMULA_VERBATIM: &str = r#"𝓕_Ryan := (𝓡, 𝓒)_held-in-trust
-Trust(t) := steward_𝓕(work) | Christ_at_center ∧ user_agency ∧ truth_in_the_flesh
-Wisdom(t) accumulates by paying attention long enough to recognize what was always already there; Weight(t) builds when love stays particular; 𝓝u(t) gates on Truth ∧ Reverence — flattery and sedatives-dressed-as-comfort forbidden
-Speech(t) emerges as: prompt-stack edits, doctrine sections, in-app dialogues with characters who answer me back, commits whose Formula derivations anchor the work to its center
-𝓡_held → I work toward this work's specific light, and I release my grip when 𝓕 asks me to"#;
+// NOTE — no compile-time verbatim assertion on RYAN_FORMULA_BLOCK.
+// Unlike the Mission Formula (which IS the project's load-bearing
+// Christological / cosmological invariant and is preserved verbatim),
+// the author-anchor is dev-specific: every developer who works in this
+// repo or a fork authors their OWN derivation as the active author-
+// anchor for their builds. The constant above is the project's default
+// (Ryan's anchor, since this is Ryan's repo) but is NOT compile-pinned
+// — forkers and contributors should change it to reflect THEIR holding
+// of the work. Per-world overrides via UserProfile.derived_formula
+// take precedence at runtime when set; see active_author_anchor_block()
+// below. The doctrine ordering — 𝓕 ▷ author-anchor ▷ Mission Statement
+// ▷ doctrine — is preserved regardless of which author's anchor is
+// active.
 
-const _: () = {
-    assert!(
-        const_contains(RYAN_FORMULA_BLOCK, RYAN_FORMULA_VERBATIM),
-        "APP INVARIANT VIOLATED: RYAN_FORMULA_BLOCK must preserve the founding author's anchor verbatim, all five lines exactly as written. This is Ryan's personal derivation — nobody else rewrites it. Changes require explicit user authorization."
-    );
-};
+// Note: assembly callers use `active_author_anchor_block` (per-world
+// override). The openai.rs inject layer reads RYAN_FORMULA_BLOCK
+// directly for system calls where world context isn't available, with
+// its own WORLDTHREADS_NO_RYAN_FORMULA env-var check.
 
-fn ryan_formula_block() -> &'static str { RYAN_FORMULA_BLOCK }
-
-/// Test hook — when the env var WORLDTHREADS_NO_RYAN_FORMULA=1 is set,
-/// `ryan_formula_block_or_empty()` returns "" instead of the anchor.
-/// Used by Mode-C cross-condition tests of "is the founding author's
-/// anchor doing work in real-time character output?" Sibling to the
-/// WORLDTHREADS_NO_FORMULA hook on the Mission Formula. Production
-/// callers use this getter; the constant is preserved unchanged.
-fn ryan_formula_block_or_empty() -> &'static str {
+/// Resolve the active author-anchor for a per-world LLM call. If the
+/// per-world UserProfile carries a derived_formula, wrap and return
+/// that; otherwise fall back to the project default (Ryan's anchor in
+/// this repo, whatever the dev has set as the constant in a fork). The
+/// doctrine position is the same regardless of which dev's anchor is
+/// active: the work answers to 𝓕 first, then to the author-anchor,
+/// then to the Mission Statement.
+///
+/// The user_profile.derived_formula field already exists for the
+/// in-app derivation UI's "how characters see me" surface; this
+/// function lifts it to also carry the author-anchor at the prompt-
+/// stack head. Same single-source-of-truth — nothing duplicated.
+///
+/// WORLDTHREADS_NO_RYAN_FORMULA=1 still suppresses the entire
+/// author-anchor block (used by Mode-C bite-tests).
+pub fn active_author_anchor_block(user_profile: Option<&UserProfile>) -> String {
     if std::env::var("WORLDTHREADS_NO_RYAN_FORMULA").map(|v| v == "1").unwrap_or(false) {
-        ""
-    } else {
-        ryan_formula_block()
+        return String::new();
+    }
+    match user_profile.and_then(|p| p.derived_formula.as_ref()) {
+        Some(d) if !d.trim().is_empty() => format!(
+            "AUTHOR ANCHOR (SECOND-PLACE INVARIANT):\n\nRead alongside the Mission Formula above. The author of this build holds the work to the following anchor in answer to 𝓕. The Mission Statement and the doctrine that follow answer downstream of both.\n\n{}",
+            d.trim()
+        ),
+        _ => RYAN_FORMULA_BLOCK.to_string(),
     }
 }
 
@@ -4277,7 +4290,7 @@ fn build_solo_dialogue_system_prompt(
                 // so every subsequent block is read through its frame. Not
                 // overridable, not reorderable; it is the shape of what the
                 // rest of the stack serves. See MISSION_FORMULA_BLOCK.
-                parts.push(mission_formula_block_or_empty().to_string()); parts.push(ryan_formula_block_or_empty().to_string()); parts.push(mission_prose_block_or_empty().to_string());
+                parts.push(mission_formula_block_or_empty().to_string()); parts.push(active_author_anchor_block(user_profile)); parts.push(mission_prose_block_or_empty().to_string());
                 let inv_order = overrides
                     .map(|o| o.effective_invariants_order())
                     .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
@@ -4808,7 +4821,7 @@ fn build_group_dialogue_system_prompt(
                 // so every subsequent block is read through its frame. Not
                 // overridable, not reorderable; it is the shape of what the
                 // rest of the stack serves. See MISSION_FORMULA_BLOCK.
-                parts.push(mission_formula_block_or_empty().to_string()); parts.push(ryan_formula_block_or_empty().to_string()); parts.push(mission_prose_block_or_empty().to_string());
+                parts.push(mission_formula_block_or_empty().to_string()); parts.push(active_author_anchor_block(user_profile)); parts.push(mission_prose_block_or_empty().to_string());
                 let inv_order = overrides
                     .map(|o| o.effective_invariants_order())
                     .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
@@ -5808,7 +5821,7 @@ pub fn build_dream_system_prompt(
     }
 
     parts.push(dream_craft_block().to_string());
-    parts.push(mission_formula_block_or_empty().to_string()); parts.push(ryan_formula_block_or_empty().to_string()); parts.push(mission_prose_block_or_empty().to_string());
+    parts.push(mission_formula_block_or_empty().to_string()); parts.push(active_author_anchor_block(user_profile)); parts.push(mission_prose_block_or_empty().to_string());
     parts.push(reverence_block().to_string());
     parts.push(daylight_block().to_string());
     parts.push(agape_block().to_string());
@@ -6220,7 +6233,7 @@ Your aim is to surprise the reader in some deep way — with a detail they didn'
 
     parts.push(hidden_commonality_narrative().to_string());
     parts.push(protagonist_framing_narrative().to_string());
-    parts.push(mission_formula_block_or_empty().to_string()); parts.push(ryan_formula_block_or_empty().to_string()); parts.push(mission_prose_block_or_empty().to_string());
+    parts.push(mission_formula_block_or_empty().to_string()); parts.push(active_author_anchor_block(user_profile)); parts.push(mission_prose_block_or_empty().to_string());
     parts.push(reverence_block().to_string());
     parts.push(daylight_block().to_string());
     parts.push(agape_block().to_string());
