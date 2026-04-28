@@ -338,24 +338,7 @@ pub async fn run_dialogue_with_base(
         .ok_or_else(|| "No response from model".to_string())?;
     let raw = choice.message.content.clone();
 
-    // Salvage mid-sentence cutoffs. When the model's reply is terminated by
-    // max_completion_tokens (finish_reason == "length"), trim back to the
-    // last complete sentence so the user never sees a half-finished word.
-    // Then balance any unclosed openers (", *, or () so dialogue/action
-    // markup never dangles. Natural stops are returned as-is.
-    let reply = if choice.finish_reason.as_deref() == Some("length") {
-        let trimmed = trim_to_last_complete_sentence(&raw);
-        let base = if trimmed.is_empty() { raw.as_str() } else { trimmed.as_str() };
-        balance_trailing_openers(base)
-    } else {
-        raw
-    };
-
-    // Strip asterisks that wrap a bare quoted phrase (no other content
-    // inside the pair). Models occasionally emit `*"That makes sense."*`
-    // — asterisks are for actions, not speech. The prompt says so, but
-    // this is a defensive net for the times the model slips.
-    let reply = strip_asterisk_wrapped_quotes(&reply);
+    let reply = post_process_dialogue_reply_for_persist(&raw, choice.finish_reason.as_deref());
 
     Ok((reply, response.usage))
 }
@@ -475,6 +458,29 @@ pub fn balance_trailing_openers(s: &str) -> String {
     if stars % 2 == 1 { out.push('*'); }
     if dquotes % 2 == 1 { out.push('"'); }
     out
+}
+
+/// Apply the same post-processing `run_dialogue_with_base` uses on the
+/// assistant completion **before** the text is persisted or shown as the
+/// canonical in-app reply (length-trim + `balance_trailing_openers` when
+/// `finish_reason == "length"`, then `strip_asterisk_wrapped_quotes`).
+///
+/// `worldcli ask --fence-pipeline` calls this so fence experiments can
+/// compare API-raw vs persist-path without duplicating orchestrator logic.
+/// See CLAUDE.md § "Dialogue fence integrity — three-layer stack".
+pub fn post_process_dialogue_reply_for_persist(raw: &str, finish_reason: Option<&str>) -> String {
+    let reply = if finish_reason == Some("length") {
+        let trimmed = trim_to_last_complete_sentence(raw);
+        let base = if trimmed.is_empty() {
+            raw
+        } else {
+            trimmed.as_str()
+        };
+        balance_trailing_openers(base)
+    } else {
+        raw.to_string()
+    };
+    strip_asterisk_wrapped_quotes(&reply)
 }
 
 /// Generate a proactive (unsolicited) message from the character into their

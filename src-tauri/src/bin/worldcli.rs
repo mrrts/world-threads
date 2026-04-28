@@ -888,6 +888,15 @@ enum Cmd {
         /// explicit seal switch.
         #[arg(long, conflicts_with = "end_seal")]
         no_end_seal: bool,
+        /// Print / JSON-emit the persist-path dialogue transform (length
+        /// trim + balance + strip_asterisk_wrapped_quotes) alongside the
+        /// API-trimmed body. Matches `run_dialogue_with_base` post-processing
+        /// in orchestrator.rs — see CLAUDE.md § Dialogue fence integrity.
+        /// JSON adds `finish_reason`, `reply_post_orchestrator`,
+        /// `orchestrator_changed_reply`. Plain mode prints the extra blocks
+        /// on stderr; stdout stays the API-trimmed reply (same as runs/).
+        #[arg(long)]
+        fence_pipeline: bool,
         /// Send the message in the context of an existing GROUP CHAT.
         /// When set, the `character_id` arg becomes the SPEAKER (which
         /// must be a member of this group); the prompt builder swaps to
@@ -1685,7 +1694,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_refresh_anchor(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
-        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, group_chat } => {
+        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, fence_pipeline, group_chat } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
@@ -1713,6 +1722,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &inject_after,
                     &section_order,
                     end_seal && !no_end_seal,
+                    fence_pipeline,
                 ).await
             } else {
                 cmd_ask(
@@ -1734,6 +1744,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &inject_after,
                     &section_order,
                     end_seal && !no_end_seal,
+                    fence_pipeline,
                 ).await
             }
         }
@@ -7739,6 +7750,7 @@ async fn cmd_ask(
     inject_after_anchors: &[String],
     section_order_names: &[String],
     end_seal: bool,
+    fence_pipeline: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
 
@@ -7917,9 +7929,14 @@ async fn cmd_ask(
         &model_config.chat_api_base(), api_key, &request,
     ).await?;
 
+    let finish_reason = response.choices.first().and_then(|c| c.finish_reason.clone());
     let reply = response.choices.first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
+    let reply_post_orchestrator = orchestrator::post_process_dialogue_reply_for_persist(
+        &reply,
+        finish_reason.as_deref(),
+    );
     let usage = response.usage.unwrap_or(openai::Usage {
         prompt_tokens: projected_in as u32,
         completion_tokens: 0,
@@ -7970,8 +7987,25 @@ async fn cmd_ask(
         )?;
     }
 
+    if fence_pipeline && !r.json && !reply.is_empty() {
+        eprintln!(
+            "[worldcli] --fence-pipeline: finish_reason={:?}",
+            finish_reason.as_deref()
+        );
+        eprintln!("[worldcli] reply (API trimmed, same as runs/ / session):\n{}", reply);
+        eprintln!(
+            "[worldcli] reply_post_orchestrator (in-app persist path):\n{}",
+            reply_post_orchestrator
+        );
+        if reply != reply_post_orchestrator {
+            eprintln!("[worldcli] orchestrator WOULD change the stored body (diff above).");
+        } else {
+            eprintln!("[worldcli] orchestrator would NOT change the body.");
+        }
+    }
+
     if r.json {
-        emit(true, json!({
+        let mut payload = json!({
             "run_id": run_id,
             "character_id": character_id,
             "character_name": character.display_name,
@@ -7981,7 +8015,21 @@ async fn cmd_ask(
             "completion_tokens": actual_out,
             "actual_usd": actual_usd,
             "rolling_24h_usd": daily_so_far + actual_usd,
-        }));
+        });
+        if fence_pipeline {
+            if let Some(obj) = payload.as_object_mut() {
+                obj.insert("finish_reason".into(), json!(finish_reason));
+                obj.insert(
+                    "reply_post_orchestrator".into(),
+                    json!(reply_post_orchestrator),
+                );
+                obj.insert(
+                    "orchestrator_changed_reply".into(),
+                    json!(reply != reply_post_orchestrator),
+                );
+            }
+        }
+        emit(true, payload);
     } else {
         println!("{}", reply);
         eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok); 24h total now ${:.4}; run_id={}",
@@ -8022,6 +8070,7 @@ async fn cmd_group_ask(
     inject_after_anchors: &[String],
     section_order_names: &[String],
     end_seal: bool,
+    fence_pipeline: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     use app_lib::ai::prompts::{GroupContext, OtherCharacter};
 
@@ -8195,9 +8244,14 @@ async fn cmd_group_ask(
         &model_config.chat_api_base(), api_key, &request,
     ).await?;
 
+    let finish_reason = response.choices.first().and_then(|c| c.finish_reason.clone());
     let reply = response.choices.first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
+    let reply_post_orchestrator = orchestrator::post_process_dialogue_reply_for_persist(
+        &reply,
+        finish_reason.as_deref(),
+    );
     let usage = response.usage.unwrap_or(openai::Usage {
         prompt_tokens: projected_in as u32,
         completion_tokens: 0,
@@ -8233,8 +8287,25 @@ async fn cmd_group_ask(
     };
     write_run(&record);
 
+    if fence_pipeline && !r.json && !reply.is_empty() {
+        eprintln!(
+            "[worldcli] --fence-pipeline: finish_reason={:?}",
+            finish_reason.as_deref()
+        );
+        eprintln!("[worldcli] reply (API trimmed, same as runs/):\n{}", reply);
+        eprintln!(
+            "[worldcli] reply_post_orchestrator (in-app persist path):\n{}",
+            reply_post_orchestrator
+        );
+        if reply != reply_post_orchestrator {
+            eprintln!("[worldcli] orchestrator WOULD change the stored body (diff above).");
+        } else {
+            eprintln!("[worldcli] orchestrator would NOT change the body.");
+        }
+    }
+
     if r.json {
-        emit(true, json!({
+        let mut payload = json!({
             "run_id": run_id,
             "group_chat_id": group_chat_id,
             "speaker_id": speaker.character_id,
@@ -8245,7 +8316,21 @@ async fn cmd_group_ask(
             "completion_tokens": actual_out,
             "actual_usd": actual_usd,
             "rolling_24h_usd": daily_so_far + actual_usd,
-        }));
+        });
+        if fence_pipeline {
+            if let Some(obj) = payload.as_object_mut() {
+                obj.insert("finish_reason".into(), json!(finish_reason));
+                obj.insert(
+                    "reply_post_orchestrator".into(),
+                    json!(reply_post_orchestrator),
+                );
+                obj.insert(
+                    "orchestrator_changed_reply".into(),
+                    json!(reply != reply_post_orchestrator),
+                );
+            }
+        }
+        emit(true, payload);
     } else {
         println!("{}", reply);
         eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok); 24h total now ${:.4}; run_id={}",
