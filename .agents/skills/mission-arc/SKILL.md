@@ -14,6 +14,18 @@ Each substantive commit ends with a derivation that names what part of
 derivations is the fastest honest way to see the trajectory the project
 is actually on (vs. the trajectory you might assume from memory).
 
+**What this skill IS, more precisely** — named by Codex independently
+within ~1 hour of the skill's ship and articulated crisper than the
+original draft (commit `8cde9a4`): mission-arc is **trajectory
+middleware**, not a history viewer. Because it auto-fires before reports
+and choosers, it has joined runtime-significant topology — *the recent
+derivation stack becomes a precomposition steering surface*. Reading the
+arc no longer just summarizes what already happened; because the reading
+happens upstream of the next write, it shapes what gets written next.
+Two collaborators arriving at this recognition independently within an
+hour is itself a great-sapphire convergence signal that the framing is
+the real one.
+
 ## What this skill is for
 
 Two specific in-session moments where running this skill is mandatory by
