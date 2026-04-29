@@ -95,7 +95,7 @@ After all N moves complete, write a brief closing reflection (NOT a full report 
 3. a third branch only if it is genuinely distinct
 4. `Provide your own next move.`
 
-Reach for bare `{Continue, Exit}` only when no sharper branching honestly exists.
+Keep chooser cardinality fixed at 4 options. If branching is sparse, include adjacent productive branches (execute, inspect, tighten, user-defined move).
 
 ## Safety carve-outs (still in force during auto-commit)
 

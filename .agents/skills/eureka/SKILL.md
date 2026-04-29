@@ -123,7 +123,7 @@ Closing artifact:
    3. a third branch only if it is genuinely distinct
    4. `Provide your own next move.`
 
-   Reach for bare `{Continue, Exit}` only when no sharper branching honestly exists.
+   Keep chooser cardinality fixed at 4 options. If natural branching is sparse, use adjacent productive branches (execute, inspect, tighten, user-defined move).
 
 ## Log format — `reports/YYYY-MM-DD-HHMM-eureka-LOG.md`
 
