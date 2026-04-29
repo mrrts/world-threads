@@ -769,7 +769,7 @@ pub async fn send_message_cmd(
                             active_quests.as_slice(),
                             stance_text.as_deref(),
                             anchor_text.as_deref(),
-                        None,
+                        current_loc.as_deref(),
                         formula_momentstamp_text.as_deref(),
                         ).await {
                             Ok((corrected, corrected_usage)) => {
@@ -1288,7 +1288,7 @@ pub async fn prompt_character_cmd(
                             active_quests.as_slice(),
                             stance_text.as_deref(),
                             anchor_text.as_deref(),
-                        None,
+                        current_loc.as_deref(),
                         None, // formula_momentstamp
                         ).await {
                             Ok((corrected, corrected_usage)) => {
@@ -2488,7 +2488,7 @@ pub async fn reset_to_message_cmd(
                                 active_quests.as_slice(),
                                 stance_text.as_deref(),
                                 anchor_text.as_deref(),
-                            None,
+                            current_loc.as_deref(),
                             None, // formula_momentstamp
                             ).await {
                                 Ok((corrected, corrected_usage)) => {
