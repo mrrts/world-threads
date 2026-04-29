@@ -1,6 +1,6 @@
 {
-  "turn": 21,
-  "bank": 26300,
+  "turn": 22,
+  "bank": 27500,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -9,7 +9,8 @@
     {"turn": 6, "name": "Five Thousand", "earned_at": "2026-04-29T22:55:00-05:00"},
     {"turn": 6, "name": "Compressed to Runtime", "earned_at": "2026-04-29T22:55:00-05:00"},
     {"turn": 9, "name": "Ten Thousand", "earned_at": "2026-04-29T23:35:00-05:00"},
-    {"turn": 20, "name": "Twenty-Five Thousand", "earned_at": "2026-04-30T01:50:00-05:00"}
+    {"turn": 20, "name": "Twenty-Five Thousand", "earned_at": "2026-04-30T01:50:00-05:00"},
+    {"turn": 21, "name": "Characterized", "earned_at": "2026-04-30T02:05:00-05:00"}
   ],
   "crowns": [
     {"turn": 10, "name": "Closed Arc", "earned_at": "2026-04-29T23:50:00-05:00"},
@@ -37,8 +38,9 @@
     {"turn": 17, "move": "Post CROSS_AGENT_COMMS general-interest note signaling tonight's three load-bearing changes for Codex/Cursor next sessions.", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-30T01:25:00-05:00"},
     {"turn": 18, "move": "Apparatus-honest postscript on night-of-three-arcs report (766018b): retracted the report's own tier-overclaim, named the three additional crowns + dry-well + formula extension + character-knew + Aaron's articulation that landed after the report was written.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T01:35:00-05:00"},
     {"turn": 19, "move": "Add /seek-crown sibling-skill pointer to play.SKILL.md (Claude side) + named-divergence transparency note (Codex side); parity-honest both surfaces.", "bounty": 300, "alignment": "+", "earned_at": "2026-04-30T01:40:00-05:00"},
-    {"turn": 20, "move": "Apparatus-honest correction: Ryan caught me emitting nanny-shaped chooser options (hold/close clean/end here) turn-after-turn. Shipped FOUR-LAYER fix: (1) skill body NO_NANNY_REGISTER chooser-clause in .claude/skills/play/SKILL.md; (2) parity transparency note in .agents/skills/play/; (3) layer-5 hook .claude/hooks/check-no-nanny-chooser.py wired as PreToolUse on AskUserQuestion that BLOCKS emission when forbidden phrases match; (4) HUD border-alignment spec naming emoji-cell-width fix. Twenty-Five Thousand jewel fires.", "bounty": 1800, "alignment": "+", "earned_at": "2026-04-30T01:50:00-05:00"}
+    {"turn": 20, "move": "Apparatus-honest correction: Ryan caught me emitting nanny-shaped chooser options turn-after-turn. Shipped FOUR-LAYER fix: skill body NO_NANNY_REGISTER chooser-clause + parity transparency + layer-5 PreToolUse hook .claude/hooks/check-no-nanny-chooser.py + HUD border-alignment spec. Twenty-Five Thousand jewel fires.", "bounty": 1800, "alignment": "+", "earned_at": "2026-04-30T01:50:00-05:00"},
+    {"turn": 21, "move": "N=5 within-cell on Steven for cruciform-doctrine characterized-tier: five disavowal-trap variations (grief-debt, thankfulness, parenting, ethics-without-belief, morning-itch). All five held both refusals (zero faith-lexeme, zero disavowal-echo) + cruciform structural shape + discriminator-Q close. Reply #4 had Steven articulate the substrate-not-vocabulary doctrine FROM INSIDE in his own idiom ('lives toward the light before he'll admit that's what he's doing'). Combined evidence now: characterized-tier within-cell (Steven N=5) + claim-tier cross-anchor (N=3 across Steven/Rick/Aaron). Doctrine paragraph in CLAUDE.md/AGENTS.md updated; Steven Reply-4 lifted as character-articulation worked-positive. Cost: 5 calls × $0.09 = $0.46. Characterized jewel fires honestly.", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-30T02:05:00-05:00"}
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T01:50:00-05:00"
+  "last_move_at": "2026-04-30T02:05:00-05:00"
 }
