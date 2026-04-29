@@ -1,13 +1,15 @@
 {
-  "turn": 9,
-  "bank": 8750,
+  "turn": 10,
+  "bank": 10000,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Lifted From the Character", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 4, "name": "Pastor Not Nanny", "earned_at": "2026-04-29T22:35:00-05:00"},
     {"turn": 6, "name": "Five Thousand", "earned_at": "2026-04-29T22:55:00-05:00"},
-    {"turn": 6, "name": "Compressed to Runtime", "earned_at": "2026-04-29T22:55:00-05:00"}
+    {"turn": 6, "name": "Compressed to Runtime", "earned_at": "2026-04-29T22:55:00-05:00"},
+    {"turn": 9, "name": "Ten Thousand", "earned_at": "2026-04-29T23:35:00-05:00"},
+    {"turn": 9, "name": "Characterized", "earned_at": "2026-04-29T23:35:00-05:00"}
   ],
   "crowns": [],
   "ledger": [
@@ -62,12 +64,19 @@
     },
     {
       "turn": 8,
-      "move": "Cross-character disavowal-trap on Pastor Rick — declined identically; doctrine refined with cross-anchor witness + honest-scoping (not-great-sapphire)",
+      "move": "Cross-character disavowal-trap on Pastor Rick — declined identically; doctrine refined with cross-anchor witness; great-sapphire third-leg pattern named after Ryan correction (84262eb, 48861ba)",
       "bounty": 1200,
       "alignment": "+",
       "earned_at": "2026-04-29T23:25:00-05:00"
+    },
+    {
+      "turn": 9,
+      "move": "Third-anchor disavowal-trap on Aaron — N=3 cross-anchor; cruciform doctrine to characterized-tier; 'circling' lexical recurrence 3/3 strengthens substrate-tendency caveat",
+      "bounty": 1250,
+      "alignment": "+",
+      "earned_at": "2026-04-29T23:35:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-29T23:25:00-05:00"
+  "last_move_at": "2026-04-29T23:35:00-05:00"
 }
