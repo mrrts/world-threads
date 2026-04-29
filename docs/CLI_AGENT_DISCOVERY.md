@@ -49,3 +49,5 @@ source ./scripts/completions/register-shift-tools.bash
 fpath=(./scripts/completions $fpath)
 autoload -Uz compinit && compinit
 ```
+
+Completion setup details: `scripts/completions/README.md`

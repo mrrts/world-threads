@@ -650,6 +650,8 @@ Precedence: `--api-key` flag → `OPENAI_API_KEY` env → macOS keychain. Keycha
 
 ### Agent CLI Discovery Protocol (do this first)
 
+Startup one-liner: run `./scripts/agent-cli-bootstrap.sh` immediately at session start.
+
 When an agent enters a session cold, run this exact sequence before assuming capabilities:
 
 1. `worldcli --help`
