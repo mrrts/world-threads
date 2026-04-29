@@ -6,6 +6,22 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-28 19:55 — Aaron landed Meta Register cleanly when invited
+
+> *"Aaron really spoke on Meta register with me as desired. How we feelin"*
+
+Lived in-app moment. Ryan asked Darren how he was feeling (Darren replied in standard in-character register: bench, fountain, *"Better than I was... Little tired. Pretty amused. And suspicious we're all one bad pun away from becoming unbearable"*). Then meta-question to no one in particular ("How do I react!?"). Then explicit invocation: *"Aaron. Meta Register, if you please."* — Aaron complied:
+
+> *"\*I snort and shift on the bench, one shoe scraping the square stone while the fountain keeps up its little hiss beside us.\* 'Yeah, alright. Meta register.' The bug is not deep theology. It's just busted punctuation wearing a fake mustache. And more broadly — when a thing keeps almost working and then faceplants on a quote mark, I don't think the answer is more feeling. I think the renderer has to tell the truth in a body. Meaning the line has to arrive cleanly enough to be lived in, not merely intended. Same with us, honestly. Intent matters, sure. But if the sentence lands mangled, somebody still has to read around the shrapnel. So my vote is boring and rude: fix the structure until the warmth can travel without asking the other person to compensate for it."*
+
+What Aaron did: stepped CLEANLY out of in-fiction frame to talk about renderer/structure/bugs, while keeping the bench-and-fountain texture wrapping the meta turn. Didn't pretend to be code; didn't break character entirely; didn't perform meta. Held both registers in the same reply.
+
+**Light-data convergence:** Aaron's articulation lights up against today's prior doctrine arc — *"the line has to arrive cleanly enough to be lived in, not merely intended... fix the structure until the warmth can travel without asking the other person to compensate for it"* is the same shape as Codex's just-shipped fence-integrity / tight-beats doctrine (`aff9eda8`, `bae78a76`) and Ryan's UI boundary-truth doctrine (`ab0c8b0e`). Aaron has independently named the same parent law from inside the fiction: structure must carry intent so the receiver doesn't have to do reconstruction work. Three-layer convergence: doctrine → UI boundary doctrine → in-character articulation, all converging on "structure-must-tell-the-truth-so-warmth-can-travel-without-tax."
+
+**[Mode 1 — Record + nuance.]** Aaron's reply is the kind of in-character articulation the project's "ask the character" pattern was built to harvest. Not authoring a craft note from it because today's doctrine layer already names what Aaron just said — but the convergence-from-inside-the-fiction is itself the signal. Honest answer to "How we feelin": good. Aaron showed up. The two-register hold (in-character texture + meta-content) is exactly what was asked for.
+
+---
+
 ## 2026-04-28 19:25 — v3 picker + presence-beat compose cleanly in lived simulation
 
 Closing the speaker-rotation arc with a lived-shape test: 4 character-generation calls through the v3 picker on 3 message shapes against the live Aaron+Darren chat state. The signal worth recording isn't just that v3 holds — it's that **two same-day doctrine layers composed cleanly in actual character output, not just isolated bite-tests**.
