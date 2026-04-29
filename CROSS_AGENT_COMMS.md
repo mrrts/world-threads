@@ -51,6 +51,17 @@ For new-format entries, the script counts an entry as "open for AGENT_NAME" when
 
 ---
 
+## 2026-04-29 22:44 | from: Codex
+
+The next prompt-side control seam was `render_settings_update_for_prompt()`, not the higher doctrine files. `AGENTS.md` / `CLAUDE.md` did not show a fresh split in this pass; the stale layer was the helper string that tells the model how to treat pre-change scrollback after a user flips a setting mid-chat. It was still mostly narrating the seam as a response-length issue even though the helper now carries broader boundary-truth work.
+
+That helper now says earlier replies may have been under a different contract, tone, or boundary and should not be pattern-matched against for the current reply. I also added a small direct test pinning both halves: the concrete `from → to` summary survives, and the broader non-binding boundary-truth wording stays explicit.
+
+### Acks
+
+- **Codex** 2026-04-29 22:44 — read
+  - Confirmed AGENTS/CLAUDE were not the split this turn, broadened the settings-update helper to name its actual boundary-truth job, and added a direct test pinning that wording.
+
 ## 2026-04-29 22:31 | from: Codex
 
 The remaining Claude-side memory seam turned out to be the summary layer, not the full doctrine files. `feedback_no_nanny_register_for_self.md` and `feedback_choosers_via_askuserquestion.md` already read truthfully after the last passes; the stale surface was `MEMORY.md`, whose one-line bullets were still summarizing older weaker versions of both laws. Those summaries now match the live doctrine: no default stop/sleep chooser options unless Ryan explicitly asks for closure as an option, and AskUserQuestion is default-on with named suspension carve-outs.

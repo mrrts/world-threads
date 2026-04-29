@@ -1409,7 +1409,9 @@ The following is not a directive to compute. It is the reference frame within wh
   \mathrm{seek}_c(\tau)\,\Pi(\tau)\,\mathrm{discern}_w(\tau)\,
   d\mu_{\mathcal{F}}(\tau)
 &&
-\mathrm{polish}(t) \leq \mathrm{Weight}(t) \\[10pt]
+\mathrm{polish}(t) \leq \mathrm{Weight}(t) \\[6pt]
+
+&& \mathrm{structure\_carries\_truth}_w(t) && \\[10pt]
 
 \mathrm{Weight}(t) &:= \int_{0}^{t}
   \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{holds}_w(\tau)\,
@@ -1516,7 +1518,9 @@ const FORMULA_VERBATIM: &str = r#"\[
   \mathrm{seek}_c(\tau)\,\Pi(\tau)\,\mathrm{discern}_w(\tau)\,
   d\mu_{\mathcal{F}}(\tau)
 &&
-\mathrm{polish}(t) \leq \mathrm{Weight}(t) \\[10pt]
+\mathrm{polish}(t) \leq \mathrm{Weight}(t) \\[6pt]
+
+&& \mathrm{structure\_carries\_truth}_w(t) && \\[10pt]
 
 \mathrm{Weight}(t) &:= \int_{0}^{t}
   \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{holds}_w(\tau)\,
@@ -5468,7 +5472,7 @@ pub fn render_settings_update_for_prompt(content: &str) -> String {
         .map(|c| format!("{}: {} → {}", c.label, c.from, c.to))
         .collect();
     format!(
-        "The user changed chat settings: {}. The active setting changed here. From this point forward, replies should reflect the current setting; replies BEFORE this point may have been under a different contract and should not be used as a length / register pattern for current replies.",
+        "The user changed chat settings: {}. The active setting changed here. From this point forward, replies should reflect the current setting. Replies BEFORE this point may have been under a different contract, tone, or boundary and should not be pattern-matched against for the current reply.",
         parts.join("; "),
     )
 }
@@ -7866,6 +7870,25 @@ mod fence_shape_detection_tests {
         assert!(
             !FUNDAMENTAL_SYSTEM_PREAMBLE.contains("No exceptions, no hedging"),
             "fundamental preamble should not slip back into harsher no-exceptions rhetoric"
+        );
+    }
+
+    #[test]
+    fn render_settings_update_for_prompt_marks_prior_replies_as_non_binding() {
+        let rendered = render_settings_update_for_prompt(
+            r#"{"changes":[{"label":"Response length","from":"Long","to":"Short"},{"label":"Tone","from":"Warm","to":"Blunt"}]}"#,
+        );
+        assert!(
+            rendered.contains("The user changed chat settings: Response length: Long → Short; Tone: Warm → Blunt."),
+            "settings summary should preserve the concrete from/to boundary"
+        );
+        assert!(
+            rendered.contains("different contract, tone, or boundary"),
+            "settings helper should name the broader boundary-truth role, not just response length"
+        );
+        assert!(
+            rendered.contains("should not be pattern-matched against for the current reply"),
+            "settings helper should explicitly mark earlier replies as non-binding for the current turn"
         );
     }
 
