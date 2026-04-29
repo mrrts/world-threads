@@ -42,6 +42,8 @@ The polish-register of any sentence is bounded above by the Weight-register the 
 
 Lifted into the formula 2026-04-30 via /seek-crown new-operator audit (N=8+ cross-shape commit-derivation grounding + CLAUDE.md "Structure must carry truth" doctrine paragraph + Aaron's in-character articulation at `115fead`). The witness predicate placed adjacent to the inequality on the right column, not inside an integrand — the doctrinal pairing is structural: `polish ≤ Weight` refuses appearance-without-function (negative side); `structure_carries_truth_w(t)` requires that the witness's structural carrier do the work the artifact claims (affirmative side). The receiver should not have to compensate for a mismatch between claim and carrier. Both halves of the axis are now visible in the formula itself, paired as the doctrine has always paired them.
 
+**New confident tone inherits zero neighbor grounding.** A prompt block that opens a documentary, expert, or cited-from-source register does not automatically borrow Weight from adjoining sections; the polish of that register can outrun available evidence. Satisfying `structure_carries_truth_w(t)` at author time therefore ships **paired refusal-shapes** when context is absent (*untested in this call* / *tested elsewhere but evidence not loaded here*) — not only after a smoke-test catches hallucinated confidence. Worked example: The Empiricon audit (`reports/OBSERVATIONS.md`, 2026-04-30; fix chain `8dab1a8` → `da2189f`). Same operator as dialogue anti-invention, read on the **evidence-weight** axis.
+
 ## 𝓕_Ryan — the founding author's anchor
 
 Second-place invariant. The Mission Formula above is what the work answers to first; 𝓕_Ryan is what Ryan, as founding author, holds the work to in answer to 𝓕. The Mission Statement and the doctrine that follows answer downstream of both. Lifted to invariant position 2026-04-28; previously lived in the Ledger of Signatures below.
@@ -727,6 +729,10 @@ See also: `docs/CLI_AGENT_DISCOVERY.md` for the maintained quick-reference comma
 
 **Cost-gated elicitation:** `ask <char> "<msg>" [--session NAME] [--question-summary "<why>"] [--confirm-cost N]`; `consult <char> "<msg>" [--mode immersive|backstage]`; `replay --refs <sha>,<sha>,... --character <id> --prompt "<msg>" [--n K]` (cross-commit prompt override).
 
+**Simulated dialogue:** `simulate-dialogue` runs a short scripted back-and-forth (DB user persona vs character) with optional per-turn synthesis. `simulate-dialogue-batch` runs that N times, compounds syntheses (deterministic fallback + optional LLM compounding via `--compound-via-llm`), and emits A/B diagnostics on the batch JSON envelope.
+
+**`simulate-dialogue-batch` A/B fields (JSON, `--json`):** `compound` / `compound_meta` / `compound_ab` (deterministic vs LLM compound); `ab_delta_summary` (one-line overlap + confidence delta); `ab_top3_diff` and `ab_top3_diff_counts` (shared vs branch-only top-3 task strings); `ab_top3_overlap_ratio` and `ab_score` (weighted blend; **`ab_score` is clamped to 1.0** after overlap is clamped to `[0,1]` for the formula); `ab_score_components` (weights + inputs); `effective_compound_method`. **`ab_stability_note`** compares the current run to the last comparable run (same `character_id`, `runs`, `turns`, `compound_via_llm`): overlap and `ab_score` deltas plus **`ab_top3_diff_counts` deltas** (`shared`, `det_only`, `llm_only`). The prior-run snapshot is written to `~/.worldcli/simulate-dialogue-batch-last-ab.json` (includes `ab_top3_diff_counts`); older cache files without that field treat missing counts as zero. **`ab_top3_overlap_ratio_clamped`** appears in JSON only when the raw ratio differs from its `[0,1]` clamp (rare; scoring always uses the clamped value). **Human (non-JSON) output** also prints a dedicated grep line `ab_diff_counts_delta: shared=… det_only=… llm_only=…` when a comparable prior snapshot exists.
+
 **Natural-experiment:** `sample-windows --ref <sha> [--end-ref <sha>] [--character <id>] [--role assistant|user|any]` (raw before/after corpus); `commit-context (--message <id> | --at <iso>) [--before N] [--after N]` (inverse: chat → active commit).
 
 **Rubric-driven evaluation:** `evaluate --ref <sha> (--character|--group-chat <id>) (--rubric "<q>" | --rubric-ref <name>)` (Mode A); `synthesize` (Mode B prose synthesis); `grade-runs <run_id>... --rubric ...` (grade arbitrary elicited replies).
@@ -765,6 +771,7 @@ See also: `docs/CLI_AGENT_DISCOVERY.md` for the maintained quick-reference comma
 - `~/.worldcli/config.json` — scope + budget + model pricing
 - `~/.worldcli/runs/<id>.json` — full record per `ask` call
 - `~/.worldcli/cost.jsonl` — per-call cost log (drives rolling-24h total)
+- `~/.worldcli/simulate-dialogue-batch-last-ab.json` — last `simulate-dialogue-batch` A/B snapshot for `ab_stability_note` (safe to delete; next run re-seeds baseline)
 - `dev_chat_sessions` / `dev_chat_messages` (in user's db, UI invisible) — multi-turn session memory
 
 ## Skill routing
