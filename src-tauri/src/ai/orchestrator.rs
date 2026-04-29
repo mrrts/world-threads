@@ -615,6 +615,59 @@ mod tests {
     }
 
     #[test]
+    fn dialogue_messages_emit_location_correction_with_explicit_override() {
+        // Pins the plumbing fix at 603f03d: every dialogue call site
+        // (chat_cmds::send_message_cmd, prompt_character_cmd, reset_to_message_cmd
+        // and group_chat_cmds::send_group_message_cmd, prompt_group_character_cmd
+        // plus the conscience-pass regen siblings — 7 sites total) reads the
+        // chat-row current_location and threads it through run_dialogue_with_base
+        // → build_dialogue_messages. Without this assertion, a regression to
+        // passing None at any of those sites would silently fall through to
+        // DEFAULT_CHAT_LOCATION = "Town Square" without test coverage.
+        let world = minimal_world();
+        let character = minimal_character();
+        let profile = minimal_profile("Casey");
+        let system = prompts::build_dialogue_system_prompt(
+            &world,
+            &character,
+            Some(&profile),
+            None,
+            None,
+            None,
+            None,
+            false,
+            &[],
+            None,
+            &[],
+            None,
+            &[],
+            None,
+            &[],
+            None,
+            None,
+        );
+        let msgs = prompts::build_dialogue_messages(
+            &system,
+            &[minimal_message("user", "Where are we?")],
+            &[],
+            None,
+            &[],
+            &HashMap::new(),
+            &HashMap::new(),
+            Some("Casey"),
+            Some("Garden Patio"),
+        );
+        assert!(
+            msgs.iter().any(|m| {
+                m.role == "system"
+                    && m.content.contains("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: **Garden Patio**")
+                    && m.content.contains("The scene is happening HERE")
+            }),
+            "dialogue message assembly should keep the authoritative location correction when an explicit override is present (regression guard for the run_dialogue_with_base plumbing at 603f03d)"
+        );
+    }
+
+    #[test]
     fn proactive_ping_messages_emit_location_correction_with_explicit_override() {
         let world = minimal_world();
         let character = minimal_character();
