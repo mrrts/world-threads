@@ -747,7 +747,8 @@ enum Cmd {
         repo: Option<PathBuf>,
     },
 
-    /// Consult the Consultant about a character's thread — either
+    /// Consult the Consultant about a solo character thread or a group
+    /// chat thread — either
     /// Immersive (a trusted in-world confidant who treats everything as
     /// real and never breaks frame) or Backstage (a wry stage-manager
     /// outside the fourth wall who talks craft, mechanics, and the
@@ -756,7 +757,14 @@ enum Cmd {
     /// cannot render. Cost-gated like `ask`. Persists to a dev-session
     /// separate from the app's consultant history.
     Consult {
-        character_id: String,
+        /// Character thread target (solo consult). Required unless
+        /// --group-chat is provided.
+        #[arg(long = "character-id", required_unless_present = "group_chat")]
+        character_id: Option<String>,
+        /// Group chat target (group consult). Uses the same consultant
+        /// prompt builder against group context.
+        #[arg(long = "group-chat", conflicts_with = "character_id")]
+        group_chat: Option<String>,
         message: String,
         /// Which mode. "immersive" (default) = in-world confidant;
         /// "backstage" = craft/mechanics collaborator outside the frame.
@@ -1786,14 +1794,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_replay(&r, &api_key, &refs, &character, &prompt, model.as_deref(), confirm_cost, n, repo.as_deref(), &section_order, &craft_notes_order, &invariants_order, &omit_craft_notes, &omit_invariants, insert_file.as_deref(), insert_before.as_deref(), insert_after.as_deref()).await
         }
-        Cmd::Consult { character_id, message, mode, session, model, confirm_cost, question_summary } => {
+        Cmd::Consult { character_id, group_chat, message, mode, session, model, confirm_cost, question_summary } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_consult(&r, &api_key, &character_id, &message, &mode, session.as_deref(), model.as_deref(), confirm_cost, question_summary.as_deref()).await
+            cmd_consult(
+                &r,
+                &api_key,
+                character_id.as_deref(),
+                group_chat.as_deref(),
+                &message,
+                &mode,
+                session.as_deref(),
+                model.as_deref(),
+                confirm_cost,
+                question_summary.as_deref(),
+            ).await
         }
         Cmd::ShowStance { character_id, history } => cmd_show_stance(&r, &character_id, history),
         Cmd::RefreshStance { character_id, model, confirm_cost } => {
@@ -7078,7 +7097,8 @@ async fn cmd_lab_scenario_run(
 async fn cmd_consult(
     r: &Resolved,
     api_key: &str,
-    character_id: &str,
+    character_id: Option<&str>,
+    group_chat_id: Option<&str>,
     message: &str,
     mode: &str,
     session: Option<&str>,
@@ -7091,7 +7111,19 @@ async fn cmd_consult(
             "invalid --mode '{}'; must be 'immersive' or 'backstage'", mode
         )));
     }
-    let _ = r.check_character(character_id)?;
+    if character_id.is_some() && group_chat_id.is_some() {
+        return Err(Box::<dyn std::error::Error>::from(
+            "consult: pass either <character_id> or --group-chat <id>, not both".to_string(),
+        ));
+    }
+    if character_id.is_none() && group_chat_id.is_none() {
+        return Err(Box::<dyn std::error::Error>::from(
+            "consult: missing target (pass <character_id> or --group-chat <id>)".to_string(),
+        ));
+    }
+    if let Some(cid) = character_id {
+        let _ = r.check_character(cid)?;
+    }
 
     // Use the shared ai::consultant helper — same system-prompt
     // genealogy as the in-app story_consultant_cmd. CLI gets full
@@ -7101,46 +7133,94 @@ async fn cmd_consult(
     let (system_prompt, mut model_config) = app_lib::ai::consultant::build_consultant_system_prompt(
         &r.db,
         mode,
-        Some(character_id),
-        None,
+        character_id,
+        group_chat_id,
     ).map_err(Box::<dyn std::error::Error>::from)?;
     if let Some(m) = model_override { model_config.dialogue_model = m.to_string(); }
 
     // Character-name + world_id for run-log tagging, plus dev-session
     // history if --session was supplied.
-    let (prior_messages, session_id, character_name, world_id) = {
+    let (prior_messages, session_id, consult_target_id, consult_target_name, world_id) = {
         let conn = r.db.conn.lock().unwrap();
-        let character = get_character(&conn, character_id)?;
-        let (session_id, prior_messages): (Option<String>, Vec<(String, String)>) = match session {
-            None => (None, Vec::new()),
-            Some(name) => {
-                let existing: Option<String> = conn.query_row(
-                    "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
-                    params![name], |r| r.get(0),
-                ).ok();
-                let id = match existing {
-                    Some(id) => id,
-                    None => {
-                        let new_id = uuid::Uuid::new_v4().to_string();
-                        conn.execute(
-                            "INSERT INTO dev_chat_sessions (session_id, name, character_id) VALUES (?1, ?2, ?3)",
-                            params![new_id, name, character_id],
-                        )?;
-                        new_id
-                    }
-                };
-                let mut stmt = conn.prepare(
-                    "SELECT role, content FROM dev_chat_messages \
-                     WHERE session_id = ?1 ORDER BY created_at ASC"
-                )?;
-                let rows: Vec<(String, String)> = stmt
-                    .query_map(params![id], |r| Ok((r.get(0)?, r.get(1)?)))?
-                    .filter_map(|r| r.ok())
-                    .collect();
-                (Some(id), rows)
-            }
-        };
-        (prior_messages, session_id, character.display_name.clone(), character.world_id.clone())
+        if let Some(cid) = character_id {
+            let character = get_character(&conn, cid)?;
+            let (session_id, prior_messages): (Option<String>, Vec<(String, String)>) = match session {
+                None => (None, Vec::new()),
+                Some(name) => {
+                    let existing: Option<String> = conn.query_row(
+                        "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
+                        params![name], |r| r.get(0),
+                    ).ok();
+                    let id = match existing {
+                        Some(id) => id,
+                        None => {
+                            let new_id = uuid::Uuid::new_v4().to_string();
+                            conn.execute(
+                                "INSERT INTO dev_chat_sessions (session_id, name, character_id) VALUES (?1, ?2, ?3)",
+                                params![new_id, name, cid],
+                            )?;
+                            new_id
+                        }
+                    };
+                    let mut stmt = conn.prepare(
+                        "SELECT role, content FROM dev_chat_messages \
+                         WHERE session_id = ?1 ORDER BY created_at ASC"
+                    )?;
+                    let rows: Vec<(String, String)> = stmt
+                        .query_map(params![id], |r| Ok((r.get(0)?, r.get(1)?)))?
+                        .filter_map(|r| r.ok())
+                        .collect();
+                    (Some(id), rows)
+                }
+            };
+            (
+                prior_messages,
+                session_id,
+                cid.to_string(),
+                character.display_name.clone(),
+                character.world_id.clone(),
+            )
+        } else {
+            let gcid = group_chat_id.expect("validated above");
+            let gc = get_group_chat(&conn, gcid)?;
+            let (session_id, prior_messages): (Option<String>, Vec<(String, String)>) = match session {
+                None => (None, Vec::new()),
+                Some(name) => {
+                    let existing: Option<String> = conn.query_row(
+                        "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
+                        params![name], |r| r.get(0),
+                    ).ok();
+                    let synthetic_target = format!("group:{gcid}");
+                    let id = match existing {
+                        Some(id) => id,
+                        None => {
+                            let new_id = uuid::Uuid::new_v4().to_string();
+                            conn.execute(
+                                "INSERT INTO dev_chat_sessions (session_id, name, character_id) VALUES (?1, ?2, ?3)",
+                                params![new_id, name, synthetic_target],
+                            )?;
+                            new_id
+                        }
+                    };
+                    let mut stmt = conn.prepare(
+                        "SELECT role, content FROM dev_chat_messages \
+                         WHERE session_id = ?1 ORDER BY created_at ASC"
+                    )?;
+                    let rows: Vec<(String, String)> = stmt
+                        .query_map(params![id], |r| Ok((r.get(0)?, r.get(1)?)))?
+                        .filter_map(|r| r.ok())
+                        .collect();
+                    (Some(id), rows)
+                }
+            };
+            (
+                prior_messages,
+                session_id,
+                gcid.to_string(),
+                format!("{} [group]", gc.display_name),
+                gc.world_id.clone(),
+            )
+        }
     };
 
     let mut messages = vec![openai::ChatMessage { role: "system".to_string(), content: system_prompt }];
@@ -7180,7 +7260,7 @@ async fn cmd_consult(
 
     if !r.json {
         eprintln!("[worldcli] consulting ({}) about {} via {} — projected≈${:.4} (~{} in / {} out tok); 24h spent=${:.4} of ${:.2}",
-            mode, character_name, model_config.dialogue_model, projected_usd, projected_in, projected_out,
+            mode, consult_target_name, model_config.dialogue_model, projected_usd, projected_in, projected_out,
             daily_so_far, daily_cap);
     }
 
@@ -7220,8 +7300,8 @@ async fn cmd_consult(
     let record = RunRecord {
         id: run_id.clone(),
         timestamp: chrono::Utc::now().to_rfc3339(),
-        character_id: character_id.to_string(),
-        character_name: format!("{} [consult:{}]", character_name, mode),
+        character_id: consult_target_id.clone(),
+        character_name: format!("{} [consult:{}]", consult_target_name, mode),
         world_id,
         model: model_config.dialogue_model.clone(),
         session: session.map(|s| s.to_string()),
@@ -7250,8 +7330,8 @@ async fn cmd_consult(
         emit(true, json!({
             "run_id": run_id,
             "mode": mode,
-            "character_id": character_id,
-            "character_name": character_name,
+            "character_id": consult_target_id,
+            "character_name": consult_target_name,
             "model": model_config.dialogue_model,
             "reply": reply,
             "prompt_tokens": actual_in,
