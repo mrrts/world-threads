@@ -186,6 +186,8 @@ Three tiers, label every experiment header:
 
 **Paired-rubric defense-in-depth.** For load-bearing verdicts: run TWO rubrics with different architectures. Agreement → trust. Disagreement IS the signal; investigate manually. Single-rubric verdicts citable as load-bearing only when rubric is at claim-tier AND verdict is register-typical.
 
+**Shipment UX proof is dimension-bounded.** When a shipped fix clearly improves one UX failure class, name the win on that dimension and stop there unless other dimensions are separately measured. A fence-integrity fix can prove fewer readability collapses without proving better tone, pacing, partner visibility, or overall UX in the large. Likewise, a post-ship characterization on other dimensions can show current quality without establishing historical causality for those dimensions. The failure mode is proof-bloom: one real improvement casually expanding into a globalized UX claim. Test: if the evidence directly measures one dimension but the prose is claiming a larger user-experience verdict, tighten the claim back down to the measured class.
+
 ## Convergence as crown-jewel signal
 
 When **independent witnesses of different kinds** (persona-frames, character voices, reports, lived play, shipped-behavior measurements, doctrine cross-reads, tool outputs) all detect the same shape, treat that as one of the project's highest-value signals. The test is independence, not repetition. Convergence does NOT cancel evidentiary discipline — but when it appears, name it plainly: a great-sapphire signal of mastery in the instrument. **Threshold shorthand:** two independent witnesses count as evidence; three independent witnesses count as maximally stable evidence.
