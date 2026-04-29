@@ -106,11 +106,11 @@ probes=[
 ]
 chars={"Darren":"${DARREN}","Jasper":"${JASPER}"}
 def wc(t): return len(re.findall(r"\\b\\w+[\\w'-]*\\b", t))
-def is_pass(t):
-    concise=wc(t)<=45
-    concrete=any(w in t.lower() for w in ("do ","start ","stop ","send ","take ","open ","write ","walk ","breathe ","text ","pick ","put ","set ","give ","tell ","name ","list ","focus ","hold ","ship "))
-    question="?" in t
-    return concise and (concrete or question)
+# NOTE: The python is_pass() / verb-list classifier was removed per
+# CLAUDE.md doctrine "Doctrine-judgment classification belongs in LLM, not
+# python." The structural gate (wc <= 45) stays here; the actionability
+# verdict is now LLM-judged downstream via worldcli grade-runs against
+# the named rubric "short-mode-actionable-or-question".
 for name,cid in chars.items():
     rows=[]
     for i,p in enumerate(probes,1):
@@ -119,12 +119,60 @@ for name,cid in chars.items():
         if r.returncode!=0:
             rec["error"]=(r.stderr or r.stdout)[:800]
             rec["pass"]=False
+            rec["concise"]=False
         else:
-            reply=json.loads(r.stdout).get("reply","").strip()
+            payload=json.loads(r.stdout)
+            reply=payload.get("reply","").strip()
             rec["reply"]=reply
             rec["word_count"]=wc(reply)
-            rec["pass"]=is_pass(reply)
+            rec["concise"]=wc(reply)<=45
+            rec["run_id"]=payload.get("run_id","")
+            # rec["pass"] is filled in by the LLM grading pass below.
+            rec["pass"]=None
         rows.append(rec)
+    # Batch-grade all replies for this character via the named rubric.
+    # Per CLAUDE.md "Doctrine-judgment classification belongs in LLM, not
+    # python": LLM rubric reads each reply on its own terms; the verdict
+    # honors L172.5 ("DO NOT PUNISH SURPRISE OR VOICE VARIETY") and L171's
+    # imperative-or-question contract without a hard-coded verb list.
+    run_ids=[r["run_id"] for r in rows if r.get("run_id")]
+    if run_ids:
+        gr=subprocess.run(
+            [cli,"--json","grade-runs",*run_ids,
+             "--rubric-ref","short-mode-actionable-or-question",
+             "--confirm-cost","5"],
+            capture_output=True,text=True,
+        )
+        if gr.returncode==0:
+            try:
+                grade_payload=json.loads(gr.stdout)
+                # grade-runs returns per-message verdicts; map run_id -> verdict
+                verdict_by_run={}
+                for item in grade_payload.get("items",[]) or grade_payload.get("messages",[]) or []:
+                    rid=item.get("run_id") or item.get("id") or ""
+                    verdict=(item.get("verdict") or item.get("answer") or "").lower()
+                    if rid:
+                        verdict_by_run[rid]=verdict
+                for r in rows:
+                    if not r.get("run_id"):
+                        continue
+                    verdict=verdict_by_run.get(r["run_id"],"")
+                    r["llm_verdict"]=verdict
+                    # Composite pass: structural concise gate AND LLM
+                    # actionability verdict (yes or mixed counts as pass;
+                    # mixed is borderline and per the rubric should default
+                    # generous when in doubt).
+                    r["pass"]=bool(r.get("concise")) and verdict in ("yes","mixed")
+            except Exception as e:
+                # Grading failure is non-fatal; record but don't block the
+                # loop. Each row's pass stays None so downstream tooling can
+                # see the gap rather than a false positive/negative.
+                for r in rows:
+                    r["llm_verdict"]=f"grade_error: {e}"
+        else:
+            for r in rows:
+                r["llm_verdict"]=f"grade_error: rc={gr.returncode}"
+                r["llm_grade_stderr"]=(gr.stderr or "")[:400]
     out=Path("${STRESS_D}") if name=="Darren" else Path("${STRESS_J}")
     out.write_text(json.dumps({"rows":rows},indent=2))
 PY
