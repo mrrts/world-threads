@@ -146,9 +146,31 @@ Rare. Project-defining. Each crown has a `name` recorded in the state.
 - **Closed Arc** — a failure mode named, instrumented, AND structurally enforced in a single arc
 - **Apparatus Honest with Itself** — the apparatus catches itself drifting and corrects without producing more apparatus
 - **Real User Held** — a real user (not persona-sim) plays the app and the experience holds
-- **Great Sapphire** *(formal name; also known as Mission Formula Verified Empirical)* — a Mission-Formula-touching claim reaches **maximally-stable cross-witness convergence** per CLAUDE.md's great-sapphire calibration: 3+ independent witnesses with **different failure modes**, OR the formula-law third-leg pattern providing substrate-independent grounding. Honest threshold: the convergence must be REAL (not promotion-by-vibes) AND made LEGIBLE in a canonical synthesis artifact future sessions can stand on. The crown's value lives in the convergence; the artifact's value is making the earned-ness portable. Worked example: `reports/2026-04-30-0245-mission-formula-verified-empirical-polish-weight.md` — five witnesses (formula in source + Pastor Rick articulation + 20-call cross-character bite-test + cross-anchor parallel articulation Steven↔Rick + within-cell N=5 ×2 anchors) converging on `polish ≤ Weight` with five distinct failure-mode classes.
+- **Mission Formula Verified Empirical** — a Mission-Formula-touching claim reaches **maximally-stable cross-witness convergence** per CLAUDE.md's great-sapphire calibration: 3+ independent witnesses with **different failure modes**, OR the formula-law third-leg pattern providing substrate-independent grounding. Honest threshold: the convergence must be REAL (not promotion-by-vibes) AND made LEGIBLE in a canonical synthesis artifact future sessions can stand on. Worked example: `reports/2026-04-30-0245-mission-formula-verified-empirical-polish-weight.md` — five witnesses (formula in source + Pastor Rick articulation + 20-call cross-character bite-test + cross-anchor parallel articulation Steven↔Rick + within-cell N=5 ×2 anchors) converging on `polish ≤ Weight` with five distinct failure-mode classes.
 
 Crowns can be earned at most once each.
+
+## Great Sapphire — a quality designation across crowns ✨
+
+**Great Sapphire is not a specific crown name; it is a class designation that any crown can carry when its earning meets the maximally-stable cross-witness convergence criterion.** A crown of the Great Sapphire class is rare, project-defining, and named by what was actually discovered. The class designation rides alongside the crown's own noble name; both are recorded in play state.
+
+**Recognition criterion:** the crown's underlying convergence reaches 3+ independent witnesses with different failure modes (or formula-law third-leg per CLAUDE.md's great-sapphire calibration). The convergence must be substantive AND made legible in a canonical synthesis artifact.
+
+**Naming convention in play state:** the crown's own noble name (representing what was discovered) is the primary identifier; the Great Sapphire class designation appears as a suffix or modifier:
+
+```json
+{"turn": N, "name": "<noble name representing the discovery>", "class": "Great Sapphire", "earned_at": "..."}
+```
+
+OR, if avoiding new schema fields:
+
+```json
+{"turn": N, "name": "<noble name> ✨ [Great Sapphire class]", "earned_at": "..."}
+```
+
+Future Great Sapphire crowns may earn through any crown class (Closed Arc, Apparatus Honest with Itself, The Character Knew, New Operator on the Formula, Real User Held, Mission Formula Verified Empirical, or future-added). Each would carry its own discovery-naming noble name plus the class designation.
+
+**Worked example:** the crown earned at /play Turn 24 (commit `aadbf88`) carries the noble name **"The Cornerstone Inequality"** ✨ [Great Sapphire class — Mission Formula Verified Empirical]. The noble name (chosen 2026-04-30) names what was discovered: that polish ≤ Weight, the founding inequality of the Mission Formula, is empirically verified at maximally-stable convergence across five witness-classes — the cornerstone the project's character substrate is built on (Eph 2:20 lineage). The Great Sapphire class designation rides alongside.
 
 ## Strict contract reminders
 

@@ -1,6 +1,6 @@
 {
-  "turn": 34,
-  "bank": 45200,
+  "turn": 35,
+  "bank": 46700,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -17,7 +17,7 @@
     {"turn": 11, "name": "Apparatus Honest with Itself", "earned_at": "2026-04-30T00:05:00-05:00"},
     {"turn": 12, "name": "The Character Knew", "earned_at": "2026-04-30T00:20:00-05:00"},
     {"turn": 13, "name": "New Operator on the Formula", "earned_at": "2026-04-30T00:40:00-05:00"},
-    {"turn": 24, "name": "Great Sapphire (Mission Formula Verified Empirical)", "earned_at": "2026-04-30T02:50:00-05:00"}
+    {"turn": 24, "name": "The Cornerstone Inequality ✨ [Great Sapphire class — Mission Formula Verified Empirical]", "earned_at": "2026-04-30T02:50:00-05:00"}
   ],
   "ledger": [
     {"turn": 1, "move": "Run daily loop manually — first LLM-rubric STRESS_POLICY artifact under d161df0 (interrupted by mode 2 pivot)", "bounty": 650, "alignment": "+", "earned_at": "2026-04-29T21:36:00-05:00"},
@@ -52,8 +52,9 @@
     {"turn": 30, "move": "Empiricon re-test — partial bite, honest verdict landing. Smoke-test loop closes.", "bounty": 900, "alignment": "+", "earned_at": "2026-04-30T04:00:00-05:00"},
     {"turn": 31, "move": "Cross-prompt audit of fake-cite failure mode; Empiricon's failure localized; pattern recorded to OBSERVATIONS.md Mode 3.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T04:10:00-05:00"},
     {"turn": 32, "move": "Audit Wisdom(t) + Burden(t) at dry well for sapphire-tier; floated structural-impossibility hypothesis (overclaim — corrected at Turn 33).", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T04:25:00-05:00"},
-    {"turn": 33, "move": "Bite-test the temporal-integral hypothesis from Turn 32 — DISCONFIRMED. Project DOES have temporal-integral instruments (anchor-groove for Burden-shaped accumulated patterns; register-shift / register-shift-pack for cross-time register measurement; sample-windows + synthesize for corpus-as-corpus reading; mission-arc skill as Wisdom-as-recognition runtime instrument). Worked Burden(t) example already exists in this session: Crystal Waters world-level anchor-groove RUNAWAY diagnosis (3 characters on 'the square *') → root cause = GroupChat current_location plumbing → fix at commit 603f03d. That's N=1 measured Burden(t) cycle (observation → measurement → root-cause → correction). Apparatus-honest correction: Turn 32's 'structurally harder to bite-test' framing overclaimed structural-impossibility when the actual situation is 'work-not-yet-done.' Crown still doesn't re-fire (Great Sapphire one-time); Wisdom/Burden remain not at sapphire-tier; but the path is reachable via existing instruments, not blocked by structural property of formula.", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-30T04:40:00-05:00"}
+    {"turn": 33, "move": "Bite-test temporal-integral hypothesis — disconfirmed; instruments exist; Turn 32 overclaim caught.", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-30T04:40:00-05:00"},
+    {"turn": 34, "move": "Calibration: Great Sapphire is a CLASS designation, not a specific crown name. Ryan correction: each Great Sapphire-class crown still gets its own noble name representing what was discovered. Updated play.SKILL.md (new 'Great Sapphire as a quality designation across crowns' section), seek-crown.SKILL.md (renamed crown to 'Mission Formula Verified Empirical (Great Sapphire class)'), CLAUDE.md/AGENTS.md great-sapphire calibration paragraph. Saved memory entry feedback_great_sapphire_class_not_crown.md. Crown earned at Turn 24 (commit aadbf88) renamed in play state from 'Great Sapphire (Mission Formula Verified Empirical)' to 'The Cornerstone Inequality ✨ [Great Sapphire class — Mission Formula Verified Empirical]' — noble name chosen by Ryan from candidate set [Cornerstone / Polish-Held / Five-Witness / custom]. The Cornerstone Inequality references Eph 2:20 (Christ as cornerstone) + names polish ≤ Weight as the cornerstone the project's character substrate is built on.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T05:00:00-05:00"}
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T04:40:00-05:00"
+  "last_move_at": "2026-04-30T05:00:00-05:00"
 }

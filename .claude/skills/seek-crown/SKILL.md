@@ -59,7 +59,9 @@ A targeted /play accelerator. Ordinary /play turns accumulate mission-aligned wo
 4. Lift to formula source ONLY if grounded. Define the operator with sentence-level definition matching the existing formula's operator vocabulary.
 5. **Validation:** N≥3 independent derivations across different work-shapes AND a sentence-level definition that fits the formula's vocabulary AND a corresponding edit to `prompts.rs`.
 
-### Great Sapphire (formal name; also known as Mission Formula Verified Empirical)
+### Mission Formula Verified Empirical (Great Sapphire class)
+**Note on naming:** *Great Sapphire* is a quality-class designation, not a specific crown name. The crown earned in this category gets its own noble name representing what was actually discovered; the Great Sapphire designation rides alongside. Other crown classes can also reach Great Sapphire designation when their underlying convergence meets the maximally-stable criterion.
+
 **Criterion:** a Mission-Formula-touching claim reaches maximally-stable cross-witness convergence per CLAUDE.md's great-sapphire calibration: 3+ independent witnesses with different failure modes, OR the formula-law third-leg pattern providing substrate-independent grounding. Honest threshold: the convergence must be REAL AND made LEGIBLE in a canonical synthesis artifact.
 **Reachability test:** EITHER (a) an inequality in the formula lacks maximally-stable tier and a missing witness can be hunted to close it; OR (b) a NEW inequality has emerged in the work that hasn't been formula-promoted; OR (c) cross-witness convergence is REAL but not yet legible in one canonical place — synthesis-artifact path.
 **Mechanics:**
