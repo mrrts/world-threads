@@ -468,14 +468,16 @@ fn join_names_english(names: &[String]) -> String {
 /// late position — inside the turn hint right before generation —
 /// keeps short replies actually short. Empty string for Auto / unknown.
 ///
-/// Phrased firmly because group chats specifically tend to drift long:
-/// more context, more characters, more pressure to perform.
+/// Keep this late-turn reminder in the same register as the prompt
+/// stack's response-length doctrine: active contract for fixed modes,
+/// soft brevity compass for Auto. Group chats need the late reminder,
+/// but not older barked-limit rhetoric.
 fn length_reminder_for_turn(response_length: Option<&str>) -> &'static str {
     match response_length {
-        Some("Short") => " HARD LENGTH LIMIT: 1–2 sentences. Never 3. Stop before you'd need a third. A two-sentence reply is the target; one sentence is often better. If you feel the urge to keep going, that urge is the mistake.",
-        Some("Medium") => " LENGTH LIMIT: 3–4 sentences. Never more than 5. Stop before you'd need a sixth.",
-        Some("Long") => " LENGTH: 5–8 sentences, 10 maximum. Stop before you'd need more.",
-        Some("Auto") => " LENGTH: USE VARIETY. Vary from the length used last turn. A one-liner and a paragraph can both be right. Match THIS moment, not a default register.",
+        Some("Short") => " ACTIVE LENGTH CONTRACT: 1–2 sentences total. One sentence is often enough. Ignore longer scrollback if the setting changed; the current setting governs this reply.",
+        Some("Medium") => " ACTIVE LENGTH CONTRACT: 3–4 sentences total. Hold that shape even if earlier turns ran shorter or longer; the current setting governs this reply.",
+        Some("Long") => " ACTIVE LENGTH CONTRACT: about 5–10 sentences total. Let the reply breathe when the moment supports it, then land cleanly.",
+        Some("Auto") => " DEFAULT LEAN: often 2–3 short sentences total is enough. Keep the substance; cut ornament first. If this moment genuinely needs more air, give it the air it needs.",
         _ => "",
     }
 }
