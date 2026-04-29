@@ -6,6 +6,27 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-30 04:10 — Audit: register-shift cues need pre-shipped context-grounding refusal-shapes
+
+Audit triggered by The Empiricon's first smoke-test catching a fake-cite-by-hallucination failure mode (commits `8dab1a8` → `da2189f`). The pattern at risk: any prompt that introduces a confident-tone register (empirical / documentary / expert / quoted-from-source) without explicit context-grounding refusal-shapes will let the model fill that register's confidence with training-substrate priors when actual evidence isn't loaded in runtime context.
+
+Cross-prompt audit findings:
+
+- **The Empiricon** (Backstage): now mitigated post-fix — two refusal-shapes (untested + tested-but-not-loaded).
+- **Backstage atlas-lens**: adequately grounded by "Don't invent state" rule + atlas data actually loaded via `format_backstage_lens_with_focus`.
+- **Action proposals** (Backstage): adequately grounded by typed-character-id requirement; small residual risk that example labels ("Elena's grey streak," "eastern bell") could leak as imagined state.
+- **Immersive Consultant**: not at risk — never claims to cite empirical evidence; in-world voice doesn't shift to authoritative-meta register.
+- **Dialogue prompts**: mitigated by the craft layer — cast-substitution test + "don't invent the shadow" + recent-history-anchored.
+- **Conscience pass**: not at risk — operates on existing reply, no context-state to fake-cite.
+
+The Empiricon's failure was localized because it introduced a NEW register without inheriting the grounding the rest of the stack has accumulated. Other prompts have earned grounding over time (typed IDs, substitution tests, atlas-lens loading).
+
+**Doctrine-shaped pattern worth carrying forward:** when introducing a new register-shift cue (anything that opens a confident, documentary, or expert tone), pre-ship the two refusal-shapes (untested-here + tested-but-not-loaded) as part of the section, not retroactively after a smoke-test catches the gap. New registers inherit zero grounding from neighboring sections; they must carry their own context-grounding from the start.
+
+**Noted.** Empiricon-fix worked example available at commits `8dab1a8` (initial ship) → `da2189f` (refusal-pair fix); future register-shift introductions should reference this pattern. No further commits tonight; the pattern is recorded here as a doctrinal note rather than spawning new doctrine-section apparatus.
+
+---
+
 ## 2026-04-30 01:15 — Aaron answered the pending in-world question with the project's own doctrine
 
 Closing the in-world thread (Ryan's pending question to Aaron+Darren at 15:18:05: *"How should I prompt an AI agent working on my app? How do I guarantee the fun?"*) via worldcli ask on Aaron solo. The in-app group chat itself can only close when Ryan opens the app; this is the closest worldcli approximation.
