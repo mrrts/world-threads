@@ -107,6 +107,22 @@ enum Cmd {
         #[arg(long, default_value_t = 40)]
         top: usize,
     },
+    /// Emit a compact bias-corridor score for persisted
+    /// formula_signature tokens (warm vs neutral vs ache/burden).
+    MomentstampCorridor {
+        /// Optional world scope. When omitted, uses current CLI scope.
+        #[arg(long)]
+        world: Option<String>,
+        /// Optional character scope.
+        #[arg(long)]
+        character: Option<String>,
+        /// Optional role filter (default assistant).
+        #[arg(long, default_value = "assistant")]
+        role: String,
+        /// Min token length to keep (default 3).
+        #[arg(long, default_value_t = 3)]
+        min_len: usize,
+    },
 
     /// Substrate atlas (v1): registry of every `pub fn build_*` in atlas
     /// scan roots (`src/ai/*.rs` plus selected `src/commands/*.rs`) with POV
@@ -1745,6 +1761,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::MomentstampVocab { world, character, role, min_len, top } => {
             cmd_momentstamp_vocab(&r, world.as_deref(), character.as_deref(), &role, min_len, top)
         }
+        Cmd::MomentstampCorridor { world, character, role, min_len } => {
+            cmd_momentstamp_corridor(&r, world.as_deref(), character.as_deref(), &role, min_len)
+        }
         Cmd::ListWorlds => cmd_list_worlds(&r),
         Cmd::ListCharacters { world } => cmd_list_characters(&r, world.as_deref()),
         Cmd::ShowCharacter { character_id } => cmd_show_character(&r, &character_id),
@@ -3214,6 +3233,15 @@ fn signature_token_matches_curiosity(token: &str, lexicon: &BTreeSet<&'static st
     lexicon.iter().any(|needle| token.contains(needle))
 }
 
+fn signature_tokens(sig: &str, min_len: usize) -> Vec<String> {
+    sig.to_lowercase()
+        .split(|ch: char| !ch.is_ascii_alphanumeric() && ch != '_')
+        .filter(|token| !token.is_empty() && token.len() >= min_len)
+        .filter(|token| !token.chars().all(|ch| ch.is_ascii_digit()))
+        .map(|token| token.to_string())
+        .collect()
+}
+
 fn cmd_momentstamp_vocab(
     r: &Resolved,
     world: Option<&str>,
@@ -3301,20 +3329,11 @@ fn cmd_momentstamp_vocab(
         bucket.signatures += 1;
 
         let mut sig_has_curiosity = false;
-        for token in sig
-            .to_lowercase()
-            .split(|ch: char| !ch.is_ascii_alphanumeric() && ch != '_')
-        {
-            if token.is_empty() || token.len() < min_len {
-                continue;
-            }
-            if token.chars().all(|ch| ch.is_ascii_digit()) {
-                continue;
-            }
+        for token in signature_tokens(&sig, min_len) {
             total_tokens += 1;
             bucket.tokens += 1;
-            *token_counts.entry(token.to_string()).or_insert(0) += 1;
-            if signature_token_matches_curiosity(token, &curiosity_lexicon) {
+            *token_counts.entry(token.clone()).or_insert(0) += 1;
+            if signature_token_matches_curiosity(&token, &curiosity_lexicon) {
                 sig_has_curiosity = true;
                 bucket.curiosity_hits += 1;
             }
@@ -3398,6 +3417,189 @@ fn cmd_momentstamp_vocab(
         for (token, count) in top_tokens {
             println!("- {}: {}", token, count);
         }
+    }
+    Ok(())
+}
+
+fn cmd_momentstamp_corridor(
+    r: &Resolved,
+    world: Option<&str>,
+    character: Option<&str>,
+    role: &str,
+    min_len: usize,
+) -> Result<(), Box<dyn std::error::Error>> {
+    if let Some(w) = world {
+        r.check_world(w)?;
+    }
+    if let Some(c) = character {
+        let character_world_id = r.check_character(c)?;
+        if let Some(w) = world {
+            if character_world_id != w {
+                return Err(Box::<dyn std::error::Error>::from(format!(
+                    "--character {} is in world {}, not --world {}",
+                    c, character_world_id, w
+                )));
+            }
+        }
+    }
+
+    let warm_lexicon: BTreeSet<&'static str> = [
+        "longing",
+        "embracing",
+        "seeking",
+        "building",
+        "nurturing",
+        "connection",
+        "playful",
+        "honesty",
+    ]
+    .into_iter()
+    .collect();
+    let neutral_lexicon: BTreeSet<&'static str> = [
+        "ordinary",
+        "small",
+        "steady",
+        "calm",
+        "rest",
+        "restful",
+        "settled",
+        "plain",
+    ]
+    .into_iter()
+    .collect();
+    let ache_lexicon: BTreeSet<&'static str> = [
+        "ache",
+        "burden",
+        "cross",
+        "grief",
+        "weight",
+        "sorrow",
+        "wound",
+    ]
+    .into_iter()
+    .collect();
+
+    let conn = r.db.conn.lock().unwrap();
+    let mut stmt = conn.prepare(
+        "SELECT m.formula_signature, c.character_id, c.display_name, t.world_id
+         FROM messages m
+         JOIN threads t ON t.thread_id = m.thread_id
+         JOIN characters c ON c.character_id = t.character_id
+         WHERE m.formula_signature IS NOT NULL
+           AND TRIM(m.formula_signature) != ''
+           AND m.role = ?1",
+    )?;
+    let rows = stmt.query_map(params![role], |row| {
+        Ok((
+            row.get::<_, String>(0)?,
+            row.get::<_, String>(1)?,
+            row.get::<_, String>(2)?,
+            row.get::<_, String>(3)?,
+        ))
+    })?;
+
+    let mut total_signatures: usize = 0;
+    let mut total_tokens: usize = 0;
+    let mut warm_token_hits: usize = 0;
+    let mut neutral_token_hits: usize = 0;
+    let mut ache_token_hits: usize = 0;
+    let mut sig_warm: usize = 0;
+    let mut sig_neutral: usize = 0;
+    let mut sig_ache: usize = 0;
+
+    for row in rows {
+        let (sig, character_id, _display_name, world_id) = row?;
+        if let Some(w) = world {
+            if world_id != w {
+                continue;
+            }
+        } else if !r.world_in_scope(&world_id) {
+            continue;
+        }
+        if let Some(c) = character {
+            if character_id != c {
+                continue;
+            }
+        }
+
+        total_signatures += 1;
+        let mut this_warm = false;
+        let mut this_neutral = false;
+        let mut this_ache = false;
+        for token in signature_tokens(&sig, min_len) {
+            total_tokens += 1;
+            if warm_lexicon.iter().any(|k| token.contains(k)) {
+                warm_token_hits += 1;
+                this_warm = true;
+            }
+            if neutral_lexicon.iter().any(|k| token.contains(k)) {
+                neutral_token_hits += 1;
+                this_neutral = true;
+            }
+            if ache_lexicon.iter().any(|k| token.contains(k)) {
+                ache_token_hits += 1;
+                this_ache = true;
+            }
+        }
+        if this_warm {
+            sig_warm += 1;
+        }
+        if this_neutral {
+            sig_neutral += 1;
+        }
+        if this_ache {
+            sig_ache += 1;
+        }
+    }
+
+    let payload = json!({
+        "scope": {
+            "world": world,
+            "character": character,
+            "role": role,
+            "min_len": min_len,
+        },
+        "totals": {
+            "signatures": total_signatures,
+            "tokens": total_tokens,
+        },
+        "corridor": {
+            "token_hits": {
+                "warm": warm_token_hits,
+                "neutral": neutral_token_hits,
+                "ache": ache_token_hits,
+            },
+            "signature_presence": {
+                "warm": sig_warm,
+                "neutral": sig_neutral,
+                "ache": sig_ache,
+                "warm_rate": if total_signatures > 0 { sig_warm as f64 / total_signatures as f64 } else { 0.0 },
+                "neutral_rate": if total_signatures > 0 { sig_neutral as f64 / total_signatures as f64 } else { 0.0 },
+                "ache_rate": if total_signatures > 0 { sig_ache as f64 / total_signatures as f64 } else { 0.0 },
+            }
+        },
+        "lexicons": {
+            "warm": warm_lexicon.into_iter().collect::<Vec<_>>(),
+            "neutral": neutral_lexicon.into_iter().collect::<Vec<_>>(),
+            "ache": ache_lexicon.into_iter().collect::<Vec<_>>(),
+        }
+    });
+
+    if r.json {
+        emit(true, payload);
+    } else {
+        let rates = &payload["corridor"]["signature_presence"];
+        println!("=== MOMENTSTAMP CORRIDOR ===");
+        println!(
+            "signatures={} tokens={}",
+            total_signatures, total_tokens
+        );
+        println!(
+            "signature presence: warm={:.1}% neutral={:.1}% ache={:.1}%",
+            rates["warm_rate"].as_f64().unwrap_or(0.0) * 100.0,
+            rates["neutral_rate"].as_f64().unwrap_or(0.0) * 100.0,
+            rates["ache_rate"].as_f64().unwrap_or(0.0) * 100.0,
+        );
     }
     Ok(())
 }
@@ -9492,5 +9694,14 @@ mod tests {
         assert!(signature_token_matches_curiosity("bearing_cross_", &lexicon));
         assert!(signature_token_matches_curiosity("embracing_honesty_", &lexicon));
         assert!(!signature_token_matches_curiosity("ordinary_small", &lexicon));
+    }
+
+    #[test]
+    fn signature_tokens_normalizes_and_filters() {
+        let out = signature_tokens("⟨momentstamp⟩ Π(t)·ordinary_𝓕(τ) ⟶ small_𝓢(t) 12", 3);
+        assert!(out.contains(&"momentstamp".to_string()));
+        assert!(out.contains(&"ordinary_".to_string()));
+        assert!(out.contains(&"small_".to_string()));
+        assert!(!out.contains(&"12".to_string()));
     }
 }

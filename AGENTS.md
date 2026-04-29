@@ -469,6 +469,11 @@ Decision discipline:
 - Keep lead-block and reactions-off wiring.
 - Downgrade pure curiosity-back claim from claim-tier to sketch-tier-with-confound until characterized by pinned content classes (neutral vs curiosity-rich).
 
+Update (2026-04-29 late reruns):
+- Pinned-neutral 3-probe rerun landed symmetric (`A 2/3`, `B 2/3`) in this pass.
+- Pinned-curiosity mirror is now part of the standard matrix; do not promote tiers from a single 3-probe slice.
+- Promotion rule: require repeated paired probes across both pinned classes plus organic control before any mechanism-tier upgrade.
+
 ## Replayable initial-conditions (momentstamp override)
 
 `--momentstamp-override <text>` turns chat-state from an implicit random input into an explicit replay parameter. Treat it as an initial-conditions pin, not a style knob.
