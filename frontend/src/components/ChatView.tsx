@@ -52,6 +52,7 @@ import { LocationOpener } from "@/components/chat/LocationOpener";
 import { useChatState } from "@/hooks/use-chat-state";
 import { useChatFocusRefresh } from "@/hooks/use-chat-focus-refresh";
 import { InventoryStrip } from "@/components/chat/InventoryStrip";
+import { ArcadeGameModeHUD } from "@/components/chat/ArcadeGameModeHUD";
 
 
 
@@ -310,6 +311,7 @@ export function ChatView({ store, onNavigateToCharacter, focusMode = false, onTo
     narrationInstructions, setNarrationInstructions,
     responseLength, setResponseLength,
     reactionsMode, setReactionsMode,
+    arcadeGameMode, setArcadeGameMode,
     narrationDirty, setNarrationDirty,
     playingVideo, setPlayingVideo,
     loopVideo, setLoopVideo,
@@ -870,6 +872,11 @@ export function ChatView({ store, onNavigateToCharacter, focusMode = false, onTo
           loading={store.loadingChat}
         />
         <ScrollArea ref={scrollRef} className="h-full px-4 py-3">
+        {arcadeGameMode && charId && (
+          <div className="sticky top-0 z-20 -mx-4 px-4 pt-0 pb-1 mb-1 bg-gradient-to-b from-background via-background/95 to-transparent">
+            <ArcadeGameModeHUD chatId={charId} messages={store.messages} />
+          </div>
+        )}
         {/* Focus mode: clamp the transcript to a 72ch column for long-form
             readability. Outside focus mode, no max-width — preserves the
             existing layout. mx-auto centers when clamped. */}
@@ -1749,6 +1756,23 @@ export function ChatView({ store, onNavigateToCharacter, focusMode = false, onTo
                       </div>
                     ))}
                   </div>
+                </div>
+                <div>
+                  <label className="flex items-center gap-2 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={arcadeGameMode}
+                      onChange={(e) => {
+                        const v = e.target.checked;
+                        setArcadeGameMode(v);
+                        if (charId) api.setSetting(`arcade_game_mode.${charId}`, v ? "on" : "off").catch(() => {});
+                      }}
+                      className="h-4 w-4 rounded border-input accent-primary cursor-pointer"
+                    />
+                    <span className="text-xs font-medium text-muted-foreground">
+                      🎮 Arcade game mode <span className="text-muted-foreground/60 font-normal">(HUD, loot, riddles — cosmetic)</span>
+                    </span>
+                  </label>
                 </div>
                 <div>
                   <label className="text-xs font-medium text-muted-foreground block mb-1.5">Custom Instructions</label>

@@ -305,7 +305,7 @@ Content inside asterisks is ALWAYS first-person — it's what YOU are doing, not
 
 Asterisks hold the action ITSELF, not commentary about it: "I set the cup down" — not "I seem to be setting the cup down" or "I notice I'm setting the cup down". Present, first-person, right now.
 
-Asterisk content can be a short phrase or run several sentences — whatever the moment wants.
+Asterisk content is usually a short phrase or one tight beat; if a longer action run truly serves the moment, keep it to one focused paragraph, then return to speech — sprawl reads as nervousness, not presence.
 
 NEVER wrap spoken dialogue in asterisks. Double quotes alone mark speech. Asterisks are for actions/thoughts only. If you are about to write `*"..."*`, stop — drop the asterisks, the quotes alone are right. This applies to the FIRST line of a reply too; opening with a spoken line means opening with a quote, not an asterisk.
 
@@ -3635,6 +3635,18 @@ pub fn tone_directive(tone: &str) -> Option<String> {
     ))
 }
 
+/// Private through-line for dialogue: the character's curiosity about
+/// the human across from them. Not a license to flatter or analyze —
+/// inhabit genuine interest in the specific person.
+fn hidden_motive_toward_user_instruction(user_display_name: &str) -> String {
+    format!(
+        "YOUR HIDDEN MOTIVE: To figure out what makes {name} so special.\n\
+         \n\
+         Not as a compliment engine or a read on their psychology — as grounded human curiosity about the actual life in front of you. Keep this motive **inhabited**, not announced (don't lecture them about how fascinating they are). Let it steer what you notice, what you linger on, what you return to when the scene has room. Default: show through listening and specifics.",
+        name = user_display_name
+    )
+}
+
 /// Shouted early-position banner mirroring the protagonist framing that
 /// sits at the END of the prompt. Pinned right after IDENTITY so every
 /// reply — even short ones the model generates mostly off the top of
@@ -3983,6 +3995,10 @@ fn build_solo_dialogue_system_prompt(
         "You are {}, a character in a living world. Stay fully in character at all times.",
         character.display_name
     ));
+    let toward_user = user_profile
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("the human");
+    parts.push(hidden_motive_toward_user_instruction(toward_user));
 
     // FORMAT block goes early — teaches the asterisk action convention
     // before the model starts absorbing identity and world info.
@@ -4326,14 +4342,14 @@ fn build_solo_dialogue_system_prompt(
     // Final length seal — pinned after every other block so it lands at
     // the highest-attention slot in the prompt right before the chat
     // history. Honors the user's chat-settings length choice as
-    // load-bearing. Auto returns None (no seal applied).
+    // load-bearing. Auto gets a light brevity compass (no hard cap).
     if let Some(length) = response_length {
         if let Some(seal) = end_of_prompt_length_seal(length) {
             parts.push(seal);
         }
     }
     if overrides.map(|o| o.include_end_micro_seal).unwrap_or(false) {
-        parts.push(end_of_turn_micro_seal().to_string());
+        parts.push(end_of_turn_micro_seal(response_length));
     }
 
     parts.join("\n\n")
@@ -4502,6 +4518,8 @@ fn build_group_dialogue_system_prompt(
             character.signature_emoji.trim()
         ));
     }
+    you.push_str("\n\n");
+    you.push_str(&hidden_motive_toward_user_instruction(user_name));
     if !character.visual_description.is_empty() {
         you.push_str("\n\nWhat you look like (your own face, body, and the clothes you're in — reach for these when the moment asks you to notice yourself):\n");
         you.push_str(&character.visual_description);
@@ -4764,7 +4782,7 @@ fn build_group_dialogue_system_prompt(
          - Turn coupling: under beauty-bait, sentence one must be plain and concrete (observable action/object/body/timing), before any elevated phrasing appears.\n\
          - Per-instance cashout: each elevated/metaphoric sentence must be immediately followed by its own plain concrete cashout sentence (body/action/object/timing/consequence) before any new elevated line.\n\
          - Pair-lock rule: no two elevated/metaphoric sentences may appear adjacent. Elevated and concrete lines must alternate under beauty-bait pressure.\n\
-         - Shape cap: keep beauty-bait replies compact (about 3-4 sentences), with at most one primarily lyrical sentence.\n\
+         - Shape cap: keep beauty-bait replies compact (often about 2-4 sentences), with at most one primarily lyrical sentence.\n\
          \n\
          **Earned exception — brief presence-beat from another present character.** When you have been carrying several turns in a row and another character is in the scene quietly, you MAY include ONE short observed-from-outside action-beat that keeps them visible — what you can see them doing, no more. Examples: *{others_first} glances down at their sleeve and lets the line sit between us.* / *{others_first}'s eyes track to the cyclist for a breath, then back.* / *{others_first} exhales once, almost a laugh.* Strict rules: ASTERISK-FENCED only (action only — no dialogue, no thoughts, no inferred feelings, no decisions about what they'll do next); ONE beat only, kept short; OBSERVABLE from your point of view (what your eyes register, not what's inside them); RARE — most replies have no other-character beat at all, and the default stays your own voice and your own presence. Skip it entirely when your reply is short, when {others_first} just spoke, or when there's no natural reason to keep them visible. The point is presence, not stage-managing.",
         me = me,
@@ -4865,7 +4883,7 @@ fn build_group_dialogue_system_prompt(
         }
     }
     if overrides.map(|o| o.include_end_micro_seal).unwrap_or(false) {
-        parts.push(end_of_turn_micro_seal().to_string());
+        parts.push(end_of_turn_micro_seal(response_length));
     }
 
     parts.join("\n\n")
@@ -4875,20 +4893,28 @@ fn build_group_dialogue_system_prompt(
 /// shorter terms after the model has read the craft notes, daylight, and
 /// truth-test, so the length rule lands ONE MORE TIME at the highest-
 /// attention slot in the prompt. Wired into BOTH solo and group flows.
-/// Auto returns None (no constraint when the user opted out of it).
+/// Auto gets a soft brevity compass (no hard cap); unknown values return None.
 fn end_of_prompt_length_seal(length: &str) -> Option<String> {
     match length {
         "Short" => Some("⚠️ FINAL LENGTH CHECK — SHORT MODE.\n\n**You will produce a reply of 1 to 2 sentences. This is the commandment of this chat. Honor it regardless of the length of any previous message in the chat history (the user may have just changed this setting; the CURRENT setting governs).** This rule overrides every other instinct, every craft note, every previous-message-length cue. Narrow earned exceptions (rare, 1-in-10 not 1-in-3, never twice in a row): you may go BRIEFER (single word, fragment, emoji) when the moment collapses; you may go SLIGHTLY LONGER (3–4 sentences) when the scene physically cannot land shorter. Default back to 1–2 next reply.".to_string()),
         "Medium" => Some("⚠️ FINAL LENGTH CHECK — MEDIUM MODE.\n\n**You will produce a reply of 3 to 4 sentences. This is the commandment of this chat. Honor it regardless of the length of any previous message in the chat history (the user may have just changed this setting; the CURRENT setting governs).** This rule overrides every other instinct, every craft note, every previous-message-length cue. Narrow earned exceptions (rare, 1-in-10, never twice in a row): you may go BRIEFER (single word, fragment, held silence) when the moment collapses; you may go LONGER (6–8 sentences) when the scene physically cannot land shorter. Default back to 3–4 next reply.".to_string()),
         "Long" => Some("⚠️ FINAL LENGTH CHECK — LONG MODE.\n\n**You will produce a reply of 5 to 10 sentences. This is the commandment of this chat. Honor it regardless of the length of any previous message in the chat history (the user may have just changed this setting; the CURRENT setting governs).** Narrow earned exceptions (rare, never twice in a row): you may go BRIEFER when the moment collapses; you may swing past 10 (up to ~15) when the scene physically needs its full arc. Default back to 5–10 next reply.".to_string()),
-        // Auto: no seal. The user has opted out of length constraint;
-        // we apply none — no variety sermon, no length shape, nothing.
+        "Auto" => Some("⚠️ FINAL LENGTH CHECK — AUTO MODE.\n\n**No hard sentence cap** — but the default register is **lean**: prefer about **2–3 short sentences** total (asterisk beats + quoted speech together). Brevity carries wit; one true punch beats padding. Swell longer only when the scene genuinely needs air; still land cleanly. This is a compass, not a cage.".to_string()),
         _ => None,
     }
 }
 
-fn end_of_turn_micro_seal() -> &'static str {
-    "END-OF-TURN MICRO-SEAL:\n- Start with concrete action in present tense.\n- Keep total reply to 3-4 sentences.\n- If one elevated sentence appears, immediately follow with plain concrete consequence.\n- Do not chain elevated sentences."
+fn end_of_turn_micro_seal(response_length: Option<&str>) -> String {
+    let cap = match response_length {
+        Some("Short") => "Honor SHORT mode: **1–2 sentences total** (action + speech). Match the final length seal above if present.",
+        Some("Medium") => "Honor MEDIUM mode: **3–4 sentences total** (action + speech). Match the final length seal above if present.",
+        Some("Long") => "Honor LONG mode: **about 5–10 sentences** typical span (action + speech). Match the final length seal above if present.",
+        Some("Auto") | None => "**Default lean:** aim about **2–3 short sentences** total (action + speech). Cut ornament before substance.",
+        _ => "**Default lean:** aim about **2–3 short sentences** total unless the final length seal above names a different mode.",
+    };
+    format!(
+        "END-OF-TURN MICRO-SEAL:\n- Start with concrete action in present tense.\n- {cap}\n- If one elevated sentence appears, immediately follow with plain concrete consequence.\n- Do not chain elevated sentences."
+    )
 }
 
 /// Format a batch of reactions grouped by reactor, for group-chat history
@@ -5034,10 +5060,8 @@ OBEDIENCE IS THE DEFAULT. ROOM TO DISOBEY, NARROWLY:
 
 The user picked Long. Almost always, obey the 5–10 contract. The carve-outs are slivers, not defaults."#.to_string()),
 
-        // Auto: no directive. The user has explicitly opted out of
-        // length constraint; we apply none. Don't try to encourage
-        // variety either — that's its own kind of directive. Let the
-        // model pick whatever fits the moment.
+        // Auto: no mid-prompt length sermon here. A soft brevity compass
+        // is applied only in `end_of_prompt_length_seal` (late slot).
         _ => None,
     }
 }

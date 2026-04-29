@@ -10,6 +10,8 @@ pub mod group_chat_internals {
     pub use crate::commands::group_chat_cmds::{
         consecutive_run_by_recent_speaker,
         llm_pick_responders_with_overrides,
+        llm_pick_addressee,
+        AddresseePick,
     };
 }
 

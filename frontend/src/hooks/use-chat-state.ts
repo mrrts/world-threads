@@ -88,6 +88,8 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
   // "occasional" produces text-message-realistic reactions (~25% of
   // user messages); the LLM self-paces against that budget.
   const [reactionsMode, setReactionsMode] = useState<"off" | "occasional" | "always">("off");
+  /** Opt-in cosmetic arcade HUD + play stats (per thread). */
+  const [arcadeGameMode, setArcadeGameMode] = useState(false);
   const [narrationDirty, setNarrationDirty] = useState(false);
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const [loopVideo, setLoopVideo] = useState<Record<string, boolean>>({});
@@ -128,7 +130,8 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
       api.getSetting(`narration_instructions.${chatId}`),
       api.getSetting(`response_length.${chatId}`),
       api.getSetting(`reactions_enabled.${chatId}`),
-    ]).then(([tone, instructions, length, reactions]) => {
+      api.getSetting(`arcade_game_mode.${chatId}`),
+    ]).then(([tone, instructions, length, reactions, arcade]) => {
       setNarrationTone(tone || "Cinematic");
       setNarrationInstructions(instructions || "");
       setResponseLength(length || "Short");
@@ -140,6 +143,8 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
         m === "always" || m === "true" || m === "on" ? "always" :
         m === "occasional" ? "occasional" : "off";
       setReactionsMode(parsed);
+      const ar = (arcade || "").trim().toLowerCase();
+      setArcadeGameMode(ar === "on" || ar === "true" || ar === "1");
       setNarrationDirty(false);
     });
   }, [chatId]);
@@ -460,6 +465,7 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     narrationInstructions, setNarrationInstructions,
     responseLength, setResponseLength,
     reactionsMode, setReactionsMode,
+    arcadeGameMode, setArcadeGameMode,
     narrationDirty, setNarrationDirty,
     playingVideo, setPlayingVideo,
     loopVideo, setLoopVideo,

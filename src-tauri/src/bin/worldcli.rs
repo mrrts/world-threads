@@ -119,6 +119,26 @@ enum Cmd {
         question_summary: Option<String>,
     },
 
+    /// Run the addressee picker (memory-tier LLM, ~$0.0005/call) on a
+    /// hypothetical user message in a group chat. Sibling to
+    /// pick-responders for the layer-isolated bite-test methodology.
+    /// Returns Solo(name) / Collective / Ambiguous — see AddresseePick
+    /// in commands/group_chat_cmds.rs for the dispatch contract callers
+    /// pattern-match on. Use to validate addressee-resolution changes
+    /// without burning full-pipeline cost.
+    PickAddressee {
+        #[arg(long)]
+        group_chat: String,
+        #[arg(long)]
+        message: String,
+        #[arg(long, default_value = "4")]
+        context_limit: usize,
+        #[arg(long)]
+        confirm_cost: Option<f64>,
+        #[arg(long)]
+        question_summary: Option<String>,
+    },
+
     // ── read commands ──
     /// List worlds in scope.
     ListWorlds,
@@ -1594,6 +1614,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             cmd_pick_responders(&r, &api_key, &group_chat, &message, omit_continuity_note,
                 confirm_cost, question_summary.as_deref()).await
         }
+        Cmd::PickAddressee { group_chat, message, context_limit, confirm_cost, question_summary } => {
+            let api_key = resolve_api_key(cli.api_key.as_deref())
+                .ok_or_else(|| Box::<dyn std::error::Error>::from("pick-addressee: no OpenAI API key resolved (env / keychain / --api-key)"))?;
+            cmd_pick_addressee(&r, &api_key, &group_chat, &message, context_limit,
+                confirm_cost, question_summary.as_deref()).await
+        }
         Cmd::ConfigTemplate => { println!("{}", config_template_text()); Ok(()) }
         Cmd::ListWorlds => cmd_list_worlds(&r),
         Cmd::ListCharacters { world } => cmd_list_characters(&r, world.as_deref()),
@@ -2041,6 +2067,86 @@ async fn cmd_pick_responders(
         "pick_names": pick_names,
         "consecutive_run": continuity.map(|(name, n)| json!({"name": name, "count": n})),
         "continuity_note_omitted": omit_continuity_note,
+        "question_summary": question_summary,
+        "model": model_config.memory_model,
+        "projected_usd": projected_usd,
+    });
+    emit(r.json, v);
+    Ok(())
+}
+
+async fn cmd_pick_addressee(
+    r: &Resolved,
+    api_key: &str,
+    group_chat_id: &str,
+    message: &str,
+    context_limit: usize,
+    confirm_cost: Option<f64>,
+    question_summary: Option<&str>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let (members, recent_context, user_name, model_config) = {
+        let conn = r.db.conn.lock().unwrap();
+        let gc = get_group_chat(&conn, group_chat_id)
+            .map_err(|e| format!("group_chat '{}' not found: {}", group_chat_id, e))?;
+        let member_ids: Vec<String> = gc.character_ids.as_array()
+            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+            .unwrap_or_default();
+        let members: Vec<Character> = member_ids.iter()
+            .filter_map(|id| get_character(&conn, id).ok())
+            .collect();
+        let recent_context: Vec<Message> = list_group_messages(&conn, &gc.thread_id, (context_limit as i64) + 2)
+            .unwrap_or_default();
+        let user_profile = get_user_profile(&conn, &gc.world_id).ok();
+        let user_name = user_profile.map(|p| p.display_name).unwrap_or_else(|| "the human".to_string());
+        let model_config = orchestrator::load_model_config(&conn);
+        (members, recent_context, user_name, model_config)
+    };
+
+    let projected_in: i64 = 200;
+    let projected_out: i64 = 20;
+    let projected_usd = actual_cost(&model_config.memory_model, projected_in, projected_out, &r.cfg.model_pricing);
+    let daily_so_far = rolling_24h_total_usd();
+    let cap = r.cfg.budget.per_call_usd;
+    let daily_cap = r.cfg.budget.daily_usd;
+    let needs_confirm = projected_usd > cap || daily_so_far + projected_usd > daily_cap;
+    if needs_confirm && confirm_cost.is_none() {
+        return Err(format!(
+            "Budget gate: projected ~${:.4} per call (24h spent ${:.2} of ${:.2}); pass --confirm-cost {:.2} to proceed",
+            projected_usd, daily_so_far, daily_cap, projected_usd * 1.5
+        ).into());
+    }
+    eprintln!(
+        "[worldcli pick-addressee] model={} context_limit={} projected≈${:.4}",
+        model_config.memory_model, context_limit, projected_usd
+    );
+
+    let pick = app_lib::group_chat_internals::llm_pick_addressee(
+        api_key, &model_config, message, &recent_context, &members, &user_name, context_limit,
+    ).await;
+
+    let (kind, name) = match &pick {
+        app_lib::group_chat_internals::AddresseePick::Solo(id) => {
+            let n = members.iter().find(|c| &c.character_id == id).map(|c| c.display_name.clone());
+            ("Solo", n)
+        }
+        app_lib::group_chat_internals::AddresseePick::Collective => ("Collective", None),
+        app_lib::group_chat_internals::AddresseePick::Ambiguous => ("Ambiguous", None),
+    };
+
+    append_cost_log(&CostEntry {
+        timestamp: chrono::Utc::now().to_rfc3339(),
+        model: model_config.memory_model.clone(),
+        prompt_tokens: projected_in,
+        completion_tokens: projected_out,
+        usd: projected_usd,
+    });
+
+    let v = json!({
+        "group_chat_id": group_chat_id,
+        "user_message": message,
+        "context_limit": context_limit,
+        "addressee_kind": kind,
+        "addressee_name": name,
         "question_summary": question_summary,
         "model": model_config.memory_model,
         "projected_usd": projected_usd,
