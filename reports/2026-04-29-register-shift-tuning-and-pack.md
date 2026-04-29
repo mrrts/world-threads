@@ -113,6 +113,19 @@ It prints raw JSON payloads so you can diff, archive, or pipe through `jq`.
   reports/register-shift-dashboard-<new>
 ```
 
+### Toolbelt
+
+- `scripts/run-rebound-strict.sh`
+  - Runs the strict rebound ritual in one command.
+- `scripts/register-shift-dashboard.sh`
+  - Main dashboard runner with preset support and artifact capture.
+- `scripts/prune-register-shift-artifacts.sh <keep_count>`
+  - Prunes older dashboard run directories.
+- `scripts/compare-register-shift-runs.py <old_dir> <new_dir>`
+  - Prints metric deltas between two artifact runs.
+- `scripts/latest-register-shift-run.sh [--json]`
+  - Prints the newest dashboard artifact directory path.
+
 ### Rebound Variant Command Examples
 
 - Standard pack (default):

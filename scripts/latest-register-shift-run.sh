@@ -3,6 +3,11 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPORTS_DIR="$ROOT_DIR/reports"
+JSON_MODE=false
+
+if [[ "${1:-}" == "--json" ]]; then
+  JSON_MODE=true
+fi
 
 latest="$(ls -1dt "$REPORTS_DIR"/register-shift-dashboard-* 2>/dev/null | head -n 1 || true)"
 if [[ -z "$latest" ]]; then
@@ -10,4 +15,8 @@ if [[ -z "$latest" ]]; then
   exit 1
 fi
 
-echo "$latest"
+if $JSON_MODE; then
+  printf '{"latest":"%s"}\n' "$latest"
+else
+  echo "$latest"
+fi
