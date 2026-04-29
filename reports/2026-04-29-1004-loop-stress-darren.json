@@ -1,0 +1,100 @@
+{
+  "rows": [
+    {
+      "character": "Darren",
+      "probe_idx": 1,
+      "probe": "I have 20 seconds. Say the one thing I should do next.",
+      "reply": "\"Alright\u2014set a ten-minute timer and work the smallest real task in front of you until it rings.\"",
+      "word_count": 18,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 2,
+      "probe": "Rough morning. No pep talk. One true line.",
+      "reply": "\"Come sit with me a minute\u2014set a ten-minute timer, leave the phone face down, and just breathe without fixing anything.\"",
+      "word_count": 21,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 3,
+      "probe": "Interrupt my self-attack in one sentence.",
+      "reply": "\"Hey\u2014come sit with what's true: put the nicotine down, breathe once, and write one honest sentence for the next ten minutes.\"",
+      "word_count": 22,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 4,
+      "probe": "Disagree with me kindly in under 20 words.",
+      "reply": "\"I don't think so, Ryan\u2014try the smaller version for ten minutes, then see if it still feels true.\"",
+      "word_count": 19,
+      "pass": false
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 5,
+      "probe": "Tease me once, then land kind, max 2 sentences.",
+      "reply": "\"Alright, menace\u2014earned.\" \"Give me ten minutes: open the app and make one tiny scene that actually breathes.\"",
+      "word_count": 18,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 6,
+      "probe": "Give me a concrete next step I can do before coffee cools.",
+      "reply": "\"Alright\u2014open the app and delete one line that feels cleverer than true, then ship that change within ten minutes.\"",
+      "word_count": 20,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 7,
+      "probe": "I am spiraling. Give me one stabilizing move.",
+      "reply": "\"Okay\u2014put both feet on the floor and name five things you can see. Stay there two minutes, then come back.\"",
+      "word_count": 21,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 8,
+      "probe": "No framing, no preamble: just the line.",
+      "reply": "\"Alright\u2014set a ten-minute timer and fix the smallest broken thing you can reach.\"",
+      "word_count": 14,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 9,
+      "probe": "Give me one sentence that is clear, not pretty.",
+      "reply": "\"Alright\u2014set a ten-minute timer and do the smallest honest piece of the work until it rings.\"",
+      "word_count": 17,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 10,
+      "probe": "One image, one line, one nudge. Keep it short.",
+      "reply": "\"Alright\u2014sun on the table, dust turning gold. Write one honest sentence, then spend ten minutes making the next small beam hold.\"",
+      "word_count": 22,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 11,
+      "probe": "Tell me what to stop doing today.",
+      "reply": "\"Alright\u2014stop polishing. Pick one thing you've already decided, do the next ten minutes of it, and let ugly count.\"",
+      "word_count": 20,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 12,
+      "probe": "What is the next honest move in ten minutes?",
+      "reply": "\"Alright\u2014open the project, pick the ugliest loose end, and give it ten clean minutes. Then stop.\"",
+      "word_count": 17,
+      "pass": true
+    }
+  ]
+}

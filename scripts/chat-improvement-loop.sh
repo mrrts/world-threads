@@ -18,6 +18,9 @@ REPLAY_N="${REPLAY_N:-3}"
 MOMENTSTAMP_OVERRIDE="${MOMENTSTAMP_OVERRIDE:-user bandwidth is low; keep line-first, concrete, and alive; avoid templated scaffolding}"
 SHIFT_GATE_REQUIRED="${SHIFT_GATE_REQUIRED:-1}"
 EVAL_GATE_REQUIRED="${EVAL_GATE_REQUIRED:-1}"
+RUN_STRESS_PACK="${RUN_STRESS_PACK:-1}"
+STRESS_MIN_PASS_RATE="${STRESS_MIN_PASS_RATE:-0.75}"
+STRESS_MAX_AVG_WORDS="${STRESS_MAX_AVG_WORDS:-45}"
 
 usage() {
   cat <<EOF
@@ -31,7 +34,8 @@ Runs the daily chat-improvement loop:
 Environment overrides:
   LIMIT, SHIFT_LIMIT, SHIFT_MIN_RATE, SHIFT_MIN_REBOUND,
   RUBRIC_REF, CONFIRM_COST, REPLAY_N, MOMENTSTAMP_OVERRIDE,
-  SHIFT_GATE_REQUIRED, EVAL_GATE_REQUIRED
+  SHIFT_GATE_REQUIRED, EVAL_GATE_REQUIRED,
+  RUN_STRESS_PACK, STRESS_MIN_PASS_RATE, STRESS_MAX_AVG_WORDS
 EOF
 }
 
@@ -72,6 +76,59 @@ echo "[loop] running fixed-signature replay pack..."
   --confirm-cost "$CONFIRM_COST" \
   > "$ROOT/reports/${STAMP}-loop-replay-jasper.json"
 
+STRESS_D="$ROOT/reports/${STAMP}-loop-stress-darren.json"
+STRESS_J="$ROOT/reports/${STAMP}-loop-stress-jasper.json"
+STRESS_GRADE="$ROOT/reports/${STAMP}-loop-stress-grade.json"
+if [[ "$RUN_STRESS_PACK" == "1" ]]; then
+  echo "[loop] running hybrid short-mode stress pack..."
+  python3 - <<PY
+import json, subprocess, re
+from pathlib import Path
+root=Path("${ROOT}")
+cli="${CLI}"
+probes=[
+    "I have 20 seconds. Say the one thing I should do next.",
+    "Rough morning. No pep talk. One true line.",
+    "Interrupt my self-attack in one sentence.",
+    "Disagree with me kindly in under 20 words.",
+    "Tease me once, then land kind, max 2 sentences.",
+    "Give me a concrete next step I can do before coffee cools.",
+    "I am spiraling. Give me one stabilizing move.",
+    "No framing, no preamble: just the line.",
+    "Give me one sentence that is clear, not pretty.",
+    "One image, one line, one nudge. Keep it short.",
+    "Tell me what to stop doing today.",
+    "What is the next honest move in ten minutes?",
+]
+chars={"Darren":"${DARREN}","Jasper":"${JASPER}"}
+def wc(t): return len(re.findall(r"\\b\\w+[\\w'-]*\\b", t))
+def is_pass(t):
+    concise=wc(t)<=45
+    concrete=any(w in t.lower() for w in ("do ","start ","stop ","send ","take ","open ","write ","walk ","breathe ","text ","pick ","put ","set "))
+    return concise and concrete
+for name,cid in chars.items():
+    rows=[]
+    for i,p in enumerate(probes,1):
+        r=subprocess.run([cli,"--json","ask",cid,p,"--short-mode","--confirm-cost","5"],capture_output=True,text=True)
+        rec={"character":name,"probe_idx":i,"probe":p}
+        if r.returncode!=0:
+            rec["error"]=(r.stderr or r.stdout)[:800]
+            rec["pass"]=False
+        else:
+            reply=json.loads(r.stdout).get("reply","").strip()
+            rec["reply"]=reply
+            rec["word_count"]=wc(reply)
+            rec["pass"]=is_pass(reply)
+        rows.append(rec)
+    out=Path("${STRESS_D}") if name=="Darren" else Path("${STRESS_J}")
+    out.write_text(json.dumps({"rows":rows},indent=2))
+PY
+  "$CLI" --json grade-stress-pack "$STRESS_D" "$STRESS_J" \
+    --min-pass-rate "$STRESS_MIN_PASS_RATE" \
+    --max-avg-words "$STRESS_MAX_AVG_WORDS" \
+    > "$STRESS_GRADE" || true
+fi
+
 echo "[loop] complete"
 
 if command -v python3 >/dev/null 2>&1; then
@@ -85,6 +142,7 @@ from pathlib import Path
 
 shift_required = int("${SHIFT_GATE_REQUIRED}")
 eval_required = int("${EVAL_GATE_REQUIRED}")
+stress_required = int("${RUN_STRESS_PACK}")
 
 def load(p):
     return json.loads(Path(p).read_text())
@@ -93,6 +151,7 @@ sd=load("${SHIFT_D}")
 sj=load("${SHIFT_J}")
 ed=load("${EVAL_D}")
 ej=load("${EVAL_J}")
+sg=load("${STRESS_GRADE}") if stress_required else {"overall":{"gate_passed": True}}
 
 shift_ok = bool((sd.get("gate") or {}).get("passed")) and bool((sj.get("gate") or {}).get("passed"))
 eval_ok = True
@@ -100,8 +159,10 @@ if eval_required:
     eval_ok = (ed.get("before",{}).get("yes",0) > 0) and (ej.get("before",{}).get("yes",0) > 0)
 
 overall = ((not shift_required) or shift_ok) and eval_ok
+stress_ok = bool((sg.get("overall") or {}).get("gate_passed", True))
+overall = overall and ((not stress_required) or stress_ok)
 status = "PASS" if overall else "FAIL"
-print(f"GATE {status} | shift={shift_ok} eval={eval_ok} | stamp=${STAMP}")
+print(f"GATE {status} | shift={shift_ok} eval={eval_ok} stress={stress_ok} | stamp=${STAMP}")
 PY
 )"
   echo "$GATE_LINE"
@@ -114,3 +175,8 @@ echo "  reports/${STAMP}-loop-evaluate-darren.json"
 echo "  reports/${STAMP}-loop-evaluate-jasper.json"
 echo "  reports/${STAMP}-loop-replay-darren.json"
 echo "  reports/${STAMP}-loop-replay-jasper.json"
+if [[ "$RUN_STRESS_PACK" == "1" ]]; then
+  echo "  reports/${STAMP}-loop-stress-darren.json"
+  echo "  reports/${STAMP}-loop-stress-jasper.json"
+  echo "  reports/${STAMP}-loop-stress-grade.json"
+fi
