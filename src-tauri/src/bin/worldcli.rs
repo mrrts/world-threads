@@ -33,7 +33,7 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 use app_lib::ai::prompts::json_array_to_strings;
-use app_lib::ai::{openai, orchestrator, prompts, relational_stance, load_test_anchor};
+use app_lib::ai::{openai, orchestrator, prompts, relational_stance, load_test_anchor, substrate_atlas};
 use app_lib::db::{queries::*, Database};
 
 // ─── CLI surface ────────────────────────────────────────────────────────
@@ -86,6 +86,20 @@ enum Cmd {
 
     /// Print a starter ~/.worldcli/config.json template (does NOT overwrite).
     ConfigTemplate,
+
+    /// Substrate atlas (v1): registry of every `pub fn build_*` under
+    /// `src/ai/` with POV / parity / craft / enforcement columns. `--json`
+    /// for machine output. `--audit` (v2): fail if sources contain a new
+    /// `pub fn build_*` not registered in `substrate_atlas::BuildSubstrate`.
+    /// `--emit-markdown <path>` writes the markdown table (utf-8).
+    Substrates {
+        #[arg(long)]
+        audit: bool,
+        #[arg(long)]
+        json: bool,
+        #[arg(long, value_name = "PATH")]
+        emit_markdown: Option<PathBuf>,
+    },
 
     /// Print the active author-anchor (𝓕_Ryan or per-world override) as
     /// it would be assembled into the LLM prompt for the given world.
@@ -1612,7 +1626,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cfg = load_config();
 
     // Print scope warning early when --scope full is in use
-    if matches!(cli.scope, Scope::Full) && !matches!(cli.cmd, Cmd::Status | Cmd::ConfigTemplate) {
+    if matches!(cli.scope, Scope::Full)
+        && !matches!(
+            cli.cmd,
+            Cmd::Status | Cmd::ConfigTemplate | Cmd::Substrates { .. }
+        )
+    {
         eprintln!("[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.");
     }
 
@@ -1629,6 +1648,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     match cli.cmd {
         Cmd::Status => cmd_status(&r),
+        Cmd::Substrates {
+            audit,
+            json,
+            emit_markdown,
+        } => cmd_substrates(audit, json, emit_markdown.as_ref()),
         Cmd::ShowAuthorAnchor { world } => cmd_show_author_anchor(&r, world.as_deref()),
         Cmd::PickResponders { group_chat, message, omit_continuity_note, confirm_cost, question_summary } => {
             let api_key = resolve_api_key(cli.api_key.as_deref())
@@ -1999,6 +2023,31 @@ fn cmd_show_craft_rule(name: &str, json: bool) -> Result<(), Box<dyn std::error:
 }
 
 // ─── Status / config ────────────────────────────────────────────────────
+
+fn cmd_substrates(
+    audit: bool,
+    json: bool,
+    emit_markdown: Option<&PathBuf>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    if audit {
+        if let Err(e) = substrate_atlas::audit_registry_matches_discovered() {
+            return Err(format!("substrates --audit: {e}").into());
+        }
+        eprintln!("substrates --audit: OK (registry matches discovered `pub fn build_*` in src/ai/)");
+    }
+    let md = substrate_atlas::format_atlas_markdown();
+    if let Some(p) = emit_markdown {
+        std::fs::write(p, &md)?;
+        eprintln!("substrates: wrote {}", p.display());
+    }
+    if json {
+        println!("{}", substrate_atlas::format_atlas_json()?);
+    } else if !audit {
+        // With `--audit` only, keep stdout quiet for CI; table otherwise.
+        println!("{}", md);
+    }
+    Ok(())
+}
 
 fn cmd_status(r: &Resolved) -> Result<(), Box<dyn std::error::Error>> {
     let daily = rolling_24h_total_usd();

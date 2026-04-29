@@ -6,6 +6,7 @@ pub mod openai;
 pub mod orchestrator;
 pub mod consultant;
 pub mod prompts;
+pub mod substrate_atlas;
 pub mod relational_stance;
 pub mod load_test_anchor;
 pub mod derivation;
