@@ -7470,4 +7470,52 @@ mod fence_shape_detection_tests {
             "clean history should not get the late fence-shape correction note"
         );
     }
+
+    #[test]
+    fn build_dialogue_messages_emits_location_correction_with_explicit_override() {
+        let recent_messages = vec![minimal_message("user", "Where are we again?")];
+        let msgs = build_dialogue_messages(
+            "SYSTEM",
+            &recent_messages,
+            &[],
+            None,
+            &[],
+            &HashMap::new(),
+            &HashMap::new(),
+            None,
+            Some("Garden Patio"),
+        );
+        assert!(
+            msgs.iter().any(|m| {
+                m.role == "system"
+                    && m.content.contains("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: **Garden Patio**")
+                    && m.content.contains("The scene is happening HERE")
+            }),
+            "explicit current_location override should emit the late authoritative location correction note"
+        );
+    }
+
+    #[test]
+    fn build_dialogue_messages_emits_location_correction_with_default_fallback() {
+        let recent_messages = vec![minimal_message("user", "Hello there.")];
+        let msgs = build_dialogue_messages(
+            "SYSTEM",
+            &recent_messages,
+            &[],
+            None,
+            &[],
+            &HashMap::new(),
+            &HashMap::new(),
+            None,
+            None,
+        );
+        let expected = format!(
+            "[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: **{}**",
+            DEFAULT_CHAT_LOCATION
+        );
+        assert!(
+            msgs.iter().any(|m| m.role == "system" && m.content.contains(&expected)),
+            "when no override or location_change exists, the default chat location should still be emitted authoritatively"
+        );
+    }
 }
