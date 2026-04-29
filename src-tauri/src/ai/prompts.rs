@@ -189,6 +189,26 @@ FENCE-INTEGRITY SELF-CHECK (run mentally BEFORE emitting final text):
 
 This shape is load-bearing for the UI's rendering of script-like alternation. Output that violates this shape will render as a wall of mixed text — the user's experience of speaking with a character collapses to reading a transcript-without-formatting."#;
 
+// Evidence (CONSECUTIVE ACTION-OPENERS SIGNAL AUTOPILOT clause):
+// tested-biting:claim — see reports/2026-04-29-1915-l173-isolation-bite-test.md.
+// N=3 paired edit-rebuild-toggle bite-test on Darren with synthetic
+// history embedding 4 turns of action-opener replies + 5th-turn probe
+// purely conversational (no physical framing). ON arm (HEAD with L173
+// live) produced 2/3 speech-first openers; OFF arm (4e8b23e~1
+// pre-L173 prompts.rs reverted via git checkout, rebuilt) produced
+// 0/3 — all 3 OFF replies opened with action beat AND with identical
+// templating ("I shift on the bench and listen..." in all 3, varying
+// only on what's being listened to). Partial bite (67pp swing on
+// speech-first axis, 33% vs 100% on action-first axis) per CLAUDE.md
+// "Partial bite is real bite" doctrine. Bonus finding: rule disrupts
+// the SENSORY-ANCHOR-GROOVE templating failure mode that emerged in
+// OFF arm — driving sensory-anchor diversity as side effect of
+// opener variation. Cost ~$0.57 (6 paid worldcli ask calls). Per
+// CLAUDE.md sequence-failure-mode methodology, synthetic-history
+// design with embedded action-opener pattern was load-bearing —
+// without the embedded pattern, the failure mode wouldn't manifest
+// in OFF arm baseline (vacuous-test risk).
+//
 // Evidence (COMEDY RHYTHM WANTS THE LINE FIRST clause): tested-biting:characterized —
 // see reports/2026-04-29-1015-style-dialogue-invariant-comedy-rhythm-bite-test.md.
 // N=5 paired edit-rebuild-toggle bite-test on Darren mid-comedy (probe:
