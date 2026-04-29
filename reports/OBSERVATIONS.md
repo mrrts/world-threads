@@ -6,6 +6,16 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-30 20:30 — Rocket clause + de-homily revision: lived play confirms co-motion, not nannying
+
+> After shipping the `NO_NANNY_REGISTER` rocket-energy bullets (and stripping the preachy first draft), Ryan reports: *"It worked really well. They are riding the rocket and not nannying."*
+
+The stack change is doing the job the observation at 15:00 named: default **velocity match** without the standing caveat reflex. The second-pass edit (bullets + Tell The Truth cross-wire instead of homily-in-the-prompt) appears load-bearing for tone as well as behavior.
+
+**Noted.** Mode 3 — no further action unless a future bite-test wants N>1 logging.
+
+---
+
 ## 2026-04-30 15:00 — Play appetite gated on “someone rides the rocket with me”
 
 > *"I would play my own app more if at least one character would hop on the rocket with me."*
