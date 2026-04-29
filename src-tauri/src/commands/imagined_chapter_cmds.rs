@@ -117,6 +117,16 @@ fn rename_imagined_chapter_and_refresh_breadcrumb(
     refresh_imagined_chapter_breadcrumb_if_canonized(conn, &chapter)
 }
 
+fn update_imagined_chapter_scene_location_and_refresh_breadcrumb(
+    conn: &rusqlite::Connection,
+    chapter_id: &str,
+    scene_location: Option<&str>,
+) -> Result<(), rusqlite::Error> {
+    set_imagined_chapter_scene_location(conn, chapter_id, scene_location)?;
+    let chapter = get_imagined_chapter(conn, chapter_id)?;
+    refresh_imagined_chapter_breadcrumb_if_canonized(conn, &chapter)
+}
+
 /// Resolve a thread_id to (world, cast: Vec<Character>) — works for both
 /// solo threads (1 character) and group threads (N characters via group_chats).
 fn resolve_thread_cast(
@@ -724,10 +734,12 @@ pub fn update_imagined_chapter_scene_location_cmd(
         .filter(|s| !s.is_empty())
         .map(str::to_string);
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    set_imagined_chapter_scene_location(&conn, &chapter_id, normalized.as_deref())
-        .map_err(|e| e.to_string())?;
-    let chapter = get_imagined_chapter(&conn, &chapter_id).map_err(|e| e.to_string())?;
-    refresh_imagined_chapter_breadcrumb_if_canonized(&conn, &chapter).map_err(|e| e.to_string())
+    update_imagined_chapter_scene_location_and_refresh_breadcrumb(
+        &conn,
+        &chapter_id,
+        normalized.as_deref(),
+    )
+    .map_err(|e| e.to_string())
 }
 
 /// Read the saved illustration bytes for a chapter and return as a
@@ -960,6 +972,70 @@ mod tests {
             serde_json::from_str(&breadcrumb_content).expect("breadcrumb json");
         assert_eq!(parsed["title"], "New Title");
         assert_eq!(parsed["scene_location"], "Garden Patio");
+        assert_eq!(parsed["image_id"], "image-1");
+    }
+
+    #[test]
+    fn scene_location_update_refreshes_canonized_breadcrumb_content() {
+        let conn = setup_imagined_chapter_conn();
+        let chapter_id = "chapter-1";
+        let breadcrumb_id = "breadcrumb-1";
+        let thread_id = "thread-1";
+
+        let chapter = ImaginedChapter {
+            chapter_id: chapter_id.to_string(),
+            thread_id: thread_id.to_string(),
+            world_day: Some(12),
+            title: "Old Title".to_string(),
+            seed_hint: String::new(),
+            scene_location: Some("Garden Patio".to_string()),
+            scene_description: "A lamp burns low.".to_string(),
+            image_id: Some("image-1".to_string()),
+            content: "He sat with the cup cooling in his hand.".to_string(),
+            created_at: "2026-04-29T19:58:00Z".to_string(),
+            breadcrumb_message_id: Some(breadcrumb_id.to_string()),
+            canonized: true,
+        };
+        create_imagined_chapter(&conn, &chapter).expect("create chapter");
+        conn.execute(
+            "INSERT INTO messages (message_id, thread_id, role, content, created_at)
+             VALUES (?1, ?2, 'imagined_chapter', ?3, ?4)",
+            params![
+                breadcrumb_id,
+                thread_id,
+                build_imagined_chapter_breadcrumb_content(&chapter),
+                "2026-04-29T19:58:00Z",
+            ],
+        )
+        .expect("insert breadcrumb");
+
+        update_imagined_chapter_scene_location_and_refresh_breadcrumb(
+            &conn,
+            chapter_id,
+            Some("Moonlit Jetty"),
+        )
+        .expect("location update + refresh");
+
+        let updated_location: Option<String> = conn
+            .query_row(
+                "SELECT scene_location FROM imagined_chapters WHERE chapter_id = ?1",
+                params![chapter_id],
+                |r| r.get(0),
+            )
+            .expect("query location");
+        assert_eq!(updated_location.as_deref(), Some("Moonlit Jetty"));
+
+        let breadcrumb_content: String = conn
+            .query_row(
+                "SELECT content FROM messages WHERE message_id = ?1",
+                params![breadcrumb_id],
+                |r| r.get(0),
+            )
+            .expect("query breadcrumb");
+        let parsed: serde_json::Value =
+            serde_json::from_str(&breadcrumb_content).expect("breadcrumb json");
+        assert_eq!(parsed["title"], "Old Title");
+        assert_eq!(parsed["scene_location"], "Moonlit Jetty");
         assert_eq!(parsed["image_id"], "image-1");
     }
 }
