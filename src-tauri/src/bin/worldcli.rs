@@ -2060,7 +2060,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             if let Some(gc_id) = group_chat {
                 let effective_message = if short_mode {
                     format!(
-                        "{}\n\n[SHORT-MODE CONTRACT: reply in <=20 words; use a warm invitational opener, then one specific action with explicit verb + object and a 10-minute bound; no stage business unless physically required.]",
+                        "{}\n\n[SHORT-MODE CONTRACT: reply in <=20 words; use a warm invitational opener, then explicit concrete action with a 10-minute bound; no stage business unless physically required.]",
                         message
                     )
                 } else {
@@ -2095,7 +2095,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &character_id,
                     &if short_mode {
                         format!(
-                            "{}\n\n[SHORT-MODE CONTRACT: reply in <=20 words; use a warm invitational opener, then one specific action with explicit verb + object and a 10-minute bound; no stage business unless physically required.]",
+                            "{}\n\n[SHORT-MODE CONTRACT: reply in <=20 words; use a warm invitational opener, then explicit concrete action with a 10-minute bound; no stage business unless physically required.]",
                             message
                         )
                     } else {
