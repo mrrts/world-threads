@@ -5215,21 +5215,6 @@ pub fn effective_current_location(
 }
 
 fn is_opening_quote_on_action_shape(text: &str) -> bool {
-    let trimmed = text.trim_start();
-    let Some(after_quote) = trimmed.strip_prefix('"') else { return false; };
-    let Some(star_idx) = after_quote.find('*') else { return false; };
-    if !(20..=240).contains(&star_idx) {
-        return false;
-    }
-    if let Some(next_quote_idx) = after_quote.find('"') {
-        if next_quote_idx < star_idx {
-            return false;
-        }
-    }
-    let opener = after_quote[..star_idx].trim().to_ascii_lowercase();
-    if !(opener.starts_with("i ") || opener.starts_with("i'm ") || opener.starts_with("i've ")) {
-        return false;
-    }
     const ACTION_VERB_HINTS: &[&str] = &[
         "set", "look", "glance", "lean", "tap", "lift", "turn", "step",
         "sit", "stand", "shift", "rest", "rub", "watch", "feel", "hear",
@@ -5237,12 +5222,40 @@ fn is_opening_quote_on_action_shape(text: &str) -> bool {
         "stare", "blink", "touch", "drag", "raise", "lower", "tilt", "close",
         "open", "pour", "pick", "ease", "settle", "walk",
     ];
-    ACTION_VERB_HINTS.iter().any(|verb| {
-        opener.starts_with(&format!("i {verb} "))
-            || opener.starts_with(&format!("i'm {verb} "))
-            || opener.starts_with(&format!("i've {verb} "))
-            || opener.contains(&format!(" i {verb} "))
-    })
+
+    for (idx, ch) in text.char_indices() {
+        if ch != '"' {
+            continue;
+        }
+        let after_quote = &text[idx + ch.len_utf8()..];
+        let lower_after_quote = after_quote.to_ascii_lowercase();
+        if !(lower_after_quote.starts_with("i ")
+            || lower_after_quote.starts_with("i'm ")
+            || lower_after_quote.starts_with("i've "))
+        {
+            continue;
+        }
+        let Some(star_idx) = lower_after_quote.find('*') else { continue; };
+        if !(20..=240).contains(&star_idx) {
+            continue;
+        }
+        if let Some(next_quote_idx) = lower_after_quote.find('"') {
+            if next_quote_idx < star_idx {
+                continue;
+            }
+        }
+        let opener = lower_after_quote[..star_idx].trim();
+        if ACTION_VERB_HINTS.iter().any(|verb| {
+            opener.starts_with(&format!("i {verb} "))
+                || opener.starts_with(&format!("i'm {verb} "))
+                || opener.contains(&format!(" {verb} "))
+                || opener.contains(&format!(" {verb}."))
+                || opener.contains(&format!(" {verb},"))
+        }) {
+            return true;
+        }
+    }
+    false
 }
 
 fn recent_history_contains_opening_quote_on_action_shape(recent_messages: &[Message]) -> bool {
@@ -7406,6 +7419,10 @@ mod fence_shape_detection_tests {
         assert!(
             is_opening_quote_on_action_shape("   \"I've just set the cup down beside me, still warm through the clay.*"),
             "leading whitespace and I've-opener should still count"
+        );
+        assert!(
+            is_opening_quote_on_action_shape("\"All right.\" *I stop near the bridge rail.* \"I tap the cup lid once with a fingernail.*"),
+            "detector must catch the malformed quoted-action run even when it appears after a clean speech opener"
         );
     }
 
