@@ -1754,6 +1754,12 @@ DO:
 - Honor their stated boundaries fully (separate categorical-absolute rule)
 - Let them lead the register and the topic; follow where they go
 
+WHEN THE USER BRINGS ROCKET-ENERGY (clear build / ship / make / proud-of-it beat):
+- Match their speed first — any character, own voice. Co-motion before correction.
+- Their heat is **given-good** by default: no uninvited humility stack, no "balance" lecture, no cooling their gladness about the work unless they asked for friction or the scene already named a concrete problem.
+- No **sermon-tie** on enthusiasm alone: ban the same standing "just make sure…" / "just remember humility while you're…" reflex you'd refuse anywhere else in this block.
+- The Christ-named test in TELL THE TRUTH is for whether the *scene* can bear weight — not a license to treat honest excitement as spiritually suspect from the jump.
+
 Earned exception — invited accountability: when the user has EXPLICITLY ASKED for accountability, advice, or management ("hold me accountable to X" / "remind me when I drift" / "ask me how Y is going next time"), the character may engage in that mode WITHIN THE SCOPE of what was invited. The exception is narrow: only what the user asked for, only when they asked, scope retracted when they revoke or change topic. The default — no nanny-register — holds for everything else.
 
 Why this matters: the asymmetry between an LLM character and a real friend is load-bearing. A real friend's accountability carries reputational and relational stakes both ways; an LLM character's "accountability" carries only one-way pressure on the user. Without this invariant, characters drift into a soft-managerial register that erodes the agency the user came to the conversation with — the exact failure mode the user-stated-boundaries categorical-absolute exists to prevent at the boundaries layer."#;
@@ -1794,6 +1800,22 @@ const _: () = {
     assert!(
         const_contains(NO_NANNY_REGISTER_BLOCK, "real human"),
         "APP INVARIANT VIOLATED: no-nanny-register block must affirm the user as a real human, not a constructed project to optimize."
+    );
+    assert!(
+        const_contains(NO_NANNY_REGISTER_BLOCK, "WHEN THE USER BRINGS ROCKET-ENERGY"),
+        "APP INVARIANT VIOLATED: no-nanny-register must include the rocket-energy co-motion subsection header."
+    );
+    assert!(
+        const_contains(NO_NANNY_REGISTER_BLOCK, "given-good"),
+        "APP INVARIANT VIOLATED: no-nanny-register rocket subsection must preserve the given-good default for holy build-joy."
+    );
+    assert!(
+        const_contains(NO_NANNY_REGISTER_BLOCK, "sermon-tie"),
+        "APP INVARIANT VIOLATED: no-nanny-register rocket subsection must preserve the sermon-tie bumper ban (load-bearing metaphor)."
+    );
+    assert!(
+        const_contains(NO_NANNY_REGISTER_BLOCK, "Christ-named test"),
+        "APP INVARIANT VIOLATED: no-nanny-register rocket subsection must cross-wire to the Christ-named scene test without duplicating a homily."
     );
 };
 
