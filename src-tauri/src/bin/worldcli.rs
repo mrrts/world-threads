@@ -753,6 +753,13 @@ enum Cmd {
         action_shape_mix: bool,
     },
 
+    /// Print a compact stress-pack policy report (other_rate,
+    /// no_concrete_directive_rate, and two-signal recommendation).
+    StressPolicyReport {
+        /// One grade-stress-pack JSON artifact.
+        file: PathBuf,
+    },
+
     /// Evaluate natural-corpus messages against a rubric on either
     /// side of a git ref. The messages-x-commits primitive. `evaluate`
     /// requires corpus messages; use `grade-runs` if you want to grade
@@ -1985,6 +1992,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::GradeStressPack { files, min_pass_rate, max_avg_words, question_as_action_allowed, action_shape_mix } => {
             cmd_grade_stress_pack(&r, &files, min_pass_rate, max_avg_words, question_as_action_allowed, action_shape_mix)
         }
+        Cmd::StressPolicyReport { file } => cmd_stress_policy_report(&r, &file),
         Cmd::Synthesize { git_ref, end_ref, limit, character, group_chat, question, question_file, role, context_turns, model, confirm_cost, repo } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
@@ -4578,6 +4586,79 @@ fn cmd_grade_stress_pack(
         return Err(Box::<dyn std::error::Error>::from(
             "grade-stress-pack gate failed",
         ));
+    }
+    Ok(())
+}
+
+fn cmd_stress_policy_report(
+    r: &Resolved,
+    file: &PathBuf,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let raw = fs::read_to_string(file)?;
+    let body: JsonValue = serde_json::from_str(&raw)?;
+    let mut rows: Vec<JsonValue> = Vec::new();
+    let rec = "fail when other_rate >= 0.15 AND no_concrete_rate >= 0.17";
+
+    let files = body.get("files").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+    for f in files {
+        let per = f
+            .get("per_character")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        for pc in per {
+            let character = pc.get("character").and_then(|v| v.as_str()).unwrap_or("?");
+            let total = pc.get("total").and_then(|v| v.as_u64()).unwrap_or(0) as f64;
+            let mut no_concrete = 0.0f64;
+            if let Some(arr) = pc.get("failure_archetypes").and_then(|v| v.as_array()) {
+                for a in arr {
+                    if a.get("archetype").and_then(|v| v.as_str()) == Some("no_concrete_directive") {
+                        let c = a.get("count").and_then(|v| v.as_u64()).unwrap_or(0) as f64;
+                        if total > 0.0 {
+                            no_concrete = c / total;
+                        }
+                    }
+                }
+            }
+            let mut other = 0.0f64;
+            if let Some(arr) = pc.get("action_shape_mix").and_then(|v| v.as_array()) {
+                for s in arr {
+                    if s.get("shape").and_then(|v| v.as_str()) == Some("other") {
+                        other = s.get("rate").and_then(|v| v.as_f64()).unwrap_or(0.0);
+                    }
+                }
+            }
+            let two_signal_fail = other >= 0.15 && no_concrete >= 0.17;
+            rows.push(json!({
+                "character": character,
+                "other_rate": other,
+                "no_concrete_rate": no_concrete,
+                "two_signal_fail": two_signal_fail,
+                "recommendation": rec,
+            }));
+        }
+    }
+    let payload = json!({
+        "source_file": file.display().to_string(),
+        "rows": rows,
+    });
+    if r.json {
+        emit(true, payload);
+    } else {
+        println!("=== STRESS POLICY REPORT ===");
+        println!("source: {}", file.display());
+        if let Some(arr) = payload["rows"].as_array() {
+            for row in arr {
+                println!(
+                    "- {} | other_rate={:.3} no_concrete_rate={:.3} => {}",
+                    row["character"].as_str().unwrap_or("?"),
+                    row["other_rate"].as_f64().unwrap_or(0.0),
+                    row["no_concrete_rate"].as_f64().unwrap_or(0.0),
+                    if row["two_signal_fail"].as_bool().unwrap_or(false) { "FAIL" } else { "PASS" }
+                );
+            }
+        }
+        println!("rule: {}", rec);
     }
     Ok(())
 }
