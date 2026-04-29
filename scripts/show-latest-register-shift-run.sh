@@ -8,6 +8,15 @@ LATEST_ONLY="all"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --help|-h)
+      cat <<'EOF'
+Usage: show-latest-register-shift-run.sh [--quiet] [--format text|csv|json] [--latest-only all|shift|pack|rebound]
+  --quiet        Suppress latest_run path header
+  --format       Output format (text, csv, json)
+  --latest-only  Filter rows to one subset
+EOF
+      exit 0
+      ;;
     --quiet)
       QUIET=true
       shift

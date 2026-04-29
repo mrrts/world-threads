@@ -1,1 +1,7 @@
 label,kind,subset,shift_rate,rebound_rate,avg_shifts,speech_first_rate,shift_run_rate,gate_passed
+Darren shift,shift,shift,0.7,0.28,1.4375,,,
+Jasper shift,shift,shift,0.8125,0.3684210526315789,2.3125,,,
+Darren pack,pack,pack,,,,1.0,1.0,True
+Jasper pack,pack,pack,,,,1.0,1.0,True
+Darren rebound pack,pack,rebound,,,,1.0,1.0,True
+Jasper rebound pack,pack,rebound,,,,1.0,1.0,True

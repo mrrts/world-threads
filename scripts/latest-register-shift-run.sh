@@ -10,6 +10,16 @@ LIST_FILES=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --help|-h)
+      cat <<'EOF'
+Usage: latest-register-shift-run.sh [--json|--pretty] [--name-only] [--list-files]
+  --json        Emit compact JSON
+  --pretty      Emit pretty JSON (implies --json)
+  --name-only   Emit just run directory basename
+  --list-files  Emit files in the latest run directory
+EOF
+      exit 0
+      ;;
     --json)
       JSON_MODE=true
       shift
@@ -35,7 +45,13 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-latest="$(ls -1dt "$REPORTS_DIR"/register-shift-dashboard-* 2>/dev/null | head -n 1 || true)"
+latest=""
+for p in "$REPORTS_DIR"/register-shift-dashboard-*; do
+  [[ -d "$p" ]] || continue
+  if [[ -z "$latest" || "$p" -nt "$latest" ]]; then
+    latest="$p"
+  fi
+done
 if [[ -z "$latest" ]]; then
   echo "No register-shift dashboard runs found under $REPORTS_DIR" >&2
   exit 1

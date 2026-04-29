@@ -648,6 +648,21 @@ Precedence: `--api-key` flag → `OPENAI_API_KEY` env → macOS keychain. Keycha
 
 ### Commands (overview — see `worldcli --help` for the full surface)
 
+### Agent CLI Discovery Protocol (do this first)
+
+When an agent enters a session cold, run this exact sequence before assuming capabilities:
+
+1. `worldcli --help`
+2. `worldcli register-shift --help`
+3. `worldcli register-shift-pack --help`
+4. `./scripts/register-shift-dashboard.sh --help` (or open script header/body)
+5. `./scripts/show-latest-register-shift-run.sh --help` (or open script header/body)
+6. `./scripts/latest-register-shift-run.sh --help` (or open script header/body)
+7. `./scripts/compare-register-shift-runs.py --help` (or read top-of-file usage)
+
+If a command lacks built-in `--help`, agents should open the script and treat its usage string / top comments as canonical. This is mandatory discoverability hygiene, not optional polish.
+See also: `docs/CLI_AGENT_DISCOVERY.md` for the maintained quick-reference command list.
+
 **Read** (no LLM cost): `status`, `list-worlds`, `list-characters`, `show-character`, `show-world`, `kept-records`, `journals`, `quests`, `recent-messages`, `list-group-chats`, `group-messages`, `anchor-groove` (sensory-anchor recurrence diagnostic).
 
 **Cost-gated elicitation:** `ask <char> "<msg>" [--session NAME] [--question-summary "<why>"] [--confirm-cost N]`; `consult <char> "<msg>" [--mode immersive|backstage]`; `replay --refs <sha>,<sha>,... --character <id> --prompt "<msg>" [--n K]` (cross-commit prompt override).

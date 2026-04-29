@@ -10,6 +10,24 @@ LIMIT="${LIMIT:-80}"
 CONFIRM_COST="${CONFIRM_COST:-5}"
 
 PRESET="${1:-medium}"
+if [[ "$PRESET" == "--help" || "$PRESET" == "-h" ]]; then
+  cat <<'EOF'
+Usage: register-shift-dashboard.sh [loose|medium|strict] [--commit-artifacts]
+
+Environment overrides:
+  WORLDCLI                  Path to worldcli binary
+  DARREN_ID                 Darren character id
+  JASPER_ID                 Jasper character id
+  LIMIT                     register-shift message limit
+  CONFIRM_COST              confirm-cost forwarded to pack calls
+  PACK_MIN_SPEECH_FIRST     override pack gate min speech-first rate
+  PACK_MIN_SHIFT_RUN        override pack gate min shift-run rate
+  SHIFT_MIN_RATE            optional register-shift min shift gate
+  SHIFT_MIN_REBOUND_RATE    optional register-shift min rebound gate
+  RUN_REBOUND_PACK          true|false to include rebound variant pack calls
+EOF
+  exit 0
+fi
 shift || true
 COMMIT_ARTIFACTS=false
 while [[ $# -gt 0 ]]; do
