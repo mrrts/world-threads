@@ -613,6 +613,44 @@ mod tests {
             "scene description assembly should keep the authoritative location correction when an explicit override is present"
         );
     }
+
+    #[test]
+    fn proactive_ping_messages_emit_location_correction_with_explicit_override() {
+        let world = minimal_world();
+        let character = minimal_character();
+        let profile = minimal_profile("Casey");
+        let msgs = build_proactive_ping_runtime_messages(
+            &world,
+            &character,
+            &[minimal_message("user", "You still awake?")],
+            &[],
+            Some(&profile),
+            None,
+            None,
+            false,
+            &[],
+            &[],
+            Some("An hour later."),
+            "the thought keeps catching on the same unfinished thread",
+            &HashMap::new(),
+            &HashMap::new(),
+            &[],
+            None,
+            None,
+            &[],
+            None,
+            None,
+            Some("Garden Patio"),
+        );
+        assert!(
+            msgs.iter().any(|m| {
+                m.role == "system"
+                    && m.content.contains("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: **Garden Patio**")
+                    && m.content.contains("The scene is happening HERE")
+            }),
+            "proactive ping assembly should keep the authoritative location correction when an explicit override is present"
+        );
+    }
 }
 
 /// Walk backward through `s` and return the substring ending at the last
@@ -837,6 +875,66 @@ fn build_scene_description_messages(
     )
 }
 
+fn build_proactive_ping_runtime_messages(
+    world: &World,
+    character: &Character,
+    recent_messages: &[Message],
+    retrieved_snippets: &[String],
+    user_profile: Option<&UserProfile>,
+    mood_directive: Option<&str>,
+    tone: Option<&str>,
+    local_model: bool,
+    mood_chain: &[String],
+    kept_ids: &[String],
+    elapsed_hint: Option<&str>,
+    angle: &str,
+    illustration_captions: &std::collections::HashMap<String, String>,
+    reactions_by_msg: &std::collections::HashMap<String, Vec<crate::db::queries::Reaction>>,
+    recent_journals: &[crate::db::queries::JournalEntry],
+    latest_reading: Option<&crate::db::queries::DailyReading>,
+    latest_meanwhile: Option<&crate::db::queries::MeanwhileEvent>,
+    active_quests: &[crate::db::queries::Quest],
+    relational_stance: Option<&str>,
+    load_test_anchor: Option<&str>,
+    current_location_override: Option<&str>,
+) -> Vec<openai::ChatMessage> {
+    let own_voice_samples = prompts::pick_own_voice_samples(
+        &character.character_id,
+        recent_messages,
+        false,
+        6,
+    );
+    let system = prompts::build_proactive_ping_system_prompt(
+        world,
+        character,
+        user_profile,
+        mood_directive,
+        tone,
+        local_model,
+        mood_chain,
+        recent_journals,
+        latest_reading,
+        &own_voice_samples,
+        latest_meanwhile,
+        active_quests,
+        relational_stance,
+        load_test_anchor,
+    );
+    let user_display_name = user_profile.map(|p| p.display_name.as_str());
+    prompts::build_proactive_ping_messages(
+        &system,
+        recent_messages,
+        retrieved_snippets,
+        kept_ids,
+        elapsed_hint,
+        angle,
+        illustration_captions,
+        reactions_by_msg,
+        user_display_name,
+        current_location_override,
+    )
+}
+
 /// Generate a proactive (unsolicited) message from the character into their
 /// thread. Uses a dialogue-variant system prompt that tells the character
 /// they're reaching out first, and appends a final system anchor so the
@@ -867,27 +965,33 @@ pub async fn run_proactive_ping_with_base(
     load_test_anchor: Option<&str>,
     current_location_override: Option<&str>,
 ) -> Result<(String, Option<openai::Usage>), String> {
-    // Proactive pings are solo-only — pass is_group=false to the sampler.
-    let own_voice_samples = prompts::pick_own_voice_samples(
-        &character.character_id,
-        recent_messages,
-        false,
-        6,
-    );
-    let system = prompts::build_proactive_ping_system_prompt(
-        world, character, user_profile, mood_directive, tone, local_model, mood_chain,
-        recent_journals, latest_reading, &own_voice_samples, latest_meanwhile,
-        active_quests, relational_stance, load_test_anchor,
-    );
-    let user_display_name = user_profile.map(|p| p.display_name.as_str());
     // Pick a fresh random angle per call — curated pool keeps framings
     // heterogeneous so back-to-back pings can't collapse into the same
     // generic "thinking of you" register.
     let angle = prompts::pick_proactive_ping_angle();
     log::info!("[Proactive] angle = {:.80}", angle);
-    let messages = prompts::build_proactive_ping_messages(
-        &system, recent_messages, retrieved_snippets, kept_ids, elapsed_hint, angle, illustration_captions,
-        reactions_by_msg, user_display_name, current_location_override,
+    let messages = build_proactive_ping_runtime_messages(
+        world,
+        character,
+        recent_messages,
+        retrieved_snippets,
+        user_profile,
+        mood_directive,
+        tone,
+        local_model,
+        mood_chain,
+        kept_ids,
+        elapsed_hint,
+        angle,
+        illustration_captions,
+        reactions_by_msg,
+        recent_journals,
+        latest_reading,
+        latest_meanwhile,
+        active_quests,
+        relational_stance,
+        load_test_anchor,
+        current_location_override,
     );
 
     let request = ChatRequest {
