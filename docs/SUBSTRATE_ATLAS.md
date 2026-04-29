@@ -15,6 +15,14 @@ This is the living score of every registered `pub fn build_*` in the atlas scan 
 Registry source of truth: `substrate_atlas::BuildSubstrate`.
 Drift gate: `substrate_atlas::audit_registry_matches_discovered`.
 
+## Chorus
+
+- **Total registered substrates:** 21 (`BuildSubstrate::ALL`)
+- **Scan roots:** `src-tauri/src/ai/*.rs` + selected `src-tauri/src/commands/*.rs`
+- **Parity-sensitive substrates:** 7 (explicit cross-surface obligations)
+- **Explicit automation in enforcement notes:** 21 / 21
+- **Manual-heavy enforcement notes:** 16 / 21 (best candidates for stronger tests)
+
 | Substrate | `rust fn` | file | family | voice / POV | user / payload | parity | craft anchor | enforcement |
 |---|---|---|---|---|---|---|---|---|
 | `AnimationPrompt` | `build_animation_prompt` | `prompts.rs` | animation beat | tool/narration hybrid (see block) | scene + cast + user as needed | — | per-fn craft blocks in prompts.rs | manual / bite-tests (add tests when substrate gains invariants) |

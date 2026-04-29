@@ -259,6 +259,18 @@ impl BuildSubstrate {
     }
 }
 
+fn has_explicit_automation(enforcement: &str) -> bool {
+    let e = enforcement.to_ascii_lowercase();
+    e.contains("test")
+        || e.contains("guard")
+        || e.contains("audit")
+        || e.contains("invariant")
+}
+
+fn is_manual_heavy(enforcement: &str) -> bool {
+    enforcement.to_ascii_lowercase().starts_with("manual /")
+}
+
 const PROMPTS_RS: &str = include_str!("prompts.rs");
 const DERIVATION_RS: &str = include_str!("derivation.rs");
 const CONSULTANT_RS: &str = include_str!("consultant.rs");
@@ -335,6 +347,39 @@ pub fn format_atlas_markdown() -> String {
     s.push_str("Each row captures role, voice, payload shape, parity edges, and enforcement so implementation and intent stay in tune.\n\n");
     s.push_str("Registry source of truth: `substrate_atlas::BuildSubstrate`.\n");
     s.push_str("Drift gate: `substrate_atlas::audit_registry_matches_discovered`.\n\n");
+    let total = BuildSubstrate::ALL.len();
+    let parity_sensitive = BuildSubstrate::ALL
+        .iter()
+        .filter(|e| e.parity() != "—")
+        .count();
+    let automated = BuildSubstrate::ALL
+        .iter()
+        .filter(|e| has_explicit_automation(e.enforcement()))
+        .count();
+    let manual_heavy = BuildSubstrate::ALL
+        .iter()
+        .filter(|e| is_manual_heavy(e.enforcement()))
+        .count();
+    s.push_str("## Chorus\n\n");
+    s.push_str(&format!(
+        "- **Total registered substrates:** {} (`BuildSubstrate::ALL`)\n",
+        total
+    ));
+    s.push_str(
+        "- **Scan roots:** `src-tauri/src/ai/*.rs` + selected `src-tauri/src/commands/*.rs`\n",
+    );
+    s.push_str(&format!(
+        "- **Parity-sensitive substrates:** {} (explicit cross-surface obligations)\n",
+        parity_sensitive
+    ));
+    s.push_str(&format!(
+        "- **Explicit automation in enforcement notes:** {} / {}\n",
+        automated, total
+    ));
+    s.push_str(&format!(
+        "- **Manual-heavy enforcement notes:** {} / {} (best candidates for stronger tests)\n\n",
+        manual_heavy, total
+    ));
     s.push_str("| Substrate | `rust fn` | file | family | voice / POV | user / payload | parity | craft anchor | enforcement |\n");
     s.push_str("|---|---|---|---|---|---|---|---|---|\n");
     for e in BuildSubstrate::ALL {
@@ -383,6 +428,81 @@ pub fn format_atlas_json() -> Result<String, serde_json::Error> {
         })
         .collect();
     serde_json::to_string_pretty(&rows)
+}
+
+/// Backstage consultant lens: compact, documentary snapshot of the atlas.
+///
+/// Plain-language first, technical identifiers second. This is meant to help
+/// Backstage reason about risk and parity without dumping the full table.
+pub fn format_backstage_lens() -> String {
+    format_backstage_lens_with_focus(&[])
+}
+
+pub fn format_backstage_lens_with_focus(focus: &[BuildSubstrate]) -> String {
+    let total = BuildSubstrate::ALL.len();
+    let parity_rows: Vec<BuildSubstrate> = BuildSubstrate::ALL
+        .iter()
+        .copied()
+        .filter(|e| e.parity() != "—")
+        .collect();
+    let manual_rows: Vec<BuildSubstrate> = BuildSubstrate::ALL
+        .iter()
+        .copied()
+        .filter(|e| is_manual_heavy(e.enforcement()))
+        .collect();
+    let automated_count = BuildSubstrate::ALL
+        .iter()
+        .filter(|e| has_explicit_automation(e.enforcement()))
+        .count();
+
+    let mut focus_ranked: Vec<BuildSubstrate> = focus
+        .iter()
+        .copied()
+        .filter(|e| parity_rows.contains(e))
+        .collect();
+    for row in &parity_rows {
+        if !focus_ranked.contains(row) {
+            focus_ranked.push(*row);
+        }
+    }
+
+    let mut s = String::new();
+    s.push_str("═══════════════════════════════════════════════\n");
+    s.push_str("ATLAS LENS (documentary, backstage-only)\n\n");
+    s.push_str("Use this as a quiet craft map. Default to plain-language guidance; only surface technical labels if ");
+    s.push_str("the user explicitly asks for internals.\n\n");
+    s.push_str("Plain read:\n");
+    s.push_str(&format!(
+        "- Registered substrates: {total}\n- Cross-surface parity seams: {}\n- Explicit automation markers in enforcement: {} / {}\n- Manual-heavy enforcement notes: {} / {}\n\n",
+        parity_rows.len(),
+        automated_count,
+        total,
+        manual_rows.len(),
+        total
+    ));
+
+    s.push_str("Current parity hotspots (plain-language first):\n");
+    for e in focus_ranked.iter().take(5) {
+        s.push_str(&format!(
+            "- {:?}: {}\n  Guardrail shape: {}\n",
+            e,
+            e.parity(),
+            e.enforcement()
+        ));
+    }
+    s.push('\n');
+
+    s.push_str("Technical lookup (only if asked):\n");
+    for e in focus_ranked.iter().take(5) {
+        s.push_str(&format!(
+            "- {:?} => `{}` in `{}`\n",
+            e,
+            e.rust_fn(),
+            e.source_file()
+        ));
+    }
+    s.push_str("═══════════════════════════════════════════════");
+    s
 }
 
 #[cfg(test)]

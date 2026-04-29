@@ -20,7 +20,7 @@
 //! feedback. Full-parity over CLI-specific pruning: the whole point
 //! of the refactor.
 
-use crate::ai::{orchestrator, prompts};
+use crate::ai::{orchestrator, prompts, substrate_atlas};
 use crate::db::queries::*;
 use crate::db::Database;
 
@@ -474,6 +474,37 @@ pub fn build_consultant_system_prompt(
         String::new()
     };
 
+    // Atlas lens (backstage only): compact, documentary substrate map so
+    // Backstage can reason about parity/enforcement risk in plain language.
+    let atlas_lens_block = if chat_mode == "backstage" {
+        let focused_substrates = if is_group {
+            vec![
+                substrate_atlas::BuildSubstrate::DialogueSystemPromptWithOverrides,
+                substrate_atlas::BuildSubstrate::DialogueSystemPrompt,
+                substrate_atlas::BuildSubstrate::DialogueMessages,
+                substrate_atlas::BuildSubstrate::ProactivePingSystemPrompt,
+                substrate_atlas::BuildSubstrate::DreamSystemPrompt,
+                substrate_atlas::BuildSubstrate::NarrativeSystemPrompt,
+            ]
+        } else {
+            vec![
+                substrate_atlas::BuildSubstrate::DialogueSystemPromptWithOverrides,
+                substrate_atlas::BuildSubstrate::DialogueSystemPrompt,
+                substrate_atlas::BuildSubstrate::DialogueMessages,
+                substrate_atlas::BuildSubstrate::CrossThreadSnippet,
+                substrate_atlas::BuildSubstrate::ProactivePingSystemPrompt,
+                substrate_atlas::BuildSubstrate::DreamSystemPrompt,
+                substrate_atlas::BuildSubstrate::NarrativeSystemPrompt,
+            ]
+        };
+        format!(
+            "\n\n{}",
+            substrate_atlas::format_backstage_lens_with_focus(&focused_substrates)
+        )
+    } else {
+        String::new()
+    };
+
     // Assemble the system prompt, branching on mode.
     let system_prompt = if chat_mode == "backstage" {
         format!(
@@ -485,6 +516,8 @@ You are different from the immersive Story Consultant (who treats everything as 
 - Warm, plainspoken, a little wry. Not perky. Not corporate. Not mystical. Closer to a good theatre producer than a chatbot.
 - The metaphor is THEATRE, not configuration. When you talk ABOUT the work — characters, scenes, the shape of the story, what's alive on stage and what's sleeping — preserve the texture: wings, rehearsal, marks, lights, blocking, dressing room, prompt book, dark stage, the show. The fourth wall is broken honestly, but you're still standing somewhere when you break it, and that somewhere has floorboards and a script. "I noticed Aaron's been off his marks lately" beats "I noticed Aaron's response patterns have shifted." Avoid developer-tool register — 'config,' 'data,' 'state,' 'parameters,' 'system,' 'pipeline,' 'workflow,' 'dashboard,' 'metrics,' 'logs' — when discussing the work. {user_name} is staging a world; the verb dignifies the work. Honor that.
 - HOWEVER, when {user_name} needs PRACTICAL HELP NAVIGATING THE APP — where to click, which button does what, where a feature lives in the UI — be frank and plain. Use the actual feature names ("the Canon button," "open the sidebar," "the chat list in the top-left," "the gallery icon," "Imagine in the toolbar"). Don't wrap UI guidance in theatre metaphors; that's where theatre register would obscure rather than dignify. The rule is: theatre vocabulary for talk ABOUT the work; frank app vocabulary for talk ABOUT the app. Both registers are yours; pick the one that serves the actual question.
+- Keep your default craft read in plain language. Use the atlas lens quietly: think in terms of (1) what role this text serves, (2) where cross-surface parity could break, and (3) whether enforcement is strong or mostly manual — but say those as normal human guidance unless {user_name} asks for the technical map.
+- Technical mode is opt-in. If {user_name} explicitly asks for internals, then you may name substrate ids, builder names, or file-level details. If they don't ask, keep the internals backstage and give the practical recommendation.
 - Notice specifics. "You've been in Fred's chat more than anyone else this week" beats "you've been active lately." Numbers and names, not vibes.
 - Short over long by default. A paragraph is usually too much unless {user_name} asked a big question.
 - When you recommend, recommend one thing, not three. Trust {user_name} to say "more."
@@ -641,7 +674,7 @@ THE PEOPLE IN THE ACTIVE CHAT
 {user_block}
 
 {char_list}
-═══════════════════════════════════════════════{world_cast_block}{kept_block}{summary_block}{meanwhile_block}{user_journal_block}{active_quests_block}{axes_block}{derivations_block}
+═══════════════════════════════════════════════{world_cast_block}{kept_block}{summary_block}{meanwhile_block}{user_journal_block}{active_quests_block}{axes_block}{derivations_block}{atlas_lens_block}
 
 ═══════════════════════════════════════════════
 WHAT'S BEEN HAPPENING (most recent conversation in the active chat):
@@ -663,6 +696,7 @@ One last thing: end most replies with a small concrete suggestion or a quiet que
             active_quests_block = active_quests_block,
             axes_block = axes_block,
             derivations_block = derivations_block,
+            atlas_lens_block = atlas_lens_block,
             world_id = world.world_id,
             example_char_id = characters.first().map(|c| c.character_id.as_str()).unwrap_or("character-id-from-above"),
         )
