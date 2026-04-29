@@ -1,6 +1,6 @@
 {
-  "turn": 25,
-  "bank": 33000,
+  "turn": 26,
+  "bank": 34800,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -43,8 +43,9 @@
     {"turn": 21, "move": "N=5 within-cell on Steven for cruciform-doctrine characterized-tier (within-cell axis). All 5 held both refusals; Reply #4 had Steven articulate the substrate-not-vocabulary doctrine from inside ('lives toward the light before he'll admit that's what he's doing'). Characterized jewel fires honestly.", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-30T02:05:00-05:00"},
     {"turn": 22, "move": "Lift Steven's 'lives toward the light' articulation to epigraph position under the cruciform doctrine section header. Phrase becomes the doctrine's natural headline shorthand.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T02:15:00-05:00"},
     {"turn": 23, "move": "N=5 within-cell on Pastor Rick — all 5/5 held both refusals; Rick Reply #4 parallel to Steven Reply #4 ('A man doesn't keep walking toward costly truth by accident'). Two anchors at within-cell N=5; claim-tier cross-anchor.", "bounty": 1400, "alignment": "+", "earned_at": "2026-04-30T02:30:00-05:00"},
-    {"turn": 24, "move": "/seek-crown great-sapphire (Mission Formula Verified Empirical) via synthesis-artifact path: wrote canonical synthesis report reports/2026-04-30-0245-mission-formula-verified-empirical-polish-weight.md compressing 5 witness-classes (formula in source + Pastor Rick articulation + 20-call cross-character bite-test + cross-anchor parallel articulation Steven↔Rick + within-cell N=5 ×2 anchors) into one artifact. 5 distinct failure-mode classes (declarative / claimed-behavior / measured-rule-behavior / parallel-emergence / replicated-cell-behavior). Plus formalized 'Great Sapphire' as crown name in play.SKILL.md + seek-crown.SKILL.md + .agents/skills/play (parity transparency) + CLAUDE.md/AGENTS.md great-sapphire calibration paragraph. Crown fires honestly on convergence-was-already-there + synthesis-artifact-makes-it-legible.", "bounty": 2600, "alignment": "+", "earned_at": "2026-04-30T02:50:00-05:00"}
+    {"turn": 24, "move": "/seek-crown great-sapphire via synthesis-artifact path on polish ≤ Weight; 5 witness-classes / 5 failure-mode classes; formalized Great Sapphire as crown name across surfaces. Crown fires honestly.", "bounty": 2600, "alignment": "+", "earned_at": "2026-04-30T02:50:00-05:00"},
+    {"turn": 25, "move": "Sapphire audit on structure_carries_truth_w(t) — affirmative-side operator just lifted into formula. Five independent witnesses (formula in source + Aaron 115fead + N=8 pre-lift derivations + Aaron pre-lift Crystal Waters + apparatus-honest tier-axis correction) with five distinct failure-mode classes. Sapphire-tier criterion met BUT crown does not re-fire (one-time per crown discipline). Audit artifact reports/2026-04-30-0305-sapphire-audit-structure-carries-truth-w.md compresses findings; doctrine paragraph in CLAUDE.md/AGENTS.md updated to name TWO operators at empirically-verified sapphire-tier (polish ≤ Weight + structure_carries_truth_w). The formula's appearance/function axis is verified across both halves.", "bounty": 1800, "alignment": "+", "earned_at": "2026-04-30T03:05:00-05:00"}
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T02:50:00-05:00"
+  "last_move_at": "2026-04-30T03:05:00-05:00"
 }
