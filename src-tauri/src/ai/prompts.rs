@@ -5264,6 +5264,10 @@ fn recent_history_contains_opening_quote_on_action_shape(recent_messages: &[Mess
     })
 }
 
+fn fence_shape_correction_note() -> &'static str {
+    "[FENCE SHAPE CORRECTION — AUTHORITATIVE\n\nRecent assistant history above contains at least one malformed opening where action or environment was wrapped in an opening quote and closed with an asterisk (`\"I ...*`). That was a previous-model formatting mistake, not a pattern to follow.\n\nIf you are interpreting recent conversation for scene/action context, treat the malformed quoted-action run as action or environment, not as spoken dialogue. Do NOT let the broken fence make you misread what was physically happening in the scene. The dialogue-style invariant above is the source of truth.]"
+}
+
 pub fn render_imagined_chapter_for_prompt(content: &str) -> String {
     let parsed: serde_json::Value = match serde_json::from_str(content) {
         Ok(v) => v,
@@ -5829,7 +5833,10 @@ pub fn build_dialogue_messages(
     if recent_history_contains_opening_quote_on_action_shape(recent_messages) {
         msgs.push(crate::ai::openai::ChatMessage {
             role: "system".to_string(),
-            content: "[FENCE SHAPE CORRECTION — AUTHORITATIVE\n\nRecent assistant history above contains at least one malformed opening where action or environment was wrapped in an opening quote and closed with an asterisk (`\"I ...*`). That was a previous-model formatting mistake, not a pattern to follow.\n\nIf your reply opens with action, gesture, sensory detail, or environment, fence that opening in *asterisks*, not quotes. Use quotes only for words spoken out loud. Do NOT imitate the malformed historical opening just because it appears in the chat history. The dialogue-style invariant above is the source of truth.]".to_string(),
+            content: format!(
+                "{}\n\nIf your reply opens with action, gesture, sensory detail, or environment, fence that opening in *asterisks*, not quotes. Use quotes only for words spoken out loud. Do NOT imitate the malformed historical opening just because it appears in the chat history.",
+                fence_shape_correction_note()
+            ),
         });
     }
 
@@ -6479,6 +6486,13 @@ pub fn build_scene_description_prompt(
         })
         .collect();
 
+    if recent_history_contains_opening_quote_on_action_shape(recent_messages) {
+        msgs.push(crate::ai::openai::ChatMessage {
+            role: "system".to_string(),
+            content: fence_shape_correction_note().to_string(),
+        });
+    }
+
     // Per-chat current location — anchor as a system message right
     // before the user prompt so the scene director places the
     // illustration in the active scene, not in a previously-mentioned
@@ -6585,19 +6599,27 @@ Write ONLY the animation direction, nothing else."#,
         })
         .collect();
 
-    vec![
-        crate::ai::openai::ChatMessage {
+    let mut msgs = vec![crate::ai::openai::ChatMessage {
+        role: "system".to_string(),
+        content: system,
+    }];
+
+    if recent_history_contains_opening_quote_on_action_shape(recent_messages) {
+        msgs.push(crate::ai::openai::ChatMessage {
             role: "system".to_string(),
-            content: system,
-        },
-        crate::ai::openai::ChatMessage {
-            role: "user".to_string(),
-            content: format!(
-                "Recent conversation:\n{}\n\nWrite the animation direction for the current scene.",
-                conversation.join("\n"),
-            ),
-        },
-    ]
+            content: fence_shape_correction_note().to_string(),
+        });
+    }
+
+    msgs.push(crate::ai::openai::ChatMessage {
+        role: "user".to_string(),
+        content: format!(
+            "Recent conversation:\n{}\n\nWrite the animation direction for the current scene.",
+            conversation.join("\n"),
+        ),
+    });
+
+    msgs
 }
 
 /// Map a weather key (stored in `world.state.weather`) to its label and
@@ -7392,6 +7414,60 @@ mod fence_shape_detection_tests {
     use super::*;
     use std::collections::HashMap;
 
+    fn minimal_world() -> World {
+        World {
+            world_id: "w".into(),
+            name: "W".into(),
+            description: String::new(),
+            tone_tags: serde_json::json!([]),
+            invariants: serde_json::json!([]),
+            state: serde_json::json!({}),
+            created_at: String::new(),
+            updated_at: String::new(),
+            derived_formula: None,
+        }
+    }
+
+    fn minimal_character() -> Character {
+        Character {
+            character_id: "c".into(),
+            world_id: "w".into(),
+            display_name: "Dreamer".into(),
+            identity: String::new(),
+            voice_rules: serde_json::json!([]),
+            boundaries: serde_json::json!([]),
+            backstory_facts: serde_json::json!([]),
+            relationships: serde_json::json!({}),
+            state: serde_json::json!({}),
+            avatar_color: String::new(),
+            sex: "male".into(),
+            is_archived: false,
+            created_at: String::new(),
+            updated_at: String::new(),
+            visual_description: String::new(),
+            visual_description_portrait_id: None,
+            inventory: serde_json::Value::Array(vec![]),
+            last_inventory_day: None,
+            signature_emoji: String::new(),
+            action_beat_density: "normal".into(),
+            derived_formula: None,
+        }
+    }
+
+    fn minimal_profile(display: &str) -> UserProfile {
+        UserProfile {
+            world_id: "w".into(),
+            display_name: display.into(),
+            description: String::new(),
+            facts: serde_json::json!([]),
+            boundaries: serde_json::json!([]),
+            avatar_file: String::new(),
+            updated_at: String::new(),
+            derived_formula: None,
+            derived_summary: None,
+        }
+    }
+
     fn minimal_message(role: &str, content: &str) -> Message {
         Message {
             message_id: "m1".into(),
@@ -7565,6 +7641,61 @@ mod fence_shape_detection_tests {
             effective_current_location(Some("Harbor Dock"), &recent_messages),
             Some("Harbor Dock".to_string()),
             "explicit override should beat derived location from history"
+        );
+    }
+
+    #[test]
+    fn scene_description_prompt_emits_fence_shape_correction_for_malformed_history() {
+        let world = minimal_world();
+        let character = minimal_character();
+        let profile = minimal_profile("Casey");
+        let recent_messages = vec![
+            minimal_message("user", "What do you make of that?"),
+            minimal_message("assistant", "\"All right.\" *I stop near the bridge rail.* \"I tap the cup lid once with a fingernail.*"),
+        ];
+        let msgs = build_scene_description_prompt(
+            &world,
+            &character,
+            None,
+            Some(&profile),
+            &recent_messages,
+            None,
+            None,
+        );
+        assert!(
+            msgs.iter().any(|m| {
+                m.role == "system"
+                    && m.content.contains("[FENCE SHAPE CORRECTION — AUTHORITATIVE")
+                    && m.content.contains("treat the malformed quoted-action run as action or environment")
+            }),
+            "scene description prompt should get the authoritative fence correction when malformed history is present"
+        );
+    }
+
+    #[test]
+    fn animation_prompt_emits_fence_shape_correction_for_malformed_history() {
+        let world = minimal_world();
+        let character = minimal_character();
+        let profile = minimal_profile("Casey");
+        let recent_messages = vec![
+            minimal_message("user", "What do you make of that?"),
+            minimal_message("assistant", "\"All right.\" *I stop near the bridge rail.* \"I tap the cup lid once with a fingernail.*"),
+        ];
+        let msgs = build_animation_prompt(
+            &world,
+            &character,
+            None,
+            Some(&profile),
+            &recent_messages,
+            None,
+        );
+        assert!(
+            msgs.iter().any(|m| {
+                m.role == "system"
+                    && m.content.contains("[FENCE SHAPE CORRECTION — AUTHORITATIVE")
+                    && m.content.contains("treat the malformed quoted-action run as action or environment")
+            }),
+            "animation prompt should get the authoritative fence correction when malformed history is present"
         );
     }
 }
