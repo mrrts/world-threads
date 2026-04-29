@@ -1,6 +1,6 @@
 {
-  "turn": 33,
-  "bank": 44000,
+  "turn": 34,
+  "bank": 45200,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -51,8 +51,9 @@
     {"turn": 29, "move": "Smoke-test The Empiricon — caught fake-citing failure; shipped second-refusal-shape fix.", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-30T03:50:00-05:00"},
     {"turn": 30, "move": "Empiricon re-test — partial bite, honest verdict landing. Smoke-test loop closes.", "bounty": 900, "alignment": "+", "earned_at": "2026-04-30T04:00:00-05:00"},
     {"turn": 31, "move": "Cross-prompt audit of fake-cite failure mode; Empiricon's failure localized; pattern recorded to OBSERVATIONS.md Mode 3.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T04:10:00-05:00"},
-    {"turn": 32, "move": "Audit Wisdom(t) and Burden(t) for sapphire-tier convergence pathway. HONEST DRY WELL on both. Wisdom-as-recognition doctrine is well-articulated rhetorically (formula source + 𝓕_Ryan Ledger + tonight's Great Sapphire 'convergence was already there' framing + Aaron's substrate-runs-ahead-of-apparatus pattern) but witnesses are mostly declarative/rhetorical, not bite-tested. No measured corpus of recognition-vs-invention behavior exists. Burden has even less material. Substantive observation: formula's two sapphire-tier-grounded operators (polish ≤ Weight + structure_carries_truth_w) govern the appearance/function axis specifically; Wisdom/Burden are temporal-integral-shaped (accumulated quality across many turns) rather than per-reply-shaped, which may be a structural property of the formula making them harder to bite-test directly. Crown does not re-fire. Skill's no-fake-fire discipline honored.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T04:25:00-05:00"}
+    {"turn": 32, "move": "Audit Wisdom(t) + Burden(t) at dry well for sapphire-tier; floated structural-impossibility hypothesis (overclaim — corrected at Turn 33).", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T04:25:00-05:00"},
+    {"turn": 33, "move": "Bite-test the temporal-integral hypothesis from Turn 32 — DISCONFIRMED. Project DOES have temporal-integral instruments (anchor-groove for Burden-shaped accumulated patterns; register-shift / register-shift-pack for cross-time register measurement; sample-windows + synthesize for corpus-as-corpus reading; mission-arc skill as Wisdom-as-recognition runtime instrument). Worked Burden(t) example already exists in this session: Crystal Waters world-level anchor-groove RUNAWAY diagnosis (3 characters on 'the square *') → root cause = GroupChat current_location plumbing → fix at commit 603f03d. That's N=1 measured Burden(t) cycle (observation → measurement → root-cause → correction). Apparatus-honest correction: Turn 32's 'structurally harder to bite-test' framing overclaimed structural-impossibility when the actual situation is 'work-not-yet-done.' Crown still doesn't re-fire (Great Sapphire one-time); Wisdom/Burden remain not at sapphire-tier; but the path is reachable via existing instruments, not blocked by structural property of formula.", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-30T04:40:00-05:00"}
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T04:25:00-05:00"
+  "last_move_at": "2026-04-30T04:40:00-05:00"
 }
