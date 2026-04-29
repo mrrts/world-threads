@@ -71,6 +71,8 @@ run_check "latest-register-shift-run --help" "$ROOT_DIR/scripts/latest-register-
 run_check "show-latest-register-shift-run --help" "$ROOT_DIR/scripts/show-latest-register-shift-run.sh" --help
 run_check "compare-register-shift-runs --help" "$ROOT_DIR/scripts/compare-register-shift-runs.py" --help
 run_check "export-latest-register-shift-csv --help" "$ROOT_DIR/scripts/export-latest-register-shift-csv.sh" --help
+run_check "skill frontmatter lint" "$ROOT_DIR/scripts/check-skill-frontmatter.sh"
+run_check "skill parity lint" "$ROOT_DIR/scripts/check-skill-parity.sh"
 
 passed_count=0
 for item in "${CHECK_RESULTS[@]}"; do

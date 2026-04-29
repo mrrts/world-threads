@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+
+"$repo_root/scripts/check-skill-frontmatter.sh"
+"$repo_root/scripts/check-skill-parity.sh"
