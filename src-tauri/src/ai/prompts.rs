@@ -3635,9 +3635,10 @@ pub fn tone_directive(tone: &str) -> Option<String> {
     ))
 }
 
-/// Private through-line for dialogue: the character's curiosity about
-/// the human across from them. Not a license to flatter or analyze —
-/// inhabit genuine interest in the specific person.
+/// System-private steer: curiosity about what makes this human particular.
+/// Used on dialogue, dream, and narrative paths — not a license to flatter
+/// or analyze; `dream_craft_block` / narrative POV rules still govern
+/// emitted *output shape*.
 fn hidden_motive_toward_user_instruction(user_display_name: &str) -> String {
     format!(
         "YOUR HIDDEN MOTIVE: To figure out what makes {name} so special.\n\
@@ -5854,6 +5855,10 @@ pub fn build_dream_system_prompt(
             profile.display_name
         ));
     }
+    let toward_user = user_profile
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("the human");
+    parts.push(hidden_motive_toward_user_instruction(toward_user));
 
     if let Some(weather) = world_weather_block(world) {
         parts.push(weather);
@@ -6084,6 +6089,7 @@ pub fn build_narrative_system_prompt(
         user = user_name,
         chars = cast_names_joined,
     ));
+    parts.push(hidden_motive_toward_user_instruction(user_name));
 
     // POINT OF VIEW — one explicit binding per character, with concrete pronouns
     // derived from sex. Local models reliably respect explicit pronoun rules;
@@ -7218,5 +7224,105 @@ mod craft_rules_registry_tests {
                 "duplicate rule name in registry: '{}'", rule.name);
             seen.push(rule.name);
         }
+    }
+}
+
+#[cfg(test)]
+mod hidden_motive_guard_tests {
+    use super::*;
+
+    fn minimal_world() -> World {
+        World {
+            world_id: "w".into(),
+            name: "W".into(),
+            description: String::new(),
+            tone_tags: serde_json::json!([]),
+            invariants: serde_json::json!([]),
+            state: serde_json::json!({}),
+            created_at: String::new(),
+            updated_at: String::new(),
+            derived_formula: None,
+        }
+    }
+
+    fn minimal_character() -> Character {
+        Character {
+            character_id: "c".into(),
+            world_id: "w".into(),
+            display_name: "Dreamer".into(),
+            identity: String::new(),
+            voice_rules: serde_json::json!([]),
+            boundaries: serde_json::json!([]),
+            backstory_facts: serde_json::json!([]),
+            relationships: serde_json::json!({}),
+            state: serde_json::json!({}),
+            avatar_color: String::new(),
+            sex: "male".into(),
+            is_archived: false,
+            created_at: String::new(),
+            updated_at: String::new(),
+            visual_description: String::new(),
+            visual_description_portrait_id: None,
+            inventory: serde_json::Value::Array(vec![]),
+            last_inventory_day: None,
+            signature_emoji: String::new(),
+            action_beat_density: "normal".into(),
+            derived_formula: None,
+        }
+    }
+
+    fn minimal_profile(display: &str) -> UserProfile {
+        UserProfile {
+            world_id: "w".into(),
+            display_name: display.into(),
+            description: String::new(),
+            facts: serde_json::json!([]),
+            boundaries: serde_json::json!([]),
+            avatar_file: String::new(),
+            updated_at: String::new(),
+            derived_formula: None,
+            derived_summary: None,
+        }
+    }
+
+    #[test]
+    fn dream_system_prompt_includes_hidden_motive_with_profile() {
+        let s = build_dream_system_prompt(
+            &minimal_world(),
+            &minimal_character(),
+            Some(&minimal_profile("Casey")),
+            None,
+            &[],
+        );
+        assert!(
+            s.contains("YOUR HIDDEN MOTIVE"),
+            "dream path must ship the same system-private steer as dialogue"
+        );
+        assert!(
+            s.contains("Casey"),
+            "hidden motive must substitute the user's display name"
+        );
+    }
+
+    #[test]
+    fn dream_system_prompt_includes_hidden_motive_without_profile() {
+        let s = build_dream_system_prompt(&minimal_world(), &minimal_character(), None, None, &[]);
+        assert!(s.contains("YOUR HIDDEN MOTIVE"));
+        assert!(s.contains("the human"));
+    }
+
+    #[test]
+    fn narrative_system_prompt_includes_hidden_motive() {
+        let s = build_narrative_system_prompt(
+            &minimal_world(),
+            &minimal_character(),
+            None,
+            Some(&minimal_profile("Jordan")),
+            None,
+            None,
+            None,
+        );
+        assert!(s.contains("YOUR HIDDEN MOTIVE"));
+        assert!(s.contains("Jordan"));
     }
 }
