@@ -139,6 +139,28 @@ enum Cmd {
         question_summary: Option<String>,
     },
 
+    /// Run the canonization classifier (memory-tier LLM, ~$0.005-0.02/call)
+    /// on an existing message in the db. Sibling to pick-responders /
+    /// pick-addressee for the layer-isolated bite-test methodology.
+    /// Returns 1-2 ProposedCanonUpdate items (kind, subject, content)
+    /// without applying anything. Use to validate canonization-classifier
+    /// changes against the actual classifier path without burning the
+    /// full propose+commit Tauri-app rebuild dance. Pass --act
+    /// "light" or "heavy" to match the user-gate ceremony; --user-hint
+    /// for free-text steering.
+    ClassifyCanonization {
+        #[arg(long)]
+        source_message_id: String,
+        #[arg(long, default_value = "light")]
+        act: String,
+        #[arg(long, default_value = "")]
+        user_hint: String,
+        #[arg(long)]
+        confirm_cost: Option<f64>,
+        #[arg(long)]
+        question_summary: Option<String>,
+    },
+
     // ── read commands ──
     /// List worlds in scope.
     ListWorlds,
@@ -1620,6 +1642,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             cmd_pick_addressee(&r, &api_key, &group_chat, &message, context_limit,
                 confirm_cost, question_summary.as_deref()).await
         }
+        Cmd::ClassifyCanonization { source_message_id, act, user_hint, confirm_cost, question_summary } => {
+            let api_key = resolve_api_key(cli.api_key.as_deref())
+                .ok_or_else(|| Box::<dyn std::error::Error>::from("classify-canonization: no OpenAI API key resolved (env / keychain / --api-key)"))?;
+            cmd_classify_canonization(&r, &api_key, &source_message_id, &act, &user_hint,
+                confirm_cost, question_summary.as_deref()).await
+        }
         Cmd::ConfigTemplate => { println!("{}", config_template_text()); Ok(()) }
         Cmd::ListWorlds => cmd_list_worlds(&r),
         Cmd::ListCharacters { world } => cmd_list_characters(&r, world.as_deref()),
@@ -2150,6 +2178,86 @@ async fn cmd_pick_addressee(
         "question_summary": question_summary,
         "model": model_config.memory_model,
         "projected_usd": projected_usd,
+    });
+    emit(r.json, v);
+    Ok(())
+}
+
+async fn cmd_classify_canonization(
+    r: &Resolved,
+    api_key: &str,
+    source_message_id: &str,
+    act: &str,
+    user_hint: &str,
+    confirm_cost: Option<f64>,
+    question_summary: Option<&str>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let act_normalized = act.to_lowercase();
+    if act_normalized != "light" && act_normalized != "heavy" {
+        return Err(format!("--act must be 'light' or 'heavy' (got '{}')", act).into());
+    }
+
+    let (model_config, source_msg, source_speaker_label, context_msgs, subjects) = {
+        let conn = r.db.conn.lock().unwrap();
+        app_lib::canon_internals::build_canonization_inputs(&conn, source_message_id)
+            .map_err(|e| Box::<dyn std::error::Error>::from(e))?
+    };
+
+    // Cost projection: classifier uses memory_model with substantial input
+    // (subjects block + context window) and 1-2 structured outputs.
+    let projected_in: i64 = 3000;
+    let projected_out: i64 = 400;
+    let projected_usd = actual_cost(&model_config.memory_model, projected_in, projected_out, &r.cfg.model_pricing);
+    let daily_so_far = rolling_24h_total_usd();
+    let cap = r.cfg.budget.per_call_usd;
+    let daily_cap = r.cfg.budget.daily_usd;
+    let needs_confirm = projected_usd > cap || daily_so_far + projected_usd > daily_cap;
+    if needs_confirm && confirm_cost.is_none() {
+        return Err(format!(
+            "Budget gate: projected ~${:.4} per call (24h spent ${:.2} of ${:.2}); pass --confirm-cost {:.2} to proceed",
+            projected_usd, daily_so_far, daily_cap, projected_usd * 1.5
+        ).into());
+    }
+    eprintln!(
+        "[worldcli classify-canonization] model={} act={} subjects={} context_msgs={} projected≈${:.4}",
+        model_config.memory_model, act_normalized, subjects.len(), context_msgs.len(), projected_usd
+    );
+
+    let user_hint_opt = if user_hint.trim().is_empty() { None } else { Some(user_hint) };
+    let (proposals, usage) = orchestrator::propose_canonization_updates(
+        &model_config.chat_api_base(), api_key, &model_config.memory_model,
+        &source_msg, &source_speaker_label, &context_msgs, &subjects,
+        user_hint_opt,
+        &act_normalized,
+    ).await.map_err(|e| Box::<dyn std::error::Error>::from(e))?;
+
+    let actual_in = usage.as_ref().map(|u| u.prompt_tokens as i64).unwrap_or(projected_in);
+    let actual_out = usage.as_ref().map(|u| u.completion_tokens as i64).unwrap_or(projected_out);
+    let actual_usd = actual_cost(&model_config.memory_model, actual_in, actual_out, &r.cfg.model_pricing);
+
+    append_cost_log(&CostEntry {
+        timestamp: chrono::Utc::now().to_rfc3339(),
+        model: model_config.memory_model.clone(),
+        prompt_tokens: actual_in,
+        completion_tokens: actual_out,
+        usd: actual_usd,
+    });
+
+    let proposals_json: Vec<serde_json::Value> = proposals.iter().map(|p| {
+        serde_json::to_value(p).unwrap_or(json!({}))
+    }).collect();
+
+    let v = json!({
+        "source_message_id": source_message_id,
+        "source_speaker_label": source_speaker_label,
+        "act": act_normalized,
+        "user_hint": user_hint_opt,
+        "subject_count": subjects.len(),
+        "context_msg_count": context_msgs.len(),
+        "proposals": proposals_json,
+        "model": model_config.memory_model,
+        "actual_usd": actual_usd,
+        "question_summary": question_summary,
     });
     emit(r.json, v);
     Ok(())

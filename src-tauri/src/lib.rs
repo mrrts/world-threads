@@ -15,6 +15,13 @@ pub mod group_chat_internals {
     };
 }
 
+/// Surgical re-exports for the worldcli classify-canonization affordance.
+/// build_canonization_inputs is the wiring extracted from
+/// propose_auto_canon_cmd; both surfaces call into the same pipeline.
+pub mod canon_internals {
+    pub use crate::commands::canon_cmds::build_canonization_inputs;
+}
+
 use commands::audio_cmds::*;
 use commands::backup_cmds::*;
 use commands::character_cmds::*;

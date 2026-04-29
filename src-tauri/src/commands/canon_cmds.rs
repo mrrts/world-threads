@@ -340,6 +340,64 @@ pub struct ProposeAutoCanonRequest {
 
 fn default_light_act() -> String { "light".to_string() }
 
+/// Build the inputs for `propose_canonization_updates` from a source
+/// message id. Extracted as a pub helper so the worldcli affordance
+/// (`classify-canonization`) can call into the same wiring path the
+/// Tauri command uses, instead of replicating subject-construction
+/// + speaker-label + context-window logic.
+///
+/// Returns: (model_config, source_msg, source_speaker_label, context_msgs, subjects).
+/// Errors: source message not found; world resolution failed.
+pub fn build_canonization_inputs(
+    conn: &rusqlite::Connection,
+    source_message_id: &str,
+) -> Result<
+    (orchestrator::ModelConfig, Message, String, Vec<Message>, Vec<orchestrator::CanonizationSubject>),
+    String,
+> {
+    let model_config = orchestrator::load_model_config(conn);
+    let (source_msg, table) = find_message(conn, source_message_id)
+        .ok_or_else(|| "source message not found".to_string())?;
+    let world_id: String = conn.query_row(
+        "SELECT world_id FROM threads WHERE thread_id = ?1",
+        params![source_msg.thread_id], |r| r.get(0),
+    ).map_err(|e| format!("couldn't resolve world for source message: {e}"))?;
+    let user_profile = get_user_profile(conn, &world_id).ok();
+    let user_display_name = user_profile.as_ref()
+        .map(|p| p.display_name.clone())
+        .unwrap_or_else(|| "The human".to_string());
+    let speaker_label = speaker_label_for(conn, &source_msg, &user_display_name);
+    let context_msgs = surrounding_messages(conn, &table, &source_msg.thread_id, &source_msg.created_at);
+    let characters = list_characters(conn, &world_id).unwrap_or_default();
+    let mut subjects: Vec<orchestrator::CanonizationSubject> = Vec::new();
+    for ch in &characters {
+        if ch.is_archived { continue; }
+        subjects.push(orchestrator::CanonizationSubject {
+            subject_type: "character".to_string(),
+            subject_id: ch.character_id.clone(),
+            subject_label: ch.display_name.clone(),
+            current_description: ch.identity.clone(),
+            voice_rules: json_array_to_strings(&ch.voice_rules),
+            boundaries: json_array_to_strings(&ch.boundaries),
+            backstory_facts: json_array_to_strings(&ch.backstory_facts),
+            open_loops: character_open_loops(ch),
+        });
+    }
+    if let Some(profile) = user_profile.as_ref() {
+        subjects.push(orchestrator::CanonizationSubject {
+            subject_type: "user".to_string(),
+            subject_id: world_id.clone(),
+            subject_label: if profile.display_name.trim().is_empty() { "You".to_string() } else { profile.display_name.clone() },
+            current_description: profile.description.clone(),
+            voice_rules: Vec::new(),
+            boundaries: json_array_to_strings(&profile.boundaries),
+            backstory_facts: json_array_to_strings(&profile.facts),
+            open_loops: Vec::new(),
+        });
+    }
+    Ok((model_config, source_msg, speaker_label, context_msgs, subjects))
+}
+
 /// Classify a moment into 1-2 proposed canonization updates without
 /// applying anything. Returns a preview the UI can display (and
 /// optionally allow the user to edit in-place) before the user commits.
@@ -356,63 +414,7 @@ pub async fn propose_auto_canon_cmd(
     // Gather everything under one lock, then release before the LLM call.
     let (model_config, source_msg, source_speaker_label, context_msgs, subjects) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let model_config = orchestrator::load_model_config(&conn);
-
-        let (source_msg, table) = find_message(&conn, &request.source_message_id)
-            .ok_or_else(|| "source message not found".to_string())?;
-
-        // Find the world this moment belongs to (via the thread).
-        let world_id: String = conn.query_row(
-            "SELECT world_id FROM threads WHERE thread_id = ?1",
-            params![source_msg.thread_id], |r| r.get(0),
-        ).map_err(|e| format!("couldn't resolve world for source message: {e}"))?;
-
-        let user_profile = get_user_profile(&conn, &world_id).ok();
-        let user_display_name = user_profile.as_ref()
-            .map(|p| p.display_name.clone())
-            .unwrap_or_else(|| "The human".to_string());
-
-        let speaker_label = speaker_label_for(&conn, &source_msg, &user_display_name);
-        let context_msgs = surrounding_messages(&conn, &table, &source_msg.thread_id, &source_msg.created_at);
-
-        // Build candidate subject list: every character in the world + the user.
-        let characters = list_characters(&conn, &world_id).unwrap_or_default();
-        let mut subjects: Vec<orchestrator::CanonizationSubject> = Vec::new();
-        for ch in &characters {
-            if ch.is_archived { continue; }
-            subjects.push(orchestrator::CanonizationSubject {
-                subject_type: "character".to_string(),
-                subject_id: ch.character_id.clone(),
-                subject_label: ch.display_name.clone(),
-                current_description: ch.identity.clone(),
-                voice_rules: json_array_to_strings(&ch.voice_rules),
-                boundaries: json_array_to_strings(&ch.boundaries),
-                backstory_facts: json_array_to_strings(&ch.backstory_facts),
-                open_loops: character_open_loops(ch),
-            });
-        }
-        if let Some(profile) = user_profile.as_ref() {
-            subjects.push(orchestrator::CanonizationSubject {
-                subject_type: "user".to_string(),
-                subject_id: world_id.clone(),
-                subject_label: if profile.display_name.trim().is_empty() { "You".to_string() } else { profile.display_name.clone() },
-                current_description: profile.description.clone(),
-                // User profile carries known_fact (UserProfile.facts —
-                // field name differs from Character.backstory_facts) and
-                // boundary (UserProfile.boundaries — same name). The
-                // classifier treats the user as eligible for these kinds;
-                // the commit-phase router below maps them to the correct
-                // user-side fields. Per 2026-04-25 fix: previously these
-                // were Vec::new() and the commit returned "kind not
-                // supported for user" — observed by Ryan in actual play.
-                voice_rules: Vec::new(),
-                boundaries: json_array_to_strings(&profile.boundaries),
-                backstory_facts: json_array_to_strings(&profile.facts),
-                open_loops: Vec::new(),
-            });
-        }
-
-        (model_config, source_msg, speaker_label, context_msgs, subjects)
+        build_canonization_inputs(&conn, &request.source_message_id)?
     };
 
     let (proposals, usage) = orchestrator::propose_canonization_updates(
