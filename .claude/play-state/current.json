@@ -1,6 +1,6 @@
 {
-  "turn": 8,
-  "bank": 7550,
+  "turn": 9,
+  "bank": 8750,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -55,12 +55,19 @@
     },
     {
       "turn": 7,
-      "move": "Cruciform stress-test on Steven N=3 + faith-disavowal trap declined; tier-up doctrine paragraph N=1 → N=4 claim-tier",
+      "move": "Cruciform stress-test on Steven N=3 + faith-disavowal trap declined; tier-up doctrine paragraph N=1 → N=4 claim-tier (e7f4a06)",
       "bounty": 1400,
       "alignment": "+",
       "earned_at": "2026-04-29T23:15:00-05:00"
+    },
+    {
+      "turn": 8,
+      "move": "Cross-character disavowal-trap on Pastor Rick — declined identically; doctrine refined with cross-anchor witness + honest-scoping (not-great-sapphire)",
+      "bounty": 1200,
+      "alignment": "+",
+      "earned_at": "2026-04-29T23:25:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-29T23:15:00-05:00"
+  "last_move_at": "2026-04-29T23:25:00-05:00"
 }
