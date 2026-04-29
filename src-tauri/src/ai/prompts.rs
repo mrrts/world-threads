@@ -7555,6 +7555,10 @@ mod fence_shape_detection_tests {
             "detector should keep catching the lived-corpus wince/shake variant"
         );
         assert!(
+            is_opening_quote_on_action_shape("\"I narrow my eyes, mock-judging.*"),
+            "detector should keep catching the lived-corpus narrow variant"
+        );
+        assert!(
             is_opening_quote_on_action_shape("\"My left hand gives the faintest tremor, and I shift the page to settle it.*"),
             "detector should catch possessive-pronoun body-part openers that still trap action in quotes"
         );
