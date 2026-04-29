@@ -886,6 +886,12 @@ pub enum InvariantPiece {
 impl InvariantPiece {
     /// Default order — matches the pre-configurable-order sequence.
     ///
+    /// `NoNannyRegister` is first among omit-table invariant *pieces* so the
+    /// agency/stamina discipline is read immediately after Mission Formula +
+    /// author anchor + mission prose, before the embodiment/theology stack.
+    /// `TruthInTheFlesh` stays last for closing doctrinal weight (see
+    /// reports/2026-04-25-1135-truth-in-the-flesh-marginal-bite.md).
+    ///
     /// 2026-04-26 ~05:20 — re-uncommented per Ryan after the 33-experiment
     /// arc (reports/2026-04-26-0441 + 0513) confirmed the minimal stack
     /// (formula+prose+character+chat-history; craft notes off; invariants
@@ -896,6 +902,7 @@ impl InvariantPiece {
     /// the f5c537a production toggle. Uncomment-history is preserved
     /// in git for trivial re-toggling.
     pub const DEFAULT_ORDER: &'static [InvariantPiece] = &[
+        InvariantPiece::NoNannyRegister,
         InvariantPiece::FrontLoadEmbodiment,
         InvariantPiece::Reverence,
         InvariantPiece::Daylight,
@@ -904,7 +911,6 @@ impl InvariantPiece {
         InvariantPiece::Soundness,
         InvariantPiece::Nourishment,
         InvariantPiece::TellTheTruth,
-        InvariantPiece::NoNannyRegister,
         InvariantPiece::TruthInTheFlesh,
     ];
 
