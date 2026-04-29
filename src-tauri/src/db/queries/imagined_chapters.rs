@@ -187,3 +187,15 @@ pub fn rename_imagined_chapter(
     )?;
     Ok(())
 }
+
+pub fn set_imagined_chapter_scene_location(
+    conn: &Connection,
+    chapter_id: &str,
+    scene_location: Option<&str>,
+) -> Result<(), rusqlite::Error> {
+    conn.execute(
+        "UPDATE imagined_chapters SET scene_location = ?2 WHERE chapter_id = ?1",
+        params![chapter_id, scene_location],
+    )?;
+    Ok(())
+}

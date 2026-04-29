@@ -304,6 +304,7 @@ pub fn run() {
             get_imagined_chapter_cmd,
             delete_imagined_chapter_cmd,
             rename_imagined_chapter_cmd,
+            update_imagined_chapter_scene_location_cmd,
             get_imagined_chapter_image_url_cmd,
             canonize_imagined_chapter_cmd,
             decanonize_imagined_chapter_cmd,

@@ -5451,7 +5451,7 @@ pub fn render_settings_update_for_prompt(content: &str) -> String {
         .map(|c| format!("{}: {} → {}", c.label, c.from, c.to))
         .collect();
     format!(
-        "The user changed chat settings: {}. From this point forward, replies should reflect the NEW setting; replies BEFORE this point may have been under different settings and should not be used as a length / register pattern for current replies.",
+        "The user changed chat settings: {}. The active setting changed here. From this point forward, replies should reflect the current setting; replies BEFORE this point may have been under a different contract and should not be used as a length / register pattern for current replies.",
         parts.join("; "),
     )
 }

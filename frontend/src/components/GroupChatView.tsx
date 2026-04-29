@@ -569,7 +569,11 @@ export function GroupChatView({ store, onNavigateToCharacter, focusMode = false,
       await store.reloadActiveChatMessages();
     };
     window.addEventListener("imagined-chapter-canonized", handler as EventListener);
-    return () => window.removeEventListener("imagined-chapter-canonized", handler as EventListener);
+    window.addEventListener("imagined-chapter-updated", handler as EventListener);
+    return () => {
+      window.removeEventListener("imagined-chapter-canonized", handler as EventListener);
+      window.removeEventListener("imagined-chapter-updated", handler as EventListener);
+    };
   }, [store]);
 
   const openGallery = useCallback(async (startMessageId?: string) => {

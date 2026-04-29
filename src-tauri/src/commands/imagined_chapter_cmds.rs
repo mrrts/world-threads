@@ -74,6 +74,39 @@ struct ChapterDoneEvent {
     content: String,
 }
 
+fn build_imagined_chapter_breadcrumb_content(chapter: &ImaginedChapter) -> String {
+    let first_line: String = chapter.content.lines()
+        .find(|l| !l.trim().is_empty())
+        .unwrap_or("")
+        .chars().take(200).collect();
+    serde_json::json!({
+        "chapter_id": chapter.chapter_id,
+        "title": chapter.title,
+        "scene_location": chapter.scene_location,
+        "image_id": chapter.image_id,
+        "first_line": first_line,
+    }).to_string()
+}
+
+fn refresh_imagined_chapter_breadcrumb_if_canonized(
+    conn: &rusqlite::Connection,
+    chapter: &ImaginedChapter,
+) -> Result<(), rusqlite::Error> {
+    let Some(breadcrumb_id) = chapter.breadcrumb_message_id.as_deref() else {
+        return Ok(());
+    };
+    let content = build_imagined_chapter_breadcrumb_content(chapter);
+    conn.execute(
+        "UPDATE messages SET content = ?2 WHERE message_id = ?1",
+        params![breadcrumb_id, content],
+    )?;
+    conn.execute(
+        "UPDATE group_messages SET content = ?2 WHERE message_id = ?1",
+        params![breadcrumb_id, content],
+    )?;
+    Ok(())
+}
+
 /// Resolve a thread_id to (world, cast: Vec<Character>) — works for both
 /// solo threads (1 character) and group threads (N characters via group_chats).
 fn resolve_thread_cast(
@@ -665,7 +698,27 @@ pub fn rename_imagined_chapter_cmd(
     title: String,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    rename_imagined_chapter(&conn, &chapter_id, &title).map_err(|e| e.to_string())
+    rename_imagined_chapter(&conn, &chapter_id, &title).map_err(|e| e.to_string())?;
+    let chapter = get_imagined_chapter(&conn, &chapter_id).map_err(|e| e.to_string())?;
+    refresh_imagined_chapter_breadcrumb_if_canonized(&conn, &chapter).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn update_imagined_chapter_scene_location_cmd(
+    db: State<Database>,
+    chapter_id: String,
+    scene_location: Option<String>,
+) -> Result<(), String> {
+    let normalized = scene_location
+        .as_deref()
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .map(str::to_string);
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    set_imagined_chapter_scene_location(&conn, &chapter_id, normalized.as_deref())
+        .map_err(|e| e.to_string())?;
+    let chapter = get_imagined_chapter(&conn, &chapter_id).map_err(|e| e.to_string())?;
+    refresh_imagined_chapter_breadcrumb_if_canonized(&conn, &chapter).map_err(|e| e.to_string())
 }
 
 /// Read the saved illustration bytes for a chapter and return as a
@@ -733,17 +786,7 @@ pub fn canonize_imagined_chapter_cmd(
     ).unwrap_or(false);
     let table = if is_group { "group_messages" } else { "messages" };
     let breadcrumb_id = uuid::Uuid::new_v4().to_string();
-    let first_line: String = chapter.content.lines()
-        .find(|l| !l.trim().is_empty())
-        .unwrap_or("")
-        .chars().take(200).collect();
-    let content = serde_json::json!({
-        "chapter_id": chapter.chapter_id,
-        "title": chapter.title,
-        "scene_location": chapter.scene_location,
-        "image_id": chapter.image_id,
-        "first_line": first_line,
-    }).to_string();
+    let content = build_imagined_chapter_breadcrumb_content(&chapter);
     let now = Utc::now().to_rfc3339();
     // World-day/time at canon time (which is when the chapter "enters" the chat).
     let (world_day, world_time): (Option<i64>, String) = conn.query_row(

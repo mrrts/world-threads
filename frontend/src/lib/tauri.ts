@@ -896,6 +896,8 @@ export const api = {
     invoke<void>("delete_imagined_chapter_cmd", { chapterId }),
   renameImaginedChapter: (chapterId: string, title: string) =>
     invoke<void>("rename_imagined_chapter_cmd", { chapterId, title }),
+  updateImaginedChapterSceneLocation: (chapterId: string, sceneLocation: string | null) =>
+    invoke<void>("update_imagined_chapter_scene_location_cmd", { chapterId, sceneLocation }),
   getImaginedChapterImageUrl: (chapterId: string) =>
     invoke<string>("get_imagined_chapter_image_url_cmd", { chapterId }),
   canonizeImaginedChapter: (chapterId: string) =>

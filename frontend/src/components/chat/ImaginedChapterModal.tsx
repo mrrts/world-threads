@@ -68,6 +68,8 @@ export function ImaginedChapterModal({
   const [streamContent, setStreamContent] = useState<string>("");
   const [streamChapterId, setStreamChapterId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [draftSceneLocation, setDraftSceneLocation] = useState("");
+  const [savingSceneLocation, setSavingSceneLocation] = useState(false);
 
   // Active chapter data when viewing a saved one (not generating)
   const [activeChapterData, setActiveChapterData] = useState<ImaginedChapter | null>(null);
@@ -135,11 +137,12 @@ export function ImaginedChapterModal({
       setActiveChapterData(null);
       setActiveImageUrl("");
       if (!generatingRef.current) {
-        setPhase("idle");
-        setStreamTitle("");
-        setStreamImage("");
-        setStreamContent("");
-        setStreamChapterId(null);
+      setPhase("idle");
+      setStreamTitle("");
+      setStreamImage("");
+      setStreamContent("");
+      setStreamChapterId(null);
+      setDraftSceneLocation("");
       }
       setError(null);
       setCanonizedThisSession(new Set());
@@ -147,6 +150,16 @@ export function ImaginedChapterModal({
       setCanonizing(false);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (activeChapterData) {
+      setDraftSceneLocation(activeChapterData.scene_location || "");
+      return;
+    }
+    if ((phase === "done" || phase === "writing") && streamChapterId) {
+      setDraftSceneLocation(sceneLocation);
+    }
+  }, [activeChapterData, phase, streamChapterId, sceneLocation]);
 
   // Identify the chapter currently being viewed if it's NOT canonized.
   // The close-prompt fires on it. Two viewing surfaces to consider:
@@ -371,6 +384,35 @@ export function ImaginedChapterModal({
       }
     } catch (e) {
       setError(String(e));
+    }
+  }
+
+  async function saveSceneLocation(chapterId: string) {
+    if (savingSceneLocation) return;
+    const normalized = draftSceneLocation.trim();
+    setSavingSceneLocation(true);
+    setError(null);
+    try {
+      await api.updateImaginedChapterSceneLocation(chapterId, normalized || null);
+      if (activeChapterData?.chapter_id === chapterId) {
+        setActiveChapterData({
+          ...activeChapterData,
+          scene_location: normalized || null,
+        });
+      }
+      if (streamChapterId === chapterId) {
+        setSceneLocation(normalized);
+      }
+      await loadChapters();
+      if (threadId) {
+        window.dispatchEvent(new CustomEvent("imagined-chapter-updated", {
+          detail: { threadId },
+        }));
+      }
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setSavingSceneLocation(false);
     }
   }
 
@@ -605,12 +647,20 @@ export function ImaginedChapterModal({
                     onChangeFontSize={persistChapterFontSize}
                   />
                   {phase === "done" && streamChapterId && (
-                    <CanonizeRow
-                      canonized={canonizedThisSession.has(streamChapterId)}
-                      canonizing={canonizing}
-                      onCanonize={() => canonizeChapter(streamChapterId)}
-                      onDecanonize={() => decanonizeChapter(streamChapterId)}
-                    />
+                    <>
+                      <SceneLocationEditor
+                        value={draftSceneLocation}
+                        onChange={setDraftSceneLocation}
+                        onSave={() => saveSceneLocation(streamChapterId)}
+                        saving={savingSceneLocation}
+                      />
+                      <CanonizeRow
+                        canonized={canonizedThisSession.has(streamChapterId)}
+                        canonizing={canonizing}
+                        onCanonize={() => canonizeChapter(streamChapterId)}
+                        onDecanonize={() => decanonizeChapter(streamChapterId)}
+                      />
+                    </>
                   )}
                 </>
               )}
@@ -626,6 +676,12 @@ export function ImaginedChapterModal({
                     fontPx={chatFontPx(chapterFontSize)}
                     fontSizeLevel={chapterFontSize}
                     onChangeFontSize={persistChapterFontSize}
+                  />
+                  <SceneLocationEditor
+                    value={draftSceneLocation}
+                    onChange={setDraftSceneLocation}
+                    onSave={() => saveSceneLocation(activeChapterData.chapter_id)}
+                    saving={savingSceneLocation}
                   />
                   <CanonizeRow
                     canonized={activeChapterData.canonized || canonizedThisSession.has(activeChapterData.chapter_id)}
@@ -993,6 +1049,42 @@ function ChapterView({
         </div>
       )}
     </article>
+  );
+}
+
+function SceneLocationEditor({
+  value,
+  onChange,
+  onSave,
+  saving,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+  onSave: () => void;
+  saving: boolean;
+}) {
+  return (
+    <div className="max-w-2xl mx-auto mb-4 rounded-lg border border-amber-900/10 bg-amber-50/35 px-4 py-3">
+      <label className="text-[11px] font-medium uppercase tracking-[0.18em] text-amber-900/55 block mb-2">
+        Chapter location
+      </label>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Leave blank to keep the place open"
+          className="flex-1 rounded-lg border border-amber-200 bg-white/70 px-3 py-2 text-sm text-amber-950 placeholder:text-amber-900/35 focus:outline-none focus:ring-1 focus:ring-amber-400"
+        />
+        <Button
+          onClick={onSave}
+          disabled={saving}
+          className="bg-amber-700 hover:bg-amber-800 text-amber-50"
+        >
+          {saving ? <Loader2 size={14} className="animate-spin mr-2" /> : null}
+          Save place
+        </Button>
+      </div>
+    </div>
   );
 }
 
