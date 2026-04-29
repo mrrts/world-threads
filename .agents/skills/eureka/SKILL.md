@@ -1,3 +1,8 @@
+---
+name: eureka
+description: Run a time-boxed discovery loop that hunts for one genuinely emergent finding the project could not have produced otherwise, logs the run live, and ships each discovery with a Formula derivation.
+---
+
 # eureka
 
 ## The instruction

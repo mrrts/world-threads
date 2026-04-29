@@ -1,3 +1,8 @@
+---
+name: auto-commit
+description: Execute an autonomous N-move development run on WorldThreads, where each move is substantive enough to earn its own commit and the overall arc lands somewhere coherent rather than just checking boxes.
+---
+
 # auto-commit
 
 ## Objective
