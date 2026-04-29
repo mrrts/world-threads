@@ -1,5 +1,5 @@
 register-shift dashboard artifacts
-timestamp: 2026-04-29-075447
+timestamp: 2026-04-29-081635
 preset: strict
 limit: 80
 confirm_cost: 5
@@ -11,3 +11,5 @@ files:
 - jasper-register-shift.json
 - darren-pack.json
 - jasper-pack.json
+- darren-pack-rebound.json
+- jasper-pack-rebound.json

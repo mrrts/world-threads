@@ -10,7 +10,10 @@ if ! [[ "$KEEP" =~ ^[0-9]+$ ]]; then
   exit 1
 fi
 
-mapfile -t dirs < <(ls -1dt "$REPORTS_DIR"/register-shift-dashboard-* 2>/dev/null || true)
+dirs=()
+while IFS= read -r line; do
+  dirs+=("$line")
+done < <(ls -1dt "$REPORTS_DIR"/register-shift-dashboard-* 2>/dev/null || true)
 count="${#dirs[@]}"
 
 if (( count <= KEEP )); then

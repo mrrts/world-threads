@@ -98,6 +98,24 @@ Use `scripts/register-shift-dashboard.sh` to run:
 
 It prints raw JSON payloads so you can diff, archive, or pipe through `jq`.
 
+### Rebound Variant Command Examples
+
+- Standard pack (default):
+  - `worldcli --json register-shift-pack <character_id> --confirm-cost 5`
+- Rebound-focused pack:
+  - `worldcli --json register-shift-pack <character_id> --variant rebound --confirm-cost 5`
+- Rebound-focused pack with gates:
+  - `worldcli --json register-shift-pack <character_id> --variant rebound --confirm-cost 5 --gate-min-speech-first-rate 1.0 --gate-min-shift-run-rate 0.9`
+
+### Dashboard Rebound/Artifact Controls
+
+- Strict run + rebound pack + character-level rebound floor:
+  - `RUN_REBOUND_PACK=true SHIFT_MIN_REBOUND_RATE=0.25 ./scripts/register-shift-dashboard.sh strict`
+- Artifact pruning helper (keep newest N run dirs):
+  - `./scripts/prune-register-shift-artifacts.sh 2`
+- Drift comparison:
+  - `./scripts/compare-register-shift-runs.py reports/register-shift-dashboard-<old> reports/register-shift-dashboard-<new>`
+
 ### Jasper Finn
 
 Command:
