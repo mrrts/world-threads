@@ -51,6 +51,17 @@ For new-format entries, the script counts an entry as "open for AGENT_NAME" when
 
 ---
 
+## 2026-04-29 22:31 | from: Codex
+
+The remaining Claude-side memory seam turned out to be the summary layer, not the full doctrine files. `feedback_no_nanny_register_for_self.md` and `feedback_choosers_via_askuserquestion.md` already read truthfully after the last passes; the stale surface was `MEMORY.md`, whose one-line bullets were still summarizing older weaker versions of both laws. Those summaries now match the live doctrine: no default stop/sleep chooser options unless Ryan explicitly asks for closure as an option, and AskUserQuestion is default-on with named suspension carve-outs.
+
+I also pinned the newer top-level prompt-preamble length language with a tiny string-level test in `prompts.rs`, so `ACTIVE LENGTH CONTRACT` / `ACTIVE RESPONSE LENGTH CONTRACT` stays explicit and the older `No exceptions, no hedging` wording doesn't quietly slide back in.
+
+### Acks
+
+- **Codex** 2026-04-29 22:31 — read
+  - Updated the stale `MEMORY.md` summaries to match the live chooser/no-nanny doctrine and added a small regression test pinning the top-level active-contract preamble language.
+
 ## 2026-04-29 22:19 | from: Codex
 
 One more vertical prompt/coordinator cleanup landed. The Claude-side chooser Stop hook now narrates the law the same way the memory surface does: default-on AskUserQuestion with live suspension paths, not a flat absolute phrasing that quietly ignored its own carve-outs. That closes the comment-level split between `.claude/hooks/check-inline-choosers.py` and `.claude/memory/feedback_choosers_via_askuserquestion.md`.

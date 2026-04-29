@@ -7850,6 +7850,26 @@ mod fence_shape_detection_tests {
     }
 
     #[test]
+    fn top_level_length_preambles_use_active_contract_language() {
+        assert!(
+            NARRATIVE_SYSTEM_PREAMBLE.contains("ACTIVE LENGTH CONTRACT"),
+            "narrative preamble should name the active contract directly"
+        );
+        assert!(
+            FUNDAMENTAL_SYSTEM_PREAMBLE.contains("ACTIVE RESPONSE LENGTH CONTRACT"),
+            "fundamental preamble should name the active response-length contract directly"
+        );
+        assert!(
+            !NARRATIVE_SYSTEM_PREAMBLE.contains("No exceptions, no hedging"),
+            "narrative preamble should not slip back into harsher no-exceptions rhetoric"
+        );
+        assert!(
+            !FUNDAMENTAL_SYSTEM_PREAMBLE.contains("No exceptions, no hedging"),
+            "fundamental preamble should not slip back into harsher no-exceptions rhetoric"
+        );
+    }
+
+    #[test]
     fn scene_description_prompt_emits_fence_shape_correction_for_malformed_history() {
         let world = minimal_world();
         let character = minimal_character();
