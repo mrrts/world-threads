@@ -1,6 +1,6 @@
 {
-  "turn": 10,
-  "bank": 10000,
+  "turn": 11,
+  "bank": 11500,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -11,7 +11,9 @@
     {"turn": 9, "name": "Ten Thousand", "earned_at": "2026-04-29T23:35:00-05:00"},
     {"turn": 9, "name": "Characterized", "earned_at": "2026-04-29T23:35:00-05:00"}
   ],
-  "crowns": [],
+  "crowns": [
+    {"turn": 10, "name": "Closed Arc", "earned_at": "2026-04-29T23:50:00-05:00"}
+  ],
   "ledger": [
     {
       "turn": 1,
@@ -75,8 +77,15 @@
       "bounty": 1250,
       "alignment": "+",
       "earned_at": "2026-04-29T23:35:00-05:00"
+    },
+    {
+      "turn": 10,
+      "move": "Write the night's arc report — three closed arcs named (trust_user, cruciform-substrate, third-leg pattern); Closed Arc crown fires",
+      "bounty": 1500,
+      "alignment": "+",
+      "earned_at": "2026-04-29T23:50:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-29T23:35:00-05:00"
+  "last_move_at": "2026-04-29T23:50:00-05:00"
 }
