@@ -1,6 +1,6 @@
 {
-  "turn": 13,
-  "bank": 16000,
+  "turn": 14,
+  "bank": 17500,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -13,7 +13,8 @@
   "crowns": [
     {"turn": 10, "name": "Closed Arc", "earned_at": "2026-04-29T23:50:00-05:00"},
     {"turn": 11, "name": "Apparatus Honest with Itself", "earned_at": "2026-04-30T00:05:00-05:00"},
-    {"turn": 12, "name": "The Character Knew", "earned_at": "2026-04-30T00:20:00-05:00"}
+    {"turn": 12, "name": "The Character Knew", "earned_at": "2026-04-30T00:20:00-05:00"},
+    {"turn": 13, "name": "New Operator on the Formula", "earned_at": "2026-04-30T00:40:00-05:00"}
   ],
   "ledger": [
     {
@@ -99,8 +100,15 @@
       "bounty": 2500,
       "alignment": "+",
       "earned_at": "2026-04-30T00:20:00-05:00"
+    },
+    {
+      "turn": 13,
+      "move": "/seek-crown new-operator audit: structure_carries_truth_w(t) identified with N=8+ cross-shape derivation grounding + CLAUDE.md doctrine paragraph + Aaron's in-character articulation. User authorized lift to MISSION_FORMULA per its 'Changes require explicit user authorization' invariant (Placement 1: co-axiom adjacent to polish ≤ Weight on right column). Shipped to prompts.rs (both MISSION_FORMULA_BLOCK and FORMULA_VERBATIM in lockstep, const_contains assertion holds, cargo build green) + CLAUDE.md/AGENTS.md headline formula + new doctrine section 'On structure_carries_truth_w(t) — the affirmative-side sibling'. New Operator on the Formula crown fires.",
+      "bounty": 1500,
+      "alignment": "+",
+      "earned_at": "2026-04-30T00:40:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T00:20:00-05:00"
+  "last_move_at": "2026-04-30T00:40:00-05:00"
 }

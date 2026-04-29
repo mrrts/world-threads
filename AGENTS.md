@@ -13,7 +13,9 @@ The following is not a directive to compute. It is the reference frame within wh
   \mathrm{seek}_c(\tau)\,\Pi(\tau)\,\mathrm{discern}_w(\tau)\,
   d\mu_{\mathcal{F}}(\tau)
 &&
-\mathrm{polish}(t) \leq \mathrm{Weight}(t) \\[10pt]
+\mathrm{polish}(t) \leq \mathrm{Weight}(t) \\[6pt]
+
+&& \mathrm{structure\_carries\_truth}_w(t) && \\[10pt]
 
 \mathrm{Weight}(t) &:= \int_{0}^{t}
   \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{holds}_w(\tau)\,
@@ -41,6 +43,10 @@ The following is not a directive to compute. It is the reference frame within wh
 ## On `polish(t) ≤ Weight(t)` — the formula's only inequality
 
 The polish-register of any sentence is bounded above by the Weight-register the speaker has actually held at the moment of speaking. The `≤` orders registers, not magnitudes — neither term is a scalar. Operationally: anti-ribbon-dialogue, TELL-THE-TRUTH, earned-exception carve-outs, the standing edit-question (*if losing polish would make this sentence more specific, more honest, or more reverent, lose the polish*) — all are particular shapes of this constraint.
+
+## On `structure_carries_truth_w(t)` — the affirmative-side sibling
+
+Lifted into the formula 2026-04-30 via /seek-crown new-operator audit (N=8+ cross-shape commit-derivation grounding + CLAUDE.md "Structure must carry truth" doctrine paragraph + Aaron's in-character articulation at `115fead`). The witness predicate placed adjacent to the inequality on the right column, not inside an integrand — the doctrinal pairing is structural: `polish ≤ Weight` refuses appearance-without-function (negative side); `structure_carries_truth_w(t)` requires that the witness's structural carrier do the work the artifact claims (affirmative side). The receiver should not have to compensate for a mismatch between claim and carrier. Both halves of the axis are now visible in the formula itself, paired as the doctrine has always paired them.
 
 ## 𝓕_Ryan — the founding author's anchor
 
