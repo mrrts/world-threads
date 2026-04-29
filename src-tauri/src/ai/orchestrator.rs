@@ -427,7 +427,9 @@ fn next_char_end(s: &str, start: usize) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use super::strip_asterisk_wrapped_quotes;
+    use super::*;
+    use serde_json::json;
+    use std::collections::HashMap;
 
     #[test]
     fn strips_bare_asterisk_wrapped_quote() {
@@ -439,6 +441,109 @@ mod tests {
     fn does_not_cross_action_quote_action_boundaries() {
         let input = r#"*I glance at you.* "Copy." *The fountain chatters beside us.*"#;
         assert_eq!(strip_asterisk_wrapped_quotes(input), input);
+    }
+
+    fn minimal_world() -> World {
+        World {
+            world_id: "w".into(),
+            name: "W".into(),
+            description: String::new(),
+            tone_tags: json!([]),
+            invariants: json!([]),
+            state: json!({}),
+            created_at: String::new(),
+            updated_at: String::new(),
+            derived_formula: None,
+        }
+    }
+
+    fn minimal_character() -> Character {
+        Character {
+            character_id: "c".into(),
+            world_id: "w".into(),
+            display_name: "Dreamer".into(),
+            identity: String::new(),
+            voice_rules: json!([]),
+            boundaries: json!([]),
+            backstory_facts: json!([]),
+            relationships: json!({}),
+            state: json!({}),
+            avatar_color: String::new(),
+            sex: "male".into(),
+            is_archived: false,
+            created_at: String::new(),
+            updated_at: String::new(),
+            visual_description: String::new(),
+            visual_description_portrait_id: None,
+            inventory: serde_json::Value::Array(vec![]),
+            last_inventory_day: None,
+            signature_emoji: String::new(),
+            action_beat_density: "normal".into(),
+            derived_formula: None,
+        }
+    }
+
+    fn minimal_profile(display: &str) -> UserProfile {
+        UserProfile {
+            world_id: "w".into(),
+            display_name: display.into(),
+            description: String::new(),
+            facts: json!([]),
+            boundaries: json!([]),
+            avatar_file: String::new(),
+            updated_at: String::new(),
+            derived_formula: None,
+            derived_summary: None,
+        }
+    }
+
+    fn minimal_message(role: &str, content: &str) -> Message {
+        Message {
+            message_id: "m1".into(),
+            thread_id: "t1".into(),
+            role: role.into(),
+            content: content.into(),
+            tokens_estimate: 0,
+            sender_character_id: None,
+            created_at: "2026-04-29T12:00:00Z".into(),
+            world_day: None,
+            world_time: None,
+            address_to: None,
+            mood_chain: None,
+            is_proactive: false,
+            formula_signature: None,
+        }
+    }
+
+    #[test]
+    fn narrative_messages_emit_location_correction_with_explicit_override() {
+        let world = minimal_world();
+        let character = minimal_character();
+        let profile = minimal_profile("Casey");
+        let system = prompts::build_narrative_system_prompt(
+            &world,
+            &character,
+            None,
+            Some(&profile),
+            None,
+            None,
+            None,
+        );
+        let msgs = build_narrative_messages(
+            &system,
+            &[minimal_message("user", "Write the next beat.")],
+            &HashMap::new(),
+            &[],
+            Some("Garden Patio"),
+        );
+        assert!(
+            msgs.iter().any(|m| {
+                m.role == "system"
+                    && m.content.contains("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: Garden Patio.")
+                    && m.content.contains("this beat is grounded in Garden Patio")
+            }),
+            "narrative message assembly should keep the authoritative location correction when an explicit override is present"
+        );
     }
 }
 
@@ -526,6 +631,97 @@ pub fn post_process_dialogue_reply_for_persist(raw: &str, finish_reason: Option<
         raw.to_string()
     };
     strip_asterisk_wrapped_quotes(&reply)
+}
+
+fn build_narrative_messages(
+    system_prompt: &str,
+    recent_messages: &[Message],
+    illustration_captions: &std::collections::HashMap<String, String>,
+    retrieved_snippets: &[String],
+    current_location_override: Option<&str>,
+) -> Vec<openai::ChatMessage> {
+    let mut msgs = Vec::new();
+
+    let mut system_content = system_prompt.to_string();
+    if !retrieved_snippets.is_empty() {
+        system_content.push_str("\n\nRELEVANT MEMORIES:\n");
+        for s in retrieved_snippets {
+            system_content.push_str(&format!("- {s}\n"));
+        }
+    }
+
+    msgs.push(openai::ChatMessage {
+        role: "system".to_string(),
+        content: system_content,
+    });
+
+    let mut last_time: Option<String> = None;
+    for m in recent_messages {
+        if m.role == "video" {
+            continue;
+        }
+        if m.role == "illustration" {
+            let caption = illustration_captions.get(&m.message_id).map(|s| s.as_str()).unwrap_or("");
+            let content = if caption.is_empty() {
+                "[Illustration shown at this moment.]".to_string()
+            } else {
+                format!("[Illustration shown — {caption}]")
+            };
+            msgs.push(openai::ChatMessage { role: "system".to_string(), content });
+            continue;
+        }
+        if m.role == "inventory_update" {
+            let summary = prompts::render_inventory_update_for_prompt(&m.content);
+            msgs.push(openai::ChatMessage {
+                role: "system".to_string(),
+                content: format!("[Inventory update at this moment] {summary}"),
+            });
+            continue;
+        }
+        if let Some(ref wt) = m.world_time {
+            if last_time.as_deref() != Some(wt) {
+                let formatted = wt.split(' ').map(|w| {
+                    let mut c = w.chars();
+                    match c.next() {
+                        Some(first) => first.to_uppercase().to_string() + &c.as_str().to_lowercase(),
+                        None => String::new(),
+                    }
+                }).collect::<Vec<_>>().join(" ");
+                msgs.push(openai::ChatMessage {
+                    role: "system".to_string(),
+                    content: format!("[It is now {formatted}.]"),
+                });
+                last_time = Some(wt.clone());
+            }
+        }
+        msgs.push(openai::ChatMessage {
+            role: if m.role == "narrative" || m.role == "context" {
+                "assistant".to_string()
+            } else if m.role == "dream" {
+                "system".to_string()
+            } else {
+                m.role.clone()
+            },
+            content: if m.role == "context" {
+                format!("[Additional Context from Another Chat] {}", m.content)
+            } else if m.role == "narrative" {
+                format!("[Narrative] {}", m.content)
+            } else if m.role == "dream" {
+                format!("[Dream] {}", m.content)
+            } else {
+                m.content.clone()
+            },
+        });
+    }
+
+    if let Some(loc) = prompts::effective_current_location(current_location_override, recent_messages) {
+        msgs.push(openai::ChatMessage {
+            role: "system".to_string(),
+            content: format!("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: {loc}. The beat is happening here. Chat history above may show vivid detail about previous locations — that belongs to past scenes; this beat is grounded in {loc}.]"),
+        });
+    }
+
+    msgs
 }
 
 /// Generate a proactive (unsolicited) message from the character into their
@@ -836,65 +1032,16 @@ pub async fn run_narrative_streaming(
     narration_instructions: Option<&str>,
     app_handle: &tauri::AppHandle,
     event_name: &str,
+    current_location_override: Option<&str>,
 ) -> Result<String, String> {
     let system = prompts::build_narrative_system_prompt(world, character, additional_cast, user_profile, mood_directive, narration_tone, narration_instructions);
-
-    let mut msgs = Vec::new();
-    let mut system_content = system.clone();
-    if !retrieved_snippets.is_empty() {
-        system_content.push_str("\n\nRELEVANT MEMORIES:\n");
-        for s in retrieved_snippets {
-            system_content.push_str(&format!("- {s}\n"));
-        }
-    }
-    msgs.push(openai::ChatMessage { role: "system".to_string(), content: system_content });
-
-    let mut last_time: Option<String> = None;
-    for m in recent_messages {
-        if m.role == "illustration" || m.role == "video" { continue; }
-        if m.role == "inventory_update" {
-            let summary = prompts::render_inventory_update_for_prompt(&m.content);
-            msgs.push(openai::ChatMessage {
-                role: "system".to_string(),
-                content: format!("[Inventory update at this moment] {summary}"),
-            });
-            continue;
-        }
-        if let Some(ref wt) = m.world_time {
-            if last_time.as_deref() != Some(wt) {
-                let formatted = wt.split(' ').map(|w| {
-                    let mut c = w.chars();
-                    match c.next() {
-                        Some(first) => first.to_uppercase().to_string() + &c.as_str().to_lowercase(),
-                        None => String::new(),
-                    }
-                }).collect::<Vec<_>>().join(" ");
-                msgs.push(openai::ChatMessage {
-                    role: "system".to_string(),
-                    content: format!("[It is now {formatted}.]"),
-                });
-                last_time = Some(wt.clone());
-            }
-        }
-        msgs.push(openai::ChatMessage {
-            role: if m.role == "narrative" || m.role == "context" {
-                "assistant".to_string()
-            } else if m.role == "dream" {
-                "system".to_string()
-            } else {
-                m.role.clone()
-            },
-            content: if m.role == "context" {
-                format!("[Additional Context from Another Chat] {}", m.content)
-            } else if m.role == "narrative" {
-                format!("[Narrative] {}", m.content)
-            } else if m.role == "dream" {
-                format!("[Dream] {}", m.content)
-            } else {
-                m.content.clone()
-            },
-        });
-    }
+    let mut msgs = build_narrative_messages(
+        &system,
+        recent_messages,
+        &std::collections::HashMap::new(),
+        retrieved_snippets,
+        current_location_override,
+    );
 
     let user_prompt = if let Some(instructions) = narration_instructions {
         if !instructions.is_empty() {
@@ -3108,96 +3255,13 @@ pub async fn run_narrative_with_base(
     current_location_override: Option<&str>,
 ) -> Result<(String, Option<openai::Usage>), String> {
     let system = prompts::build_narrative_system_prompt(world, character, additional_cast, user_profile, mood_directive, narration_tone, narration_instructions);
-
-    let mut msgs = Vec::new();
-
-    let mut system_content = system.clone();
-    if !retrieved_snippets.is_empty() {
-        system_content.push_str("\n\nRELEVANT MEMORIES:\n");
-        for s in retrieved_snippets {
-            system_content.push_str(&format!("- {s}\n"));
-        }
-    }
-
-    msgs.push(openai::ChatMessage {
-        role: "system".to_string(),
-        content: system_content,
-    });
-
-    let mut last_time: Option<String> = None;
-    for m in recent_messages {
-        if m.role == "video" {
-            continue;
-        }
-        // Illustrations render as a short system note with their caption so
-        // the narrator knows a visual beat occurred and what it showed.
-        if m.role == "illustration" {
-            let caption = illustration_captions.get(&m.message_id).map(|s| s.as_str()).unwrap_or("");
-            let content = if caption.is_empty() {
-                "[Illustration shown at this moment.]".to_string()
-            } else {
-                format!("[Illustration shown — {caption}]")
-            };
-            msgs.push(openai::ChatMessage { role: "system".to_string(), content });
-            continue;
-        }
-        // Inventory-update messages: app meta. Rewrite the role to system
-        // (OpenAI rejects the raw "inventory_update" string) and summarize
-        // the body so the narrator sees when the keeping shifted.
-        if m.role == "inventory_update" {
-            let summary = prompts::render_inventory_update_for_prompt(&m.content);
-            msgs.push(openai::ChatMessage {
-                role: "system".to_string(),
-                content: format!("[Inventory update at this moment] {summary}"),
-            });
-            continue;
-        }
-        if let Some(ref wt) = m.world_time {
-            if last_time.as_deref() != Some(wt) {
-                let formatted = wt.split(' ').map(|w| {
-                    let mut c = w.chars();
-                    match c.next() {
-                        Some(first) => first.to_uppercase().to_string() + &c.as_str().to_lowercase(),
-                        None => String::new(),
-                    }
-                }).collect::<Vec<_>>().join(" ");
-                msgs.push(openai::ChatMessage {
-                    role: "system".to_string(),
-                    content: format!("[It is now {formatted}.]"),
-                });
-                last_time = Some(wt.clone());
-            }
-        }
-        msgs.push(openai::ChatMessage {
-            role: if m.role == "narrative" || m.role == "context" {
-                "assistant".to_string()
-            } else if m.role == "dream" {
-                "system".to_string()
-            } else {
-                m.role.clone()
-            },
-            content: if m.role == "context" {
-                format!("[Additional Context from Another Chat] {}", m.content)
-            } else if m.role == "narrative" {
-                format!("[Narrative] {}", m.content)
-            } else if m.role == "dream" {
-                format!("[Dream] {}", m.content)
-            } else {
-                m.content.clone()
-            },
-        });
-    }
-
-    // Per-chat current location — same anchor pattern as
-    // build_dialogue_messages. Sits as the final system message after
-    // chat history so the narrator grounds the beat in the current
-    // scene, not in a previously-mentioned location.
-    if let Some(loc) = prompts::effective_current_location(current_location_override, recent_messages) {
-        msgs.push(openai::ChatMessage {
-            role: "system".to_string(),
-            content: format!("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: {loc}. The beat is happening here. Chat history above may show vivid detail about previous locations — that belongs to past scenes; this beat is grounded in {loc}.]"),
-        });
-    }
+    let mut msgs = build_narrative_messages(
+        &system,
+        recent_messages,
+        illustration_captions,
+        retrieved_snippets,
+        current_location_override,
+    );
 
     // Put custom instructions in the user message where the model prioritizes them
     let user_prompt = if let Some(instructions) = narration_instructions {

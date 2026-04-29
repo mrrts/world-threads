@@ -399,6 +399,10 @@ pub async fn generate_imagined_chapter_cmd(
 
     // Use the existing illustration pipeline with include_scene_summary=false
     // — the scene description we just invented is passed as custom_instructions.
+    // This is intentionally a chapter-owned scene, not a live chat scene-state
+    // repair surface; if imagined chapters ever need authoritative location,
+    // that should be stored on the chapter itself rather than borrowed from
+    // thread current_location.
     let primary_char = cast_refs[0];
     let additional: Vec<&Character> = cast_refs.iter().skip(1).copied().collect();
     let (_used_scene_desc, image_bytes, image_chat_usage) = orchestrator::generate_illustration_with_base(
