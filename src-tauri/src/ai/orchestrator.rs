@@ -545,6 +545,50 @@ mod tests {
             "narrative message assembly should keep the authoritative location correction when an explicit override is present"
         );
     }
+
+    #[test]
+    fn streaming_dialogue_messages_emit_location_correction_with_explicit_override() {
+        let world = minimal_world();
+        let character = minimal_character();
+        let profile = minimal_profile("Casey");
+        let system = prompts::build_dialogue_system_prompt(
+            &world,
+            &character,
+            Some(&profile),
+            None,
+            None,
+            None,
+            None,
+            false,
+            &[],
+            None,
+            &[],
+            None,
+            &[],
+            None,
+            &[],
+            None,
+            None,
+        );
+        let msgs = build_dialogue_streaming_messages(
+            &system,
+            &[minimal_message("user", "Where are we?")],
+            &[],
+            None,
+            &[],
+            &HashMap::new(),
+            Some("Casey"),
+            Some("Garden Patio"),
+        );
+        assert!(
+            msgs.iter().any(|m| {
+                m.role == "system"
+                    && m.content.contains("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: **Garden Patio**")
+                    && m.content.contains("The scene is happening HERE")
+            }),
+            "streaming dialogue message assembly should keep the authoritative location correction when an explicit override is present"
+        );
+    }
 }
 
 /// Walk backward through `s` and return the substring ending at the last
@@ -722,6 +766,31 @@ fn build_narrative_messages(
     }
 
     msgs
+}
+
+fn build_dialogue_streaming_messages(
+    system_prompt: &str,
+    recent_messages: &[Message],
+    retrieved_snippets: &[String],
+    character_names: Option<&std::collections::HashMap<String, String>>,
+    kept_ids: &[String],
+    illustration_captions: &std::collections::HashMap<String, String>,
+    user_display_name: Option<&str>,
+    current_location_override: Option<&str>,
+) -> Vec<openai::ChatMessage> {
+    let empty_reactions: std::collections::HashMap<String, Vec<crate::db::queries::Reaction>> =
+        std::collections::HashMap::new();
+    prompts::build_dialogue_messages(
+        system_prompt,
+        recent_messages,
+        retrieved_snippets,
+        character_names,
+        kept_ids,
+        illustration_captions,
+        &empty_reactions,
+        user_display_name,
+        current_location_override,
+    )
 }
 
 /// Generate a proactive (unsolicited) message from the character into their
@@ -987,14 +1056,23 @@ pub async fn run_dialogue_streaming(
     leader: Option<&str>,
     kept_ids: &[String],
     illustration_captions: &std::collections::HashMap<String, String>,
+    current_location_override: Option<&str>,
 ) -> Result<String, String> {
     // Streaming preview path (no journals/quests/etc loaded). Pass None
     // for relational_stance — the preview is a transient pre-generate
     // and doesn't need the synthesized stance loaded.
     let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, &[], None, &[], None, &[], None, None);
-    let empty_reactions: std::collections::HashMap<String, Vec<crate::db::queries::Reaction>> = std::collections::HashMap::new();
     let user_display_name = user_profile.map(|p| p.display_name.as_str());
-    let messages = prompts::build_dialogue_messages(&system, recent_messages, retrieved_snippets, character_names, kept_ids, illustration_captions, &empty_reactions, user_display_name, None);
+    let messages = build_dialogue_streaming_messages(
+        &system,
+        recent_messages,
+        retrieved_snippets,
+        character_names,
+        kept_ids,
+        illustration_captions,
+        user_display_name,
+        current_location_override,
+    );
 
     let token_limit = match response_length {
         Some("Short") => Some(150),
