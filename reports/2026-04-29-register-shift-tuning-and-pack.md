@@ -70,6 +70,34 @@ Output highlights:
 - `shift_run_rate=1.0` (5/5)
 - `gate.passed=true`
 
+## Recommended Gate Profiles
+
+Use these as presets while tuning characters:
+
+- **Loose (exploration):**
+  - `--gate-min-speech-first-rate 0.60`
+  - `--gate-min-shift-run-rate 0.60`
+- **Medium (default working bar):**
+  - `--gate-min-speech-first-rate 0.80`
+  - `--gate-min-shift-run-rate 0.80`
+- **Strict (pre-ship bar for comedy-invited packs):**
+  - `--gate-min-speech-first-rate 1.00`
+  - `--gate-min-shift-run-rate 0.90`
+
+Rationale:
+
+- Speech-first should be near-perfect when the probe explicitly invites play/bit-comedy.
+- Shift-run rate can be slightly lower than speech-first because some replies may stay tonally clean without a strong mid-turn pivot.
+
+## One-Command Dashboard Script
+
+Use `scripts/register-shift-dashboard.sh` to run:
+
+- `register-shift` on Darren + Jasper (`limit=80`)
+- gated `register-shift-pack` on Darren + Jasper
+
+It prints raw JSON payloads so you can diff, archive, or pipe through `jq`.
+
 ### Jasper Finn
 
 Command:
