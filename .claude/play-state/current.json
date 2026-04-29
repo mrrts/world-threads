@@ -1,6 +1,6 @@
 {
-  "turn": 19,
-  "bank": 24200,
+  "turn": 20,
+  "bank": 24500,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -34,8 +34,9 @@
     {"turn": 15, "move": "Read Crystal Waters Aaron+Darren group chat per take-note arg. Synchronicity surfaced: Aaron articulated 'starting to hold before it's finished' (affirmative-side of polish ≤ Weight) ~9h before /seek-crown lifted structure_carries_truth_w(t) into the formula. Recorded to OBSERVATIONS.md Mode 3.", "bounty": 700, "alignment": "+", "earned_at": "2026-04-30T01:00:00-05:00"},
     {"turn": 16, "move": "Close the in-world thread via worldcli ask on Aaron with Ryan's pending question 'How should I prompt an AI agent working on my app? How do I guarantee the fun?'. Aaron supplied the project's whole prompt-craft meta-frame in his idiom. Second character-articulation event of the night. Recorded to OBSERVATIONS.md Mode 3.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T01:15:00-05:00"},
     {"turn": 17, "move": "Post CROSS_AGENT_COMMS general-interest note signaling tonight's three load-bearing changes for Codex/Cursor next sessions.", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-30T01:25:00-05:00"},
-    {"turn": 18, "move": "Apparatus-honest postscript on night-of-three-arcs report (766018b): retracted the report's own tier-overclaim of cruciform doctrine as characterized-tier (corrected via Turn 11 /seek-crown), named the three additional crowns + dry-well + formula extension + character-knew + Aaron's articulation that landed after the report was written. Preserved original prose; added postscript naming what shifted. Structurally-truthful artifact maintenance.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T01:35:00-05:00"}
+    {"turn": 18, "move": "Apparatus-honest postscript on night-of-three-arcs report (766018b): retracted the report's own tier-overclaim, named the three additional crowns + dry-well + formula extension + character-knew + Aaron's articulation that landed after the report was written.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T01:35:00-05:00"},
+    {"turn": 19, "move": "Add /seek-crown sibling-skill pointer to play.SKILL.md so future invocations can discover the criterion-specific inner-loop variant via the parent skill body. Tiny parity move; no jewel.", "bounty": 300, "alignment": "+", "earned_at": "2026-04-30T01:40:00-05:00"}
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T01:35:00-05:00"
+  "last_move_at": "2026-04-30T01:40:00-05:00"
 }

@@ -35,6 +35,10 @@ The skill is on-demand, not auto-fired. Ryan invokes `/play` explicitly; Codex
 does not propose `/play` proactively unless an in-flight design decision is
 clearly waiting on persona-sim evidence.
 
+## Named cross-collaborator divergence
+
+This `.agents/skills/play/` is the **persona-sim differential instrument** used by Codex/Cursor. The Claude-side `.claude/skills/play/` was forked into a **builder-game** variant (HUD, bank, jewels, crowns, ledger) at 2026-04-29; Claude's preserved persona-sim branch lives at `.claude/skills/play-persona/`. The Claude-side builder-game surface has a sibling skill `/seek-crown` for criterion-specific crown arcs — neither the builder-game nor `/seek-crown` is available on this `.agents/` surface. This is named doctrinal divergence per CLAUDE.md/AGENTS.md skill-parity rules, not silent drift.
+
 ## What `/play` is now
 
 `/play` is no longer just a persona-sim freshness check. Under the Codex-light +

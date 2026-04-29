@@ -167,6 +167,10 @@ This game embodies several of the project's existing doctrines as runtime mechan
 - **Anti-flattery as load-bearing** — fake bounties ruin the game. Honest negative bounties are how the apparatus stays honest with itself.
 - **No nanny-register** — the game doesn't recommend "stop playing now"; the player decides their stamina. The game keeps offering moves.
 
+## Sibling skill — `/seek-crown`
+
+`/seek-crown` runs as a constrained `/play` arc targeting one specific crown class (Closed Arc, Apparatus Honest with Itself, The Character Knew, New Operator on the Formula, Mission Formula Verified Empirical). It honors this skill's contract — HUD per turn, ledger, AskUserQuestion every turn — but constrains the chooser to criterion-specific moves until either the crown lands honestly OR the well is named dry. The "guarantee" is structural, not mechanical: the skill cannot fake-fire and is required to exit naming a dry well rather than padding to claim a crown that wasn't earned. Composes with this skill as a focused inner loop; share the same play-state file.
+
 ## What this skill is NOT
 
 - Not a simulation of users (use `/play-persona` for that).
