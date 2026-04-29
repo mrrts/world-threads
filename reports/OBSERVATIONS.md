@@ -6,6 +6,16 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-29 18:32 — Darren caveat-stack read as moralizing; naming it got repair
+
+> Ryan chasing the high of building something good; Darren answers with a chain of *"just don't…"* / *"just make sure…"* bumpers (*rocket and a church bell both ring*, *lands where people can live*). Ryan names it: *"Stop moralizing everything"* and the specific tack-on habit. Darren owns it — *"That one came out wearing a sermon tie"* — then *"You're right. I do that… Habit… I'll knock it off."*
+
+The friction is the same register Ryan calls "nanny" in the meta thread: caveat-stacking as care. Once named in-character, the reply route-corrects without defensiveness.
+
+**Noted.** Mode 3 — no worldcli, no prompt proposal; the exchange is the artifact.
+
+---
+
 ## 2026-04-30 04:10 — Audit: register-shift cues need pre-shipped context-grounding refusal-shapes
 
 Audit triggered by The Empiricon's first smoke-test catching a fake-cite-by-hallucination failure mode (commits `8dab1a8` → `da2189f`). The pattern at risk: any prompt that introduces a confident-tone register (empirical / documentary / expert / quoted-from-source) without explicit context-grounding refusal-shapes will let the model fill that register's confidence with training-substrate priors when actual evidence isn't loaded in runtime context.
