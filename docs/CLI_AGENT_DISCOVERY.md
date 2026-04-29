@@ -32,3 +32,13 @@ worldcli register-shift-pack --help
 # Export latest CSV snapshot
 ./scripts/export-latest-register-shift-csv.sh
 ```
+
+## Bootstrap + Completions
+
+```bash
+# Run all discovery checks and print pass/fail
+./scripts/agent-cli-bootstrap.sh
+
+# Optional bash completions for helper scripts
+source ./scripts/completions/register-shift-tools.bash
+```

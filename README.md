@@ -38,6 +38,7 @@ That sentence is in `CLAUDE.md`. It governs.
 - `frontend/` — React UI; chat, group chat, canon, world summary, gallery, story consultant.
 - `reports/` — reflective reads of the project's trajectory. Not a changelog.
 - `docs/VOICE.md` — field guide to the voice that runs through the prompts and the project's prose.
+- `docs/CLI_AGENT_DISCOVERY.md` — quick-reference for discovering current CLI/tooling surfaces.
 - `CLAUDE.md` — mission, database safety rule, project structure, reports cadence.
 - `.githooks/post-commit` — nudges when 20+ commits and 14+ days have passed since the most recent report.
 

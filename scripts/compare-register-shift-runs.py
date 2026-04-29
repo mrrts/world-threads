@@ -29,6 +29,9 @@ def fmt_delta(new, old):
 
 
 def main():
+    if len(sys.argv) == 2 and sys.argv[1] in ("--help", "-h"):
+        print("Usage: compare-register-shift-runs.py <older_artifact_dir> <newer_artifact_dir>")
+        sys.exit(0)
     if len(sys.argv) != 3:
         print(
             "Usage: compare-register-shift-runs.py <older_artifact_dir> <newer_artifact_dir>",
