@@ -458,9 +458,44 @@ Worked example: `plain_after_crooked_dialogue` was authored from Hal's own reply
 
 Status: **keep**.
 
-Lead-block ablation (prepend ON vs OFF, inline series + chain handoff unchanged) reached claim-tier on the primary endpoint: curiosity-back. At N=5 pairs on Jasper, lead ON closed with ask-back in 5/5 vs 3/5 with lead OFF (100% vs 60%, +40pp). Centering, trajectory awareness, and honest limit-naming were effectively equivalent across variants; length effect seen at N=3 did not replicate at N=5.
+Pinned-signature follow-up revised the earlier interpretation. With neutral signature content held identical across halves, the prior pure-position curiosity claim did not replicate on the introspective probe. Honest model: observed effect is **position x content interaction**, not pure position.
 
-Interpretation: inline+chain appear to carry most depth-signal work; lead primacy adds measurable margin specifically on user-directed closure behavior. Budget trade remains justified under reactions-off gating. Do not re-open rollback discussion without stronger contradictory evidence.
+Interpretation:
+- Lead-block primacy amplifies what signature content already names.
+- Generator vocabulary substrate materially matters (descriptive output can still carry soft prescription).
+- Position-effect is non-zero but smaller than the earlier claim-tier framing.
+
+Decision discipline:
+- Keep lead-block and reactions-off wiring.
+- Downgrade pure curiosity-back claim from claim-tier to sketch-tier-with-confound until characterized by pinned content classes (neutral vs curiosity-rich).
+
+## Replayable initial-conditions (momentstamp override)
+
+`--momentstamp-override <text>` turns chat-state from an implicit random input into an explicit replay parameter. Treat it as an initial-conditions pin, not a style knob.
+
+What this enables:
+- Cross-commit replay at a fixed chat-state (`replay --refs ... --momentstamp-override ...`).
+- Counterfactual signature probes (same prompt-stack/history, varied signature text).
+- Constructed no-momentstamp cohorts (override + lead-suppress) without waiting for naturally occurring cohorts.
+
+Scope-limit:
+- This replays assistant input-conditions only; it does **not** replay user receivability/attention/timing context.
+
+Practical pull-from-corpus snippet:
+
+```bash
+# Pull the exact persisted signature for one historical assistant message.
+SIG=$(sqlite3 "$HOME/Library/Application Support/com.worldthreads.app/worldthreads.db" \
+  "SELECT formula_signature FROM messages WHERE message_id='YOUR_MESSAGE_ID' LIMIT 1;")
+
+# Replay with pinned chat-state signature across refs.
+worldcli replay \
+  --refs HEAD,<older_sha> \
+  --character <character_id> \
+  --prompt "What's been pulling at you today?" \
+  --with-momentstamp \
+  --momentstamp-override "$SIG"
+```
 
 **Three experimental modes:**
 - **Mode A — passive corpus** (`worldcli evaluate`): rule shifted real-use behavior; effect should show up in ordinary conversation.

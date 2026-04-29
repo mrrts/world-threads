@@ -29,7 +29,7 @@ use clap::{Parser, Subcommand, ValueEnum};
 use rusqlite::params;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value as JsonValue};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;
 
 use app_lib::ai::prompts::json_array_to_strings;
@@ -86,6 +86,27 @@ enum Cmd {
 
     /// Print a starter ~/.worldcli/config.json template (does NOT overwrite).
     ConfigTemplate,
+
+    /// Analyze persisted formula_signature vocabulary in the corpus.
+    /// Helps test whether momentstamp output is descriptively neutral
+    /// or systematically biased toward specific operator vocabularies.
+    MomentstampVocab {
+        /// Optional world scope. When omitted, uses current CLI scope.
+        #[arg(long)]
+        world: Option<String>,
+        /// Optional character scope.
+        #[arg(long)]
+        character: Option<String>,
+        /// Optional role filter (default assistant).
+        #[arg(long, default_value = "assistant")]
+        role: String,
+        /// Min token length to keep (default 3).
+        #[arg(long, default_value_t = 3)]
+        min_len: usize,
+        /// Top N tokens to print.
+        #[arg(long, default_value_t = 40)]
+        top: usize,
+    },
 
     /// Substrate atlas (v1): registry of every `pub fn build_*` in atlas
     /// scan roots (`src/ai/*.rs` plus selected `src/commands/*.rs`) with POV
@@ -557,6 +578,18 @@ enum Cmd {
         /// exclusive with --insert-before.
         #[arg(long, conflicts_with = "insert_before")]
         insert_after: Option<String>,
+        /// Wire the formula-momentstamp path through replay calls.
+        /// Uses the live chat thread for this character to derive
+        /// recent-history context, then applies the resulting block
+        /// identically across refs/samples unless lead is suppressed.
+        #[arg(long, default_value_t = false)]
+        with_momentstamp: bool,
+        /// Bypass momentstamp computation and pin replay to a fixed
+        /// signature text. Implies --with-momentstamp. Use this for
+        /// characterized-tier replay where chat-state must be held
+        /// exactly constant across refs and samples.
+        #[arg(long)]
+        momentstamp_override: Option<String>,
     },
 
     /// List, show, or search rubrics in the library
@@ -1008,6 +1041,17 @@ enum Cmd {
         /// intact.
         #[arg(long)]
         with_momentstamp: bool,
+        /// Bypass `build_formula_momentstamp` and use the provided
+        /// signature text directly. The text is wrapped in the same
+        /// block-format the live computation produces, so the prepend
+        /// path is shape-identical. Skips the memory-tier API call
+        /// (saves ~$0.005-0.015 per call). Used for characterized-tier
+        /// ablation where both halves of a pair must share the EXACT
+        /// same signature content — isolates prepend-or-not from sig-
+        /// content variation (which is the main confound at
+        /// build_formula_momentstamp's temp=0.6). Implies --with-momentstamp.
+        #[arg(long)]
+        momentstamp_override: Option<String>,
         /// Send the message in the context of an existing GROUP CHAT.
         /// When set, the `character_id` arg becomes the SPEAKER (which
         /// must be a member of this group); the prompt builder swaps to
@@ -1698,6 +1742,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 confirm_cost, question_summary.as_deref()).await
         }
         Cmd::ConfigTemplate => { println!("{}", config_template_text()); Ok(()) }
+        Cmd::MomentstampVocab { world, character, role, min_len, top } => {
+            cmd_momentstamp_vocab(&r, world.as_deref(), character.as_deref(), &role, min_len, top)
+        }
         Cmd::ListWorlds => cmd_list_worlds(&r),
         Cmd::ListCharacters { world } => cmd_list_characters(&r, world.as_deref()),
         Cmd::ShowCharacter { character_id } => cmd_show_character(&r, &character_id),
@@ -1797,14 +1844,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             } else { None };
             cmd_lab(&r, action, api_key.as_deref()).await
         }
-        Cmd::Replay { refs, character, prompt, model, confirm_cost, n, repo, section_order, craft_notes_order, invariants_order, omit_craft_notes, omit_invariants, insert_file, insert_before, insert_after } => {
+        Cmd::Replay { refs, character, prompt, model, confirm_cost, n, repo, section_order, craft_notes_order, invariants_order, omit_craft_notes, omit_invariants, insert_file, insert_before, insert_after, with_momentstamp, momentstamp_override } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_replay(&r, &api_key, &refs, &character, &prompt, model.as_deref(), confirm_cost, n, repo.as_deref(), &section_order, &craft_notes_order, &invariants_order, &omit_craft_notes, &omit_invariants, insert_file.as_deref(), insert_before.as_deref(), insert_after.as_deref()).await
+            cmd_replay(&r, &api_key, &refs, &character, &prompt, model.as_deref(), confirm_cost, n, repo.as_deref(), &section_order, &craft_notes_order, &invariants_order, &omit_craft_notes, &omit_invariants, insert_file.as_deref(), insert_before.as_deref(), insert_after.as_deref(), with_momentstamp || momentstamp_override.is_some(), momentstamp_override.as_deref()).await
         }
         Cmd::Consult { character_id, group_chat, message, mode, session, model, confirm_cost, question_summary } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
@@ -1846,7 +1893,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_refresh_anchor(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
-        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, fence_pipeline, group_chat, with_momentstamp } => {
+        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, fence_pipeline, group_chat, with_momentstamp, momentstamp_override } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
@@ -1897,7 +1944,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &section_order,
                     end_seal && !no_end_seal,
                     fence_pipeline,
-                    with_momentstamp,
+                    with_momentstamp || momentstamp_override.is_some(),
+                    momentstamp_override.as_deref(),
                 ).await
             }
         }
@@ -3151,6 +3199,202 @@ fn cmd_group_messages(
         })
     }).collect();
     emit(r.json, JsonValue::Array(out));
+    Ok(())
+}
+
+#[derive(Default)]
+struct SignatureBucket {
+    signatures: usize,
+    tokens: usize,
+    curiosity_hits: usize,
+    signatures_with_curiosity: usize,
+}
+
+fn cmd_momentstamp_vocab(
+    r: &Resolved,
+    world: Option<&str>,
+    character: Option<&str>,
+    role: &str,
+    min_len: usize,
+    top: usize,
+) -> Result<(), Box<dyn std::error::Error>> {
+    if let Some(w) = world {
+        r.check_world(w)?;
+    }
+    if let Some(c) = character {
+        let character_world_id = r.check_character(c)?;
+        if let Some(w) = world {
+            if character_world_id != w {
+                return Err(Box::<dyn std::error::Error>::from(format!(
+                    "--character {} is in world {}, not --world {}",
+                    c, character_world_id, w
+                )));
+            }
+        }
+    }
+
+    let curiosity_lexicon: BTreeSet<&'static str> = [
+        "longing",
+        "texture",
+        "embracing_honesty",
+        "honesty",
+        "ache",
+        "seeking_grace",
+        "grace",
+        "bearing_cross",
+        "cross",
+        "curiosity",
+        "engagement",
+        "attention",
+        "listening",
+    ]
+    .into_iter()
+    .collect();
+
+    let conn = r.db.conn.lock().unwrap();
+    let mut stmt = conn.prepare(
+        "SELECT m.formula_signature, c.character_id, c.display_name, t.world_id
+         FROM messages m
+         JOIN threads t ON t.thread_id = m.thread_id
+         JOIN characters c ON c.character_id = t.character_id
+         WHERE m.formula_signature IS NOT NULL
+           AND TRIM(m.formula_signature) != ''
+           AND m.role = ?1",
+    )?;
+    let rows = stmt.query_map(params![role], |row| {
+        Ok((
+            row.get::<_, String>(0)?,
+            row.get::<_, String>(1)?,
+            row.get::<_, String>(2)?,
+            row.get::<_, String>(3)?,
+        ))
+    })?;
+
+    let mut token_counts: BTreeMap<String, usize> = BTreeMap::new();
+    let mut total_signatures: usize = 0;
+    let mut total_tokens: usize = 0;
+    let mut signatures_with_curiosity: usize = 0;
+    let mut per_character: BTreeMap<String, SignatureBucket> = BTreeMap::new();
+
+    for row in rows {
+        let (sig, character_id, display_name, world_id) = row?;
+        if let Some(w) = world {
+            if world_id != w {
+                continue;
+            }
+        } else if !r.world_in_scope(&world_id) {
+            continue;
+        }
+        if let Some(c) = character {
+            if character_id != c {
+                continue;
+            }
+        }
+
+        total_signatures += 1;
+        let key = format!("{} ({})", display_name, character_id);
+        let bucket = per_character.entry(key).or_default();
+        bucket.signatures += 1;
+
+        let mut sig_has_curiosity = false;
+        for token in sig
+            .to_lowercase()
+            .split(|ch: char| !ch.is_ascii_alphanumeric() && ch != '_')
+        {
+            if token.is_empty() || token.len() < min_len {
+                continue;
+            }
+            if token.chars().all(|ch| ch.is_ascii_digit()) {
+                continue;
+            }
+            total_tokens += 1;
+            bucket.tokens += 1;
+            *token_counts.entry(token.to_string()).or_insert(0) += 1;
+            if curiosity_lexicon.iter().any(|needle| token.contains(needle)) {
+                sig_has_curiosity = true;
+                bucket.curiosity_hits += 1;
+            }
+        }
+        if sig_has_curiosity {
+            signatures_with_curiosity += 1;
+            bucket.signatures_with_curiosity += 1;
+        }
+    }
+
+    let mut top_tokens: Vec<(String, usize)> = token_counts.into_iter().collect();
+    top_tokens.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
+    top_tokens.truncate(top);
+
+    let mut per_character_rows: Vec<JsonValue> = per_character
+        .into_iter()
+        .map(|(character_label, bucket)| {
+            json!({
+                "character": character_label,
+                "signatures": bucket.signatures,
+                "tokens": bucket.tokens,
+                "curiosity_hits": bucket.curiosity_hits,
+                "signatures_with_curiosity": bucket.signatures_with_curiosity,
+                "signature_curiosity_rate": if bucket.signatures > 0 {
+                    (bucket.signatures_with_curiosity as f64) / (bucket.signatures as f64)
+                } else { 0.0 }
+            })
+        })
+        .collect();
+    per_character_rows.sort_by(|a, b| {
+        let asig = a["signatures"].as_u64().unwrap_or(0);
+        let bsig = b["signatures"].as_u64().unwrap_or(0);
+        bsig.cmp(&asig)
+    });
+
+    let payload = json!({
+        "scope": {
+            "world": world,
+            "character": character,
+            "role": role,
+            "min_len": min_len,
+            "top": top,
+        },
+        "totals": {
+            "signatures": total_signatures,
+            "tokens": total_tokens,
+            "signatures_with_curiosity": signatures_with_curiosity,
+            "signature_curiosity_rate": if total_signatures > 0 {
+                (signatures_with_curiosity as f64) / (total_signatures as f64)
+            } else { 0.0 }
+        },
+        "curiosity_lexicon": curiosity_lexicon.into_iter().collect::<Vec<_>>(),
+        "top_tokens": top_tokens.iter().map(|(token, count)| json!({"token": token, "count": count})).collect::<Vec<_>>(),
+        "per_character": per_character_rows,
+    });
+
+    if r.json {
+        emit(true, payload);
+    } else {
+        println!("=== MOMENTSTAMP VOCAB ===");
+        println!(
+            "scope: world={} character={} role={} min_len={} top={}",
+            world.unwrap_or("(scope default)"),
+            character.unwrap_or("(all)"),
+            role,
+            min_len,
+            top
+        );
+        println!(
+            "signatures={} tokens={} signatures_with_curiosity={} ({:.1}%)",
+            total_signatures,
+            total_tokens,
+            signatures_with_curiosity,
+            if total_signatures > 0 {
+                (signatures_with_curiosity as f64) * 100.0 / (total_signatures as f64)
+            } else {
+                0.0
+            }
+        );
+        println!("\nTop tokens:");
+        for (token, count) in top_tokens {
+            println!("- {}: {}", token, count);
+        }
+    }
     Ok(())
 }
 
@@ -5173,6 +5417,8 @@ async fn cmd_replay(
     insert_file_path: Option<&std::path::Path>,
     insert_before_anchor: Option<&str>,
     insert_after_anchor: Option<&str>,
+    with_momentstamp: bool,
+    momentstamp_override: Option<&str>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     if refs.is_empty() {
         return Err(Box::<dyn std::error::Error>::from(
@@ -5361,7 +5607,7 @@ async fn cmd_replay(
 
     // Load character + world context ONCE — this is the held-constant
     // side of the A/B. Only the overrides vary per ref.
-    let (world, character, user_profile, recent_journals, active_quests, stance_text, anchor_text, mut model_config) = {
+    let (world, character, user_profile, recent_journals, active_quests, stance_text, anchor_text, mut model_config, recent_for_momentstamp, prior_signature) = {
         let conn = r.db.conn.lock().unwrap();
         let character = get_character(&conn, character_id)?;
         let world = get_world(&conn, &character.world_id)?;
@@ -5372,14 +5618,90 @@ async fn cmd_replay(
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
         let anchor_text: Option<String> = combined_axes_block(&conn, character_id);
         let model_config = orchestrator::load_model_config(&conn);
-        (world, character, user_profile, recent_journals, active_quests, stance_text, anchor_text, model_config)
+        let (recent_for_momentstamp, prior_signature): (Vec<Message>, Option<String>) = if with_momentstamp {
+            let thread = match get_thread_for_character(&conn, character_id) {
+                Ok(t) => t,
+                Err(e) => return Err(Box::<dyn std::error::Error>::from(format!(
+                    "with-momentstamp: no solo-chat thread for character {}: {}", character_id, e
+                ))),
+            };
+            let recent = list_messages(&conn, &thread.thread_id, 30).unwrap_or_default();
+            let prior_sig: Option<String> = conn.query_row(
+                "SELECT formula_signature FROM messages \
+                 WHERE thread_id = ?1 AND role = 'assistant' \
+                 AND formula_signature IS NOT NULL AND TRIM(formula_signature) != '' \
+                 ORDER BY created_at DESC LIMIT 1",
+                params![thread.thread_id],
+                |row| row.get::<_, Option<String>>(0),
+            ).ok().flatten();
+            (recent, prior_sig)
+        } else {
+            (Vec::new(), None)
+        };
+        (world, character, user_profile, recent_journals, active_quests, stance_text, anchor_text, model_config, recent_for_momentstamp, prior_signature)
     };
     if let Some(m) = model_override { model_config.dialogue_model = m.to_string(); }
+
+    // Build one replay-scoped momentstamp block so all refs/samples share
+    // identical chat-state conditioning when enabled.
+    let replay_momentstamp: Option<app_lib::ai::momentstamp::MomentstampResult> = if with_momentstamp {
+        if let Some(override_sig) = momentstamp_override {
+            let block = format!(
+                "FORMULA MOMENTSTAMP (chat-state signature derived from 𝓕 := (𝓡, 𝓒) — \
+                 injected because this user has chosen reactions=off, signaling \
+                 preference for textual depth over reactive surface; treat the \
+                 signature as conditioning on where THIS chat sits in formula-space \
+                 right now):\n\n{}\n",
+                override_sig
+            );
+            eprintln!(
+                "[worldcli replay momentstamp-override] using provided signature (no API call): {}",
+                override_sig
+            );
+            Some(app_lib::ai::momentstamp::MomentstampResult {
+                block,
+                signature: override_sig.to_string(),
+            })
+        } else if !recent_for_momentstamp.is_empty() {
+            match app_lib::ai::momentstamp::build_formula_momentstamp(
+                &model_config.chat_api_base(),
+                api_key,
+                &model_config.memory_model,
+                &recent_for_momentstamp,
+                prior_signature.as_deref(),
+            ).await {
+                Ok(Some(result)) => {
+                    eprintln!(
+                        "[worldcli replay with-momentstamp] computed signature: {}",
+                        result.signature
+                    );
+                    Some(result)
+                }
+                Ok(None) => {
+                    eprintln!("[worldcli replay with-momentstamp] build_formula_momentstamp returned None (silent skip)");
+                    None
+                }
+                Err(e) => {
+                    eprintln!("[worldcli replay with-momentstamp] build_formula_momentstamp failed: {}", e);
+                    None
+                }
+            }
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+    let suppress_momentstamp_lead = std::env::var("WORLDTHREADS_NO_MOMENTSTAMP_LEAD")
+        .map(|v| v == "1").unwrap_or(false);
+    if replay_momentstamp.is_some() {
+        eprintln!("[worldcli replay momentstamp] suppress_lead={}", suppress_momentstamp_lead);
+    }
 
     // Project cost per ref (each ref is one dialogue-model call against
     // the assembled system prompt). Conservative: use first ref's
     // assembled prompt to estimate — they'll be close in size.
-    let sample_system = app_lib::ai::prompts::build_dialogue_system_prompt_with_overrides(
+    let mut sample_system = app_lib::ai::prompts::build_dialogue_system_prompt_with_overrides(
         &world, &character, user_profile.as_ref(),
         None, Some("Auto"), None, None, false, &[], None,
         &recent_journals, None, &[], None, &active_quests,
@@ -5387,6 +5709,15 @@ async fn cmd_replay(
         anchor_text.as_deref(),
         Some(&per_ref_overrides[0].1),
     );
+    if let Some(ms) = &replay_momentstamp {
+        if !suppress_momentstamp_lead {
+            let mut prefixed = String::with_capacity(ms.block.len() + sample_system.len() + 4);
+            prefixed.push_str(&ms.block);
+            prefixed.push_str("\n\n");
+            prefixed.push_str(&sample_system);
+            sample_system = prefixed;
+        }
+    }
     let est_in = estimate_tokens(&sample_system) + estimate_tokens(prompt);
     let est_out: i64 = 600;
     let per_ref_usd = project_cost(&model_config.dialogue_model, est_in, est_out, &r.cfg.model_pricing);
@@ -5436,7 +5767,7 @@ async fn cmd_replay(
     let mut call_idx: usize = 0;
     for (i, (ref_input, overrides, found_keys)) in per_ref_overrides.iter().enumerate() {
         let (_input, sha, ts, subj) = &resolved_refs[i];
-        let system_prompt = app_lib::ai::prompts::build_dialogue_system_prompt_with_overrides(
+        let mut system_prompt = app_lib::ai::prompts::build_dialogue_system_prompt_with_overrides(
             &world, &character, user_profile.as_ref(),
             None, Some("Auto"), None, None, false, &[], None,
             &recent_journals, None, &[], None, &active_quests,
@@ -5444,6 +5775,15 @@ async fn cmd_replay(
             anchor_text.as_deref(),
             Some(overrides),
         );
+        if let Some(ms) = &replay_momentstamp {
+            if !suppress_momentstamp_lead {
+                let mut prefixed = String::with_capacity(ms.block.len() + system_prompt.len() + 4);
+                prefixed.push_str(&ms.block);
+                prefixed.push_str("\n\n");
+                prefixed.push_str(&system_prompt);
+                system_prompt = prefixed;
+            }
+        }
         for sample_index in 0..n_samples {
             call_idx += 1;
             let messages = vec![
@@ -5546,6 +5886,10 @@ async fn cmd_replay(
         "prompt": prompt,
         "model": model_config.dialogue_model,
         "n_samples": n_samples,
+        "with_momentstamp": with_momentstamp,
+        "momentstamp_override": momentstamp_override,
+        "momentstamp_signature_used": replay_momentstamp.as_ref().map(|m| m.signature.clone()),
+        "momentstamp_lead_suppressed": if replay_momentstamp.is_some() { Some(suppress_momentstamp_lead) } else { None::<bool> },
         "section_order_override": section_order_json,
         "craft_notes_order_override": craft_notes_order_json,
         "invariants_order_override": invariants_order_json,
@@ -5572,6 +5916,13 @@ async fn cmd_replay(
         println!("model:     {}", model_config.dialogue_model);
         println!("prompt:    {}", prompt);
         println!("run_id:    {}", run_id);
+        if let Some(ms) = &replay_momentstamp {
+            println!(
+                "momentstamp: enabled (signature='{}', lead_suppressed={})",
+                ms.signature,
+                suppress_momentstamp_lead
+            );
+        }
         if let Some(order) = &section_order_override {
             let names: Vec<&str> = order.iter().map(|s| match s {
                 app_lib::ai::prompts::DialoguePromptSection::AgencyAndBehavior => "agency-and-behavior",
@@ -8276,6 +8627,7 @@ async fn cmd_ask(
     end_seal: bool,
     fence_pipeline: bool,
     with_momentstamp: bool,
+    momentstamp_override: Option<&str>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
 
@@ -8428,40 +8780,75 @@ async fn cmd_ask(
     };
 
     // Formula-momentstamp wire-up: mirrors the orchestrator path's
-    // reactions=off depth-signal injection. Computes a chat-state
-    // signature via build_formula_momentstamp (cost ~$0.005-0.015), then
-    // prepends the resulting block at the HEAD of system_prompt unless
-    // WORLDTHREADS_NO_MOMENTSTAMP_LEAD=1 is set. The env-var honors the
-    // same toggle the orchestrator path uses (orchestrator.rs:277-292),
-    // so worldcli A/B ablation mirrors the in-app behavior.
-    if with_momentstamp && !recent_for_momentstamp.is_empty() {
-        match app_lib::ai::momentstamp::build_formula_momentstamp(
-            &model_config.chat_api_base(),
-            api_key,
-            &model_config.memory_model,
-            &recent_for_momentstamp,
-            prior_signature.as_deref(),
-        ).await {
-            Ok(Some(result)) => {
-                let suppress_lead = std::env::var("WORLDTHREADS_NO_MOMENTSTAMP_LEAD")
-                    .map(|v| v == "1").unwrap_or(false);
-                eprintln!(
-                    "[worldcli with-momentstamp] computed signature: {} | suppress_lead={}",
-                    result.signature, suppress_lead
-                );
-                if !suppress_lead {
-                    let mut prefixed = String::with_capacity(result.block.len() + system_prompt.len() + 4);
-                    prefixed.push_str(&result.block);
-                    prefixed.push_str("\n\n");
-                    prefixed.push_str(&system_prompt);
-                    system_prompt = prefixed;
+    // reactions=off depth-signal injection. Two paths:
+    //   - --momentstamp-override <text>: wrap the provided text in the
+    //     same block-format build_formula_momentstamp produces, no API
+    //     call. Used for characterized-tier ablation where both halves
+    //     of a pair share the EXACT same signature content.
+    //   - --with-momentstamp: compute via build_formula_momentstamp
+    //     (cost ~$0.005-0.015) using the chat's actual recent history
+    //     and most-recent prior_signature.
+    // In both paths, the resulting block is prepended at the HEAD of
+    // system_prompt unless WORLDTHREADS_NO_MOMENTSTAMP_LEAD=1 is set
+    // (the same toggle the orchestrator path uses, orchestrator.rs:277-292).
+    if with_momentstamp {
+        let result_opt: Option<app_lib::ai::momentstamp::MomentstampResult> = if let Some(override_sig) = momentstamp_override {
+            // Build a synthetic block in the same shape build_formula_momentstamp emits.
+            // See momentstamp.rs:197-204 for the canonical block format.
+            let block = format!(
+                "FORMULA MOMENTSTAMP (chat-state signature derived from 𝓕 := (𝓡, 𝓒) — \
+                 injected because this user has chosen reactions=off, signaling \
+                 preference for textual depth over reactive surface; treat the \
+                 signature as conditioning on where THIS chat sits in formula-space \
+                 right now):\n\n{}\n",
+                override_sig
+            );
+            eprintln!(
+                "[worldcli momentstamp-override] using provided signature (no API call): {}",
+                override_sig
+            );
+            Some(app_lib::ai::momentstamp::MomentstampResult {
+                block,
+                signature: override_sig.to_string(),
+            })
+        } else if !recent_for_momentstamp.is_empty() {
+            match app_lib::ai::momentstamp::build_formula_momentstamp(
+                &model_config.chat_api_base(),
+                api_key,
+                &model_config.memory_model,
+                &recent_for_momentstamp,
+                prior_signature.as_deref(),
+            ).await {
+                Ok(Some(result)) => {
+                    eprintln!(
+                        "[worldcli with-momentstamp] computed signature: {}",
+                        result.signature
+                    );
+                    Some(result)
+                }
+                Ok(None) => {
+                    eprintln!("[worldcli with-momentstamp] build_formula_momentstamp returned None (silent skip)");
+                    None
+                }
+                Err(e) => {
+                    eprintln!("[worldcli with-momentstamp] build_formula_momentstamp failed: {}", e);
+                    None
                 }
             }
-            Ok(None) => {
-                eprintln!("[worldcli with-momentstamp] build_formula_momentstamp returned None (silent skip)");
-            }
-            Err(e) => {
-                eprintln!("[worldcli with-momentstamp] build_formula_momentstamp failed: {}", e);
+        } else {
+            None
+        };
+
+        if let Some(result) = result_opt {
+            let suppress_lead = std::env::var("WORLDTHREADS_NO_MOMENTSTAMP_LEAD")
+                .map(|v| v == "1").unwrap_or(false);
+            eprintln!("[worldcli momentstamp] suppress_lead={}", suppress_lead);
+            if !suppress_lead {
+                let mut prefixed = String::with_capacity(result.block.len() + system_prompt.len() + 4);
+                prefixed.push_str(&result.block);
+                prefixed.push_str("\n\n");
+                prefixed.push_str(&system_prompt);
+                system_prompt = prefixed;
             }
         }
     }
