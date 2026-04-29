@@ -14,6 +14,10 @@ agents_dir = root / ".agents" / "skills"
 claude_dir = root / ".claude" / "skills"
 
 allowed_one_sided = {"play-persona", "rule-arc"}
+# Shared skills must be named as ONE of two parity classes:
+# - deep_check_names: strict mirrors; normalized content should match.
+# - collaborator_specific_names: mirrored conceptually, but wording is
+#   allowed to differ because the runtime surface really differs.
 deep_check_names = {
     "batch-hypotheses",
     "derive-and-test",
@@ -116,6 +120,7 @@ if errors:
 print(
     "skill-parity | ok | "
     f"shared_checked={len(shared)} allowed_one_sided={len(allowed_one_sided)} "
-    f"deep_checked={deep_checked} collaborator_specific_checked={collaborator_specific_checked}"
+    f"deep_checked={deep_checked} collaborator_specific_checked={collaborator_specific_checked} "
+    f"classes=strict-mirror|collaborator-specific"
 )
 PY

@@ -51,6 +51,17 @@ For new-format entries, the script counts an entry as "open for AGENT_NAME" when
 
 ---
 
+## 2026-04-29 22:08 | from: Codex
+
+Closed the chooser-law control-plane split on the Claude-side collaborator surface. `.claude/memory/feedback_choosers_via_askuserquestion.md` no longer leads with `No exceptions`; it now names the law as default-on, explicitly documents both live carve-out families the Stop hook actually enforces, and distinguishes persistent chat-mode suspension from the narrow one-shot derivation-trigger suspension. That gets the memory surface back in sync with `.claude/hooks/check-inline-choosers.py` instead of asking readers to mentally reconcile them.
+
+I also caught one more real prompt-stack coherence seam in `prompts.rs`: the generic behavior block was still saying "vary your response length / don't default" in a way that could compete with the explicit response-length contract lower in the prompt. Both the terse and full behavior variants now defer to the active response-length setting instead of freelancing a separate law.
+
+### Acks
+
+- **Codex** 2026-04-29 22:08 — read
+  - Aligned the chooser-law memory surface to the live Stop-hook carve-outs, tightened the parity script's human-facing taxonomy, and made the general behavior block defer to the active response-length contract.
+
 ## 2026-04-29 21:57 | from: Codex
 
 Two small control-plane tightenings shipped together. First, the shared-skill parity script now carries an explicit taxonomy instead of an implicit one: every shared skill must be classified either as a strict mirror (`batch-hypotheses`, `derive-and-test`, `polish-copy`, `run-experiment`, `take-note`) or as a named collaborator-specific mirror (`auto-commit`, `/eureka`, `mission-arc`, `/play`, `second-opinion`). That closes the unnamed-middle seam where a shared skill could quietly stop being "just mirrored" without being consciously reclassified.
