@@ -751,6 +751,15 @@ enum Cmd {
         /// Include imperative/question/other action-shape mix in output.
         #[arg(long, default_value_t = false)]
         action_shape_mix: bool,
+        /// Enforce two-signal policy gate (other_rate and no_concrete_rate).
+        #[arg(long, default_value_t = false)]
+        gate_two_signal: bool,
+        /// Maximum allowed other_rate for two-signal gate.
+        #[arg(long, default_value_t = 0.15)]
+        gate_max_other_rate: f64,
+        /// Maximum allowed no_concrete_rate for two-signal gate.
+        #[arg(long, default_value_t = 0.17)]
+        gate_max_no_concrete_rate: f64,
     },
 
     /// Print a compact stress-pack policy report (other_rate,
@@ -1989,8 +1998,27 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_grade_runs(&r, &api_key, &run_ids, rubric.as_deref(), rubric_ref.as_deref(), rubric_file.as_deref(), model.as_deref(), confirm_cost).await
         }
-        Cmd::GradeStressPack { files, min_pass_rate, max_avg_words, question_as_action_allowed, action_shape_mix } => {
-            cmd_grade_stress_pack(&r, &files, min_pass_rate, max_avg_words, question_as_action_allowed, action_shape_mix)
+        Cmd::GradeStressPack {
+            files,
+            min_pass_rate,
+            max_avg_words,
+            question_as_action_allowed,
+            action_shape_mix,
+            gate_two_signal,
+            gate_max_other_rate,
+            gate_max_no_concrete_rate,
+        } => {
+            cmd_grade_stress_pack(
+                &r,
+                &files,
+                min_pass_rate,
+                max_avg_words,
+                question_as_action_allowed,
+                action_shape_mix,
+                gate_two_signal,
+                gate_max_other_rate,
+                gate_max_no_concrete_rate,
+            )
         }
         Cmd::StressPolicyReport { file } => cmd_stress_policy_report(&r, &file),
         Cmd::Synthesize { git_ref, end_ref, limit, character, group_chat, question, question_file, role, context_turns, model, confirm_cost, repo } => {
@@ -4270,6 +4298,9 @@ fn cmd_grade_stress_pack(
     max_avg_words: f64,
     question_as_action_allowed: bool,
     action_shape_mix: bool,
+    gate_two_signal: bool,
+    gate_max_other_rate: f64,
+    gate_max_no_concrete_rate: f64,
 ) -> Result<(), Box<dyn std::error::Error>> {
     if files.is_empty() {
         return Err(Box::<dyn std::error::Error>::from(
@@ -4284,6 +4315,16 @@ fn cmd_grade_stress_pack(
     if max_avg_words <= 0.0 {
         return Err(Box::<dyn std::error::Error>::from(
             "--max-avg-words must be > 0",
+        ));
+    }
+    if !(0.0..=1.0).contains(&gate_max_other_rate) {
+        return Err(Box::<dyn std::error::Error>::from(
+            "--gate-max-other-rate must be in [0.0, 1.0]",
+        ));
+    }
+    if !(0.0..=1.0).contains(&gate_max_no_concrete_rate) {
+        return Err(Box::<dyn std::error::Error>::from(
+            "--gate-max-no-concrete-rate must be in [0.0, 1.0]",
         ));
     }
 
@@ -4350,6 +4391,7 @@ fn cmd_grade_stress_pack(
     let mut by_file: Vec<JsonValue> = Vec::new();
     let mut aggregate: BTreeMap<String, CharStats> = BTreeMap::new();
     let mut aggregate_shapes: BTreeMap<String, BTreeMap<String, usize>> = BTreeMap::new();
+    let mut aggregate_no_concrete: BTreeMap<String, usize> = BTreeMap::new();
     let mut file_gate_failures: Vec<String> = Vec::new();
 
     for path in files {
@@ -4408,6 +4450,11 @@ fn cmd_grade_stress_pack(
 
             if !pass {
                 let archetype = classify_archetype(row, question_as_action_allowed);
+                if archetype == "no_concrete_directive" {
+                    *aggregate_no_concrete
+                        .entry(character.to_string())
+                        .or_insert(0) += 1;
+                }
                 *per_char_archetypes
                     .entry(character.to_string())
                     .or_default()
@@ -4442,6 +4489,12 @@ fn cmd_grade_stress_pack(
                 .into_iter()
                 .map(|(k, v)| json!({"archetype": k, "count": v}))
                 .collect::<Vec<_>>();
+            let no_concrete_count = per_char_archetypes
+                .get(&character)
+                .and_then(|m| m.get("no_concrete_directive"))
+                .copied()
+                .unwrap_or(0);
+            let no_concrete_rate = no_concrete_count as f64 / stats.total as f64;
             let shape_mix = if action_shape_mix {
                 per_char_shapes
                     .get(&character)
@@ -4453,6 +4506,25 @@ fn cmd_grade_stress_pack(
             } else {
                 Vec::new()
             };
+            let other_rate = per_char_shapes
+                .get(&character)
+                .and_then(|m| m.get("other"))
+                .copied()
+                .unwrap_or(0) as f64
+                / stats.total as f64;
+            let two_signal_fail = gate_two_signal
+                && other_rate >= gate_max_other_rate
+                && no_concrete_rate >= gate_max_no_concrete_rate;
+            if two_signal_fail {
+                file_passed = false;
+                file_gate_failures.push(format!(
+                    "{} {} failed two-signal gate (other_rate={:.3}, no_concrete_rate={:.3})",
+                    path.display(),
+                    character,
+                    other_rate,
+                    no_concrete_rate
+                ));
+            }
             char_rows.push(json!({
                 "character": character,
                 "total": stats.total,
@@ -4462,6 +4534,9 @@ fn cmd_grade_stress_pack(
                 "gate_passed": passed,
                 "failure_archetypes": archetypes,
                 "action_shape_mix": shape_mix,
+                "other_rate": other_rate,
+                "no_concrete_rate": no_concrete_rate,
+                "two_signal_fail": two_signal_fail,
             }));
         }
         by_file.push(json!({
@@ -4494,6 +4569,20 @@ fn cmd_grade_stress_pack(
         } else {
             Vec::new()
         };
+        let no_concrete_count = aggregate_no_concrete.get(&character).copied().unwrap_or(0);
+        let no_concrete_rate = no_concrete_count as f64 / stats.total as f64;
+        let other_rate = aggregate_shapes
+            .get(&character)
+            .and_then(|m| m.get("other"))
+            .copied()
+            .unwrap_or(0) as f64
+            / stats.total as f64;
+        let two_signal_fail = gate_two_signal
+            && other_rate >= gate_max_other_rate
+            && no_concrete_rate >= gate_max_no_concrete_rate;
+        if two_signal_fail {
+            overall_passed = false;
+        }
         overall_rows.push(json!({
             "character": character,
             "total": stats.total,
@@ -4502,6 +4591,9 @@ fn cmd_grade_stress_pack(
             "avg_words": avg_words,
             "gate_passed": passed,
             "action_shape_mix": shape_mix,
+            "other_rate": other_rate,
+            "no_concrete_rate": no_concrete_rate,
+            "two_signal_fail": two_signal_fail,
         }));
     }
 
@@ -4511,6 +4603,9 @@ fn cmd_grade_stress_pack(
             "max_avg_words": max_avg_words,
             "question_as_action_allowed": question_as_action_allowed,
             "action_shape_mix": action_shape_mix,
+            "gate_two_signal": gate_two_signal,
+            "gate_max_other_rate": gate_max_other_rate,
+            "gate_max_no_concrete_rate": gate_max_no_concrete_rate,
         },
         "files": by_file,
         "overall": {

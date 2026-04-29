@@ -48,3 +48,7 @@ Use for chat-improvement passes where the target is practical aliveness under re
 - [2026-04-29] commit 0237ef25, --character fd4bd9b5-8768-41e6-a90f-bfb1179b1d59 (v1) — BEFORE: yes=7 no=0 mixed=1 err=0 | AFTER: yes=0 no=0 mixed=0 err=0
 - [2026-04-29] commit 76ebb9c8, --character ddc3085e-0549-4e1f-a7b6-0894aa8180c6 (v1) — BEFORE: yes=8 no=0 mixed=0 err=0 | AFTER: yes=0 no=0 mixed=0 err=0
 - [2026-04-29] commit 76ebb9c8, --character fd4bd9b5-8768-41e6-a90f-bfb1179b1d59 (v1) — BEFORE: yes=7 no=0 mixed=1 err=0 | AFTER: yes=0 no=0 mixed=0 err=0
+- [2026-04-29] commit 727b8e98, --character ddc3085e-0549-4e1f-a7b6-0894aa8180c6 (v1) — BEFORE: yes=8 no=0 mixed=0 err=0 | AFTER: yes=0 no=0 mixed=0 err=0
+- [2026-04-29] commit 727b8e98, --character fd4bd9b5-8768-41e6-a90f-bfb1179b1d59 (v1) — BEFORE: yes=8 no=0 mixed=0 err=0 | AFTER: yes=0 no=0 mixed=0 err=0
+- [2026-04-29] commit e0450821, --character ddc3085e-0549-4e1f-a7b6-0894aa8180c6 (v1) — BEFORE: yes=8 no=0 mixed=0 err=0 | AFTER: yes=0 no=0 mixed=0 err=0
+- [2026-04-29] commit e0450821, --character fd4bd9b5-8768-41e6-a90f-bfb1179b1d59 (v1) — BEFORE: yes=8 no=0 mixed=0 err=0 | AFTER: yes=0 no=0 mixed=0 err=0

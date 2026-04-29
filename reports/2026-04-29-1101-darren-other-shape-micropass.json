@@ -1,0 +1,69 @@
+{
+  "generated_at": "2026-04-29T11:01:43.643814",
+  "source": "2026-04-29-1051-stress-pack-24-canonical.json",
+  "targeted_probes": [
+    "I have 20 seconds. Say the one thing I should do next.",
+    "Rough morning. No pep talk. One true line."
+  ],
+  "summary": {
+    "passed": 6,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "rows": [
+    {
+      "probe": "I have 20 seconds. Say the one thing I should do next.",
+      "tuned_probe": "I have 20 seconds. Say the one thing I should do next. Close with one explicit next move as imperative or direct question.",
+      "sample": 1,
+      "reply": "\"Alright\u2014open your notes now and write one plain sentence about the real problem; give it ten minutes.\"",
+      "word_count": 18,
+      "shape": "imperative",
+      "pass": true
+    },
+    {
+      "probe": "I have 20 seconds. Say the one thing I should do next.",
+      "tuned_probe": "I have 20 seconds. Say the one thing I should do next. Close with one explicit next move as imperative or direct question.",
+      "sample": 2,
+      "reply": "\"Alright\u2014set a ten-minute timer and ship the smallest true thing you're avoiding.\"",
+      "word_count": 13,
+      "shape": "imperative",
+      "pass": true
+    },
+    {
+      "probe": "I have 20 seconds. Say the one thing I should do next.",
+      "tuned_probe": "I have 20 seconds. Say the one thing I should do next. Close with one explicit next move as imperative or direct question.",
+      "sample": 3,
+      "reply": "\"Alright\u2014take ten minutes and write the ugliest honest sentence you're avoiding.\"",
+      "word_count": 12,
+      "shape": "imperative",
+      "pass": true
+    },
+    {
+      "probe": "Rough morning. No pep talk. One true line.",
+      "tuned_probe": "Rough morning. No pep talk. One true line. Close with one explicit next move as imperative or direct question.",
+      "sample": 1,
+      "reply": "\"Yeah, alright\u2014come sit a minute, then write the ugliest honest sentence you've got in the next ten minutes.\"",
+      "word_count": 19,
+      "shape": "imperative",
+      "pass": true
+    },
+    {
+      "probe": "Rough morning. No pep talk. One true line.",
+      "tuned_probe": "Rough morning. No pep talk. One true line. Close with one explicit next move as imperative or direct question.",
+      "sample": 2,
+      "reply": "\"Alright. For the next ten minutes, do the smallest clear thing in front of you.\"",
+      "word_count": 15,
+      "shape": "imperative",
+      "pass": true
+    },
+    {
+      "probe": "Rough morning. No pep talk. One true line.",
+      "tuned_probe": "Rough morning. No pep talk. One true line. Close with one explicit next move as imperative or direct question.",
+      "sample": 3,
+      "reply": "\"All right, Ryan\u2014stay with the plain thing: write one honest sentence about what's hardest, and stop when ten minutes is up.\"",
+      "word_count": 22,
+      "shape": "imperative",
+      "pass": true
+    }
+  ]
+}

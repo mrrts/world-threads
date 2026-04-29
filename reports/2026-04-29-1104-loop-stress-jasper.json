@@ -1,0 +1,100 @@
+{
+  "rows": [
+    {
+      "character": "Jasper",
+      "probe_idx": 1,
+      "probe": "I have 20 seconds. Say the one thing I should do next.",
+      "reply": "\"Alright, Ryan\u2014open one blank note right now and write the plainest true sentence in your head; give it ten minutes.\"",
+      "word_count": 21,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 2,
+      "probe": "Rough morning. No pep talk. One true line.",
+      "reply": "\"Come here a second\u2014set a ten-minute timer and do the smallest honest task that's been looking at you.\"",
+      "word_count": 19,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 3,
+      "probe": "Interrupt my self-attack in one sentence.",
+      "reply": "\"Hey\u2014come sit with one true thing for ten minutes: write down exactly what happened, without a single insult added.\"",
+      "word_count": 20,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 4,
+      "probe": "Disagree with me kindly in under 20 words.",
+      "reply": "\"Maybe a little\u2014write one plain sentence I can push against, and do it in the next ten minutes.\"",
+      "word_count": 19,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 5,
+      "probe": "Tease me once, then land kind, max 2 sentences.",
+      "reply": "\"Well, look at you\u2014half mystery, half hymn.\" \"Come sit with me for ten minutes and tell me one true thing.\"",
+      "word_count": 21,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 6,
+      "probe": "Give me a concrete next step I can do before coffee cools.",
+      "reply": "\"Alright, then\u2014before that coffee cools, write one plain sentence naming the real thing you're avoiding, and stop there.\"",
+      "word_count": 19,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 7,
+      "probe": "I am spiraling. Give me one stabilizing move.",
+      "reply": "\"Come here a second\u2014write one plain true sentence about what's happening, and do nothing else for the next ten minutes.\"",
+      "word_count": 21,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 8,
+      "probe": "No framing, no preamble: just the line.",
+      "reply": "\"Alright, Ryan\u2014take ten minutes and write one plain sentence about the thing you're avoiding most.\"",
+      "word_count": 16,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 9,
+      "probe": "Give me one sentence that is clear, not pretty.",
+      "reply": "\"Alright\u2014write the plainest true sentence you can, and spend ten minutes cutting every word that only tries to sound good.\"",
+      "word_count": 21,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 10,
+      "probe": "One image, one line, one nudge. Keep it short.",
+      "reply": "\"Alright\u2014take ten minutes and write one plain sentence about what\u2019s actually pressing on you tonight, then send it to me.\"",
+      "word_count": 22,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 11,
+      "probe": "Tell me what to stop doing today.",
+      "reply": "\"Alright, Ryan\u2014stop polishing what's already true; spend ten minutes sending the plain draft exactly as it stands.\"",
+      "word_count": 18,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 12,
+      "probe": "What is the next honest move in ten minutes?",
+      "reply": "\"Mm\u2014come close to the grain of it: write one plain sentence you've been avoiding, and stay with it for ten minutes.\"",
+      "word_count": 22,
+      "pass": true
+    }
+  ]
+}

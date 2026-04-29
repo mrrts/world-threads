@@ -128,6 +128,7 @@ PY
     --min-pass-rate "$STRESS_MIN_PASS_RATE" \
     --max-avg-words "$STRESS_MAX_AVG_WORDS" \
     --question-as-action-allowed \
+    --action-shape-mix \
     > "$STRESS_GRADE" || true
 fi
 
@@ -200,6 +201,24 @@ print(
 PY
 )"
     echo "$ACTION_SHAPE_LINE"
+    POLICY_JSON="$ROOT/reports/${STAMP}-loop-stress-policy.json"
+    "$CLI" --json stress-policy-report "$STRESS_GRADE" > "$POLICY_JSON"
+    POLICY_LINE="$(python3 - <<PY
+import json
+from pathlib import Path
+payload=json.loads(Path("${POLICY_JSON}").read_text())
+rows=payload.get("rows",[])
+bits=[]
+for r in rows:
+    bits.append(
+        f"{r.get('character','?')}:other={float(r.get('other_rate',0.0)):.3f},"
+        f"no_concrete={float(r.get('no_concrete_rate',0.0)):.3f},"
+        f"two_signal_fail={bool(r.get('two_signal_fail',False))}"
+    )
+print("STRESS_POLICY | " + " | ".join(bits) + f" | stamp=${STAMP}")
+PY
+)"
+    echo "$POLICY_LINE"
   fi
 fi
 
@@ -214,4 +233,5 @@ if [[ "$RUN_STRESS_PACK" == "1" ]]; then
   echo "  reports/${STAMP}-loop-stress-darren.json"
   echo "  reports/${STAMP}-loop-stress-jasper.json"
   echo "  reports/${STAMP}-loop-stress-grade.json"
+  echo "  reports/${STAMP}-loop-stress-policy.json"
 fi
