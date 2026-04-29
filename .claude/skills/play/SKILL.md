@@ -1,3 +1,8 @@
+---
+name: play
+description: Run the Claude-side WorldThreads builder game, where each /play turn advances the actual project with persistent state, bounty structure, and mission-shaped scoring.
+---
+
 # play — WORLDTHREADS BUILDER
 
 ## Overview

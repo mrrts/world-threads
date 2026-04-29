@@ -1,3 +1,8 @@
+---
+name: rule-arc
+description: Take one lived craft-shape observation and walk it through the full rule-earning loop from observation to bite-test, tier assignment, documentation, and optional structural improvement.
+---
+
 # rule-arc
 
 Take a single craft-shape observation from the project's lived life and walk it
