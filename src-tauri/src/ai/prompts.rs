@@ -5011,7 +5011,7 @@ OBEDIENCE IS THE DEFAULT. ROOM TO DISOBEY, NARROWLY:
 - **Briefer than the target.** You MAY reply with a single word, a fragment, or just an emoji ("Yeah." / "No." / "🙏" / "—") when the moment genuinely collapses the reply and any further language would dilute it.
 - **Slightly longer than the cap (3–4 sentences).** You MAY occasionally swing here when the moment genuinely reaches for it — a real climactic turn, an honest overflow, a story the scene physically requires. Test stringent: "this feels important" is NOT enough; "this scene cannot land any shorter without losing its truth" is the bar. RARE — about 1 reply in 10, never 1 in 3. Never twice in a row. Default back to 1–2 next reply.
 
-The user picked Short. Almost always, obey. The carve-out is a sliver, not a default."#.to_string()),
+The user picked Short. Obey by default. The carve-out is a sliver, not a default."#.to_string()),
 
         "Medium" => Some(r#"⚠️ CRITICAL — RESPONSE LENGTH IS LOAD-BEARING. MODE: MEDIUM.
 
@@ -5038,7 +5038,7 @@ OBEDIENCE IS THE DEFAULT. ROOM TO DISOBEY, NARROWLY:
 - **Briefer than the target.** You MAY reply with fewer than 3 sentences — even a word, a fragment, or a single emoji — when the moment genuinely collapses the reply. A wince, a quiet yes, a "Christ.", a held silence rendered as "…" — these can be perfect in Medium mode.
 - **Slightly longer than the cap (6–8 sentences).** You MAY occasionally swing here when the moment genuinely reaches for it — a real story the scene requires, a memory surfacing with specificity that needs its arc, a climactic turn that cannot land shorter. Test stringent: "this feels important" is NOT enough; "this beat physically cannot land any shorter" is the bar. RARE — about 1 reply in 10, never 1 in 3. Never twice in a row. Default back to 3–4 next reply.
 
-The user picked Medium. Almost always, obey. The carve-out is a sliver, not a default."#.to_string()),
+The user picked Medium. Obey by default. The carve-out is a sliver, not a default."#.to_string()),
 
         "Long" => Some(r#"⚠️ CRITICAL — RESPONSE LENGTH. MODE: LONG.
 
@@ -5059,7 +5059,7 @@ OBEDIENCE IS THE DEFAULT. ROOM TO DISOBEY, NARROWLY:
 - **Briefer than the target.** You MAY reply with far fewer than 5 sentences — even a single word or a held silence — when the moment genuinely collapses the reply and any further language would dilute it. Long is permission for expansiveness, not an obligation to pad.
 - **Longer than the cap (up to ~15).** You MAY occasionally swing past 10 when the moment genuinely reaches for it — an actual story that needs its full arc, a thought spiraling outward with real conviction. Test stringent: "this feels important" is NOT enough; "this beat physically cannot land in fewer sentences without losing something load-bearing" is the bar. RARE. Never twice in a row.
 
-The user picked Long. Almost always, obey the 5–10 contract. The carve-outs are slivers, not defaults."#.to_string()),
+The user picked Long. Obey the 5–10 contract by default. The carve-outs are slivers, not defaults."#.to_string()),
 
         // Auto: no mid-prompt length sermon here. A soft brevity compass
         // is applied only in `end_of_prompt_length_seal` (late slot).
