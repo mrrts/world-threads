@@ -495,6 +495,7 @@ Update (2026-04-29 late reruns):
 - Pinned-neutral 3-probe rerun landed symmetric (`A 2/3`, `B 2/3`) in this pass.
 - Pinned-curiosity mirror is now part of the standard matrix; do not promote tiers from a single 3-probe slice.
 - Promotion rule: require repeated paired probes across both pinned classes plus organic control before any mechanism-tier upgrade.
+- Humor is first-class option-register in momentstamp spectrum reads; evaluate warm/neutral/ache/humor as parallel valid outputs chosen by evidence.
 
 ## Replayable initial-conditions (momentstamp override)
 

@@ -108,7 +108,7 @@ enum Cmd {
         top: usize,
     },
     /// Emit a compact bias-corridor score for persisted
-    /// formula_signature tokens (warm vs neutral vs ache/burden).
+    /// formula_signature tokens (warm vs neutral vs ache/burden vs humor).
     MomentstampCorridor {
         /// Optional world scope. When omitted, uses current CLI scope.
         #[arg(long)]
@@ -131,6 +131,9 @@ enum Cmd {
         /// Maximum acceptable signature-level warm rate (0.0-1.0).
         #[arg(long)]
         gate_max_warm_rate: Option<f64>,
+        /// Minimum acceptable signature-level humor rate (0.0-1.0).
+        #[arg(long)]
+        gate_min_humor_rate: Option<f64>,
     },
 
     /// Substrate atlas (v1): registry of every `pub fn build_*` in atlas
@@ -1770,7 +1773,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::MomentstampVocab { world, character, role, min_len, top } => {
             cmd_momentstamp_vocab(&r, world.as_deref(), character.as_deref(), &role, min_len, top)
         }
-        Cmd::MomentstampCorridor { world, character, role, min_len, gate_min_neutral_rate, gate_min_ache_rate, gate_max_warm_rate } => {
+        Cmd::MomentstampCorridor { world, character, role, min_len, gate_min_neutral_rate, gate_min_ache_rate, gate_max_warm_rate, gate_min_humor_rate } => {
             cmd_momentstamp_corridor(
                 &r,
                 world.as_deref(),
@@ -1780,6 +1783,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 gate_min_neutral_rate,
                 gate_min_ache_rate,
                 gate_max_warm_rate,
+                gate_min_humor_rate,
             )
         }
         Cmd::ListWorlds => cmd_list_worlds(&r),
@@ -3447,9 +3451,13 @@ fn cmd_momentstamp_corridor(
     gate_min_neutral_rate: Option<f64>,
     gate_min_ache_rate: Option<f64>,
     gate_max_warm_rate: Option<f64>,
+    gate_min_humor_rate: Option<f64>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let gate_requested =
-        gate_min_neutral_rate.is_some() || gate_min_ache_rate.is_some() || gate_max_warm_rate.is_some();
+        gate_min_neutral_rate.is_some()
+            || gate_min_ache_rate.is_some()
+            || gate_max_warm_rate.is_some()
+            || gate_min_humor_rate.is_some();
     if let Some(w) = world {
         r.check_world(w)?;
     }
@@ -3500,6 +3508,20 @@ fn cmd_momentstamp_corridor(
     ]
     .into_iter()
     .collect();
+    let humor_lexicon: BTreeSet<&'static str> = [
+        "humor",
+        "play",
+        "playful",
+        "joke",
+        "wit",
+        "laugh",
+        "smile",
+        "fun",
+        "tease",
+        "light",
+    ]
+    .into_iter()
+    .collect();
 
     let conn = r.db.conn.lock().unwrap();
     let mut stmt = conn.prepare(
@@ -3525,9 +3547,11 @@ fn cmd_momentstamp_corridor(
     let mut warm_token_hits: usize = 0;
     let mut neutral_token_hits: usize = 0;
     let mut ache_token_hits: usize = 0;
+    let mut humor_token_hits: usize = 0;
     let mut sig_warm: usize = 0;
     let mut sig_neutral: usize = 0;
     let mut sig_ache: usize = 0;
+    let mut sig_humor: usize = 0;
 
     for row in rows {
         let (sig, character_id, _display_name, world_id) = row?;
@@ -3548,6 +3572,7 @@ fn cmd_momentstamp_corridor(
         let mut this_warm = false;
         let mut this_neutral = false;
         let mut this_ache = false;
+        let mut this_humor = false;
         for token in signature_tokens(&sig, min_len) {
             total_tokens += 1;
             if warm_lexicon.iter().any(|k| token.contains(k)) {
@@ -3562,6 +3587,10 @@ fn cmd_momentstamp_corridor(
                 ache_token_hits += 1;
                 this_ache = true;
             }
+            if humor_lexicon.iter().any(|k| token.contains(k)) {
+                humor_token_hits += 1;
+                this_humor = true;
+            }
         }
         if this_warm {
             sig_warm += 1;
@@ -3572,11 +3601,15 @@ fn cmd_momentstamp_corridor(
         if this_ache {
             sig_ache += 1;
         }
+        if this_humor {
+            sig_humor += 1;
+        }
     }
 
     let warm_rate = if total_signatures > 0 { sig_warm as f64 / total_signatures as f64 } else { 0.0 };
     let neutral_rate = if total_signatures > 0 { sig_neutral as f64 / total_signatures as f64 } else { 0.0 };
     let ache_rate = if total_signatures > 0 { sig_ache as f64 / total_signatures as f64 } else { 0.0 };
+    let humor_rate = if total_signatures > 0 { sig_humor as f64 / total_signatures as f64 } else { 0.0 };
 
     let mut gate_failures: Vec<String> = Vec::new();
     if let Some(min_neutral) = gate_min_neutral_rate {
@@ -3603,6 +3636,14 @@ fn cmd_momentstamp_corridor(
             ));
         }
     }
+    if let Some(min_humor) = gate_min_humor_rate {
+        if humor_rate < min_humor {
+            gate_failures.push(format!(
+                "humor_rate {:.4} < required {:.4}",
+                humor_rate, min_humor
+            ));
+        }
+    }
 
     let payload = json!({
         "scope": {
@@ -3614,6 +3655,7 @@ fn cmd_momentstamp_corridor(
                 "min_neutral_rate": gate_min_neutral_rate,
                 "min_ache_rate": gate_min_ache_rate,
                 "max_warm_rate": gate_max_warm_rate,
+                "min_humor_rate": gate_min_humor_rate,
             }
         },
         "totals": {
@@ -3625,20 +3667,24 @@ fn cmd_momentstamp_corridor(
                 "warm": warm_token_hits,
                 "neutral": neutral_token_hits,
                 "ache": ache_token_hits,
+                "humor": humor_token_hits,
             },
             "signature_presence": {
                 "warm": sig_warm,
                 "neutral": sig_neutral,
                 "ache": sig_ache,
+                "humor": sig_humor,
                 "warm_rate": warm_rate,
                 "neutral_rate": neutral_rate,
                 "ache_rate": ache_rate,
+                "humor_rate": humor_rate,
             }
         },
         "lexicons": {
             "warm": warm_lexicon.into_iter().collect::<Vec<_>>(),
             "neutral": neutral_lexicon.into_iter().collect::<Vec<_>>(),
             "ache": ache_lexicon.into_iter().collect::<Vec<_>>(),
+            "humor": humor_lexicon.into_iter().collect::<Vec<_>>(),
         },
         "gate": {
             "passed": gate_failures.is_empty(),
@@ -3657,10 +3703,11 @@ fn cmd_momentstamp_corridor(
             total_signatures, total_tokens
         );
         println!(
-            "signature presence: warm={:.1}% neutral={:.1}% ache={:.1}%",
+            "signature presence: warm={:.1}% neutral={:.1}% ache={:.1}% humor={:.1}%",
             rates["warm_rate"].as_f64().unwrap_or(0.0) * 100.0,
             rates["neutral_rate"].as_f64().unwrap_or(0.0) * 100.0,
             rates["ache_rate"].as_f64().unwrap_or(0.0) * 100.0,
+            rates["humor_rate"].as_f64().unwrap_or(0.0) * 100.0,
         );
         if gate_requested {
             println!("gates: {}", if gate_passed { "PASS" } else { "FAIL" });
