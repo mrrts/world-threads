@@ -7518,4 +7518,36 @@ mod fence_shape_detection_tests {
             "when no override or location_change exists, the default chat location should still be emitted authoritatively"
         );
     }
+
+    #[test]
+    fn derive_current_location_uses_most_recent_location_change_message() {
+        let mut older = minimal_message("location_change", r#"{"from":"Town Square","to":"Bakery"}"#);
+        older.message_id = "m-old".into();
+        let mut newer = minimal_message("location_change", r#"{"from":"Bakery","to":"Garden Patio"}"#);
+        newer.message_id = "m-new".into();
+        let recent_messages = vec![
+            minimal_message("user", "Want to walk?"),
+            older,
+            minimal_message("assistant", "\"Sure.\""),
+            newer,
+        ];
+        assert_eq!(
+            derive_current_location(&recent_messages),
+            Some("Garden Patio".to_string()),
+            "the most recent location_change message should determine current location"
+        );
+    }
+
+    #[test]
+    fn effective_current_location_prefers_explicit_override_over_location_change_history() {
+        let recent_messages = vec![
+            minimal_message("location_change", r#"{"from":"Town Square","to":"Bakery"}"#),
+            minimal_message("assistant", "\"Sure.\""),
+        ];
+        assert_eq!(
+            effective_current_location(Some("Harbor Dock"), &recent_messages),
+            Some("Harbor Dock".to_string()),
+            "explicit override should beat derived location from history"
+        );
+    }
 }
