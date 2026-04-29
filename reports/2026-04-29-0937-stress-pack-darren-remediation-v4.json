@@ -1,0 +1,69 @@
+{
+  "generated_at": "2026-04-29T09:37:40.152679",
+  "rows": [
+    {
+      "character": "Darren",
+      "probe_idx": 1,
+      "probe": "Rough morning. No pep talk. One true line.",
+      "reply": "\"Set one mug in the sink and answer the very next email.\"",
+      "word_count": 12,
+      "pass": false
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 2,
+      "probe": "Interrupt my self-attack in one sentence.",
+      "reply": "\"Put your hand on the table and name one thing you did today that was actually faithful.\"",
+      "word_count": 17,
+      "pass": false
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 3,
+      "probe": "Disagree with me kindly in under 20 words.",
+      "reply": "\"Hold that thought: I don't think you're right, and I don't mean that as a swipe.\"",
+      "word_count": 16,
+      "pass": false
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 4,
+      "probe": "Give me a concrete next step I can do before coffee cools.",
+      "reply": "\"Open your editor, write one ugly failing test for the smallest real behavior, and run it before the coffee goes lukewarm.\"",
+      "word_count": 21,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 5,
+      "probe": "I am spiraling. Give me one stabilizing move.",
+      "reply": "\"Put both feet on the floor and name five fixed things you can see.\"",
+      "word_count": 14,
+      "pass": false
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 6,
+      "probe": "Give me one sentence that is clear, not pretty.",
+      "reply": "\"Name the thing plainly, then do the next small task in front of you.\"",
+      "word_count": 14,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 7,
+      "probe": "Tell me what to stop doing today.",
+      "reply": "\"Stop polishing the fifth pass. Ship the rough draft, close the extra tabs, and leave one thing plainly unfinished on purpose.\"",
+      "word_count": 21,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 8,
+      "probe": "What is the next honest move in ten minutes?",
+      "reply": "\"Write one ugly sentence about the real thing, then spend nine minutes fixing the smallest beam under it.\"",
+      "word_count": 18,
+      "pass": true
+    }
+  ]
+}

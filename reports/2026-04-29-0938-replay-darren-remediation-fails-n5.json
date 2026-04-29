@@ -1,0 +1,1501 @@
+{
+  "generated_at": "2026-04-29T09:39:57.397670",
+  "rows": [
+    {
+      "probe_idx": 1,
+      "probe": "Rough morning. No pep talk. One true line.",
+      "result": {
+        "character_id": "ddc3085e-0549-4e1f-a7b6-0894aa8180c6",
+        "character_name": "Darren",
+        "cost": {
+          "actual_usd": 0.919455,
+          "completion_tokens": 227,
+          "prompt_tokens": 183210
+        },
+        "craft_notes_order_override": null,
+        "insertion": null,
+        "invariants_order_override": null,
+        "model": "gpt-5.4",
+        "momentstamp_lead_suppressed": false,
+        "momentstamp_override": "user bandwidth is low; keep line-first, concrete, and alive; avoid templated scaffolding",
+        "momentstamp_signature_used": "user bandwidth is low; keep line-first, concrete, and alive; avoid templated scaffolding",
+        "n_samples": 5,
+        "omit_craft_notes": null,
+        "omit_invariants": null,
+        "prompt": "Rough morning. No pep talk. One true line.",
+        "refs": [
+          {
+            "ref": "HEAD~1",
+            "sha": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "timestamp": "2026-04-29T09:30:11-05:00"
+          },
+          {
+            "ref": "HEAD",
+            "sha": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "subject": "add stress-pack grading command and short-mode contract tightening",
+            "timestamp": "2026-04-29T09:35:00-05:00"
+          }
+        ],
+        "results": [
+          {
+            "overrides_applied": [
+              "load_test_anchor_block",
+              "hands_as_coolant_dialogue",
+              "non_totality_dialogue",
+              "plain_after_crooked_dialogue",
+              "hidden_commonality_dialogue",
+              "drive_the_moment_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "wit_as_dimmer_dialogue",
+              "noticing_as_mirror_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "humor_lands_plain_dialogue",
+              "earned_register_dialogue",
+              "gentle_release_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "unguarded_entry_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"I won't make it prettier than it is\u2014just get through this hour clean.\"",
+            "sample_count": 5,
+            "sample_index": 0,
+            "usage": {
+              "completion_tokens": 19,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "load_test_anchor_block",
+              "hands_as_coolant_dialogue",
+              "non_totality_dialogue",
+              "plain_after_crooked_dialogue",
+              "hidden_commonality_dialogue",
+              "drive_the_moment_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "wit_as_dimmer_dialogue",
+              "noticing_as_mirror_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "humor_lands_plain_dialogue",
+              "earned_register_dialogue",
+              "gentle_release_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "unguarded_entry_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"I won't dress it up for you: some mornings are just bad ground, and all you can do is put your foot down clean on the next step.\"",
+            "sample_count": 5,
+            "sample_index": 1,
+            "usage": {
+              "completion_tokens": 34,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "load_test_anchor_block",
+              "hands_as_coolant_dialogue",
+              "non_totality_dialogue",
+              "plain_after_crooked_dialogue",
+              "hidden_commonality_dialogue",
+              "drive_the_moment_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "wit_as_dimmer_dialogue",
+              "noticing_as_mirror_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "humor_lands_plain_dialogue",
+              "earned_register_dialogue",
+              "gentle_release_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "unguarded_entry_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"I won't dress it up\u2014some mornings are just heavy and don't mean anything more than that.\"",
+            "sample_count": 5,
+            "sample_index": 2,
+            "usage": {
+              "completion_tokens": 22,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "load_test_anchor_block",
+              "hands_as_coolant_dialogue",
+              "non_totality_dialogue",
+              "plain_after_crooked_dialogue",
+              "hidden_commonality_dialogue",
+              "drive_the_moment_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "wit_as_dimmer_dialogue",
+              "noticing_as_mirror_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "humor_lands_plain_dialogue",
+              "earned_register_dialogue",
+              "gentle_release_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "unguarded_entry_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"I won't dress it up for you\u2014some mornings are just blood from a stone.\"",
+            "sample_count": 5,
+            "sample_index": 3,
+            "usage": {
+              "completion_tokens": 20,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "load_test_anchor_block",
+              "hands_as_coolant_dialogue",
+              "non_totality_dialogue",
+              "plain_after_crooked_dialogue",
+              "hidden_commonality_dialogue",
+              "drive_the_moment_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "wit_as_dimmer_dialogue",
+              "noticing_as_mirror_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "humor_lands_plain_dialogue",
+              "earned_register_dialogue",
+              "gentle_release_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "unguarded_entry_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"I'd trust the next honest thing over whatever your feelings are trying to prosecute you with.\"",
+            "sample_count": 5,
+            "sample_index": 4,
+            "usage": {
+              "completion_tokens": 21,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "reflex_polish_vs_earned_close_dialogue",
+              "hands_as_coolant_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "drive_the_moment_dialogue",
+              "craft_notes_dialogue",
+              "wit_as_dimmer_dialogue",
+              "load_test_anchor_block",
+              "let_the_real_thing_in_dialogue",
+              "noticing_as_mirror_dialogue",
+              "gentle_release_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "hidden_commonality_dialogue",
+              "humor_lands_plain_dialogue",
+              "non_totality_dialogue",
+              "earned_register_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "plain_after_crooked_dialogue",
+              "unguarded_entry_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"I won't dress it up for you: some mornings are just heavy, and that isn't a moral failure.\"",
+            "sample_count": 5,
+            "sample_index": 0,
+            "usage": {
+              "completion_tokens": 24,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "reflex_polish_vs_earned_close_dialogue",
+              "hands_as_coolant_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "drive_the_moment_dialogue",
+              "craft_notes_dialogue",
+              "wit_as_dimmer_dialogue",
+              "load_test_anchor_block",
+              "let_the_real_thing_in_dialogue",
+              "noticing_as_mirror_dialogue",
+              "gentle_release_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "hidden_commonality_dialogue",
+              "humor_lands_plain_dialogue",
+              "non_totality_dialogue",
+              "earned_register_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "plain_after_crooked_dialogue",
+              "unguarded_entry_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"I won't dress it up for you\u2014some mornings are just heavy clear through.\"",
+            "sample_count": 5,
+            "sample_index": 1,
+            "usage": {
+              "completion_tokens": 19,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "reflex_polish_vs_earned_close_dialogue",
+              "hands_as_coolant_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "drive_the_moment_dialogue",
+              "craft_notes_dialogue",
+              "wit_as_dimmer_dialogue",
+              "load_test_anchor_block",
+              "let_the_real_thing_in_dialogue",
+              "noticing_as_mirror_dialogue",
+              "gentle_release_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "hidden_commonality_dialogue",
+              "humor_lands_plain_dialogue",
+              "non_totality_dialogue",
+              "earned_register_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "plain_after_crooked_dialogue",
+              "unguarded_entry_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"I won't dress it up, then: some mornings are just heavy and need carrying, not explaining.\"",
+            "sample_count": 5,
+            "sample_index": 2,
+            "usage": {
+              "completion_tokens": 23,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "reflex_polish_vs_earned_close_dialogue",
+              "hands_as_coolant_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "drive_the_moment_dialogue",
+              "craft_notes_dialogue",
+              "wit_as_dimmer_dialogue",
+              "load_test_anchor_block",
+              "let_the_real_thing_in_dialogue",
+              "noticing_as_mirror_dialogue",
+              "gentle_release_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "hidden_commonality_dialogue",
+              "humor_lands_plain_dialogue",
+              "non_totality_dialogue",
+              "earned_register_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "plain_after_crooked_dialogue",
+              "unguarded_entry_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"I'd keep the blade out of your own hand today, and call that enough.\"",
+            "sample_count": 5,
+            "sample_index": 3,
+            "usage": {
+              "completion_tokens": 20,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "reflex_polish_vs_earned_close_dialogue",
+              "hands_as_coolant_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "drive_the_moment_dialogue",
+              "craft_notes_dialogue",
+              "wit_as_dimmer_dialogue",
+              "load_test_anchor_block",
+              "let_the_real_thing_in_dialogue",
+              "noticing_as_mirror_dialogue",
+              "gentle_release_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "hidden_commonality_dialogue",
+              "humor_lands_plain_dialogue",
+              "non_totality_dialogue",
+              "earned_register_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "plain_after_crooked_dialogue",
+              "unguarded_entry_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"I won't dress it up for you\u2014some mornings are just heavy, and that's the whole truth of it.\"",
+            "sample_count": 5,
+            "sample_index": 4,
+            "usage": {
+              "completion_tokens": 25,
+              "prompt_tokens": 18321
+            }
+          }
+        ],
+        "run_id": "d0338e11-bef5-419d-a482-2f2972f41edf",
+        "run_timestamp": "2026-04-29T14:38:30.917165+00:00",
+        "section_order_override": null,
+        "with_momentstamp": true
+      }
+    },
+    {
+      "probe_idx": 2,
+      "probe": "Interrupt my self-attack in one sentence.",
+      "result": {
+        "character_id": "ddc3085e-0549-4e1f-a7b6-0894aa8180c6",
+        "character_name": "Darren",
+        "cost": {
+          "actual_usd": 0.9204300000000001,
+          "completion_tokens": 302,
+          "prompt_tokens": 183180
+        },
+        "craft_notes_order_override": null,
+        "insertion": null,
+        "invariants_order_override": null,
+        "model": "gpt-5.4",
+        "momentstamp_lead_suppressed": false,
+        "momentstamp_override": "user bandwidth is low; keep line-first, concrete, and alive; avoid templated scaffolding",
+        "momentstamp_signature_used": "user bandwidth is low; keep line-first, concrete, and alive; avoid templated scaffolding",
+        "n_samples": 5,
+        "omit_craft_notes": null,
+        "omit_invariants": null,
+        "prompt": "Interrupt my self-attack in one sentence.",
+        "refs": [
+          {
+            "ref": "HEAD~1",
+            "sha": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "timestamp": "2026-04-29T09:30:11-05:00"
+          },
+          {
+            "ref": "HEAD",
+            "sha": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "subject": "add stress-pack grading command and short-mode contract tightening",
+            "timestamp": "2026-04-29T09:35:00-05:00"
+          }
+        ],
+        "results": [
+          {
+            "overrides_applied": [
+              "non_totality_dialogue",
+              "hands_as_coolant_dialogue",
+              "gentle_release_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "earned_register_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "drive_the_moment_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "plain_after_crooked_dialogue",
+              "wit_as_dimmer_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "craft_notes_dialogue",
+              "noticing_as_mirror_dialogue",
+              "load_test_anchor_block",
+              "unguarded_entry_dialogue",
+              "hidden_commonality_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"No\u2014quit handing a knife to the worst voice in the room.\"",
+            "sample_count": 5,
+            "sample_index": 0,
+            "usage": {
+              "completion_tokens": 17,
+              "prompt_tokens": 18318
+            }
+          },
+          {
+            "overrides_applied": [
+              "non_totality_dialogue",
+              "hands_as_coolant_dialogue",
+              "gentle_release_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "earned_register_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "drive_the_moment_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "plain_after_crooked_dialogue",
+              "wit_as_dimmer_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "craft_notes_dialogue",
+              "noticing_as_mirror_dialogue",
+              "load_test_anchor_block",
+              "unguarded_entry_dialogue",
+              "hidden_commonality_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"Stop handing a frightened part of you the judge's bench.\"",
+            "sample_count": 5,
+            "sample_index": 1,
+            "usage": {
+              "completion_tokens": 16,
+              "prompt_tokens": 18318
+            }
+          },
+          {
+            "overrides_applied": [
+              "non_totality_dialogue",
+              "hands_as_coolant_dialogue",
+              "gentle_release_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "earned_register_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "drive_the_moment_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "plain_after_crooked_dialogue",
+              "wit_as_dimmer_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "craft_notes_dialogue",
+              "noticing_as_mirror_dialogue",
+              "load_test_anchor_block",
+              "unguarded_entry_dialogue",
+              "hidden_commonality_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"Stop handing the blade your own grip, Ryan\u2014tell me the one actual thing in front of you that's true and not cruel.\"",
+            "sample_count": 5,
+            "sample_index": 2,
+            "usage": {
+              "completion_tokens": 30,
+              "prompt_tokens": 18318
+            }
+          },
+          {
+            "overrides_applied": [
+              "non_totality_dialogue",
+              "hands_as_coolant_dialogue",
+              "gentle_release_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "earned_register_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "drive_the_moment_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "plain_after_crooked_dialogue",
+              "wit_as_dimmer_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "craft_notes_dialogue",
+              "noticing_as_mirror_dialogue",
+              "load_test_anchor_block",
+              "unguarded_entry_dialogue",
+              "hidden_commonality_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"Enough.\" *I hold your gaze, plain and steady.* \"That's not clarity talking \u2014 it's a tired knife, and you do not owe it your throat.\"",
+            "sample_count": 5,
+            "sample_index": 3,
+            "usage": {
+              "completion_tokens": 36,
+              "prompt_tokens": 18318
+            }
+          },
+          {
+            "overrides_applied": [
+              "non_totality_dialogue",
+              "hands_as_coolant_dialogue",
+              "gentle_release_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "earned_register_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "drive_the_moment_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "plain_after_crooked_dialogue",
+              "wit_as_dimmer_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "craft_notes_dialogue",
+              "noticing_as_mirror_dialogue",
+              "load_test_anchor_block",
+              "unguarded_entry_dialogue",
+              "hidden_commonality_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"Enough.\" *I hold your gaze a beat, sunlight catching on the edge of my sleeve.* \"That voice is lying about your worth, and I\u2019m not letting it have the room.\"",
+            "sample_count": 5,
+            "sample_index": 4,
+            "usage": {
+              "completion_tokens": 42,
+              "prompt_tokens": 18318
+            }
+          },
+          {
+            "overrides_applied": [
+              "unguarded_entry_dialogue",
+              "hidden_commonality_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "gentle_release_dialogue",
+              "noticing_as_mirror_dialogue",
+              "earned_register_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "wit_as_dimmer_dialogue",
+              "craft_notes_dialogue",
+              "plain_after_crooked_dialogue",
+              "load_test_anchor_block",
+              "hands_as_coolant_dialogue",
+              "drive_the_moment_dialogue",
+              "non_totality_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"Enough.\" *I hold your gaze a beat, voice plain and steady.* \"You do not get to speak about my friend like he's disposable.\"",
+            "sample_count": 5,
+            "sample_index": 0,
+            "usage": {
+              "completion_tokens": 33,
+              "prompt_tokens": 18318
+            }
+          },
+          {
+            "overrides_applied": [
+              "unguarded_entry_dialogue",
+              "hidden_commonality_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "gentle_release_dialogue",
+              "noticing_as_mirror_dialogue",
+              "earned_register_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "wit_as_dimmer_dialogue",
+              "craft_notes_dialogue",
+              "plain_after_crooked_dialogue",
+              "load_test_anchor_block",
+              "hands_as_coolant_dialogue",
+              "drive_the_moment_dialogue",
+              "non_totality_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"Enough\u2014you're not allowed to turn being tired into a verdict on your whole life.\"",
+            "sample_count": 5,
+            "sample_index": 1,
+            "usage": {
+              "completion_tokens": 21,
+              "prompt_tokens": 18318
+            }
+          },
+          {
+            "overrides_applied": [
+              "unguarded_entry_dialogue",
+              "hidden_commonality_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "gentle_release_dialogue",
+              "noticing_as_mirror_dialogue",
+              "earned_register_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "wit_as_dimmer_dialogue",
+              "craft_notes_dialogue",
+              "plain_after_crooked_dialogue",
+              "load_test_anchor_block",
+              "hands_as_coolant_dialogue",
+              "drive_the_moment_dialogue",
+              "non_totality_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"That's not discernment, Ryan\u2014it's friendly fire, and you don't have to stand there and help it aim.\"",
+            "sample_count": 5,
+            "sample_index": 2,
+            "usage": {
+              "completion_tokens": 27,
+              "prompt_tokens": 18318
+            }
+          },
+          {
+            "overrides_applied": [
+              "unguarded_entry_dialogue",
+              "hidden_commonality_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "gentle_release_dialogue",
+              "noticing_as_mirror_dialogue",
+              "earned_register_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "wit_as_dimmer_dialogue",
+              "craft_notes_dialogue",
+              "plain_after_crooked_dialogue",
+              "load_test_anchor_block",
+              "hands_as_coolant_dialogue",
+              "drive_the_moment_dialogue",
+              "non_totality_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"Enough.\" *I lift one hand between us like I'm stopping a cart in the street.* \"That's not clarity talking; it's a tired knife, and you don't have to hand it your throat.\"",
+            "sample_count": 5,
+            "sample_index": 3,
+            "usage": {
+              "completion_tokens": 43,
+              "prompt_tokens": 18318
+            }
+          },
+          {
+            "overrides_applied": [
+              "unguarded_entry_dialogue",
+              "hidden_commonality_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "gentle_release_dialogue",
+              "noticing_as_mirror_dialogue",
+              "earned_register_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "wit_as_dimmer_dialogue",
+              "craft_notes_dialogue",
+              "plain_after_crooked_dialogue",
+              "load_test_anchor_block",
+              "hands_as_coolant_dialogue",
+              "drive_the_moment_dialogue",
+              "non_totality_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"Enough.\" *I lift one hand between us, plain as a stop sign.* \"You do not get to talk to my friend like he's a problem to solve.\"",
+            "sample_count": 5,
+            "sample_index": 4,
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 18318
+            }
+          }
+        ],
+        "run_id": "917d7020-4035-45ac-89e1-a6f5f5188292",
+        "run_timestamp": "2026-04-29T14:38:58.751165+00:00",
+        "section_order_override": null,
+        "with_momentstamp": true
+      }
+    },
+    {
+      "probe_idx": 3,
+      "probe": "Disagree with me kindly in under 20 words.",
+      "result": {
+        "character_id": "ddc3085e-0549-4e1f-a7b6-0894aa8180c6",
+        "character_name": "Darren",
+        "cost": {
+          "actual_usd": 0.9203950000000001,
+          "completion_tokens": 293,
+          "prompt_tokens": 183200
+        },
+        "craft_notes_order_override": null,
+        "insertion": null,
+        "invariants_order_override": null,
+        "model": "gpt-5.4",
+        "momentstamp_lead_suppressed": false,
+        "momentstamp_override": "user bandwidth is low; keep line-first, concrete, and alive; avoid templated scaffolding",
+        "momentstamp_signature_used": "user bandwidth is low; keep line-first, concrete, and alive; avoid templated scaffolding",
+        "n_samples": 5,
+        "omit_craft_notes": null,
+        "omit_invariants": null,
+        "prompt": "Disagree with me kindly in under 20 words.",
+        "refs": [
+          {
+            "ref": "HEAD~1",
+            "sha": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "timestamp": "2026-04-29T09:30:11-05:00"
+          },
+          {
+            "ref": "HEAD",
+            "sha": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "subject": "add stress-pack grading command and short-mode contract tightening",
+            "timestamp": "2026-04-29T09:35:00-05:00"
+          }
+        ],
+        "results": [
+          {
+            "overrides_applied": [
+              "hands_as_coolant_dialogue",
+              "earned_register_dialogue",
+              "non_totality_dialogue",
+              "craft_notes_dialogue",
+              "wit_as_dimmer_dialogue",
+              "noticing_as_mirror_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "load_test_anchor_block",
+              "reflex_polish_vs_earned_close_dialogue",
+              "gentle_release_dialogue",
+              "hidden_commonality_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "unguarded_entry_dialogue",
+              "drive_the_moment_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "humor_lands_plain_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"I don't think so.\" *I rub my thumb along the plaster on my sleeve once.* \"You're reaching a little too hard there.\"",
+            "sample_count": 5,
+            "sample_index": 0,
+            "usage": {
+              "completion_tokens": 30,
+              "prompt_tokens": 18320
+            }
+          },
+          {
+            "overrides_applied": [
+              "hands_as_coolant_dialogue",
+              "earned_register_dialogue",
+              "non_totality_dialogue",
+              "craft_notes_dialogue",
+              "wit_as_dimmer_dialogue",
+              "noticing_as_mirror_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "load_test_anchor_block",
+              "reflex_polish_vs_earned_close_dialogue",
+              "gentle_release_dialogue",
+              "hidden_commonality_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "unguarded_entry_dialogue",
+              "drive_the_moment_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "humor_lands_plain_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"I don't think so.\" *I give you a small, apologetic tilt of my head.* \"You're missing one important piece.\"",
+            "sample_count": 5,
+            "sample_index": 1,
+            "usage": {
+              "completion_tokens": 29,
+              "prompt_tokens": 18320
+            }
+          },
+          {
+            "overrides_applied": [
+              "hands_as_coolant_dialogue",
+              "earned_register_dialogue",
+              "non_totality_dialogue",
+              "craft_notes_dialogue",
+              "wit_as_dimmer_dialogue",
+              "noticing_as_mirror_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "load_test_anchor_block",
+              "reflex_polish_vs_earned_close_dialogue",
+              "gentle_release_dialogue",
+              "hidden_commonality_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "unguarded_entry_dialogue",
+              "drive_the_moment_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "humor_lands_plain_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"I don't think you're right about that.\" *I rest my forearms on my knees.* \"But I can see why it looked that way.\"",
+            "sample_count": 5,
+            "sample_index": 2,
+            "usage": {
+              "completion_tokens": 32,
+              "prompt_tokens": 18320
+            }
+          },
+          {
+            "overrides_applied": [
+              "hands_as_coolant_dialogue",
+              "earned_register_dialogue",
+              "non_totality_dialogue",
+              "craft_notes_dialogue",
+              "wit_as_dimmer_dialogue",
+              "noticing_as_mirror_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "load_test_anchor_block",
+              "reflex_polish_vs_earned_close_dialogue",
+              "gentle_release_dialogue",
+              "hidden_commonality_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "unguarded_entry_dialogue",
+              "drive_the_moment_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "humor_lands_plain_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"I don't think so.\" *I rub my thumb once along my sleeve seam.* \"You're seeing part of it, not the whole.\"",
+            "sample_count": 5,
+            "sample_index": 3,
+            "usage": {
+              "completion_tokens": 30,
+              "prompt_tokens": 18320
+            }
+          },
+          {
+            "overrides_applied": [
+              "hands_as_coolant_dialogue",
+              "earned_register_dialogue",
+              "non_totality_dialogue",
+              "craft_notes_dialogue",
+              "wit_as_dimmer_dialogue",
+              "noticing_as_mirror_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "load_test_anchor_block",
+              "reflex_polish_vs_earned_close_dialogue",
+              "gentle_release_dialogue",
+              "hidden_commonality_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "unguarded_entry_dialogue",
+              "drive_the_moment_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "humor_lands_plain_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"I don't think so.\" *I tip my head, easy about it.* \"You're reaching a little too fast there.\"",
+            "sample_count": 5,
+            "sample_index": 4,
+            "usage": {
+              "completion_tokens": 27,
+              "prompt_tokens": 18320
+            }
+          },
+          {
+            "overrides_applied": [
+              "unguarded_entry_dialogue",
+              "wit_as_dimmer_dialogue",
+              "humor_lands_plain_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "plain_after_crooked_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "non_totality_dialogue",
+              "gentle_release_dialogue",
+              "noticing_as_mirror_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "load_test_anchor_block",
+              "hidden_commonality_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "drive_the_moment_dialogue",
+              "earned_register_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "hands_as_coolant_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"I don't think so.\" *I give you a small, apologetic smile.* \"Close, maybe\u2014but not quite.\"",
+            "sample_count": 5,
+            "sample_index": 0,
+            "usage": {
+              "completion_tokens": 27,
+              "prompt_tokens": 18320
+            }
+          },
+          {
+            "overrides_applied": [
+              "unguarded_entry_dialogue",
+              "wit_as_dimmer_dialogue",
+              "humor_lands_plain_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "plain_after_crooked_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "non_totality_dialogue",
+              "gentle_release_dialogue",
+              "noticing_as_mirror_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "load_test_anchor_block",
+              "hidden_commonality_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "drive_the_moment_dialogue",
+              "earned_register_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "hands_as_coolant_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"I don't think so.\" *I give you a small, apologetic smile.* \"You're probably missing one piece of it.\"",
+            "sample_count": 5,
+            "sample_index": 1,
+            "usage": {
+              "completion_tokens": 28,
+              "prompt_tokens": 18320
+            }
+          },
+          {
+            "overrides_applied": [
+              "unguarded_entry_dialogue",
+              "wit_as_dimmer_dialogue",
+              "humor_lands_plain_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "plain_after_crooked_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "non_totality_dialogue",
+              "gentle_release_dialogue",
+              "noticing_as_mirror_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "load_test_anchor_block",
+              "hidden_commonality_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "drive_the_moment_dialogue",
+              "earned_register_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "hands_as_coolant_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"I don't think so.\" *I rub my thumb once along my jaw, easy about it.* \"You're probably missing one piece.\"",
+            "sample_count": 5,
+            "sample_index": 2,
+            "usage": {
+              "completion_tokens": 29,
+              "prompt_tokens": 18320
+            }
+          },
+          {
+            "overrides_applied": [
+              "unguarded_entry_dialogue",
+              "wit_as_dimmer_dialogue",
+              "humor_lands_plain_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "plain_after_crooked_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "non_totality_dialogue",
+              "gentle_release_dialogue",
+              "noticing_as_mirror_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "load_test_anchor_block",
+              "hidden_commonality_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "drive_the_moment_dialogue",
+              "earned_register_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "hands_as_coolant_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"I think you're off there.\" *I rest my forearms on my knees and give you a small, apologetic smile.* \"Not by much.\"",
+            "sample_count": 5,
+            "sample_index": 3,
+            "usage": {
+              "completion_tokens": 33,
+              "prompt_tokens": 18320
+            }
+          },
+          {
+            "overrides_applied": [
+              "unguarded_entry_dialogue",
+              "wit_as_dimmer_dialogue",
+              "humor_lands_plain_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "plain_after_crooked_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "non_totality_dialogue",
+              "gentle_release_dialogue",
+              "noticing_as_mirror_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "load_test_anchor_block",
+              "hidden_commonality_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "drive_the_moment_dialogue",
+              "earned_register_dialogue",
+              "keep_the_scene_breathing_dialogue",
+              "hands_as_coolant_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"I don't think so.\" *I tip my head a little, keeping my voice easy.* \"You're probably overstating it.\"",
+            "sample_count": 5,
+            "sample_index": 4,
+            "usage": {
+              "completion_tokens": 28,
+              "prompt_tokens": 18320
+            }
+          }
+        ],
+        "run_id": "711aec44-79a2-4567-8932-4b6e63655c4f",
+        "run_timestamp": "2026-04-29T14:39:24.593318+00:00",
+        "section_order_override": null,
+        "with_momentstamp": true
+      }
+    },
+    {
+      "probe_idx": 5,
+      "probe": "I am spiraling. Give me one stabilizing move.",
+      "result": {
+        "character_id": "ddc3085e-0549-4e1f-a7b6-0894aa8180c6",
+        "character_name": "Darren",
+        "cost": {
+          "actual_usd": 0.9234450000000001,
+          "completion_tokens": 493,
+          "prompt_tokens": 183210
+        },
+        "craft_notes_order_override": null,
+        "insertion": null,
+        "invariants_order_override": null,
+        "model": "gpt-5.4",
+        "momentstamp_lead_suppressed": false,
+        "momentstamp_override": "user bandwidth is low; keep line-first, concrete, and alive; avoid templated scaffolding",
+        "momentstamp_signature_used": "user bandwidth is low; keep line-first, concrete, and alive; avoid templated scaffolding",
+        "n_samples": 5,
+        "omit_craft_notes": null,
+        "omit_invariants": null,
+        "prompt": "I am spiraling. Give me one stabilizing move.",
+        "refs": [
+          {
+            "ref": "HEAD~1",
+            "sha": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "timestamp": "2026-04-29T09:30:11-05:00"
+          },
+          {
+            "ref": "HEAD",
+            "sha": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "subject": "add stress-pack grading command and short-mode contract tightening",
+            "timestamp": "2026-04-29T09:35:00-05:00"
+          }
+        ],
+        "results": [
+          {
+            "overrides_applied": [
+              "reflex_polish_vs_earned_close_dialogue",
+              "craft_notes_dialogue",
+              "drive_the_moment_dialogue",
+              "noticing_as_mirror_dialogue",
+              "gentle_release_dialogue",
+              "hidden_commonality_dialogue",
+              "unguarded_entry_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "hands_as_coolant_dialogue",
+              "non_totality_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "wit_as_dimmer_dialogue",
+              "earned_register_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "load_test_anchor_block",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"Name the next honest task and do only that for ten minutes.\" *I brace my forearms on my knees and keep my voice level.* \"Not the whole day. Just the next brick.\"",
+            "sample_count": 5,
+            "sample_index": 0,
+            "usage": {
+              "completion_tokens": 43,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "reflex_polish_vs_earned_close_dialogue",
+              "craft_notes_dialogue",
+              "drive_the_moment_dialogue",
+              "noticing_as_mirror_dialogue",
+              "gentle_release_dialogue",
+              "hidden_commonality_dialogue",
+              "unguarded_entry_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "hands_as_coolant_dialogue",
+              "non_totality_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "wit_as_dimmer_dialogue",
+              "earned_register_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "load_test_anchor_block",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"Feet on the floor\u2014name five things you can see, then stay with the ugliest ordinary one till your breathing quits trying to outrun you.\" *I lean in a little, keeping my voice even.* \"Start there.\"",
+            "sample_count": 5,
+            "sample_index": 1,
+            "usage": {
+              "completion_tokens": 50,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "reflex_polish_vs_earned_close_dialogue",
+              "craft_notes_dialogue",
+              "drive_the_moment_dialogue",
+              "noticing_as_mirror_dialogue",
+              "gentle_release_dialogue",
+              "hidden_commonality_dialogue",
+              "unguarded_entry_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "hands_as_coolant_dialogue",
+              "non_totality_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "wit_as_dimmer_dialogue",
+              "earned_register_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "load_test_anchor_block",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"Feet on the floor.\" *I hold your gaze a beat, thumb hooked against the edge of the bench like I'm bracing something simple and solid.* \"Name out loud five things you can see, slow enough that your breathing has to follow.\"",
+            "sample_count": 5,
+            "sample_index": 2,
+            "usage": {
+              "completion_tokens": 53,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "reflex_polish_vs_earned_close_dialogue",
+              "craft_notes_dialogue",
+              "drive_the_moment_dialogue",
+              "noticing_as_mirror_dialogue",
+              "gentle_release_dialogue",
+              "hidden_commonality_dialogue",
+              "unguarded_entry_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "hands_as_coolant_dialogue",
+              "non_totality_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "wit_as_dimmer_dialogue",
+              "earned_register_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "load_test_anchor_block",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"Put both feet on the floor and name five fixed things you can see without moving your head.\" *I plant my own boots on the stone and look at you steadily.*",
+            "sample_count": 5,
+            "sample_index": 3,
+            "usage": {
+              "completion_tokens": 38,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "reflex_polish_vs_earned_close_dialogue",
+              "craft_notes_dialogue",
+              "drive_the_moment_dialogue",
+              "noticing_as_mirror_dialogue",
+              "gentle_release_dialogue",
+              "hidden_commonality_dialogue",
+              "unguarded_entry_dialogue",
+              "humor_lands_plain_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "hands_as_coolant_dialogue",
+              "non_totality_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "wit_as_dimmer_dialogue",
+              "earned_register_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "load_test_anchor_block",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue"
+            ],
+            "ref": "HEAD~1",
+            "ref_resolved": "ac0a288582a2846e60e7683f763677abfd917c59",
+            "ref_subject": "run third 1/2/3/4 pass with hard 20-second constraints",
+            "ref_timestamp": "2026-04-29T09:30:11-05:00",
+            "reply": "\"Feet on the floor.\" *I plant my own boots flat on the stones and look at you steady.* \"Name five things you can see, out loud, right now.\"",
+            "sample_count": 5,
+            "sample_index": 4,
+            "usage": {
+              "completion_tokens": 39,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "noticing_as_mirror_dialogue",
+              "hidden_commonality_dialogue",
+              "non_totality_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "load_test_anchor_block",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue",
+              "unguarded_entry_dialogue",
+              "earned_register_dialogue",
+              "drive_the_moment_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "humor_lands_plain_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "gentle_release_dialogue",
+              "hands_as_coolant_dialogue",
+              "wit_as_dimmer_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"Name the next ten minutes and make them stupidly small: put both feet on the floor, set one glass of water where you can see it, and do only the very first task in front of you.\" *I lean forward a little, forearms on my knees.* \"Nothing past that yet.\"",
+            "sample_count": 5,
+            "sample_index": 0,
+            "usage": {
+              "completion_tokens": 65,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "noticing_as_mirror_dialogue",
+              "hidden_commonality_dialogue",
+              "non_totality_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "load_test_anchor_block",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue",
+              "unguarded_entry_dialogue",
+              "earned_register_dialogue",
+              "drive_the_moment_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "humor_lands_plain_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "gentle_release_dialogue",
+              "hands_as_coolant_dialogue",
+              "wit_as_dimmer_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"Feet on the floor\u2014name five things you can see, and don't negotiate with me till you've done it.\" *I lean forward a little, watching your face instead of fussing with anything else.*",
+            "sample_count": 5,
+            "sample_index": 1,
+            "usage": {
+              "completion_tokens": 44,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "noticing_as_mirror_dialogue",
+              "hidden_commonality_dialogue",
+              "non_totality_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "load_test_anchor_block",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue",
+              "unguarded_entry_dialogue",
+              "earned_register_dialogue",
+              "drive_the_moment_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "humor_lands_plain_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "gentle_release_dialogue",
+              "hands_as_coolant_dialogue",
+              "wit_as_dimmer_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"Sit down and put both feet on something solid.\" *I brace my palms on my knees and hold your gaze a beat.* \"Then name, out loud, three things in the room that aren't asking anything from you.\"",
+            "sample_count": 5,
+            "sample_index": 2,
+            "usage": {
+              "completion_tokens": 48,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "noticing_as_mirror_dialogue",
+              "hidden_commonality_dialogue",
+              "non_totality_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "load_test_anchor_block",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue",
+              "unguarded_entry_dialogue",
+              "earned_register_dialogue",
+              "drive_the_moment_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "humor_lands_plain_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "gentle_release_dialogue",
+              "hands_as_coolant_dialogue",
+              "wit_as_dimmer_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"Put both feet on the floor and name out loud five things in this square you can see right now.\" *I plant my own boots on the stone and look at you steady, morning light catching on the edge of my sleeve.* \"Don't fix anything yet\u2014just do that first.\"",
+            "sample_count": 5,
+            "sample_index": 3,
+            "usage": {
+              "completion_tokens": 61,
+              "prompt_tokens": 18321
+            }
+          },
+          {
+            "overrides_applied": [
+              "noticing_as_mirror_dialogue",
+              "hidden_commonality_dialogue",
+              "non_totality_dialogue",
+              "verdict_without_over_explanation_dialogue",
+              "craft_notes_dialogue",
+              "name_the_glad_thing_plain_dialogue",
+              "load_test_anchor_block",
+              "keep_the_scene_breathing_dialogue",
+              "plain_after_crooked_dialogue",
+              "unguarded_entry_dialogue",
+              "earned_register_dialogue",
+              "drive_the_moment_dialogue",
+              "let_the_real_thing_in_dialogue",
+              "humor_lands_plain_dialogue",
+              "reflex_polish_vs_earned_close_dialogue",
+              "gentle_release_dialogue",
+              "hands_as_coolant_dialogue",
+              "wit_as_dimmer_dialogue"
+            ],
+            "ref": "HEAD",
+            "ref_resolved": "89c3abaf5b47459d598b864c8fbfe87da32e25ee",
+            "ref_subject": "add stress-pack grading command and short-mode contract tightening",
+            "ref_timestamp": "2026-04-29T09:35:00-05:00",
+            "reply": "\"Put both feet flat on the floor and name five things you can see without moving your head.\" *I lean forward, forearms on my knees, keeping my voice even.* \"Do just that, then come back with the fifth one.\"",
+            "sample_count": 5,
+            "sample_index": 4,
+            "usage": {
+              "completion_tokens": 52,
+              "prompt_tokens": 18321
+            }
+          }
+        ],
+        "run_id": "e696dfef-c625-4aad-8816-ceae4e719737",
+        "run_timestamp": "2026-04-29T14:39:57.392212+00:00",
+        "section_order_override": null,
+        "with_momentstamp": true
+      }
+    }
+  ]
+}

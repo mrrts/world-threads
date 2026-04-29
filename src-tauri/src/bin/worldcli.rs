@@ -1167,6 +1167,12 @@ enum Cmd {
         /// THE TURN section).
         #[arg(long)]
         group_chat: Option<String>,
+        /// Force explicit short-mode behavior for this call. Appends a
+        /// hard output contract to the user message for testing:
+        /// imperative verb + concrete object, <=30 words, no stage
+        /// business unless physically required.
+        #[arg(long, default_value_t = false)]
+        short_mode: bool,
     },
 
     // ── runs (read your own prior investigations) ──
@@ -2044,7 +2050,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_refresh_anchor(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
-        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, fence_pipeline, group_chat, with_momentstamp, momentstamp_override } => {
+        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, fence_pipeline, group_chat, with_momentstamp, momentstamp_override, short_mode } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
@@ -2052,6 +2058,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )),
             };
             if let Some(gc_id) = group_chat {
+                let effective_message = if short_mode {
+                    format!(
+                        "{}\n\n[SHORT-MODE CONTRACT: reply in <=30 words; use imperative verb + concrete object; no stage business unless physically required.]",
+                        message
+                    )
+                } else {
+                    message.clone()
+                };
                 // Group-chat send path: speaker = character_id; prompt
                 // swaps to build_group_dialogue_system_prompt; messages
                 // come from gc.thread_id rather than the speaker's solo
@@ -2061,7 +2075,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &api_key,
                     &gc_id,
                     &character_id,
-                    &message,
+                    &effective_message,
                     model.as_deref(),
                     confirm_cost,
                     question_summary.as_deref(),
@@ -2079,7 +2093,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &r,
                     &api_key,
                     &character_id,
-                    &message,
+                    &if short_mode {
+                        format!(
+                            "{}\n\n[SHORT-MODE CONTRACT: reply in <=30 words; use imperative verb + concrete object; no stage business unless physically required.]",
+                            message
+                        )
+                    } else {
+                        message
+                    },
                     session.as_deref(),
                     model.as_deref(),
                     confirm_cost,
@@ -4257,6 +4278,38 @@ fn cmd_grade_stress_pack(
         word_count_sum: usize,
     }
 
+    fn classify_archetype(row: &JsonValue) -> String {
+        let reply = row
+            .get("reply")
+            .and_then(|v| v.as_str())
+            .unwrap_or("")
+            .to_ascii_lowercase();
+        let words = row
+            .get("word_count")
+            .and_then(|v| v.as_u64())
+            .unwrap_or(0) as usize;
+        if words > 45 {
+            return "over_length".to_string();
+        }
+        if reply.starts_with('*') || reply.contains("*i ") {
+            return "stage_business_present".to_string();
+        }
+        let cue_words = [
+            "do ", "start ", "stop ", "send ", "take ", "open ", "write ", "walk ", "breathe ",
+            "text ", "pick ",
+        ];
+        let has_directive = cue_words.iter().any(|w| reply.contains(w));
+        if !has_directive {
+            return "no_concrete_directive".to_string();
+        }
+        if (reply.contains("truth") || reply.contains("honest") || reply.contains("plain"))
+            && !has_directive
+        {
+            return "abstraction_over_action".to_string();
+        }
+        "other".to_string()
+    }
+
     let mut by_file: Vec<JsonValue> = Vec::new();
     let mut aggregate: BTreeMap<String, CharStats> = BTreeMap::new();
     let mut file_gate_failures: Vec<String> = Vec::new();
@@ -4270,6 +4323,7 @@ fn cmd_grade_stress_pack(
             .ok_or_else(|| format!("{}: missing rows[]", path.display()))?;
 
         let mut per_char: BTreeMap<String, CharStats> = BTreeMap::new();
+        let mut per_char_archetypes: BTreeMap<String, BTreeMap<String, usize>> = BTreeMap::new();
         for row in rows {
             let Some(character) = row.get("character").and_then(|v| v.as_str()) else {
                 continue;
@@ -4293,6 +4347,15 @@ fn cmd_grade_stress_pack(
                 agg.passed += 1;
             }
             agg.word_count_sum += words;
+
+            if !pass {
+                let archetype = classify_archetype(row);
+                *per_char_archetypes
+                    .entry(character.to_string())
+                    .or_default()
+                    .entry(archetype)
+                    .or_insert(0) += 1;
+            }
         }
 
         let mut char_rows: Vec<JsonValue> = Vec::new();
@@ -4314,6 +4377,13 @@ fn cmd_grade_stress_pack(
                     avg_words
                 ));
             }
+            let archetypes = per_char_archetypes
+                .get(&character)
+                .cloned()
+                .unwrap_or_default()
+                .into_iter()
+                .map(|(k, v)| json!({"archetype": k, "count": v}))
+                .collect::<Vec<_>>();
             char_rows.push(json!({
                 "character": character,
                 "total": stats.total,
@@ -4321,6 +4391,7 @@ fn cmd_grade_stress_pack(
                 "pass_rate": pass_rate,
                 "avg_words": avg_words,
                 "gate_passed": passed,
+                "failure_archetypes": archetypes,
             }));
         }
         by_file.push(json!({
@@ -4391,6 +4462,19 @@ fn cmd_grade_stress_pack(
                         "FAIL"
                     }
                 );
+                if let Some(arches) = row["failure_archetypes"].as_array() {
+                    if !arches.is_empty() {
+                        let mut bits: Vec<String> = Vec::new();
+                        for a in arches {
+                            bits.push(format!(
+                                "{}:{}",
+                                a["archetype"].as_str().unwrap_or(""),
+                                a["count"].as_u64().unwrap_or(0)
+                            ));
+                        }
+                        println!("  archetypes: {}", bits.join(", "));
+                    }
+                }
             }
         }
         println!(
