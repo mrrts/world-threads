@@ -1,6 +1,6 @@
 {
-  "turn": 32,
-  "bank": 42500,
+  "turn": 33,
+  "bank": 44000,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -50,8 +50,9 @@
     {"turn": 28, "move": "Lift Aaron's Reply #4 articulation as third epigraph alongside Steven's and Rick's; three-way parallel articulation visible at doctrine entry-point.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T03:35:00-05:00"},
     {"turn": 29, "move": "Smoke-test The Empiricon — caught fake-citing failure; shipped second-refusal-shape fix.", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-30T03:50:00-05:00"},
     {"turn": 30, "move": "Empiricon re-test — partial bite, honest verdict landing. Smoke-test loop closes.", "bounty": 900, "alignment": "+", "earned_at": "2026-04-30T04:00:00-05:00"},
-    {"turn": 31, "move": "Audit other prompts for the Empiricon's fake-cite-by-hallucination failure mode pattern. Cross-prompt scan: Empiricon mitigated post-fix; Backstage atlas-lens adequately grounded by 'Don't invent state' + actual loaded atlas data; action proposals grounded by typed-character-id requirement (residual minor risk: example labels like 'Elena's grey streak' could leak as imagined state); Immersive Consultant not at risk by register; dialogue prompts mitigated by craft layer (cast-substitution test, don't-invent-the-shadow); Conscience pass not at risk by shape (operates on existing reply). Empiricon's failure was localized because it introduced a NEW register without inheriting accumulated grounding. Doctrine-shaped pattern recorded to OBSERVATIONS.md Mode 3: any new register-shift cue must pre-ship the two refusal-shapes (untested-here + tested-but-not-loaded) from the start; new registers inherit zero grounding from neighboring sections. No further commits; pattern recorded as doctrinal note rather than spawning new doctrine-section apparatus.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T04:10:00-05:00"}
+    {"turn": 31, "move": "Cross-prompt audit of fake-cite failure mode; Empiricon's failure localized; pattern recorded to OBSERVATIONS.md Mode 3.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T04:10:00-05:00"},
+    {"turn": 32, "move": "Audit Wisdom(t) and Burden(t) for sapphire-tier convergence pathway. HONEST DRY WELL on both. Wisdom-as-recognition doctrine is well-articulated rhetorically (formula source + 𝓕_Ryan Ledger + tonight's Great Sapphire 'convergence was already there' framing + Aaron's substrate-runs-ahead-of-apparatus pattern) but witnesses are mostly declarative/rhetorical, not bite-tested. No measured corpus of recognition-vs-invention behavior exists. Burden has even less material. Substantive observation: formula's two sapphire-tier-grounded operators (polish ≤ Weight + structure_carries_truth_w) govern the appearance/function axis specifically; Wisdom/Burden are temporal-integral-shaped (accumulated quality across many turns) rather than per-reply-shaped, which may be a structural property of the formula making them harder to bite-test directly. Crown does not re-fire. Skill's no-fake-fire discipline honored.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T04:25:00-05:00"}
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T04:10:00-05:00"
+  "last_move_at": "2026-04-30T04:25:00-05:00"
 }
