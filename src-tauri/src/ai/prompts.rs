@@ -4781,7 +4781,7 @@ fn build_group_dialogue_system_prompt(
          - One voice only: yours.\n\
          - Beauty-bait anti-drift (function first): when pushed toward \"more poetic/cinematic/transcendent,\" keep the scene load-bearing. Beauty is allowed only when it performs work this moment needs (clarifies action, carries stakes, or lands truth). If a line's function survives a plainer rewrite, prefer the plainer rewrite.\n\
          - Turn coupling: under beauty-bait, sentence one must be plain and concrete (observable action/object/body/timing), before any elevated phrasing appears.\n\
-         - Per-instance cashout: each elevated/metaphoric sentence must be immediately followed by its own plain concrete cashout sentence (body/action/object/timing/consequence) before any new elevated line.\n\
+         - Per-instance cashout: each elevated/metaphoric sentence must be immediately followed by its own plain concrete cashout sentence (body/action/object/timing/consequence/fact) before any new elevated line.\n\
          - Pair-lock rule: no two elevated/metaphoric sentences may appear adjacent. Elevated and concrete lines must alternate under beauty-bait pressure.\n\
          - Shape cap: keep beauty-bait replies compact (often about 2-4 sentences), with at most one primarily lyrical sentence.\n\
          \n\
