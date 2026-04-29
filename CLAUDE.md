@@ -462,6 +462,22 @@ An auto-commit run that DEFAULTS to "close loops" rather than "ship more new thi
 
 When bite-testing a craft-shape rule, run AT LEAST TWO MEASUREMENT AXES — minimum, instrument-count + by-eye-read. When they agree, bite is well-characterized. When they DIVERGE, the divergence IS the signal: the rule may be working on an axis its stated metric doesn't capture, OR the metric needs refinement. Don't auto-retract a rule because its literal metric isn't meeting its prediction; check whether the failure mode it was DESIGNED to address has actually shifted on a different axis. Worked example: OPEN ON ONE TRUE THING — literal-count says OVERFLOW, lived-experience says SMOOTHER; the rule operates on integration (one continuous moment) not cardinality.
 
+## Signal injection — "data + pointer" beats "directive" when surrounding rules already discriminate
+
+When adding a new signal to a sub-system prompt (LLM picker, classifier, addressee resolver, etc.) where the surrounding rules already discriminate well along the relevant axis, **phrase the signal as data + pointer to existing criteria, not as a directive about what to do with it**. The picker/classifier weighs the data alongside the criteria it already has; the directive overrides that weighing and produces all-or-nothing behavior.
+
+Worked example — speaker-rotation pressure into `llm_pick_responders` (commits `b13fa26` → `25b9458`, 2026-04-28). Surrounding rules already discriminated well between solo/multi-responder cases via message-content cues. Three calibration points:
+
+- **v1 (directive):** *"...sometimes their absence has begun to be felt and a brief second voice would land truer than another solo turn"* → 100% silent-peer inclusion across all message types. Over-fires.
+- **v2 (high-bar restriction):** *"Only invite the silent peer if THIS particular message specifically opens a door for them"* → 0% inclusion. Over-restricts.
+- **v3 (data + pointer):** *"X has carried the last N character turns alone (the silent peer hasn't spoken in that stretch). Apply the criteria above to this specific message."* → discriminates correctly: 0% on pure continuation, 100% on group-stake "you both", 100% on explicit silent-peer-mention.
+
+The pattern: state the data (the fact you're surfacing); point back to the existing criteria (let those do the weighing); resist interpreting the data into a recommendation. The mistake to avoid is **directive-disguised-as-data** — phrasing that LOOKS like neutral information but reads as recommendation (v1's "would land truer" was this drift; the LLM read it as instruction).
+
+**Earned exception — directive phrasing is warranted when the signal must counter existing rules.** If the new signal exists specifically to OVERRIDE behavior the surrounding rules would otherwise produce (rather than augment what they're already weighing well), directive phrasing is honest about that purpose. Safety rules that must fire regardless of stylistic considerations are properly directive (*"never say X"*), not "data + pointer." The test: are the surrounding rules already discriminating in a useful way along this axis? If yes, give them more data and trust them. If no, the new signal IS the rule and directive phrasing is right.
+
+**Composes with the cheap-isolated-layer-bite-test methodology** (see `worldcli pick-responders`, commit `b13fa26`): when the change is visible at an early decision-layer decoupled from full character generation, build the layer-isolated worldcli affordance first, then iterate phrasing through cheap A/B until calibration converges. The 2026-04-28 speaker-rotation arc converged in 3 tries for ~$0.01 total via this combination.
+
 ## Craft-note bite verification
 
 Rules shipped without a bite-test are authorial commitments, not verified behavior-shapers. Before committing a new craft note:
