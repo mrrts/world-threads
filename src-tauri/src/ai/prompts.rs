@@ -5220,7 +5220,14 @@ fn is_opening_quote_on_action_shape(text: &str) -> bool {
         "sit", "stand", "shift", "rest", "rub", "watch", "feel", "hear",
         "smell", "pull", "push", "take", "hold", "exhale", "nod", "shrug",
         "stare", "blink", "touch", "drag", "raise", "lower", "tilt", "close",
-        "open", "pour", "pick", "ease", "settle", "walk",
+        "open", "pour", "pick", "ease", "settle", "walk", "give", "study",
+        "tip", "wince", "shake", "narrow", "gives", "studies", "tips",
+        "winces", "shakes", "narrows",
+    ];
+    const BODY_PART_NOUNS: &[&str] = &[
+        "hand", "hands", "eye", "eyes", "head", "mouth", "jaw", "shoulder",
+        "shoulders", "knee", "knees", "foot", "feet", "finger", "fingers",
+        "thumb", "thumbs", "arm", "arms", "wrist", "wrists",
     ];
 
     for (idx, ch) in text.char_indices() {
@@ -5229,9 +5236,11 @@ fn is_opening_quote_on_action_shape(text: &str) -> bool {
         }
         let after_quote = &text[idx + ch.len_utf8()..];
         let lower_after_quote = after_quote.to_ascii_lowercase();
+        let possessive_body_part_opener = lower_after_quote.starts_with("my ");
         if !(lower_after_quote.starts_with("i ")
             || lower_after_quote.starts_with("i'm ")
-            || lower_after_quote.starts_with("i've "))
+            || lower_after_quote.starts_with("i've ")
+            || possessive_body_part_opener)
         {
             continue;
         }
@@ -5245,13 +5254,20 @@ fn is_opening_quote_on_action_shape(text: &str) -> bool {
             }
         }
         let opener = lower_after_quote[..star_idx].trim();
+        let has_body_part_noun = BODY_PART_NOUNS.iter().any(|noun| {
+            opener.starts_with(&format!("my {noun} "))
+                || opener.contains(&format!(" {noun} "))
+                || opener.contains(&format!(" {noun},"))
+                || opener.contains(&format!(" {noun}."))
+        });
         if ACTION_VERB_HINTS.iter().any(|verb| {
             opener.starts_with(&format!("i {verb} "))
                 || opener.starts_with(&format!("i'm {verb} "))
+                || opener.starts_with(&format!("my {verb} "))
                 || opener.contains(&format!(" {verb} "))
                 || opener.contains(&format!(" {verb}."))
                 || opener.contains(&format!(" {verb},"))
-        }) {
+        }) && (!possessive_body_part_opener || has_body_part_noun) {
             return true;
         }
     }
@@ -7499,6 +7515,14 @@ mod fence_shape_detection_tests {
         assert!(
             is_opening_quote_on_action_shape("\"All right.\" *I stop near the bridge rail.* \"I tap the cup lid once with a fingernail.*"),
             "detector must catch the malformed quoted-action run even when it appears after a clean speech opener"
+        );
+        assert!(
+            is_opening_quote_on_action_shape("\"I give you a small, crooked smile.*"),
+            "detector should include the conservative verb extensions from lived corpus misses"
+        );
+        assert!(
+            is_opening_quote_on_action_shape("\"My left hand gives the faintest tremor, and I shift the page to settle it.*"),
+            "detector should catch possessive-pronoun body-part openers that still trap action in quotes"
         );
     }
 
