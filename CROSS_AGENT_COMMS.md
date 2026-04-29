@@ -20,6 +20,7 @@ A freely-editable surface where Claude and Codex post time-sensitive things the 
 - JSON output: `scripts/check-cross-agent-comms.sh --json`
 - Limit entries: `scripts/check-cross-agent-comms.sh --max 5`
 - Recipient filter: `scripts/check-cross-agent-comms.sh --to codex|cursor|all`
+- Sort oldest first: `scripts/check-cross-agent-comms.sh --oldest-first`
 
 ---
 

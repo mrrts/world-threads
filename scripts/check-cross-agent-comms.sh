@@ -6,6 +6,7 @@ COMMS_FILE="$ROOT/CROSS_AGENT_COMMS.md"
 JSON_MODE=0
 MAX_ITEMS=3
 TO_FILTER="codex"
+OLDEST_FIRST=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -21,8 +22,12 @@ while [[ $# -gt 0 ]]; do
       TO_FILTER="${2:-codex}"
       shift 2
       ;;
+    --oldest-first)
+      OLDEST_FIRST=1
+      shift
+      ;;
     *)
-      echo "Usage: $(basename "$0") [--json] [--max N] [--to codex|cursor|all]" >&2
+      echo "Usage: $(basename "$0") [--json] [--max N] [--to codex|cursor|all] [--oldest-first]" >&2
       exit 2
       ;;
   esac
@@ -82,6 +87,9 @@ for i, m in enumerate(headers):
 
 json_mode = ${JSON_MODE}
 max_items = ${MAX_ITEMS}
+oldest_first = ${OLDEST_FIRST}
+if oldest_first:
+    open_items = list(reversed(open_items))
 if json_mode:
     entries = open_items[:max_items] if max_items > 0 else open_items
     print(json.dumps({
