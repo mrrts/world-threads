@@ -10,6 +10,22 @@ LIMIT="${LIMIT:-80}"
 CONFIRM_COST="${CONFIRM_COST:-5}"
 
 PRESET="${1:-medium}"
+shift || true
+COMMIT_ARTIFACTS=false
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --commit-artifacts)
+      COMMIT_ARTIFACTS=true
+      shift
+      ;;
+    *)
+      echo "Unknown arg: $1" >&2
+      echo "Usage: $0 [loose|medium|strict] [--commit-artifacts]" >&2
+      exit 1
+      ;;
+  esac
+done
+
 case "$PRESET" in
   loose)
     PACK_MIN_SPEECH_FIRST_DEFAULT="0.6"
@@ -25,7 +41,7 @@ case "$PRESET" in
     ;;
   *)
     echo "Unknown preset: $PRESET" >&2
-    echo "Usage: $0 [loose|medium|strict]" >&2
+    echo "Usage: $0 [loose|medium|strict] [--commit-artifacts]" >&2
     exit 1
     ;;
 esac
@@ -74,6 +90,23 @@ run_json_to_file jasper-pack \
   --gate-min-speech-first-rate "$PACK_MIN_SPEECH_FIRST" \
   --gate-min-shift-run-rate "$PACK_MIN_SHIFT_RUN"
 
+scoreboard_line="$(PRESET="$PRESET" python3 - "$OUT_DIR" <<'PY'
+import json,os,sys
+root=sys.argv[1]
+def load(name):
+    with open(os.path.join(root,f"{name}.json")) as f:
+        return json.load(f)
+d=load("darren-pack")
+j=load("jasper-pack")
+dp="PASS" if d.get("gate",{}).get("passed") else "FAIL"
+jp="PASS" if j.get("gate",{}).get("passed") else "FAIL"
+ds=d.get("speech_first_rate",0.0); dr=d.get("shift_run_rate",0.0)
+js=j.get("speech_first_rate",0.0); jr=j.get("shift_run_rate",0.0)
+print(f"SCOREBOARD preset={os.environ.get('PRESET','?')} | Darren:{dp} (speech={ds:.2f} shift={dr:.2f}) | Jasper:{jp} (speech={js:.2f} shift={jr:.2f})")
+PY
+)"
+echo "$scoreboard_line"
+
 cat > "$OUT_DIR/README.txt" <<EOF
 register-shift dashboard artifacts
 timestamp: $STAMP
@@ -92,3 +125,8 @@ EOF
 
 echo
 echo "done: artifacts written to $OUT_DIR"
+if $COMMIT_ARTIFACTS; then
+  git add "$OUT_DIR"
+  git commit -m "Add register-shift dashboard artifacts $STAMP" >/dev/null
+  echo "artifacts committed from $OUT_DIR"
+fi
