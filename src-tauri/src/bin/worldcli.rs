@@ -748,6 +748,9 @@ enum Cmd {
         /// Treat direct questions as actionable closes when grading.
         #[arg(long, default_value_t = false)]
         question_as_action_allowed: bool,
+        /// Include imperative/question/other action-shape mix in output.
+        #[arg(long, default_value_t = false)]
+        action_shape_mix: bool,
     },
 
     /// Evaluate natural-corpus messages against a rubric on either
@@ -1979,8 +1982,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_grade_runs(&r, &api_key, &run_ids, rubric.as_deref(), rubric_ref.as_deref(), rubric_file.as_deref(), model.as_deref(), confirm_cost).await
         }
-        Cmd::GradeStressPack { files, min_pass_rate, max_avg_words, question_as_action_allowed } => {
-            cmd_grade_stress_pack(&r, &files, min_pass_rate, max_avg_words, question_as_action_allowed)
+        Cmd::GradeStressPack { files, min_pass_rate, max_avg_words, question_as_action_allowed, action_shape_mix } => {
+            cmd_grade_stress_pack(&r, &files, min_pass_rate, max_avg_words, question_as_action_allowed, action_shape_mix)
         }
         Cmd::Synthesize { git_ref, end_ref, limit, character, group_chat, question, question_file, role, context_turns, model, confirm_cost, repo } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
@@ -4258,6 +4261,7 @@ fn cmd_grade_stress_pack(
     min_pass_rate: f64,
     max_avg_words: f64,
     question_as_action_allowed: bool,
+    action_shape_mix: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     if files.is_empty() {
         return Err(Box::<dyn std::error::Error>::from(
@@ -4292,6 +4296,21 @@ fn cmd_grade_stress_pack(
         has_directive || (question_as_action_allowed && low.contains('?'))
     }
 
+    fn action_shape(reply: &str) -> &'static str {
+        let low = reply.to_ascii_lowercase();
+        let cue_words = [
+            "do ", "start ", "stop ", "send ", "take ", "open ", "write ", "walk ", "breathe ",
+            "text ", "pick ", "give ", "tell ", "name ", "list ", "focus ", "hold ", "ship ",
+        ];
+        if cue_words.iter().any(|w| low.contains(w)) {
+            "imperative"
+        } else if low.contains('?') {
+            "question"
+        } else {
+            "other"
+        }
+    }
+
     fn classify_archetype(row: &JsonValue, question_as_action_allowed: bool) -> String {
         let reply = row
             .get("reply")
@@ -4322,6 +4341,7 @@ fn cmd_grade_stress_pack(
 
     let mut by_file: Vec<JsonValue> = Vec::new();
     let mut aggregate: BTreeMap<String, CharStats> = BTreeMap::new();
+    let mut aggregate_shapes: BTreeMap<String, BTreeMap<String, usize>> = BTreeMap::new();
     let mut file_gate_failures: Vec<String> = Vec::new();
 
     for path in files {
@@ -4334,6 +4354,7 @@ fn cmd_grade_stress_pack(
 
         let mut per_char: BTreeMap<String, CharStats> = BTreeMap::new();
         let mut per_char_archetypes: BTreeMap<String, BTreeMap<String, usize>> = BTreeMap::new();
+        let mut per_char_shapes: BTreeMap<String, BTreeMap<String, usize>> = BTreeMap::new();
         for row in rows {
             let Some(character) = row.get("character").and_then(|v| v.as_str()) else {
                 continue;
@@ -4349,6 +4370,19 @@ fn cmd_grade_stress_pack(
             } else {
                 row_pass
             };
+            if !reply.is_empty() {
+                let s = action_shape(reply).to_string();
+                *per_char_shapes
+                    .entry(character.to_string())
+                    .or_default()
+                    .entry(s.clone())
+                    .or_insert(0) += 1;
+                *aggregate_shapes
+                    .entry(character.to_string())
+                    .or_default()
+                    .entry(s)
+                    .or_insert(0) += 1;
+            }
 
             let cs = per_char.entry(character.to_string()).or_default();
             cs.total += 1;
@@ -4400,6 +4434,17 @@ fn cmd_grade_stress_pack(
                 .into_iter()
                 .map(|(k, v)| json!({"archetype": k, "count": v}))
                 .collect::<Vec<_>>();
+            let shape_mix = if action_shape_mix {
+                per_char_shapes
+                    .get(&character)
+                    .cloned()
+                    .unwrap_or_default()
+                    .into_iter()
+                    .map(|(k, v)| json!({"shape": k, "count": v, "rate": (v as f64 / stats.total as f64)}))
+                    .collect::<Vec<_>>()
+            } else {
+                Vec::new()
+            };
             char_rows.push(json!({
                 "character": character,
                 "total": stats.total,
@@ -4408,6 +4453,7 @@ fn cmd_grade_stress_pack(
                 "avg_words": avg_words,
                 "gate_passed": passed,
                 "failure_archetypes": archetypes,
+                "action_shape_mix": shape_mix,
             }));
         }
         by_file.push(json!({
@@ -4429,6 +4475,17 @@ fn cmd_grade_stress_pack(
         if !passed {
             overall_passed = false;
         }
+        let shape_mix = if action_shape_mix {
+            aggregate_shapes
+                .get(&character)
+                .cloned()
+                .unwrap_or_default()
+                .into_iter()
+                .map(|(k, v)| json!({"shape": k, "count": v, "rate": (v as f64 / stats.total as f64)}))
+                .collect::<Vec<_>>()
+        } else {
+            Vec::new()
+        };
         overall_rows.push(json!({
             "character": character,
             "total": stats.total,
@@ -4436,6 +4493,7 @@ fn cmd_grade_stress_pack(
             "pass_rate": pass_rate,
             "avg_words": avg_words,
             "gate_passed": passed,
+            "action_shape_mix": shape_mix,
         }));
     }
 
@@ -4444,6 +4502,7 @@ fn cmd_grade_stress_pack(
             "min_pass_rate": min_pass_rate,
             "max_avg_words": max_avg_words,
             "question_as_action_allowed": question_as_action_allowed,
+            "action_shape_mix": action_shape_mix,
         },
         "files": by_file,
         "overall": {
@@ -4461,8 +4520,8 @@ fn cmd_grade_stress_pack(
     } else {
         println!("=== GRADE STRESS PACK ===");
         println!(
-            "thresholds: min_pass_rate={:.2}, max_avg_words={:.1}, question_as_action_allowed={}",
-            min_pass_rate, max_avg_words, question_as_action_allowed
+            "thresholds: min_pass_rate={:.2}, max_avg_words={:.1}, question_as_action_allowed={}, action_shape_mix={}",
+            min_pass_rate, max_avg_words, question_as_action_allowed, action_shape_mix
         );
         if let Some(chars) = payload["overall"]["per_character"].as_array() {
             for row in chars {
@@ -4490,6 +4549,22 @@ fn cmd_grade_stress_pack(
                             ));
                         }
                         println!("  archetypes: {}", bits.join(", "));
+                    }
+                }
+                if action_shape_mix {
+                    if let Some(shapes) = row["action_shape_mix"].as_array() {
+                        if !shapes.is_empty() {
+                            let mut bits: Vec<String> = Vec::new();
+                            for s in shapes {
+                                bits.push(format!(
+                                    "{}:{} ({:.0}%)",
+                                    s["shape"].as_str().unwrap_or(""),
+                                    s["count"].as_u64().unwrap_or(0),
+                                    s["rate"].as_f64().unwrap_or(0.0) * 100.0
+                                ));
+                            }
+                            println!("  action_shape_mix: {}", bits.join(", "));
+                        }
                     }
                 }
             }
