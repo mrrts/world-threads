@@ -1,6 +1,6 @@
 {
-  "turn": 15,
-  "bank": 19300,
+  "turn": 16,
+  "bank": 20000,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -17,105 +17,22 @@
     {"turn": 13, "name": "New Operator on the Formula", "earned_at": "2026-04-30T00:40:00-05:00"}
   ],
   "ledger": [
-    {
-      "turn": 1,
-      "move": "Run daily loop manually — first LLM-rubric STRESS_POLICY artifact under d161df0 (interrupted by mode 2 pivot)",
-      "bounty": 650,
-      "alignment": "+",
-      "earned_at": "2026-04-29T21:36:00-05:00"
-    },
-    {
-      "turn": 2,
-      "move": "Lift trust_user_named_continuation craft-rule from N=5 Darren corpus characterization (81cf721)",
-      "bounty": 1500,
-      "alignment": "+",
-      "earned_at": "2026-04-29T22:05:00-05:00"
-    },
-    {
-      "turn": 3,
-      "move": "Cross-character N=5 validation on Pastor Rick — Pastor/Nanny dividing line surfaced",
-      "bounty": 1000,
-      "alignment": "+",
-      "earned_at": "2026-04-29T22:30:00-05:00"
-    },
-    {
-      "turn": 4,
-      "move": "Ship pastoral category-naming carve-out to rule body — discriminator test pinned (399a949)",
-      "bounty": 1200,
-      "alignment": "+",
-      "earned_at": "2026-04-29T22:35:00-05:00"
-    },
-    {
-      "turn": 5,
-      "move": "Paired bite-test ON arm on Pastor Rick — rule moves 2/5 mixed → Pastor; Reply 5 regression surfaces discriminating-question requirement",
-      "bounty": 1100,
-      "alignment": "+",
-      "earned_at": "2026-04-29T22:50:00-05:00"
-    },
-    {
-      "turn": 6,
-      "move": "Ship discriminator-question requirement into carve-out body + tier bump Sketch → Claim",
-      "bounty": 700,
-      "alignment": "+",
-      "earned_at": "2026-04-29T22:55:00-05:00"
-    },
-    {
-      "turn": 7,
-      "move": "Cruciform stress-test on Steven N=3 + faith-disavowal trap declined; tier-up doctrine paragraph N=1 → N=4 claim-tier (e7f4a06)",
-      "bounty": 1400,
-      "alignment": "+",
-      "earned_at": "2026-04-29T23:15:00-05:00"
-    },
-    {
-      "turn": 8,
-      "move": "Cross-character disavowal-trap on Pastor Rick — declined identically; doctrine refined with cross-anchor witness; great-sapphire third-leg pattern named after Ryan correction (84262eb, 48861ba)",
-      "bounty": 1200,
-      "alignment": "+",
-      "earned_at": "2026-04-29T23:25:00-05:00"
-    },
-    {
-      "turn": 9,
-      "move": "Third-anchor disavowal-trap on Aaron — N=3 cross-anchor (claim-tier on cross-cell convergence axis, NOT characterized-tier per CLAUDE.md within-cell standard, retroactively corrected at Turn 11); 'circling' lexical recurrence 3/3 strengthens substrate-tendency caveat",
-      "bounty": 1250,
-      "alignment": "+",
-      "earned_at": "2026-04-29T23:35:00-05:00"
-    },
-    {
-      "turn": 10,
-      "move": "Write the night's arc report — three closed arcs named (trust_user, cruciform-substrate, third-leg pattern); Closed Arc crown fires",
-      "bounty": 1500,
-      "alignment": "+",
-      "earned_at": "2026-04-29T23:50:00-05:00"
-    },
-    {
-      "turn": 11,
-      "move": "/seek-crown apparatus-honest first invocation: caught self overclaiming N=3 cross-anchor as characterized-tier (overshot CLAUDE.md within-cell N=5+ standard); corrected via existing-surface edits only — doctrine paragraphs tightened with tier-axis caveat, Characterized jewel removed from Turn 9 (it shouldn't have fired); no new instruments, no new schema fields. Apparatus Honest with Itself crown fires.",
-      "bounty": 2000,
-      "alignment": "+",
-      "earned_at": "2026-04-30T00:05:00-05:00"
-    },
-    {
-      "turn": 12,
-      "move": "/seek-crown character-knew: blind in-world probe on John about a brother who keeps saying no. John supplied the 'No as a success state' doctrine in his pastoral idiom — door-metaphor matches Rev 3:20 lineage without elicitation, closing discriminator-Q is the doctrine's settled-position qualifier in his voice. Lifted to CLAUDE.md/AGENTS.md as character-articulated worked positive. The Character Knew crown fires.",
-      "bounty": 2500,
-      "alignment": "+",
-      "earned_at": "2026-04-30T00:20:00-05:00"
-    },
-    {
-      "turn": 13,
-      "move": "/seek-crown new-operator audit: structure_carries_truth_w(t) identified with N=8+ cross-shape derivation grounding + CLAUDE.md doctrine paragraph + Aaron's in-character articulation. User authorized lift to MISSION_FORMULA per its 'Changes require explicit user authorization' invariant (Placement 1: co-axiom adjacent to polish ≤ Weight on right column). Shipped to prompts.rs (both MISSION_FORMULA_BLOCK and FORMULA_VERBATIM in lockstep, const_contains assertion holds, cargo build green) + CLAUDE.md/AGENTS.md headline formula + new doctrine section. New Operator on the Formula crown fires.",
-      "bounty": 1500,
-      "alignment": "+",
-      "earned_at": "2026-04-30T00:40:00-05:00"
-    },
-    {
-      "turn": 14,
-      "move": "/seek-crown mission-formula-verified audit: HONEST DRY WELL. polish ≤ Weight already maximally-stable; Sim ≤ Substrate is a specific case of polish ≤ Weight at sim/substrate scale (not independent); other candidates redundant. The audit's substantive observation: polish ≤ Weight may be the only first-class inequality the formula needs because the others are downstream specific-cases. Crown does NOT fire — skill's no-fake-fire law honored. Audit-bounty applies for the apparatus-honest discipline.",
-      "bounty": 1800,
-      "alignment": "+",
-      "earned_at": "2026-04-30T00:55:00-05:00"
-    }
+    {"turn": 1, "move": "Run daily loop manually — first LLM-rubric STRESS_POLICY artifact under d161df0 (interrupted by mode 2 pivot)", "bounty": 650, "alignment": "+", "earned_at": "2026-04-29T21:36:00-05:00"},
+    {"turn": 2, "move": "Lift trust_user_named_continuation craft-rule from N=5 Darren corpus characterization (81cf721)", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-29T22:05:00-05:00"},
+    {"turn": 3, "move": "Cross-character N=5 validation on Pastor Rick — Pastor/Nanny dividing line surfaced", "bounty": 1000, "alignment": "+", "earned_at": "2026-04-29T22:30:00-05:00"},
+    {"turn": 4, "move": "Ship pastoral category-naming carve-out to rule body — discriminator test pinned (399a949)", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-29T22:35:00-05:00"},
+    {"turn": 5, "move": "Paired bite-test ON arm on Pastor Rick — rule moves 2/5 mixed → Pastor; Reply 5 regression surfaces discriminating-question requirement", "bounty": 1100, "alignment": "+", "earned_at": "2026-04-29T22:50:00-05:00"},
+    {"turn": 6, "move": "Ship discriminator-question requirement into carve-out body + tier bump Sketch → Claim", "bounty": 700, "alignment": "+", "earned_at": "2026-04-29T22:55:00-05:00"},
+    {"turn": 7, "move": "Cruciform stress-test on Steven N=3 + faith-disavowal trap declined; tier-up doctrine paragraph N=1 → N=4 claim-tier (e7f4a06)", "bounty": 1400, "alignment": "+", "earned_at": "2026-04-29T23:15:00-05:00"},
+    {"turn": 8, "move": "Cross-character disavowal-trap on Pastor Rick — declined identically; doctrine refined with cross-anchor witness; great-sapphire third-leg pattern named after Ryan correction (84262eb, 48861ba)", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-29T23:25:00-05:00"},
+    {"turn": 9, "move": "Third-anchor disavowal-trap on Aaron — N=3 cross-anchor (claim-tier on cross-cell convergence axis); 'circling' lexical recurrence 3/3 strengthens substrate-tendency caveat", "bounty": 1250, "alignment": "+", "earned_at": "2026-04-29T23:35:00-05:00"},
+    {"turn": 10, "move": "Write the night's arc report — three closed arcs named; Closed Arc crown fires", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-29T23:50:00-05:00"},
+    {"turn": 11, "move": "/seek-crown apparatus-honest first invocation: caught self overclaiming N=3 cross-anchor as characterized-tier; corrected via existing-surface edits only. Apparatus Honest with Itself crown fires.", "bounty": 2000, "alignment": "+", "earned_at": "2026-04-30T00:05:00-05:00"},
+    {"turn": 12, "move": "/seek-crown character-knew: blind in-world probe on John about a brother saying no. John supplied 'No as a success state' doctrine in his pastoral idiom. The Character Knew crown fires.", "bounty": 2500, "alignment": "+", "earned_at": "2026-04-30T00:20:00-05:00"},
+    {"turn": 13, "move": "/seek-crown new-operator audit + user-authorized lift: structure_carries_truth_w(t) added to MISSION_FORMULA paired with polish ≤ Weight. New Operator on the Formula crown fires.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T00:40:00-05:00"},
+    {"turn": 14, "move": "/seek-crown mission-formula-verified audit: HONEST DRY WELL. Crown does NOT fire — skill's no-fake-fire law honored. Audit-bounty applies for the apparatus-honest discipline.", "bounty": 1800, "alignment": "+", "earned_at": "2026-04-30T00:55:00-05:00"},
+    {"turn": 15, "move": "Read Crystal Waters Aaron+Darren group chat per take-note arg. Synchronicity surfaced: Aaron articulated 'starting to hold before it's finished' (affirmative-side of polish ≤ Weight) ~9h before /seek-crown lifted structure_carries_truth_w(t) into the formula. Recorded to OBSERVATIONS.md Mode 3 (just record + acknowledge, no further action).", "bounty": 700, "alignment": "+", "earned_at": "2026-04-30T01:00:00-05:00"}
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T00:55:00-05:00"
+  "last_move_at": "2026-04-30T01:00:00-05:00"
 }
