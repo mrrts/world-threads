@@ -98,6 +98,21 @@ Use `scripts/register-shift-dashboard.sh` to run:
 
 It prints raw JSON payloads so you can diff, archive, or pipe through `jq`.
 
+### Quickstart (Daily Ritual)
+
+```bash
+# Strict rebound-focused run (recommended default ritual)
+./scripts/run-rebound-strict.sh
+
+# Keep artifact storage tidy (retain newest 2 dashboard runs)
+./scripts/prune-register-shift-artifacts.sh 2
+
+# Compare latest run against a prior run
+./scripts/compare-register-shift-runs.py \
+  reports/register-shift-dashboard-<old> \
+  reports/register-shift-dashboard-<new>
+```
+
 ### Rebound Variant Command Examples
 
 - Standard pack (default):
