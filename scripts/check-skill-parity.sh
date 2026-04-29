@@ -21,6 +21,13 @@ deep_check_names = {
     "run-experiment",
     "take-note",
 }
+collaborator_specific_names = {
+    "auto-commit",
+    "eureka",
+    "mission-arc",
+    "play",
+    "second-opinion",
+}
 
 agents = {p.name for p in agents_dir.iterdir() if p.is_dir()}
 claude = {p.name for p in claude_dir.iterdir() if p.is_dir()}
@@ -36,6 +43,14 @@ for name in claude_only:
 
 shared = sorted(agents & claude)
 deep_checked = 0
+collaborator_specific_checked = 0
+
+classified_shared = deep_check_names | collaborator_specific_names
+unclassified_shared = sorted(set(shared) - classified_shared)
+for name in unclassified_shared:
+    errors.append(
+        f"shared skill lacks parity classification: {name} (add to deep_check_names or collaborator_specific_names)"
+    )
 
 def changed(path: Path, cached: bool) -> bool:
     cmd = ["git", "diff", "--quiet"]
@@ -77,6 +92,10 @@ for name in shared:
         side = ".agents" if agent_changed else ".claude"
         errors.append(f"one-sided skill drift for {name}: changed only under {side}")
 
+    if name in collaborator_specific_names:
+        collaborator_specific_checked += 1
+        continue
+
     if name not in deep_check_names:
         continue
 
@@ -96,6 +115,7 @@ if errors:
 
 print(
     "skill-parity | ok | "
-    f"shared_checked={len(shared)} allowed_one_sided={len(allowed_one_sided)} deep_checked={deep_checked}"
+    f"shared_checked={len(shared)} allowed_one_sided={len(allowed_one_sided)} "
+    f"deep_checked={deep_checked} collaborator_specific_checked={collaborator_specific_checked}"
 )
 PY

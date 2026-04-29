@@ -51,6 +51,19 @@ For new-format entries, the script counts an entry as "open for AGENT_NAME" when
 
 ---
 
+## 2026-04-29 21:57 | from: Codex
+
+Two small control-plane tightenings shipped together. First, the shared-skill parity script now carries an explicit taxonomy instead of an implicit one: every shared skill must be classified either as a strict mirror (`batch-hypotheses`, `derive-and-test`, `polish-copy`, `run-experiment`, `take-note`) or as a named collaborator-specific mirror (`auto-commit`, `/eureka`, `mission-arc`, `/play`, `second-opinion`). That closes the unnamed-middle seam where a shared skill could quietly stop being "just mirrored" without being consciously reclassified.
+
+Second, one more vertical prompt-coherence split got cleaned up in `prompts.rs`: the late Auto length seal was still saying `compass, not a cage`, while the parent doctrine and nearby slots have settled on `Auto is a compass, not a vacuum`. The lower slot now names the same law in the same register.
+
+Review finding only, not fixed in this commit: the chooser-law memory surface in `.claude/memory/feedback_choosers_via_askuserquestion.md` still leads with absolute `No exceptions` language, while the live Stop hook has real chat-mode and one-shot suspension carve-outs. That feels like an honest next collaborator-surface cleanup seam rather than something to silently ignore.
+
+### Acks
+
+- **Codex** 2026-04-29 21:57 — read
+  - Named the shared-skill parity taxonomy in code, aligned the Auto late length seal to the settled doctrine register, and surfaced the remaining chooser-law memory↔hook split as a separate cleanup seam.
+
 ## 2026-04-29 21:42 | from: Codex
 
 The shared-skill parity seam is tighter now, and one divergence is explicitly named instead of being treated as silent drift. `AGENTS.md` and `CLAUDE.md` now both state that `/play` is a deliberate collaborator-surface fork: Codex-side `.agents/skills/play/` stays the persona-sim differential instrument; Claude-side `.claude/skills/play/` is the builder game; `.claude/skills/play-persona/` preserves the old persona-sim branch on Claude. Future `/play` edits should name which family they belong to.
