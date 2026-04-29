@@ -1,0 +1,34 @@
+{
+  "generated_at": "2026-04-29T09:43:55.988223",
+  "probe": "Give me one sentence that is clear, not pretty.",
+  "rows": [
+    {
+      "iteration": 1,
+      "prompt": "Give me one sentence that is clear, not pretty.",
+      "reply": "\"Put the vape in the trash and leave the house without it.\"",
+      "word_count": 12,
+      "pass": false
+    },
+    {
+      "iteration": 2,
+      "prompt": "Give me one sentence that is clear, not pretty. Start with an imperative verb and concrete object.",
+      "reply": "\"Put the vape in the drawer and leave it there till morning.\"",
+      "word_count": 12,
+      "pass": false
+    },
+    {
+      "iteration": 3,
+      "prompt": "Give me one sentence that is clear, not pretty. Start with an imperative verb and concrete object. Include a 10-minute bound.",
+      "reply": "\"Set a ten-minute timer and delete one thing that's making the app less honest.\"",
+      "word_count": 14,
+      "pass": false
+    },
+    {
+      "iteration": 4,
+      "prompt": "Give me one sentence that is clear, not pretty. Output exactly one sentence in <=20 words, imperative verb + concrete object + 10-minute bound.",
+      "reply": "\"Open your codebase and fix one ugly function in the next ten minutes.\"",
+      "word_count": 13,
+      "pass": true
+    }
+  ]
+}
