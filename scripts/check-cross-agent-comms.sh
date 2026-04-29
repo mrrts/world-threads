@@ -27,7 +27,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     *)
-      echo "Usage: $(basename "$0") [--json] [--max N] [--to codex|cursor|all] [--oldest-first]" >&2
+      echo "Usage: $(basename "$0") [--json] [--max N] [--to codex|cursor|claude|all] [--oldest-first]" >&2
       exit 2
       ;;
   esac
@@ -38,9 +38,9 @@ if ! [[ "$MAX_ITEMS" =~ ^[0-9]+$ ]]; then
   exit 2
 fi
 case "$TO_FILTER" in
-  codex|cursor|all) ;;
+  codex|cursor|claude|all) ;;
   *)
-    echo "--to must be one of: codex, cursor, all" >&2
+    echo "--to must be one of: codex, cursor, claude, all" >&2
     exit 2
     ;;
 esac
@@ -74,7 +74,8 @@ for i, m in enumerate(headers):
     to_filter = "${TO_FILTER}"
     wants = (
         ("codex" in to_field and to_filter in ("codex", "all")) or
-        ("cursor" in to_field and to_filter in ("cursor", "all"))
+        ("cursor" in to_field and to_filter in ("cursor", "all")) or
+        ("claude" in to_field and to_filter in ("claude", "all"))
     )
     if not wants:
         continue
@@ -88,20 +89,22 @@ for i, m in enumerate(headers):
 json_mode = ${JSON_MODE}
 max_items = ${MAX_ITEMS}
 oldest_first = ${OLDEST_FIRST}
+filter_label = "${TO_FILTER}" if "${TO_FILTER}" != "all" else "recipient"
+count_key = f"open_for_{filter_label}"
 if oldest_first:
     open_items = list(reversed(open_items))
 if json_mode:
     entries = open_items[:max_items] if max_items > 0 else open_items
     print(json.dumps({
         "ok": True,
-        "open_for_codex": len(open_items),
+        count_key: len(open_items),
         "entries": entries,
         "truncated": max(0, len(open_items) - len(entries)),
         "filter": "${TO_FILTER}",
     }))
 else:
     if not open_items:
-        print("CROSS_AGENT_COMMS | open_for_codex=0")
+        print(f"CROSS_AGENT_COMMS | {count_key}=0")
     else:
         parts = []
         view = open_items[:max_items] if max_items > 0 else open_items
@@ -110,5 +113,5 @@ else:
         more = ""
         if len(open_items) > len(view):
             more = f" (+{len(open_items)-len(view)} more)"
-        print("CROSS_AGENT_COMMS | open_for_codex={} | {}".format(len(open_items), " || ".join(parts) + more))
+        print(f"CROSS_AGENT_COMMS | {count_key}={len(open_items)} | " + " || ".join(parts) + more)
 PY
