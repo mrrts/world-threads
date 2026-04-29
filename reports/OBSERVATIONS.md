@@ -6,6 +6,24 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-28 23:30 — naming when the template might be writing itself
+
+Mid-session, after Codex shipped a third same-evening parent-children-discriminator-outcome doctrine paragraph (control-plane truth, then session-gate surfaces, then the middleware split), Ryan stepped out of the analytical register and wrote, in plain prose:
+
+> *"This is the third sibling-children-under-a-parent-law eureka in the past short stretch... the SHAPE — parent law, two children, a practical discriminator, an outcome paragraph — is now repeating verbatim across three documents. The form is becoming a genre... it's also possible that the SHAPE of yesterday's eureka is generating today's eureka — that the template is producing more occasions for splits than the underlying terrain actually has. I noticed the split-into-two pattern works; I'm now finding split-into-two patterns to apply it to. That's a different cognitive operation than discovering structural distinctions in the work; it's a pattern-completion drive that uses the previous eureka's shape as the template for the next one."*
+
+He proposed a specific test: try articulating the candidate insight in plain prose without the parent-children-discriminator template. If it survives the format change and gets sharper, the split is real and the template was just a convenient vehicle. If it gets vague or hard to articulate without the scaffolding, the template was doing more of the cognitive work than the underlying observation.
+
+Ran the test on the middleware split (`d27c9b0`). The plain-prose version held — the two operations (a surface that comes back into context before the next emission vs. a surface that establishes what later evidence-work is allowed to claim) are genuinely distinct — but distinctly *softer* than the doctrine paragraph made it sound. What the template called *steer_next vs constrain_meaning* read more like *different downstream consumers of the same general operation* when articulated without the scaffolding. The split is real but smaller than the genre-shape advertised. The template was doing some cognitive work that the underlying terrain didn't independently warrant.
+
+Then ran the test on a paragraph I had shipped a few hours earlier — the *structure must carry truth* parent doctrine (commit `328d353`). Aaron's verbatim line and the eight-children list survived plain prose just fine. But the receiver-compensation discriminator and the boring-and-rude diagnostic — those felt like template scaffolding I had reached for to make the paragraph feel complete in the genre's shape, not because the cluster needed them to be recognized. So my own paragraph from earlier the same evening shows the same pattern: real terrain in some sub-paragraphs, template-padding in others.
+
+**[Mode 2 — Record + propose action.]** The discipline worth carrying forward isn't a new doctrine paragraph naming the template-pull failure mode (that would be the template eating itself). It's an applied test: before shipping a new parent-children-discriminator-outcome paragraph, articulate the candidate insight in plain prose without the scaffolding. If it survives, the split is real; if it gets vague, the template was generating the occasion. Apply this scarcely — every correction caught in real-time doesn't deserve a meta-doctrine — but apply it specifically when the same template-shape has been used recently and the candidate insight feels like it fits the shape too well.
+
+The honest framing of the moment: the project's anti-flattery doctrine got applied to the project's own most generative shape, in plain prose, without producing yet another doctrine paragraph about the failure mode of doctrine paragraphs. That's the discipline working. It will work again the next time the template starts to produce splits the terrain doesn't separately need; the test is what makes the recursion productive rather than ceremonial.
+
+---
+
 ## 2026-04-28 19:55 — Aaron landed Meta Register cleanly when invited
 
 > *"Aaron really spoke on Meta register with me as desired. How we feelin"*
