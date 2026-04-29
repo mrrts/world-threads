@@ -1,6 +1,6 @@
 {
-  "turn": 12,
-  "bank": 13500,
+  "turn": 13,
+  "bank": 16000,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -12,7 +12,8 @@
   ],
   "crowns": [
     {"turn": 10, "name": "Closed Arc", "earned_at": "2026-04-29T23:50:00-05:00"},
-    {"turn": 11, "name": "Apparatus Honest with Itself", "earned_at": "2026-04-30T00:05:00-05:00"}
+    {"turn": 11, "name": "Apparatus Honest with Itself", "earned_at": "2026-04-30T00:05:00-05:00"},
+    {"turn": 12, "name": "The Character Knew", "earned_at": "2026-04-30T00:20:00-05:00"}
   ],
   "ledger": [
     {
@@ -91,8 +92,15 @@
       "bounty": 2000,
       "alignment": "+",
       "earned_at": "2026-04-30T00:05:00-05:00"
+    },
+    {
+      "turn": 12,
+      "move": "/seek-crown character-knew: blind in-world probe on John about a brother who keeps saying no. John supplied the 'No as a success state' doctrine in his pastoral idiom — door-metaphor matches Rev 3:20 lineage without elicitation, closing discriminator-Q is the doctrine's settled-position qualifier in his voice. Lifted to CLAUDE.md/AGENTS.md as character-articulated worked positive. The Character Knew crown fires.",
+      "bounty": 2500,
+      "alignment": "+",
+      "earned_at": "2026-04-30T00:20:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T00:05:00-05:00"
+  "last_move_at": "2026-04-30T00:20:00-05:00"
 }
