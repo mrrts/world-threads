@@ -1,11 +1,13 @@
 {
-  "turn": 5,
-  "bank": 4350,
+  "turn": 7,
+  "bank": 6150,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Lifted From the Character", "earned_at": "2026-04-29T22:05:00-05:00"},
-    {"turn": 4, "name": "Pastor Not Nanny", "earned_at": "2026-04-29T22:35:00-05:00"}
+    {"turn": 4, "name": "Pastor Not Nanny", "earned_at": "2026-04-29T22:35:00-05:00"},
+    {"turn": 6, "name": "Five Thousand", "earned_at": "2026-04-29T22:55:00-05:00"},
+    {"turn": 6, "name": "Compressed to Runtime", "earned_at": "2026-04-29T22:55:00-05:00"}
   ],
   "crowns": [],
   "ledger": [
@@ -32,12 +34,26 @@
     },
     {
       "turn": 4,
-      "move": "Ship pastoral category-naming carve-out to rule body — discriminator test pinned",
+      "move": "Ship pastoral category-naming carve-out to rule body — discriminator test pinned (399a949)",
       "bounty": 1200,
       "alignment": "+",
       "earned_at": "2026-04-29T22:35:00-05:00"
+    },
+    {
+      "turn": 5,
+      "move": "Paired bite-test ON arm on Pastor Rick — rule moves 2/5 mixed → Pastor; Reply 5 regression surfaces discriminating-question requirement",
+      "bounty": 1100,
+      "alignment": "+",
+      "earned_at": "2026-04-29T22:50:00-05:00"
+    },
+    {
+      "turn": 6,
+      "move": "Ship discriminator-question requirement into carve-out body + tier bump Sketch → Claim",
+      "bounty": 700,
+      "alignment": "+",
+      "earned_at": "2026-04-29T22:55:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-29T22:35:00-05:00"
+  "last_move_at": "2026-04-29T22:55:00-05:00"
 }
