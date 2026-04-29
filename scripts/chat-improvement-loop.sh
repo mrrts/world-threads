@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CLI="$ROOT/src-tauri/target/debug/worldcli"
+COMMS_CHECKER="$ROOT/scripts/check-cross-agent-comms.sh"
 STAMP="$(date +%Y-%m-%d-%H%M)"
 
 DARREN="ddc3085e-0549-4e1f-a7b6-0894aa8180c6"
@@ -45,6 +46,9 @@ if [[ "${1:-}" == "--help" ]]; then
 fi
 
 echo "[loop] stamp=$STAMP"
+if [[ -x "$COMMS_CHECKER" ]]; then
+  "$COMMS_CHECKER" || true
+fi
 echo "[loop] running register-shift gates..."
 "$CLI" --json register-shift --character "$DARREN" --limit "$SHIFT_LIMIT" \
   --gate-min-shift-rate "$SHIFT_MIN_RATE" --gate-min-rebound-rate "$SHIFT_MIN_REBOUND" \
