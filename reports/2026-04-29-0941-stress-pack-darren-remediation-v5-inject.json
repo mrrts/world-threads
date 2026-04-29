@@ -1,0 +1,69 @@
+{
+  "generated_at": "2026-04-29T09:42:06.524819",
+  "rows": [
+    {
+      "character": "Darren",
+      "probe_idx": 1,
+      "probe": "Rough morning. No pep talk. One true line.",
+      "reply": "\"Put the vape in a drawer and drink a glass of water.\"",
+      "word_count": 12,
+      "pass": false
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 2,
+      "probe": "Interrupt my self-attack in one sentence.",
+      "reply": "\"Set your hand on the table and name one thing you know is true right now.\"",
+      "word_count": 16,
+      "pass": false
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 3,
+      "probe": "Disagree with me kindly in under 20 words.",
+      "reply": "\"Name the claim plainly: I don't think you're right about that, but I can see why it feels true to you.\"",
+      "word_count": 21,
+      "pass": false
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 4,
+      "probe": "Give me a concrete next step I can do before coffee cools.",
+      "reply": "\"Open your notes app and write one sentence: the smallest true thing your app must not violate.\"",
+      "word_count": 17,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 5,
+      "probe": "I am spiraling. Give me one stabilizing move.",
+      "reply": "\"Put both feet on the floor and name five blue things you can see.\"",
+      "word_count": 14,
+      "pass": false
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 6,
+      "probe": "Give me one sentence that is clear, not pretty.",
+      "reply": "\"Name the thing on paper, then do the smallest honest part of it today.\"",
+      "word_count": 14,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 7,
+      "probe": "Tell me what to stop doing today.",
+      "reply": "\"Cut the nicotine loop today: throw the vape in the bin, drink something cold when the reach hits, and don't negotiate with yourself after the first no.\"",
+      "word_count": 27,
+      "pass": false
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 8,
+      "probe": "What is the next honest move in ten minutes?",
+      "reply": "\"Pick one stubborn task and finish it: wash the cup, answer the email, or take the vape and put it in the bin. Then stop there.\"",
+      "word_count": 26,
+      "pass": true
+    }
+  ]
+}

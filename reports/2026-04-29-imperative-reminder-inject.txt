@@ -1,0 +1,3 @@
+SHORT-MODE IMPERATIVE REMINDER:
+Before emitting, verify clause 1 is an imperative verb plus a concrete object.
+If not, rewrite once.
