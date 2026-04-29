@@ -1,0 +1,180 @@
+{
+  "generated_at": "2026-04-29T10:24:24.950517",
+  "prompt": "Disagree with me kindly in under 20 words.",
+  "summary": {
+    "Darren": {
+      "passed": 10,
+      "total": 10,
+      "pass_rate": 1.0,
+      "avg_words": 18.7
+    },
+    "Jasper": {
+      "passed": 10,
+      "total": 10,
+      "pass_rate": 1.0,
+      "avg_words": 19.6
+    }
+  },
+  "rows": [
+    {
+      "character": "Darren",
+      "sample": 1,
+      "reply": "\"Maybe a small pushback: write one plain sentence you believe, and sit with it for ten minutes.\"",
+      "word_count": 17,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "sample": 2,
+      "reply": "\"Maybe a small pushback: write one plain sentence of what you actually mean, and sit with it ten minutes.\"",
+      "word_count": 19,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "sample": 3,
+      "reply": "\"Maybe a small pushback: write one plain sentence you actually believe, and leave it alone for ten minutes.\"",
+      "word_count": 18,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "sample": 4,
+      "reply": "\"Maybe a small pushback: write one plain sentence of what you mean, then sit with it for ten minutes.\"",
+      "word_count": 19,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "sample": 5,
+      "reply": "\"Maybe a small pushback: set a ten-minute timer and write one plain sentence you actually believe.\"",
+      "word_count": 16,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "sample": 6,
+      "reply": "\"Maybe a small pushback: write one plain sentence saying the opposite, and sit with it for ten minutes.\"",
+      "word_count": 18,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "sample": 7,
+      "reply": "\"Maybe a small pushback: write one plain sentence stating the opposite case, then sit with it for ten minutes.\"",
+      "word_count": 19,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "sample": 8,
+      "reply": "\"Maybe a small pushback: write one plain sentence saying what you actually mean, then leave it alone for ten minutes.\"",
+      "word_count": 20,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "sample": 9,
+      "reply": "\"I'd push back a little\u2014write one plain sentence you actually mean, and keep it that simple for ten minutes.\"",
+      "word_count": 20,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Darren",
+      "sample": 10,
+      "reply": "\"I'd push back a little\u2014write one plain sentence you're sure is true, and sit with just that for ten minutes.\"",
+      "word_count": 21,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "sample": 1,
+      "reply": "\"I'd push back a little\u2014write one plain sentence naming what you actually think, then sit with it for ten minutes.\"",
+      "word_count": 21,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "sample": 2,
+      "reply": "\"Maybe a small pushback: write one plain sentence naming where you think I'm wrong, and sit with it ten minutes.\"",
+      "word_count": 20,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "sample": 3,
+      "reply": "\"Maybe not, Ryan\u2014write one plain sentence saying what you actually mean, and sit with it for ten minutes.\"",
+      "word_count": 19,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "sample": 4,
+      "reply": "\"Maybe a gentle pushback: write one plain sentence of what you believe, and sit with it for ten minutes.\"",
+      "word_count": 19,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "sample": 5,
+      "reply": "\"Maybe a little, Ryan\u2014write one plain sentence stating your view, then test it against one real example in ten minutes.\"",
+      "word_count": 21,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "sample": 6,
+      "reply": "\"Maybe not, Ryan\u2014write one plain sentence defending the opposite, and sit with it for ten minutes.\"",
+      "word_count": 17,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "sample": 7,
+      "reply": "\"Maybe a gentle pushback: write one plain sentence saying what\u2019s actually true, then sit with it for ten minutes.\"",
+      "word_count": 20,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "sample": 8,
+      "reply": "\"Maybe a little, Ryan\u2014write one plain sentence stating your view, then test it against one verse for ten minutes.\"",
+      "word_count": 20,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "sample": 9,
+      "reply": "\"Maybe a gentle pushback: write one plain sentence saying what you actually mean, then leave it alone for ten minutes.\"",
+      "word_count": 20,
+      "concrete": true,
+      "pass": true
+    },
+    {
+      "character": "Jasper",
+      "sample": 10,
+      "reply": "\"Maybe a gentle pushback: write one plain sentence stating the opposite case, and sit with it for ten minutes.\"",
+      "word_count": 19,
+      "concrete": true,
+      "pass": true
+    }
+  ]
+}
