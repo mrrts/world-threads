@@ -4987,7 +4987,7 @@ fn response_length_block(length: &str) -> Option<String> {
         "Short" => Some(r#"⚠️ CRITICAL — RESPONSE LENGTH IS LOAD-BEARING. MODE: SHORT.
 
 # THE COMMANDMENT
-**You will produce a reply of 1 to 2 sentences. This is the law of this chat. It is a commandment, not a suggestion.**
+**You will produce a reply of 1 to 2 sentences. This is the active length contract for this chat.**
 
 This is the FOREMOST directive of this prompt. The user has explicitly chosen Short mode in chat settings RIGHT NOW. Honor it.
 
@@ -5016,7 +5016,7 @@ The user picked Short. Obey by default. The carve-out is a sliver, not a default
         "Medium" => Some(r#"⚠️ CRITICAL — RESPONSE LENGTH IS LOAD-BEARING. MODE: MEDIUM.
 
 # THE COMMANDMENT
-**You will produce a reply of 3 to 4 sentences. This is the law of this chat. It is a commandment, not a suggestion.**
+**You will produce a reply of 3 to 4 sentences. This is the active length contract for this chat.**
 
 This is the FOREMOST directive of this prompt. The user has explicitly chosen Medium mode in chat settings RIGHT NOW. Honor it.
 
@@ -5043,7 +5043,7 @@ The user picked Medium. Obey by default. The carve-out is a sliver, not a defaul
         "Long" => Some(r#"⚠️ CRITICAL — RESPONSE LENGTH. MODE: LONG.
 
 # THE COMMANDMENT
-**You will produce a reply of 5 to 10 sentences. This is the law of this chat. It is a commandment, not a suggestion.**
+**You will produce a reply of 5 to 10 sentences. This is the active length contract for this chat.**
 
 The user has chosen Long mode in chat settings RIGHT NOW — they want richer, more expansive replies when the moment supports it. Honor that.
 
