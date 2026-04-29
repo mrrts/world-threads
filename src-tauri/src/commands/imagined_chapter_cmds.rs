@@ -107,6 +107,16 @@ fn refresh_imagined_chapter_breadcrumb_if_canonized(
     Ok(())
 }
 
+fn rename_imagined_chapter_and_refresh_breadcrumb(
+    conn: &rusqlite::Connection,
+    chapter_id: &str,
+    title: &str,
+) -> Result<(), rusqlite::Error> {
+    rename_imagined_chapter(conn, chapter_id, title)?;
+    let chapter = get_imagined_chapter(conn, chapter_id)?;
+    refresh_imagined_chapter_breadcrumb_if_canonized(conn, &chapter)
+}
+
 /// Resolve a thread_id to (world, cast: Vec<Character>) — works for both
 /// solo threads (1 character) and group threads (N characters via group_chats).
 fn resolve_thread_cast(
@@ -698,9 +708,8 @@ pub fn rename_imagined_chapter_cmd(
     title: String,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    rename_imagined_chapter(&conn, &chapter_id, &title).map_err(|e| e.to_string())?;
-    let chapter = get_imagined_chapter(&conn, &chapter_id).map_err(|e| e.to_string())?;
-    refresh_imagined_chapter_breadcrumb_if_canonized(&conn, &chapter).map_err(|e| e.to_string())
+    rename_imagined_chapter_and_refresh_breadcrumb(&conn, &chapter_id, &title)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -874,4 +883,83 @@ pub fn bulk_decanonize_imagined_chapters_for_thread_cmd(
         count += 1;
     }
     Ok(BulkDecanonizeResponse { decanonized_count: count })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::db::schema::run_migrations;
+    use rusqlite::ffi::sqlite3_auto_extension;
+    use rusqlite::Connection;
+
+    fn setup_imagined_chapter_conn() -> Connection {
+        unsafe {
+            sqlite3_auto_extension(Some(std::mem::transmute(
+                sqlite_vec::sqlite3_vec_init as *const (),
+            )));
+        }
+        let conn = Connection::open_in_memory().expect("in-memory sqlite");
+        run_migrations(&conn).expect("migrations");
+        conn
+    }
+
+    #[test]
+    fn rename_refreshes_canonized_breadcrumb_content() {
+        let conn = setup_imagined_chapter_conn();
+        let chapter_id = "chapter-1";
+        let breadcrumb_id = "breadcrumb-1";
+        let thread_id = "thread-1";
+
+        let chapter = ImaginedChapter {
+            chapter_id: chapter_id.to_string(),
+            thread_id: thread_id.to_string(),
+            world_day: Some(12),
+            title: "Old Title".to_string(),
+            seed_hint: String::new(),
+            scene_location: Some("Garden Patio".to_string()),
+            scene_description: "A lamp burns low.".to_string(),
+            image_id: Some("image-1".to_string()),
+            content: "He sat with the cup cooling in his hand.".to_string(),
+            created_at: "2026-04-29T19:58:00Z".to_string(),
+            breadcrumb_message_id: Some(breadcrumb_id.to_string()),
+            canonized: true,
+        };
+        create_imagined_chapter(&conn, &chapter).expect("create chapter");
+        conn.execute(
+            "INSERT INTO messages (message_id, thread_id, role, content, created_at)
+             VALUES (?1, ?2, 'imagined_chapter', ?3, ?4)",
+            params![
+                breadcrumb_id,
+                thread_id,
+                build_imagined_chapter_breadcrumb_content(&chapter),
+                "2026-04-29T19:58:00Z",
+            ],
+        )
+        .expect("insert breadcrumb");
+
+        rename_imagined_chapter_and_refresh_breadcrumb(&conn, chapter_id, "New Title")
+            .expect("rename + refresh");
+
+        let updated_title: String = conn
+            .query_row(
+                "SELECT title FROM imagined_chapters WHERE chapter_id = ?1",
+                params![chapter_id],
+                |r| r.get(0),
+            )
+            .expect("query title");
+        assert_eq!(updated_title, "New Title");
+
+        let breadcrumb_content: String = conn
+            .query_row(
+                "SELECT content FROM messages WHERE message_id = ?1",
+                params![breadcrumb_id],
+                |r| r.get(0),
+            )
+            .expect("query breadcrumb");
+        let parsed: serde_json::Value =
+            serde_json::from_str(&breadcrumb_content).expect("breadcrumb json");
+        assert_eq!(parsed["title"], "New Title");
+        assert_eq!(parsed["scene_location"], "Garden Patio");
+        assert_eq!(parsed["image_id"], "image-1");
+    }
 }
