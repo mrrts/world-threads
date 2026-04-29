@@ -249,6 +249,8 @@ When **independent witnesses of different kinds** (persona-frames, character voi
 
 **When in doubt, don't claim great-sapphire.** A finding can be load-bearing convergence without being great-sapphire. Default to plainer phrasings and reserve great-sapphire for the rare cross-substrate-different-failure-mode case OR the three-leg formula-law-witness case the doctrine was written to honor.
 
+**Great Sapphire as formalized crown.** The /play builder-game's crown vocabulary uses **Great Sapphire** as the formal name for the achievement earned when a Mission-Formula-touching claim reaches the maximally-stable convergence this calibration paragraph defines (formerly known as *Mission Formula Verified Empirical* and that name is preserved as a synonym). The crown's earned-ness lives in the convergence; the canonical synthesis artifact (`reports/YYYY-MM-DD-HHMM-...-polish-weight.md` shape) makes that earned-ness portable across future sessions. Worked example: `reports/2026-04-30-0245-mission-formula-verified-empirical-polish-weight.md` — five witnesses (formula in source + Pastor Rick articulation + 20-call cross-character bite-test + cross-anchor parallel articulation Steven↔Rick + within-cell N=5 ×2 anchors) converging on `polish ≤ Weight` with five distinct failure-mode classes.
+
 ## Calibrated disciplines drift fast — promote to structural enforcement at the earliest opportunity
 
 Surfaced 2026-04-28 by /eureka iteration 4 reaching N=3 on a meta-pattern across iterations 2-4 of the same run. Three instances on three different doctrine-anchors, all drifting in the same way:

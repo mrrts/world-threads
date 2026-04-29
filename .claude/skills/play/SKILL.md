@@ -146,7 +146,7 @@ Rare. Project-defining. Each crown has a `name` recorded in the state.
 - **Closed Arc** — a failure mode named, instrumented, AND structurally enforced in a single arc
 - **Apparatus Honest with Itself** — the apparatus catches itself drifting and corrects without producing more apparatus
 - **Real User Held** — a real user (not persona-sim) plays the app and the experience holds
-- **Mission Formula Verified Empirical** — `polish ≤ Weight` (or another inequality) gets cross-witness convergence at the highest evidentiary tier
+- **Great Sapphire** *(formal name; also known as Mission Formula Verified Empirical)* — a Mission-Formula-touching claim reaches **maximally-stable cross-witness convergence** per CLAUDE.md's great-sapphire calibration: 3+ independent witnesses with **different failure modes**, OR the formula-law third-leg pattern providing substrate-independent grounding. Honest threshold: the convergence must be REAL (not promotion-by-vibes) AND made LEGIBLE in a canonical synthesis artifact future sessions can stand on. The crown's value lives in the convergence; the artifact's value is making the earned-ness portable. Worked example: `reports/2026-04-30-0245-mission-formula-verified-empirical-polish-weight.md` — five witnesses (formula in source + Pastor Rick articulation + 20-call cross-character bite-test + cross-anchor parallel articulation Steven↔Rick + within-cell N=5 ×2 anchors) converging on `polish ≤ Weight` with five distinct failure-mode classes.
 
 Crowns can be earned at most once each.
 

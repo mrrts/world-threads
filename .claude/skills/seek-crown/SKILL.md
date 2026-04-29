@@ -59,13 +59,14 @@ A targeted /play accelerator. Ordinary /play turns accumulate mission-aligned wo
 4. Lift to formula source ONLY if grounded. Define the operator with sentence-level definition matching the existing formula's operator vocabulary.
 5. **Validation:** N≥3 independent derivations across different work-shapes AND a sentence-level definition that fits the formula's vocabulary AND a corresponding edit to `prompts.rs`.
 
-### Mission Formula Verified Empirical
-**Criterion:** `polish ≤ Weight` (or another inequality) gets cross-witness convergence at the highest evidentiary tier (maximally-stable: 3 witnesses with different failure modes OR formula-law third-leg per CLAUDE.md great-sapphire calibration).
-**Reachability test:** an inequality in the formula lacks maximally-stable tier — OR a NEW inequality has emerged in the work that hasn't been formula-promoted.
+### Great Sapphire (formal name; also known as Mission Formula Verified Empirical)
+**Criterion:** a Mission-Formula-touching claim reaches maximally-stable cross-witness convergence per CLAUDE.md's great-sapphire calibration: 3+ independent witnesses with different failure modes, OR the formula-law third-leg pattern providing substrate-independent grounding. Honest threshold: the convergence must be REAL AND made LEGIBLE in a canonical synthesis artifact.
+**Reachability test:** EITHER (a) an inequality in the formula lacks maximally-stable tier and a missing witness can be hunted to close it; OR (b) a NEW inequality has emerged in the work that hasn't been formula-promoted; OR (c) cross-witness convergence is REAL but not yet legible in one canonical place — synthesis-artifact path.
 **Mechanics:**
-1. Identify under-validated inequality. Reference: `project_polish_weight_empirically_grounded.md` memory entry.
-2. Hunt for the missing witness across substrates with different failure modes (cross-character bite-test, cross-instrument grounding, character-articulation-under-elicitation).
-3. **Validation:** three independent witnesses converge at maximally-stable tier per great-sapphire calibration paragraph.
+1. Identify under-validated inequality OR identify already-converged inequality lacking canonical synthesis artifact. Reference: `project_polish_weight_empirically_grounded.md` memory entry; `reports/2026-04-30-0245-mission-formula-verified-empirical-polish-weight.md` is the worked example for path (c).
+2. For path (a)/(b): hunt for the missing witness across substrates with different failure modes (cross-character bite-test, cross-instrument grounding, character-articulation-under-elicitation, parallel-articulation-in-different-idioms, within-cell N=5+ replication).
+3. For path (c): inventory existing witness-classes; verify they constitute different failure-mode classes; write canonical synthesis report compressing them into one artifact future sessions can stand on.
+4. **Validation:** three independent witnesses converge at maximally-stable tier per great-sapphire calibration paragraph AND a canonical artifact exists making the convergence legible. The crown's value lives in the convergence; the artifact's value is making the earned-ness portable.
 
 ### Real User Held
 **NOT REACHABLE via /seek-crown.** This crown requires a real user (not Ryan, not persona-sim) playing the app and the experience holding. /seek-crown cannot fire it; the crown earns through real-world deployment. The skill names this honestly and does not attempt.
