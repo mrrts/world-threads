@@ -7651,6 +7651,39 @@ mod fence_shape_detection_tests {
     }
 
     #[test]
+    fn build_dialogue_messages_keeps_location_correction_when_fence_correction_also_fires() {
+        let recent_messages = vec![
+            minimal_message("user", "Where are we again?"),
+            minimal_message("assistant", "\"I tap the cup lid once with a fingernail.*"),
+        ];
+        let msgs = build_dialogue_messages(
+            "SYSTEM",
+            &recent_messages,
+            &[],
+            None,
+            &[],
+            &HashMap::new(),
+            &HashMap::new(),
+            None,
+            Some("Garden Patio"),
+        );
+        assert!(
+            msgs.iter().any(|m| {
+                m.role == "system"
+                    && m.content.contains("[FENCE SHAPE CORRECTION — AUTHORITATIVE")
+            }),
+            "malformed history should still trigger the late fence correction note"
+        );
+        assert!(
+            msgs.iter().any(|m| {
+                m.role == "system"
+                    && m.content.contains("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: **Garden Patio**")
+            }),
+            "authoritative location correction should still be emitted when another late correction note is also present"
+        );
+    }
+
+    #[test]
     fn build_dialogue_messages_emits_location_correction_with_default_fallback() {
         let recent_messages = vec![minimal_message("user", "Hello there.")];
         let msgs = build_dialogue_messages(
