@@ -1572,6 +1572,10 @@ pub async fn try_proactive_ping_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         combined_axes_block(&conn, &character.character_id)
     };
+    let current_loc = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        get_thread_location(&conn, &thread.thread_id).ok().flatten()
+    };
     let current_world_day_for_stance: Option<i64> = recent_msgs.iter().rev()
         .find_map(|m| m.world_day);
     let stance_needs_refresh = match (latest_stance.as_ref(), current_world_day_for_stance) {
@@ -1607,7 +1611,7 @@ pub async fn try_proactive_ping_cmd(
         active_quests.as_slice(),
         stance_text.as_deref(),
         anchor_text.as_deref(),
-    None,
+        current_loc.as_deref(),
     ).await?;
 
     if reply_text.trim().is_empty() {
@@ -1820,7 +1824,7 @@ pub async fn generate_narrative_cmd(
 ) -> Result<NarrativeResult, String> {
     // Read everything from DB
     let (world, character, thread, recent_msgs, model_config, retrieved,
-         user_profile, current_mood, mood_enabled, narration_tone, narration_instructions) = {
+         user_profile, current_mood, mood_enabled, narration_tone, narration_instructions, current_loc) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
         let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
@@ -1840,6 +1844,7 @@ pub async fn generate_narrative_cmd(
         let current_mood = get_character_mood(&conn, &character_id);
         let mood_enabled = get_setting(&conn, "mood_drift_enabled")
             .ok().flatten().map(|v| v == "true").unwrap_or(true);
+        let current_loc = get_thread_location(&conn, &thread.thread_id).ok().flatten();
 
         let narration_tone = get_setting(&conn, &format!("narration_tone.{}", character_id))
             .ok().flatten();
@@ -1847,7 +1852,7 @@ pub async fn generate_narrative_cmd(
             .ok().flatten();
 
         (world, character, thread, recent_msgs, model_config, retrieved,
-         user_profile, current_mood, mood_enabled, narration_tone, narration_instructions)
+         user_profile, current_mood, mood_enabled, narration_tone, narration_instructions, current_loc)
     };
 
     // Mood directive
@@ -1887,7 +1892,7 @@ pub async fn generate_narrative_cmd(
         narration_tone.as_deref(),
         merged_instructions.as_deref(),
         &illustration_captions,
-    None,
+        current_loc.as_deref(),
     ).await?;
 
     // Store as a "narrative" role message

@@ -2123,6 +2123,10 @@ pub async fn generate_group_narrative_cmd(
         .filter(|c| c.character_id != primary_character.character_id)
         .collect();
     let illustration_captions = crate::commands::chat_cmds::collect_illustration_captions(&db, &recent_msgs);
+    let current_loc = {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        get_group_chat_location(&conn, &group_chat_id).ok().flatten()
+    };
     let (narrative_text, usage) = orchestrator::run_narrative_with_base(
         &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
         &world, primary_character,
@@ -2133,7 +2137,7 @@ pub async fn generate_group_narrative_cmd(
         narration_tone.as_deref(),
         merged_instructions.as_deref(),
         &illustration_captions,
-    None,
+        current_loc.as_deref(),
     ).await?;
 
     if let Some(u) = &usage {

@@ -26,7 +26,7 @@ pub async fn generate_video_cmd(
     let is_group = character_id.is_empty();
 
     // Load context
-    let (world, character, recent_msgs, model_config, user_profile, illustration_file) = {
+    let (world, character, recent_msgs, model_config, user_profile, illustration_file, current_loc) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let model_config = orchestrator::load_model_config(&conn);
 
@@ -91,7 +91,13 @@ pub async fn generate_video_cmd(
         .collect();
         recent_msgs.reverse();
 
-        (world, character, recent_msgs, model_config, user_profile, file_name)
+        let current_loc = if is_group {
+            None
+        } else {
+            get_thread_location(&conn, &thread_id).ok().flatten()
+        };
+
+        (world, character, recent_msgs, model_config, user_profile, file_name, current_loc)
     };
 
     let dir = &portraits_dir.0;
@@ -103,7 +109,15 @@ pub async fn generate_video_cmd(
 
     // Generate animation prompt — optionally include conversation context
     let mut animation_prompt = if include_context.unwrap_or(false) {
-        generate_animation_prompt(&api_key, &model_config, &world, &character, user_profile.as_ref(), &recent_msgs).await?
+        generate_animation_prompt(
+            &api_key,
+            &model_config,
+            &world,
+            &character,
+            user_profile.as_ref(),
+            &recent_msgs,
+            current_loc.as_deref(),
+        ).await?
     } else {
         "Bring this illustration to life with natural, subtle motion.".to_string()
     };
@@ -283,12 +297,21 @@ async fn generate_animation_prompt(
     character: &Character,
     user_profile: Option<&UserProfile>,
     recent_msgs: &[Message],
+    current_location_override: Option<&str>,
 ) -> Result<String, String> {
     use crate::ai::prompts;
 
     // Videos are only generated from individual chats today (the frontend
     // guards on activeCharacter), so no additional cast or names map.
-    let messages = prompts::build_animation_prompt(world, character, None, user_profile, recent_msgs, None);
+    let messages = prompts::build_animation_prompt(
+        world,
+        character,
+        None,
+        user_profile,
+        recent_msgs,
+        None,
+        current_location_override,
+    );
     let request = ChatRequest {
         model: model_config.dialogue_model.clone(),
         messages,

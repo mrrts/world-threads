@@ -6570,6 +6570,7 @@ pub fn build_animation_prompt(
     user_profile: Option<&UserProfile>,
     recent_messages: &[Message],
     character_names: Option<&HashMap<String, String>>,
+    current_location_override: Option<&str>,
 ) -> Vec<crate::ai::openai::ChatMessage> {
     let user_name = user_profile
         .map(|p| p.display_name.as_str())
@@ -6654,6 +6655,17 @@ Write ONLY the animation direction, nothing else."#,
         msgs.push(crate::ai::openai::ChatMessage {
             role: "system".to_string(),
             content: fence_shape_correction_note().to_string(),
+        });
+    }
+
+    if let Some(loc) = effective_current_location(current_location_override, recent_messages) {
+        msgs.push(crate::ai::openai::ChatMessage {
+            role: "system".to_string(),
+            content: format!(
+                "[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: **{loc}**\n\
+                 \n\
+                 The animation belongs in **{loc}**. Treat earlier location detail in the chat history as past-scene material, not the present setting of the video. Ground movement, environment, and physical beats in **{loc}**.]"
+            ),
         });
     }
 
@@ -7802,6 +7814,7 @@ mod fence_shape_detection_tests {
             Some(&profile),
             &recent_messages,
             None,
+            None,
         );
         assert!(
             msgs.iter().any(|m| {
@@ -7810,6 +7823,31 @@ mod fence_shape_detection_tests {
                     && m.content.contains("treat the malformed quoted-action run as action or environment")
             }),
             "animation prompt should get the authoritative fence correction when malformed history is present"
+        );
+    }
+
+    #[test]
+    fn animation_prompt_emits_location_correction_with_explicit_override() {
+        let world = minimal_world();
+        let character = minimal_character();
+        let profile = minimal_profile("Casey");
+        let recent_messages = vec![minimal_message("user", "Give me the scene in motion.")];
+        let msgs = build_animation_prompt(
+            &world,
+            &character,
+            None,
+            Some(&profile),
+            &recent_messages,
+            None,
+            Some("Garden Patio"),
+        );
+        assert!(
+            msgs.iter().any(|m| {
+                m.role == "system"
+                    && m.content.contains("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: **Garden Patio**")
+                    && m.content.contains("The animation belongs in **Garden Patio**")
+            }),
+            "animation prompt should emit the authoritative location correction when an explicit override is present"
         );
     }
 }
