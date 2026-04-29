@@ -274,12 +274,25 @@ pub async fn run_dialogue_with_base(
     // caller pre-built a chat-state signature derived from 𝓕 := (𝓡, 𝓒),
     // prepend it at the HEAD of the system prompt so the conditioning
     // applies before any other block. See ai::momentstamp.
+    //
+    // Test hook — env var WORLDTHREADS_NO_MOMENTSTAMP_LEAD=1 suppresses
+    // ONLY the head-of-prompt prepending. The momentstamp continues to
+    // be computed and persisted (formula_signature column on the
+    // assistant message) and the inline series in chat history continues
+    // to fire unchanged via build_dialogue_messages. Used for A/B
+    // ablation: does primacy-position specifically do work, separate
+    // from the inline series + chain handoff? Sibling to
+    // WORLDTHREADS_NO_FORMULA / WORLDTHREADS_NO_RYAN_FORMULA env hooks.
     if let Some(stamp) = formula_momentstamp {
-        let mut prefixed = String::with_capacity(stamp.len() + system.len() + 4);
-        prefixed.push_str(stamp);
-        prefixed.push_str("\n\n");
-        prefixed.push_str(&system);
-        system = prefixed;
+        let suppress_lead = std::env::var("WORLDTHREADS_NO_MOMENTSTAMP_LEAD")
+            .map(|v| v == "1").unwrap_or(false);
+        if !suppress_lead {
+            let mut prefixed = String::with_capacity(stamp.len() + system.len() + 4);
+            prefixed.push_str(stamp);
+            prefixed.push_str("\n\n");
+            prefixed.push_str(&system);
+            system = prefixed;
+        }
     }
     // Conscience-pass retry path: a prior draft drifted on an invariant,
     // and the grader returned a concrete correction note. Append it at the

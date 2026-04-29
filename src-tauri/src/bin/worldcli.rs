@@ -996,6 +996,18 @@ enum Cmd {
         /// on stderr; stdout stays the API-trimmed reply (same as runs/).
         #[arg(long)]
         fence_pipeline: bool,
+        /// Wire the formula-momentstamp path through this call. Mirrors
+        /// the orchestrator's reactions=off depth-signal injection: pulls
+        /// the character's recent thread messages + most-recent
+        /// formula_signature, calls build_formula_momentstamp, prepends
+        /// the resulting block at the HEAD of the system prompt. Costs
+        /// one extra ~$0.005-0.015 memory-tier call. Used for A/B
+        /// ablation of the lead-block effect — pair this flag with
+        /// WORLDTHREADS_NO_MOMENTSTAMP_LEAD=1 env var to suppress ONLY
+        /// the prepending while keeping the computation + chain handoff
+        /// intact.
+        #[arg(long)]
+        with_momentstamp: bool,
         /// Send the message in the context of an existing GROUP CHAT.
         /// When set, the `character_id` arg becomes the SPEAKER (which
         /// must be a member of this group); the prompt builder swaps to
@@ -1834,7 +1846,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_refresh_anchor(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
-        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, fence_pipeline, group_chat } => {
+        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, fence_pipeline, group_chat, with_momentstamp } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
@@ -1885,6 +1897,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &section_order,
                     end_seal && !no_end_seal,
                     fence_pipeline,
+                    with_momentstamp,
                 ).await
             }
         }
@@ -8262,11 +8275,12 @@ async fn cmd_ask(
     section_order_names: &[String],
     end_seal: bool,
     fence_pipeline: bool,
+    with_momentstamp: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
 
     // Build prompt context inside one lock-acquire.
-    let (system_prompt, model_config, prior_messages, session_id, character, world_id) = {
+    let (mut system_prompt, model_config, prior_messages, session_id, character, world_id, recent_for_momentstamp, prior_signature) = {
         let conn = r.db.conn.lock().unwrap();
         let character = get_character(&conn, character_id)?;
         let mut world = get_world(&conn, &character.world_id)?;
@@ -8385,8 +8399,72 @@ async fn cmd_ask(
             }
         };
         let world_id = character.world_id.clone();
-        (system_prompt, model_config, prior_messages, session_id, character, world_id)
+
+        // Pull recent thread messages + most-recent formula_signature
+        // for the momentstamp wire-up. Both are None when --with-momentstamp
+        // is off, avoiding any extra db work for the default path.
+        let (recent_for_momentstamp, prior_signature): (Vec<Message>, Option<String>) = if with_momentstamp {
+            let thread = match get_thread_for_character(&conn, character_id) {
+                Ok(t) => t,
+                Err(e) => return Err(Box::<dyn std::error::Error>::from(format!(
+                    "with-momentstamp: no solo-chat thread for character {}: {}", character_id, e
+                ))),
+            };
+            let recent = list_messages(&conn, &thread.thread_id, 30).unwrap_or_default();
+            let prior_sig: Option<String> = conn.query_row(
+                "SELECT formula_signature FROM messages \
+                 WHERE thread_id = ?1 AND role = 'assistant' \
+                 AND formula_signature IS NOT NULL AND TRIM(formula_signature) != '' \
+                 ORDER BY created_at DESC LIMIT 1",
+                params![thread.thread_id],
+                |row| row.get::<_, Option<String>>(0),
+            ).ok().flatten();
+            (recent, prior_sig)
+        } else {
+            (Vec::new(), None)
+        };
+
+        (system_prompt, model_config, prior_messages, session_id, character, world_id, recent_for_momentstamp, prior_signature)
     };
+
+    // Formula-momentstamp wire-up: mirrors the orchestrator path's
+    // reactions=off depth-signal injection. Computes a chat-state
+    // signature via build_formula_momentstamp (cost ~$0.005-0.015), then
+    // prepends the resulting block at the HEAD of system_prompt unless
+    // WORLDTHREADS_NO_MOMENTSTAMP_LEAD=1 is set. The env-var honors the
+    // same toggle the orchestrator path uses (orchestrator.rs:277-292),
+    // so worldcli A/B ablation mirrors the in-app behavior.
+    if with_momentstamp && !recent_for_momentstamp.is_empty() {
+        match app_lib::ai::momentstamp::build_formula_momentstamp(
+            &model_config.chat_api_base(),
+            api_key,
+            &model_config.memory_model,
+            &recent_for_momentstamp,
+            prior_signature.as_deref(),
+        ).await {
+            Ok(Some(result)) => {
+                let suppress_lead = std::env::var("WORLDTHREADS_NO_MOMENTSTAMP_LEAD")
+                    .map(|v| v == "1").unwrap_or(false);
+                eprintln!(
+                    "[worldcli with-momentstamp] computed signature: {} | suppress_lead={}",
+                    result.signature, suppress_lead
+                );
+                if !suppress_lead {
+                    let mut prefixed = String::with_capacity(result.block.len() + system_prompt.len() + 4);
+                    prefixed.push_str(&result.block);
+                    prefixed.push_str("\n\n");
+                    prefixed.push_str(&system_prompt);
+                    system_prompt = prefixed;
+                }
+            }
+            Ok(None) => {
+                eprintln!("[worldcli with-momentstamp] build_formula_momentstamp returned None (silent skip)");
+            }
+            Err(e) => {
+                eprintln!("[worldcli with-momentstamp] build_formula_momentstamp failed: {}", e);
+            }
+        }
+    }
 
     let mut messages = vec![openai::ChatMessage { role: "system".to_string(), content: system_prompt }];
     for (role, content) in prior_messages.iter() {
