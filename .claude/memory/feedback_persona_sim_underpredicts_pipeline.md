@@ -1,6 +1,6 @@
 ---
 name: Persona-sim verdicts under-predict the actual pipeline; filter via Step 2.5
-description: ChatGPT-substrate persona-sims (used in /play) produce DIVERGENT-BETTER more often than DIVERGENT-WORSE — sims under-predict the pipeline more than they over-predict, because the substrate's natural pull is toward MFA-varnish / polite-aphorism / operator-recital — exactly the failure modes the doctrine is built to refuse. /play verdicts should be filtered through Step 2.5 grounding before treated as ship-shaped.
+description: ChatGPT-substrate persona-sims (used in /play) produce DIVERGENT-BETTER more often than DIVERGENT-WORSE — sims under-predict the pipeline more than they over-predict, because the substrate's natural pull is toward MFA-varnish / polite-aphorism / operator-recital — exactly the failure modes the doctrine is built to refuse. Now N=5 across distinct persona-axes (Maggie / Lena / Sam / Ellen / Jasper-via-returning-Maggie); pattern stable enough to treat as characterized methodological context. /play verdicts should be filtered through Step 2.5 grounding before treated as ship-shaped.
 type: feedback
 originSessionId: 0704b307-1436-463c-9d33-25ee758ec227
 ---
@@ -22,6 +22,29 @@ total persona-sims with discriminating questions on different axes:
   + concrete follow-up question (Layer 1 CONVERGENT on form, Layer 2
   DIVERGENT-BETTER on softness, Layer 3 CALIBRATION-DELTA on whether the
   permitted form is failure or texture).
+- **Jasper (5th confirmation, 2026-04-29, fresh world Elderwood Hearth,
+  fresh character not in prior Crystal-Waters cast)** predicted MFA-
+  varnish on first-reply axis ("clay has a way of calling," "wander the
+  woods for inspiration," "if that makes sense" hedge) → actual pipeline
+  produced concrete grounded particulars (grandmother's shed by the
+  river, ruined lumps, "earth began to make sense under my thumbs,"
+  wedge-the-clay, clay still dry in the seams of his fingers). DIVERGENT-
+  BETTER. The /play's gpt-5 turn-3 prescribed a "First reply discipline"
+  block (asterisk-action present, tactile detail, no abstraction-words,
+  asks-a-question-back) — the live Jasper demonstrated all four already
+  happening, retiring the prescription as already-shipped. Run-id
+  `b0a220f5`; full report at `reports/2026-04-29-0525-play-maggie-after-
+  length-seal-softening.md`.
+
+**Pattern stability now load-bearing.** Five confirmations across distinct
+axes (literate-skeptic-no-math / burned-by-Replika / math-fluent / grief-
+vulnerable / fresh-world-second-visit) all showing DIVERGENT-BETTER on
+the persona-sim's specifically-attuned axis means the under-prediction is
+not a sketch-tier observation — it is a characterized methodological
+context for /play work. Future /play reports should treat persona-sim
+verdicts as biased-toward-flagging-failure-modes-the-doctrine-already-
+refuses; Step 2.5 grounding is mandatory before treating any /play
+recommendation as ship-shaped.
 
 **The pattern:** ChatGPT-substrate's natural pull (the source of the
 persona-sim's predicted-character replies) reaches for MFA prose, polite-
