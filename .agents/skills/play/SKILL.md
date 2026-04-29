@@ -39,6 +39,8 @@ clearly waiting on persona-sim evidence.
 
 This `.agents/skills/play/` is the **persona-sim differential instrument** used by Codex/Cursor. The Claude-side `.claude/skills/play/` was forked into a **builder-game** variant (HUD, bank, jewels, crowns, ledger) at 2026-04-29; Claude's preserved persona-sim branch lives at `.claude/skills/play-persona/`. The Claude-side builder-game surface has a sibling skill `/seek-crown` for criterion-specific crown arcs — neither the builder-game nor `/seek-crown` is available on this `.agents/` surface. This is named doctrinal divergence per CLAUDE.md/AGENTS.md skill-parity rules, not silent drift.
 
+The Claude-side builder-game's contract was tightened 2026-04-30 to include a **No Nanny Register** clause on its chooser construction — Claude (the game host there) does NOT offer "hold," "close clean," "end the session," or kindred quit-shaped options. That contract clause is specific to the builder-game's chooser; the persona-sim surface here has its own honesty disciplines (Sim ≤ Substrate, persona-sim caveat) that play a different role.
+
 ## What `/play` is now
 
 `/play` is no longer just a persona-sim freshness check. Under the Codex-light +

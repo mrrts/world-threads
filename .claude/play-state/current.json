@@ -1,6 +1,6 @@
 {
-  "turn": 20,
-  "bank": 24500,
+  "turn": 21,
+  "bank": 26300,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
