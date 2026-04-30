@@ -1,6 +1,6 @@
 {
-  "turn": 123,
-  "bank": 136550,
+  "turn": 124,
+  "bank": 137750,
   "jewels": [
     {
       "turn": 2,
@@ -932,8 +932,15 @@
       "bounty": 1100,
       "alignment": "+",
       "earned_at": "2026-04-30T09:35:34-05:00"
+    },
+    {
+      "turn": 123,
+      "move": "Harden /play UI contract with dedicated chooser-tool stop hook and ship (9af4262)",
+      "bounty": 1200,
+      "alignment": "+",
+      "earned_at": "2026-04-30T09:38:24-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T09:35:34-05:00"
+  "last_move_at": "2026-04-30T09:38:24-05:00"
 }
