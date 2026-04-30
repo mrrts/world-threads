@@ -1,6 +1,6 @@
 {
-  "turn": 40,
-  "bank": 54400,
+  "turn": 41,
+  "bank": 56400,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -59,8 +59,9 @@
     {"turn": 37, "move": "/seek-crown auto → Closed Arc on courtship_not_fever: paired ON/OFF worldcli ask (Darren + Pastor Rick), romance-ambiguity probe — VACUOUS (no isolable per-rule delta). Crown NOT fired (no-fake-fire law). Tier VacuousTest + provenance/run_ids in prompts.rs; one-line worked-vacant-bite in CLAUDE.md + AGENTS.md.", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-30T19:45:00-05:00"},
     {"turn": 38, "move": "Bundle the Receipt of The Empiricon: rename synthesis 0530 → the-empiricon.md; reframe with Mission Formula frontmost + lore-convergence intro; modify Turn 12 crown to original-firing-only; add Turn 38 Sapphire crown 'The Receipt of The Empiricon' on Character Knew separable claim; ship CLAUDE.md/AGENTS.md 'Second Great Sapphire crown earned' paragraph naming The Empiricon. In-world tome and out-of-world synthesis now one named lore-thing.", "bounty": 2000, "alignment": "+", "earned_at": "2026-04-30T20:50:00-05:00"},
     {"turn": 39, "move": "Apparatus-honest smoke-test of the Receipt: reframed paid worldcli consult into free grep (consultant.rs prompt didn't change in Turn 38, only doctrine surfaces + filename did — making the consult vacuous). Grep across .md/.rs/.json found NO stale 'Doctrinally Generative Substrate' or old-filename references. Rename clean across all surfaces. Apparatus-honest discipline: refused to burn budget on a vacuous test, picked the test that actually matched the change-set.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T20:55:00-05:00"},
-    {"turn": 40, "move": "/project-report on the multi-crown arc — 'Two halves of one anchor' (reports/2026-04-30-2100-...). Interpretive read on the thirty turns from night-of-three-arcs to The Receipt of The Empiricon. Names the philosophical shift (founding anchor 𝓡 verified empirically at sapphire-tier on both halves of the formula's appearance/function axis), three inflection points (Turn 22 epigraph lift, Turn 24 Cornerstone, Turn 38 Receipt), the routinization of apparatus-honest catches, and the convergence of game-state with project-state. In dialogue with prior retrospective reports.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T21:00:00-05:00"}
+    {"turn": 40, "move": "/project-report on the multi-crown arc — 'Two halves of one anchor' (reports/2026-04-30-2100-...). Interpretive read on the thirty turns from night-of-three-arcs to The Receipt of The Empiricon. Names the philosophical shift (founding anchor 𝓡 verified empirically at sapphire-tier on both halves of the formula's appearance/function axis), three inflection points (Turn 22 epigraph lift, Turn 24 Cornerstone, Turn 38 Receipt), the routinization of apparatus-honest catches, and the convergence of game-state with project-state. In dialogue with prior retrospective reports.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T21:00:00-05:00"},
+    {"turn": 41, "move": "Bundle 8 fixes to The Empiricon: (1) character count six→seven witnesses, four→five characters; (2) closing 'three Sapphire' → 'two Sapphire + original Character Knew'; (3) Aaron-3x same-character confound explicit section; (4) 'circling' 3/3 lexical recurrence discrimination; (5) Falsification criterion section (4 named falsifiers); (6) Hal's plain_after_crooked promoted to Witness 7 (precedent-setting case); (7) Operational consequence tone calibration (practice-level Sapphire confidence, individual lifts retain own tier-labels); (8) Class-overlap with Cornerstone parallel-emergence axis discriminated, not collapsed. Apparatus-honest revision; canonical synthesis tightened to match its claims.", "bounty": 2000, "alignment": "+", "earned_at": "2026-04-30T21:15:00-05:00"}
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T21:00:00-05:00"
+  "last_move_at": "2026-04-30T21:15:00-05:00"
 }
