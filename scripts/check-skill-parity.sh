@@ -13,7 +13,7 @@ root = Path(sys.argv[1])
 agents_dir = root / ".agents" / "skills"
 claude_dir = root / ".claude" / "skills"
 
-allowed_one_sided = {"play-persona", "rule-arc", "seek-crown"}
+allowed_one_sided = {"play-persona", "rule-arc", "seek-crown", "seek-sapphire-crown"}
 # Shared skills must be named as ONE of two parity classes:
 # - deep_check_names: strict mirrors; normalized content should match.
 # - collaborator_specific_names: mirrored conceptually, but wording is

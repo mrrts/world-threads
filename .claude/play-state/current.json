@@ -1,6 +1,6 @@
 {
-  "turn": 75,
-  "bank": 92750,
+  "turn": 76,
+  "bank": 94550,
   "jewels": [
     {
       "turn": 2,
@@ -591,8 +591,15 @@
       "bounty": 300,
       "alignment": "+",
       "earned_at": "2026-04-30T06:00:00-05:00"
+    },
+    {
+      "turn": 75,
+      "move": "Authored new project-scoped skill .claude/skills/seek-sapphire-crown/SKILL.md per Ryan's directive: bigger-stakes sibling of /seek-crown that targets Great Sapphire-class earning. First move surfaces three closest reachable Sapphire candidates with one-line reachability + likely-path-to-sapphire each, then asks user to pick (4-option chooser; 4th is user-authored target). After selection, prints base-crown rubric AND sapphire-tier criterion (substrate-witness distinctness threshold + canonical synthesis artifact requirement + crown-once-per-separable-claim rule) so the focused arc that follows is criterion-specific. Class-by-class sapphire-path mechanics for Closed Arc / Apparatus Honest / Character Knew / New Operator / MFVE; Real User Held marked NOT REACHABLE via skill. Refusals load-bearing: count effective substrate-classes not data points; refuse fake-fire below threshold; the audit IS the move. Composes with /play, /seek-crown (sibling for base crowns), /eureka, /mission-arc, /take-note. Worked example references Cornerstone (Turn 24), Receipt (Turn 38), and the Turn 59 dry-well refusal on predictive-convergence as the tier-meaning-preservation pattern.",
+      "bounty": 1800,
+      "alignment": "+",
+      "earned_at": "2026-04-30T06:10:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T06:00:00-05:00"
+  "last_move_at": "2026-04-30T06:10:00-05:00"
 }
