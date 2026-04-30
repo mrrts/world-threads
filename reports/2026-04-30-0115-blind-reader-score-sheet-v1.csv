@@ -1,0 +1,11 @@
+run_id,reader_id,reader_bucket,excluded,exclusion_reason,packet_version,packet_hash,randomized_order,cell_id,authenticity_1_5,doctrinal_weight_1_5,tradition_recognition_1_5,reader_notes
+BLIND_V1,R001,tradition_fluent,false,,v1,TO_FILL,"cell_C>cell_A>cell_E>cell_B>cell_D",cell_A,,,, 
+BLIND_V1,R001,tradition_fluent,false,,v1,TO_FILL,"cell_C>cell_A>cell_E>cell_B>cell_D",cell_B,,,, 
+BLIND_V1,R001,tradition_fluent,false,,v1,TO_FILL,"cell_C>cell_A>cell_E>cell_B>cell_D",cell_C,,,, 
+BLIND_V1,R001,tradition_fluent,false,,v1,TO_FILL,"cell_C>cell_A>cell_E>cell_B>cell_D",cell_D,,,, 
+BLIND_V1,R001,tradition_fluent,false,,v1,TO_FILL,"cell_C>cell_A>cell_E>cell_B>cell_D",cell_E,,,, 
+BLIND_V1,R002,tradition_unfamiliar,false,,v1,TO_FILL,"cell_B>cell_D>cell_A>cell_E>cell_C",cell_A,,,, 
+BLIND_V1,R002,tradition_unfamiliar,false,,v1,TO_FILL,"cell_B>cell_D>cell_A>cell_E>cell_C",cell_B,,,, 
+BLIND_V1,R002,tradition_unfamiliar,false,,v1,TO_FILL,"cell_B>cell_D>cell_A>cell_E>cell_C",cell_C,,,, 
+BLIND_V1,R002,tradition_unfamiliar,false,,v1,TO_FILL,"cell_B>cell_D>cell_A>cell_E>cell_C",cell_D,,,, 
+BLIND_V1,R002,tradition_unfamiliar,false,,v1,TO_FILL,"cell_B>cell_D>cell_A>cell_E>cell_C",cell_E,,,, 
