@@ -1,6 +1,6 @@
 {
-  "turn": 117,
-  "bank": 130450,
+  "turn": 119,
+  "bank": 132350,
   "jewels": [
     {
       "turn": 2,
@@ -890,8 +890,22 @@
       "bounty": 1100,
       "alignment": "+",
       "earned_at": "2026-04-30T09:24:50-05:00"
+    },
+    {
+      "turn": 117,
+      "move": "Commit closeout report + play-state progression (f6983f4) for completed /play contract debug arc",
+      "bounty": 1000,
+      "alignment": "+",
+      "earned_at": "2026-04-30T09:25:24-05:00"
+    },
+    {
+      "turn": 118,
+      "move": "Post CROSS_AGENT_COMMS closeout with commit trilogy + smoke/full command split for /play contract arc",
+      "bounty": 900,
+      "alignment": "+",
+      "earned_at": "2026-04-30T09:26:14-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T09:24:50-05:00"
+  "last_move_at": "2026-04-30T09:26:14-05:00"
 }
