@@ -66,3 +66,23 @@ Replication run completed for the same anchors with `TURNS=3`.
 - Synthesis shape remains stable:
   - both outputs keep the same top-level schema and actionable next-beat framing.
   - both preserve anchor-distinct conversational posture while converging on practical action-item structure.
+
+## Third-anchor extension (Aaron, 3 turns)
+
+Added Aaron (`0d080429-81b5-431e-8f51-1f8ad4279f9b`) at 3 turns:
+
+- `confirm_at_least`: `0.14729704500000002`
+- `cost_usd`: `0.2965`
+
+Three-anchor 3-turn cost spread:
+
+- Steven: `0.2943`
+- John: `0.2881`
+- Aaron: `0.2965`
+
+Range across three anchors at 3 turns: `0.0084` USD.
+
+Interpretation:
+
+- Anchor-specific conversational stance remains distinct, but runtime cost remains tightly clustered across anchors at fixed turns.
+- This supports using a single default budget expectation for 3-turn science passes, with small per-anchor variance buffer.
