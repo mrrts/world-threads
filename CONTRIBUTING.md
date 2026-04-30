@@ -39,6 +39,7 @@ Match the project's existing patterns:
 **AI coding agents:** Substantive replies use **four** mission-ranked numbered options per `CLAUDE.md` **Choosers are control surfaces** and **Skill routing** (mirrored in `AGENTS.md`); Cursor loads `.cursor/rules/chooser-four-options.mdc`.
 
 **worldcli simulate-dialogue smoke:** follow `reports/2026-04-30-0035-simulate-dialogue-smoke-protocol.md` for the minimal 2-turn test including budget-gate (`confirm_at_least`) rerun expectations.
+Quick run command: `make worldcli-simulate-dialogue-smoke` (auto-selects first character unless one is passed to `scripts/worldcli-simulate-dialogue-smoke.sh`).
 
 **/play UI contract stress:** run `make play-contract-stress` (or `python3 scripts/play-contract-stress.py`) to exercise chained `/play` HUD + chooser-hook adversarial cases before/after `/play` contract changes.
 

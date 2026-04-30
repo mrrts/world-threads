@@ -25,3 +25,7 @@ play-contract-stress:
 .PHONY: play-contract-smoke
 play-contract-smoke:
 	python3 ./scripts/play-contract-stress.py --smoke
+
+.PHONY: worldcli-simulate-dialogue-smoke
+worldcli-simulate-dialogue-smoke:
+	./scripts/worldcli-simulate-dialogue-smoke.sh
