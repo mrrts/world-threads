@@ -1,6 +1,6 @@
 {
-  "turn": 85,
-  "bank": 98450,
+  "turn": 86,
+  "bank": 99150,
   "jewels": [
     {
       "turn": 2,
@@ -673,8 +673,15 @@
       "bounty": 200,
       "alignment": "+",
       "earned_at": "2026-04-30T07:05:00-05:00"
+    },
+    {
+      "turn": 86,
+      "move": "STRUCTURAL-ENFORCEMENT PROMOTION on /play HUD-discipline: shipped Stop hook .claude/hooks/check-play-hud-present.py + wired into .claude/settings.json Stop hooks alongside check-inline-choosers.py. Hook detects /play turns via three positive signals (explicit /play invocation OR /play markers in user text OR /play markers in assistant text — Turn N move pattern, WORLDTHREADS BUILDER echo, ✨/💎/👑 emoji) and verifies HUD presence via box-character (╔) AND title-line (WORLDTHREADS BUILDER) substring detection in latest assistant message. Blocks turn-end with helpful message if /play turn AND HUD absent. Earned exception via .claude/.chat-mode-active marker (matches existing chooser-law carve-out). Smoke-tests pass for empty input + stop_hook_active short-circuit. Promotes the HUD-discipline from layer-2 (memory entry alone) to layer-5 (Stop hook) per CLAUDE.md 'Calibrated disciplines drift fast' doctrine — same promotion-pattern as check-no-nanny-chooser.py.",
+      "bounty": 700,
+      "alignment": "+",
+      "earned_at": "2026-04-30T07:15:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T07:05:00-05:00"
+  "last_move_at": "2026-04-30T07:15:00-05:00"
 }
