@@ -6,6 +6,8 @@ Not a roleplay engine. Not an AI companion. A craft instrument for writing the k
 
 It is also, quietly, a science project studying prompt engineering — hypotheses carried in the stack, tested with small instruments and diffs, argued into `reports/` beside the shipping app.
 
+The work makes use of a novel method for tuning any LLM to a very specific register: **key formulas** written in a mathematical–English hybrid notation, carried at the head of the prompt stack (mission line, cast derivations, and the rest) and guarded by compile-time checks — soften a load-bearing clause and the build fails, not months later in vibe alone.
+
 If you want the next deeper surface instead of the repo front door, start with [`reports/2026-04-27-0030-public-release-landing.md`](reports/2026-04-27-0030-public-release-landing.md).
 
 ## What it is
