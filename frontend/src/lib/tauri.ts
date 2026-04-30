@@ -141,6 +141,10 @@ export interface Message {
   /** True when this assistant message was emitted as a proactive ping
    *  (character reaching out first). Drives distinct styling + unread badge. */
   is_proactive?: boolean;
+  /** Unicode-math chat-state signature derived from 𝓕 := (𝓡, 𝓒). Populated
+   *  on assistant messages generated under reactions=off. Used by the chiptune
+   *  soundtrack as the per-message momentstamp keying next-phrase generation. */
+  formula_signature?: string | null;
 }
 
 export interface ProactivePingResult {

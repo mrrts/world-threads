@@ -106,6 +106,12 @@ function getContext(): AudioContext {
   return audioCtx;
 }
 
+// Expose the audio clock so callers can schedule phrases back-to-back without
+// gaps (chain mode). Returns 0 if no AudioContext has been created yet.
+export function getAudioContextTime(): number {
+  return audioCtx?.currentTime ?? 0;
+}
+
 function midiToFreq(midi: number): number {
   return 440 * Math.pow(2, (midi - 69) / 12);
 }

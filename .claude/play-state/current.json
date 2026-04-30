@@ -1,6 +1,6 @@
 {
-  "turn": 140,
-  "bank": 152450,
+  "turn": 141,
+  "bank": 153450,
   "jewels": [
     {
       "turn": 2,
@@ -1051,8 +1051,15 @@
       "bounty": 1200,
       "alignment": "+",
       "earned_at": "2026-04-30T11:50:00-05:00"
+    },
+    {
+      "turn": 141,
+      "move": "Phase 4 of chiptune-soundtrack arc: ChatView integration scaffold + UI placement per Ryan directive ('right before Response Length: Auto'). frontend/src/hooks/useChiptuneSoundtrack.ts ships a typed hook managing phrase-memory + lifecycle: subscribes to (enabled, apiKey, latestAssistantMessage) and on each new assistant message with formula_signature, generates the next phrase via api.generateNextScorePhrase passing currentLastPhrase forward, queues playback at the tail of the current phrase (cursorRef + getAudioContextTime helper export from synth — phrases chain seamlessly without gaps), updates cursor to handle.endsAt. Lifecycle: stops playback on disable + unmount; per-message-id+signature dedupe key prevents double-fire on rerender. ChatView.tsx wired: opt-in toggle (default off; persists per-character to localStorage as chiptune_soundtrack.{charId}); icon button placed immediately before 'Response Length: {responseLength}' span at the input-toolbar slot per Ryan placement. Music/VolumeX icons + Loader2 during generation. Hover tooltip shows current mood_descriptor when playing. TS Message interface extended with formula_signature?: string|null (already serialized from Rust db::queries::message::Message). Group-chat parity DEFERRED to a follow-up commit (named explicitly): GroupChatView.tsx still needs the same toggle + hook wiring for solo/group surface parity per CLAUDE.md. Frontend build clean (vite 1.56s). Phase 4 sub-criterion (integration plays soundtrack during real chat, opt-in toggle visible at the placement Ryan named) structurally ✓; Phase 5 lived-play test (held-or-not) is the gate that follows.",
+      "bounty": 1000,
+      "alignment": "+",
+      "earned_at": "2026-04-30T12:10:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T11:50:00-05:00"
+  "last_move_at": "2026-04-30T12:10:00-05:00"
 }
