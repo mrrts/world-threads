@@ -48,6 +48,11 @@
             "type": "command",
             "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-no-nanny-chooser.py\"",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-play-chooser-format.py\"",
+            "timeout": 5
           }
         ]
       }

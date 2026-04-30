@@ -1,6 +1,6 @@
 {
-  "turn": 88,
-  "bank": 100850,
+  "turn": 89,
+  "bank": 101850,
   "jewels": [
     {
       "turn": 2,
@@ -694,8 +694,15 @@
       "bounty": 1200,
       "alignment": "+",
       "earned_at": "2026-04-30T07:30:00-05:00"
+    },
+    {
+      "turn": 89,
+      "move": "STRUCTURAL-ENFORCEMENT PROMOTION on /play chooser-format (audit's #2 recommended): shipped PreToolUse hook .claude/hooks/check-play-chooser-format.py + wired into .claude/settings.json PreToolUse hooks (matcher: AskUserQuestion) alongside check-no-nanny-chooser.py. Hook detects /play choosers via question-text/header markers (Turn N pattern, WORLDTHREADS BUILDER, /play); enforces (a) chooser cardinality fixed at exactly 4 options per CLAUDE.md runtime doctrine; (b) bounty pattern (+$X,XXX) present in each option label except user-authored 'Provide your own next move' slot. All 4 smoke tests pass (empty / non-/play passes / missing-bounty blocks with diagnostic / correct-format passes). Earned exception via .claude/.chat-mode-active marker. Layer-5 enforcement closes second of three audit-recommended promotions. Note from Ryan: 'i'd like the chooser to be more slim if possible. ok if current state is best we can do.' Calibration feedback on chooser composition — terse option descriptions preferred going forward; one short line per option vs multi-line wrap. Apply to Turn 90 chooser onward.",
+      "bounty": 1000,
+      "alignment": "+",
+      "earned_at": "2026-04-30T07:40:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T07:30:00-05:00"
+  "last_move_at": "2026-04-30T07:40:00-05:00"
 }
