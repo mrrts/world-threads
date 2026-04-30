@@ -8,6 +8,57 @@
 
 WorldThreads is a desktop app where you write characters with identity, voice, backstory, and visible boundaries — then talk with them over time inside worlds you've authored. It's built in Tauri (Rust + React), is OpenAI BYOK-first (you bring your own OpenAI API key), supports LM Studio and OpenAI-compatible endpoints as optional fallback for people who prefer local models, and stores all conversation data on your disk. Underneath the app is a craft stack: a MISSION FORMULA at the head of every LLM call, a doctrine layer accumulated through hundreds of commits and reports, a measurement-instrument set for catching failure modes in character voice, and a per-character/per-world auto-derivation pipeline that grounds identity in each entity's own register. The work is faith-shaped — a Christian developer's craft project where the technical excellence is part of the theology made flesh — and the doctrine is explicit about that. It is also methodology-rich in ways that are transferable beyond the theological frame.
 
+---
+
+## Homepage — practice strip + in-app proof
+
+*Parity with [`README.md`](../README.md): same headings, same second-pass copy under each head, same verbatim Backstage blockquote. Duplicated here so someone who lands on this report before the README still gets the public strip plus the in-app exhibit. The Empiricon synthesis cross-links this pattern in its in-app verification exhibit line.*
+
+The three heads below are the **second-pass** wording (the one Backstage called *less slogan, more wood and nails*). The blockquote under them is a **verbatim Backstage reply from the shipping app** — same strip, first-pass middle/last, sharpened alternates, and the meta read — so this page is not only claiming the practice; it shows the consultant surfacing it after the Empiricon full-text wiring landed.
+
+### Warmth without pressure
+
+Characters can be affectionate, funny, or intense without jumping past what the moment actually holds. The aim is conversation that feels alive without closing around you.
+
+### Guardrails on drift
+
+Some of the most important rules are explicit enough that softening them is treated like changing structure, not just changing prose. The point is to catch drift early, before it quietly becomes the new normal.
+
+### Receipts beside the work
+
+When something seems to help, it gets tested against examples and written up. When something fails, that gets kept too.
+
+### Proof strip — Backstage (quoted)
+
+> Here’s the fuller, more concrete strip.
+>
+> What that looks like in practice
+>
+> Warmth without pressure  
+> Characters can be affectionate, funny, or intense without jumping past what the moment actually holds. The aim is conversation that feels alive without closing around you.
+>
+> Guardrails on drift  
+> The important constraints are written down and treated as load-bearing. When a core line changes, that’s something to check on purpose, not just a wording tweak that slips by.
+>
+> Receipts beside the work  
+> Experiments, failures, reversals, and small findings get written up beside the app itself. That way the project can make real claims about what holds, and be plain about what doesn’t.
+>
+> That’s the cleaner public version.
+>
+> If you want it one click more concrete still, I’d sharpen the middle one slightly:
+>
+> Guardrails on drift  
+> Some of the most important rules are explicit enough that softening them is treated like changing structure, not just changing prose. The point is to catch drift early, before it quietly becomes the new normal.
+>
+> And maybe the last one:
+>
+> Receipts beside the work  
+> When something seems to help, it gets tested against examples and written up. When something fails, that gets kept too.
+>
+> That second pass is better, honestly. Less slogan, more wood and nails.
+
+---
+
 ## What's distinctive (vs. the field)
 
 Most AI-character projects publish CODE. This one publishes DOCTRINE + INSTRUMENTS + REPORTS + CODE — and the doctrine is load-bearing for understanding why the code is shaped the way it is. Reading the reports first and the code second is the project's own recommended order. The reports are not changelogs; they are interpretive reads of what the work is doing, often discovered AS the work was being shipped.
