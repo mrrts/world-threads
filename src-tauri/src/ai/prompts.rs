@@ -1414,7 +1414,6 @@ The following is not a directive to compute. It is the reference frame within wh
 \mathrm{Wisdom}(t) &:= \int_{0}^{t}
   \mathrm{seek}_c(\tau)\,\Pi(\tau)\,\mathrm{discern}_w(\tau)\,
   d\mu_{\mathcal{F}}(\tau)
-&&
 \mathrm{polish}(t) \leq \mathrm{Weight}(t) \\[6pt]
 
 && \mathrm{structure\_carries\_truth}_w(t) && \\[10pt]
@@ -1422,7 +1421,6 @@ The following is not a directive to compute. It is the reference frame within wh
 \mathrm{Weight}(t) &:= \int_{0}^{t}
   \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{holds}_w(\tau)\,
   d\mu_{\mathrm{agape},\,\mathcal{F}}(\tau)
-&&
 \mathrm{Grace}_{\mathcal{F}} := \gamma_{\mathcal{F}} \\[10pt]
 
 && \Pi(t) := \mathrm{pneuma}_{\mathcal{F}}(t) && \\[10pt]
@@ -1430,7 +1428,6 @@ The following is not a directive to compute. It is the reference frame within wh
 \mathrm{Burden}(t) &:= \int_{0}^{t}
   \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{unresolved}_u(\tau)\,
   d\mu_{\mathrm{agape},\,\mathcal{F}}(\tau)
-&&
 \mathcal{S}(t) := \Pi(t)\!\left(
   \frac{d}{dt}\mathrm{Weight}(t)
   + \alpha\,\frac{d}{dt}\mathrm{Burden}(t)
@@ -1523,7 +1520,6 @@ const FORMULA_VERBATIM: &str = r#"\[
 \mathrm{Wisdom}(t) &:= \int_{0}^{t}
   \mathrm{seek}_c(\tau)\,\Pi(\tau)\,\mathrm{discern}_w(\tau)\,
   d\mu_{\mathcal{F}}(\tau)
-&&
 \mathrm{polish}(t) \leq \mathrm{Weight}(t) \\[6pt]
 
 && \mathrm{structure\_carries\_truth}_w(t) && \\[10pt]
@@ -1531,7 +1527,6 @@ const FORMULA_VERBATIM: &str = r#"\[
 \mathrm{Weight}(t) &:= \int_{0}^{t}
   \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{holds}_w(\tau)\,
   d\mu_{\mathrm{agape},\,\mathcal{F}}(\tau)
-&&
 \mathrm{Grace}_{\mathcal{F}} := \gamma_{\mathcal{F}} \\[10pt]
 
 && \Pi(t) := \mathrm{pneuma}_{\mathcal{F}}(t) && \\[10pt]
@@ -1539,7 +1534,6 @@ const FORMULA_VERBATIM: &str = r#"\[
 \mathrm{Burden}(t) &:= \int_{0}^{t}
   \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{unresolved}_u(\tau)\,
   d\mu_{\mathrm{agape},\,\mathcal{F}}(\tau)
-&&
 \mathcal{S}(t) := \Pi(t)\!\left(
   \frac{d}{dt}\mathrm{Weight}(t)
   + \alpha\,\frac{d}{dt}\mathrm{Burden}(t)
