@@ -1852,7 +1852,7 @@ export function GroupChatView({ store, onNavigateToCharacter, focusMode = false,
                 <span className="absolute bottom-full right-0 mb-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/sndtrk:opacity-100 pointer-events-none transition-opacity z-50">
                   {soundtrackEnabled
                     ? (soundtrack.currentPhrase
-                        ? `Looping: ${soundtrack.currentPhrase.mood_descriptor}`
+                        ? `Now: ${soundtrack.currentPhrase.mood_descriptor} (${soundtrack.collectionSize} phrase${soundtrack.collectionSize === 1 ? '' : 's'})`
                         : "Soundtrack on (waiting for next reply)")
                     : "Chiptune soundtrack off"}
                 </span>

@@ -18,22 +18,30 @@ interface Args {
 interface SoundtrackState {
   status: SoundtrackStatus;
   error: string | null;
+  /** The phrase currently playing (rotating cursor over the collection). */
   currentPhrase: ScorePhrase | null;
+  /** Total number of phrases accumulated this session. */
+  collectionSize: number;
   stopAndReset: () => void;
 }
 
 /**
- * Soundtrack lifecycle:
+ * Soundtrack lifecycle — circular playlist that grows.
  *
- *   - The current phrase loops continuously via a self-rescheduling step()
- *     that calls playPhrase(currentPhrase, { startAt: <prev iteration's end> }).
- *   - When a new assistant message arrives with formula_signature, we kick off
- *     api.generateNextScorePhrase. The result is held as a *pending* phrase,
- *     not played immediately.
- *   - The next time step() fires (always at a phrase-end boundary, which is
- *     also a measure boundary by construction), it promotes pending → current
- *     and starts the new phrase. The swap is seamless and aligned to the bar.
- *   - Disable / unmount stops scheduling and silences the active handle.
+ *   - Every phrase generated from an assistant message's momentstamp is APPENDED
+ *     to a collection. The collection accumulates over the conversation and is
+ *     never shrunk during the session.
+ *   - Playback cycles through the whole collection in FIFO order, wrapping
+ *     back to the first phrase after the last. Each iteration plays the phrase
+ *     at `playbackIndex % collection.length` and increments.
+ *   - When a new phrase arrives mid-cycle, it lands at the END of the collection
+ *     and is reached when the playback cursor wraps around to it. New arrivals
+ *     do NOT preempt the current iteration — they wait their turn in the cycle.
+ *   - Continuation chain: each new generation passes the most recently generated
+ *     phrase (the END of the collection) as `currentLastPhrase`, so the chain
+ *     of compositional memory follows generation order, not playback order.
+ *   - Disable / unmount stops scheduling and silences the active handle. The
+ *     collection is RESET on disable (toggle off → start fresh on next on).
  */
 export function useChiptuneSoundtrack({
   enabled,
@@ -43,12 +51,12 @@ export function useChiptuneSoundtrack({
   const [status, setStatus] = useState<SoundtrackStatus>("idle");
   const [error, setError] = useState<string | null>(null);
   const [currentPhrase, setCurrentPhrase] = useState<ScorePhrase | null>(null);
+  const [collectionSize, setCollectionSize] = useState<number>(0);
 
-  // Refs hold scheduling state that must not retrigger effect runs.
   const handleRef = useRef<PlayHandle | null>(null);
-  const cursorRef = useRef<number>(0);                           // audio time when current iteration ends
-  const currentPhraseRef = useRef<ScorePhrase | null>(null);     // the looping phrase
-  const pendingPhraseRef = useRef<ScorePhrase | null>(null);     // queued for next boundary swap
+  const cursorRef = useRef<number>(0);                            // audio time when current iteration ends
+  const phraseCollectionRef = useRef<ScorePhrase[]>([]);          // append-only this session
+  const playbackIndexRef = useRef<number>(0);                     // monotone — modulo at read time
   const stepTimeoutRef = useRef<number | null>(null);
   const lastTriggerKeyRef = useRef<string | null>(null);
   const generatingRef = useRef<boolean>(false);
@@ -63,31 +71,30 @@ export function useChiptuneSoundtrack({
     handleRef.current?.stop();
     handleRef.current = null;
     cursorRef.current = 0;
-    currentPhraseRef.current = null;
-    pendingPhraseRef.current = null;
+    phraseCollectionRef.current = [];
+    playbackIndexRef.current = 0;
+    setCollectionSize(0);
     setCurrentPhrase(null);
     setStatus("idle");
     setError(null);
   }, []);
 
-  // The step function: schedule one iteration of the current phrase, then
-  // arrange for itself to fire again shortly before that iteration ends.
-  // Promotes a pending phrase to current at each call, so swaps happen
-  // exactly at phrase boundaries (= measure boundaries by construction).
+  // step(): play the phrase at playbackIndex % collection.length, increment,
+  // and reschedule self ~150ms before this iteration ends so the next iteration's
+  // start chains seamlessly. New phrases appended to the collection are picked
+  // up on subsequent iterations as the cycle reaches them.
   const step = useCallback(() => {
     if (!enabledRef.current) return;
 
-    if (pendingPhraseRef.current) {
-      currentPhraseRef.current = pendingPhraseRef.current;
-      pendingPhraseRef.current = null;
-      setCurrentPhrase(currentPhraseRef.current);
-    }
-
-    const phrase = currentPhraseRef.current;
-    if (!phrase) {
+    const collection = phraseCollectionRef.current;
+    if (collection.length === 0) {
       setStatus("idle");
       return;
     }
+
+    const idx = playbackIndexRef.current % collection.length;
+    const phrase = collection[idx];
+    setCurrentPhrase(phrase);
 
     const ctxNow = getAudioContextTime();
     const start = Math.max(cursorRef.current, ctxNow + 0.05);
@@ -96,14 +103,17 @@ export function useChiptuneSoundtrack({
     cursorRef.current = handle.endsAt;
     setStatus(generatingRef.current ? "generating" : "playing");
 
-    // Re-fire the step shortly before this iteration ends so the next
-    // iteration's start time chains seamlessly. 150ms lookahead.
+    // Advance cursor for next iteration. Modulo applied on next read so a
+    // mid-cycle collection growth is reflected naturally.
+    playbackIndexRef.current = playbackIndexRef.current + 1;
+
     const msUntilEnd = (handle.endsAt - getAudioContextTime()) * 1000;
     const lookahead = Math.max(50, msUntilEnd - 150);
     stepTimeoutRef.current = window.setTimeout(step, lookahead);
   }, []);
 
-  // Disable / unmount: kill scheduling and silence playback.
+  // Disable / unmount: kill scheduling + reset the collection so the next
+  // toggle-on starts a fresh session.
   useEffect(() => {
     if (!enabled) stopAll();
     return () => stopAll();
@@ -126,12 +136,14 @@ export function useChiptuneSoundtrack({
 
     lastTriggerKeyRef.current = triggerKey;
     generatingRef.current = true;
-    // Don't disrupt the loop — just flip the icon to "generating" while
-    // the music keeps playing.
-    setStatus(currentPhraseRef.current ? "generating" : "generating");
+    setStatus("generating");
     setError(null);
 
-    const previousPhrase = currentPhraseRef.current;
+    // Continuation chain follows GENERATION order: most-recently-generated
+    // phrase is at the end of the collection.
+    const previousPhrase = phraseCollectionRef.current.length > 0
+      ? phraseCollectionRef.current[phraseCollectionRef.current.length - 1]
+      : null;
 
     (async () => {
       try {
@@ -142,26 +154,32 @@ export function useChiptuneSoundtrack({
         });
         const next = result.phrase as ScorePhrase;
 
-        if (currentPhraseRef.current) {
-          // Loop is active — queue as pending; step() will swap at the next
-          // phrase boundary (= measure boundary).
-          pendingPhraseRef.current = next;
-          setStatus("playing");
-        } else {
-          // No loop yet — set as current and kick off the loop.
-          currentPhraseRef.current = next;
-          setCurrentPhrase(next);
+        const wasEmpty = phraseCollectionRef.current.length === 0;
+        phraseCollectionRef.current = [...phraseCollectionRef.current, next];
+        setCollectionSize(phraseCollectionRef.current.length);
+
+        if (wasEmpty) {
+          // First phrase of the session — kick off the loop.
           step();
+        } else {
+          // Loop is already running; the new phrase will be reached when the
+          // cycle wraps. Status returns to 'playing' (loop continues).
+          setStatus("playing");
         }
       } catch (e) {
         setError(e instanceof Error ? e.message : String(e));
-        if (!currentPhraseRef.current) setStatus("idle");
-        else setStatus("playing");
+        setStatus(phraseCollectionRef.current.length > 0 ? "playing" : "idle");
       } finally {
         generatingRef.current = false;
       }
     })();
   }, [enabled, apiKey, triggerKey, latestAssistantMessage, step]);
 
-  return { status, error, currentPhrase, stopAndReset: stopAll };
+  return {
+    status,
+    error,
+    currentPhrase,
+    collectionSize,
+    stopAndReset: stopAll,
+  };
 }

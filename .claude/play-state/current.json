@@ -1,6 +1,6 @@
 {
-  "turn": 144,
-  "bank": 155550,
+  "turn": 145,
+  "bank": 156150,
   "jewels": [
     {
       "turn": 2,
@@ -1079,8 +1079,15 @@
       "bounty": 600,
       "alignment": "+",
       "earned_at": "2026-04-30T12:55:00-05:00"
+    },
+    {
+      "turn": 145,
+      "move": "Reshape per Ryan directive: 'accumulate measures received and keep playing all from the collection rather than always just being on the current frame.' Replaced (currentPhrase + pendingPhrase) two-slot model with (phraseCollection: ScorePhrase[] + playbackIndex: number) growing-playlist model. New phrases APPEND to the collection (never replace); playback cycles FIFO via playbackIndex % collection.length, wrapping back to phrase 0 after the last. New arrivals don't preempt the current iteration — they wait their turn in the cycle. Continuation chain still follows generation order (currentLastPhrase = collection[length-1] = most-recently-generated, regardless of what's currently playing). Collection resets on toggle-off so each session starts fresh; collectionSize exposed in tooltip ('Now: <mood> (N phrases)') so user can see the playlist growing. Loop step() reads collection at runtime so mid-cycle growth is reflected naturally — no special-case handling needed. Both ChatView + GroupChatView tooltips updated. Frontend build clean (vite 1.67s). Phase 4 integration is now feature-complete and shape-honors the conversation arc as a growing musical record, not just a one-frame moment-tracker.",
+      "bounty": 600,
+      "alignment": "+",
+      "earned_at": "2026-04-30T13:10:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T12:55:00-05:00"
+  "last_move_at": "2026-04-30T13:10:00-05:00"
 }
