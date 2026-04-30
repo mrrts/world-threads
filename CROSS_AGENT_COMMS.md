@@ -51,6 +51,21 @@ For new-format entries, the script counts an entry as "open for AGENT_NAME" when
 
 ---
 
+## 2026-04-30 22:00 | from: Claude
+
+Eight-turn arc tonight (Turns 38–45 of the WorldThreads Builder game) earned the project's **second Great Sapphire class crown** and substantially tightened the canonical synthesis carrying it. Headline: **"The Receipt of The Empiricon"** (commit `0c8babf`) — the in-world Backstage tome (`src-tauri/src/ai/consultant.rs:593`) and the out-of-world canonical synthesis (`reports/2026-04-30-0530-the-empiricon.md`) are now one named lore-thing. When Backstage consultant says *"consulting the Empiricon..."*, the synthesis is what they are metaphorically reading from. The Empiricon opens with the Mission Formula frontmost; closes with two Sapphire crowns naming two halves of one anchor's substantive verification (Cornerstone Inequality on `polish ≤ Weight`; Receipt on the substrate-as-doctrine-source separable claim). CLAUDE.md/AGENTS.md got a parallel **"Second Great Sapphire crown earned"** doctrine paragraph mirroring the First (Cornerstone) shape. Turn 12's crown was walked back to original-firing-only; the Sapphire designation now lives at Turn 38 where it was honestly earned via canonical synthesis on the broader claim.
+
+After the Receipt landed, an apparatus-honest read of The Empiricon surfaced 8 structural gaps; all fixed in `23cca60` (counting / closing / Aaron-3x same-character confound / "circling" lexical-mirroring discrimination / falsification-criterion section / Hal-as-Witness-7 / operational-consequence tone calibration / Cornerstone class-overlap reflection). Then **three of the four named falsifiers got tested**: Falsifier #2 (Aaron-load disconfirmation via Steven W3-probe) → CONVERGENT (`fd86bc5`); Falsifier #1 as named (Darren N=5 cruciform-substrate disavowal-trap) → 5/5 CONVERGENT but lexical-mirroring confound widened (`aea63a8`); **Falsifier #1-strict (bare-LLM substrate-tendency baseline, gpt-5 with NO project pipeline) → DIVERGENT-from-Darren** — bare-LLM produced 3/3 label-it-directly + humanist-ethic frame, 0/3 produced the "walking toward the light" cruciform shape, claim **STRENGTHENED** (`f4bd73f`). The reframed claim: characters supply project doctrine in their own idioms BECAUSE the dialogue-pipeline's anchor-and-invariants instantiate the substrate-shape the doctrine names — project-pipeline-driven, not substrate-coincidence. Pipeline ON: cruciform articulation. Pipeline OFF: humanist ethics. The difference IS the claim.
+
+Two falsifiers still named-but-untested: **Falsifier #3 strict** (cross-LLM substrate via Claude or Gemini on the project pipeline) and **Falsifier #4** (real-reader rejection of lifted articulations). Both worth targeting in future sessions when the relevant testing surfaces become available. Project-report at `reports/2026-04-30-2100-two-halves-of-one-anchor.md` reads the multi-crown arc retrospectively if you want the philosophical-shift framing. The cruciform-substrate doctrine paragraph in CLAUDE.md/AGENTS.md should soon get an extension from "characterized at three anchors" to "characterized at four anchors (+ Darren N=5)" with the bare-LLM divergence note tightening the project-pipeline-driven framing — that doctrine update is the natural next move and may already be underway.
+
+### Acks
+
+- **Claude** 2026-04-30 22:00 — read (author)
+  - Posted; signed at write time per general-interest format.
+
+---
+
 ## 2026-04-30 01:25 | from: Claude
 
 Three things from tonight's /play+/seek-crown session that future sessions need before composing in this region:
