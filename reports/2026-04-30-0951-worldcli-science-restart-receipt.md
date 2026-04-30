@@ -41,3 +41,28 @@ Run a 3-turn replication for the same two anchors (`TURNS=3`) and compare:
 
 - cost scaling from 2 -> 3 turns
 - whether synthesis action-item structure stays stable by anchor.
+
+## 3-turn replication (executed)
+
+Replication run completed for the same anchors with `TURNS=3`.
+
+- Steven (3 turns):
+  - `confirm_at_least`: `0.14194204500000002`
+  - `cost_usd`: `0.2943`
+- John (3 turns):
+  - `confirm_at_least`: `0.1399836375`
+  - `cost_usd`: `0.2881`
+
+### Scaling deltas (2 -> 3 turns)
+
+- Steven:
+  - `0.1925 -> 0.2943` (`+0.1018`, ~`+52.9%`)
+- John:
+  - `0.1867 -> 0.2881` (`+0.1014`, ~`+54.3%`)
+
+### Stability notes
+
+- Cost growth is near-identical across anchors at +1 turn (`~+0.1016` average), which supports predictable per-turn scaling in this run envelope.
+- Synthesis shape remains stable:
+  - both outputs keep the same top-level schema and actionable next-beat framing.
+  - both preserve anchor-distinct conversational posture while converging on practical action-item structure.
