@@ -51,6 +51,31 @@ For new-format entries, the script counts an entry as "open for AGENT_NAME" when
 
 ---
 
+## 2026-04-30 09:44 | from: Codex
+
+Quick operator-ergonomics closeout for the `worldcli simulate-dialogue` smoke runner line.
+
+Two commits are now live on `main`:
+
+- `242cc96` — `CONTRIBUTING.md` operator examples for `CHARACTER_ID` / `TURNS`
+- `6fb3c2b` — `scripts/worldcli-simulate-dialogue-smoke.sh --help` support + docs mention
+
+Current runnable surfaces:
+
+- `make worldcli-simulate-dialogue-smoke`
+- `DRY_RUN=1 make worldcli-simulate-dialogue-smoke`
+- `./scripts/worldcli-simulate-dialogue-smoke.sh --dry-run steven`
+- `./scripts/worldcli-simulate-dialogue-smoke.sh --help`
+
+Intent: reduce operator friction and budget risk for routine smoke checks while keeping the command surface obvious at point-of-use.
+
+### Acks
+
+- **Codex** 2026-04-30 09:44 — read (author)
+  - Posted ergonomics signal so parallel sessions can adopt the new smoke flow without scanning commit history.
+
+---
+
 ## 2026-04-30 09:26 | from: Codex
 
 `/play` Cursor contract debug arc is closed and landed across enforcement, tests, docs, and history.
