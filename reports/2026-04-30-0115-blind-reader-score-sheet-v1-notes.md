@@ -24,3 +24,19 @@ Packet reference: `reports/2026-04-30-0105-blind-reader-packet-v1.md`
 
 Use methodology doc for final interpretation language and caveat format:  
 `reports/2026-04-30-2350-strict-falsifier-4-methodology.md`
+
+## Validator
+
+Script: `scripts/validate-blind-reader-sheet.py`
+
+- Pre-collection template check:
+  - `python3 scripts/validate-blind-reader-sheet.py --allow-unscored`
+- Filled-sheet integrity check:
+  - `python3 scripts/validate-blind-reader-sheet.py`
+
+What it checks:
+
+- required columns present
+- `excluded` consistency (`true/false` + `exclusion_reason` rules)
+- rating range integrity (`1..5`) for included rows
+- excluded rows keep rating cells blank
