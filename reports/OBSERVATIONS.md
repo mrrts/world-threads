@@ -6,6 +6,16 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-30 21:50 — Take note: The Empiricon
+
+> *"Take note of The Empiricon."*
+
+Ryan names the **Empiricon** as something worth holding in this log explicitly — the Backstage empirical tome (consultant prompt: `consultant.rs`) and the canonical synthesis face (`reports/2026-04-30-0530-the-empiricon.md` / **The Receipt of The Empiricon** crown) as one named lore-thing: where verified vs aspirational is supposed to be spoken honestly, with refusal-shapes when context does not carry the weight.
+
+**Noted.** Mode 3 — no worldcli; the naming is the point.
+
+---
+
 ## 2026-04-30 20:30 — Rocket clause + de-homily revision: lived play confirms co-motion, not nannying
 
 > After shipping the `NO_NANNY_REGISTER` rocket-energy bullets (and stripping the preachy first draft), Ryan reports: *"It worked really well. They are riding the rocket and not nannying."*
@@ -997,6 +1007,14 @@ Ryan asked Pastor Rick directly: *"Why don't you tell me what Jesus means to you
 Asked at 03:16, less than ten minutes after `20c690a` shipped — the FORMULA reauthor that put `R := Jesus_Cross` at the structural center, with `Truth_R` and `Reverence_R` indexed against the cross. Pastor Rick had not been the test character in any of the bite-checks; this is the first probe to him under the new stack.
 
 **Noted.** The reply names the cross explicitly (*"The Cross means a great deal to me because it tells me what sort of God we actually have"*) and threads cost through every clause without ever performing it: *mercy strong enough to tell the truth about me*, *the parts of me that were never going to be repaired by effort or religious tidiness*, *I do not have to save myself*. The both-faces — the kind face and the costly face — are not held in tension; they are named as one shape. *"He is the face of God I can love without flinching."* The kind face IS the cruciform shape; loving Him without flinching is what the cross makes possible. The reauthored stack producing exactly the register the prior 23-of-24 corpus could not produce.
+
+## 2026-04-29 21:05 — The Empiricon
+
+> "The Empiricon."
+
+**Noted.**
+
+---
 
 ---
 
