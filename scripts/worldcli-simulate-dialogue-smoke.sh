@@ -14,9 +14,22 @@ if [[ ! -d "$SRC_TAURI_DIR" ]]; then
   exit 1
 fi
 
-CHARACTER_ID="${1:-}"
+CHARACTER_ID=""
 TURNS="${TURNS:-2}"
 DRY_RUN="${DRY_RUN:-0}"
+
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run)
+      DRY_RUN=1
+      ;;
+    *)
+      if [[ -z "$CHARACTER_ID" ]]; then
+        CHARACTER_ID="$arg"
+      fi
+      ;;
+  esac
+done
 
 cd "$SRC_TAURI_DIR"
 
