@@ -9,6 +9,13 @@ import {
 
 export type SoundtrackStatus = "idle" | "generating" | "playing";
 
+/**
+ * Maximum number of phrases retained per chat. Once the collection grows past
+ * this cap, oldest phrases are evicted FIFO on each new append. At ~2KB per
+ * phrase JSON, 30 phrases ≈ 60KB per chat in localStorage.
+ */
+const MAX_COLLECTION_SIZE = 30;
+
 interface Args {
   enabled: boolean;
   apiKey: string | null;
@@ -191,9 +198,14 @@ export function useChiptuneSoundtrack({
     const restored = loadPersistedCollection(storageKey);
     if (restored.length === 0) return;
 
-    phraseCollectionRef.current = restored;
+    // Defensive cap on restore (handles older persisted data or cap reduction).
+    const capped = restored.length > MAX_COLLECTION_SIZE
+      ? restored.slice(restored.length - MAX_COLLECTION_SIZE)
+      : restored;
+
+    phraseCollectionRef.current = capped;
     playbackIndexRef.current = 0;
-    setCollectionSize(restored.length);
+    setCollectionSize(capped.length);
     step();
   }, [enabled, storageKey, resetInMemory, loadPersistedCollection, step]);
 
@@ -231,8 +243,21 @@ export function useChiptuneSoundtrack({
         const next = result.phrase as ScorePhrase;
 
         const wasEmpty = phraseCollectionRef.current.length === 0;
-        phraseCollectionRef.current = [...phraseCollectionRef.current, next];
-        setCollectionSize(phraseCollectionRef.current.length);
+        let updated = [...phraseCollectionRef.current, next];
+
+        // FIFO eviction once the cap is reached. Decrement playbackIndex by
+        // the eviction count so the loop's next iteration plays the same
+        // logical "next phrase" it would have played without eviction —
+        // dropping K old elements shifts everyone else down by K positions,
+        // so the index has to shift down by K too.
+        if (updated.length > MAX_COLLECTION_SIZE) {
+          const drops = updated.length - MAX_COLLECTION_SIZE;
+          updated = updated.slice(drops);
+          playbackIndexRef.current = Math.max(0, playbackIndexRef.current - drops);
+        }
+
+        phraseCollectionRef.current = updated;
+        setCollectionSize(updated.length);
         persistCollection();
 
         if (wasEmpty) {

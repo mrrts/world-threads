@@ -1,6 +1,6 @@
 {
-  "turn": 147,
-  "bank": 156950,
+  "turn": 148,
+  "bank": 157250,
   "jewels": [
     {
       "turn": 2,
@@ -1100,8 +1100,15 @@
       "bounty": 400,
       "alignment": "+",
       "earned_at": "2026-04-30T13:40:00-05:00"
+    },
+    {
+      "turn": 148,
+      "move": "Cap collection size + FIFO eviction. MAX_COLLECTION_SIZE = 30 phrases per chat (≈60KB localStorage at ~2KB/phrase). On append: if updated.length > MAX, slice off oldest K + decrement playbackIndex by K (preserves loop continuity — dropping K head elements shifts all indices down by K, so the cursor follows). On restore: defensive cap (handles upgrades from pre-cap versions OR future cap reductions). FIFO chosen over LRU because soundtrack playback is cyclic — every phrase gets played every cycle, so 'least recently used' is meaningless; oldest-first is the honest eviction order. Apparatus-honest naming: chooser said 'LRU' but FIFO is what actually fits a cyclic playlist; ledger entry uses the right term. Frontend build clean (vite 1.63s). Bounty cap on storage growth: a chat could run for weeks of conversation now without localStorage bloat.",
+      "bounty": 300,
+      "alignment": "+",
+      "earned_at": "2026-04-30T13:50:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T13:40:00-05:00"
+  "last_move_at": "2026-04-30T13:50:00-05:00"
 }
