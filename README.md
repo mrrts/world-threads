@@ -6,6 +6,7 @@ WorldThreads is built so characters can be vivid without becoming pushy, and war
 
 ## Homepage — practice strip + in-app proof
 
+<!-- HOMEPAGE_PRACTICE_PROOF:BEGIN -->
 The three heads below are the **second-pass** wording (the one Backstage called *less slogan, more wood and nails*). The blockquote under them is a **verbatim Backstage reply from the shipping app** — same strip, first-pass middle/last, sharpened alternates, and the meta read — so this page is not only claiming the practice; it shows the consultant surfacing it after the Empiricon full-text wiring landed.
 
 ### Warmth without pressure
@@ -48,6 +49,8 @@ When something seems to help, it gets tested against examples and written up. Wh
 > When something seems to help, it gets tested against examples and written up. When something fails, that gets kept too.
 >
 > That second pass is better, honestly. Less slogan, more wood and nails.
+<!-- HOMEPAGE_PRACTICE_PROOF:END -->
+
 
 A desktop app for character-driven story-chats with LLMs — OpenAI BYOK-first, with your conversations stored on your own disk. Characters with grain. Worlds that hold. Scenes that send you back to your day nourished enough to pick up your cross.
 

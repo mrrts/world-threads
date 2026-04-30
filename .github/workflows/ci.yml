@@ -10,6 +10,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  homepage-fragment-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: README + landing match homepage practice fragment
+        run: ./scripts/check-homepage-practice-fragment-sync.sh
+
   rust-lib:
     runs-on: ubuntu-latest
     defaults:
