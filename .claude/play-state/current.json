@@ -1,6 +1,6 @@
 {
-  "turn": 89,
-  "bank": 101850,
+  "turn": 90,
+  "bank": 102650,
   "jewels": [
     {
       "turn": 2,
@@ -701,8 +701,15 @@
       "bounty": 1000,
       "alignment": "+",
       "earned_at": "2026-04-30T07:40:00-05:00"
+    },
+    {
+      "turn": 90,
+      "move": "STRUCTURAL-ENFORCEMENT PROMOTION on /play jewel/crown announce-vs-record consistency (audit's #3 recommended, the last in the set): shipped Stop hook .claude/hooks/check-play-jewel-crown-record.py + wired into .claude/settings.json Stop hooks. Hook scans assistant prose (HUD block stripped to avoid Last-Move false positives; code blocks stripped) for earning-shape patterns ('fires the X crown' / 'earns the X jewel' / 'X jewel fires'), filters out past-reference markers ('was earned' / 'previously earned' / 'from turn'), and verifies each announced name appears in play-state.json's jewels/crowns arrays via loose substring + first-3-significant-words match (permissive against minor wording differences). Blocks turn-end with line-by-line diagnostic if announce-without-record. Smoke tests pass: empty input passes; name_recorded matches 'Cornerstone Inequality' against full crown name; past-reference is filtered; inside-HUD mention is filtered. Closes the audit-recommended set (3 of 3 shipped). Earned exception via chat-mode marker. Six /play strict-contract rules now structurally enforced at layer-5: chooser-presence + no-nanny-phrases + HUD-print + HUD-alignment + chooser-format + jewel/crown-record. Four rules correctly stay at layer-2 per audit: READ state / bounty magnitude / no fake bounties / crown-once.",
+      "bounty": 800,
+      "alignment": "+",
+      "earned_at": "2026-04-30T07:50:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T07:40:00-05:00"
+  "last_move_at": "2026-04-30T07:50:00-05:00"
 }
