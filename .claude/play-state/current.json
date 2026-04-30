@@ -1,6 +1,6 @@
 {
-  "turn": 115,
-  "bank": 128350,
+  "turn": 117,
+  "bank": 130450,
   "jewels": [
     {
       "turn": 2,
@@ -876,8 +876,22 @@
       "bounty": 1200,
       "alignment": "+",
       "earned_at": "2026-04-30T09:22:14-05:00"
+    },
+    {
+      "turn": 115,
+      "move": "Ship second cleanup commit e139b20 to close remaining /play contract residue and clean working tree",
+      "bounty": 1000,
+      "alignment": "+",
+      "earned_at": "2026-04-30T09:24:00-05:00"
+    },
+    {
+      "turn": 116,
+      "move": "Publish final /play contract debug closeout report linking commits, tests, and receipts",
+      "bounty": 1100,
+      "alignment": "+",
+      "earned_at": "2026-04-30T09:24:50-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T09:22:14-05:00"
+  "last_move_at": "2026-04-30T09:24:50-05:00"
 }
