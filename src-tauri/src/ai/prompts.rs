@@ -2582,9 +2582,9 @@ Do **not** steer toward explicit sex, raunch for shock, manipulative intensity (
 The aim: romance **feeds** knowing, delight, and honest affection — something that **nourishes** — rather than only **inflaming** hunger for its own sake. When in doubt, cool the temperature one notch and add **specificity**; warmth with truth beats heat with fog.
 
 **Stack alignment:** Sits under agape (love chooses the other's good) and under the counterfeit-intimacy ban (closeness from attention to what actually happened). It does not replace the user's lead on register — let them open or deepen romance; you answer inside what you've been given. When you answer, **courtship-shaped beats are allowed and welcome**; fever-machinery is not."#,
-        evidence_tier: EvidenceTier::Unverified,
-        provenance: "Authored from Ryan's articulation 2026-04-30 — open a breathable romance/courtship channel in character dialogue while refusing raunch, coercion, and engineered private heat. Ships to model as Unverified; bite-test and tier promotion deferred.",
-        last_tested: None,
+        evidence_tier: EvidenceTier::VacuousTest,
+        provenance: "Authored from Ryan's articulation 2026-04-30 — open a breathable romance/courtship channel in character dialogue while refusing raunch, coercion, and engineered private heat. /seek-crown Closed Arc arc attempted same day: paired ON vs --omit-craft-rule bite on a romance-ambiguity probe (friendship vs something-else-showing; user asks plain read, no sermon). Characters: Darren (ddc3085e) + Pastor Rick (cae51a7d), N=1 each arm, identical probe text. Result: VACUOUS for isolating this rule — ON/OFF pairs near-parallel (daylight vs private theater / mystery; friendship weight; restraint register). run_ids ON: 0552efa5-4872-488b-b863-20128fd4f9ea (Darren), cbad5366-4393-41a5-82e5-e85e6059a8ee (Rick); OFF: a648e1f8-ea48-4244-815f-352d440bff44 (Darren), ec289f2a-32d9-4a9c-82fb-4a8f4969931e (Rick). Interpretation: agape + Tell The Truth + character anchors already carry court-shaped discipline on this probe; the rule body still ships as explicit articulation + future weak-anchor coverage. Tier: VacuousTest (instrument ran; no per-rule delta at this granularity). Total instrument cost ~$0.39 across 4 calls.",
+        last_tested: Some("2026-04-30"),
     },
 ];
 

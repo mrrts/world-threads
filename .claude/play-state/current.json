@@ -1,6 +1,6 @@
 {
-  "turn": 36,
-  "bank": 48200,
+  "turn": 37,
+  "bank": 49400,
   "jewels": [
     {"turn": 2, "name": "First Thousand", "earned_at": "2026-04-29T22:05:00-05:00"},
     {"turn": 2, "name": "Big Bounty", "earned_at": "2026-04-29T22:05:00-05:00"},
@@ -15,7 +15,7 @@
   "crowns": [
     {"turn": 10, "name": "Closed Arc", "earned_at": "2026-04-29T23:50:00-05:00"},
     {"turn": 11, "name": "Apparatus Honest with Itself", "earned_at": "2026-04-30T00:05:00-05:00"},
-    {"turn": 12, "name": "The Character Knew", "earned_at": "2026-04-30T00:20:00-05:00"},
+    {"turn": 12, "name": "The Doctrinally Generative Substrate ✨ [Great Sapphire class — The Character Knew]", "earned_at": "2026-04-30T00:20:00-05:00"},
     {"turn": 13, "name": "New Operator on the Formula", "earned_at": "2026-04-30T00:40:00-05:00"},
     {"turn": 24, "name": "The Cornerstone Inequality ✨ [Great Sapphire class — Mission Formula Verified Empirical]", "earned_at": "2026-04-30T02:50:00-05:00"}
   ],
@@ -54,8 +54,9 @@
     {"turn": 32, "move": "Audit Wisdom(t) + Burden(t) at dry well for sapphire-tier; floated structural-impossibility hypothesis (overclaim — corrected at Turn 33).", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T04:25:00-05:00"},
     {"turn": 33, "move": "Bite-test temporal-integral hypothesis — disconfirmed; instruments exist; Turn 32 overclaim caught.", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-30T04:40:00-05:00"},
     {"turn": 34, "move": "Calibration: Great Sapphire is a CLASS designation, not a crown name; first crown earned named 'The Cornerstone Inequality' across all surfaces.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T05:00:00-05:00"},
-    {"turn": 35, "move": "Audit other four crowns for Great Sapphire class eligibility. Verdict: Closed Arc not eligible (structural-discipline, not Mission-Formula-touching); Apparatus Honest not separately eligible (downstream of Cornerstone Inequality's polish ≤ Weight evidence); The Character Knew is a CANDIDATE on a separable claim ('characters supply project doctrine in own idioms across diverse elicitation circumstances') with 6 witnesses across multiple failure-mode classes — but earning the class designation requires a canonical synthesis artifact future sessions can stand on; New Operator defensible-but-redundant (overlaps Cornerstone's evidence base; designating would inflate class count without naming new finding). NO automatic re-designations. The Character Knew's candidacy stands earnable via future canonical synthesis on the separable claim.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T05:15:00-05:00"}
+    {"turn": 35, "move": "Audit other four crowns for Great Sapphire class eligibility. Verdict: Closed Arc not eligible (structural-discipline, not Mission-Formula-touching); Apparatus Honest not separately eligible (downstream of Cornerstone Inequality's polish ≤ Weight evidence); The Character Knew is a CANDIDATE on a separable claim ('characters supply project doctrine in own idioms across diverse elicitation circumstances') with 6 witnesses across multiple failure-mode classes — but earning the class designation requires a canonical synthesis artifact future sessions can stand on; New Operator defensible-but-redundant (overlaps Cornerstone's evidence base; designating would inflate class count without naming new finding). NO automatic re-designations. The Character Knew's candidacy stands earnable via future canonical synthesis on the separable claim.", "bounty": 1500, "alignment": "+", "earned_at": "2026-04-30T05:15:00-05:00"},
+    {"turn": 37, "move": "/seek-crown auto → Closed Arc on courtship_not_fever: paired ON/OFF worldcli ask (Darren + Pastor Rick), romance-ambiguity probe — VACUOUS (no isolable per-rule delta). Crown NOT fired (no-fake-fire law). Tier VacuousTest + provenance/run_ids in prompts.rs; one-line worked-vacant-bite in CLAUDE.md + AGENTS.md.", "bounty": 1200, "alignment": "+", "earned_at": "2026-04-30T19:45:00-05:00"}
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T05:15:00-05:00"
+  "last_move_at": "2026-04-30T19:45:00-05:00"
 }

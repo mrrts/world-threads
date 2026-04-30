@@ -652,6 +652,8 @@ The bite-verification discipline above is the WHAT; **the craft-rules registry i
 
 **Worldcli affordances:** `worldcli list-craft-rules`; `worldcli show-craft-rule <name>`; `worldcli ask --omit-craft-rule <name>`.
 
+**Worked vacant bite (registry):** `courtship_not_fever` (2026-04-30 `/seek-crown`) — paired ON/OFF on Darren + Pastor Rick, romance-ambiguity probe; vacuous at N=1 (stack already carried restraint); tier `VacuousTest`; rule body still ships.
+
 **The expected tier-distribution.** First six registry rules produced ~5:1 EnsembleVacuous-or-VacuousTest:Characterized ratio. **Most craft-rules in this prompt-stack are part of load-bearing multiplicities** — character anchors + cumulative prompt-stack + the rule itself carry each discipline overdeterminedly. EnsembleVacuous is the honest-and-frequent label, not a failure mode. Deploy the per-rule omit-flag against rules with EXISTING sketch-tier non-vacuous signals; treat newly-articulated rules as likely-EnsembleVacuous by default.
 
 **Characterized-tier requires THREE conditions, not two:** (1) probe-replicable failure mode in specific replies; (2) carve-out refinable in response to early evidence; **(2.5) the failure mode has been previously OBSERVED outside of the bite-test**, producing a sketch-tier signal that ENTERS the bite-test as the thing to look for. Without (2.5), even probe-replicable rules tend toward VacuousTest.
