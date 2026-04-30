@@ -1,6 +1,6 @@
 {
-  "turn": 152,
-  "bank": 157550,
+  "turn": 153,
+  "bank": 157950,
   "jewels": [
     {
       "turn": 2,
@@ -1146,8 +1146,15 @@
       "bounty": 300,
       "alignment": "+",
       "earned_at": "2026-04-30T14:50:00-05:00"
+    },
+    {
+      "turn": 153,
+      "move": "Hero screenshot scaffolding for docs/index.html. Added <figure class='hero-shot'> between hero CTAs and first content section: <img> pointing to docs/screenshots/hero-chat.png with onerror handler that swaps in a styled placeholder div if the image isn't present (no broken-image icon ever); figcaption ('A chat in progress. The character has a register; the prompt stack underneath is built so it holds.'); placeholder text names exact file + recommended dimensions (~1600x1000 px, real chat-in-progress capture with character portrait + recent messages + input field visible). CSS: subtle 1px border, stacked soft shadows (8px 24px + 2px 6px), rounded corners, max-width 100%; placeholder uses dashed border + muted text so it reads as intentional gap not broken page. The screenshot itself is Ryan-supplied — apparatus-honest about that boundary in the chooser; the scaffolding is what this commit ships.",
+      "bounty": 400,
+      "alignment": "+",
+      "earned_at": "2026-04-30T15:05:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T14:50:00-05:00"
+  "last_move_at": "2026-04-30T15:05:00-05:00"
 }
