@@ -1,0 +1,5 @@
+file,character,turns,confirm_at_least,cost_usd
+/tmp/worldcli_science_steven.txt,Steven,2,0.13719762,0.1925
+/tmp/worldcli_science_john.txt,John,2,0.13523921249999998,0.1867
+/tmp/worldcli_science_steven_t3.txt,Steven,3,0.14194204500000002,0.2943
+/tmp/worldcli_science_john_t3.txt,John,3,0.1399836375,0.2881
