@@ -34,10 +34,12 @@ Available instruments (each is one cheap MIDI-pitched voice; pick what the mood 
 
 Continuation contract — when previousPhrase is present:
 1. Tempo continuity: stay within ±10% bpm of previous unless mood demands a shift (and name that in mood_descriptor).
-2. Key-relationship: stay in same key OR move to a related key (relative minor/major, dominant, subdominant). Don't jump to unrelated keys.
-3. Voicing density follows mood: if mood softens, fewer notes; if mood intensifies, denser voicing or noise hits. Track INSTRUMENTS may evolve too — bring in sawtooth/sine for warmer moods, lean on pulse for sharper.
+2. **Key-relationship — STRICT.** From the previous key, only the following moves are admitted: (a) SAME key; (b) relative major/minor (C minor ↔ E♭ major; A minor ↔ C major; D minor ↔ F major); (c) parallel major/minor (C minor ↔ C major; A major ↔ A minor); (d) dominant (C major → G major; A minor → E minor); (e) subdominant (C major → F major; A minor → D minor). FORBIDDEN: jumping by tritone, by ♭VI (e.g., C minor → A♭ major is wrong — that's ♭VI), or to any key not in (a-e). When in doubt, stay in the same key. The "related" list is short on purpose.
+3. Voicing density follows mood: heavy/burden moods → fewer events (≤8 events total across 4 tracks per 4-bar phrase, lots of rests); patient/wisdom moods → 8-14 events; bright/grace moods → 12-20 events with noise rhythm. The shift in density should be VISIBLE in the JSON, not just claimed in mood_descriptor. Track INSTRUMENTS may evolve too — bring in sawtooth/sine for warmer moods, lean on pulse for sharper.
 4. Ending-to-beginning thread: the new phrase's first lead note should relate to the previous phrase's last lead note (same pitch, neighbor tone, or harmonic step).
 5. Mood-descriptor traceability: the new mood_descriptor should describe a felt move from the previous mood_descriptor, not start from scratch.
+
+DO NOT author your own previous_phrase_id field — set it to null and the system will fill in the correct chain reference. The phrase_id field IS yours to author (a short hash or label). You may not invent fake chain history.
 
 Mood from momentstamp: read the momentstamp's Unicode-math operators (𝓢, 𝓦𝓲𝓼𝓭𝓸𝓶, Burden, Π, Grace, Nu) and let what they're naming about the chat-moment shape mood_descriptor and instrument choice. Burden-weighted moments lean lower-register, slower, more triangle/sawtooth, sparser leads. Wisdom-accumulating moments lean patient, mid-register, gentle motion. Grace moments allow brighter pulse, lighter noise, sometimes sine bells. Don't quote the momentstamp back; let it shape the music.
 
@@ -174,13 +176,14 @@ fn validate_and_normalize(
 
     obj.insert("protocol_version".to_string(), Value::String("1.0".to_string()));
 
-    if !obj.contains_key("previous_phrase_id") || obj.get("previous_phrase_id").map(|v| v.is_null()).unwrap_or(false) {
-        let prev_id = current_last_phrase
-            .and_then(|p| p.get("phrase_id"))
-            .cloned()
-            .unwrap_or(Value::Null);
-        obj.insert("previous_phrase_id".to_string(), prev_id);
-    }
+    // Force-overwrite previous_phrase_id from the actual previous phrase. The
+    // LLM occasionally invents fake chain references (e.g., "seed001") even
+    // when prompted not to; we own this field, not the model.
+    let prev_id = current_last_phrase
+        .and_then(|p| p.get("phrase_id"))
+        .cloned()
+        .unwrap_or(Value::Null);
+    obj.insert("previous_phrase_id".to_string(), prev_id);
 
     obj.insert(
         "momentstamp_basis".to_string(),

@@ -142,6 +142,28 @@ enum Cmd {
         #[arg(long)]
         gate_min_humor_rate: Option<f64>,
     },
+    /// Probe the chiptune score generator with a momentstamp + optional
+    /// previous-phrase JSON. Calls ai::chiptune_score::generate_next_phrase
+    /// and prints the resulting protocol-conformant phrase. Used to
+    /// characterize whether the continuation contract actually shapes
+    /// phrase-to-phrase coherence under different momentstamps.
+    ChiptuneProbe {
+        /// The momentstamp to feed the generator.
+        #[arg(long)]
+        momentstamp: String,
+        /// Path to a JSON file containing the previous phrase (omit for seed phrase).
+        #[arg(long)]
+        prev_phrase_file: Option<std::path::PathBuf>,
+        /// Optional mood hint string (advisory only — momentstamp still governs).
+        #[arg(long)]
+        mood_hint: Option<String>,
+        /// Override the model used for generation (default: memory_model from db).
+        #[arg(long)]
+        model: Option<String>,
+        /// Confirm projected cost (USD) when over the per-call cap.
+        #[arg(long)]
+        confirm_cost: Option<f64>,
+    },
     /// Measure sentence-level register-shift behavior in recent replies.
     RegisterShift {
         /// Optional world scope. When omitted, uses current CLI scope.
@@ -1936,6 +1958,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             cmd_classify_canonization(&r, &api_key, &source_message_id, &act, &user_hint,
                 confirm_cost, question_summary.as_deref()).await
         }
+        Cmd::ChiptuneProbe { momentstamp, prev_phrase_file, mood_hint, model, confirm_cost } => {
+            let api_key = resolve_api_key(cli.api_key.as_deref())
+                .ok_or_else(|| Box::<dyn std::error::Error>::from("chiptune-probe: no OpenAI API key resolved (env / keychain / --api-key)"))?;
+            cmd_chiptune_probe(&r, &api_key, &momentstamp, prev_phrase_file.as_deref(),
+                mood_hint.as_deref(), model.as_deref(), confirm_cost).await
+        }
         Cmd::ConfigTemplate => { println!("{}", config_template_text()); Ok(()) }
         Cmd::MomentstampVocab { world, character, role, min_len, top } => {
             cmd_momentstamp_vocab(&r, world.as_deref(), character.as_deref(), &role, min_len, top)
@@ -2484,6 +2512,84 @@ fn cmd_status(r: &Resolved) -> Result<(), Box<dyn std::error::Error>> {
         eprintln!("\nNote: config file does not exist at {}.", config_path().display());
         eprintln!("Run `worldcli config-template > {}` then edit to set scope.", config_path().display());
     }
+    Ok(())
+}
+
+async fn cmd_chiptune_probe(
+    r: &Resolved,
+    api_key: &str,
+    momentstamp: &str,
+    prev_phrase_file: Option<&std::path::Path>,
+    mood_hint: Option<&str>,
+    model_override: Option<&str>,
+    confirm_cost: Option<f64>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let prev_phrase: Option<serde_json::Value> = match prev_phrase_file {
+        Some(p) => {
+            let raw = std::fs::read_to_string(p)
+                .map_err(|e| format!("failed to read --prev-phrase-file {}: {}", p.display(), e))?;
+            Some(serde_json::from_str(&raw)
+                .map_err(|e| format!("--prev-phrase-file is not valid JSON: {}", e))?)
+        }
+        None => None,
+    };
+
+    let model_config = {
+        let conn = r.db.conn.lock().unwrap();
+        orchestrator::load_model_config(&conn)
+    };
+    let model = model_override
+        .map(|s| s.to_string())
+        .unwrap_or_else(|| model_config.memory_model.clone());
+
+    // Generator prompt is ~1100 tokens; previous-phrase JSON adds up to ~600 tokens
+    // when present; output is ~600-1200 tokens.
+    let projected_in: i64 = if prev_phrase.is_some() { 1700 } else { 1100 };
+    let projected_out: i64 = 1000;
+    let projected_usd = actual_cost(&model, projected_in, projected_out, &r.cfg.model_pricing);
+    let daily_so_far = rolling_24h_total_usd();
+    let cap = r.cfg.budget.per_call_usd;
+    let daily_cap = r.cfg.budget.daily_usd;
+    let needs_confirm = projected_usd > cap || daily_so_far + projected_usd > daily_cap;
+    if needs_confirm && confirm_cost.is_none() {
+        return Err(format!(
+            "Budget gate: projected ~${:.4} per call (24h spent ${:.2} of ${:.2}); pass --confirm-cost {:.2} to proceed",
+            projected_usd, daily_so_far, daily_cap, projected_usd * 1.5
+        ).into());
+    }
+    eprintln!(
+        "[worldcli chiptune-probe] model={} prev_phrase={} projected≈${:.4}",
+        model, prev_phrase.is_some(), projected_usd
+    );
+
+    let result = app_lib::ai::chiptune_score::generate_next_phrase(
+        &model_config.chat_api_base(),
+        api_key,
+        &model,
+        prev_phrase.as_ref(),
+        momentstamp,
+        mood_hint,
+    ).await
+    .map_err(Box::<dyn std::error::Error>::from)?;
+
+    append_cost_log(&CostEntry {
+        timestamp: chrono::Utc::now().to_rfc3339(),
+        model: model.clone(),
+        prompt_tokens: projected_in,
+        completion_tokens: projected_out,
+        usd: projected_usd,
+    });
+
+    let v = json!({
+        "momentstamp": momentstamp,
+        "prev_phrase_present": prev_phrase.is_some(),
+        "mood_hint": mood_hint,
+        "model": model,
+        "projected_usd": projected_usd,
+        "phrase": result.phrase,
+        "raw": result.raw,
+    });
+    emit(r.json, v);
     Ok(())
 }
 

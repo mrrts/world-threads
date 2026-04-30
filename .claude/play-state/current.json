@@ -1,6 +1,6 @@
 {
-  "turn": 141,
-  "bank": 153450,
+  "turn": 142,
+  "bank": 154250,
   "jewels": [
     {
       "turn": 2,
@@ -1058,8 +1058,15 @@
       "bounty": 1000,
       "alignment": "+",
       "earned_at": "2026-04-30T12:10:00-05:00"
+    },
+    {
+      "turn": 142,
+      "move": "Musicality tightening before Phase 5 lived-play gate. Built worldcli chiptune-probe subcommand (src-tauri/src/bin/worldcli.rs: ChiptuneProbe variant + cmd_chiptune_probe + cost-gating; calls app_lib::ai::chiptune_score::generate_next_phrase directly with momentstamp + optional prev-phrase-file). Ran 5-probe characterization (3 seed-phrase + 2-phrase chain): Burden → Cm/80bpm/heavy/sparse; Wisdom → CM/120bpm/patient/very-sparse; Grace → CM/120bpm/bright/denser. Continuation contract evidence: tempo continuity STRONG (probes 04+05 stayed 80-85bpm despite stamp-pull to 120); voice-leading thread STRONG (lead pitch chains 63→63→60→60 across phrase boundaries); mood-descriptor traceability STRONG; cross-stamp discrimination STRONG. Continuation contract weak legs: key-relationship (probe 04 modulated Cm → A♭ major = ♭VI, forbidden by doctrine); voicing-density-follows-mood (~12 events across all three despite mood arc — borderline, bears more probing); previous_phrase_id integrity (LLM authored 'seed001' labels not from real chain). Tightening shipped: (a) prompt key-relationship section rewritten with explicit allow-list (same/relative/parallel/dominant/subdominant) + forbid-list (tritone, ♭VI) + worked examples; (b) voicing-density given numerical ranges per mood class; (c) validator force-overwrites previous_phrase_id from prev's phrase_id (LLM no longer owns chain integrity). Re-probe verification (N=2 on same prompt as 04): both chose E♭ major (relative major of C minor — doctrine-correct). 2/2 hit on the closed leak. Empirical report shipped: reports/2026-04-30-1230-chiptune-musicality-probe.md (sketch tier, honest scoping). Apparatus-honest: 5 weak axes named explicitly; 1 closed at sketch verification; 1 marked borderline pending more probes; 3 strong axes preserved unchanged. Cargo build clean (worldcli binary).",
+      "bounty": 800,
+      "alignment": "+",
+      "earned_at": "2026-04-30T12:30:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T12:10:00-05:00"
+  "last_move_at": "2026-04-30T12:30:00-05:00"
 }
