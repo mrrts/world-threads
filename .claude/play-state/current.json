@@ -1,6 +1,6 @@
 {
-  "turn": 87,
-  "bank": 99650,
+  "turn": 88,
+  "bank": 100850,
   "jewels": [
     {
       "turn": 2,
@@ -687,8 +687,15 @@
       "bounty": 500,
       "alignment": "+",
       "earned_at": "2026-04-30T07:20:00-05:00"
+    },
+    {
+      "turn": 88,
+      "move": "STRUCTURAL-ENFORCEMENT PROMOTION on /play HUD border-alignment (audit's #1 recommended): shipped Stop hook .claude/hooks/check-play-hud-alignment.py + wired into .claude/settings.json Stop hooks alongside check-play-hud-present.py. Hook locates the HUD block (between ╔ and ╝), extracts each interior ║...║ line, computes visual cell width with proper unicode handling (emoji ranges 1F300-1F6FF / 1F900-1F9FF / 1FA70-1FAFF / 2600-26FF / 2700-27BF treated as 2 cells; east-asian-wide as 2 cells; variation selectors / ZWJ as 0 cells; ASCII + box-drawing + arrows + em-dash as 1 cell). Blocks turn-end with line-numbered diagnostic if any interior line ≠ 62 cells. No external deps (stdlib only). Smoke tests pass: empty-input exit 0; cell-width function correct for 💎 👑 ✨ ↑ —; all 7 lines of Turn 88's actual HUD validate at 62 cells. Earned exception via .claude/.chat-mode-active marker. Promotes the HUD-alignment discipline from layer-2 (SKILL.md doctrine alone) to layer-5 (Stop hook). Pairs with check-play-hud-present.py: presence-hook ensures HUD exists; alignment-hook ensures it actually does the work it claims (structure-carries-truth-w applied at the box-as-box level). Crosses Twenty-Five Thousand-tier bank threshold beyond? No — bank crosses $100k; no defined jewel for that threshold. Bank: $100,850.",
+      "bounty": 1200,
+      "alignment": "+",
+      "earned_at": "2026-04-30T07:30:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T07:20:00-05:00"
+  "last_move_at": "2026-04-30T07:30:00-05:00"
 }
