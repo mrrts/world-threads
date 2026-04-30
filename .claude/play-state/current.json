@@ -1,6 +1,6 @@
 {
-  "turn": 128,
-  "bank": 141450,
+  "turn": 129,
+  "bank": 142450,
   "jewels": [
     {
       "turn": 2,
@@ -967,8 +967,15 @@
       "bounty": 800,
       "alignment": "+",
       "earned_at": "2026-04-30T09:47:36-05:00"
+    },
+    {
+      "turn": 128,
+      "move": "Return to worldcli science: run Steven+John smoke comparison and publish receipt report",
+      "bounty": 1000,
+      "alignment": "+",
+      "earned_at": "2026-04-30T09:51:59-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T09:47:36-05:00"
+  "last_move_at": "2026-04-30T09:51:59-05:00"
 }
