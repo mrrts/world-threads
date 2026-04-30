@@ -404,7 +404,7 @@ The numbered ending on a reply is a control surface — a protocol by which mome
 
 **Cheap test:** if the user answered with just the number, would Claude Code know exactly what to do next without inventing? If not, the wording is mushy.
 
-**IDE agents:** The same four-option surface applies in Cursor, Composer, and Auto — plain markdown `1`–`4`, mission-ranked, option 4 reserved for user-authored direction; no `AskUserQuestion` in the IDE is not an exemption. Spell-out and carve-outs: **Skill routing** (end of this file) and `AGENTS.md`.
+**IDE agents:** Cursor, Composer, and Auto follow this section; the operational clause (plain markdown `1`–`4`, carve-outs) lives in **Skill routing** at file end — same wording as `AGENTS.md` **IDE agents**, which opens by pointing here for wording discipline, cheap test, and slot-4 meaning.
 
 ## LLM outputs are first-reading surfaces
 

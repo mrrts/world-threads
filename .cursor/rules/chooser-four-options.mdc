@@ -9,4 +9,4 @@ Substantive replies in this workspace end with **exactly four numbered next move
 
 Pure acknowledgments with **no** decision surface may omit the quad; default is four.
 
-Authoritative copy: `AGENTS.md` (Skill routing + IDE agents paragraph) and `CLAUDE.md` (**Choosers are control surfaces** + **Skill routing** at file end).
+Authoritative copy: `CLAUDE.md` (**Choosers are control surfaces** for doctrine; **Skill routing** at file end for the full IDE clause). `AGENTS.md` **Skill routing** mirrors file-end **Skill routing**; its **IDE agents** paragraph **opens** by pointing to `CLAUDE.md` **Choosers are control surfaces** (wording discipline, cheap test, slot-4 user-authorship), then states the plain-markdown contract.
