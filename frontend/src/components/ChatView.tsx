@@ -1864,35 +1864,37 @@ export function ChatView({ store, onNavigateToCharacter, focusMode = false, onTo
             )}
           </div>
             </div>
-            <div className="relative group/sndtrk inline-flex">
-              <button
-                type="button"
-                onClick={toggleSoundtrack}
-                aria-label={soundtrackEnabled ? "Mute chiptune soundtrack" : "Play chiptune soundtrack"}
-                aria-pressed={soundtrackEnabled}
-                className={`flex items-center justify-center w-7 h-7 rounded-md transition-colors cursor-pointer ${
-                  soundtrackEnabled
-                    ? "text-violet-400 hover:text-violet-300 hover:bg-violet-500/10"
-                    : "text-muted-foreground/50 hover:text-foreground hover:bg-accent/50"
-                }`}
-              >
-                {soundtrack.status === "generating" ? (
-                  <Loader2 size={14} className="animate-spin" />
-                ) : soundtrackEnabled ? (
-                  <Music size={14} />
-                ) : (
-                  <VolumeX size={14} />
-                )}
-              </button>
-              <span className="absolute bottom-full right-0 mb-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/sndtrk:opacity-100 pointer-events-none transition-opacity z-50">
-                {soundtrackEnabled
-                  ? (soundtrack.currentPhrase
-                      ? `Playing: ${soundtrack.currentPhrase.mood_descriptor}`
-                      : "Soundtrack on (waiting for next reply)")
-                  : "Chiptune soundtrack off"}
-              </span>
+            <div className="flex items-center justify-end gap-1.5">
+              <div className="relative group/sndtrk inline-flex">
+                <button
+                  type="button"
+                  onClick={toggleSoundtrack}
+                  aria-label={soundtrackEnabled ? "Mute chiptune soundtrack" : "Play chiptune soundtrack"}
+                  aria-pressed={soundtrackEnabled}
+                  className={`flex items-center justify-center w-5 h-5 rounded transition-colors cursor-pointer ${
+                    soundtrackEnabled
+                      ? "text-violet-400 hover:text-violet-300 hover:bg-violet-500/10"
+                      : "text-muted-foreground/50 hover:text-foreground hover:bg-accent/50"
+                  }`}
+                >
+                  {soundtrack.status === "generating" ? (
+                    <Loader2 size={11} className="animate-spin" />
+                  ) : soundtrackEnabled ? (
+                    <Music size={11} />
+                  ) : (
+                    <VolumeX size={11} />
+                  )}
+                </button>
+                <span className="absolute bottom-full right-0 mb-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/sndtrk:opacity-100 pointer-events-none transition-opacity z-50">
+                  {soundtrackEnabled
+                    ? (soundtrack.currentPhrase
+                        ? `Looping: ${soundtrack.currentPhrase.mood_descriptor}`
+                        : "Soundtrack on (waiting for next reply)")
+                    : "Chiptune soundtrack off"}
+                </span>
+              </div>
+              <span className="text-muted-foreground/50 text-right" style={{ fontSize: "12px" }}>Response Length: {responseLength}</span>
             </div>
-            <span className="text-muted-foreground/50 text-right" style={{ fontSize: "12px" }}>Response Length: {responseLength}</span>
           </div>
         </div>
       </div>

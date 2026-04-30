@@ -22,6 +22,19 @@ interface SoundtrackState {
   stopAndReset: () => void;
 }
 
+/**
+ * Soundtrack lifecycle:
+ *
+ *   - The current phrase loops continuously via a self-rescheduling step()
+ *     that calls playPhrase(currentPhrase, { startAt: <prev iteration's end> }).
+ *   - When a new assistant message arrives with formula_signature, we kick off
+ *     api.generateNextScorePhrase. The result is held as a *pending* phrase,
+ *     not played immediately.
+ *   - The next time step() fires (always at a phrase-end boundary, which is
+ *     also a measure boundary by construction), it promotes pending → current
+ *     and starts the new phrase. The swap is seamless and aligned to the bar.
+ *   - Disable / unmount stops scheduling and silences the active handle.
+ */
 export function useChiptuneSoundtrack({
   enabled,
   apiKey,
@@ -31,35 +44,70 @@ export function useChiptuneSoundtrack({
   const [error, setError] = useState<string | null>(null);
   const [currentPhrase, setCurrentPhrase] = useState<ScorePhrase | null>(null);
 
-  // Refs hold playback state that must not retrigger effect runs.
+  // Refs hold scheduling state that must not retrigger effect runs.
   const handleRef = useRef<PlayHandle | null>(null);
-  const cursorRef = useRef<number>(0);
+  const cursorRef = useRef<number>(0);                           // audio time when current iteration ends
+  const currentPhraseRef = useRef<ScorePhrase | null>(null);     // the looping phrase
+  const pendingPhraseRef = useRef<ScorePhrase | null>(null);     // queued for next boundary swap
+  const stepTimeoutRef = useRef<number | null>(null);
   const lastTriggerKeyRef = useRef<string | null>(null);
   const generatingRef = useRef<boolean>(false);
+  const enabledRef = useRef<boolean>(enabled);
+  enabledRef.current = enabled;
 
-  const stopAndReset = useCallback(() => {
+  const stopAll = useCallback(() => {
+    if (stepTimeoutRef.current !== null) {
+      clearTimeout(stepTimeoutRef.current);
+      stepTimeoutRef.current = null;
+    }
     handleRef.current?.stop();
     handleRef.current = null;
     cursorRef.current = 0;
-    lastTriggerKeyRef.current = null;
+    currentPhraseRef.current = null;
+    pendingPhraseRef.current = null;
     setCurrentPhrase(null);
     setStatus("idle");
     setError(null);
   }, []);
 
-  // Disable / unmount: kill any in-flight playback.
-  useEffect(() => {
-    if (!enabled) {
-      handleRef.current?.stop();
-      handleRef.current = null;
-      cursorRef.current = 0;
-      setStatus("idle");
+  // The step function: schedule one iteration of the current phrase, then
+  // arrange for itself to fire again shortly before that iteration ends.
+  // Promotes a pending phrase to current at each call, so swaps happen
+  // exactly at phrase boundaries (= measure boundaries by construction).
+  const step = useCallback(() => {
+    if (!enabledRef.current) return;
+
+    if (pendingPhraseRef.current) {
+      currentPhraseRef.current = pendingPhraseRef.current;
+      pendingPhraseRef.current = null;
+      setCurrentPhrase(currentPhraseRef.current);
     }
-    return () => {
-      handleRef.current?.stop();
-      handleRef.current = null;
-    };
-  }, [enabled]);
+
+    const phrase = currentPhraseRef.current;
+    if (!phrase) {
+      setStatus("idle");
+      return;
+    }
+
+    const ctxNow = getAudioContextTime();
+    const start = Math.max(cursorRef.current, ctxNow + 0.05);
+    const handle = playPhrase(phrase, { startAt: start });
+    handleRef.current = handle;
+    cursorRef.current = handle.endsAt;
+    setStatus(generatingRef.current ? "generating" : "playing");
+
+    // Re-fire the step shortly before this iteration ends so the next
+    // iteration's start time chains seamlessly. 150ms lookahead.
+    const msUntilEnd = (handle.endsAt - getAudioContextTime()) * 1000;
+    const lookahead = Math.max(50, msUntilEnd - 150);
+    stepTimeoutRef.current = window.setTimeout(step, lookahead);
+  }, []);
+
+  // Disable / unmount: kill scheduling and silence playback.
+  useEffect(() => {
+    if (!enabled) stopAll();
+    return () => stopAll();
+  }, [enabled, stopAll]);
 
   // Trigger on new assistant message arrival.
   const triggerKey = latestAssistantMessage
@@ -73,18 +121,17 @@ export function useChiptuneSoundtrack({
     if (!latestAssistantMessage) return;
     if (generatingRef.current) return;
     if (lastTriggerKeyRef.current === triggerKey) return;
-    // Need a non-empty momentstamp to key next-phrase generation. If the
-    // message has no formula_signature (reactions=on chats, or pre-feature
-    // messages), skip silently — soundtrack remains on the current phrase.
     const momentstamp = latestAssistantMessage.formula_signature?.trim();
     if (!momentstamp) return;
 
     lastTriggerKeyRef.current = triggerKey;
     generatingRef.current = true;
-    setStatus("generating");
+    // Don't disrupt the loop — just flip the icon to "generating" while
+    // the music keeps playing.
+    setStatus(currentPhraseRef.current ? "generating" : "generating");
     setError(null);
 
-    const previousPhrase = currentPhrase;
+    const previousPhrase = currentPhraseRef.current;
 
     (async () => {
       try {
@@ -94,22 +141,27 @@ export function useChiptuneSoundtrack({
           moodHint: null,
         });
         const next = result.phrase as ScorePhrase;
-        setCurrentPhrase(next);
 
-        const ctxNow = getAudioContextTime();
-        const startAt = Math.max(cursorRef.current, ctxNow + 0.05);
-        const h = playPhrase(next, { startAt });
-        handleRef.current = h;
-        cursorRef.current = h.endsAt;
-        setStatus("playing");
+        if (currentPhraseRef.current) {
+          // Loop is active — queue as pending; step() will swap at the next
+          // phrase boundary (= measure boundary).
+          pendingPhraseRef.current = next;
+          setStatus("playing");
+        } else {
+          // No loop yet — set as current and kick off the loop.
+          currentPhraseRef.current = next;
+          setCurrentPhrase(next);
+          step();
+        }
       } catch (e) {
         setError(e instanceof Error ? e.message : String(e));
-        setStatus("idle");
+        if (!currentPhraseRef.current) setStatus("idle");
+        else setStatus("playing");
       } finally {
         generatingRef.current = false;
       }
     })();
-  }, [enabled, apiKey, triggerKey, latestAssistantMessage, currentPhrase]);
+  }, [enabled, apiKey, triggerKey, latestAssistantMessage, step]);
 
-  return { status, error, currentPhrase, stopAndReset };
+  return { status, error, currentPhrase, stopAndReset: stopAll };
 }

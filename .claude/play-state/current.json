@@ -1,6 +1,6 @@
 {
-  "turn": 143,
-  "bank": 154950,
+  "turn": 144,
+  "bank": 155550,
   "jewels": [
     {
       "turn": 2,
@@ -1072,8 +1072,15 @@
       "bounty": 700,
       "alignment": "+",
       "earned_at": "2026-04-30T12:40:00-05:00"
+    },
+    {
+      "turn": 144,
+      "move": "Two Ryan-directed refinements to the Phase-4 soundtrack integration. (1) UI: toggle button now INLINE with 'Response Length: Auto' on the same horizontal row, not stacked above. Fix: wrapped both toggle and Response Length span in a flex-row container ('flex items-center justify-end gap-1.5'); the parent was flex-col which had stacked them. Also tightened button size (w-7 h-7 → w-5 h-5; icon size 14 → 11) so it visually subordinates to the Response Length text. Both ChatView + GroupChatView. (2) Synth lifecycle: useChiptuneSoundtrack rewritten as a self-rescheduling LOOP — the current phrase loops continuously via step() that calls playPhrase(currentPhrase, {startAt: prev_iteration_end}) and reschedules itself ~150ms before each iteration ends. New phrase generations land in pendingPhraseRef as queued; they swap to currentPhrase only at the next phrase-end boundary (= measure boundary by construction since phrase length = bars × ts[0] × subdivision / ts[1] is always integer bars). Result: the music never stops between phrases; new phrases swap on bar boundaries; status='generating' icon flips during API calls without disrupting the loop. The lookback approach (lookahead = max(50, msUntilEnd - 150)) keeps cursor monotone and seamless. Tooltip text updated 'Playing' → 'Looping' to honor the new behavior. Frontend build clean (vite 1.65s). Phase 4 integration is now feature-complete; Phase 5 lived-play gate next.",
+      "bounty": 600,
+      "alignment": "+",
+      "earned_at": "2026-04-30T12:55:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T12:40:00-05:00"
+  "last_move_at": "2026-04-30T12:55:00-05:00"
 }
