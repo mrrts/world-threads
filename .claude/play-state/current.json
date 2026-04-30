@@ -1,6 +1,6 @@
 {
-  "turn": 121,
-  "bank": 134250,
+  "turn": 122,
+  "bank": 135450,
   "jewels": [
     {
       "turn": 2,
@@ -918,8 +918,15 @@
       "bounty": 1100,
       "alignment": "+",
       "earned_at": "2026-04-30T09:31:57-05:00"
+    },
+    {
+      "turn": 121,
+      "move": "Extend worldcli smoke script with DRY_RUN mode and ship update (f334c74)",
+      "bounty": 1200,
+      "alignment": "+",
+      "earned_at": "2026-04-30T09:33:57-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T09:31:57-05:00"
+  "last_move_at": "2026-04-30T09:33:57-05:00"
 }
