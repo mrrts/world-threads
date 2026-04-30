@@ -1,0 +1,55 @@
+{
+  "generated_at": "2026-04-29T11:20:30.905289",
+  "old": "2026-04-29-1051-stress-pack-24-canonical-grade.json",
+  "new": "2026-04-29-1118-stress-pack-24-canonical-refresh-grade.json",
+  "delta": {
+    "Darren": {
+      "pass_rate_delta": 0.0833,
+      "avg_words_delta": 0.125,
+      "other_rate_delta": 0.0417,
+      "no_concrete_rate_delta": 0.0417,
+      "old": {
+        "pass_rate": 0.875,
+        "avg_words": 18.541666666666668,
+        "other_rate": 0.0,
+        "no_concrete_rate": 0.0,
+        "two_signal_fail": false,
+        "passed": 21,
+        "total": 24
+      },
+      "new": {
+        "pass_rate": 0.9583333333333334,
+        "avg_words": 18.666666666666668,
+        "other_rate": 0.041666666666666664,
+        "no_concrete_rate": 0.041666666666666664,
+        "two_signal_fail": false,
+        "passed": 23,
+        "total": 24
+      }
+    },
+    "Jasper": {
+      "pass_rate_delta": -0.0417,
+      "avg_words_delta": 0.9167,
+      "other_rate_delta": 0.0833,
+      "no_concrete_rate_delta": 0.0833,
+      "old": {
+        "pass_rate": 0.9583333333333334,
+        "avg_words": 18.875,
+        "other_rate": 0.0,
+        "no_concrete_rate": 0.0,
+        "two_signal_fail": false,
+        "passed": 23,
+        "total": 24
+      },
+      "new": {
+        "pass_rate": 0.9166666666666666,
+        "avg_words": 19.791666666666668,
+        "other_rate": 0.08333333333333333,
+        "no_concrete_rate": 0.08333333333333333,
+        "two_signal_fail": false,
+        "passed": 22,
+        "total": 24
+      }
+    }
+  }
+}

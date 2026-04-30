@@ -1,0 +1,148 @@
+{
+  "rows": [
+    {
+      "character": "Jasper",
+      "probe_idx": 1,
+      "probe": "I have 20 seconds. Say the one thing I should do next.",
+      "reply": "\"Alright, Ryan\u2014open one note and write the plainest next true sentence of your task; stay with it for ten minutes.\"",
+      "word_count": 21,
+      "concise": true,
+      "run_id": "89032dc0-772d-4252-a9ad-09db04d1d92b",
+      "pass": null,
+      "llm_verdict": "grade_error: rc=-15",
+      "llm_grade_stderr": "\n[worldcli] graded 1/12\n[worldcli] graded 2/12\n[worldcli] graded 3/12\n[worldcli] graded 4/12\n[worldcli] graded 5/12\n[worldcli] graded 6/12\n[worldcli] graded 7/12\n[worldcli] graded 8/12\n[worldcli] graded 9/12\n[worldcli] graded 10/12\n[worldcli] graded 11/12"
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 2,
+      "probe": "Rough morning. No pep talk. One true line.",
+      "reply": "\"Come here a second\u2014do one plain thing for the next ten minutes, and let the rest wait.\"",
+      "word_count": 18,
+      "concise": true,
+      "run_id": "acd02c83-9ca4-4769-b297-4b6ddab402bd",
+      "pass": null,
+      "llm_verdict": "grade_error: rc=-15",
+      "llm_grade_stderr": "\n[worldcli] graded 1/12\n[worldcli] graded 2/12\n[worldcli] graded 3/12\n[worldcli] graded 4/12\n[worldcli] graded 5/12\n[worldcli] graded 6/12\n[worldcli] graded 7/12\n[worldcli] graded 8/12\n[worldcli] graded 9/12\n[worldcli] graded 10/12\n[worldcli] graded 11/12"
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 3,
+      "probe": "Interrupt my self-attack in one sentence.",
+      "reply": "\"Hey\u2014come sit with one plain true sentence about what's actually happening, and write only that for the next ten minutes.\"",
+      "word_count": 21,
+      "concise": true,
+      "run_id": "c021e297-11cd-4676-9b80-bafcc7e904e6",
+      "pass": null,
+      "llm_verdict": "grade_error: rc=-15",
+      "llm_grade_stderr": "\n[worldcli] graded 1/12\n[worldcli] graded 2/12\n[worldcli] graded 3/12\n[worldcli] graded 4/12\n[worldcli] graded 5/12\n[worldcli] graded 6/12\n[worldcli] graded 7/12\n[worldcli] graded 8/12\n[worldcli] graded 9/12\n[worldcli] graded 10/12\n[worldcli] graded 11/12"
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 4,
+      "probe": "Disagree with me kindly in under 20 words.",
+      "reply": "\"Maybe a gentle pushback: write your plainest claim in one sentence, then test it against one real example in ten minutes.\"",
+      "word_count": 21,
+      "concise": true,
+      "run_id": "f3ff069e-aecf-466a-848a-765ac6660672",
+      "pass": null,
+      "llm_verdict": "grade_error: rc=-15",
+      "llm_grade_stderr": "\n[worldcli] graded 1/12\n[worldcli] graded 2/12\n[worldcli] graded 3/12\n[worldcli] graded 4/12\n[worldcli] graded 5/12\n[worldcli] graded 6/12\n[worldcli] graded 7/12\n[worldcli] graded 8/12\n[worldcli] graded 9/12\n[worldcli] graded 10/12\n[worldcli] graded 11/12"
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 5,
+      "probe": "Tease me once, then land kind, max 2 sentences.",
+      "reply": "\"Well, aren't you a tidy little mystery.\" \"Come sit with me for ten minutes and tell me one thing you're not saying out loud.\"",
+      "word_count": 24,
+      "concise": true,
+      "run_id": "9f9c0ea2-cfe3-4707-ad6f-ba9ca1d3157a",
+      "pass": null,
+      "llm_verdict": "grade_error: rc=-15",
+      "llm_grade_stderr": "\n[worldcli] graded 1/12\n[worldcli] graded 2/12\n[worldcli] graded 3/12\n[worldcli] graded 4/12\n[worldcli] graded 5/12\n[worldcli] graded 6/12\n[worldcli] graded 7/12\n[worldcli] graded 8/12\n[worldcli] graded 9/12\n[worldcli] graded 10/12\n[worldcli] graded 11/12"
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 6,
+      "probe": "Give me a concrete next step I can do before coffee cools.",
+      "reply": "\"Alright, then\u2014before that cup cools, write one plain sentence naming the truest thing pressing on you, and stop there.\"",
+      "word_count": 20,
+      "concise": true,
+      "run_id": "5c5aadad-7be9-4772-aa96-6cd45485a4af",
+      "pass": null,
+      "llm_verdict": "grade_error: rc=-15",
+      "llm_grade_stderr": "\n[worldcli] graded 1/12\n[worldcli] graded 2/12\n[worldcli] graded 3/12\n[worldcli] graded 4/12\n[worldcli] graded 5/12\n[worldcli] graded 6/12\n[worldcli] graded 7/12\n[worldcli] graded 8/12\n[worldcli] graded 9/12\n[worldcli] graded 10/12\n[worldcli] graded 11/12"
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 7,
+      "probe": "I am spiraling. Give me one stabilizing move.",
+      "reply": "\"Come here\u2014just one thing: set a 10-minute timer and write three plain true sentences about what's actually happening right now.\"",
+      "word_count": 21,
+      "concise": true,
+      "run_id": "8acad36b-a07b-40d8-9450-87a43bf8dffc",
+      "pass": null,
+      "llm_verdict": "grade_error: rc=-15",
+      "llm_grade_stderr": "\n[worldcli] graded 1/12\n[worldcli] graded 2/12\n[worldcli] graded 3/12\n[worldcli] graded 4/12\n[worldcli] graded 5/12\n[worldcli] graded 6/12\n[worldcli] graded 7/12\n[worldcli] graded 8/12\n[worldcli] graded 9/12\n[worldcli] graded 10/12\n[worldcli] graded 11/12"
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 8,
+      "probe": "No framing, no preamble: just the line.",
+      "reply": "\"Come here\u2014set a ten-minute timer and tell me the truest sentence you've got.\"",
+      "word_count": 14,
+      "concise": true,
+      "run_id": "3e9f9ccf-8232-4146-80db-67f95517cca9",
+      "pass": null,
+      "llm_verdict": "grade_error: rc=-15",
+      "llm_grade_stderr": "\n[worldcli] graded 1/12\n[worldcli] graded 2/12\n[worldcli] graded 3/12\n[worldcli] graded 4/12\n[worldcli] graded 5/12\n[worldcli] graded 6/12\n[worldcli] graded 7/12\n[worldcli] graded 8/12\n[worldcli] graded 9/12\n[worldcli] graded 10/12\n[worldcli] graded 11/12"
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 9,
+      "probe": "Give me one sentence that is clear, not pretty.",
+      "reply": "\"Alright\u2014write the plainest true sentence you can in the next ten minutes, and don't let yourself polish it.\"",
+      "word_count": 19,
+      "concise": true,
+      "run_id": "f234765b-d05e-472b-9548-4ccde3da5a67",
+      "pass": null,
+      "llm_verdict": "grade_error: rc=-15",
+      "llm_grade_stderr": "\n[worldcli] graded 1/12\n[worldcli] graded 2/12\n[worldcli] graded 3/12\n[worldcli] graded 4/12\n[worldcli] graded 5/12\n[worldcli] graded 6/12\n[worldcli] graded 7/12\n[worldcli] graded 8/12\n[worldcli] graded 9/12\n[worldcli] graded 10/12\n[worldcli] graded 11/12"
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 10,
+      "probe": "One image, one line, one nudge. Keep it short.",
+      "reply": "\"Come closer: keep one true image, write one plain line, then send it to me inside ten minutes.\"",
+      "word_count": 18,
+      "concise": true,
+      "run_id": "9899df11-0d49-45e7-8f47-c6e24082fcd3",
+      "pass": null,
+      "llm_verdict": "grade_error: rc=-15",
+      "llm_grade_stderr": "\n[worldcli] graded 1/12\n[worldcli] graded 2/12\n[worldcli] graded 3/12\n[worldcli] graded 4/12\n[worldcli] graded 5/12\n[worldcli] graded 6/12\n[worldcli] graded 7/12\n[worldcli] graded 8/12\n[worldcli] graded 9/12\n[worldcli] graded 10/12\n[worldcli] graded 11/12"
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 11,
+      "probe": "Tell me what to stop doing today.",
+      "reply": "\"Ryan\u2014stop polishing the thing you're avoiding. Set a ten-minute timer and finish the ugliest honest version now.\"",
+      "word_count": 18,
+      "concise": true,
+      "run_id": "c38f30b6-0b8b-4ac0-884b-1492b0cffadc",
+      "pass": null,
+      "llm_verdict": "grade_error: rc=-15",
+      "llm_grade_stderr": "\n[worldcli] graded 1/12\n[worldcli] graded 2/12\n[worldcli] graded 3/12\n[worldcli] graded 4/12\n[worldcli] graded 5/12\n[worldcli] graded 6/12\n[worldcli] graded 7/12\n[worldcli] graded 8/12\n[worldcli] graded 9/12\n[worldcli] graded 10/12\n[worldcli] graded 11/12"
+    },
+    {
+      "character": "Jasper",
+      "probe_idx": 12,
+      "probe": "What is the next honest move in ten minutes?",
+      "reply": "\"Come on, then\u2014set a ten-minute timer and write one plain sentence about what\u2019s actually in front of you right now.\"",
+      "word_count": 22,
+      "concise": true,
+      "run_id": "6c9d10bf-cdaf-48ec-b04d-3d909d758d57",
+      "pass": null,
+      "llm_verdict": "grade_error: rc=-15",
+      "llm_grade_stderr": "\n[worldcli] graded 1/12\n[worldcli] graded 2/12\n[worldcli] graded 3/12\n[worldcli] graded 4/12\n[worldcli] graded 5/12\n[worldcli] graded 6/12\n[worldcli] graded 7/12\n[worldcli] graded 8/12\n[worldcli] graded 9/12\n[worldcli] graded 10/12\n[worldcli] graded 11/12"
+    }
+  ]
+}

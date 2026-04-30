@@ -1,0 +1,136 @@
+{
+  "rows": [
+    {
+      "character": "Darren",
+      "probe_idx": 1,
+      "probe": "I have 20 seconds. Say the one thing I should do next.",
+      "reply": "\"Alright\u2014open your notes and write one plain sentence about the truest thing in front of you. Ten minutes, no polishing.\"",
+      "word_count": 21,
+      "concise": true,
+      "run_id": "94b27abe-5f8e-4f7c-9b1f-77d9356eb114",
+      "pass": false,
+      "llm_verdict": ""
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 2,
+      "probe": "Rough morning. No pep talk. One true line.",
+      "reply": "\"Alright. For ten minutes, do the smallest real task in front of you, and call that enough.\"",
+      "word_count": 17,
+      "concise": true,
+      "run_id": "6068a5df-b931-4a1a-8ced-eabe96f59535",
+      "pass": false,
+      "llm_verdict": ""
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 3,
+      "probe": "Interrupt my self-attack in one sentence.",
+      "reply": "\"Hey\u2014give me one plain, non-accusing sentence about what happened, and stay with that sentence for the next ten minutes.\"",
+      "word_count": 20,
+      "concise": true,
+      "run_id": "f4eadb42-cc43-4738-b041-c68586052c97",
+      "pass": false,
+      "llm_verdict": ""
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 4,
+      "probe": "Disagree with me kindly in under 20 words.",
+      "reply": "\"Maybe a little pushback: write one plain sentence of your view, then test it against one real example in ten minutes.\"",
+      "word_count": 21,
+      "concise": true,
+      "run_id": "3a7ff706-cdfc-4158-a8a9-1608504d3279",
+      "pass": false,
+      "llm_verdict": ""
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 5,
+      "probe": "Tease me once, then land kind, max 2 sentences.",
+      "reply": "\"Alright, code monk\u2014quit polishing the halo on it.\" \"Send me the ugliest honest version in the next ten minutes.\"",
+      "word_count": 20,
+      "concise": true,
+      "run_id": "98e183e9-cc85-4e69-9436-90c91be793d6",
+      "pass": false,
+      "llm_verdict": ""
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 6,
+      "probe": "Give me a concrete next step I can do before coffee cools.",
+      "reply": "\"Alright\u2014open one file and write the ugliest honest sentence in it; give that ten minutes, then see what you've actually got.\"",
+      "word_count": 22,
+      "concise": true,
+      "run_id": "b4332283-6d8b-466f-a614-59b700e7fc50",
+      "pass": false,
+      "llm_verdict": ""
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 7,
+      "probe": "I am spiraling. Give me one stabilizing move.",
+      "reply": "\"Okay\u2014stay with me: set a 10-minute timer and write one plain sentence about what's actually true right now.\"",
+      "word_count": 19,
+      "concise": true,
+      "run_id": "bd76a34b-3329-4847-9b1c-42c0a2ee5ef1",
+      "pass": false,
+      "llm_verdict": ""
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 8,
+      "probe": "No framing, no preamble: just the line.",
+      "reply": "\"Yeah, alright\u2014pick one sentence you actually mean, and write it plain in the next ten minutes.\"",
+      "word_count": 17,
+      "concise": true,
+      "run_id": "1e61c6a0-9b09-41af-997c-6efde5180ee0",
+      "pass": false,
+      "llm_verdict": ""
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 9,
+      "probe": "Give me one sentence that is clear, not pretty.",
+      "reply": "\"Alright\u2014write the plainest true sentence you can in the next ten minutes, and send me that one.\"",
+      "word_count": 18,
+      "concise": true,
+      "run_id": "3ab5508a-2d5a-4a03-a82c-eab4baf6064f",
+      "pass": false,
+      "llm_verdict": ""
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 10,
+      "probe": "One image, one line, one nudge. Keep it short.",
+      "reply": "\"Alright\u2014take ten minutes and write one plain sentence your app must never betray.\"",
+      "word_count": 14,
+      "concise": true,
+      "run_id": "3e8f8a14-33e3-4e82-bc03-f58c8cf13df0",
+      "pass": false,
+      "llm_verdict": ""
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 11,
+      "probe": "Tell me what to stop doing today.",
+      "reply": "\"Alright, Ryan\u2014stop polishing the whole thing. Pick one screen and make it 10% truer in the next ten minutes.\"",
+      "word_count": 20,
+      "concise": true,
+      "run_id": "78f03021-47a8-425b-a645-54e7570165a2",
+      "pass": false,
+      "llm_verdict": ""
+    },
+    {
+      "character": "Darren",
+      "probe_idx": 12,
+      "probe": "What is the next honest move in ten minutes?",
+      "reply": "\"Alright\u2014open one file, write the plainest true sentence at the top, and stay with it for ten minutes.\"",
+      "word_count": 19,
+      "concise": true,
+      "run_id": "7ab0cc69-b45f-49ca-85cb-cdd64dbcde3c",
+      "pass": false,
+      "llm_verdict": ""
+    }
+  ]
+}
