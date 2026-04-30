@@ -1,6 +1,6 @@
 {
-  "turn": 84,
-  "bank": 98250,
+  "turn": 85,
+  "bank": 98450,
   "jewels": [
     {
       "turn": 2,
@@ -666,8 +666,15 @@
       "bounty": 300,
       "alignment": "+",
       "earned_at": "2026-04-30T07:00:00-05:00"
+    },
+    {
+      "turn": 85,
+      "move": "Lift HUD-drift catch to durable memory: feedback_play_hud_non_negotiable_every_turn.md. Names five drift modes to watch for (brief commits / handoff signals / memory-lift turns / apologetic catch-ups / multi-edit-rapid turns) — none earn departure from /play strict contract's 'HUD print, every turn, no exceptions.' Composes with structure-carries-truth-w doctrine: dropping HUD asks receiver to compensate by tracking state in head (unrequested receiver-tax). MEMORY.md indexed. Future structural-enforcement candidate: Stop hook or pre-reply check verifying HUD presence in /play turns.",
+      "bounty": 200,
+      "alignment": "+",
+      "earned_at": "2026-04-30T07:05:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T07:00:00-05:00"
+  "last_move_at": "2026-04-30T07:05:00-05:00"
 }
