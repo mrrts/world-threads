@@ -1,6 +1,6 @@
 {
-  "turn": 124,
-  "bank": 137750,
+  "turn": 125,
+  "bank": 138850,
   "jewels": [
     {
       "turn": 2,
@@ -939,8 +939,15 @@
       "bounty": 1200,
       "alignment": "+",
       "earned_at": "2026-04-30T09:38:24-05:00"
+    },
+    {
+      "turn": 124,
+      "move": "Add adversarial fixtures for /play chooser hook and enforce selection->work semantics (f48bc20)",
+      "bounty": 1100,
+      "alignment": "+",
+      "earned_at": "2026-04-30T09:42:06-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T09:38:24-05:00"
+  "last_move_at": "2026-04-30T09:42:06-05:00"
 }
