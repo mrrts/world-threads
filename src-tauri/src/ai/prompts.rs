@@ -5255,8 +5255,11 @@ KNOWLEDGE LIMITS:
 /// chapter text. Title + first line + date — enough to recognize and not
 /// contradict.
 /// Format a `location_change` message body (`{from, to}` JSON) as a
-/// compact prompt-friendly summary. `from` is None on first-set;
-/// emit "Scene now in <to>" rather than "from null to <to>".
+/// compact prompt-friendly summary.
+/// Canonical shape:
+///   [Location Change]: Ryan changed the location from <from> to <to>.
+/// On first-set (`from` missing/null):
+///   [Location Change]: Ryan changed the location to <to>.
 pub fn render_location_change_for_prompt(content: &str) -> String {
     #[derive(serde::Deserialize)]
     struct Body {
@@ -5272,8 +5275,10 @@ pub fn render_location_change_for_prompt(content: &str) -> String {
         return content.to_string();
     }
     match body.from.as_deref() {
-        Some(prev) if !prev.is_empty() => format!("Scene moved from {} to {}", prev, body.to),
-        _ => format!("Scene now in {}", body.to),
+        Some(prev) if !prev.is_empty() => {
+            format!("[Location Change]: Ryan changed the location from {} to {}.", prev, body.to)
+        }
+        _ => format!("[Location Change]: Ryan changed the location to {}.", body.to),
     }
 }
 
@@ -5790,7 +5795,7 @@ pub fn build_dialogue_messages(
             let summary = render_location_change_for_prompt(&m.content);
             msgs.push(crate::ai::openai::ChatMessage {
                 role: "system".to_string(),
-                content: format!("[Scene moved] {summary}"),
+                content: summary,
             });
             continue;
         }
@@ -7876,8 +7881,8 @@ mod fence_shape_detection_tests {
     fn render_location_change_for_prompt_uses_scene_now_shape_on_first_set() {
         assert_eq!(
             render_location_change_for_prompt(r#"{"to":"Garden Patio"}"#),
-            "Scene now in Garden Patio",
-            "first-set location changes should render as 'Scene now in ...' rather than implying a prior location"
+            "[Location Change]: Ryan changed the location to Garden Patio.",
+            "first-set location changes should render as labeled location-change system notes"
         );
     }
 

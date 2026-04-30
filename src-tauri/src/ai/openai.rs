@@ -19,6 +19,46 @@ pub struct ChatMessage {
     pub content: String,
 }
 
+fn normalize_chat_roles(messages: &mut [ChatMessage]) {
+    fn is_supported(role: &str) -> bool {
+        matches!(role, "system" | "assistant" | "user" | "tool" | "function" | "developer")
+    }
+
+    for m in messages.iter_mut() {
+        if is_supported(&m.role) {
+            continue;
+        }
+
+        if m.role == "location_change" {
+            #[derive(Deserialize)]
+            struct LocationBody {
+                #[serde(default)]
+                from: Option<String>,
+                #[serde(default)]
+                to: String,
+            }
+
+            let summary = match serde_json::from_str::<LocationBody>(&m.content) {
+                Ok(body) if !body.to.trim().is_empty() => match body.from {
+                    Some(from) if !from.trim().is_empty() => {
+                        format!("Ryan changed the location from {} to {}.", from.trim(), body.to.trim())
+                    }
+                    _ => format!("Ryan changed the location to {}.", body.to.trim()),
+                },
+                _ => m.content.clone(),
+            };
+
+            m.role = "system".to_string();
+            m.content = format!("[Location Change]: {summary}");
+            continue;
+        }
+
+        let prior_role = m.role.clone();
+        m.role = "system".to_string();
+        m.content = format!("[Role Remap: {}]: {}", prior_role, m.content);
+    }
+}
+
 #[derive(Debug, Serialize, Clone)]
 pub struct ResponseFormat {
     #[serde(rename = "type")]
@@ -234,6 +274,7 @@ pub async fn chat_completion_with_base(base_url: &str, api_key: &str, request: &
     // Order: inject Ryan's anchor FIRST so the Mission Formula prepends
     // above it, putting 𝓕 at top and 𝓕_Ryan immediately below — matching
     // the doctrine ordering (𝓕 ▷ 𝓕_Ryan ▷ Mission Statement ▷ doctrine).
+    normalize_chat_roles(&mut request.messages);
     inject_ryan_formula(&mut request.messages);
     inject_mission_formula(&mut request.messages);
     let mut builder = client.post(&url).json(&request);
@@ -416,6 +457,7 @@ pub async fn chat_completion_stream(
     // Order: inject Ryan's anchor FIRST so the Mission Formula prepends
     // above it, putting 𝓕 at top and 𝓕_Ryan immediately below — matching
     // the doctrine ordering (𝓕 ▷ 𝓕_Ryan ▷ Mission Statement ▷ doctrine).
+    normalize_chat_roles(&mut request.messages);
     inject_ryan_formula(&mut request.messages);
     inject_mission_formula(&mut request.messages);
     let mut builder = client.post(&url).json(&request);
@@ -529,6 +571,7 @@ pub async fn chat_completion_stream_silent(
     // Order: inject Ryan's anchor FIRST so the Mission Formula prepends
     // above it, putting 𝓕 at top and 𝓕_Ryan immediately below — matching
     // the doctrine ordering (𝓕 ▷ 𝓕_Ryan ▷ Mission Statement ▷ doctrine).
+    normalize_chat_roles(&mut request.messages);
     inject_ryan_formula(&mut request.messages);
     inject_mission_formula(&mut request.messages);
     let mut builder = client.post(&url).json(&request);
