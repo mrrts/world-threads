@@ -1,6 +1,6 @@
 {
-  "turn": 153,
-  "bank": 157950,
+  "turn": 161,
+  "bank": 159000,
   "jewels": [
     {
       "turn": 2,
@@ -1153,8 +1153,64 @@
       "bounty": 400,
       "alignment": "+",
       "earned_at": "2026-04-30T15:05:00-05:00"
+    },
+    {
+      "turn": 154,
+      "move": "Hero image landed at docs/screenshots/hero-chat.png — real WorldThreads chat-in-progress capture (Aaron portrait + Crystal Waters scene + ongoing dialogue + sidebar). 5108x2408 PNG, 13.5MB. Required apparatus-honest pause first: initial file Ryan dropped was a podcast page (Witness Theory Podcast); flagged structural mismatch with the figcaption claim before committing; Ryan replaced with the real capture. Visual claim and visual evidence now agree.",
+      "bounty": 200,
+      "alignment": "+",
+      "earned_at": "2026-04-30T15:25:00-05:00"
+    },
+    {
+      "turn": 155,
+      "move": "Compress hero PNG to WebP. Path: sips --resampleWidth 1600 → cwebp -q 82 → 1600x754 WebP at 104KB. 99.2% size reduction (13.5MB → 104KB) with no visible quality loss. docs/index.html updated: src changed PNG→WebP, added explicit width/height attrs to reserve layout slot (no CLS), loading='eager' decoding='async' for above-fold optimization. Original PNG removed from working tree (git history preserves at a01db620). WebP browser support universal across modern browsers, no <picture>/<source> fallback needed.",
+      "bounty": 200,
+      "alignment": "+",
+      "earned_at": "2026-04-30T15:35:00-05:00"
+    },
+    {
+      "turn": 156,
+      "move": "OG image + Twitter card meta tags for social previews. Generated docs/screenshots/og-card.jpg at 1200x630 (211KB, JPG q85) by restoring hero PNG from git history → sips height-fit to 630 → center-crop to 1200x630. JPG chosen over WebP for max OG-platform compatibility (LinkedIn + some chat platforms iffy on WebP-OG). Added og:image + dimensions + alt + twitter:card 'summary_large_image' + twitter-specific image/title/desc/alt. URLs absolute per OG protocol. Funnel now extends off-site — shared link surfaces real preview before click-through.",
+      "bounty": 300,
+      "alignment": "+",
+      "earned_at": "2026-04-30T15:45:00-05:00"
+    },
+    {
+      "turn": 157,
+      "move": "README Stack section rewritten 'why-this-not-that.' Each bullet now names the alternative being chosen-against and the reason specific to project shape: (1) Tauri v2 over Electron — Rust backend lets project compile-check load-bearing prompt invariants; (2) Compile-time invariant assertions pulled to its own bullet — the const_contains pattern as one of project's most distinctive technical choices; (3) SQLite + FTS5 + sqlite-vec over Postgres + pgvector — server-shaped data layer would break conversations-on-disk covenant structurally; (4) OpenAI BYOK over provider-bundled — no rebill, doctrine layer tuned with OpenAI in loop. Stack section now answers 'why these for THIS project' rather than reading as boilerplate.",
+      "bounty": 200,
+      "alignment": "+",
+      "earned_at": "2026-04-30T15:50:00-05:00"
+    },
+    {
+      "turn": 158,
+      "move": "Mirrored Stack rewrite into docs/index.html as 'Built on' section (heading-renamed for marketing-page audience: 'Stack' is dev-jargon, 'Built on' carries same content for both Maggie and tech-skeptic). Same four why-this-not-that bullets. Placement between 'Cost & data' and 'Get it running' — flow goes is-this-for-me → what's-it-made-of → how-do-I-run-it. Used existing ul.plain class for visual consistency with the Read-more list, <code> for inline const_contains snippet. Funnel discipline preserved while parity holds.",
+      "bounty": 150,
+      "alignment": "+",
+      "earned_at": "2026-04-30T15:55:00-05:00"
+    },
+    {
+      "turn": 159,
+      "move": "Visual rhythm polish on docs/index.html — six tightening fixes from critical re-read: (1) h1 subtitle was 1.82rem rendered (0.7em of 2.6rem h1), larger than tagline at 1.35rem; reduced to clamp(0.95rem, 2vw, 1.15rem) so visual descent reads cleanly h1→subtitle→tagline→lede; (2) h1 fluid sizing via clamp(2rem, 5.5vw, 2.6rem); (3) CTAs gained margin-bottom: 0.5rem so wrapped buttons don't crash on narrow screens; (4) inline <code> got overflow-wrap+word-break to prevent long const_contains snippet overflow on mobile; (5) new ul.prose-list class for Built-on (no surrounding borders, top-borders between adjacent items, more vertical padding, 1.55 line-height) — Read-more keeps the scannable ul.plain style; (6) figcaption color bumped from --ink-soft2 to --ink-soft for stronger contrast at small italic size.",
+      "bounty": 300,
+      "alignment": "+",
+      "earned_at": "2026-04-30T16:10:00-05:00"
+    },
+    {
+      "turn": 160,
+      "move": "Favicon: typographic 𝓕 (the Mission Formula's distinctive glyph) in cream on warm-rust accent disc. SVG source-of-truth (420 bytes) + rendered PNG fallbacks via rsvg-convert (favicon-32.png 1.2KB; favicon-192.png 7.5KB). Multi-format <link> declarations: rel='icon' SVG (modern), rel='icon' PNG 32x32 (older), rel='apple-touch-icon' PNG 192x192 (iOS home-screen + Safari pinned). Brand-mark IS doctrine-glyph — same 𝓕 the prompt stack puts at head of every LLM call now greets readers in tab strip.",
+      "bounty": 200,
+      "alignment": "+",
+      "earned_at": "2026-04-30T16:25:00-05:00"
+    },
+    {
+      "turn": 161,
+      "move": "CI debug at Ryan's call. Two failures: (1) homepage-fragment-sync — broke at turn 150 README rewrite when I removed the HOMEPAGE_PRACTICE_PROOF marker block; doctrine prescribed README+landing parity but rewrite arc surfaced funnel-discipline (each surface in its own register) winning over literal-copy parity for these two specific surfaces. Resolution: retarget sync system to single-host (landing report only) — README keeps tighter market-facing register, landing report keeps full Backstage exhibit (which docs/index.html links to as 'the full exchange'). Updated scripts/homepage_practice_fragment.py HOSTS list, CLAUDE.md doctrine paragraph, CONTRIBUTING.md Documentation section. (2) rust-lib — pre-existing failure (red across all runs, never green): cargo test --lib failed because Tauri 2 lib transitively pulls webkit2gtk-sys/glib-sys/gobject-sys at link time even for tests; Ubuntu runner had no GTK/WebKit headers. Resolution: added Tauri Linux apt deps step before Rust toolchain install + Swatinem/rust-cache for build artifact reuse. Also: branch-protection ruleset just enabled requiring PRs to main (push to main rejected); pivoted to branch + PR workflow. PR #1 opened. Local verification: ./scripts/check-homepage-practice-fragment-sync.sh passes; cargo test --lib passes (51 tests). Awaiting CI green on PR before merge.",
+      "bounty": 0,
+      "alignment": "=",
+      "earned_at": "2026-04-30T17:30:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T15:05:00-05:00"
+  "last_move_at": "2026-04-30T17:30:00-05:00"
 }
