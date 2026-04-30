@@ -1,6 +1,6 @@
 {
-  "turn": 133,
-  "bank": 146850,
+  "turn": 134,
+  "bank": 147750,
   "jewels": [
     {
       "turn": 2,
@@ -1002,8 +1002,15 @@
       "bounty": 1100,
       "alignment": "+",
       "earned_at": "2026-04-30T10:00:20-05:00"
+    },
+    {
+      "turn": 133,
+      "move": "Run Aaron 3-turn replication and extend receipt + timestamped metrics with 3-anchor cost spread",
+      "bounty": 900,
+      "alignment": "+",
+      "earned_at": "2026-04-30T10:24:52-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T10:00:20-05:00"
+  "last_move_at": "2026-04-30T10:24:52-05:00"
 }
