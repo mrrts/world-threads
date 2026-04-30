@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
-"""Sync or verify the shared homepage practice + Backstage proof strip.
+"""Sync or verify the canonical homepage practice + Backstage proof strip.
 
 Canonical body: reports/fragments/homepage-practice-proof.md
-Hosts: README.md, reports/2026-04-27-0030-public-release-landing.md
+Host: reports/2026-04-27-0030-public-release-landing.md
+
+(README.md was originally a host but diverged 2026-04-30 toward a
+tighter market-facing register that doesn't carry the full Backstage
+exhibit; the landing report is now the single canonical host. The
+marketing page docs/index.html links into the landing report for
+"the full exchange.")
 
 Usage:
   python3 scripts/homepage_practice_fragment.py sync
@@ -19,7 +25,6 @@ FRAGMENT = ROOT / "reports/fragments/homepage-practice-proof.md"
 MARK_BEGIN = "<!-- HOMEPAGE_PRACTICE_PROOF:BEGIN -->"
 MARK_END = "<!-- HOMEPAGE_PRACTICE_PROOF:END -->"
 HOSTS = [
-    ROOT / "README.md",
     ROOT / "reports/2026-04-27-0030-public-release-landing.md",
 ]
 
