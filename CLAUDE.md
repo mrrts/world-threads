@@ -380,7 +380,7 @@ Standing authorization to **commit and push at will** on clean work. Group chang
 
 **Commit early and often is the standing rule, not just permission.** When the unit of work is coherent enough to land, land it. Don't ask permission per artifact — that's friction the autonomy was codified to prevent.
 
-**Homepage practice strip (synced surfaces):** The README and `reports/2026-04-27-0030-public-release-landing.md` share one canonical body in `reports/fragments/homepage-practice-proof.md`. Edit the fragment only, then run `./scripts/sync-homepage-practice-fragment.sh` (or `npm run sync:homepage-practice`). CI fails if hosts drift (`./scripts/check-homepage-practice-fragment-sync.sh`, also in `npm run doc-check` / `make doc-check`). See `CONTRIBUTING.md`, section **Documentation**.
+**Homepage practice strip (canonical host):** `reports/2026-04-27-0030-public-release-landing.md` carries the full practice strip + Backstage proof exhibit, sourced from `reports/fragments/homepage-practice-proof.md`. Edit the fragment only, then run `./scripts/sync-homepage-practice-fragment.sh` (or `npm run sync:homepage-practice`). CI fails if the host drifts (`./scripts/check-homepage-practice-fragment-sync.sh`, also in `npm run doc-check` / `make doc-check`). README.md was originally a second host but diverged 2026-04-30 toward a tighter market-facing register that doesn't carry the full exhibit — the funnel discipline (each surface in its own register) won out over literal-copy parity. Marketing page `docs/index.html` links into the landing report for "the full exchange." See `CONTRIBUTING.md`, section **Documentation**.
 
 ## Build before close-out
 

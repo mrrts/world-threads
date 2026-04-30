@@ -6,7 +6,7 @@ You author characters with identity, voice, backstory, and visible boundaries. Y
 
 The aim is small and specific: a co-made evening of writing-and-listening that sends you back to your day a little more awake than you started.
 
-> If you'd like the same material in a calmer visual register, the project's marketing page is at **[https://mrrts.github.io/WorldThreads](https://mrrts.github.io/WorldThreads)**.
+> If you'd like the same material in a calmer visual register, the project's marketing page is at **[mrrts.github.io/WorldThreads](https://mrrts.github.io/WorldThreads/)**.
 
 ## What it's like to use
 

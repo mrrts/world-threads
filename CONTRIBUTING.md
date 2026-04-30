@@ -34,7 +34,7 @@ Match the project's existing patterns:
 
 ## Documentation
 
-**Homepage practice strip + Backstage proof (README + public landing):** edit the canonical body in `reports/fragments/homepage-practice-proof.md` only, then run `./scripts/sync-homepage-practice-fragment.sh` from the repo root so `README.md` and `reports/2026-04-27-0030-public-release-landing.md` stay identical; CI runs `./scripts/check-homepage-practice-fragment-sync.sh` and fails if they drift.
+**Homepage practice strip + Backstage proof (canonical host: public landing report):** edit the canonical body in `reports/fragments/homepage-practice-proof.md` only, then run `./scripts/sync-homepage-practice-fragment.sh` from the repo root; the body lands inside the marker block in `reports/2026-04-27-0030-public-release-landing.md`. CI runs `./scripts/check-homepage-practice-fragment-sync.sh` and fails on drift. (README.md was originally a second host but diverged toward a tighter market-facing register; the marketing page `docs/index.html` links into the landing report for "the full exchange.")
 
 **AI coding agents:** Substantive replies use **four** mission-ranked numbered options per `CLAUDE.md` **Choosers are control surfaces** and **Skill routing** (mirrored in `AGENTS.md`); Cursor loads `.cursor/rules/chooser-four-options.mdc`.
 
