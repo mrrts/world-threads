@@ -61,10 +61,10 @@ Built distributables for macOS / Windows / Linux are not yet released; running f
 
 ## Stack
 
-- **Tauri v2** — Rust backend, React/TypeScript frontend, native desktop windowing
-- **SQLite** with FTS5 + sqlite-vec for on-disk data + semantic memory
-- **OpenAI BYOK first** — your key, your spend, your control
-- **All conversation data on your disk** — no third-party storage
+- **Tauri v2** (Rust backend + React/TypeScript frontend) over Electron — smaller bundle, faster cold start, native windowing without a Chromium-per-popout. The Rust backend matters more than the bundle size: it lets the project compile-check load-bearing prompt invariants.
+- **Compile-time invariant assertions** — load-bearing phrases of the prompt stack are pinned via `const _: () = { assert!(const_contains(BLOCK, "...")); };`. Soften a North Star invariant and the build fails, not months later in vibe alone. The doctrine layer is part of the build artifact, not just markdown intentions.
+- **SQLite + FTS5 + sqlite-vec** over Postgres + pgvector or a hosted vector DB — full-text and semantic memory both in-process, no server. The project's covenant is that your conversations live on your disk; a server-shaped data layer would break that structurally.
+- **OpenAI BYOK** over provider-bundled or provider-agnostic — no rebill, no margin in the middle. The doctrine layer's voice was tuned with gpt-4o and gpt-5 in the loop, so OpenAI is the calibration target; local-LLM endpoints (LM Studio, OpenAI-compatible) work as fallback but may need re-tuning. Key lives in your OS keychain via Stronghold.
 
 ## Reading this work
 
