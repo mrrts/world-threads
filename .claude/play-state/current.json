@@ -1,6 +1,6 @@
 {
-  "turn": 96,
-  "bank": 104150,
+  "turn": 97,
+  "bank": 104450,
   "jewels": [
     {
       "turn": 2,
@@ -750,8 +750,15 @@
       "bounty": 200,
       "alignment": "+",
       "earned_at": "2026-04-30T08:40:00-05:00"
+    },
+    {
+      "turn": 97,
+      "move": "Mode 3 OBSERVATIONS.md entry: 'The /play apparatus is scaffolded.' Names the post-tonight state — six layer-5 hooks watch the mechanical part of the contract; four rules held at layer-2 because judgment-based; harness blocks turn-end on drift with diagnostic citing source-doctrine; substrate self-corrects via the diagnostic loop. The user only has to catch judgment-shaped drift now; mechanical-shape drift is graded automatically. Closing read: 'apparatus-honest scaffolding earned tonight is the kind of artifact future sessions stand on without re-deriving. Promotion-pattern (catch → memory → hook) ran four times this session; pattern is repeatable.' Brief; no ceremony. Per carry-not-perform discipline applied at OBSERVATIONS register.",
+      "bounty": 300,
+      "alignment": "+",
+      "earned_at": "2026-04-30T08:45:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T08:40:00-05:00"
+  "last_move_at": "2026-04-30T08:45:00-05:00"
 }

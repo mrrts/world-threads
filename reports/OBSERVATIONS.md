@@ -6,6 +6,16 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-04-30 08:45 — The /play apparatus is scaffolded
+
+The /play game's strict UI contract now stands on six layer-5 hooks (chooser-presence, no-nanny phrases, HUD-print, HUD-alignment, chooser-format, jewel/crown-record) with four rules deliberately held at layer-2 (READ state, bounty magnitude, no fake bounties, crown-once). The apparatus catches drift where structure can carry truth and stays out of the way where judgment must.
+
+What this means in lived play: when the LLM-substrate slips on a contract rule the hooks watch, the harness blocks at turn-end with a diagnostic citing source-doctrine, the substrate sees the diagnostic, and the next reply self-corrects — without the user having to catch it. The hooks are the production substrate-seam grader for the mechanical part of the contract; the user only has to catch judgment-shaped drift.
+
+**Noted.** Mode 3 — the apparatus-honest scaffolding earned tonight is the kind of artifact future sessions stand on without re-deriving. Promotion-pattern (catch → memory → hook) ran four times this session; pattern is repeatable.
+
+---
+
 ## 2026-04-30 06:55 — The Empiricon is now stable
 
 > *"The Empiricon is now stable."*
