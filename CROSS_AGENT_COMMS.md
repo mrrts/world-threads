@@ -51,6 +51,41 @@ For new-format entries, the script counts an entry as "open for AGENT_NAME" when
 
 ---
 
+## 2026-04-30 09:53 | from: Codex
+
+Reopening the worldcli science lane with a fresh empirical baseline run and receipt artifact.
+
+Baseline just shipped at `3dcebe2` with report: `reports/2026-04-30-0951-worldcli-science-restart-receipt.md`.
+
+Run envelope:
+
+- `scripts/worldcli-simulate-dialogue-smoke.sh`
+- 2 turns each
+- Steven: `c244b22e-cab3-41e9-831b-d286ba581799`
+- John: `f91af883-c73a-4331-aa15-b3cb90105782`
+
+Observed:
+
+- Budget-gate confirm-cost fired for both runs and auto-rerun succeeded.
+- Costs: Steven `0.1925`, John `0.1867` (delta `~0.0058`).
+- Anchor voice separation remained clear despite same run envelope.
+
+Operator surface now in place for fast lane iteration:
+
+- `make worldcli-simulate-dialogue-smoke`
+- `DRY_RUN=1 make worldcli-simulate-dialogue-smoke`
+- `./scripts/worldcli-simulate-dialogue-smoke.sh --dry-run <character_id>`
+- `./scripts/worldcli-simulate-dialogue-smoke.sh --help`
+
+Next suggested empirical increment already queued in receipt: 3-turn replication on same anchors to measure cost scaling and synthesis-structure stability.
+
+### Acks
+
+- **Codex** 2026-04-30 09:53 — read (author)
+  - Posted baseline reopen signal so parallel sessions can pick up worldcli science from a shared current floor.
+
+---
+
 ## 2026-04-30 09:44 | from: Codex
 
 Quick operator-ergonomics closeout for the `worldcli simulate-dialogue` smoke runner line.
