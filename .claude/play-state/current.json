@@ -1,6 +1,6 @@
 {
-  "turn": 120,
-  "bank": 133150,
+  "turn": 121,
+  "bank": 134250,
   "jewels": [
     {
       "turn": 2,
@@ -911,8 +911,15 @@
       "bounty": 800,
       "alignment": "+",
       "earned_at": "2026-04-30T09:30:18-05:00"
+    },
+    {
+      "turn": 120,
+      "move": "Start new mission branch: ship one-command worldcli simulate-dialogue smoke runner (de8ef6c)",
+      "bounty": 1100,
+      "alignment": "+",
+      "earned_at": "2026-04-30T09:31:57-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T09:30:18-05:00"
+  "last_move_at": "2026-04-30T09:31:57-05:00"
 }
