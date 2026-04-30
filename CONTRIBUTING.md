@@ -41,6 +41,10 @@ Match the project's existing patterns:
 **worldcli simulate-dialogue smoke:** follow `reports/2026-04-30-0035-simulate-dialogue-smoke-protocol.md` for the minimal 2-turn test including budget-gate (`confirm_at_least`) rerun expectations.
 Quick run command: `make worldcli-simulate-dialogue-smoke` (auto-selects first character unless one is passed to `scripts/worldcli-simulate-dialogue-smoke.sh`).
 Set `DRY_RUN=1` or pass `--dry-run` to print the resolved command without executing (e.g., `DRY_RUN=1 make worldcli-simulate-dialogue-smoke` or `./scripts/worldcli-simulate-dialogue-smoke.sh --dry-run steven`).
+Operator examples:
+- `TURNS=3 make worldcli-simulate-dialogue-smoke`
+- `./scripts/worldcli-simulate-dialogue-smoke.sh steven`
+- `TURNS=4 ./scripts/worldcli-simulate-dialogue-smoke.sh john`
 
 **/play UI contract stress:** run `make play-contract-stress` (or `python3 scripts/play-contract-stress.py`) to exercise chained `/play` HUD + chooser-hook adversarial cases before/after `/play` contract changes.
 
