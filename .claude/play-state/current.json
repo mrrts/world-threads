@@ -1,6 +1,6 @@
 {
-  "turn": 119,
-  "bank": 132350,
+  "turn": 120,
+  "bank": 133150,
   "jewels": [
     {
       "turn": 2,
@@ -904,8 +904,15 @@
       "bounty": 900,
       "alignment": "+",
       "earned_at": "2026-04-30T09:26:14-05:00"
+    },
+    {
+      "turn": 119,
+      "move": "Add execution-semantics law to /play skill and ship closeout changes (commit e8fd86f)",
+      "bounty": 800,
+      "alignment": "+",
+      "earned_at": "2026-04-30T09:30:18-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T09:26:14-05:00"
+  "last_move_at": "2026-04-30T09:30:18-05:00"
 }
