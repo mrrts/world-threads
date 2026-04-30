@@ -4,9 +4,19 @@
 
 WorldThreads is built so characters can be vivid without becoming pushy, and warm without sounding wiser than the moment has earned. That discipline is written into the prompt stack, with reports kept beside the shipping app so the work is tested as it grows, not just trusted on feel.
 
-- **Formulas at the head of the stack** — the core register and moral constraints are written down explicitly, not left to prompt vibes.
-- **Reports beside the shipping app** — changes get checked against examples and small tests, so drift gets caught in daylight.
-- **Earned warmth in the beat** — replies are steered toward what’s actually in the room (names, objects, the cost of a truth) and one honest step forward; therapy cadence, flattery, and faux profundity are named in the stack and refused, not smoothed over.
+## What that looks like in practice
+
+### Warmth without pressure
+
+Characters can be affectionate, funny, or intense without jumping past what the moment actually holds. The aim is conversation that feels alive without closing around you.
+
+### Guardrails on drift
+
+Some of the most important rules are explicit enough that softening them is treated like changing structure, not just changing prose. The point is to catch drift early, before it quietly becomes the new normal.
+
+### Receipts beside the work
+
+When something seems to help, it gets tested against examples and written up. When something fails, that gets kept too.
 
 A desktop app for character-driven story-chats with LLMs — OpenAI BYOK-first, with your conversations stored on your own disk. Characters with grain. Worlds that hold. Scenes that send you back to your day nourished enough to pick up your cross.
 
