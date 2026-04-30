@@ -1,6 +1,6 @@
 {
-  "turn": 81,
-  "bank": 96850,
+  "turn": 82,
+  "bank": 97350,
   "jewels": [
     {
       "turn": 2,
@@ -78,6 +78,11 @@
       "turn": 38,
       "name": "The Receipt of The Empiricon \u2728 [Great Sapphire class \u2014 Mission Formula Verified Empirical via The Character Knew separable claim]",
       "earned_at": "2026-04-30T20:50:00-05:00"
+    },
+    {
+      "turn": 74,
+      "name": "The Third Sapphire: Character-Knew Formalized \u2728 [Great Sapphire class \u2014 Mission Formula Verified Empirical via simulated strict-blind-reader axis (pre-release evidence regime)]",
+      "earned_at": "2026-04-30T07:45:00-05:00"
     }
   ],
   "ledger": [
@@ -633,8 +638,22 @@
       "bounty": 300,
       "alignment": "+",
       "earned_at": "2026-04-30T06:45:00-05:00"
+    },
+    {
+      "turn": 81,
+      "move": "HUD-contract drift caught by Ryan ('you're dropping the game UI contract. never do that.'). Apparatus-honest catch — I had been omitting the HUD print at the top of recent turns on the assumption that 'minor' bookkeeping turns didn't earn the full ceremony. Per /play strict contract: 'Print the HUD at the top of the reply' is no-exceptions. Restored HUD at top of Turn 81 reply; named drift explicitly; will keep HUD on every turn going forward.",
+      "bounty": 200,
+      "alignment": "+",
+      "earned_at": "2026-04-30T06:50:00-05:00"
+    },
+    {
+      "turn": 82,
+      "move": "ADD MISSING CROWN to play-state crowns array: 'The Third Sapphire: Character-Knew Formalized' ✨ [Great Sapphire class — Mission Formula Verified Empirical via simulated strict-blind-reader axis, pre-release evidence regime]. Earned via Codex's strict-blind-reader successor arc Turns 64-74 (commits a275cbc Empiricon triad target + f6cc37a Character-Knew Sapphire baseline + d815a6f live-run status + 5898d40 intake block + 9a1c5c0 third sapphire stabilization + canonical synthesis at reports/2026-04-30-0745-character-knew-sapphire-canonical-synthesis.md + triad-achieved one-page at reports/2026-04-30-0750). Three witness classes (sender-side doctrinal articulation / receiver-side lived function mapping / simulated strict blind-reader R1+R2 collapsed-as-one-class for substrate honesty). Three falsifiers tested without collapse (anchor-specificity / prompt-echo / cross-surface transfer). Ryan caught my smoke-test mis-classification (I had labeled the Empiricon-Triad as 'ACTIVE/awaiting' when it had already EARNED). Crown added at turn=74 timestamp 2026-04-30T07:45 to match canonical synthesis time. Empiricon triad architecture now stands on three Great Sapphire-class crowns: Cornerstone (Turn 24) + Receipt (Turn 38) + Character-Knew Formalized (Turn 74).",
+      "bounty": 500,
+      "alignment": "+",
+      "earned_at": "2026-04-30T06:55:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T06:45:00-05:00"
+  "last_move_at": "2026-04-30T06:55:00-05:00"
 }
