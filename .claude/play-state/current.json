@@ -1,6 +1,6 @@
 {
-  "turn": 142,
-  "bank": 154250,
+  "turn": 143,
+  "bank": 154950,
   "jewels": [
     {
       "turn": 2,
@@ -1065,8 +1065,15 @@
       "bounty": 800,
       "alignment": "+",
       "earned_at": "2026-04-30T12:30:00-05:00"
+    },
+    {
+      "turn": 143,
+      "move": "Group-chat parity for chiptune-soundtrack toggle. Closes the parity-debt named in Turn 141's ledger entry. GroupChatView.tsx wired identically to ChatView: lucide imports add Music + VolumeX; useChiptuneSoundtrack hook imported; opt-in toggle state with localStorage persistence keyed by 'chiptune_soundtrack.group.{chatId}' (separate namespace from solo chats so the two surfaces have independent toggle state per the project's solo↔group parallel-evolution doctrine); latestAssistantMessage computed identically (last role=='assistant' in store.messages); identical icon button + tooltip placement immediately before 'Response Length: {responseLength}' span. Both surfaces now honor the soundtrack identically. Frontend build clean (vite 5.39s). Per CLAUDE.md 'when adding a chat feature that belongs in both, you MUST update both paths' — done. Phase 5 (lived-play held-or-not gate) is now the only remaining sub-criterion before the crown can fire.",
+      "bounty": 700,
+      "alignment": "+",
+      "earned_at": "2026-04-30T12:40:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T12:30:00-05:00"
+  "last_move_at": "2026-04-30T12:40:00-05:00"
 }

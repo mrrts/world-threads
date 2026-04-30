@@ -6,7 +6,8 @@ import { InlineQuestProposalCard } from "@/components/chat/InlineQuestProposalCa
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog } from "@/components/ui/dialog";
-import { Send, Loader2, X, BookOpen, MessageSquare, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, ChevronRight, ChevronDown, Play, Volume2, ArrowRight, Smile, SmilePlus, ScrollText, Package, Sparkles, MessageCircleQuestion, List, MapPin, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Send, Loader2, X, BookOpen, MessageSquare, Settings, Image, Trash2, SlidersHorizontal, Pencil, Square, ChevronRight, ChevronDown, Play, Volume2, ArrowRight, Smile, SmilePlus, ScrollText, Package, Sparkles, MessageCircleQuestion, List, MapPin, PanelLeftClose, PanelLeftOpen, Music, VolumeX } from "lucide-react";
+import { useChiptuneSoundtrack } from "@/hooks/useChiptuneSoundtrack";
 import { invoke } from "@tauri-apps/api/core";
 import { ReactionBubbles } from "@/components/chat/ReactionBubbles";
 import { ReactionPicker } from "@/components/chat/ReactionPicker";
@@ -253,6 +254,35 @@ export function GroupChatView({ store, onNavigateToCharacter, focusMode = false,
     handleRetry,
     playVideo,
   } = useChatState({ store, chatId, chatType: "group" });
+
+  // Chiptune soundtrack (Phase 4 — group-chat parity with ChatView). Opt-in
+  // toggle persists per-group-chat in localStorage. Latest assistant message's
+  // formula_signature feeds the AI score generator; phrases chain at the tail
+  // of current playback.
+  const soundtrackPrefKey = `chiptune_soundtrack.group.${chatId ?? ""}`;
+  const [soundtrackEnabled, setSoundtrackEnabled] = useState<boolean>(() => {
+    try { return localStorage.getItem(soundtrackPrefKey) === "on"; }
+    catch { return false; }
+  });
+  const toggleSoundtrack = () => {
+    setSoundtrackEnabled((v) => {
+      const next = !v;
+      try { localStorage.setItem(soundtrackPrefKey, next ? "on" : "off"); } catch { /* private mode */ }
+      return next;
+    });
+  };
+  const latestAssistantMessage = (() => {
+    const msgs = store.messages;
+    for (let i = msgs.length - 1; i >= 0; i--) {
+      if (msgs[i].role === "assistant") return msgs[i];
+    }
+    return null;
+  })();
+  const soundtrack = useChiptuneSoundtrack({
+    enabled: soundtrackEnabled,
+    apiKey: store.apiKey ?? null,
+    latestAssistantMessage,
+  });
 
   // Focus-trigger: fan out to all group members' inventories on user
   // engagement. Backend runs one LLM call per overdue member in
@@ -1797,6 +1827,34 @@ export function GroupChatView({ store, onNavigateToCharacter, focusMode = false,
               </div>
             )}
           </div>
+            </div>
+            <div className="relative group/sndtrk inline-flex">
+              <button
+                type="button"
+                onClick={toggleSoundtrack}
+                aria-label={soundtrackEnabled ? "Mute chiptune soundtrack" : "Play chiptune soundtrack"}
+                aria-pressed={soundtrackEnabled}
+                className={`flex items-center justify-center w-7 h-7 rounded-md transition-colors cursor-pointer ${
+                  soundtrackEnabled
+                    ? "text-violet-400 hover:text-violet-300 hover:bg-violet-500/10"
+                    : "text-muted-foreground/50 hover:text-foreground hover:bg-accent/50"
+                }`}
+              >
+                {soundtrack.status === "generating" ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : soundtrackEnabled ? (
+                  <Music size={14} />
+                ) : (
+                  <VolumeX size={14} />
+                )}
+              </button>
+              <span className="absolute bottom-full right-0 mb-1.5 px-2 py-0.5 text-[10px] font-medium text-white bg-black rounded-md shadow-lg whitespace-nowrap opacity-0 group-hover/sndtrk:opacity-100 pointer-events-none transition-opacity z-50">
+                {soundtrackEnabled
+                  ? (soundtrack.currentPhrase
+                      ? `Playing: ${soundtrack.currentPhrase.mood_descriptor}`
+                      : "Soundtrack on (waiting for next reply)")
+                  : "Chiptune soundtrack off"}
+              </span>
             </div>
             <span className="text-muted-foreground/50 text-right" style={{ fontSize: "12px" }}>Response Length: {responseLength}</span>
           </div>
