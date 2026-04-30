@@ -1,0 +1,12 @@
+---
+description: End substantive replies with four numbered mission-ranked options (IDE parity with repo chooser law)
+alwaysApply: true
+---
+
+# Four-option chooser (Cursor / Composer / Auto)
+
+Substantive replies in this workspace end with **exactly four numbered next moves** (`1.` through `4.`), plain markdown, **mission-ranked**, concrete in the first clause. **Option 4** is the user-authorship slot (`4. Provide your own next move.` or equivalent).
+
+Pure acknowledgments with **no** decision surface may omit the quad; default is four.
+
+Authoritative copy: `AGENTS.md` (Skill routing + IDE agents paragraph) and `CLAUDE.md` (**Choosers are control surfaces** + **Skill routing** at file end).

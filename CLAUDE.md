@@ -404,6 +404,8 @@ The numbered ending on a reply is a control surface — a protocol by which mome
 
 **Cheap test:** if the user answered with just the number, would Claude Code know exactly what to do next without inventing? If not, the wording is mushy.
 
+**IDE agents:** The same four-option surface applies in Cursor, Composer, and Auto — plain markdown `1`–`4`, mission-ranked, option 4 reserved for user-authored direction; no `AskUserQuestion` in the IDE is not an exemption. Spell-out and carve-outs: **Skill routing** (end of this file) and `AGENTS.md`.
+
 ## LLM outputs are first-reading surfaces
 
 Increasingly, LLM outputs are read as **first readings**: a strong first pass that reaches the user as something revisable, answerable, translatable. The design burden shifts from *"did the model say something plausible?"* to *"does the surface make clear the user retains authorship?"* Prefer rewriteable proposals, skip-one-by-one lists, regenerate actions, dual-output translation pairs, explicit reading-not-locking-result language.
