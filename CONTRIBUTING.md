@@ -32,6 +32,10 @@ Match the project's existing patterns:
 - **New craft-shape rules earn their place via bite-test.** See the Craft-note bite verification section in `CLAUDE.md`. A PR that adds a new prompt-stack rule without a bite-test report should be expected to be asked for one.
 - **Reports are first-class artifacts.** If your PR ships substantive new doctrine, accompany it with a report at `reports/YYYY-MM-DD-HHMM-<purpose-slug>.md` per the naming convention. The report is the rationale; the code is the instantiation.
 
+## Documentation
+
+**Homepage practice strip + Backstage proof (README + public landing):** edit the canonical body in `reports/fragments/homepage-practice-proof.md` only, then run `./scripts/sync-homepage-practice-fragment.sh` from the repo root so `README.md` and `reports/2026-04-27-0030-public-release-landing.md` stay identical; CI runs `./scripts/check-homepage-practice-fragment-sync.sh` and fails if they drift.
+
 ### 3. Forking to build on
 
 Forking is welcome. The Ledger of Signatures structure is designed for it: when you fork, you inherit the upstream Ledger as-is (including the founding signature and any subsequent signatures). You then APPEND your own signature beneath. None of the upstream signatures are edited.
