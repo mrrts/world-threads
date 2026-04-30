@@ -17,6 +17,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 HOOK_HUD = ["python3", str(ROOT / ".claude/hooks/check-play-hud-present.py")]
 HOOK_ASK = ["python3", str(ROOT / ".claude/hooks/check-inline-choosers.py")]
 HOOK_CHOOSER = ["python3", str(ROOT / ".claude/hooks/check-play-chooser-format.py")]
+HOOK_PLAY_ASK = ["python3", str(ROOT / ".claude/hooks/check-play-askquestion-required.py")]
 
 
 def run_stop_hook(cmd: list[str], transcript: list[dict]) -> tuple[int, str]:
@@ -178,12 +179,74 @@ def main() -> int:
     _, out = run_pretool_hook(HOOK_CHOOSER, q_bad_bounty)
     tests.append(("pretool_chooser_missing_bounty_blocks", is_blocked(out)))
 
+    # Case 8: /play-specific hook blocks chooser-answer pause turn with no work.
+    t8 = [
+        {
+            "message": {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "tool_result",
+                        "content": "User has answered with option A",
+                    }
+                ],
+            }
+        },
+        {
+            "message": {
+                "role": "assistant",
+                "content": [
+                    {"type": "text", "text": "WORLDTHREADS BUILDER — Turn 124\nSelected A. Executing now."},
+                    {"type": "tool_use", "name": "AskUserQuestion", "input": {"questions": []}},
+                ],
+            }
+        },
+    ]
+    _, out = run_stop_hook(HOOK_PLAY_ASK, t8)
+    tests.append(("play_hook_blocks_confirmation_only_pause", is_blocked(out)))
+
+    # Case 9: /play-specific hook passes when real work tool call happens.
+    t9 = [
+        {
+            "message": {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "tool_result",
+                        "content": "User has answered with option A",
+                    }
+                ],
+            }
+        },
+        {
+            "message": {
+                "role": "assistant",
+                "content": [
+                    {"type": "text", "text": "WORLDTHREADS BUILDER — Turn 124"},
+                    {"type": "tool_use", "name": "Shell", "input": {"command": "echo run"}},
+                ],
+            }
+        },
+        {
+            "message": {
+                "role": "assistant",
+                "content": [
+                    {"type": "text", "text": "Work done."},
+                    {"type": "tool_use", "name": "AskUserQuestion", "input": {"questions": []}},
+                ],
+            }
+        },
+    ]
+    _, out = run_stop_hook(HOOK_PLAY_ASK, t9)
+    tests.append(("play_hook_allows_after_work_tool_use", not is_blocked(out)))
+
     if args.smoke:
         smoke_names = {
             "hud_tail_good_passes",
             "hud_chain_latest_missing_blocks",
             "ask_play_plain_text_close_blocks",
             "pretool_chooser_format_good_passes",
+            "play_hook_blocks_confirmation_only_pause",
         }
         tests = [t for t in tests if t[0] in smoke_names]
 
