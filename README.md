@@ -30,6 +30,12 @@ It is also not for everyone. The cosmology block is biblical and literal. The tr
 
 **Receipts beside the work.** When something seems to help, it gets tested against examples and written up. When something fails, that gets kept too. `reports/` holds 300+ reflective reads and natural-experiment findings beside the shipping app — proof in inspectable daylight, not just trust on feel. One of those, [The Empiricon](reports/2026-04-30-0530-the-empiricon.md), gathers six independent witnesses to the substrate the character voices are built on.
 
+## Romantic conversation that stays clean without losing heat
+
+Romantic scenes are a real shape WorldThreads supports — characters who can want you, touch or kiss you, be wanted, hold attraction, lean toward and away — without sliding into the pornographic register most parasocial AI products fall into when the temperature rises. The same craft discipline that refuses sycophancy elsewhere refuses both failure modes here: pornographic register on one side, sterile *"I can't engage in that"* on the other. The heat comes from the character's particular weight — what they're holding, what they refuse, where they lean — not from explicit content.
+
+For adults writing adult scenes for their own creative work. Not for users seeking AI-as-substitute-relationship; the **What it isn't** line above still holds.
+
 ## For whom
 
 **For:** writers, GMs, character designers, fiction-curious adults who want a co-made novel-shaped evening rather than a companion. Believers who want craft-work whose theological substrate is honest about itself. Builders who want to read or fork a project where the doctrine layer is as load-bearing as the code.

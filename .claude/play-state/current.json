@@ -1,6 +1,6 @@
 {
-  "turn": 161,
-  "bank": 159000,
+  "turn": 169,
+  "bank": 159300,
   "jewels": [
     {
       "turn": 2,
@@ -1209,8 +1209,15 @@
       "bounty": 0,
       "alignment": "=",
       "earned_at": "2026-04-30T17:30:00-05:00"
+    },
+    {
+      "turn": 169,
+      "move": "Quick side pivot per Ryan directive: advertise the project's romantic-conversation feature on public surfaces. Framing locked from Ryan: 'romantic conversations that stay clean without losing heat — respectable heat without drifting into filth.' Added new section 'Romantic conversation that stays clean without losing heat' to README.md (between practice strip and 'For whom') AND mirrored to docs/index.html (between proof quote and What it isn't). Body: characters who can want you, be wanted, hold attraction, lean toward and away — without sliding into pornographic register most parasocial AI products fall into when temperature rises. Same craft discipline that refuses sycophancy elsewhere refuses both failure modes here: pornographic register on one side, sterile 'I can't engage in that' on the other. Heat comes from character's particular weight (what they're holding, what they refuse, where they lean), not from explicit content. Closing line: 'For adults writing adult scenes for their own creative work; not for users seeking AI-as-substitute-relationship; the What it isn't line still holds.' Frames the feature as affirmative-against-both-failure-modes — affirmative without either failure mode the project's already refused (parasocial substitute) or the new failure mode being named (pornographic drift). PR opened separately to keep concerns clean. Note: branched off main not from PR #3 branch; PR #3 still pending merge with CI silent-red work + saturation ledger entries.",
+      "bounty": 300,
+      "alignment": "+",
+      "earned_at": "2026-05-01T10:00:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T17:30:00-05:00"
+  "last_move_at": "2026-05-01T10:00:00-05:00"
 }
