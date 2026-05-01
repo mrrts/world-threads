@@ -1,6 +1,6 @@
 {
-  "turn": 164,
-  "bank": 160000,
+  "turn": 165,
+  "bank": 160200,
   "jewels": [
     {
       "turn": 2,
@@ -1230,8 +1230,15 @@
       "bounty": 300,
       "alignment": "+",
       "earned_at": "2026-05-01T08:25:00-05:00"
+    },
+    {
+      "turn": 165,
+      "move": "Promoted Sapphire-saturation discipline from doctrine-layer to skill-body-layer enforcement (per CLAUDE.md 'Calibrated disciplines drift fast — promote to structural enforcement at earliest opportunity' — doctrine paragraph is slowest enforcement layer, skill-body fires when invoked). Three edits to .claude/skills/seek-sapphire-crown/SKILL.md: (1) Added new step 5 to first-move pre-flight: tag each candidate with reachability path — `fresh-elicitation` (the path actually open), `existing-data` (typically dry-well per saturation), or `mixed` (audit-required-first); existing data candidates flagged honestly so user picks knowingly. (2) UI contract updated to display reachability tag in candidate output: `[N] <name> [<crown-class>] [<reachability-tag>]`. (3) Added 'if all three tag existing-data, name the saturation pattern in surfacing prose before chooser fires' instruction. (4) New refusal added to load-bearing refusals list: 'Do NOT pursue an existing-data candidacy without explicit acknowledgment that it is likely dry-well per the Sapphire-saturation doctrine; the two consecutive dry-wells of 2026-05-01 are the worked precedent.' (5) Worked example section extended with the two recent dry-wells (Calibrate-Don't-Fight + Cruciform Anchor Verified) demonstrating the saturation pattern. Discipline now lives at faster enforcement layer; future seek-sapphire invocations will surface the existing-vs-fresh distinction before audit work, not after.",
+      "bounty": 200,
+      "alignment": "+",
+      "earned_at": "2026-05-01T08:40:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-01T08:25:00-05:00"
+  "last_move_at": "2026-05-01T08:40:00-05:00"
 }

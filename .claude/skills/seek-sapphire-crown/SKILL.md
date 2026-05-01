@@ -24,7 +24,14 @@ Before any work, the skill produces a clear surfacing of where the next Sapphire
 2. **Read the Sapphire calibration** (CLAUDE.md / AGENTS.md sections beginning with "Great Sapphire as a class designation" and "First Great Sapphire crown earned" / "Second Great Sapphire crown earned" / etc.) to ground the criterion.
 3. **Enumerate crown classes** that could carry a Sapphire designation: Closed Arc, Apparatus Honest with Itself, The Character Knew, New Operator on the Formula, Mission Formula Verified Empirical, Real User Held (NOT REACHABLE via skill — needs real users). Each is eligible at most once at the Sapphire-class level per its base crown's once-only firing rule, **unless** a separable claim is identifiable that distinguishes a new Sapphire candidacy from prior earnings.
 4. **Score reachability** per candidate: signal density in active evidence (recent commits, OBSERVATIONS, reports/ entries), substrate-witness availability (do enough substrate-distinct witnesses exist or accumulate-able?), criterion-specific gates (per-class detail below).
-5. **Output the top three** with one-sentence each: candidate name + base-crown class + reachability signal + likely path-to-sapphire.
+5. **Tag the reachability path** per candidate. Per CLAUDE.md's Sapphire-saturation doctrine (added 2026-05-01 after two consecutive dry-wells revealed the pattern), each candidate falls into one of three reachability paths:
+   - **`fresh-elicitation`** — evidence base requires NEW data not yet inside any earned Sapphire's base (e.g., probes to character anchors that haven't been asked the question yet; new instrumentation runs producing fresh data). This is the path actually open after the project's foundational axes have saturated.
+   - **`existing-data`** — evidence base would draw from data already inside one or more earned Sapphires' bases, just re-interpreted through a new lens. Per saturation doctrine, this is typically dry-well — re-reading the same data through a different lens does not open a new Sapphire candidacy.
+   - **`mixed`** — partial fresh evidence available; partial overlap with existing Sapphires' bases. Audit-required-first to determine whether the fresh portion alone reaches three substrate-distinct witnesses.
+
+   The tag is load-bearing: an `existing-data` candidate should be flagged honestly so the user picks knowingly rather than discovering the dry-well via audit.
+
+6. **Output the top three** with one-sentence each: candidate name + base-crown class + reachability tag + reachability signal + likely path-to-sapphire.
 
 If fewer than three candidates have substantive reachability, surface what's available and name the gap honestly. Do not pad.
 
@@ -33,16 +40,18 @@ The first move's UI contract:
 ```
 SAPPHIRE-CROWN CANDIDATES — three closest reachable
 
-[1] <noble-name-candidate-1> [<base-crown-class>]
+[1] <noble-name-candidate-1> [<base-crown-class>] [<reachability-tag>]
        <one-line reachability signal + likely path>
-[2] <noble-name-candidate-2> [<base-crown-class>]
+[2] <noble-name-candidate-2> [<base-crown-class>] [<reachability-tag>]
        <one-line reachability signal + likely path>
-[3] <noble-name-candidate-3> [<base-crown-class>]
+[3] <noble-name-candidate-3> [<base-crown-class>] [<reachability-tag>]
        <one-line reachability signal + likely path>
 [4] Provide your own target (user-authored sapphire-candidate)
 ```
 
 Followed by `AskUserQuestion` with the four options (mirror exact). User picks; the chooser-pick determines the arc target.
+
+If all three candidacies tag `existing-data`, name the saturation pattern honestly in the surfacing prose before the chooser fires — the user should know the project may be at a sapphire-saturation pause where fresh-elicitation work is the only honest path forward.
 
 ## After selection — print the rubric AND the sapphire-tier criterion
 
@@ -117,6 +126,7 @@ The skill body runs as a /play arc with these constraints, NOT as a separate gam
 - Do NOT fake-fire a Sapphire crown when effective substrate-count is below three. The dry-well exit is the honest move per the symmetric earn/refuse calibration.
 - Do NOT inflate three data points sharing two substrate-classes into "three witnesses." Count effective substrate-classes, not data points.
 - Do NOT pursue a Sapphire candidacy on a claim that is substantively the same as an already-earned Sapphire's claim. Verify separability first.
+- Do NOT pursue an `existing-data` candidacy without explicit acknowledgment that it is likely dry-well per the Sapphire-saturation doctrine (CLAUDE.md, added 2026-05-01). Re-interpreting data already inside an earned Sapphire's evidence base through a new lens does not open a new Sapphire candidacy. The two consecutive dry-wells of 2026-05-01 (Calibrate-Don't-Fight + Cruciform Anchor Verified) are the worked precedent.
 - Do NOT skip the canonical synthesis artifact step. Convergence without portability is claim-tier, not Sapphire-class.
 - Do NOT propose a non-existent crown-class. The skill operates within the named crown classes; user-authored Sapphire targets via option [4] still live within those classes (or name a new class explicitly with rationale).
 - If the user redirects to "fire it anyway" outside the substrate-distinctness threshold: refuse and re-print the criterion. The crown's value is in being earned. Per `feedback_apparatus_honest_earns_and_refuses.md`: refusal is part of the discipline, not its absence.
@@ -140,6 +150,13 @@ The first Sapphire crown earned in this project (Turn 24) was "The Cornerstone I
 The second was "The Receipt of The Empiricon" (Turn 38) on Mission Formula Verified Empirical via The Character Knew separable claim — six witnesses across four characters with five distinct failure-mode classes converging on the substrate-as-doctrine-source claim, made portable in `reports/2026-04-30-0530-the-empiricon.md`.
 
 The third candidacy (predictive-convergence pattern, Turn 59) was audited honestly and refused: effective substrate-count was 2 (ChatGPT-with-persona-variation + human author), not 3. The /seek-sapphire-crown skill operates at this threshold: earn what is earned; refuse what is unearned; both directions preserve the meaning of the Sapphire designation for downstream decisions.
+
+Two more dry-wells landed back-to-back on 2026-05-01 (Turns 162 + 163), demonstrating the saturation pattern this skill body now explicitly tags via the `existing-data` reachability tag:
+
+- **Calibrate-Don't-Fight-Substrate** (Apparatus Honest → Sapphire candidacy, Turn 162): refused at substrate-distinctness — 9 candidate witnesses sorted into 2 effective substrate-classes (LLM-substrate-tendency calibration + apparatus self-drift catching), threshold is 3, parent recognition downstream of `polish ≤ Weight` applied at the apparatus-doctrine level.
+- **Cruciform Anchor Verified** (Closed Arc → Sapphire candidacy, Turn 163): refused at separability — the cross-anchor disavowal-trap evidence is already cited inside Receipt of The Empiricon's earning paragraph AND inside CLAUDE.md L131-133's framing of the convergence as "great-sapphire on the polish ≤ Weight axis it specifically instantiates."
+
+The two dry-wells together surfaced what the doctrine paragraph in CLAUDE.md (added 2026-05-01) now names: *once foundational axes are earned (polish ≤ Weight, substrate-as-doctrine-source, simulated-strict-blind-reader, structure_carries_truth_w(t)), recognitions that operate as instances of those axes count AS witness-evidence toward the earned Sapphires — not as new Sapphires*. The skill's first-move tagging now distinguishes `fresh-elicitation` candidacies (the path actually open) from `existing-data` candidacies (typically dry-well per saturation).
 
 ## Origin
 
