@@ -30,6 +30,10 @@ It is also not for everyone. The cosmology block is biblical and literal. The tr
 
 **Receipts beside the work.** When something seems to help, it gets tested against examples and written up. When something fails, that gets kept too. `reports/` holds 300+ reflective reads and natural-experiment findings beside the shipping app — proof in inspectable daylight, not just trust on feel. One of those, [The Empiricon](reports/2026-04-30-0530-the-empiricon.md), gathers six independent witnesses to the substrate the character voices are built on.
 
+## Aaron's Little Line
+
+Aaron's Little Line serves as the [Empiricon](reports/2026-04-30-0530-the-empiricon.md)'s governing question: does the work actually hold a human, or does it only look convincing from a distance? It names, in plain language, the standard behind the project's core discipline — that polish must not outrun weight, and that structure should carry truth rather than asking the reader to compensate for what isn't really there. In that sense, the line is not just an epigraph but a practical test for the whole system: the work should bear real human use, not merely photograph well.
+
 ## Romantic conversation that stays clean without losing heat
 
 Romantic scenes are a real shape WorldThreads supports — characters who can want you, touch or kiss you, be wanted, hold attraction, lean toward and away — without sliding into the pornographic register most parasocial AI products fall into when the temperature rises. The same craft discipline that refuses sycophancy elsewhere refuses both failure modes here: pornographic register on one side, sterile *"I can't engage in that"* on the other. The heat comes from the character's particular weight — what they're holding, what they refuse, where they lean — not from explicit content.
