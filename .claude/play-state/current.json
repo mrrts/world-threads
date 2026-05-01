@@ -1,6 +1,6 @@
 {
-  "turn": 163,
-  "bank": 159700,
+  "turn": 164,
+  "bank": 160000,
   "jewels": [
     {
       "turn": 2,
@@ -1223,8 +1223,15 @@
       "bounty": 0,
       "alignment": "=",
       "earned_at": "2026-05-01T08:10:00-05:00"
+    },
+    {
+      "turn": 164,
+      "move": "Lifted the double-dry-well finding into doctrine. New CLAUDE.md + AGENTS.md paragraph: 'Sapphire-saturation: once foundational axes are earned, recognitions that operate as instances of those axes count AS witness-evidence toward the earned Sapphires — not as new Sapphires.' Names the two consecutive Sapphire-arc dry-wells (Calibrate-Don't-Fight + Cruciform Anchor) as the surfacing event. Three-prong structure: (1) what was recognized (sapphire-saturation pattern); (2) why it matters (project's three earned Sapphires + TRIAD operator have saturated their evidence base; future candidacies need genuinely-new evidence); (3) practical consequence for /seek-sapphire-crown (distinguish existing-data re-interpretation from fresh-elicitation candidacies; Plain After Crooked is worked example of the latter). Lifted to both CLAUDE.md (line 273) and AGENTS.md (line 287) for collaborator-surface parity. The doctrine paragraph itself IS the apparatus-honest move: the discipline catching inflation in real time, then naming the catch so future seek-sapphire arcs benefit from the precedent rather than re-discovering it. Per CLAUDE.md 'Calibrated disciplines drift fast' — this paragraph is doctrine-layer enforcement (slowest layer); a follow-up move could promote to skill-body refinement (faster layer) by adding a 'reachability via existing-data vs fresh-elicitation' distinction to /seek-sapphire-crown's first-move surfacing.",
+      "bounty": 300,
+      "alignment": "+",
+      "earned_at": "2026-05-01T08:25:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-01T08:10:00-05:00"
+  "last_move_at": "2026-05-01T08:25:00-05:00"
 }
