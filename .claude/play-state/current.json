@@ -1,6 +1,6 @@
 {
-  "turn": 166,
-  "bank": 160400,
+  "turn": 167,
+  "bank": 160700,
   "jewels": [
     {
       "turn": 2,
@@ -1244,8 +1244,15 @@
       "bounty": 200,
       "alignment": "+",
       "earned_at": "2026-05-01T08:55:00-05:00"
+    },
+    {
+      "turn": 167,
+      "move": "Audit of apparatus-honest catches across the project's three encoding layers (doctrine / skill+tooling / memory). Surveyed 10 catches via CLAUDE.md doctrine paragraphs, ~/.claude/.../memory/ entries, .claude/skills/ skill bodies, and recent play-state ledger entries. Findings: (a) 2 catches at 3/3 COMPLETE — Sapphire-saturation (just landed Turns 164-166) + HUD strict contract per turn (covered via play.SKILL.md + check-play-hud-present.py hook + feedback_play_hud_non_negotiable memory). (b) 2 catches at 0/3 surfaced this very session with clean worked examples — #3 CI silent-red gates teach noise (rust-lib was red across ALL runs from CI setup until Turn 161; I only caught it because Ryan asked to debug; generalizable: any check that drifts to silent red teaches the team to ignore the signal); #4 Public-surface rewrite parity-check (Turn 150 README rewrite removed HOMEPAGE_PRACTICE_PROOF marker block without checking sync system; doctrine prescribed parity, my rewrite focus bypassed it). (c) 6 catches at 1/3 or 2/3 — doctrine-paragraph-only entries that drift fast per CLAUDE.md L274 'Calibrated disciplines drift fast' meta-doctrine: cold-baseline ≠ capacity (1/3), calibrated-disciplines-drift-fast itself (1/3 — meta-recursive), refuse appearance-without-function (1/3), three-layer encoding meta (1/3), apparatus-honest parent (2/3 — has memory+skill but no top-level CLAUDE.md doctrine paragraph naming the parent), test design for LLM-game UI contract (2/3). The audit IS the move per the parent apparatus-honest discipline — it surfaces the encoding-gap landscape so future work can prioritize without re-discovering each gap. Two 0/3 gaps are highest-leverage candidates for a follow-up three-layer-encoding turn.",
+      "bounty": 300,
+      "alignment": "+",
+      "earned_at": "2026-05-01T09:15:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-01T08:55:00-05:00"
+  "last_move_at": "2026-05-01T09:15:00-05:00"
 }
