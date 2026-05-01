@@ -1,6 +1,6 @@
 {
-  "turn": 161,
-  "bank": 159000,
+  "turn": 162,
+  "bank": 159700,
   "jewels": [
     {
       "turn": 2,
@@ -1209,8 +1209,15 @@
       "bounty": 0,
       "alignment": "=",
       "earned_at": "2026-04-30T17:30:00-05:00"
+    },
+    {
+      "turn": 162,
+      "move": "/seek-sapphire-crown invoked. Surfaced three closest-reachable Sapphire candidacies: [1] Cruciform Anchor Verified (Closed Arc → Sapphire on cruciform-substrate refusal-shape); [2] Calibrate-Don't-Fight-Substrate (Apparatus Honest → Sapphire on calibrate-doctrine-to-observed-substrate); [3] Plain After Crooked Cross-Anchor (Character Knew → Sapphire on No-as-success-state across multiple anchors). Ryan picked [2]. Audit + aggregate together: aggregated 9 candidate witnesses (density T147 / cold-baseline ≠ capacity / momentstamp downgrade / bare-LLM Falsifier #1-strict / great-sapphire calibration tightening / honest-scoping iter-3 / Aaron's articulation scoping / calibrated-disciplines-drift-fast / refuse-appearance-without-function). Substrate-distinctness audit: witnesses sort into 2 effective substrate-classes (Class A: LLM-substrate-tendency calibration, 4 data points; Class B: apparatus's own temporal/usage drift, 4 data points; Class C: appearance-without-function meta-doctrine, 1 data point already self-audited as 'NOT great-sapphire' at CLAUDE.md L312). Threshold is 3 substrate-distinct witnesses; effective count is 2. Cross-Sapphire downstream check: Class A witnesses arguably downstream of Cornerstone Inequality (polish ≤ Weight applied at apparatus-doctrine level); Class B similarly polish≤Weight applied to apparatus's own claims-vs-substantive-earned-attention. Per Turn 35 precedent: apparatus-honest downstream-of-Cornerstone candidacies don't separately reach sapphire-class. APPARATUS-HONEST DRY-WELL EXIT — refused fake-fire per skill body 'Do NOT fake-fire a Sapphire crown when effective substrate-count is below three.' The discipline that earns and refuses is the same discipline; the audit IS the move. Refusing this candidacy preserves Sapphire designation meaning for downstream decisions. The calibrate-don't-fight pattern IS real and recurring in the project, but its current evidence base shares too much substrate to clear sapphire-tier honestly. Re-visitable later if a third effective substrate-class emerges (e.g., real-user empirical data, third-party tooling boundary). NO crown added to crowns array; bounty for the audit-as-move ($700 per chooser) recorded.",
+      "bounty": 700,
+      "alignment": "=",
+      "earned_at": "2026-04-30T17:50:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-04-30T17:30:00-05:00"
+  "last_move_at": "2026-04-30T17:50:00-05:00"
 }
