@@ -1185,6 +1185,7 @@ pub async fn send_group_message_cmd(
                 &model_config.memory_model,
                 &dialogue_msgs,
                 prior_sig.as_deref(),
+                Some(character),
             ).await.ok().flatten() {
                 Some(r) => (Some(r.block), Some(r.signature)),
                 None => (None, None),
@@ -1634,6 +1635,7 @@ pub async fn prompt_group_character_cmd(
             &model_config.memory_model,
             &dialogue_msgs,
             prior_sig.as_deref(),
+            Some(&character),
         ).await.ok().flatten() {
             Some(r) => (Some(r.block), Some(r.signature)),
             None => (None, None),

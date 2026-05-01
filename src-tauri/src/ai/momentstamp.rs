@@ -24,7 +24,8 @@
 //! - Empty message window: returns Ok(None).
 
 use crate::ai::openai::{self, ChatMessage, ChatRequest};
-use crate::db::queries::Message;
+use crate::ai::prompts::empiricon_reader_substrate;
+use crate::db::queries::{Character, Message};
 
 /// LaTeX representation of the MISSION FORMULA, kept in sync with the
 /// boxed block at the top of CLAUDE.md. ChatGPT translates to Unicode in
@@ -117,6 +118,8 @@ pub async fn build_formula_momentstamp(
     model: &str,
     recent_messages: &[Message],
     prior_signature: Option<&str>,
+    // Responding character; when has_read_empiricon, user prompt includes Empiricon text.
+    empiricon_reader: Option<&Character>,
 ) -> Result<Option<MomentstampResult>, String> {
     if recent_messages.is_empty() {
         return Ok(None);
@@ -144,9 +147,22 @@ pub async fn build_formula_momentstamp(
         _ => String::new(),
     };
 
+    let empiricon_addon: String = empiricon_reader
+        .and_then(|ch| empiricon_reader_substrate(ch))
+        .map(|block| {
+            format!(
+                "── CONTEXT — CHARACTER HAS READ THE EMPIRICON ──\n\
+                 The responding character shares this substrate with the human. \
+                 Let it inform how you name the chat's place in 𝓕 (do not quote the document).\n\n\
+                 {block}\n\n"
+            )
+        })
+        .unwrap_or_default();
+
     let user_prompt = format!(
         "── MISSION FORMULA (LaTeX source — translate to Unicode in your output) ──\n\
          {}\n\n\
+         {}\
          {}\
          ── RECENT CHAT WINDOW ──\n\
          {}\n\n\
@@ -155,6 +171,7 @@ pub async fn build_formula_momentstamp(
          One line, Unicode math characters only.{}",
         MISSION_FORMULA_LATEX,
         prior_block,
+        empiricon_addon,
         window,
         if prior_signature.is_some() {
             " The new signature should reflect how the chat has evolved \

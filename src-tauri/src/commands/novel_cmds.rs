@@ -432,6 +432,10 @@ pub async fn generate_novel_entry_cmd(
         if !voice_rules.is_empty() {
             desc.push_str(&format!("\n  Voice: {}", voice_rules.join("; ")));
         }
+        if let Some(block) = crate::ai::prompts::empiricon_reader_substrate(c) {
+            desc.push_str("\n\n");
+            desc.push_str(&block);
+        }
         desc
     }).collect();
 
@@ -708,6 +712,10 @@ async fn run_day_novel_silent(
         let voice_rules = crate::ai::prompts::json_array_to_strings(&c.voice_rules);
         if !voice_rules.is_empty() {
             desc.push_str(&format!("\n  Voice: {}", voice_rules.join("; ")));
+        }
+        if let Some(block) = crate::ai::prompts::empiricon_reader_substrate(c) {
+            desc.push_str("\n\n");
+            desc.push_str(&block);
         }
         desc
     }).collect();

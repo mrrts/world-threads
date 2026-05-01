@@ -7411,6 +7411,7 @@ async fn cmd_replay(
                 &model_config.memory_model,
                 &recent_for_momentstamp,
                 prior_signature.as_deref(),
+                None,
             ).await {
                 Ok(Some(result)) => {
                     eprintln!(
@@ -11579,6 +11580,7 @@ async fn cmd_ask(
                 &model_config.memory_model,
                 &recent_for_momentstamp,
                 prior_signature.as_deref(),
+                None,
             ).await {
                 Ok(Some(result)) => {
                     eprintln!(

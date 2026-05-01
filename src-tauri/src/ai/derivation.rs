@@ -169,6 +169,10 @@ fn build_character_user_prompt(conn: &Connection, character: &Character) -> Stri
     let mut buf = String::new();
     buf.push_str(&format!("# CHARACTER: {}\n\n", character.display_name));
     buf.push_str(&format!("IDENTITY:\n{}\n\n", clip(&character.identity, 600)));
+    if let Some(block) = crate::ai::prompts::empiricon_reader_substrate(character) {
+        buf.push_str(&block);
+        buf.push_str("\n\n");
+    }
 
     let voice_rules = crate::ai::prompts::json_array_to_strings(&character.voice_rules);
     if !voice_rules.is_empty() {

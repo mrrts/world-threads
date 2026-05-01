@@ -1933,5 +1933,24 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         let _ = conn.execute("ALTER TABLE group_messages ADD COLUMN formula_signature TEXT", []);
     }
 
+    // ── has_read_empiricon on characters ─────────────────────────────────
+    //
+    // When true, the full Empiricon report text is injected into this
+    // character's LLM prompts (dialogue, dreams, narration, novelization,
+    // formula derivation, momentstamp). In-universe: the character has
+    // read the document and shares that substrate with the human.
+    let char_has_empiricon: bool = conn.query_row(
+        "SELECT 1 FROM pragma_table_info('characters') WHERE name = 'has_read_empiricon'",
+        [],
+        |_| Ok(true),
+    )
+    .unwrap_or(false);
+    if !char_has_empiricon {
+        let _ = conn.execute(
+            "ALTER TABLE characters ADD COLUMN has_read_empiricon INTEGER NOT NULL DEFAULT 0",
+            [],
+        );
+    }
+
     Ok(())
 }

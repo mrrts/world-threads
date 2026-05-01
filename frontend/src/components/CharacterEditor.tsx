@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -89,6 +90,7 @@ export function CharacterEditor({ store }: Props) {
         visual_description: ch.visual_description ?? "",
         signature_emoji: ch.signature_emoji ?? "",
         action_beat_density: (ch.action_beat_density ?? "normal") as "low" | "normal" | "high",
+        has_read_empiricon: ch.has_read_empiricon ?? false,
       });
       setDirty(false);
       loadPortraits(ch.character_id);
@@ -520,6 +522,20 @@ export function CharacterEditor({ store }: Props) {
                         </button>
                       );
                     })}
+                  </div>
+                </Field>
+                <Field
+                  label="Has Read the Empiricon"
+                  hint="When on, the full Empiricon document is included in this character's prompts (chat, dreams, narration, novel chapters, formula derivation, momentstamps)."
+                >
+                  <div className="flex items-center gap-3">
+                    <Switch
+                      checked={form.has_read_empiricon ?? false}
+                      onCheckedChange={(v) => update({ has_read_empiricon: v })}
+                    />
+                    <span className="text-sm text-muted-foreground">
+                      {form.has_read_empiricon ? "On" : "Off"}
+                    </span>
                   </div>
                 </Field>
               </div>

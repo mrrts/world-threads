@@ -64,22 +64,26 @@ pub struct Character {
     /// vocabulary). NULL for characters not yet derivation-populated.
     #[serde(default)]
     pub derived_formula: Option<String>,
+    /// Full Empiricon document injected into prompts when true.
+    #[serde(default)]
+    pub has_read_empiricon: bool,
 }
 
 fn default_action_beat_density() -> String { "normal".to_string() }
 
-const CHAR_COLS: &str = "character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at, visual_description, visual_description_portrait_id, inventory, last_inventory_day, signature_emoji, action_beat_density, derived_formula";
+const CHAR_COLS: &str = "character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at, visual_description, visual_description_portrait_id, inventory, last_inventory_day, signature_emoji, action_beat_density, derived_formula, has_read_empiricon";
 
 pub fn create_character(conn: &Connection, ch: &Character) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO characters (character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at, visual_description, visual_description_portrait_id, inventory, last_inventory_day, signature_emoji, action_beat_density)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)",
+        "INSERT INTO characters (character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at, visual_description, visual_description_portrait_id, inventory, last_inventory_day, signature_emoji, action_beat_density, has_read_empiricon)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21)",
         params![ch.character_id, ch.world_id, ch.display_name, ch.identity,
             ch.voice_rules.to_string(), ch.boundaries.to_string(),
             ch.backstory_facts.to_string(), ch.relationships.to_string(),
             ch.state.to_string(), ch.avatar_color, ch.sex, ch.is_archived, ch.created_at, ch.updated_at,
             ch.visual_description, ch.visual_description_portrait_id,
-            ch.inventory.to_string(), ch.last_inventory_day, ch.signature_emoji, ch.action_beat_density],
+            ch.inventory.to_string(), ch.last_inventory_day, ch.signature_emoji, ch.action_beat_density,
+            ch.has_read_empiricon as i32],
     )?;
     Ok(())
 }
@@ -94,7 +98,7 @@ pub fn get_character(conn: &Connection, character_id: &str) -> Result<Character,
 
 pub fn list_characters(conn: &Connection, world_id: &str) -> Result<Vec<Character>, rusqlite::Error> {
     let mut stmt = conn.prepare(
-        "SELECT c.character_id, c.world_id, c.display_name, c.identity, c.voice_rules, c.boundaries, c.backstory_facts, c.relationships, c.state, c.avatar_color, c.sex, c.is_archived, c.created_at, c.updated_at, c.visual_description, c.visual_description_portrait_id, c.inventory, c.last_inventory_day, c.signature_emoji, c.action_beat_density, c.derived_formula
+        "SELECT c.character_id, c.world_id, c.display_name, c.identity, c.voice_rules, c.boundaries, c.backstory_facts, c.relationships, c.state, c.avatar_color, c.sex, c.is_archived, c.created_at, c.updated_at, c.visual_description, c.visual_description_portrait_id, c.inventory, c.last_inventory_day, c.signature_emoji, c.action_beat_density, c.derived_formula, c.has_read_empiricon
          FROM characters c
          LEFT JOIN threads t ON t.character_id = c.character_id
          LEFT JOIN (SELECT thread_id, MAX(created_at) AS last_msg FROM messages GROUP BY thread_id) m ON m.thread_id = t.thread_id
@@ -137,11 +141,12 @@ pub fn update_character(conn: &Connection, ch: &Character) -> Result<(), rusqlit
     // a new portrait is generated the cache key mismatches and the
     // backfill sweep will regenerate, cleanly overwriting the edit.
     conn.execute(
-        "UPDATE characters SET display_name=?2, identity=?3, voice_rules=?4, boundaries=?5, backstory_facts=?6, relationships=?7, state=?8, avatar_color=?9, sex=?10, visual_description=?11, signature_emoji=?12, action_beat_density=?13, updated_at=datetime('now') WHERE character_id=?1",
+        "UPDATE characters SET display_name=?2, identity=?3, voice_rules=?4, boundaries=?5, backstory_facts=?6, relationships=?7, state=?8, avatar_color=?9, sex=?10, visual_description=?11, signature_emoji=?12, action_beat_density=?13, has_read_empiricon=?14, updated_at=datetime('now') WHERE character_id=?1",
         params![ch.character_id, ch.display_name, ch.identity,
             ch.voice_rules.to_string(), ch.boundaries.to_string(),
             ch.backstory_facts.to_string(), ch.relationships.to_string(),
-            ch.state.to_string(), ch.avatar_color, ch.sex, ch.visual_description, ch.signature_emoji, ch.action_beat_density],
+            ch.state.to_string(), ch.avatar_color, ch.sex, ch.visual_description, ch.signature_emoji, ch.action_beat_density,
+            ch.has_read_empiricon as i32],
     )?;
     Ok(())
 }
@@ -395,6 +400,12 @@ fn row_to_character(row: &rusqlite::Row) -> Result<Character, rusqlite::Error> {
         signature_emoji: row.get::<_, Option<String>>(18).ok().flatten().unwrap_or_default(),
         action_beat_density: row.get::<_, Option<String>>(19).ok().flatten().unwrap_or_else(|| "normal".to_string()),
         derived_formula: row.get::<_, Option<String>>(20).unwrap_or(None),
+        has_read_empiricon: row
+            .get::<_, Option<i64>>(21)
+            .ok()
+            .flatten()
+            .map(|n| n != 0)
+            .unwrap_or(false),
     })
 }
 

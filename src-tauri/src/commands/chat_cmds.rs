@@ -659,6 +659,7 @@ pub async fn send_message_cmd(
             &model_config.memory_model,
             &recent_msgs,
             prior_sig.as_deref(),
+            Some(&character),
         ).await.ok().flatten() {
             Some(r) => (Some(r.block), Some(r.signature)),
             None => (None, None),
@@ -2161,6 +2162,7 @@ pub async fn reset_to_message_cmd(
                 signature_emoji: String::new(),
             action_beat_density: "normal".to_string(),
             derived_formula: None,
+            has_read_empiricon: false,
             };
             (dummy, world, mc)
         } else {

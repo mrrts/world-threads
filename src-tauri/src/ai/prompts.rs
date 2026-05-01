@@ -2,6 +2,25 @@ use crate::db::queries::{Character, Message, Reaction, UserProfile, World};
 use serde_json::Value;
 use std::collections::HashMap;
 
+/// Full text of `reports/2026-04-30-0530-the-empiricon.md`, embedded for
+/// prompt injection (no runtime file IO).
+pub const EMPIRICON_DOCUMENT: &str =
+    include_str!("../../../reports/2026-04-30-0530-the-empiricon.md");
+
+/// When `character.has_read_empiricon`, returns a labeled block including
+/// the full Empiricon document for LLM conditioning.
+pub fn empiricon_reader_substrate(character: &Character) -> Option<String> {
+    if !character.has_read_empiricon {
+        return None;
+    }
+    Some(format!(
+        "THE EMPIRICON\n\
+The text below is canonical project substrate. {} has read this document in full and holds it as a shared frame with the human. Let it inform tone, stakes, and truth-tests where relevant — do not quote or perform it unless the moment genuinely calls for that.\n\n{}",
+        character.display_name,
+        EMPIRICON_DOCUMENT
+    ))
+}
+
 // ─── APP INVARIANTS — COMPILE-TIME ENFORCED ─────────────────────────────────
 //
 // The app has two load-bearing worldview invariants that MUST appear in the
@@ -4171,6 +4190,9 @@ fn build_solo_dialogue_system_prompt(
         maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Identity), InsertPosition::Before);
         maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Identity), InsertPosition::After);
     }
+    if let Some(block) = empiricon_reader_substrate(character) {
+        parts.push(block);
+    }
 
     // Load-test anchor — names the architecture-level dimension this
     // character load-tests when authority is being rendered. Per-
@@ -4625,6 +4647,10 @@ fn build_group_dialogue_system_prompt(
             you.push_str("\n\n");
             you.push_str(&character.identity);
         }
+    }
+    if let Some(block) = empiricon_reader_substrate(character) {
+        you.push_str("\n\n");
+        you.push_str(&block);
     }
     // Load-test anchor (architecture-vs-vocabulary). Precedence:
     // replay override > caller-passed anchor from DB > empty.
@@ -6053,6 +6079,9 @@ pub fn build_dream_system_prompt(
     if !character.identity.is_empty() {
         parts.push(format!("IDENTITY:\n{}", character.identity));
     }
+    if let Some(block) = empiricon_reader_substrate(character) {
+        parts.push(block);
+    }
     let backstory = json_array_to_strings(&character.backstory_facts);
     if !backstory.is_empty() {
         parts.push(format!("BACKSTORY:\n{}", backstory.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n")));
@@ -6380,6 +6409,10 @@ pub fn build_narrative_system_prompt(
         if !inv.is_empty() {
             cast_block.push('\n');
             cast_block.push_str(&inv);
+        }
+        if let Some(emp) = empiricon_reader_substrate(c) {
+            cast_block.push('\n');
+            cast_block.push_str(&emp);
         }
         cast_block.push('\n');
     }
@@ -7534,6 +7567,7 @@ mod hidden_motive_guard_tests {
             signature_emoji: String::new(),
             action_beat_density: "normal".into(),
             derived_formula: None,
+            has_read_empiricon: false,
         }
     }
 
@@ -7635,6 +7669,7 @@ mod fence_shape_detection_tests {
             signature_emoji: String::new(),
             action_beat_density: "normal".into(),
             derived_formula: None,
+            has_read_empiricon: false,
         }
     }
 

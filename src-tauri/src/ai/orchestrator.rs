@@ -480,6 +480,7 @@ mod tests {
             signature_emoji: String::new(),
             action_beat_density: "normal".into(),
             derived_formula: None,
+            has_read_empiricon: false,
         }
     }
 

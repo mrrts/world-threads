@@ -124,6 +124,7 @@ pub fn create_character_cmd(db: State<Database>, world_id: String, display_name:
         signature_emoji: String::new(),
             action_beat_density: "normal".to_string(),
             derived_formula: None,
+            has_read_empiricon: false,
     };
     create_character(&conn, &ch).map_err(|e| e.to_string())?;
     create_thread(&conn, &Thread {

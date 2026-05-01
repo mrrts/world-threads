@@ -61,6 +61,7 @@ pub async fn generate_video_cmd(
                 signature_emoji: String::new(),
             action_beat_density: "normal".to_string(),
             derived_formula: None,
+            has_read_empiricon: false,
             })
         } else {
             get_character(&conn, &character_id).map_err(|e| e.to_string())?
