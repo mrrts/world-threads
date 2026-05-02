@@ -43,3 +43,5 @@ src-tauri/gen/
 .claude/.chat-mode-active
 .gstack/
 .claude/hooks/__pycache__/
+
+certs/

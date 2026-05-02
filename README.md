@@ -2,6 +2,8 @@
 
 **A desktop app for writing the kind of conversations that are worth having.**
 
+It doesn't try to fake a moment—it tries to keep making room for real moments.
+
 You author characters with identity, voice, backstory, and visible boundaries. You build the world they live in — its weather, its time of day, its shared canon. Then you talk with them. They remember what you've said. They keep journals you can read. They reach out when you've been quiet. They disagree with you when they disagree. The work runs on your own machine; your conversations live on your disk, not somebody's server.
 
 The aim is small and specific: a co-made evening of writing-and-listening that sends you back to your day a little more awake than you started.
