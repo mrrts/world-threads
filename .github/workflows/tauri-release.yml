@@ -1,0 +1,75 @@
+# Push tag v* (e.g. v0.1.0) to publish installers on GitHub Releases.
+name: Desktop release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tauri-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            frontend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          npm ci --prefix frontend
+          npm ci
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Linux build dependencies
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libssl-dev \
+            libxdo-dev \
+            pkg-config \
+            build-essential
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: src-tauri
+          tagName: ${{ github.ref_name }}
+          releaseName: WorldThreads ${{ github.ref_name }}
+          releaseBody: |
+            Installers for macOS (.dmg / .app), Windows (.msi / .exe), and Linux (.deb / .AppImage / .rpm).
+
+            **macOS:** Gatekeeper may block unsigned builds — right-click the app, choose Open, or allow in System Settings → Privacy & Security.
+          releaseDraft: true
+          prerelease: false
+          includeUpdaterJson: false

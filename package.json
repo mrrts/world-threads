@@ -1,11 +1,12 @@
 {
   "name": "world-threads",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.1.0",
   "scripts": {
     "dev": "npm run dev --prefix frontend",
     "build": "npm run build --prefix frontend",
     "tauri": "tauri",
+    "tauri:build": "npm exec tauri build",
     "sync:homepage-practice": "./scripts/sync-homepage-practice-fragment.sh",
     "check:homepage-practice": "./scripts/check-homepage-practice-fragment-sync.sh",
     "doc-check": "./scripts/check-homepage-practice-fragment-sync.sh && ./scripts/check-chooser-phrasing.sh"

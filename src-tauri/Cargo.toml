@@ -1,6 +1,6 @@
 [package]
 name = "world-threads"
-version = "0.1.0"
+version = "1.1.0"
 description = "A local-first BYOK desktop app for persistent character conversations"
 authors = ["you"]
 license = "MIT"
