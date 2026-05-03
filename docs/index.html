@@ -384,12 +384,11 @@
 </ul>
 
 <h2>Get it running</h2>
-<p>Built distributables aren't released yet; running from source is the current path. You'll need <a href="https://bun.sh/">Bun</a>, a Rust toolchain, and an OpenAI API key.</p>
+<p>Built distributables aren't released yet; running from source is the current path. You'll need <a href="https://nodejs.org/">Node.js</a> (LTS is fine), a Rust toolchain, and an OpenAI API key.</p>
 <pre><code>git clone https://github.com/mrrts/WorldThreads.git
 cd WorldThreads
-bun install
-cd src-tauri &amp;&amp; cargo build
-bun run tauri dev
+npm install
+npx tauri dev
 </code></pre>
 <p>The first-run wizard handles vault setup and key entry. Local-LLM endpoints (LM Studio, OpenAI-compatible) work as fallback for users who'd rather not use OpenAI; the project is calibrated against OpenAI models, so local-LLM users may need to retune their provider overrides.</p>
 
