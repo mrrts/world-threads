@@ -71,6 +71,8 @@ You'll need:
 
 Built distributables for macOS / Windows / Linux are not yet released; running from source is the current path.
 
+Once the app is open, click the **+** icon next to **Worlds** in the sidebar. This opens the wizard to get started.
+
 ## Stack
 
 - **Tauri v2** (Rust backend + React/TypeScript frontend) over Electron — smaller bundle, faster cold start, native windowing without a Chromium-per-popout. The Rust backend matters more than the bundle size: it lets the project compile-check load-bearing prompt invariants.
