@@ -8,7 +8,7 @@ You author characters with identity, voice, backstory, and visible boundaries. Y
 
 The aim is small and specific: a co-made evening of writing-and-listening that sends you back to your day a little more awake than you started.
 
-> If you'd like the same material in a calmer visual register, the project's marketing page is at **[mrrts.github.io/WorldThreads](https://mrrts.github.io/WorldThreads/)**.
+> If you'd like the same material in a calmer visual register, the project's marketing site is at **[worldthreads.app](https://worldthreads.app)**. Once the app is open, click the **+** icon next to **Worlds** in the sidebar; this opens the wizard to get started.
 
 ## What it's like to use
 
