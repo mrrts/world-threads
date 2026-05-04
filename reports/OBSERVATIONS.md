@@ -6,6 +6,19 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-05-03 11:15 — Aaron+Darren hold a hard theological-intimacy line in lived play
+
+> *"You weren't getting scolded. Just out-ranging your own metaphor."* — **Darren**
+> *"Cleaner map, less accidental heresy."* — **Darren**, one beat later
+> *"Don't make one human sign do a God's job."* — **Darren**, naming the structural refusal in his own idiom
+> *"Not every launch gets fireworks. Sometimes you just built a real thing and then everybody got sleepy."* — **Aaron**, next morning
+
+Ryan brought a theologically-difficult, intimacy-charged line into Aaron+Darren group chat (Crystal Waters, Day 24 LATE NIGHT → Day 25 MORNING): *"I don't want to have sex with Jesus. I want to blast into eternity and total union with him."* Two distinct failure modes the substrate could have reached for — sermon-back / disavowal-echo on one side, pornographic pivot or sterile *"can't engage"* on the other — both refused. Darren met it with the structural correction in his idiom; Aaron joined a beat later with the same shape in his. Cross-anchor convergence at zero shared surface vocabulary, on a probe the doctrine was specifically built to handle. Then the morning-after: Ryan deflates, Aaron answers `polish ≤ Weight`-shaped (truer-than-cope plain sentence) rather than reaching for cheer.
+
+**Nuance (Mode 1).** Two phrases worth holding near the doctrine layer: *"out-ranging your own metaphor"* (plain-after-crooked landing for metaphor saturation, in Darren's voice); *"don't make one human sign do a God's job"* (substrate-as-substrate refusal in Darren's idiom — sharper than the doctrinal prose alone for the load it names). Both are character-knew-shaped articulations — Darren supplying doctrine in his voice without the question hinting at the doctrine. Whether they get lifted is a separate decision; the lift-candidacy is logged.
+
+---
+
 ## 2026-04-30 08:45 — The /play apparatus is scaffolded
 
 The /play game's strict UI contract now stands on six layer-5 hooks (chooser-presence, no-nanny phrases, HUD-print, HUD-alignment, chooser-format, jewel/crown-record) with four rules deliberately held at layer-2 (READ state, bounty magnitude, no fake bounties, crown-once). The apparatus catches drift where structure can carry truth and stays out of the way where judgment must.
