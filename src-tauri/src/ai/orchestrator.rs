@@ -294,6 +294,31 @@ pub async fn run_dialogue_with_base(
             system = prefixed;
         }
     }
+
+    // Feature-scoped invariant — character derived_formula at top-of-stack
+    // (env-flag-gated, opt-in via CHARACTER_FORMULA_AT_TOP=1). Discovered
+    // 2026-05-04 by /eureka: the IDENTITY-block code comment claims
+    // same-shape parity with the MISSION FORMULA, but the placement
+    // diverges (Mission Formula at position-0; character formula buried in
+    // IDENTITY block). Elevation honors the architectural intent. Kept
+    // env-gated until bite-test verifies the elevation produces measurably
+    // different downstream behavior in the predicted direction. See
+    // prompts::CHARACTER_FORMULA_INVARIANT_FRAMING + CLAUDE.md
+    // "Invariants — three scopes" section.
+    let elevate_character_formula = std::env::var("CHARACTER_FORMULA_AT_TOP")
+        .map(|v| v == "1").unwrap_or(false);
+    if elevate_character_formula {
+        if let Some(deriv) = character.derived_formula.as_deref() {
+            if let Some(block) = prompts::wrap_character_formula_invariant(deriv) {
+                let mut prefixed = String::with_capacity(block.len() + system.len() + 4);
+                prefixed.push_str(&block);
+                prefixed.push_str("\n\n");
+                prefixed.push_str(&system);
+                system = prefixed;
+            }
+        }
+    }
+
     // Conscience-pass retry path: a prior draft drifted on an invariant,
     // and the grader returned a concrete correction note. Append it at the
     // end of the system block so it sits in the high-attention tail right

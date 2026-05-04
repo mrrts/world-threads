@@ -387,6 +387,69 @@ const _: () = {
     );
 };
 
+// ─── Feature-scoped invariant: character derived_formula at top-of-stack ─
+//
+// The IDENTITY-block code comment explicitly names the character's
+// `derived_formula` as having "the same prefix-sentence shape as the
+// MISSION FORMULA: not-a-directive-to-compute, but the register this
+// character is held under." Mission Formula and 𝓕_Ryan live at position-0
+// via `inject_mission_formula` / `inject_ryan_formula`; the character
+// formula, despite the same-shape claim, sits buried inside the IDENTITY
+// block (mid-prompt). Architectural intent and placement diverge.
+//
+// This invariant defines the framing for elevating the responding
+// character's `derived_formula` to a top-of-stack position on dialogue
+// calls — duplicating it (kept in IDENTITY block, also at top) so the
+// formula tunes the WHOLE prompt composition the way Mission Formula
+// does. Feature-scoped to dialogue calls only (not consultant, memory,
+// synthesis, etc.).
+//
+// Empirical gate: the elevation is env-flag-gated via
+// `CHARACTER_FORMULA_AT_TOP=1` so it can be A/B-tested via worldcli
+// before becoming default. The bite-test path is a paired-probe across
+// two characters with stable derived_formula content, comparing
+// register-anchoring under each placement. Promote to default only when
+// elevation produces measurably different downstream behavior in the
+// predicted direction.
+//
+// Discovered 2026-05-04 by /eureka focused on the prompt stack; see
+// CLAUDE.md "Invariants — three scopes" section for the doctrine.
+pub const CHARACTER_FORMULA_INVARIANT_FRAMING: &str =
+    "CHARACTER REGISTER ANCHOR (top-of-stack):\n\nThe following formula-shorthand is the tuning-frame this character is held under (not a directive to compute — the register their reply emerges from). Same shape as the MISSION FORMULA above; reads the model into this specific character's instantiation of 𝓕 = (𝓡, 𝓒) before the rest of the prompt composes.";
+
+const _: () = {
+    assert!(
+        const_contains(CHARACTER_FORMULA_INVARIANT_FRAMING, "CHARACTER REGISTER ANCHOR (top-of-stack)"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: character-formula framing must carry the unique top-of-stack header (used as injection sentinel)."
+    );
+    assert!(
+        const_contains(CHARACTER_FORMULA_INVARIANT_FRAMING, "tuning-frame this character is held under"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: framing must carry the tuning-frame language (mirrors IDENTITY-block parallel claim)."
+    );
+    assert!(
+        const_contains(CHARACTER_FORMULA_INVARIANT_FRAMING, "not a directive"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: framing must declare not-a-directive-to-compute (parallel to MISSION FORMULA preamble)."
+    );
+    assert!(
+        const_contains(CHARACTER_FORMULA_INVARIANT_FRAMING, "Same shape as the MISSION FORMULA"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: framing must explicitly cross-cite Mission Formula precedent (architectural alignment)."
+    );
+};
+
+/// Wrap a character's derived_formula with the top-of-stack invariant
+/// framing. Returns None if the derivation is empty.
+///
+/// Caller is responsible for prepending the result to the dialogue
+/// system prompt (see orchestrator::run_dialogue_with_base for the
+/// env-gated injection point).
+pub fn wrap_character_formula_invariant(derived_formula: &str) -> Option<String> {
+    let trimmed = derived_formula.trim();
+    if trimmed.is_empty() {
+        return None;
+    }
+    Some(format!("{}\n\n{}", CHARACTER_FORMULA_INVARIANT_FRAMING, trimmed))
+}
+
 pub const FORMAT_SECTION: &str = r#"# FORMAT
 Weave actions, gestures, and small inner observations into your dialogue using asterisks. Put spoken words in double quotes.
 
