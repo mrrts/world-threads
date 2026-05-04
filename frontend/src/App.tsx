@@ -46,37 +46,21 @@ function MainApp() {
   const [view, setView] = useState<View>("chat");
   const lastChatCharRef = useRef<string | null>(null);
 
-  // Focus mode v5 — Cmd+Shift+F shortcut + discoverable title-bar button.
+  // Focus mode — Cmd+Shift+F shortcut + title-bar button in chat views.
   //
   // Scope: chat-only. Focus is a chat-surface affordance (clamp + chrome
-  // hidden + sidebar hidden). Navigating away from chat clears focusMode;
-  // the shortcut on non-chat surfaces shows a brief hint and is otherwise
-  // a no-op. Closes the cross-surface scope gap surfaced by the v5-followup
-  // /play (`reports/2026-04-28-0632-…-stopping-rule-still-incomplete.md`):
-  // before this, focusMode persisted across navigation but Focus chrome only
-  // rendered in chat, leaving an inconsistent "I'm in Focus but it doesn't
-  // look like it" state on World/Character/Settings/Summary.
+  // hidden + sidebar hidden). Navigating away from chat clears focusMode.
   //
   // Behavior:
   // - Cmd+Shift+F (Ctrl+Shift+F on Win/Linux) in chat: toggle Focus
-  // - Cmd+Shift+F off-chat: brief "Focus is available in chats" pill (~2.5s)
-  // - Title-bar sidebar-toggle button: alternative toggle path (chat only)
+  // - Cmd+Shift+F off-chat: no-op (still preventDefault so the chord isn't swallowed oddly)
+  // - Title-bar toggle in ChatView / GroupChatView: toggle (chat only)
   // - Esc when Focus is on: exit Focus
   // - Navigating away from chat: Focus auto-clears
   const [focusMode, setFocusMode] = useState(false);
   const focusModeRef = useRef(focusMode);
   useEffect(() => { focusModeRef.current = focusMode; }, [focusMode]);
   const toggleFocus = useCallback(() => setFocusMode((f) => !f), []);
-
-  // Off-scope keystroke hint — surfaces ~2.5s pill when Cmd+Shift+F is
-  // pressed on non-chat surfaces, so the gesture isn't a silent no-op.
-  const [offScopeHint, setOffScopeHint] = useState(false);
-  const offScopeHintTimer = useRef<number | null>(null);
-  const showOffScopeHint = useCallback(() => {
-    setOffScopeHint(true);
-    if (offScopeHintTimer.current !== null) window.clearTimeout(offScopeHintTimer.current);
-    offScopeHintTimer.current = window.setTimeout(() => setOffScopeHint(false), 2500);
-  }, []);
 
   // Chat-scoped persistence: clear Focus when navigating away from chat.
   useEffect(() => {
@@ -102,7 +86,6 @@ function MainApp() {
         if (isInputTarget(e)) return; // don't hijack chord typing in inputs
         if (view !== 'chat') {
           e.preventDefault();
-          showOffScopeHint();
           return;
         }
         e.preventDefault();
@@ -111,7 +94,7 @@ function MainApp() {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [view, showOffScopeHint]);
+  }, [view]);
 
   // Background novelization: fires after 20 minutes of idle time (no user
   // activity and no window focus), iterates through un-novelized days, and
@@ -336,55 +319,6 @@ function MainApp() {
       )}
 
       {!focusMode && <Sidebar store={store} onNavigate={handleNavigate} />}
-
-      {focusMode && view === "chat" && (
-        // Active-scope cue: keep the "Focus is on" surface in the same
-        // header territory as the off-chat availability hint, so the mode
-        // reads as app-state truth rather than a floating escape hatch.
-        <div className="fixed top-4 right-4 z-30">
-          <button
-            type="button"
-            onClick={() => setFocusMode(false)}
-            className="group px-3 py-1.5 rounded-full text-xs font-medium bg-muted/80 backdrop-blur text-muted-foreground hover:text-foreground border border-border/50 transition-colors"
-            title="Leave Focus (Cmd+Shift+F or Esc)"
-          >
-            <span className="opacity-70">Focus is on</span>
-            <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">· Cmd+Shift+F or Esc to exit</span>
-          </button>
-        </div>
-      )}
-
-      {!focusMode && view !== "chat" && (
-        <div className="fixed top-4 right-4 z-30">
-          {/* Persistent off-scope affordance: Focus is a chat-surface tool,
-              but the user shouldn't have to discover that only by pressing
-              the shortcut and getting a toast. Keep the scope legible near
-              the app's header language rather than as a floating mode-pill. */}
-          <button
-            type="button"
-            onClick={showOffScopeHint}
-            className="group px-3 py-1.5 rounded-full text-xs font-medium bg-card/85 backdrop-blur text-muted-foreground border border-border/60 transition-colors hover:text-foreground shadow-sm"
-            title="Focus is available in chats"
-            aria-label="Focus is available in chats"
-          >
-            <span className="opacity-70">Focus</span>
-            <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">· in chats</span>
-          </button>
-        </div>
-      )}
-
-      {offScopeHint && view !== "chat" && (
-        // Off-scope keystroke feedback: Cmd+Shift+F on non-chat surfaces
-        // shows this pill for ~2.5s instead of being a silent no-op. Per the
-        // v5-followup /play, the silent no-op was a real cross-surface scope
-        // crack; this is the lightweight feedback that closes it.
-        <div
-          className="fixed bottom-4 right-4 z-30 px-3 py-1.5 rounded-full text-xs font-medium bg-muted/80 backdrop-blur text-muted-foreground border border-border/50 pointer-events-none animate-in fade-in slide-in-from-bottom-2"
-          role="status"
-        >
-          Focus is available in chats
-        </div>
-      )}
 
       <main className="flex-1 flex flex-col min-w-0">
         {!store.apiKey && view === "chat" && (
