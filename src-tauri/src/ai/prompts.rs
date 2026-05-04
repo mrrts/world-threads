@@ -444,6 +444,65 @@ pub fn wrap_world_formula_invariant(derived_formula: &str) -> Option<String> {
     Some(format!("{}\n\n{}", WORLD_FORMULA_INVARIANT_FRAMING, trimmed))
 }
 
+// ─── Feature-scoped invariant: location derived_formula at top-of-stack ──
+//
+// Sits between the world layer and the character layer in the elevated
+// top-of-stack block (zoom-from-world: world → location → character →
+// momentstamp). Same env flag (CHARACTER_FORMULA_AT_TOP=1) gates all
+// four layers; same architectural argument as the world and character
+// elevations (same-shape claim → same-position placement).
+//
+// Locations are free-form name strings on threads.current_location and
+// group_chats.current_location; derivations are cached per (world_id,
+// name COLLATE NOCASE) in the location_derivations table. Caller looks
+// up the cache and passes (name, derivation) into
+// run_dialogue_with_base; this helper wraps the pair in the invariant
+// framing.
+//
+// Discovered 2026-05-04 during continued lived-play testing of the
+// world+character+momentstamp elevation. Ryan: "we also need to add
+// location_derivation ... include it in the header so it zooms in
+// world → location → character → moment."
+pub const LOCATION_FORMULA_INVARIANT_FRAMING: &str =
+    "LOCATION REGISTER ANCHOR (top-of-stack):\n\nThe following formula-shorthand is the tuning-frame for this specific place within the world (not a directive to compute — the register THIS location instantiates of 𝓒 within 𝓕 = (𝓡, 𝓒)). Same shape as the MISSION FORMULA above; sits between the world layer and the character layer so the model reads outer-register ↦ here ↦ this character.";
+
+const _: () = {
+    assert!(
+        const_contains(LOCATION_FORMULA_INVARIANT_FRAMING, "LOCATION REGISTER ANCHOR (top-of-stack)"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: location-formula framing must carry the unique top-of-stack header (used as injection sentinel)."
+    );
+    assert!(
+        const_contains(LOCATION_FORMULA_INVARIANT_FRAMING, "tuning-frame for this specific place"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: framing must carry the tuning-frame language (parallel to world/character framings)."
+    );
+    assert!(
+        const_contains(LOCATION_FORMULA_INVARIANT_FRAMING, "not a directive"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: framing must declare not-a-directive-to-compute (parallel to MISSION FORMULA preamble)."
+    );
+    assert!(
+        const_contains(LOCATION_FORMULA_INVARIANT_FRAMING, "Same shape as the MISSION FORMULA"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: framing must explicitly cross-cite Mission Formula precedent (architectural alignment)."
+    );
+};
+
+/// Wrap a location's name + derived_formula with the top-of-stack
+/// invariant framing. Returns None if the derivation is empty.
+///
+/// The location name is included in the rendered block so the model
+/// reads which place this register-anchor refers to (locations don't
+/// have stable IDs visible in prompts; the name is the handle).
+pub fn wrap_location_formula_invariant(location_name: &str, derived_formula: &str) -> Option<String> {
+    let trimmed_deriv = derived_formula.trim();
+    let trimmed_name = location_name.trim();
+    if trimmed_deriv.is_empty() || trimmed_name.is_empty() {
+        return None;
+    }
+    Some(format!(
+        "{}\n\nThis location: **{}**\n\n{}",
+        LOCATION_FORMULA_INVARIANT_FRAMING, trimmed_name, trimmed_deriv
+    ))
+}
+
 // ─── Feature-scoped invariant: character derived_formula at top-of-stack ─
 //
 // The IDENTITY-block code comment explicitly names the character's

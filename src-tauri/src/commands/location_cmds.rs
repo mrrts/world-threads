@@ -1,3 +1,4 @@
+use crate::ai::orchestrator;
 use crate::commands::chat_cmds::world_time_fields;
 use crate::db::queries::*;
 use crate::db::Database;
@@ -52,6 +53,13 @@ pub fn set_chat_location_cmd(
     group_chat_id: Option<String>,
     location: String,
     save_to_library: bool,
+    // Optional API key for the background location-derivation refresh.
+    // When omitted (legacy frontend code paths) the location is set as
+    // usual but the (world, name) derivation is NOT auto-generated; the
+    // prompt path renders gracefully without it. New frontend callers
+    // should pass the user's API key to keep the derivation cache
+    // populated as locations come into use.
+    api_key: Option<String>,
 ) -> Result<ChatLocationResponse, String> {
     let trimmed = location.trim().to_string();
     if trimmed.is_empty() {
@@ -147,6 +155,27 @@ pub fn set_chat_location_cmd(
     // the row, its last_used_at already equals created_at == now, so
     // the touch is a harmless no-op on the same value.
     touch_saved_place(&conn, &world_id, &trimmed, &now).map_err(|e| e.to_string())?;
+
+    // Snapshot what we need for the background derivation before
+    // dropping the lock guard.
+    let model_config = orchestrator::load_model_config(&conn);
+    drop(conn);
+
+    // Fire-and-forget background derivation for this (world, location)
+    // pair. No-ops when api_key is None or empty, when cache already
+    // has this pair, or when another task is already inflight. See
+    // ai::derivation::maybe_refresh_location for the dedupe + caching
+    // contract.
+    if let Some(key) = api_key {
+        crate::ai::derivation::maybe_refresh_location(
+            db.conn.clone(),
+            model_config.chat_api_base(),
+            key,
+            model_config.memory_model.clone(),
+            world_id.clone(),
+            trimmed.clone(),
+        );
+    }
 
     Ok(ChatLocationResponse {
         current_location: Some(trimmed),

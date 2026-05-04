@@ -2021,6 +2021,7 @@ export function ChatView({ store, onNavigateToCharacter, focusMode = false, onTo
         worldId={store.activeWorld?.world_id ?? ""}
         characterId={charId ?? undefined}
         currentLocation={currentLocation}
+        apiKey={store.apiKey ?? null}
         onUpdated={(newLocation, insertedMessage) => {
           setCurrentLocation(newLocation);
           if (insertedMessage) store.appendMessage(insertedMessage);

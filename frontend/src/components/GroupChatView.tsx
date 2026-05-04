@@ -1985,6 +1985,7 @@ export function GroupChatView({ store, onNavigateToCharacter, focusMode = false,
         worldId={store.activeWorld?.world_id ?? ""}
         groupChatId={chatId ?? undefined}
         currentLocation={currentLocation}
+        apiKey={store.apiKey ?? null}
         onUpdated={(newLocation, insertedMessage) => {
           setCurrentLocation(newLocation);
           if (insertedMessage) store.appendMessage(insertedMessage);

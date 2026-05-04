@@ -35,6 +35,12 @@ interface Props {
   characterId?: string;
   groupChatId?: string;
   currentLocation: string | null;
+  /// Optional API key. When supplied, set_chat_location_cmd fires a
+  /// background derivation refresh on real (non-no-op) location changes
+  /// so the (world, name) entry in the location_derivations cache is
+  /// populated for future dialogue calls. Skipped silently when null
+  /// (the prompt path renders gracefully without a derivation).
+  apiKey?: string | null;
   /// Called after a successful update with the new location string and
   /// the inserted location_change message (when one was inserted —
   /// null on no-op same-as-previous updates).
@@ -54,6 +60,7 @@ export function LocationModal({
   characterId,
   groupChatId,
   currentLocation,
+  apiKey,
   onUpdated,
 }: Props) {
   const [input, setInput] = useState(currentLocation ?? "");
@@ -116,6 +123,7 @@ export function LocationModal({
         groupChatId,
         location: trimmed,
         saveToLibrary,
+        apiKey: apiKey ?? null,
       });
       onUpdated(trimmed, res.message ?? null);
       onClose();

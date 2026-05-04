@@ -198,6 +198,31 @@ pub fn save_model_config(conn: &Connection, config: &ModelConfig) -> Result<(), 
     Ok(())
 }
 
+/// Resolve the (name, derivation) pair to pass into
+/// `run_dialogue_with_base`'s `location_derivation` parameter. Looks up
+/// the chat's effective current location via the same precedence rule
+/// the dialogue messages already use, then queries the
+/// `location_derivations` cache. Returns None when:
+/// - no current location can be derived, OR
+/// - no derivation is cached yet for this (world, name) pair (the
+///   background task may still be running, or the user hasn't yet
+///   triggered set_chat_location_cmd against this name).
+///
+/// Centralizing the lookup here keeps the elevation contract uniform
+/// across solo and group dialogue paths.
+pub fn resolve_location_derivation_pair(
+    conn: &Connection,
+    world_id: &str,
+    current_location_override: Option<&str>,
+    recent_messages: &[Message],
+) -> Option<(String, String)> {
+    let name = prompts::effective_current_location(current_location_override, recent_messages)?;
+    match crate::db::queries::get_location_derivation(conn, world_id, &name) {
+        Ok(Some(d)) => Some((name, d.derived_formula)),
+        _ => None,
+    }
+}
+
 pub async fn run_dialogue_with_base(
     base_url: &str,
     api_key: &str,
@@ -233,6 +258,13 @@ pub async fn run_dialogue_with_base(
     // reactions_mode is "off" — see ai::momentstamp::build_formula_
     // momentstamp. None when reactions are enabled (no injection).
     formula_momentstamp: Option<&str>,
+    // Pre-resolved (location_name, derivation) pair for the elevated
+    // top-of-stack injection under CHARACTER_FORMULA_AT_TOP=1. Caller
+    // looks up the location_derivations cache; when no derivation is
+    // ready yet the caller passes None and the elevation block simply
+    // skips the location layer. Keeping the orchestrator DB-free
+    // matches the formula_momentstamp pattern.
+    location_derivation: Option<(&str, &str)>,
 ) -> Result<(String, Option<openai::Usage>), String> {
     // When the user has disabled conversation history for this chat, strip
     // prior turns, semantic memories, and moment markers — the character
@@ -309,15 +341,26 @@ pub async fn run_dialogue_with_base(
         .map(|v| v == "1").unwrap_or(false);
     if elevate_character_formula {
         // Compose the elevated top-of-stack register-anchor block as a
-        // zoom-from-world read: WORLD (outer register) → CHARACTER
-        // (inner register) → LATEST MOMENTSTAMP (live register-state).
-        // Same env flag gates both world and character elevation
-        // because the elevation is one architectural move — partial
-        // application would re-introduce the same divergence between
-        // same-shape claim and placement that the elevation closes.
+        // zoom-from-world read: WORLD (outer register) → LOCATION
+        // (mid register) → CHARACTER (inner register) → LATEST
+        // MOMENTSTAMP (live register-state). Same env flag gates all
+        // four because the elevation is one architectural move —
+        // partial application would re-introduce the same divergence
+        // between same-shape claim and placement that the elevation
+        // closes.
         let mut elevated_parts: Vec<String> = Vec::new();
         if let Some(deriv) = world.derived_formula.as_deref() {
             if let Some(block) = prompts::wrap_world_formula_invariant(deriv) {
+                elevated_parts.push(block);
+            }
+        }
+        // Location derivation between world and character. Caller
+        // pre-resolves the (name, derivation) pair from the
+        // location_derivations cache; when no derivation is ready yet
+        // (first use of a free-form name, or background task still
+        // running) caller passes None and this layer simply skips.
+        if let Some((loc_name, loc_deriv)) = location_derivation {
+            if let Some(block) = prompts::wrap_location_formula_invariant(loc_name, loc_deriv) {
                 elevated_parts.push(block);
             }
         }

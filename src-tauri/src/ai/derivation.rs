@@ -124,6 +124,10 @@ pub enum DerivationKey {
     World(String),
     /// User-in-world (user_profile per world).
     UserInWorld(String),
+    /// Per-(world, location-name) location derivation cache. Name is
+    /// stored case-insensitive (lowercased) for dedupe stability since
+    /// the underlying table is COLLATE NOCASE.
+    Location(String, String),
 }
 
 /// In-memory inflight tracker. Mutex<HashMap<key, started_at>>. TTL 30s
@@ -357,6 +361,64 @@ pub fn build_world_prompt(conn: &Connection, world_id: &str) -> Result<String, S
     let world = crate::db::queries::get_world(conn, world_id)
         .map_err(|e| format!("derivation: get_world failed: {e}"))?;
     Ok(build_world_user_prompt(conn, &world))
+}
+
+/// Build the user-prompt body for a location synthesis. Substrate: world
+/// description + location name + recent assistant replies set in this
+/// location across solo and group chats (newest 8). The location is just
+/// a name string in this codebase, so the world's tone + recent in-place
+/// voices carry most of the substrate.
+pub fn build_location_prompt(
+    conn: &Connection,
+    world_id: &str,
+    location_name: &str,
+) -> Result<String, String> {
+    let world = crate::db::queries::get_world(conn, world_id)
+        .map_err(|e| format!("derivation: get_world failed: {e}"))?;
+    let mut buf = String::new();
+    buf.push_str(&format!("# LOCATION (in world {}): {}\n\n", world.name, location_name));
+    if !world.description.is_empty() {
+        buf.push_str(&format!("WORLD DESCRIPTION (the larger frame):\n{}\n\n", clip(&world.description, 600)));
+    }
+    if let Some(deriv) = world.derived_formula.as_deref() {
+        let trimmed = deriv.trim();
+        if !trimmed.is_empty() {
+            buf.push_str("WORLD DERIVED FORMULA (the world's instantiation of 𝓒 — derive this location as a sub-instantiation within it):\n");
+            buf.push_str(&clip(trimmed, 800));
+            buf.push_str("\n\n");
+        }
+    }
+
+    // Recent in-place voices: assistant replies set when the chat's
+    // current_location matched this name. Best-effort: pull replies whose
+    // immediately-preceding location_change message went TO this name.
+    // SQLite-native correlated read; bounded LIMIT for cost.
+    if let Ok(mut stmt) = conn.prepare(
+        "SELECT m.content, c.display_name FROM messages m \
+         JOIN threads t ON t.thread_id = m.thread_id \
+         JOIN characters c ON c.character_id = t.character_id \
+         WHERE c.world_id = ?1 AND m.role = 'assistant' AND t.current_location = ?2 COLLATE NOCASE \
+         ORDER BY m.created_at DESC LIMIT 6",
+    ) {
+        if let Ok(rows) = stmt.query_map(params![world_id, location_name], |r| {
+            Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?))
+        }) {
+            let samples: Vec<(String, String)> = rows.flatten().collect();
+            if !samples.is_empty() {
+                buf.push_str(&format!("RECENT VOICES SET IN \"{}\" (sampling characters' replies, newest first):\n", location_name));
+                for (content, speaker) in samples.iter().take(6) {
+                    buf.push_str(&format!("{}: {}\n", speaker, clip(content, 220)));
+                }
+                buf.push('\n');
+            }
+        }
+    }
+
+    buf.push_str(&format!(
+        "\nNow synthesize a derivation in this location's own voice — the register, the textures, the daily-rhythms, the way 𝓒 instantiates HERE within {} — from the material above. Output the LaTeX block only.",
+        world.name
+    ));
+    Ok(buf)
 }
 
 pub fn build_user_in_world_prompt_owned(conn: &Connection, world_id: &str) -> Result<String, String> {
@@ -877,5 +939,84 @@ async fn refresh_user_inner(
         persist_user_derivation(&conn, world_id, &derivation).map_err(|e| e.to_string())?;
     }
     log::info!("[derivation] user-in-world {world_id} refreshed");
+    Ok(())
+}
+
+/// Fire-and-forget background derivation for a (world, location-name)
+/// pair. Skips when:
+/// - api_key empty (no LLM available)
+/// - location-name empty
+/// - cache already populated for this (world, name) pair
+/// - another task is already inflight for the same key
+///
+/// Used by set_chat_location_cmd to ensure the location's derivation
+/// exists in time for the next dialogue call. Logs failures to
+/// log::warn — never surfaces errors to the user, since the prompt path
+/// renders gracefully without the derivation when it isn't ready yet.
+pub fn maybe_refresh_location(
+    db: std::sync::Arc<std::sync::Mutex<Connection>>,
+    base_url: String,
+    api_key: String,
+    model: String,
+    world_id: String,
+    location_name: String,
+) {
+    if api_key.trim().is_empty() {
+        log::debug!("[derivation] skipping location refresh — no API key");
+        return;
+    }
+    let trimmed_name = location_name.trim().to_string();
+    if trimmed_name.is_empty() {
+        return;
+    }
+    // Cache check on the calling thread — cheap query, avoids spawning a
+    // task that would just no-op.
+    {
+        let conn = match db.lock() {
+            Ok(c) => c,
+            Err(_) => return,
+        };
+        if let Ok(Some(_existing)) = crate::db::queries::get_location_derivation(&conn, &world_id, &trimmed_name) {
+            return;
+        }
+    }
+    let key = DerivationKey::Location(world_id.clone(), trimmed_name.to_lowercase());
+    if !try_claim(&key) {
+        log::debug!("[derivation] location ({world_id}, {trimmed_name}) refresh already in flight, skipping");
+        return;
+    }
+    let key_for_release = key.clone();
+    tokio::spawn(async move {
+        if let Err(e) = refresh_location_inner(&db, &base_url, &api_key, &model, &world_id, &trimmed_name).await {
+            log::warn!("[derivation] location ({world_id}, {trimmed_name}) refresh failed: {e}");
+        }
+        release(&key_for_release);
+    });
+}
+
+async fn refresh_location_inner(
+    db: &std::sync::Arc<std::sync::Mutex<Connection>>,
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    world_id: &str,
+    location_name: &str,
+) -> Result<(), String> {
+    let prompt = {
+        let conn = db.lock().map_err(|e| format!("lock: {e}"))?;
+        // Re-check cache inside the lock; another task may have populated
+        // it between maybe_refresh_location's check and our spawn.
+        if let Ok(Some(_)) = crate::db::queries::get_location_derivation(&conn, world_id, location_name) {
+            return Ok(());
+        }
+        build_location_prompt(&conn, world_id, location_name)?
+    };
+    let derivation = synthesize_from_prompt(base_url, api_key, model, prompt).await?;
+    {
+        let conn = db.lock().map_err(|e| format!("lock: {e}"))?;
+        crate::db::queries::upsert_location_derivation(&conn, world_id, location_name, &derivation)
+            .map_err(|e| e.to_string())?;
+    }
+    log::info!("[derivation] location ({world_id}, {location_name}) refreshed");
     Ok(())
 }

@@ -668,10 +668,13 @@ pub async fn send_message_cmd(
         (None, None)
     };
 
-    let current_loc = {
+    let (current_loc, location_pair) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        get_thread_location(&conn, &thread.thread_id).ok().flatten()
+        let cl = get_thread_location(&conn, &thread.thread_id).ok().flatten();
+        let lp = orchestrator::resolve_location_derivation_pair(&conn, &world.world_id, cl.as_deref(), &recent_msgs);
+        (cl, lp)
     };
+    let location_arg: Option<(&str, &str)> = location_pair.as_ref().map(|(n, d)| (n.as_str(), d.as_str()));
     let dialogue_fut = orchestrator::run_dialogue_with_base(
         &base, &api_key, &model_config.dialogue_model,
         if !model_config.is_local() { Some(&model_config.memory_model) } else { None },
@@ -696,6 +699,7 @@ pub async fn send_message_cmd(
     anchor_text.as_deref(),
     current_loc.as_deref(),
     formula_momentstamp_text.as_deref(),
+    location_arg,
     );
     // Context for the reaction-emoji pick: the recent messages EXCLUDING
     // the user's brand-new one (which goes in the user-role slot). Gives
@@ -772,6 +776,7 @@ pub async fn send_message_cmd(
                             anchor_text.as_deref(),
                         current_loc.as_deref(),
                         formula_momentstamp_text.as_deref(),
+                        location_arg,
                         ).await {
                             Ok((corrected, corrected_usage)) => {
                                 log::info!("[Conscience] {} reply corrected after drift", character.display_name);
@@ -1213,10 +1218,13 @@ pub async fn prompt_character_cmd(
             "first_message_new_day".to_string(),
         );
     }
-    let current_loc = {
+    let (current_loc, location_pair) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        get_thread_location(&conn, &thread.thread_id).ok().flatten()
+        let cl = get_thread_location(&conn, &thread.thread_id).ok().flatten();
+        let lp = orchestrator::resolve_location_derivation_pair(&conn, &world.world_id, cl.as_deref(), &dialogue_msgs);
+        (cl, lp)
     };
+    let location_arg: Option<(&str, &str)> = location_pair.as_ref().map(|(n, d)| (n.as_str(), d.as_str()));
     let (mut reply_text, mut dialogue_usage) = orchestrator::run_dialogue_with_base(
         &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
         if !model_config.is_local() { Some(&model_config.memory_model) } else { None },
@@ -1241,6 +1249,7 @@ pub async fn prompt_character_cmd(
         anchor_text.as_deref(),
     current_loc.as_deref(),
     None, // formula_momentstamp
+    location_arg,
     ).await?;
 
     // Conscience Pass: grade + regenerate-on-drift (see send_message_cmd).
@@ -1291,6 +1300,7 @@ pub async fn prompt_character_cmd(
                             anchor_text.as_deref(),
                         current_loc.as_deref(),
                         None, // formula_momentstamp
+                        location_arg,
                         ).await {
                             Ok((corrected, corrected_usage)) => {
                                 log::info!("[Conscience] {} (prompt) reply corrected after drift", character.display_name);
@@ -2401,9 +2411,9 @@ pub async fn reset_to_message_cmd(
                 "first_message_new_day".to_string(),
             );
         }
-        let current_loc = {
+        let (current_loc, location_pair) = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            if is_group {
+            let cl = if is_group {
                 // Group threads carry location on the group_chats row, not threads.
                 conn.query_row(
                     "SELECT current_location FROM group_chats WHERE thread_id = ?1",
@@ -2412,8 +2422,11 @@ pub async fn reset_to_message_cmd(
                 ).ok().flatten()
             } else {
                 get_thread_location(&conn, &thread_id).ok().flatten()
-            }
+            };
+            let lp = orchestrator::resolve_location_derivation_pair(&conn, &world.world_id, cl.as_deref(), &recent_msgs);
+            (cl, lp)
         };
+        let location_arg: Option<(&str, &str)> = location_pair.as_ref().map(|(n, d)| (n.as_str(), d.as_str()));
         let dialogue_fut = orchestrator::run_dialogue_with_base(
             &base, &api_key, &model_config.dialogue_model,
             if !model_config.is_local() { Some(&model_config.memory_model) } else { None },
@@ -2438,6 +2451,7 @@ pub async fn reset_to_message_cmd(
         anchor_text.as_deref(),
         current_loc.as_deref(),
         None, // formula_momentstamp
+        location_arg,
         );
         let reaction_context: Vec<Message> = recent_msgs.iter()
             .rev().skip(1).take(4).rev().cloned().collect();
@@ -2497,6 +2511,7 @@ pub async fn reset_to_message_cmd(
                                 anchor_text.as_deref(),
                             current_loc.as_deref(),
                             None, // formula_momentstamp
+                            location_arg,
                             ).await {
                                 Ok((corrected, corrected_usage)) => {
                                     log::info!("[Conscience] {} (reset) reply corrected after drift", character.display_name);

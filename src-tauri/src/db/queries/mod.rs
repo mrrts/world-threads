@@ -21,6 +21,7 @@ mod quest;
 mod relational_stance;
 mod load_test_anchor;
 mod location;
+mod location_derivation;
 
 pub use world::*;
 pub use user_profile::*;
@@ -45,3 +46,4 @@ pub use quest::*;
 pub use relational_stance::*;
 pub use load_test_anchor::*;
 pub use location::*;
+pub use location_derivation::*;
