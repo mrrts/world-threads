@@ -707,6 +707,13 @@ pub mod staleness {
     pub const USER_EVENTS: i64 = 40;          // user messages in this world since last refresh
     pub const WORLD_TIME_HOURS: i64 = 168;    // 7 days
     pub const WORLD_EVENTS: i64 = 120;        // total assistant replies in-world since last refresh
+    /// A location derivation goes stale when its parent world's
+    /// derivation has been updated since (the world's tuning frame
+    /// changed; the location's sub-instantiation should follow), OR
+    /// when enough fresh in-place corpus accumulates that the original
+    /// derivation no longer reflects what's actually happening there.
+    pub const LOCATION_TIME_HOURS: i64 = 168;     // 7 days
+    pub const LOCATION_IN_PLACE_EVENTS: i64 = 60; // assistant replies set at this location since last refresh
 }
 
 /// Returns true if the character's derivation is stale per the hybrid
@@ -798,6 +805,64 @@ pub fn is_stale_user_in_world(conn: &Connection, world_id: &str) -> bool {
     time_stale || evts >= staleness::USER_EVENTS
 }
 
+/// Staleness check for a (world, location-name) derivation. Stale when:
+/// 1. No derivation cached yet for this pair (caller will generate fresh)
+/// 2. Parent world.derived_formula has been updated since the location
+///    derivation was generated (world's tuning frame changed; location
+///    is a sub-instantiation that should follow)
+/// 3. >= LOCATION_IN_PLACE_EVENTS assistant replies set in this location
+///    since last refresh (enough fresh in-place corpus accumulated)
+/// 4. >= LOCATION_TIME_HOURS since last refresh (time-based ceiling)
+pub fn is_stale_location(conn: &Connection, world_id: &str, location_name: &str) -> bool {
+    let updated_at: Option<String> = conn.query_row(
+        "SELECT updated_at FROM location_derivations WHERE world_id = ?1 AND name = ?2 COLLATE NOCASE",
+        params![world_id, location_name],
+        |r| r.get(0),
+    ).ok().flatten();
+    let Some(updated_at) = updated_at else { return true; };
+
+    // World-derivation-newer-than-location → stale (parent updated, child follows).
+    let world_newer: bool = conn.query_row(
+        "SELECT (w.derived_formula_updated_at IS NOT NULL AND w.derived_formula_updated_at > ?2) \
+         FROM worlds w WHERE w.world_id = ?1",
+        params![world_id, updated_at],
+        |r| r.get(0),
+    ).unwrap_or(false);
+    if world_newer { return true; }
+
+    // Time ceiling.
+    let time_stale: bool = conn.query_row(
+        "SELECT (julianday('now') - julianday(?1)) * 24.0 >= ?2",
+        params![updated_at, staleness::LOCATION_TIME_HOURS as f64],
+        |r| r.get(0),
+    ).unwrap_or(true);
+    if time_stale { return true; }
+
+    // In-place corpus growth: assistant replies set when chat's
+    // current_location matched this name, since last refresh. Pulls from
+    // both solo and group threads.
+    let solo_evts: i64 = conn.query_row(
+        "SELECT COUNT(*) FROM messages m \
+          JOIN threads t ON t.thread_id = m.thread_id \
+          JOIN characters c ON c.character_id = t.character_id \
+          WHERE c.world_id = ?1 AND m.role = 'assistant' \
+            AND t.current_location = ?2 COLLATE NOCASE \
+            AND m.created_at > ?3",
+        params![world_id, location_name, updated_at],
+        |r| r.get(0),
+    ).unwrap_or(0);
+    let group_evts: i64 = conn.query_row(
+        "SELECT COUNT(*) FROM group_messages m \
+          JOIN group_chats g ON g.thread_id = m.thread_id \
+          WHERE g.world_id = ?1 AND m.role = 'assistant' \
+            AND g.current_location = ?2 COLLATE NOCASE \
+            AND m.created_at > ?3",
+        params![world_id, location_name, updated_at],
+        |r| r.get(0),
+    ).unwrap_or(0);
+    (solo_evts + group_evts) >= staleness::LOCATION_IN_PLACE_EVENTS
+}
+
 // ─── Trigger helper ───────────────────────────────────────────────────
 
 /// The fire-and-forget trigger called from chat completion. Wraps the
@@ -819,10 +884,34 @@ pub async fn maybe_refresh_after_turn(
     model: String,
     world_id: String,
     character_id: Option<String>,
+    // Current location for this chat (when known) — passed through so
+    // the per-turn pass can also check whether the location's
+    // derivation has gone stale (e.g., after a world refresh) and
+    // re-derive in the background. None when the chat hasn't set a
+    // location yet.
+    current_location: Option<String>,
 ) {
     if api_key.trim().is_empty() {
         log::debug!("[derivation] skipping refresh — no API key");
         return;
+    }
+
+    // Location refresh — fire if the chat has a location and that
+    // location's derivation is stale per is_stale_location (no row,
+    // world refreshed since, time/event ceiling). maybe_refresh_location
+    // handles its own INFLIGHT dedupe.
+    if let Some(loc) = current_location.as_deref() {
+        let trimmed = loc.trim();
+        if !trimmed.is_empty() {
+            maybe_refresh_location(
+                db.clone(),
+                base_url.clone(),
+                api_key.clone(),
+                model.clone(),
+                world_id.clone(),
+                trimmed.to_string(),
+            );
+        }
     }
 
     // Character refresh
@@ -946,13 +1035,15 @@ async fn refresh_user_inner(
 /// pair. Skips when:
 /// - api_key empty (no LLM available)
 /// - location-name empty
-/// - cache already populated for this (world, name) pair
+/// - derivation NOT stale per is_stale_location (cache populated AND
+///   parent world hasn't changed since AND time/event ceilings not hit)
 /// - another task is already inflight for the same key
 ///
-/// Used by set_chat_location_cmd to ensure the location's derivation
-/// exists in time for the next dialogue call. Logs failures to
-/// log::warn — never surfaces errors to the user, since the prompt path
-/// renders gracefully without the derivation when it isn't ready yet.
+/// Used by set_chat_location_cmd (on user-initiated location change)
+/// AND by maybe_refresh_after_turn (per-turn staleness check). Logs
+/// failures to log::warn — never surfaces errors to the user, since
+/// the prompt path renders gracefully without the derivation when it
+/// isn't ready yet.
 pub fn maybe_refresh_location(
     db: std::sync::Arc<std::sync::Mutex<Connection>>,
     base_url: String,
@@ -969,14 +1060,16 @@ pub fn maybe_refresh_location(
     if trimmed_name.is_empty() {
         return;
     }
-    // Cache check on the calling thread — cheap query, avoids spawning a
-    // task that would just no-op.
+    // Staleness check on the calling thread — cheap queries, avoids
+    // spawning a task that would just no-op. Treats "no row" as stale
+    // (caller will create), and treats world-newer-than-location as
+    // stale (parent tuning frame changed; child follows).
     {
         let conn = match db.lock() {
             Ok(c) => c,
             Err(_) => return,
         };
-        if let Ok(Some(_existing)) = crate::db::queries::get_location_derivation(&conn, &world_id, &trimmed_name) {
+        if !is_stale_location(&conn, &world_id, &trimmed_name) {
             return;
         }
     }
@@ -1004,9 +1097,10 @@ async fn refresh_location_inner(
 ) -> Result<(), String> {
     let prompt = {
         let conn = db.lock().map_err(|e| format!("lock: {e}"))?;
-        // Re-check cache inside the lock; another task may have populated
-        // it between maybe_refresh_location's check and our spawn.
-        if let Ok(Some(_)) = crate::db::queries::get_location_derivation(&conn, world_id, location_name) {
+        // Re-check staleness inside the lock; another task may have
+        // refreshed it between maybe_refresh_location's check and our
+        // spawn.
+        if !is_stale_location(&conn, world_id, location_name) {
             return Ok(());
         }
         build_location_prompt(&conn, world_id, location_name)?

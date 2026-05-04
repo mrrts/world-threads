@@ -944,6 +944,7 @@ pub async fn send_message_cmd(
         model_config.memory_model.clone(),
         world.world_id.clone(),
         Some(character.character_id.clone()),
+        current_loc.clone(),
     ).await;
 
     Ok(SendMessageResult {
