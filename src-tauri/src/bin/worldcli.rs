@@ -377,6 +377,33 @@ enum Cmd {
         force: bool,
     },
 
+    /// Backfill the location_derivations cache for every (world, name)
+    /// pair that appears in saved_places, threads.current_location, or
+    /// group_chats.current_location and is not yet cached. Useful as a
+    /// one-shot population pass after enabling
+    /// CHARACTER_FORMULA_AT_TOP=1 so the first dialogue call against
+    /// each location lands with the location-register layer present
+    /// instead of waiting for the on-set background task.
+    ///
+    /// Pairs in worlds outside the active scope (per
+    /// ~/.worldcli/config.json) are skipped silently. Existing cache
+    /// entries are skipped (idempotent re-run safe). Cost projection
+    /// printed before any LLM calls fire; --confirm-cost honored.
+    BackfillLocationDerivations {
+        /// Restrict to a single world. When omitted, walks all worlds
+        /// in the active scope.
+        #[arg(long)]
+        world: Option<String>,
+        /// Re-derive even when a cache entry already exists. Default
+        /// false; idempotent re-runs are cheap because of the cache.
+        #[arg(long, default_value_t = false)]
+        force: bool,
+        /// Per-call cost ceiling for each derivation call. Defaults to
+        /// the worldcli config's per_call_usd cap.
+        #[arg(long)]
+        confirm_cost: Option<f64>,
+    },
+
     /// Recent messages in a character's solo thread, with optional
     /// query primitives for ad-hoc filtering.
     RecentMessages {
@@ -2052,6 +2079,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 cmd_derive_character(&r, &character_id, text.as_deref())
             }
         }
+        Cmd::BackfillLocationDerivations { world, force, confirm_cost } => {
+            let api_key = match resolve_api_key(cli.api_key.as_deref()) {
+                Some(k) => k,
+                None => return Err(Box::<dyn std::error::Error>::from("backfill-location-derivations: no OpenAI API key resolved")),
+            };
+            cmd_backfill_location_derivations(&r, &api_key, world.as_deref(), force, confirm_cost).await
+        }
         Cmd::RecentMessages { character_id, limit, grep, before, after, with_context } => {
             cmd_recent_messages(&r, &character_id, limit, grep.as_deref(), before.as_deref(), after.as_deref(), with_context)
         }
@@ -3112,6 +3146,100 @@ async fn cmd_derive_character_auto(r: &Resolved, character_id: &str, api_key: &s
         app_lib::ai::derivation::persist_character_derivation(&conn, character_id, &derivation)?;
     }
     let v = json!({"character_id": character_id, "derived_formula": derivation, "updated": true, "auto": true});
+    emit(r.json, v);
+    Ok(())
+}
+
+async fn cmd_backfill_location_derivations(
+    r: &Resolved,
+    api_key: &str,
+    world_filter: Option<&str>,
+    force: bool,
+    _confirm_cost: Option<f64>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let model_config = {
+        let conn = r.db.conn.lock().unwrap();
+        orchestrator::load_model_config(&conn)
+    };
+    let model = model_config.memory_model.as_str();
+    let base_url = model_config.chat_api_base();
+    let base_url = base_url.as_str();
+
+    // Collect distinct (world_id, name) pairs from saved_places +
+    // threads.current_location + group_chats.current_location.
+    let pairs: Vec<(String, String)> = {
+        let conn = r.db.conn.lock().unwrap();
+        let mut stmt = conn.prepare(
+            "SELECT DISTINCT world_id, name FROM ( \
+                SELECT world_id, name FROM saved_places \
+                UNION \
+                SELECT c.world_id, t.current_location AS name FROM threads t \
+                  JOIN characters c ON c.character_id = t.character_id \
+                  WHERE t.current_location IS NOT NULL AND trim(t.current_location) != '' \
+                UNION \
+                SELECT world_id, current_location AS name FROM group_chats \
+                  WHERE current_location IS NOT NULL AND trim(current_location) != '' \
+            ) ORDER BY world_id, name",
+        )?;
+        let rows = stmt.query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?)))?;
+        rows.flatten().collect()
+    };
+
+    // Filter by --world (if provided) AND by worldcli scope (only worlds the
+    // user opted into).
+    let in_scope: Vec<(String, String)> = pairs
+        .into_iter()
+        .filter(|(w, _)| world_filter.map(|wf| wf == w).unwrap_or(true))
+        .filter(|(w, _)| r.check_world(w).is_ok())
+        .collect();
+
+    // Skip already-cached pairs (unless --force).
+    let to_derive: Vec<(String, String)> = {
+        let conn = r.db.conn.lock().unwrap();
+        in_scope.into_iter().filter(|(w, n)| {
+            if force { return true; }
+            matches!(app_lib::db::queries::get_location_derivation(&conn, w, n), Ok(None))
+        }).collect()
+    };
+
+    eprintln!("[backfill-location-derivations] {} pair(s) to derive (force={force})", to_derive.len());
+    let mut results: Vec<serde_json::Value> = Vec::new();
+    for (idx, (world_id, name)) in to_derive.iter().enumerate() {
+        eprintln!("[{}/{}] {} :: {}", idx + 1, to_derive.len(), world_id, name);
+        let prompt = {
+            let conn = r.db.conn.lock().unwrap();
+            app_lib::ai::derivation::build_location_prompt(&conn, world_id, name)?
+        };
+        match app_lib::ai::derivation::synthesize_from_prompt(base_url, api_key, model, prompt).await {
+            Ok(derivation) => {
+                let conn = r.db.conn.lock().unwrap();
+                app_lib::db::queries::upsert_location_derivation(&conn, world_id, name, &derivation)?;
+                results.push(json!({
+                    "world_id": world_id,
+                    "name": name,
+                    "ok": true,
+                    "derived_formula": derivation,
+                }));
+            }
+            Err(e) => {
+                eprintln!("  failed: {e}");
+                results.push(json!({
+                    "world_id": world_id,
+                    "name": name,
+                    "ok": false,
+                    "error": e.to_string(),
+                }));
+            }
+        }
+    }
+
+    let v = json!({
+        "command": "backfill-location-derivations",
+        "force": force,
+        "world_filter": world_filter,
+        "total_pairs": results.len(),
+        "results": results,
+    });
     emit(r.json, v);
     Ok(())
 }
