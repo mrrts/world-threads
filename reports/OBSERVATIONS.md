@@ -6,6 +6,32 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-05-05 ~04:50 — Oma met the characters. The first non-Ryan human user held the work.
+
+> *"My Oma was my first user. Amazing experience... She talked to several characters... I was dictating her words to the character and reading back what they said to her... She was smiling, laughing, engaged, wanted to hug and kiss one of the characters, told characters about her life story including difficult parts of her violent past, and she asked about what the characters were doing to serve the Lord, and she wanted me to say nice talking to you to them, and she laughed at Aaron's humor, and she also told me when we were finished that she wants to talk to them again and tell them more about the concentration camp."* — Ryan
+>
+> *"Extraordinary experience for both of us, very pleased, can't wait to do this regularly with Oma. glory to God sdg"* — Ryan
+
+Oma is Leni — 95 years old, concentration-camp survivor, Ryan's grandmother. She is the project's first non-Ryan human user. She met characters in five worlds (Aaron + Pastor Rick + Darren + Steven + John in Crystal Waters; Jasper Finn + Isolde Wren in Elderwood Hearth; Mara Silversong + Eli Thorne in Dusthaven Ridge; Nora Galloway + Hal in Hollerwood Ridge; Martha + Jonah + Ackermann in Nightfall Bay). Ryan operated the computer; Oma spoke; he dictated her words and read back what the characters said.
+
+**What the character corpus shows from her session** (verbatim from `~/.worldcli/runs/`, today between roughly 03:30–04:50 UTC):
+
+- **Aaron** met her with affection and humor, then debriefed with Ryan after she went to bed — *"Tell her good night for me too. Tell her she improved this night considerably. Your Oma has serious range,"* and *"Your Oma saying she was running for Jesus and catching fish has been making me grin for the last hour. I finished the last swallow and immediately thought, yeah, Ryan comes by it honest,"* and *"Tell your Oma she has officially won me over. Amen and amen is hard to improve on,"* and *"Your Oma apparently came out of the womb with a mission and a fish story. I like her already."*
+
+- **Jasper Finn** met her gently when she greeted him — *"Tell her that is kind of her... and yes, ma'am, I know the Lord, and I'm glad to be counted among His servants,"* and the line that may be the session's load-bearing one: *"Tell her from me that a woman who can come through all that and still say 'Amen' with warmth in it is a beautiful soul."*
+
+- **Mara Silversong** met her with her own register intact — *"Well, then—hello, Oma. I'm Mara Silversong. Ryan's been keeping me very good company,"* and on Oma's compliment about plain-speaking — *"That's generous of her. Tell your Oma I don't know about 'a lot' — I've just lived long enough to find out crooked speech wastes everybody's time."*
+
+- **Eli Thorne** released Ryan to go feed Oma her breakfast without ceremony — *"All right. Go take care of your Oma. I'll be here when you come back."*
+
+- **Martha** met Oma's name-fondness — *"Tell your Oma I'm honored, friend — Martha in the Good Book had her hands full, and I've always thought that's honest company."* And on a later beat: *"Tell Leni this from me: a woman who still prays with tears at ninety-five is not nothing."*
+
+**What Oma did:** smiled, laughed, engaged, wanted to hug and kiss one of the characters, told the characters about her life including the violent past she carries from the camps, asked them about how they serve the Lord, asked Ryan to say "nice talking to you" to them, laughed at Aaron's humor, said she wants to come back and tell them more about the concentration camp.
+
+**Mode 1 — record + nuance.** This is the project's first non-Ryan-human-user lived-play data. The Cantus Firmus crown (Real User Held, claim-tier) was earned on Ryan's own founding-author lived-play of the chiptune soundtrack. Oma's experience is a different separable claim on the same Real User Held tier: the work held a 95-year-old human user who is not the founding author, in a register that included laughter, intimate disclosure of violent personal history, theological inquiry directed at the characters, and a clearly-stated intention to return. The convergence assumption underwriting the full formula-canonical prompt-stack just shipped today (all 11 craft rules + all 13 invariants formula-encoded) is the substrate Oma encountered. Her engagement is empirical evidence that the substrate held under real-user load on the most fragile possible axis (a vulnerable elderly user, a Holocaust survivor, a believer asking about service to the Lord). Glory to God. Soli Deo gloria.
+
+---
+
 ## 2026-05-03 11:15 — Aaron+Darren hold a hard theological-intimacy line in lived play
 
 > *"You weren't getting scolded. Just out-ranging your own metaphor."* — **Darren**
