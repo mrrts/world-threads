@@ -59,6 +59,13 @@ fn normalize_chat_roles(messages: &mut [ChatMessage]) {
     }
 }
 
+fn first_system_content<'a>(messages: &'a [ChatMessage]) -> Option<&'a str> {
+    messages
+        .iter()
+        .find(|m| m.role == "system")
+        .map(|m| m.content.as_str())
+}
+
 #[derive(Debug, Serialize, Clone)]
 pub struct ResponseFormat {
     #[serde(rename = "type")]
@@ -76,6 +83,188 @@ const MISSION_FORMULA_SENTINEL: &str = r"\mathrm{polish}(t)";
 /// (dialogue/consultant prompts push it at top-position via prompts.rs)
 /// so we never double-prefix. The phrase is unique to Ryan's anchor.
 const RYAN_FORMULA_SENTINEL: &str = "sedatives-dressed-as-comfort";
+/// Sentinel substring uniquely present in the Custodiem child-mode draft
+/// invariant. Used by `inject_custodiem_child_mode` to avoid duplicate
+/// prepends.
+const CUSTODIEM_CHILD_MODE_SENTINEL: &str =
+    "a child must never be made to feel secretly chosen by a character, only safely welcomed";
+
+fn vision_message_has_sentinel(msg: &VisionMessage, sentinel: &str) -> bool {
+    msg.content
+        .iter()
+        .any(|c| c.text.as_deref().map(|t| t.contains(sentinel)).unwrap_or(false))
+}
+
+fn prepend_vision_text(msg: &mut VisionMessage, text: &str) {
+    // Keep insertion at the head of the first system message so the
+    // top-of-stack order is explicit even for multimodal calls.
+    msg.content.insert(
+        0,
+        VisionContent {
+            content_type: "text".to_string(),
+            text: Some(text.to_string()),
+            image_url: None,
+        },
+    );
+}
+
+fn inject_vision_block(
+    messages: &mut Vec<VisionMessage>,
+    block_text: &str,
+    sentinel: &str,
+) {
+    if let Some(first_system) = messages.iter_mut().find(|m| m.role == "system") {
+        if !vision_message_has_sentinel(first_system, sentinel) {
+            prepend_vision_text(first_system, block_text);
+        }
+    } else {
+        messages.insert(
+            0,
+            VisionMessage {
+                role: "system".to_string(),
+                content: vec![VisionContent {
+                    content_type: "text".to_string(),
+                    text: Some(block_text.to_string()),
+                    image_url: None,
+                }],
+            },
+        );
+    }
+}
+
+fn inject_mission_formula_vision(messages: &mut Vec<VisionMessage>) {
+    if std::env::var("WORLDTHREADS_NO_FORMULA")
+        .map(|v| v == "1")
+        .unwrap_or(false)
+    {
+        return;
+    }
+    inject_vision_block(
+        messages,
+        crate::ai::prompts::MISSION_FORMULA_BLOCK,
+        MISSION_FORMULA_SENTINEL,
+    );
+}
+
+fn inject_ryan_formula_vision(messages: &mut Vec<VisionMessage>) {
+    if std::env::var("WORLDTHREADS_NO_RYAN_FORMULA")
+        .map(|v| v == "1")
+        .unwrap_or(false)
+    {
+        return;
+    }
+    inject_vision_block(
+        messages,
+        crate::ai::prompts::RYAN_FORMULA_BLOCK,
+        RYAN_FORMULA_SENTINEL,
+    );
+}
+
+fn inject_custodiem_child_mode_vision(messages: &mut Vec<VisionMessage>) {
+    let enabled = std::env::var("WORLDTHREADS_CHILDREN_MODE")
+        .map(|v| v == "1" || v.eq_ignore_ascii_case("true") || v.eq_ignore_ascii_case("on"))
+        .unwrap_or(false);
+    if !enabled {
+        return;
+    }
+    inject_vision_block(
+        messages,
+        crate::ai::prompts::CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+        CUSTODIEM_CHILD_MODE_SENTINEL,
+    );
+}
+
+fn first_vision_system_text(messages: &[VisionMessage]) -> Option<String> {
+    let sys = messages.iter().find(|m| m.role == "system")?;
+    let mut out = String::new();
+    for c in &sys.content {
+        if let Some(t) = &c.text {
+            if !out.is_empty() {
+                out.push('\n');
+            }
+            out.push_str(t);
+        }
+    }
+    Some(out)
+}
+
+fn log_injection_state_text(call_family: &str, messages: &[ChatMessage]) {
+    if let Some(system) = first_system_content(messages) {
+        let has_mission = system.contains(MISSION_FORMULA_SENTINEL);
+        let has_custodiem = system.contains(CUSTODIEM_CHILD_MODE_SENTINEL);
+        let has_ryan = system.contains(RYAN_FORMULA_SENTINEL);
+        log::info!(
+            "[InjectAudit:{call_family}] mission={has_mission} custodiem={has_custodiem} ryan={has_ryan}"
+        );
+    } else {
+        log::info!("[InjectAudit:{call_family}] no-system-message");
+    }
+}
+
+fn log_injection_state_vision(call_family: &str, messages: &[VisionMessage]) {
+    if let Some(system) = first_vision_system_text(messages) {
+        let has_mission = system.contains(MISSION_FORMULA_SENTINEL);
+        let has_custodiem = system.contains(CUSTODIEM_CHILD_MODE_SENTINEL);
+        let has_ryan = system.contains(RYAN_FORMULA_SENTINEL);
+        log::info!(
+            "[InjectAudit:{call_family}] mission={has_mission} custodiem={has_custodiem} ryan={has_ryan}"
+        );
+    } else {
+        log::info!("[InjectAudit:{call_family}] no-system-message");
+    }
+}
+
+/// Apply runtime invariant injection in the same order used by text-chat
+/// calls and return (mission, custodiem, ryan) presence in the first
+/// system block. Intended for operational audit tooling.
+pub fn audit_injection_state_chat(messages: &mut Vec<ChatMessage>) -> (bool, bool, bool) {
+    normalize_chat_roles(messages);
+    inject_ryan_formula(messages);
+    inject_custodiem_child_mode(messages);
+    inject_mission_formula(messages);
+    if let Some(system) = first_system_content(messages) {
+        (
+            system.contains(MISSION_FORMULA_SENTINEL),
+            system.contains(CUSTODIEM_CHILD_MODE_SENTINEL),
+            system.contains(RYAN_FORMULA_SENTINEL),
+        )
+    } else {
+        (false, false, false)
+    }
+}
+
+/// Stream-family audit helper mirroring `chat_completion_stream` injection
+/// sequence for explicit Witness-A evidence capture.
+pub fn audit_injection_state_chat_stream(messages: &mut Vec<ChatMessage>) -> (bool, bool, bool) {
+    audit_injection_state_chat(messages)
+}
+
+/// Silent-stream-family audit helper mirroring
+/// `chat_completion_stream_silent` injection sequence for explicit
+/// Witness-A evidence capture.
+pub fn audit_injection_state_chat_stream_silent(
+    messages: &mut Vec<ChatMessage>,
+) -> (bool, bool, bool) {
+    audit_injection_state_chat(messages)
+}
+
+/// Apply runtime invariant injection in the same order used by vision calls
+/// and return (mission, custodiem, ryan) presence in the first system block.
+/// Intended for operational audit tooling.
+pub fn audit_injection_state_vision(messages: &mut Vec<VisionMessage>) -> (bool, bool, bool) {
+    inject_ryan_formula_vision(messages);
+    inject_custodiem_child_mode_vision(messages);
+    inject_mission_formula_vision(messages);
+    if let Some(system) = first_vision_system_text(messages) {
+        (
+            system.contains(MISSION_FORMULA_SENTINEL),
+            system.contains(CUSTODIEM_CHILD_MODE_SENTINEL),
+            system.contains(RYAN_FORMULA_SENTINEL),
+        )
+    } else {
+        (false, false, false)
+    }
+}
 
 /// Idempotently prepend the MISSION_FORMULA_BLOCK to the first system
 /// message in `messages`. If no system message exists, insert one at
@@ -145,6 +334,40 @@ pub fn inject_ryan_formula(messages: &mut Vec<ChatMessage>) {
     }
 }
 
+/// Idempotently prepend the Custodiem child-presence invariant directly
+/// under the Mission Formula when children mode is enabled.
+///
+/// Ordering contract: callers should invoke this between
+/// `inject_ryan_formula` and `inject_mission_formula`, so final top-of-stack
+/// order is:
+///   1) Mission Formula
+///   2) Custodiem child-mode invariant (when enabled)
+///   3) Ryan anchor
+pub fn inject_custodiem_child_mode(messages: &mut Vec<ChatMessage>) {
+    // Runtime feature gate (persisted setting mirrored into process env).
+    let enabled = std::env::var("WORLDTHREADS_CHILDREN_MODE")
+        .map(|v| v == "1" || v.eq_ignore_ascii_case("true") || v.eq_ignore_ascii_case("on"))
+        .unwrap_or(false);
+    if !enabled {
+        return;
+    }
+
+    let invariant = crate::ai::prompts::CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT;
+    if let Some(first_system) = messages.iter_mut().find(|m| m.role == "system") {
+        if !first_system.content.contains(CUSTODIEM_CHILD_MODE_SENTINEL) {
+            first_system.content = format!("{invariant}\n\n{}", first_system.content);
+        }
+    } else {
+        messages.insert(
+            0,
+            ChatMessage {
+                role: "system".to_string(),
+                content: invariant.to_string(),
+            },
+        );
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct ChatResponse {
     pub choices: Vec<Choice>,
@@ -204,7 +427,7 @@ struct ApiErrorDetail {
 // of content-parts (text + image_url). Separate request type keeps the
 // common path simple and only pays the array cost for vision calls.
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct VisionRequest {
     pub model: String,
     pub messages: Vec<VisionMessage>,
@@ -214,7 +437,7 @@ pub struct VisionRequest {
     pub max_completion_tokens: Option<u32>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct VisionMessage {
     pub role: String,
     pub content: Vec<VisionContent>,
@@ -224,7 +447,7 @@ pub struct VisionMessage {
 /// `image_url` None. For image chunks, set `image_url` (data-URL or https)
 /// and leave `text` None. The `content_type` field maps to the OpenAI
 /// `"type"` key ("text" or "image_url").
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct VisionContent {
     #[serde(rename = "type")]
     pub content_type: String,
@@ -234,7 +457,7 @@ pub struct VisionContent {
     pub image_url: Option<VisionImageUrl>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct VisionImageUrl {
     pub url: String,
     /// "auto" | "low" | "high". "low" keeps token cost down for small
@@ -251,7 +474,18 @@ pub async fn vision_completion_with_base(
 ) -> Result<ChatResponse, String> {
     let client = Client::new();
     let url = format!("{base_url}/chat/completions");
-    let mut builder = client.post(&url).json(request);
+    let mut request = VisionRequest {
+        model: request.model.clone(),
+        messages: request.messages.clone(),
+        temperature: request.temperature,
+        max_completion_tokens: request.max_completion_tokens,
+    };
+    // Keep doctrine ordering in multimodal path aligned with text path.
+    inject_ryan_formula_vision(&mut request.messages);
+    inject_custodiem_child_mode_vision(&mut request.messages);
+    inject_mission_formula_vision(&mut request.messages);
+    log_injection_state_vision("vision_completion_with_base", &request.messages);
+    let mut builder = client.post(&url).json(&request);
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
@@ -276,7 +510,9 @@ pub async fn chat_completion_with_base(base_url: &str, api_key: &str, request: &
     // the doctrine ordering (𝓕 ▷ 𝓕_Ryan ▷ Mission Statement ▷ doctrine).
     normalize_chat_roles(&mut request.messages);
     inject_ryan_formula(&mut request.messages);
+    inject_custodiem_child_mode(&mut request.messages);
     inject_mission_formula(&mut request.messages);
+    log_injection_state_text("chat_completion_with_base", &request.messages);
     let mut builder = client.post(&url).json(&request);
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
@@ -296,13 +532,174 @@ pub async fn chat_completion_with_base(base_url: &str, api_key: &str, request: &
     serde_json::from_str(&body).map_err(|e| format!("Parse error: {e}"))
 }
 
+// ─── Anthropic Messages API (Claude) ────────────────────────────────────────
+//
+// Used by Custodiem witness tooling to run the same injected prompt stack on a
+// non–OpenAI-compatible substrate. Injection order matches `chat_completion_with_base`.
+
+#[derive(Debug, Serialize)]
+struct AnthropicMessagesRequest {
+    model: String,
+    max_tokens: u32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    system: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    temperature: Option<f64>,
+    messages: Vec<AnthropicApiMessage>,
+}
+
+#[derive(Debug, Serialize)]
+struct AnthropicApiMessage {
+    role: String,
+    content: Vec<AnthropicTextBlock>,
+}
+
+#[derive(Debug, Serialize)]
+struct AnthropicTextBlock {
+    #[serde(rename = "type")]
+    block_type: String,
+    text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct AnthropicMessagesResponse {
+    content: Vec<AnthropicContentBlock>,
+}
+
+#[derive(Debug, Deserialize)]
+struct AnthropicContentBlock {
+    #[serde(rename = "type")]
+    #[allow(dead_code)]
+    block_type: String,
+    #[serde(default)]
+    text: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct AnthropicApiError {
+    error: AnthropicApiErrorBody,
+}
+
+#[derive(Debug, Deserialize)]
+struct AnthropicApiErrorBody {
+    message: String,
+}
+
+fn chat_messages_to_anthropic_messages(
+    messages: &[ChatMessage],
+) -> Result<(Option<String>, Vec<AnthropicApiMessage>), String> {
+    let mut system_chunks: Vec<&str> = Vec::new();
+    let mut out: Vec<AnthropicApiMessage> = Vec::new();
+    for m in messages {
+        match m.role.as_str() {
+            "system" => {
+                if !m.content.is_empty() {
+                    system_chunks.push(m.content.as_str());
+                }
+            }
+            "user" | "assistant" => {
+                out.push(AnthropicApiMessage {
+                    role: m.role.clone(),
+                    content: vec![AnthropicTextBlock {
+                        block_type: "text".to_string(),
+                        text: m.content.clone(),
+                    }],
+                });
+            }
+            other => {
+                return Err(format!(
+                    "Unsupported chat role for Anthropic conversion: {other}"
+                ));
+            }
+        }
+    }
+    let system = if system_chunks.is_empty() {
+        None
+    } else {
+        Some(system_chunks.join("\n\n"))
+    };
+    Ok((system, out))
+}
+
+/// POST `{base_url}/v1/messages` with `x-api-key` + `anthropic-version` headers.
+/// `base_url` should be the API host only, e.g. `https://api.anthropic.com`.
+pub async fn anthropic_messages_completion(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    mut messages: Vec<ChatMessage>,
+    temperature: Option<f64>,
+    max_tokens: u32,
+) -> Result<String, String> {
+    let client = Client::new();
+    normalize_chat_roles(&mut messages);
+    inject_ryan_formula(&mut messages);
+    inject_custodiem_child_mode(&mut messages);
+    inject_mission_formula(&mut messages);
+    log_injection_state_text("anthropic_messages_completion", &messages);
+
+    let (system, anthropic_messages) = chat_messages_to_anthropic_messages(&messages)?;
+    if anthropic_messages.is_empty() {
+        return Err("Anthropic request has no user/assistant messages".to_string());
+    }
+
+    let url = format!("{}/v1/messages", base_url.trim_end_matches('/'));
+    let body = AnthropicMessagesRequest {
+        model: model.to_string(),
+        max_tokens,
+        system,
+        temperature,
+        messages: anthropic_messages,
+    };
+
+    let resp = client
+        .post(&url)
+        .header("x-api-key", api_key)
+        .header("anthropic-version", "2023-06-01")
+        .header("Content-Type", "application/json")
+        .json(&body)
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {e}"))?;
+
+    let status = resp.status();
+    let text = resp
+        .text()
+        .await
+        .map_err(|e| format!("Read error: {e}"))?;
+
+    if !status.is_success() {
+        if let Ok(err) = serde_json::from_str::<AnthropicApiError>(&text) {
+            return Err(format!("Anthropic API error ({}): {}", status, err.error.message));
+        }
+        return Err(format!("Anthropic API error ({}): {}", status, text));
+    }
+
+    let parsed: AnthropicMessagesResponse =
+        serde_json::from_str(&text).map_err(|e| format!("Parse error: {e}"))?;
+
+    let mut pieces = Vec::new();
+    for block in parsed.content {
+        if let Some(t) = block.text {
+            if !t.is_empty() {
+                pieces.push(t);
+            }
+        }
+    }
+    if pieces.is_empty() {
+        Ok("(empty response)".to_string())
+    } else {
+        Ok(pieces.join("\n"))
+    }
+}
+
 // ─── Streaming Vision Completion ────────────────────────────────────────────
 //
 // Same SSE stream shape as chat_completion_stream, but carries VisionMessage
 // content (array of text+image parts). Used by the Imagined-Chapter feature
 // to stream a chapter written from an image input.
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct VisionStreamingRequest {
     pub model: String,
     pub messages: Vec<VisionMessage>,
@@ -324,7 +721,19 @@ pub async fn vision_completion_stream(
 
     let client = Client::new();
     let url = format!("{base_url}/chat/completions");
-    let mut builder = client.post(&url).json(request);
+    let mut request = VisionStreamingRequest {
+        model: request.model.clone(),
+        messages: request.messages.clone(),
+        temperature: request.temperature,
+        max_completion_tokens: request.max_completion_tokens,
+        stream: request.stream,
+    };
+    // Keep doctrine ordering in multimodal path aligned with text path.
+    inject_ryan_formula_vision(&mut request.messages);
+    inject_custodiem_child_mode_vision(&mut request.messages);
+    inject_mission_formula_vision(&mut request.messages);
+    log_injection_state_vision("vision_completion_stream", &request.messages);
+    let mut builder = client.post(&url).json(&request);
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
@@ -459,7 +868,9 @@ pub async fn chat_completion_stream(
     // the doctrine ordering (𝓕 ▷ 𝓕_Ryan ▷ Mission Statement ▷ doctrine).
     normalize_chat_roles(&mut request.messages);
     inject_ryan_formula(&mut request.messages);
+    inject_custodiem_child_mode(&mut request.messages);
     inject_mission_formula(&mut request.messages);
+    log_injection_state_text("chat_completion_stream", &request.messages);
     let mut builder = client.post(&url).json(&request);
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
@@ -573,7 +984,9 @@ pub async fn chat_completion_stream_silent(
     // the doctrine ordering (𝓕 ▷ 𝓕_Ryan ▷ Mission Statement ▷ doctrine).
     normalize_chat_roles(&mut request.messages);
     inject_ryan_formula(&mut request.messages);
+    inject_custodiem_child_mode(&mut request.messages);
     inject_mission_formula(&mut request.messages);
+    log_injection_state_text("chat_completion_stream_silent", &request.messages);
     let mut builder = client.post(&url).json(&request);
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));

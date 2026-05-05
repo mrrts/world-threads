@@ -111,7 +111,17 @@ pub fn get_setting_cmd(db: State<Database>, key: String) -> Result<Option<String
 #[tauri::command]
 pub fn set_setting_cmd(db: State<Database>, key: String, value: String) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    set_setting(&conn, &key, &value).map_err(|e| e.to_string())
+    set_setting(&conn, &key, &value).map_err(|e| e.to_string())?;
+    if key == "children_mode" {
+        let enabled = value == "true" || value == "1" || value.eq_ignore_ascii_case("on");
+        unsafe {
+            std::env::set_var(
+                "WORLDTHREADS_CHILDREN_MODE",
+                if enabled { "1" } else { "0" },
+            );
+        }
+    }
+    Ok(())
 }
 
 #[tauri::command]

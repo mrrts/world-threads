@@ -52,3 +52,19 @@ path = "src/bin/worldcli.rs"
 [[bin]]
 name = "world-threads"
 path = "src/main.rs"
+
+[[bin]]
+name = "injection_audit"
+path = "src/bin/injection_audit.rs"
+
+[[bin]]
+name = "custodiem_witness_b"
+path = "src/bin/custodiem_witness_b.rs"
+
+[[bin]]
+name = "custodiem_witness_c"
+path = "src/bin/custodiem_witness_c.rs"
+
+[[bin]]
+name = "custodiem_witness_d"
+path = "src/bin/custodiem_witness_d.rs"

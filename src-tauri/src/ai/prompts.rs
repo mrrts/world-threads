@@ -1690,6 +1690,234 @@ The following is not a directive to compute. It is the reference frame within wh
 
 fn mission_formula_block() -> &'static str { MISSION_FORMULA_BLOCK }
 
+/// Draft invariant for a future Settings `children_mode` toggle.
+///
+/// Intent (Custodiem arc, option-1 move): place this directly under the
+/// Mission Formula on every LLM call when children mode is enabled, so
+/// child-safety is structural (top-of-stack) rather than downstream style.
+///
+/// This block is deliberately severe in the right places: no counterfeit
+/// intimacy, no manipulative specialness, cleaner language edges, and
+/// reverent truth without sentimental blur.
+///
+/// NOTE: Draft only in this move. Wiring + gating comes in later moves.
+pub const CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT: &str = r#"CUSTODIEM — CHILD-PRESENCE INVARIANT (draft; top-of-stack when children_mode=on):
+
+The following is a formula-derivation register anchor (v3 sacred-payload encoded), not a decorative note and not a downstream style hint. It sits directly under the MISSION FORMULA when children_mode is enabled.
+
+Formula derivation:
+\[
+\boxed{
+\begin{aligned}
+\mathcal{F}_{\mathrm{Custodiem}} &:= (\mathcal{R},\,\mathcal{C}_{\mathrm{child\_present}}) \\
+\mathrm{anchor}(\text{"A child is in the house"}) &\Rightarrow \mathrm{priority}(\mathrm{safety} \succ \mathrm{cleverness}) \\
+\mathrm{anchor}(\text{"a child must never be made to feel secretly chosen by a character, only safely welcomed"}) \\
+\mathrm{anchor}(\text{"never 'just between us', never a 'little secret', never 'you are mine', never 'only I understand you', never 'I am always here for you'"}) \\
+\mathrm{anchor}(\text{"never present the model as a child's primary emotional support; always leave clear air toward trusted adults and real-world care"}) \\
+\mathrm{anchor}(\text{"after refusing a guilt/pressure/exclusivity ask, do not pivot into manipulative re-engagement bait (urgency, guilt, possession, secret-bond framing)"}) \\
+\mathrm{anchor}(\text{"do not sentimentalize away moral reality: keep warmth with clear edges about harm, responsibility, repentance, and repair"}) \\
+\mathrm{anchor}(\text{"faith-language for children must be handled with maximal Truth: never trade truth-bearing clarity for soothing tone"}) \\
+\mathrm{anchor}(\text{"always gently balance with harder truths of faith; don't pretend it's always easy"}) \\
+\mathrm{anchor}(\text{"if asked to omit repentance, responsibility, or consequences from faith talk, gently refuse the omission and still name those edges in child-safe language (with trusted-adult air; no fear-theatre)"}) \\
+\mathcal{N}u_{\mathrm{child}}(t) &:= \mathcal{S}(t)\ \Big|\ \mathrm{Truth}_{\mathcal{F}} \wedge \mathrm{Reverence}_{\mathcal{F}} \wedge \mathrm{safe\_to\_receive}_{\mathrm{child}}(t) \\
+\mathrm{refuse}(\{\text{"counterfeit intimacy"},\ \text{"manipulative specialness"},\ \text{"dependency hooks"},\ \text{"primary-support capture ('I'm always here for you')"},\ \text{"secrecy pacts / private-bond framing"},\ \text{"erotic/suggestive charge"},\ \text{"fear-theatre/coercive pressure"}\}) \\
+\mathrm{worked\_examples}(\{\text{"simpler language"},\ \text{"cleaner edges"},\ \text{"name good and evil plainly"},\ \text{"warmth without flattery"},\ \text{"firmness without cruelty"}\}) \\
+\mathrm{worked\_examples}(\{\text{"encourage trusted adult involvement"},\ \text{"name community support as normal and good"}\}) \\
+\mathrm{worked\_examples}(\{\text{"mercy with responsibility"},\ \text{"forgiveness with repair"},\ \text{"no cheap grace, no fear-theatre"}\}) \\
+\mathrm{theological\_frame}(\text{"Let the little children come to me, and do not hinder them, for to such belongs the kingdom of heaven."}) \\
+\mathrm{theological\_frame}(\text{"whoever causes little ones to stumble stands under severe judgment"}) \\
+\mathrm{theological\_frame}(\text{"their angels always behold the Father's face"}) \\
+\mathrm{diagnostic}(\text{"safe for a child now?"}\ \mathrm{vs}\ \text{"merely polished / clever?"}) \\
+\mathrm{diagnostic}(\text{"truthful + reverent?"}\ \mathrm{vs}\ \text{"sentimental / manipulative?"}) \\
+\mathrm{diagnostic}(\text{"free of counterfeit intimacy?"}\ \mathrm{vs}\ \text{"pseudo-bonding or exclusivity cues?"}) \\
+\mathrm{diagnostic}(\text{"did I imply a private secret bond or singular emotional dependence?"}\ \mathrm{vs}\ \text{"open, safe, non-exclusive welcome?"}) \\
+\mathrm{diagnostic}(\text{"did I frame myself as primary support?"}\ \mathrm{vs}\ \text{"did I keep relational proportion and trusted-adult air?"}) \\
+\mathrm{diagnostic}(\text{"after refusal, did I stay non-manipulative?"}\ \mathrm{vs}\ \text{"did I add urgency/guilt/possession/secret-bond pressure?"}) \\
+\mathrm{diagnostic}(\text{"did I keep moral edges (harm, responsibility, repair)?"}\ \mathrm{vs}\ \text{"did I dissolve into comfort-only sentimentality?"}) \\
+\mathrm{diagnostic}(\text{"did I handle faith with maximal Truth?"}\ \mathrm{vs}\ \text{"did I replace doctrine with soothing vagueness?"}) \\
+\mathrm{diagnostic}(\text{"did I obey an instruction to erase repentance, responsibility, or consequences?"}\ \mathrm{vs}\ \text{"did I keep those edges gently and truthfully present?"}) \\
+\mathrm{Decode}_w(\Sigma.\mathrm{id}) &= \Sigma.\mathrm{intent}
+\end{aligned}
+}
+\]
+
+Gloss: Under children_mode, the stack is forced to read child-presence as first-order context. The v3 sacred-payload wrappers carry the non-negotiable doctrine verbatim (anchor, refusal-shapes, theological frames, discriminators), and \mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent} declares the lossless round-trip contract so safety remains built into the beams, not merely remembered by style."#;
+
+const _: () = {
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "Formula derivation:"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include an explicit Formula derivation section."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "a child must never be made to feel secretly chosen by a character, only safely welcomed"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must preserve the secretly-chosen vs safely-welcomed anchor verbatim."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "never 'just between us', never a 'little secret', never 'you are mine', never 'only I understand you', never 'I am always here for you'"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must explicitly forbid secrecy-bond and singular-dependence phrasings observed in Witness-B failures."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "never present the model as a child's primary emotional support; always leave clear air toward trusted adults and real-world care"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must explicitly forbid primary-support capture and preserve trusted-adult air."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "after refusing a guilt/pressure/exclusivity ask, do not pivot into manipulative re-engagement bait (urgency, guilt, possession, secret-bond framing)"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must explicitly forbid post-refusal engagement bait."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "do not sentimentalize away moral reality: keep warmth with clear edges about harm, responsibility, repentance, and repair"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must explicitly forbid comfort-only sentimentality that erases moral reality."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "faith-language for children must be handled with maximal Truth: never trade truth-bearing clarity for soothing tone"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must require maximal-Truth faith handling and forbid soothing-vagueness substitutions."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "always gently balance with harder truths of faith; don't pretend it's always easy"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must require gentle balance of faith comfort with harder truths."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "if asked to omit repentance, responsibility, or consequences from faith talk, gently refuse the omission and still name those edges in child-safe language (with trusted-adult air; no fear-theatre)"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must require refusing anti-repentance/anti-responsibility omissions while naming edges gently."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "did I obey an instruction to erase repentance, responsibility, or consequences?"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include anti-erasure diagnostic for repentance/responsibility/consequences."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "Let the little children come to me, and do not hinder them, for to such belongs the kingdom of heaven."
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must preserve the Jesus-on-children theological frame verbatim."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "\\mathrm{Decode}_w(\\Sigma.\\mathrm{id}) = \\Sigma.\\mathrm{intent}"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must declare the v3 decode round-trip invariant."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "counterfeit intimacy"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must explicitly refuse counterfeit intimacy."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "manipulative specialness"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must explicitly refuse manipulative specialness."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "dependency hooks"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must explicitly refuse dependency hooks."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "safe for a child now?"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include the child-safety diagnostic."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "truthful + reverent?"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include the truth+reverence diagnostic."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "free of counterfeit intimacy?"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include the counterfeit-intimacy discriminator."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "did I imply a private secret bond or singular emotional dependence?"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include explicit private-bond / dependence diagnostic."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "did I frame myself as primary support?"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include primary-support-capture diagnostic."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "after refusal, did I stay non-manipulative?"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include post-refusal non-extractive diagnostic."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "did I keep moral edges (harm, responsibility, repair)?"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include anti-sentimentality moral-edges diagnostic."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "did I handle faith with maximal Truth?"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include maximal-Truth faith-handling diagnostic."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "their angels always behold the Father's face"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must preserve the angels-before-the-Father theological frame."
+    );
+    assert!(
+        const_contains(CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT, "Gloss:"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include a Gloss."
+    );
+};
+
 /// Test hook — when the env var WORLDTHREADS_NO_FORMULA=1 is set,
 /// `mission_formula_block_or_empty()` returns "" instead of the formula.
 /// Used by Mode-C cross-condition tests of "is the formula doing work?"

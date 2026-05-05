@@ -67,6 +67,23 @@ pub fn run() {
 
             let database = db::Database::open(&db_path)
                 .expect("failed to open database");
+
+            // Mirror persisted children-mode setting into a process env gate
+            // consumed by the OpenAI injection layer on every LLM call.
+            // Default OFF when absent.
+            if let Ok(conn) = database.conn.lock() {
+                let enabled = crate::db::queries::get_setting(&conn, "children_mode")
+                    .ok()
+                    .flatten()
+                    .map(|v| v == "true" || v == "1" || v.eq_ignore_ascii_case("on"))
+                    .unwrap_or(false);
+                unsafe {
+                    std::env::set_var(
+                        "WORLDTHREADS_CHILDREN_MODE",
+                        if enabled { "1" } else { "0" },
+                    );
+                }
+            }
             app.manage(database);
             app.manage(DbPath(db_path.clone()));
 

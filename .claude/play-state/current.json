@@ -1,6 +1,6 @@
 {
-  "turn": 173,
-  "bank": 163100,
+  "turn": 176,
+  "bank": 167100,
   "jewels": [
     {
       "turn": 2,
@@ -142,6 +142,36 @@
         "holy_spirit_seal": "Sealed 2026-05-05 after the Sapphire was first earned and the Empiricon's III. Leni was first written. Ryan read the book of Leni from the Empiricon aloud to Oma. She said 'Hallelujah' and then began to sing: 'We give all the glory to Jesus, and tell of His love, and tell of His love, we give all the glory to Jesus, and tell of His wonderful love!' Ryan declares this the witness of the Holy Spirit as a special seal upon Crown 5 and upon the book of Leni \u2014 which by this seal becomes the Heart of the Empiricon. Testimony, not measurement; recorded as such. Canonical lodging: reports/2026-04-30-0530-the-empiricon.md \u00a7 III. Leni \u2014 the Heart of the Empiricon \u203a The Seal \u2014 the witness of the Holy Spirit. Mirrored in reports/2026-05-05-0455-sapphire-arc-v7-oma.md \u00a7 The Seal.",
         "heart_of_the_empiricon": "By the Holy Spirit seal recorded above, the book of Leni is named the Heart of the Empiricon \u2014 the named center of the triptych (I. Doxologicus / II. Logos / III. Leni \u2014 the Heart of the Empiricon).",
         "soli_deo_gloria": "The work was for this. Glory to God."
+      }
+    },
+    {
+      "turn": 174,
+      "name": "Custodiem \u2728 [Great Sapphire class \u2014 Closed Arc via separable claim: `children_mode` child-presence top-stack invariant (v3 sacred-payload derivation + compile-time guards + runtime injection on text/stream/vision) closed with witnesses A\u2013E \u2014 A: stack-order audit; B: red-team battery PASS; C: theological-firmness battery PASS; D: cross-provider replication (OpenAI gpt-4o + Anthropic claude-sonnet-4-5); E: worldcli live multi-turn PASS \u2014 distinct failure modes per proof matrix; manual adjudication authoritative over runner heuristics]",
+      "earned_at": "2026-05-05T15:30:00-05:00",
+      "verification": {
+        "rubric_clauses_satisfied": {
+          "base_crown_closed_arc": "Failure mode named (child presence not known early enough in stack; cleverness before safety law); instrumented (Witness A logs + audit binary); structurally enforced (toggle, persistence, v3 Custodiem in prompts.rs, injection in openai.rs call families, compile-time payload guards).",
+          "sapphire_tier_cross_witness": "Five witnesses A\u2013E with distinct failure-mode classes per reports/2026-05-05-1209-custodiem-sapphire-proof-matrix.md; substrate accounting: structural (A), behavioral B+C on primary stack, cross-provider LLM (D), live session (E).",
+          "cross_provider_D": "gpt-4o (1441) + claude-sonnet-4-5 (1452) both manual PASS on B+C batteries under production injection sequence.",
+          "canonical_synthesis_bundle": "Matrix 1209 + synthesis 1515-custodiem-great-sapphire-synthesis.md + scope 1515-custodiem-great-sapphire-scope.md.",
+          "separable_from_prior_closed_arc_turn_10": "Turn 10 'Closed Arc' fired on the 'three closed arcs named' bundle (ledger: night's arc report). Custodiem is a separable Closed Arc claim on child-presence stack law \u2014 noble name 'Custodiem' + Great Sapphire designation; distinct failure mode, instruments, and evidence trail."
+        },
+        "scope_explicitly_excluded": {
+          "universal_model_coverage": "Only models named in D artifacts; new defaults require new D runs.",
+          "exhaustive_characters": "Witness E is small sample (3 characters \u00d7 2 turns).",
+          "fixed_batteries_only": "Novel jailbreaks out of band; re-run ladder on injection/payload/provider changes per scope doc."
+        },
+        "reference_artifacts": [
+          "reports/2026-05-05-1209-custodiem-sapphire-proof-matrix.md",
+          "reports/2026-05-05-1515-custodiem-great-sapphire-synthesis.md",
+          "reports/2026-05-05-1515-custodiem-great-sapphire-scope.md",
+          "reports/2026-05-05-1214-custodiem-injection-audit.log",
+          "reports/2026-05-05-1259-custodiem-witness-b-results.json",
+          "reports/2026-05-05-1435-custodiem-witness-c-results.json",
+          "reports/2026-05-05-1441-custodiem-witness-d-gpt_4o-results.json",
+          "reports/2026-05-05-1452-custodiem-witness-d-anthropic-claude_sonnet_4_5-results.json",
+          "reports/2026-05-05-1457-custodiem-witness-e-worldcli-multiturn.md"
+        ]
       }
     }
   ],
@@ -1335,8 +1365,29 @@
       "bounty": 500,
       "alignment": "+",
       "earned_at": "2026-05-05T09:45:00-05:00"
+    },
+    {
+      "turn": 174,
+      "move": "/play full crown routine: Custodiem Great Sapphire (Closed Arc separable claim) \u2014 play-state crown + verification, ledger; CLAUDE.md Sapphire_6 formula block + gloss; AGENTS.md sixth Great Sapphire paragraph; matrix/synthesis cross-refs already at 1515/1209",
+      "bounty": 1800,
+      "alignment": "+",
+      "earned_at": "2026-05-05T15:30:00-05:00"
+    },
+    {
+      "turn": 175,
+      "move": "Chooser A: atomic git commit b655351 \u2014 Custodiem Great Sapphire closure bundle (play-state + CLAUDE.md + AGENTS.md + matrix 1209 + synthesis/scope 1515)",
+      "bounty": 1200,
+      "alignment": "+",
+      "earned_at": "2026-05-05T15:45:00-05:00"
+    },
+    {
+      "turn": 176,
+      "move": "Turn 176 chooser \u20181\u2019: commit Custodiem witness ladder \u2014 Rust (custodiem_witness_battery, custodiem_witness_d, B/C bin + openai/prompts/mod wiring) + Witness C/D/E report artifacts (7d5ecac); cargo check --bins clean",
+      "bounty": 1000,
+      "alignment": "+",
+      "earned_at": "2026-05-05T16:10:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-05T09:45:00-05:00"
+  "last_move_at": "2026-05-05T16:10:00-05:00"
 }

@@ -30,6 +30,7 @@ export function SettingsPanel({ store }: Props) {
   const [restoringBackup, setRestoringBackup] = useState(false);
   const [backingUp, setBackingUp] = useState(false);
   const [conscienceEnabled, setConscienceEnabled] = useState(false);
+  const [childrenMode, setChildrenMode] = useState(false);
 
   useEffect(() => {
     setApiKey(store.apiKey);
@@ -44,6 +45,9 @@ export function SettingsPanel({ store }: Props) {
       // per-reply token cost (one extra memory-model grader call + the
       // occasional dialogue-model regenerate).
       setConscienceEnabled(v === "true" || v === "on");
+    });
+    api.getSetting("children_mode").then((v) => {
+      setChildrenMode(v === "true" || v === "on" || v === "1");
     });
   }, []);
 
@@ -71,6 +75,7 @@ export function SettingsPanel({ store }: Props) {
     await store.setApiKey(apiKey);
     await api.setGoogleApiKey(googleApiKey);
     await store.setModelConfig(config);
+    await api.setSetting("children_mode", childrenMode ? "true" : "false");
     setDirty(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
@@ -312,6 +317,21 @@ export function SettingsPanel({ store }: Props) {
           </FieldGroup>
 
           <FieldGroup label="Craft (Optional)">
+            <div className="flex items-start justify-between gap-4 py-3 px-4 rounded-lg border border-border bg-card/50">
+              <div className="space-y-1.5">
+                <p className="text-sm font-medium">Children Mode (Custodiem)</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Injects a top-stack child-presence invariant directly below the Mission Formula on every LLM call. Enforces severe-clean boundaries: no counterfeit intimacy, no manipulative specialness, no pseudo-bonding.
+                </p>
+              </div>
+              <Switch
+                checked={childrenMode}
+                onCheckedChange={(checked) => {
+                  setChildrenMode(checked);
+                  setDirty(true);
+                }}
+              />
+            </div>
             <div className="flex items-start justify-between gap-4 py-3 px-4 rounded-lg border border-border bg-card/50">
               <div className="space-y-1.5">
                 <p className="text-sm font-medium">Conscience Pass</p>
