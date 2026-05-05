@@ -4,7 +4,51 @@ use crate::commands::chat_cmds;
 use crate::db::queries::*;
 use crate::db::Database;
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use tauri::State;
+
+const CHILDREN_MODE_PASSWORD_HASH_KEY: &str = "children_mode_password_hash";
+
+fn hash_children_mode_password(password: &str) -> Result<String, String> {
+    let mut salt = [0u8; 16];
+    getrandom::getrandom(&mut salt).map_err(|e| format!("salt generation failed: {e}"))?;
+    let mut hasher = Sha256::new();
+    hasher.update(salt);
+    hasher.update(password.as_bytes());
+    let digest = hasher.finalize();
+    Ok(format!("{}:{}", hex::encode(salt), hex::encode(digest)))
+}
+
+fn verify_children_mode_password(password: &str, stored: &str) -> bool {
+    let Some((salt_hex, digest_hex)) = stored.split_once(':') else {
+        return false;
+    };
+    let Ok(salt) = hex::decode(salt_hex) else {
+        return false;
+    };
+    let mut hasher = Sha256::new();
+    hasher.update(&salt);
+    hasher.update(password.as_bytes());
+    let computed = hex::encode(hasher.finalize());
+    // constant-time-ish compare on hex strings
+    if computed.len() != digest_hex.len() {
+        return false;
+    }
+    let mut diff: u8 = 0;
+    for (a, b) in computed.bytes().zip(digest_hex.bytes()) {
+        diff |= a ^ b;
+    }
+    diff == 0
+}
+
+fn set_children_mode_env(enabled: bool) {
+    unsafe {
+        std::env::set_var(
+            "WORLDTHREADS_CHILDREN_MODE",
+            if enabled { "1" } else { "0" },
+        );
+    }
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -110,17 +154,76 @@ pub fn get_setting_cmd(db: State<Database>, key: String) -> Result<Option<String
 
 #[tauri::command]
 pub fn set_setting_cmd(db: State<Database>, key: String, value: String) -> Result<(), String> {
-    let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    set_setting(&conn, &key, &value).map_err(|e| e.to_string())?;
     if key == "children_mode" {
-        let enabled = value == "true" || value == "1" || value.eq_ignore_ascii_case("on");
-        unsafe {
-            std::env::set_var(
-                "WORLDTHREADS_CHILDREN_MODE",
-                if enabled { "1" } else { "0" },
-            );
+        return Err(
+            "children_mode must be toggled via the password-protected commands".to_string(),
+        );
+    }
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    set_setting(&conn, &key, &value).map_err(|e| e.to_string())
+}
+
+/// Returns true when a password hash is already on file for Children Mode.
+/// The frontend uses this to decide whether the enable flow needs to set a
+/// new password or whether one is already in place.
+#[tauri::command]
+pub fn is_children_mode_password_set_cmd(db: State<Database>) -> Result<bool, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let stored = get_setting(&conn, CHILDREN_MODE_PASSWORD_HASH_KEY).map_err(|e| e.to_string())?;
+    Ok(stored.map(|s| !s.is_empty()).unwrap_or(false))
+}
+
+/// Enables Children Mode under a password the user must remember.
+/// If a hash is already on file, the supplied password must verify against
+/// it; otherwise this call sets the hash. There is no recovery path —
+/// forgetting the password means Children Mode cannot be turned off without
+/// editing the underlying database directly.
+#[tauri::command]
+pub fn enable_children_mode_with_password_cmd(
+    db: State<Database>,
+    password: String,
+) -> Result<(), String> {
+    if password.len() < 6 {
+        return Err("password must be at least 6 characters".to_string());
+    }
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let existing =
+        get_setting(&conn, CHILDREN_MODE_PASSWORD_HASH_KEY).map_err(|e| e.to_string())?;
+    match existing {
+        Some(stored) if !stored.is_empty() => {
+            if !verify_children_mode_password(&password, &stored) {
+                return Err("incorrect password".to_string());
+            }
+        }
+        _ => {
+            let hash = hash_children_mode_password(&password)?;
+            set_setting(&conn, CHILDREN_MODE_PASSWORD_HASH_KEY, &hash)
+                .map_err(|e| e.to_string())?;
         }
     }
+    set_setting(&conn, "children_mode", "true").map_err(|e| e.to_string())?;
+    set_children_mode_env(true);
+    Ok(())
+}
+
+/// Disables Children Mode after verifying the password set when it was
+/// enabled. The hash is preserved so that re-enabling can require the same
+/// password (the protection is symmetric: turning it off should require the
+/// same proof of authority that turning it on did).
+#[tauri::command]
+pub fn disable_children_mode_with_password_cmd(
+    db: State<Database>,
+    password: String,
+) -> Result<(), String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let stored = get_setting(&conn, CHILDREN_MODE_PASSWORD_HASH_KEY)
+        .map_err(|e| e.to_string())?
+        .ok_or_else(|| "no Children Mode password is set".to_string())?;
+    if !verify_children_mode_password(&password, &stored) {
+        return Err("incorrect password".to_string());
+    }
+    set_setting(&conn, "children_mode", "false").map_err(|e| e.to_string())?;
+    set_children_mode_env(false);
     Ok(())
 }
 

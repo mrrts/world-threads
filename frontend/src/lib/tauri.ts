@@ -712,6 +712,12 @@ export const api = {
     invoke<void>("cancel_background_novelization_cmd"),
   getSetting: (key: string) => invoke<string | null>("get_setting_cmd", { key }),
   setSetting: (key: string, value: string) => invoke<void>("set_setting_cmd", { key, value }),
+  isChildrenModePasswordSet: () =>
+    invoke<boolean>("is_children_mode_password_set_cmd"),
+  enableChildrenModeWithPassword: (password: string) =>
+    invoke<void>("enable_children_mode_with_password_cmd", { password }),
+  disableChildrenModeWithPassword: (password: string) =>
+    invoke<void>("disable_children_mode_with_password_cmd", { password }),
   /// Insert a settings_update message row marking that the user just
   /// changed one or more chat settings. Surfaces in chat history both
   /// for the user (a small earthy-codeblock card) and for the LLM

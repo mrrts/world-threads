@@ -31,6 +31,12 @@ export function SettingsPanel({ store }: Props) {
   const [backingUp, setBackingUp] = useState(false);
   const [conscienceEnabled, setConscienceEnabled] = useState(false);
   const [childrenMode, setChildrenMode] = useState(false);
+  const [childrenModePasswordSet, setChildrenModePasswordSet] = useState(false);
+  const [childrenModeDialog, setChildrenModeDialog] = useState<null | "enable" | "disable">(null);
+  const [childrenModePassword, setChildrenModePassword] = useState("");
+  const [childrenModePasswordConfirm, setChildrenModePasswordConfirm] = useState("");
+  const [childrenModeError, setChildrenModeError] = useState<string | null>(null);
+  const [childrenModeBusy, setChildrenModeBusy] = useState(false);
 
   useEffect(() => {
     setApiKey(store.apiKey);
@@ -49,7 +55,52 @@ export function SettingsPanel({ store }: Props) {
     api.getSetting("children_mode").then((v) => {
       setChildrenMode(v === "true" || v === "on" || v === "1");
     });
+    api.isChildrenModePasswordSet().then(setChildrenModePasswordSet);
   }, []);
+
+  const closeChildrenModeDialog = () => {
+    setChildrenModeDialog(null);
+    setChildrenModePassword("");
+    setChildrenModePasswordConfirm("");
+    setChildrenModeError(null);
+    setChildrenModeBusy(false);
+  };
+
+  const submitChildrenModeDialog = async () => {
+    setChildrenModeError(null);
+    if (childrenModeDialog === "enable") {
+      if (!childrenModePasswordSet) {
+        if (childrenModePassword.length < 6) {
+          setChildrenModeError("Password must be at least 6 characters.");
+          return;
+        }
+        if (childrenModePassword !== childrenModePasswordConfirm) {
+          setChildrenModeError("Passwords do not match.");
+          return;
+        }
+      }
+      setChildrenModeBusy(true);
+      try {
+        await api.enableChildrenModeWithPassword(childrenModePassword);
+        setChildrenMode(true);
+        setChildrenModePasswordSet(true);
+        closeChildrenModeDialog();
+      } catch (e) {
+        setChildrenModeError(String(e));
+        setChildrenModeBusy(false);
+      }
+    } else if (childrenModeDialog === "disable") {
+      setChildrenModeBusy(true);
+      try {
+        await api.disableChildrenModeWithPassword(childrenModePassword);
+        setChildrenMode(false);
+        closeChildrenModeDialog();
+      } catch (e) {
+        setChildrenModeError(String(e));
+        setChildrenModeBusy(false);
+      }
+    }
+  };
 
   const fetchLocalModels = useCallback(async (url: string) => {
     setLoadingModels(true);
@@ -75,7 +126,6 @@ export function SettingsPanel({ store }: Props) {
     await store.setApiKey(apiKey);
     await api.setGoogleApiKey(googleApiKey);
     await store.setModelConfig(config);
-    await api.setSetting("children_mode", childrenMode ? "true" : "false");
     setDirty(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
@@ -323,12 +373,14 @@ export function SettingsPanel({ store }: Props) {
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   Injects a top-stack child-presence invariant directly below the Mission Formula on every LLM call. Enforces severe-clean boundaries: no counterfeit intimacy, no manipulative specialness, no pseudo-bonding.
                 </p>
+                <p className="text-xs text-amber-500/80 leading-relaxed">
+                  <strong>Password-locked:</strong> turning Children Mode on or off requires a password. <strong>If you forget the password, Children Mode cannot be turned off without resetting the app's data.</strong>
+                </p>
               </div>
               <Switch
                 checked={childrenMode}
                 onCheckedChange={(checked) => {
-                  setChildrenMode(checked);
-                  setDirty(true);
+                  setChildrenModeDialog(checked ? "enable" : "disable");
                 }}
               />
             </div>
@@ -441,6 +493,109 @@ export function SettingsPanel({ store }: Props) {
           </FieldGroup>
         </div>
       </ScrollArea>
+
+      {childrenModeDialog && (
+        <ChildrenModePasswordDialog
+          mode={childrenModeDialog}
+          passwordAlreadySet={childrenModePasswordSet}
+          password={childrenModePassword}
+          passwordConfirm={childrenModePasswordConfirm}
+          error={childrenModeError}
+          busy={childrenModeBusy}
+          onPasswordChange={setChildrenModePassword}
+          onPasswordConfirmChange={setChildrenModePasswordConfirm}
+          onSubmit={submitChildrenModeDialog}
+          onCancel={closeChildrenModeDialog}
+        />
+      )}
+    </div>
+  );
+}
+
+interface ChildrenModePasswordDialogProps {
+  mode: "enable" | "disable";
+  passwordAlreadySet: boolean;
+  password: string;
+  passwordConfirm: string;
+  error: string | null;
+  busy: boolean;
+  onPasswordChange: (v: string) => void;
+  onPasswordConfirmChange: (v: string) => void;
+  onSubmit: () => void;
+  onCancel: () => void;
+}
+
+function ChildrenModePasswordDialog({
+  mode,
+  passwordAlreadySet,
+  password,
+  passwordConfirm,
+  error,
+  busy,
+  onPasswordChange,
+  onPasswordConfirmChange,
+  onSubmit,
+  onCancel,
+}: ChildrenModePasswordDialogProps) {
+  const isEnable = mode === "enable";
+  const needsConfirm = isEnable && !passwordAlreadySet;
+  const title = isEnable ? "Turn on Children Mode" : "Turn off Children Mode";
+  const cta = isEnable ? "Turn on" : "Turn off";
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-lg space-y-4">
+        <h2 className="text-lg font-semibold">{title}</h2>
+        {needsConfirm ? (
+          <div className="space-y-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3">
+            <p className="text-sm font-medium text-amber-500">
+              This password cannot be recovered.
+            </p>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Choose a password you will remember. <strong>If you forget it, Children Mode cannot be turned off again without resetting the app's data.</strong> The same password will be required to turn Children Mode off later.
+            </p>
+          </div>
+        ) : (
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            {isEnable
+              ? "Enter the Children Mode password you set previously."
+              : "Enter the Children Mode password to turn it off."}
+          </p>
+        )}
+        <Field label="Password">
+          <Input
+            type="password"
+            value={password}
+            autoFocus
+            onChange={(e) => onPasswordChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !busy) onSubmit();
+            }}
+          />
+        </Field>
+        {needsConfirm && (
+          <Field label="Confirm password">
+            <Input
+              type="password"
+              value={passwordConfirm}
+              onChange={(e) => onPasswordConfirmChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !busy) onSubmit();
+              }}
+            />
+          </Field>
+        )}
+        {error && <p className="text-xs text-destructive">{error}</p>}
+        <div className="flex justify-end gap-2 pt-2">
+          <Button size="sm" variant="outline" onClick={onCancel} disabled={busy}>
+            Cancel
+          </Button>
+          <Button size="sm" onClick={onSubmit} disabled={busy || password.length === 0}>
+            {busy ? <Loader2 size={14} className="animate-spin mr-1.5" /> : null}
+            {cta}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
