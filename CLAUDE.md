@@ -595,46 +595,81 @@ Honest scope: **N=3 on Maggie–Ryan–Leni axis** — Maggie persona-sim baseli
 
 ## Sacred-payload taxonomy — encoder contract for formula-compression
 
-For formula-encoding any content-rich artifact (craft rule, world description, character identity, user profile, location, future artifact whose value lives in specific named instances), use **v3 sacred-payload taxonomy** as encoder contract. Earned through Faithful Channel arc — pure-formula compression without per-class preservation rules loses anchor-phrasings, theological frames, worked-example specifics, source-character carve-outs even when structural skeleton preserved. Contract closes leaks structurally rather than relying on encoder discipline.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{v3\_sacred\_payload\_taxonomy} := \mathrm{encoder\_contract}\ \mathrm{for}\ \mathrm{formula\_encoding}(\mathrm{content\_rich\_artifact}) \\
+&\quad \mathrm{artifacts}: \{\mathrm{craft\_rule}, \mathrm{world\_description}, \mathrm{character\_identity}, \mathrm{user\_profile}, \mathrm{location}, \mathrm{future\_artifact}\} \\[4pt]
+&\mathrm{earned\_through}: \mathrm{Faithful\_Channel\_arc} \\
+&\mathrm{anchor}(\text{"pure-formula compression without per-class preservation rules loses anchor-phrasings, theological frames, worked-example specifics, source-character carve-outs even when structural skeleton preserved"}) \\
+&\mathrm{contract\_closes\_leaks\_structurally}\ [\neg \mathrm{rely\_on\_encoder\_discipline\_alone}] \\[6pt]
+&\mathrm{six\_classes} := \{ \\[2pt]
+&\quad \mathrm{Class\_1\_anchor\_phrasings}: \mathrm{verbatim\_quoted\_strings}(\mathrm{load\_bearing\_lines}) \\
+&\quad\quad \mathrm{wrapper}: \mathrm{anchor}(\text{"...exact phrase..."}) \\
+&\quad\quad \mathrm{worked\_examples}(\{\text{"out-ranging your own metaphor"}, \text{"Don't make one human sign do a God's job"}, \text{"a hand, a tool, a stubborn little fact"}\}) \\[2pt]
+&\quad \mathrm{Class\_2\_theological\_frame\_phrasings}: \mathrm{scripture} \vee \mathrm{Christological\_frames} \vee \mathrm{canonical\_theological\_registers\_riding}(\mathcal{R}) \\
+&\quad\quad \mathrm{wrapper}: \mathrm{theological\_frame}(\text{"...exact scripture or canonical phrasing..."}) \\
+&\quad\quad \mathrm{worked\_examples}(\{\text{"The spirit is willing, the flesh is weak; nevertheless, not my will but thine be done."}, \text{"Gethsemane / Cross / Resurrection invocations"}\}) \\[2pt]
+&\quad \mathrm{Class\_3\_worked\_example\_specifics}: \mathrm{named\_instances},\ \mathrm{particular\_character\_names},\ \mathrm{specific\_lists/triads} \\
+&\quad\quad \mathrm{value\_lives\_in}(\mathrm{SPECIFICITY}) \\
+&\quad\quad \mathrm{wrapper}: \mathrm{worked\_examples}(\{\text{"...item 1..."}, \text{"...item 2..."}\}) \\
+&\quad\quad \mathrm{worked\_examples\_of\_class}(\{ \\
+&\quad\quad\quad [\text{"clay-rim"}, \text{"nets and weather"}, \text{"a thousand unloved Tuesdays"}, \text{"tides"}, \text{"what's burning"}], \\
+&\quad\quad\quad [\text{"compulsion vs music"}, \text{"drunk on momentum"}, \text{"a different god"}, \text{"handing the day back to God"}] \\
+&\quad\quad \}) \\[2pt]
+&\quad \mathrm{Class\_4\_source\_character\_carve\_outs}: \mathrm{artifact\_lifted\_from\_specific\_character\_under\_live\_play} \\
+&\quad\quad \mathrm{wrapper}: \mathrm{source\_character}(\text{"Darren"}) \wedge \mathrm{protect}(\mathrm{native\_form}(\mathrm{source\_character})) \\
+&\quad\quad \mathrm{worked\_examples}: \{\mathrm{Darren\_on\_out\_ranging}, \mathrm{Pastor\_Rick\_on\_do\_not\_decorate\_the\_doorway}, \mathrm{Jasper\_on\_stay\_in\_the\_search}\} \\[2pt]
+&\quad \mathrm{Class\_5\_failure\_mode\_taxonomy\_labels}: \mathrm{named\_subcategories}(\mathrm{failure\_mode\_artifact\_refuses}),\ \mathrm{enumerated} \\
+&\quad\quad \mathrm{wrapper}: \mathrm{refuse}(\{\text{"sermon-back"}, \text{"absorb-and-amplify"}, \text{"sterile refusal"}\}) \\[2pt]
+&\quad \mathrm{Class\_6\_discriminating\_test\_phrasings}: \mathrm{diagnostic\_question\_forms}\ \mathrm{for\_catching\_failure\_mode\_at\_runtime} \\
+&\quad\quad \mathrm{often}: \mathrm{if}\ X\ \mathrm{ask}\ Y\ \mathrm{shape} \\
+&\quad\quad \mathrm{wrapper}: \mathrm{diagnostic}(\text{"...A..."}\ \mathrm{vs}\ \text{"...B..."}) \\
+&\} \\[6pt]
+&\mathrm{canonicalization\_rules} := \{ \\
+&\quad \mathrm{wrappers\_consistent\_per\_class};\ \neg \mathrm{invent\_new\_wrappers}, \\
+&\quad \mathrm{quoted\_strings}: \mathrm{UTF\_8\_verbatim}\ [\mathrm{punctuation}, \mathrm{capitalization}, \mathrm{italics\_rendered\_as\_text}], \\
+&\quad \mathrm{class\_instances\_appear\_in\_D\_in\_source\_body\_order}\ [\mathrm{left\_to\_right\_reading}], \\
+&\quad \mathcal{F}\_\mathrm{operators}\{\mathrm{Wisdom}, \mathrm{Weight}, \mathrm{polish}, \mathrm{Burden}, \Pi, \mathcal{S}, \mathcal{N}u, \mathrm{Grace}_{\mathcal{F}}, \mathrm{structure\_carries\_truth}_w\}\ \mathrm{frame\_relationships}\ [\neg \mathrm{substitute\_for\_class\_instances}], \\
+&\quad \mathrm{polish}(t) \leq \mathrm{Weight}(t)\ \mathrm{gates}\ D\ \mathrm{as\_whole}, \\
+&\quad D\ \mathrm{must\_close\_with}: \mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}\ [\mathrm{round\_trip\_invariant\_declaration}], \\
+&\quad \mathrm{length\_budget} := \mathrm{tertiary}\ [\mathrm{sacred\_payload\_first}; \mathrm{brevity\_tertiary}] \\
+&\} \\[4pt]
+&\mathrm{lossless\_test}\ [\mathrm{Faithful\_Channel\_validated}]: \\
+&\quad R(D) := \mathrm{Pr}[\mathrm{Decode}_w(D) \neq \Sigma.\mathrm{intent}] = 0 \\
+&\quad \mathrm{protocol}: \mathrm{encode}(\Sigma.\mathrm{body} \to D)\ \mathrm{using\_contract};\ \mathrm{fresh\_LLM\_blind\_decodes}(D \mid \Sigma.\mathrm{id}, D);\ \mathrm{verify\_class\_instances\_reappear\_verbatim} \\
+&\quad \mathrm{cross\_substrate\_validation}\ \mathrm{when\_load\_bearing}: \\
+&\quad\quad \mathrm{OpenAI\_gpt5}\ (\text{"consult\_helper.consult()"}) + \mathrm{Anthropic\_Claude}\ (\text{"consult\_helper.consult\_anthropic()"}) \\
+&\quad\quad \mathrm{verify\_convergence\_with\_distinct\_failure\_mode\_biases} \\[4pt]
+&\mathrm{honest\_scope}: \mathrm{lossless\_semantic\_decodability}(\mathrm{intent}\ \mathrm{through}\ \mathrm{formula\_D})\ [\mathrm{given\_six\_classes}] \\
+&\quad \neg \mathrm{guarantees}(\mathrm{behavioral\_equivalence}\ \mathrm{vs}\ \mathrm{source\_body\_when\_deployed})\ [\mathrm{separate\_empirical\_question}] \\
+&\quad \mathrm{doubt} \Rightarrow \mathrm{ship\_source\_body\_alongside\_D}\ \mathrm{until\_behavioral\_equivalence\_established} \\[4pt]
+&\mathrm{generalization\_beyond\_craft\_rules}: \\
+&\quad \mathrm{taxonomy\_validated\_on}: \mathrm{craft\_rule\_artifacts} \\
+&\quad \mathrm{other\_artifact\_types}\{\mathrm{worlds}, \mathrm{characters}, \mathrm{users}, \mathrm{locations}, \mathrm{journals}\}\ \mathrm{may\_need\_additional\_classes} \\
+&\quad \mathrm{contract\_as\_discipline}\ \mathrm{generalizes};\ \mathrm{specific\_six\_classes}\ \mathrm{earned\_for\_craft\_rule\_prose} \\[6pt]
+&\mathrm{dual\_field\_architecture}: \mathrm{formula\_ships},\ \mathrm{prose\_becomes\_legacy\_provenance} \\
+&\quad \mathrm{anchor}(\text{"formula canonical for model; prose canonical for humans"}) \\
+&\quad \mathrm{operationalized}\ 2026\text{-}05\text{-}05\ \mathrm{in}\ \text{"CRAFT\_RULES\_DIALOGUE.formula\_derivation: Option<\&'static str>"} \\
+&\quad \mathrm{Some}(D) \Rightarrow \mathrm{render\_path\_ships\_ONLY\_formula\_D};\ \mathrm{prose\_body\_stays\_as\_legacy\_provenance}\ [\neg \mathrm{ships}] \\
+&\quad \mathrm{None} \Rightarrow \mathrm{prose\_body\_ships}\ [\mathrm{non\_breaking}] \\
+&\quad \mathrm{pattern\_generalizes}\ \mathrm{to\_any\_future\_content\_rich\_artifact\_with\_v3\_D} \\[4pt]
+&\mathrm{pilot\_ship\_empirical\_validation}: \\
+&\quad \text{"wipe\_the\_shine\_before\_it\_sets"}\ \mathrm{shipped}\ 2026\text{-}05\text{-}05\ \mathrm{with}\ \mathrm{formula\_derivation\_set} \\
+&\quad \mathrm{bite\_test}(\mathrm{Pastor\_Rick}, \mathrm{marriage\_drift\_probe}, \mathrm{paired}\ N=5\ \mathrm{prose\_arm}\ \mathrm{vs}\ N=5\ \mathrm{formula\_arm}): \\
+&\quad\quad \to \mathrm{behavioral\_parity};\ \mathrm{sketch\_tier\_for\_behavioral\_equivalence} \\
+&\quad \mathrm{reference}(\text{"reports/2026-05-05-0500-sapphire-arc-v6-pilot-ship-and-dual-field.md"}) \\[4pt]
+&\mathrm{convergence\_commitment\_over\_hedging}: \\
+&\quad \mathrm{shipping\_both\_prose\_AND\_formula} := \mathrm{insurance}(\mathrm{formula\_lossy}) \\
+&\quad \mathrm{Sapphire\_evidence}: \mathrm{NOT\_lossy\_when\_v3\_honored} \\
+&\quad \mathrm{committing\_to\_formula\_canonical} := \mathrm{accepts\_finding} \wedge \mathrm{tests\_in\_production}\ [\neg \mathrm{hedging}] \\
+&\quad \mathrm{reversible\_per\_rule};\ \mathrm{testable\_per\_rule\_by\_lived\_play} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-**Six classes:**
-
-1. **Class 1 — Anchor phrasings.** Verbatim quoted strings the artifact lifts as load-bearing lines, often character-credited or lived-play-lifted. Preservation: VERBATIM via `\mathrm{anchor}("...exact phrase...")`. Examples: *"out-ranging your own metaphor"* / *"Don't make one human sign do a God's job"* / *"a hand, a tool, a stubborn little fact"*.
-
-2. **Class 2 — Theological-frame phrasings.** Scripture, Christological frames, canonical theological registers riding 𝓡; lose load-bearing character if paraphrased. Preservation: VERBATIM via `\mathrm{theological\_frame}("...exact scripture or canonical phrasing...")`. Examples: *"The spirit is willing, the flesh is weak; nevertheless, not my will but thine be done."* / specific Gethsemane / Cross / Resurrection invocations.
-
-3. **Class 3 — Worked-example specifics.** Named instances, particular character-names as examples, specific lists/triads as instances of pattern. Value lives in SPECIFICITY. Preservation: VERBATIM via `\mathrm{worked\_examples}(\{"...item 1...", "...item 2..."\})`. Examples: `["clay-rim", "nets and weather", "a thousand unloved Tuesdays", "tides", "what's burning"]` / `["compulsion vs music", "drunk on momentum", "a different god", "handing the day back to God"]`.
-
-4. **Class 4 — Source-character carve-outs.** Artifact lifted from specific character's articulation under live play; that character's natural form structurally protected. Preservation: source character name VERBATIM + structural carve-out via `\mathrm{source\_character}("Darren") \wedge \mathrm{protect}(\mathrm{native\_form}(\mathrm{source\_character}))`. Examples: Darren on `out_ranging`; Pastor Rick on `do_not_decorate_the_doorway`; Jasper on `stay_in_the_search`.
-
-5. **Class 5 — Failure-mode taxonomy labels.** Named subcategories of failure mode the artifact refuses, often enumerated explicitly. Preservation: VERBATIM labels in enumerated formula list via `\mathrm{refuse}(\{"sermon-back", "absorb-and-amplify", "sterile refusal"\})`.
-
-6. **Class 6 — Discriminating-test phrasings.** Diagnostic question forms for catching failure mode at runtime, often "if you feel X, ask whether Y" shape. Preservation: structural form + verbatim key phrases inside quoted strings via `\mathrm{diagnostic}("...A..." \mathrm{vs} "...B...")`.
-
-**Canonicalization rules:**
-- Use `\mathrm{class\_name}(...)` wrappers consistently per-class. Don't invent new wrappers.
-- Quoted strings UTF-8 verbatim, preserving punctuation, capitalization, italics-rendered-as-text.
-- Class-instances appear in D in source body order (left-to-right reading).
-- 𝓕-operators (Wisdom, Weight, polish, Burden, Π, 𝓢, 𝓝u, Grace_𝓕, structure_carries_truth_w) frame relationships between class-instances; NOT substitutes for class-instances.
-- `polish(t) ≤ Weight(t)` gates D as whole.
-- D must close with: `\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}` — round-trip invariant declaration.
-- Length budget tertiary — sacred-payload taxonomy served first; brevity tertiary.
-
-**Lossless test (Decode invariant Faithful Channel validated):** `R(D) := Pr[Decode_w(D) ≠ Σ.intent] = 0`. Operationally: encode prose Σ.body to D using contract; fresh LLM blind-decodes D (given only Σ.id + D, no original prose) reconstructing intent per per-class output spec; verify every class-instance in D reappears verbatim and every structural element reconstructed faithfully. Cross-substrate validation when claim load-bearing: decode via OpenAI gpt-5 + Anthropic Claude (`consult_helper.consult()` and `consult_helper.consult_anthropic()`); verify convergence with documented distinct failure-mode biases.
-
-**Honest scope:** lossless-semantic-decodability of source artifact's intent through formula-D-form, given specific six classes. Does NOT yet guarantee behavioral-equivalence (whether D produces equivalent live-pipeline character-LLM behavior to source body when deployed) — separate empirical question. When in doubt, ship source body alongside D until behavioral-equivalence established for that artifact-class.
-
-**Generalization beyond craft-rules:** taxonomy validated on craft-rule artifacts. Other artifact-types (worlds, characters, users, locations, journals) may need additional classes; encoder contract should be extended per-artifact-type. CONTRACT-as-discipline (enumerate classes; per-class preservation; canonicalization wrappers; round-trip invariant) generalizes; SPECIFIC SIX CLASSES earned for craft-rule prose.
-
-**Dual-field architecture for v3-encoded artifacts: formula ships, prose becomes legacy provenance.** When artifact has earned v3 D: **formula canonical for model; prose canonical for humans.** Operationalized 2026-05-05 in `CRAFT_RULES_DIALOGUE`'s `formula_derivation: Option<&'static str>` field:
-
-- `Some(D)` → render path ships ONLY formula D to model. Prose `body` stays in source as **legacy provenance** — visible to developers, future-agent audits, bite-test omit-flag — but does NOT ship.
-- `None` → prose `body` ships as before. New rules begin in this state until v3 D authored; non-breaking.
-- Pattern generalizes to any future content-rich artifact with earned v3 derivation.
-
-**Pilot-ship empirical validation:** wipe_the_shine_before_it_sets shipped 2026-05-05 with formula_derivation set to v3 D. Bite-test on Pastor Rick (marriage-drift probe, paired N=5 prose-arm vs N=5 formula-arm): behavioral parity. Sketch-tier evidence for behavioral-equivalence; sufficient for pilot-ship apparatus-honest commitment. Full report: `reports/2026-05-05-0500-sapphire-arc-v6-pilot-ship-and-dual-field.md`.
-
-**Convergence commitment over hedging:** shipping both prose AND formula = insurance against formula being lossy. Sapphire's evidence is it isn't lossy when v3 honored. Committing to formula-canonical accepts finding and tests in production rather than hedging. Reversible per-rule; testable per-rule by lived play.
+**Gloss:** v3 sacred-payload taxonomy = encoder contract for formula-compression, earned through Faithful Channel arc; six classes (anchor/theological-frame/worked-example/source-character-carve-out/failure-mode-label/diagnostic) each with verbatim wrapper; canonicalization rules (consistent wrappers, UTF-8 verbatim, source-body order, 𝓕-operators frame, polish≤Weight gates, Decode invariant closes); lossless test R(D)=0 cross-substrate validated; honest scope = semantic-decodability not behavioral-equivalence; generalization beyond craft-rules per artifact type; dual-field architecture (formula ships, prose legacy); pilot-ship validated wipe_the_shine; convergence-commitment over hedging.
 
 ## Calibrated disciplines drift fast — promote to structural enforcement at earliest opportunity
 
