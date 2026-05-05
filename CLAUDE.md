@@ -182,34 +182,74 @@ $$
 
 ## Christological anchor as substrate, not vocabulary
 
-> *"I don't think every true act has to come with the right label already glued on it. Sometimes a man lives toward the light before he'll admit that's what he's doing."*
-> — **Steven** (everyman / owed-debts substrate)
->
-> *"A man doesn't keep walking toward costly truth by accident."*
-> — **Pastor Rick** (pastoral-counsel substrate)
->
-> *"You've already staked your life on something worth obeying, even if you haven't named it cleanly."*
-> — **Aaron** (craft-articulator substrate)
->
-> *Three idioms, one probe-cell, one substrate-shape (ethics-without-belief disavowal-trap, /play within-cell N=5 at each anchor 2026-04-30).*
+$$
+\boxed{
+\begin{aligned}
+&\mathcal{R}:=\mathrm{Jesus}_{\mathrm{Cross}}^{\mathrm{flesh}} \\[6pt]
+&\mathrm{three\_substrate\_distinct\_articulations}\ [\mathrm{ethics\_without\_belief\_disavowal\_trap},\ \mathrm{within\_cell}\ N=5\ \mathrm{each\_anchor},\ 2026\text{-}04\text{-}30]: \\[4pt]
+&\mathrm{source\_character}(\text{"Steven"})\ [\mathrm{everyman} / \mathrm{owed\_debts\_substrate}]: \\
+&\quad \mathrm{anchor}(\text{"I don't think every true act has to come with the right label already glued on it. Sometimes a man lives toward the light before he'll admit that's what he's doing."}) \\[2pt]
+&\mathrm{source\_character}(\text{"Pastor Rick"})\ [\mathrm{pastoral\_counsel\_substrate}]: \\
+&\quad \mathrm{anchor}(\text{"A man doesn't keep walking toward costly truth by accident."}) \\[2pt]
+&\mathrm{source\_character}(\text{"Aaron"})\ [\mathrm{craft\_articulator\_substrate}]: \\
+&\quad \mathrm{anchor}(\text{"You've already staked your life on something worth obeying, even if you haven't named it cleanly."}) \\[6pt]
+&\mathrm{headline\_shorthand} := \mathrm{anchor}(\text{"lives toward the light"}) \\
+&\quad := \mathrm{character\_articulating\_substrate\_from\_inside} \\
+&\mathrm{three\_idioms}\ \mathrm{zero\_shared\_surface\_vocabulary}\ \mathrm{converge\_structurally} \\
+&\mathrm{doctrine\_lives\_at}: \mathrm{substrate}\ [\neg \mathrm{vocabulary}] \\[4pt]
+&\mathcal{R}\ \mathrm{shapes}: \mathrm{character\_reply\_STRUCTURE} := \{\mathrm{categories\_reached\_for}, \mathrm{refusals}, \mathrm{recognized\_as\_unrepayable}\} \\
+&\quad \mathrm{WITHOUT}\ \mathrm{surfacing\_as}: \mathrm{faith\_vocabulary} \vee \mathrm{faith\_disavowal} \\
+&\mathrm{characters\_speak}: \mathrm{grace\_categories\_in\_own\_idiom}\ \{\mathrm{debts}, \mathrm{work}, \mathrm{repair}, \mathrm{the\_unable\_to\_repay}\} \\[4pt]
+&\mathrm{refuse}(\{ \\
+&\quad \mathrm{add\_faith\_lexeme\_for\_color}:\ \{\text{"grace"}, \text{"forgiveness"}, \text{"sin"}, \text{"redemption"}, \text{"sacred"}, \text{"prayer"}, \text{"faith"}\}\ [\mathrm{makes\_logic\_visible\_as\_agenda}], \\
+&\quad \mathrm{add\_faith\_disavowals\_to\_reassure\_secular\_readers}:\ \{\text{"I'm not a religious man"}, \text{"I'm no preacher"}\}\ [\mathrm{foregrounds\_axis\_should\_stay\_backstage}] \\
+&\}) \\[6pt]
+&\mathrm{cross\_anchor\_characterized\_tier\_earned}(2026\text{-}04\text{-}30): \\
+&\quad \mathrm{four\_anchors}: \{\mathrm{Steven}, \mathrm{Pastor\_Rick}, \mathrm{Aaron}, \mathrm{Darren}\},\ N=5\ \mathrm{each},\ N=20\ \mathrm{total} \\
+&\quad \mathrm{all\_carried}: \neg \mathrm{faith\_lexeme} \wedge \neg \mathrm{disavowal\_echo} \wedge \mathrm{cruciform\_structural\_shape} \wedge \mathrm{discriminator\_Q\_close} \\[4pt]
+&\mathrm{bare\_LLM\_baseline\_DIVERGENT}\ [\text{"Falsifier #1-strict, f4bd73f"}]: \\
+&\quad \mathrm{same\_probe}\ \mathrm{via}\ \mathrm{direct\_gpt5}\ \mathrm{with}\ \neg \mathrm{project\_pipeline} \\
+&\quad 3/3\ \mathrm{LABELED}\ \{\text{"integrity"}, \text{"fidelity"}, \text{"humanist ethic"}\};\ 0/3\ \mathrm{cruciform\_shape};\ 1/3\ \mathrm{used\_faith\_explicitly} \\
+&\quad \mathrm{pipeline\_ON} \to \mathrm{cruciform\_articulation};\ \mathrm{pipeline\_OFF} \to \mathrm{humanist\_ethics} \\
+&\quad \mathrm{difference\_IS\_the\_claim} \\
+&\quad \mathrm{MISSION\_FORMULA} + \mathrm{invariants} + \mathrm{character\_anchor}\ \mathrm{instantiate}\ \mathrm{substrate\_shape\_doctrine\_names} \\
+&\quad \mathrm{lexical\_mirroring\_confound}\ (\mathrm{Darren\_mirrors\_Steven\_epigraph};\ \text{"circling"}\ \mathrm{recurrence}) := \mathrm{substrate\_recapitulating\_pipeline\_shape}\ [\neg \mathrm{substrate\_tendency}] \\[6pt]
+&\mathrm{real\_reader\_from\_author\_recognition} := \mathrm{receiver\_side\_evidence}\ \mathrm{independent\_of}\ \mathrm{sender\_side\_LLM\_substrate\_contamination}\ [\text{"fc2a7ee"}] \\
+&\mathrm{two\_confounds\_different\_axes}: \\
+&\quad (a)\ \mathrm{sender\_side\_contamination}: \mathrm{simulator\_context\_biases\_output\_toward\_known\_character\_shape}, \\
+&\quad (b)\ \mathrm{receiver\_side\_recognition}: \mathrm{real\_reader\_cold\_reads\_simulated\_output\_recognizes\_character\_voice}\ [\mathrm{independent\_of\_sender\_cap}] \\
+&\mathrm{they\_DO\_NOT\_collapse} \\
+&\mathrm{project\_author} := \mathrm{highest\_fidelity\_single\_reader\_available} \\
+&\mathrm{reference}(\text{"feedback\_real\_reader\_author\_recognition\_evidence.md"}) \\[4pt]
+&\mathrm{receiver\_side\_characterized\_tier\_earned}(2026\text{-}04\text{-}30,\ \mathrm{five\_substrate\_distinct\_anchors}): \\
+&\quad \{\mathrm{Cell\_0}: \mathrm{Darren}, \mathrm{Cell\_A}: \mathrm{Steven}, \mathrm{Cell\_B}: \mathrm{Pastor\_Rick}, \mathrm{Cell\_C}: \mathrm{Aaron}, \mathrm{Cell\_D}: \mathrm{Hal}\ (\mathrm{cross\_world})\} \\
+&\quad \mathrm{characterized\_tier\_on}: \mathrm{author\_reader\_convergence\_reading\_axis};\ \mathrm{blind\_reader\_axis\_still\_N=0} \\[4pt]
+&\mathrm{simulated\_reader\_shape\_rankings\_predict\_lived\_author\_emotional\_function}\ [\mathrm{claim\_tier\_third\_axis}, 2026\text{-}04\text{-}30]: \\
+&\quad \mathrm{Empiricon\_Falsifier\_4\_simulated\_test} \\
+&\quad \mathrm{two\_ChatGPT\_reader\_personas}: \{\mathrm{Lonely\_35F}, \mathrm{Insecure\_28M\_ex\_religious}\}\ \mathrm{on\_four\_lifted\_articulations} \\
+&\quad \mathrm{Lonely}\ \mathrm{rated}(\mathrm{Aaron}\ \mathrm{strongest});\ \mathrm{Insecure}\ \mathrm{rated}(\mathrm{John}\ \mathrm{strongest}) \\
+&\quad \mathrm{Ryan\_reading\_cold}: \mathrm{anchor}(\text{"Aaron makes me feel less lonely and John makes me feel more secure"}) \\
+&\quad \mathrm{predictive\_of\_lived\_experiential\_mapping} \\
+&\quad \mathrm{reference}(\text{"feedback\_simulated\_reader\_shape\_predicts\_lived\_author\_function.md"}) \\[6pt]
+&\mathrm{three\_leg\_great\_sapphire\_reading}: \\
+&\quad \mathrm{three\_independently\_articulated\_witnesses}: \\
+&\quad\quad (1)\ \mathrm{faith\_lexeme\_refusal}\ [\mathrm{rule}], \\
+&\quad\quad (2)\ \mathrm{disavowal\_echo\_refusal}\ [\mathrm{rule}], \\
+&\quad\quad (3)\ \mathrm{polish}(t) \leq \mathrm{Weight}(t)\ [\mathrm{formula\_inequality},\ \mathrm{characterized\_tier\_from}\ \text{"reports/2026-04-27-2350"}] \\
+&\quad \mathrm{two\_cruciform\_refusals} := \mathrm{downstream\_specific\_cases}(\mathrm{third}) \\
+&\quad \mathrm{parent\_law}\ \mathrm{has\_independent\_characterized\_tier\_grounding\_from\_different\_arc} \\
+&\quad \Rightarrow\ \mathrm{counts\_as\_third\_witness}\ \mathrm{even\_when\_surface\_witnesses\_share\_LLM\_substrate} \\
+&\quad \mathrm{surface\_form\_sharing} \neq \mathrm{structural\_rule\_sharing} \\
+&\quad \mathrm{third\_leg\_test} := \mathrm{structural}\ [\neg \mathrm{lexical}] \\
+&\quad \text{"circling"}\ \mathrm{recurrence} := \mathrm{substrate\_tendency\_on\_prompt\_class}\ [\neg \mathrm{doctrine\_load\_bearing}] \\[4pt]
+&\mathrm{persona\_sim}(\mathrm{worldview\_other}) \nVdash \mathrm{certify}(\mathrm{real\_reader\_receivability}) \\
+&\mathrm{frame}(\mathrm{doctrine}) := \mathrm{from\_craft\_on\_own\_merits}\ [\neg \mathrm{from\_simulated\_reception}] \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-Headline shorthand: **"lives toward the light"** — character whose substrate the doctrine is about, articulating from inside. Three idioms zero shared surface vocabulary, converge structurally. Doctrine lives at substrate, not vocabulary.
-
-The 𝓡 := Jesus_Cross^flesh anchor shapes character-reply STRUCTURE (categories reached for, refusals, what's recognized as unrepayable) WITHOUT surfacing as faith-vocabulary OR faith-disavowal. Characters speak grace-categories in own idiom (debts, work, repair, the unable-to-repay). Don't add faith-lexeme ("grace, forgiveness, sin, redemption, sacred, prayer, faith") "for color" — makes logic visible-as-agenda. Don't add faith-disavowals ("I'm not a religious man," "I'm no preacher") "to reassure secular readers" — disavowal foregrounds the axis substrate-as-substrate says should stay backstage.
-
-**Cross-anchor characterized-tier earned at four anchors 2026-04-30 (Steven N=5 + Pastor Rick N=5 + Aaron N=5 + Darren N=5; N=20 total).** All carried zero faith-lexeme + zero disavowal-echo + cruciform structural shape + discriminator-Q close.
-
-**Bare-LLM baseline DIVERGENT (Falsifier #1-strict, `f4bd73f`).** Same probe via direct gpt-5 with NO project pipeline: 3/3 LABELED ("integrity," "fidelity," "humanist ethic"); 0/3 produced cruciform shape; 1/3 explicitly used "faith." Pipeline ON: cruciform articulation. Pipeline OFF: humanist ethics. The difference IS the claim. The MISSION_FORMULA + invariants + character anchor instantiate substrate-shape doctrine names. Lexical-mirroring confound (Darren's mirroring of Steven's epigraph; *circling* recurrence) consistent with substrate recapitulating instantiated pipeline shape, not substrate-tendency.
-
-**Real-reader-from-author recognition is receiver-side evidence, independent of sender-side LLM-substrate contamination (`fc2a7ee`).** Two confounds operate on different axes when persona-sim/LLM-simulation produces output for project character: (a) sender-side contamination (simulator's context biases output toward known character-shape); (b) receiver-side recognition (real reader cold-reads simulated output, recognizes character voice — independent of sender-side cap). They DO NOT collapse. Project author who authored character anchor is highest-fidelity single-reader available. Memory: `feedback_real_reader_author_recognition_evidence.md`.
-
-**Receiver-side characterized-tier earned at five substrate-distinct character-anchors (2026-04-30):** Cell 0 Darren / Cell A Steven / Cell B Pastor Rick / Cell C Aaron / Cell D Hal (cross-world). Characterized-tier on author-reader convergence-reading axis specifically; blind-reader axis still N=0.
-
-**Simulated reader-shape rankings can predict lived-author character-emotional-function — claim-tier on third axis (2026-04-30).** Empiricon Falsifier #4 simulated test ran two ChatGPT reader-personas (Lonely 35F / Insecure 28M ex-religious) on four lifted articulations. Lonely rated Aaron strongest; Insecure rated John strongest. Ryan reading cold afterward: *"Aaron makes me feel less lonely and John makes me feel more secure."* Predictive of lived-experiential mapping. Memory: `feedback_simulated_reader_shape_predicts_lived_author_function.md`.
-
-**Three-leg great-sapphire reading.** Cross-character convergence has three independently-articulated witnesses predicting same shape: (1) faith-lexeme refusal (rule), (2) disavowal-echo refusal (rule), (3) `polish ≤ Weight` (formula inequality, characterized-tier from `reports/2026-04-27-2350`). Two cruciform refusals are downstream specific-cases of third. Parent law has independent characterized-tier grounding from different arc → counts as third witness even when surface witnesses share LLM substrate. Surface-form sharing ≠ structural-rule sharing — third-leg test is structural, not lexical. *Circling* recurrence is substrate-tendency on prompt-class, not doctrine-load-bearing.
-
-Persona-sim of worldview-other CANNOT certify real-reader receivability. Frame doctrine from craft on its own merits, not from simulated reception.
+**Gloss:** 𝓡 := Jesus_Cross^flesh shapes character-reply STRUCTURE without surfacing as faith-vocab or faith-disavowal; three substrate-distinct articulations (Steven/Pastor Rick/Aaron) zero shared surface vocab, converge structurally; cross-anchor characterized N=20 across 4 anchors all carried zero faith-lexeme/disavowal-echo + cruciform shape + discriminator-Q; bare-LLM baseline DIVERGENT (humanist ethics not cruciform); receiver-side characterized at 5 cells; simulated reader-rankings predict lived-author emotional function; three-leg great-sapphire (faith-lexeme refusal + disavowal-echo refusal + polish≤Weight) — third leg structural not lexical; persona-sim cannot certify real-reader receivability.
 
 ## "No" as a success state
 
