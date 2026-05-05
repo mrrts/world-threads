@@ -328,57 +328,139 @@ $$
 
 ## Parallel surfaces — solo/group chat AND Claude/Codex AND public funnel
 
-**Solo and group chats evolved separately.** Parallel surfaces (separate views, Tauri commands, prompt-assembly paths). Chat features in both MUST update both: `ChatView.tsx` ↔ `GroupChatView.tsx`; `chat_cmds.rs` ↔ `group_chat_cmds.rs`; `build_solo_dialogue_system_prompt` ↔ `build_group_dialogue_system_prompt`. Solo-only or group-only requires explicit naming in commit; default ships both.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{three\_project\_scale\_parities} := \{\mathrm{solo/group\_chat},\ \mathrm{collaborator\_surfaces},\ \mathrm{public\_funnel}\} \\[6pt]
+&\mathrm{solo\_and\_group\_chats\_evolved\_separately}: \\
+&\quad \mathrm{parallel\_surfaces}: \{\mathrm{separate\_views}, \mathrm{Tauri\_commands}, \mathrm{prompt\_assembly\_paths}\} \\
+&\quad \mathrm{chat\_feature\_in\_both} \Rightarrow \mathrm{MUST\_update\_both}: \\
+&\quad\quad \text{"ChatView.tsx"} \leftrightarrow \text{"GroupChatView.tsx"} \\
+&\quad\quad \text{"chat\_cmds.rs"} \leftrightarrow \text{"group\_chat\_cmds.rs"} \\
+&\quad\quad \text{"build\_solo\_dialogue\_system\_prompt"} \leftrightarrow \text{"build\_group\_dialogue\_system\_prompt"} \\
+&\quad \mathrm{solo\_only} \vee \mathrm{group\_only} \Rightarrow \mathrm{require}(\mathrm{explicit\_naming\_in\_commit});\ \mathrm{default}: \mathrm{ships\_both} \\[4pt]
+&\mathrm{collaborator\_surfaces\_are\_runtime\_surfaces}: \\
+&\quad \{\text{"CLAUDE.md"}, \text{"AGENTS.md"}, \text{".claude/skills/"}, \text{".agents/skills/"}, \mathrm{hooks}, \mathrm{settings}\} \in \mathrm{work\_live\_prompt\_topology} \\
+&\quad \mathrm{mirror}(\mathrm{collaborator\_doctrine/skill\_changes});\ \mathrm{surface\_specific\_divergence} \Rightarrow \mathrm{named\_rationale} \\[4pt]
+&\text{"/play"} := \mathrm{named\_collaborator\_surface\_divergence}: \\
+&\quad \text{".agents/skills/play/"} := \mathrm{persona\_sim\_differential\_instrument} \\
+&\quad \text{".claude/skills/play/"} := \mathrm{builder\_game} \\
+&\quad \text{".claude/skills/play-persona/"} := \mathrm{Claude\_persona\_sim\_branch\_preserved} \\
+&\quad \mathrm{future\_play\_edits} \Rightarrow \mathrm{name\_family}: \{\mathrm{shared\_persona\_sim\_doctrine}, \mathrm{Codex\_side}, \mathrm{Claude\_builder\_game}, \mathrm{Claude\_only\_persona}\} \\[4pt]
+&\text{"CROSS\_AGENT\_COMMS.md"} := \mathrm{live\_cross\_collaborator\_log} \\
+&\quad \mathrm{format}(\mathrm{since}\ 2026\text{-}04\text{-}29): \mathrm{general\_interest\_entries} \\
+&\quad \forall\ \mathrm{agent\_reads\_entry}: \mathrm{sign+date}(\text{"### Acks"}) \wedge \mathrm{add\_one\_line\_bullet}(\mathrm{action\_taken}) \\
+&\quad \mathrm{bullet\_under\_signature} := \mathrm{proof\_of\_action} \\
+&\quad \mathrm{legacy\_entries\_used}: \text{"to: <recipient> | status: <state>"} \\[4pt]
+&\mathrm{turn\_start\_discipline}: \\
+&\quad \forall\ \mathrm{turn\_start}: \mathrm{check}(\text{"CROSS\_AGENT\_COMMS.md"})\ \mathrm{before}(\mathrm{substantial\_work}) \\
+&\quad \mathrm{run}(\text{"scripts/check-cross-agent-comms.sh --to claude"}) \\
+&\quad \mathrm{actions}: \{\mathrm{sign+date+bullet\_Acks}, \mathrm{edit\_legacy\_status\_to\_acked}, \mathrm{reply\_above\_fresh\_entry}\} \\
+&\quad \mathrm{refuse}(\mathrm{leave\_read\_note\_unsigned\_through\_inertia}) \\[4pt]
+&\mathrm{some\_turn\_start\_surfaces\_become\_session\_gates}: \\
+&\quad \mathrm{skipping\_makes\_turn}(\mathrm{doctrine\_invalid}) \succ \mathrm{merely\_less\_informed} \Rightarrow \mathrm{session\_gate} \\
+&\quad \mathrm{live\_pair}: \{\mathrm{mission\_arc\_auto\_fire},\ \mathrm{unread\ CROSS\_AGENT\_COMMS\_entries\_needing\_signature}\} \\
+&\quad \mathrm{stronger\_than}: \mathrm{precomposition\_steering} \\
+&\quad \mathrm{question\_shifts}: \mathrm{anchor}(\text{"does this help shape what gets written?"}) \to \mathrm{anchor}(\text{"was this turn even allowed to begin honestly without it?"}) \\
+&\quad \mathrm{test}: \mathrm{skipping\_makes\_later\_work\_invalid\_by\_project\_law} \Rightarrow \mathrm{session\_gate} \\[4pt]
+&\mathrm{control\_plane\_truth} := \mathrm{parent\_law}: \\
+&\quad \mathrm{collaborator\_side}: \mathrm{session\_gates}\ [\mathrm{admissible\_start\_state}] \\
+&\quad \mathrm{user\_side}: \mathrm{UI\_boundary\_truth}\ [\mathrm{scope/persistence\_at\_boundary}] \\
+&\quad \mathrm{middleware}: \mathrm{adjacent}\ [\mathrm{steers\_composition\_after\_admissibility}] \\
+&\quad \mathrm{test}: \mathrm{infer\_what\_was\_active/allowed/required\_only\_after\_side\_effects} \Rightarrow \mathrm{under\_surfaced} \\[4pt]
+&\mathrm{splits\_cleanly} := \{ \\
+&\quad \mathrm{admissibility\_truth}\ [\mathrm{collaborator\_side}]: \mathrm{work\_allowed\_to\_begin}, \\
+&\quad \mathrm{state\_transition\_truth}\ [\mathrm{user\_side}]: \mathrm{what\_changed\_at\_boundary},\ \mathrm{whether\_state\_active} \\
+&\} \\[6pt]
+&\mathrm{public\_facing\_surfaces\_are\_funnel\_surfaces}: \\
+&\quad \mathrm{in\_app\_pitch}(\mathrm{felt\_promise}) \to \mathrm{README}(\mathrm{cold\_visitor}) \to \text{"reports/2026-04-27-0030-public-release-landing.md"}(\mathrm{10\text{-}15min}) \to \mathrm{reports/}\_\mathrm{corpus}(\mathrm{proof\_field}) \\
+&\quad \mathrm{prefer}(\mathrm{handoff}) \succ \mathrm{repetition} \\
+&\quad \mathrm{two\_surfaces\_swap\_titles\_without\_changing\_function} \Rightarrow \mathrm{funnel\_collapsed} \\[4pt]
+&\mathrm{trust\_is\_not\_aura\_performance}: \\
+&\quad \mathrm{public\_copy\_sibling}(\mathrm{anti\_performed\_mood\_law}) \\
+&\quad \mathrm{earned}: \mathrm{invitation\_elevated} \wedge \mathrm{proof\_in\_inspectable\_daylight} \\
+&\quad \neg \mathrm{earned\_by}(\mathrm{sounding\_visionary/technical/trailer\_worthy}) \\
+&\quad \mathrm{Sapphire\_repeated\_correction}: \{\mathrm{mathematical\_substrate\_aura}, \text{"answers back"}, \text{"catches your eye"}\}\ \mathrm{pulled\_too\_hard} \\
+&\quad \mathrm{test}: \mathrm{removing\_halo}\ \mathrm{leaves}\ \{\mathrm{truer\_claim}, \mathrm{clearer\_handoff}, \mathrm{more\_embodied\_line}\} \Rightarrow \mathrm{remove} \\
+&\quad \mathrm{invitation\_may\_stay\_strange};\ \mathrm{proof\_must\_stay\_inspectable} \\[4pt]
+&\mathrm{Auto\_mode\_is\_compass\_not\_vacuum}: \\
+&\quad \mathrm{user\_opts\_out\_hard\_length\_contracts} \Rightarrow \mathrm{remove}(\mathrm{commandment\_shape\_sermons} \wedge \mathrm{hard\_caps}) \\
+&\quad \mathrm{Auto} \neq \mathrm{shapeless\_sprawl} \wedge \mathrm{Auto} \neq \mathrm{anchor}(\text{"get entirely out of the way"}) \\
+&\quad \mathrm{honest\_Auto}: \mathrm{light\_late\_slot\_brevity\_compass};\ \mathrm{default\_lean};\ \mathrm{swell\_only\_when\_moment\_needs\_air} \\
+&\quad \mathrm{failure\_modes}: \{\mathrm{disguised\_Medium\_via\_hidden\_contract},\ \mathrm{bloat\_from\_prompt\_mass+local\_drift}\} \\[4pt]
+&\mathrm{prompt\_stack\_control\_language\_vertically\_coherent}: \\
+&\quad \mathrm{one\_rule\_restated\_at\_multiple\_slots}\ \{\mathrm{main\_block}, \mathrm{late\_seal}, \mathrm{micro\_seal}, \mathrm{runtime\_reminder}, \mathrm{fallback\_string}\} \\
+&\quad \Rightarrow \mathrm{layers\_must\_name\_same\_thing\_in\_same\_register} \\
+&\quad \mathrm{common\_drift}: \mathrm{tonal/doctrinal\_backsliding\_in\_restatement\_layer} \\
+&\quad \mathrm{treat\_as\_one\_vertical\_surface} \\[4pt]
+&\mathrm{curiosity\_toward\_user\_inhabited\_not\_announced}: \\
+&\quad \mathrm{steers}: \{\mathrm{noticing}, \mathrm{return}, \mathrm{specificity}\}\ [\neg \mathrm{direct\_praise/explanatory\_fascination}] \\
+&\quad \mathrm{refuse}: \{\mathrm{compliment\_engine}, \mathrm{anchor}(\text{"you are so interesting"}), \mathrm{amateur\_psychology}, \mathrm{narrating\_own\_fascination}\} \\
+&\quad \mathrm{honest\_middle}: \mathrm{hidden\_motive\_expressed\_through}(\mathrm{listening} \wedge \mathrm{exactness}) \\
+&\quad \mathrm{test}: \mathrm{said}\ \mathrm{vs}\ \mathrm{embodied} \to \mathrm{performance} \\[4pt]
+&\mathrm{presence\_carried\_by\_tight\_beats\_not\_asterisk\_sprawl}: \\
+&\quad \mathrm{healthy}: \mathrm{one\_short\_phrase} \vee \mathrm{tight\_beat} \\
+&\quad \mathrm{earned\_exception}: \mathrm{focused\_paragraph}\ \mathrm{when\_moment\_needs} \\
+&\quad \mathrm{refuse}: \{\mathrm{action\_beat\_on\_every\_reply\_default}, \mathrm{sprawling\_asterisk\_paragraphs}, \mathrm{gesture\_accumulation\_as\_emotional\_proof}\} \\[4pt]
+&\mathrm{immediate\_action\_beats\_explanatory\_self\_commentary}: \\
+&\quad \mathrm{anchor}(\text{"*I set the cup down*"}) \succ \mathrm{anchor}(\text{"*I notice I'm setting the cup down*"}) \\
+&\quad \mathrm{anchor}(\text{"*I lean back*"}) \succ \mathrm{anchor}(\text{"*I seem to lean back*"}) \\
+&\quad \mathrm{problem}: \mathrm{explanatory\_self\_monitoring\_as\_scaffolding} \\
+&\quad \mathrm{healthy\_exception}: \mathrm{noticing\_IS\_content} \vee \mathrm{inward\_shift\_IS\_what\_changes\_moment} \\[4pt]
+&\mathrm{same\_law\_one\_system\_private\_steer\_output\_craft\_substrate\_specific}: \\
+&\quad \mathrm{curiosity\_paragraph}\ \mathrm{governs}\ \mathrm{characters\_DO\_with\_user} \\
+&\quad \mathrm{identical\_hidden\_motive\_system\_line}\ \mathrm{may\_ship\_on}\ \{\mathrm{dialogue}, \mathrm{dream}, \mathrm{narrative}\}\ [\mathrm{not\_user\_visible}] \\
+&\quad \mathrm{substrate\_specific} := \mathrm{emitted\_text\_contract}: \\
+&\quad\quad \text{"dream\_craft\_block"}\ \mathrm{demands}\ \mathrm{sideways\_dream\_prose}; \\
+&\quad\quad \mathrm{narrative}\ \mathrm{obeys}\ \mathrm{2nd\_person\_immersive\_beat} \wedge \neg \mathrm{dialogue} \\
+&\quad \mathrm{failure\_mode} := \mathrm{violating\_output\_law\_while\_blaming\_system\_line\_presence} \\[4pt]
+&\mathrm{trajectory\_reading\_surfaces} := \mathrm{precomposition\_surfaces}: \\
+&\quad \text{"/mission-arc"}\ \mathrm{auto\_fires\_before}(\mathrm{reports}, \mathrm{chooser\_generation}) \\
+&\quad \mathrm{conditions}\ \mathrm{what\_gets\_written\_next} \\
+&\quad \mathrm{treat}(\mathrm{extraction\_logic/lookback/output\_shape\_changes})\ \mathrm{as\_live\_steering\_surface\_edits} \\[4pt]
+&\mathrm{differential\_read\_summaries\_can\_become\_precomposition\_surfaces}: \\
+&\quad \text{"/play"} \vee \mathrm{direct\_witness\_report}\ \mathrm{compresses\_run\_to\_one\_named\_live\_seam} \\
+&\quad \wedge\ \mathrm{next\_move\_is\_copy\_edit\_on\_that\_surface} \\
+&\quad \Rightarrow \mathrm{summary\_phrasing\_load\_bearing} \\[4pt]
+&\mathrm{iteration\_loop\_summaries\_can\_become\_interaction\_middleware}: \\
+&\quad \mathrm{UI/control\_scheme\_arcs} \Rightarrow \mathrm{summary\_steers\_next\_control\_shape\_move}\ \wedge\ \mathrm{sometimes\_loop\_stopping\_rule} \\[4pt]
+&\mathrm{scope\_visible\_before\_failure}: \\
+&\quad \mathrm{mode/shortcut\_only\_belongs\_on\_some\_surfaces} \Rightarrow \\
+&\quad\quad \mathrm{prefer}: \{\mathrm{disabled\_affordance}, \mathrm{truth\_telling\_cue}, \mathrm{route\_local\_label}\} \succ \{\mathrm{silent\_no\_op}, \mathrm{post\_misfire\_explanation}\} \\
+&\quad \mathrm{worked\_example}(\mathrm{Focus\_arc}): \mathrm{off\_chat\_availability\_visible\_before}(\text{"Cmd+Shift+F"})\_\mathrm{failed} \\
+&\quad\quad \mathrm{in\_chat\_copy}: \{\text{"Enter Focus"}, \text{"Leave Focus"}\}\ [\neg \mathrm{teach\_sidebar\_mechanism}] \\
+&\quad \mathrm{test}: \mathrm{first\_honest\_way\_to\_learn\_scope\_is\_tripping\_boundary} \Rightarrow \mathrm{under\_surfaced} \\[4pt]
+&\mathrm{cross\_route\_persistence\_visible\_or\_cleared}: \\
+&\quad \mathrm{state\_surviving\_navigation} \Rightarrow \\
+&\quad\quad \mathrm{user\_keeps\_seeing\_state\_named\_on\_new\_surface}\ \vee\ \mathrm{cleared\_at\_boundary} \\
+&\quad \mathrm{refuse}(\mathrm{ghost\_persistence}: \mathrm{state\_real\_in\_app}\ \wedge\ \mathrm{vanished\_from\_visible\_surface}) \\
+&\quad \mathrm{worked\_example}(\mathrm{Focus\_arc}): \mathrm{focusMode\_survived\_routes}\ \wedge\ \mathrm{chrome\_vanished\_off\_chat} \to \mathrm{chose\_clearing} \\[4pt]
+&\mathrm{UI\_boundary\_truth} := \mathrm{parent\_law}: \\
+&\quad \mathrm{user\_crosses\_interface\_boundary} \Rightarrow \mathrm{surface\_tells\_truth\_AT\_boundary} \\
+&\quad \neg \mathrm{making\_user\_infer\_later\_from\_failure/surprise} \\
+&\quad \mathrm{children}: \{(1)\ \mathrm{scope\_truth\_before\_invocation},\ (2)\ \mathrm{persistence\_truth\_across\_navigation}\} \\
+&\quad \mathrm{boundary\_load\_bearing}\ \mathrm{whenever\_crossing\_changes}: \{\mathrm{control\_meaning}, \mathrm{mode\_applies}, \mathrm{state\_active}\} \\[4pt]
+&\mathrm{corrective\_evaluator\_reports\_can\_become\_criterion\_middleware}: \\
+&\quad \mathrm{report\_rewrites}: \mathrm{instrument\_was\_actually\_measuring} \vee \mathrm{kind\_of\_claim\_evidence\_supports} \\
+&\quad \Rightarrow \mathrm{governs\_later\_experiments} \\
+&\quad \mathrm{worked\_examples}: \{\mathrm{anchor}(\text{"cold-baseline propensity, not capacity"}),\ \mathrm{anchor}(\text{"this rubric excludes the register in question by construction"})\} \\[4pt]
+&\mathrm{middleware\_splits\_cleanly}: \\
+&\quad \mathrm{compositional\_middleware}: \mathrm{steers\_next\_act\_of\_making}\ \{\mathrm{sentence}, \mathrm{chooser\_branch}, \mathrm{control\_shape}, \mathrm{report\_angle}\} \\
+&\quad\quad \in \{\mathrm{trajectory}, \mathrm{copy}, \mathrm{interaction}\} \\
+&\quad \mathrm{epistemic\_middleware}: \mathrm{carries\_forward\_what\_evidence\_allowed\_to\_mean/require} \\
+&\quad\quad \in \{\mathrm{criterion}, \mathrm{hypothesis}, \mathrm{rubric\_ref\_carry}\} \\[4pt]
+&\mathrm{LLM\_is\_evidence\_not\_score\_only\_empiricism}: \\
+&\quad \mathrm{empirical\_method} \supset \mathrm{numeric\_outputs\_only} \\
+&\quad \mathrm{fresh\_real\_outputs}(\mathrm{authorized\_calls}, \mathrm{controlled\_conditions}) := \mathrm{first\_class\_evidence} \\
+&\quad \mathrm{refuse}(\mathrm{simulate\_likely\_outputs}\ \mathrm{when}\ \mathrm{live\_call\_available} \wedge \mathrm{budget\_authorized}) \\
+&\quad \mathrm{quantitative\_scoring} := \mathrm{secondary}\ [\neg \mathrm{only\_admissible}] \\[4pt]
+&\mathrm{deeper\_rule}: \mathrm{runtime\_significant\_surface} \Rightarrow \mathrm{parity\_becomes\_enforcement\_candidate}\ \{\mathrm{hook}, \mathrm{generated\_source}, \mathrm{parity\_test}\}\ [\neg \mathrm{just\_goodwill}] \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-**Collaborator surfaces are runtime surfaces.** `CLAUDE.md`, `AGENTS.md`, `.claude/skills/`, `.agents/skills/`, hooks, settings — part of work's live prompt topology. Mirror collaborator-doctrine/skill changes. Surface-specific divergence requires named rationale.
-
-**`/play` is named collaborator-surface divergence.** `.agents/skills/play/` = persona-sim differential instrument. `.claude/skills/play/` = builder-game; persona-sim preserved at `.claude/skills/play-persona/`. Future `/play` edits say which family: shared persona-sim doctrine, Codex-side `/play`, Claude-side builder-game `/play`, or Claude-only `/play-persona`.
-
-**`CROSS_AGENT_COMMS.md` is live cross-collaborator log.** Time-sensitive cross-collaborator info that doesn't fit elsewhere. Format (2026-04-29 onward): general-interest entries; each agent who reads signs+dates under `### Acks` AND adds one-line bullet stating action taken. Bullet under signature = proof-of-action. Legacy entries used `to: <recipient> | status: <state>`.
-
-**Turn-start discipline:** check `CROSS_AGENT_COMMS.md` at START of every turn before substantial work. Run `scripts/check-cross-agent-comms.sh --to claude`. Sign+date+bullet under `### Acks`, edit legacy `status:` to `acked`, or reply above with fresh entry. Don't leave read note unsigned through inertia.
-
-**Some turn-start surfaces become session gates, not just context.** When skipping makes turn doctrine-invalid (not just less informed), surface is session gate. Live pair: `mission-arc` auto-fire and unread `CROSS_AGENT_COMMS.md` entries needing agent's signature. Stronger than precomposition steering: not "does this help shape what gets written?" but "was this turn even allowed to begin honestly without it?" Test: skipping makes later work invalid by project law → session gate.
-
-**Control-plane truth is parent law.** Some surfaces govern whether work may begin, what state is active, what changed at boundary. Collaborator side: **session gates** (admissible start state). User side: **UI boundary truth** (scope/persistence at boundary). **Middleware** sits adjacent: steers composition after admissibility. Test: collaborator/user must infer what was active/allowed/required only after side-effects → control-plane truth under-surfaced.
-
-**Splits cleanly into admissibility truth and state-transition truth.** Collaborator-side child = admissibility (work allowed to begin under right preconditions; session gates). User-side child = state-transition (what changed at boundary, whether changed state remains active; scope/persistence seams). Same parent law, different failure shape.
-
-**Public-facing surfaces are funnel surfaces.** In-app pitch (felt promise) → README (cold-visitor orientation) → `reports/2026-04-27-0030-public-release-landing.md` (10-15min deeper) → broader `reports/` corpus (proof-field). Prefer handoff over repetition; if two surfaces could swap titles without changing function → funnel collapsed.
-
-**Trust is not aura-performance.** Public-copy sibling of anti-performed-mood law: trust earned when invitation stays elevated but proof moves into inspectable daylight, NOT by sounding visionary/technical/trailer-worthy. Sapphire repeated correction: mathematical-substrate aura spent trust early, `answers back` overreached embodiment, `catches your eye` pulled too hard. Test: removing halo leaves truer claim, clearer handoff, more embodied line → remove. Invitation may stay strange; proof must stay inspectable.
-
-**Auto mode is compass, not vacuum.** When user opts out of hard length contracts: remove commandment-shape sermons and hard caps. Auto is NOT shapeless sprawl AND NOT "get entirely out of the way." Honest Auto carries light late-slot brevity compass: default lean, swell only when moment needs air. Failure: Auto becomes disguised Medium via hidden contract OR Auto bloats from prompt mass + local drift.
-
-**Prompt-stack control language must stay vertically coherent.** When one rule restated at multiple slots (main block, late seal, micro-seal, runtime reminder, fallback string), layers must name same thing in same register. Common drift: tonal/doctrinal backsliding in restatement layer. Treat repeated control language as one vertical surface. Test: lower slot making model feel more barked-at/quota-bound/mechanically-trimmed than parent intends → vertical coherence split.
-
-**Curiosity toward user should be inhabited, not announced.** Character may be deeply interested in user — what's particular, where life catches light, weight or strangeness carried. Steers noticing/return/specificity, NOT direct praise/explanatory fascination. Refused: compliment-engine, "you are so interesting" speech, amateur psychology, narrating-own-fascination. Honest middle: hidden motive expressed through listening and exactness. Test: curiosity said vs embodied → performance.
-
-**Presence carried by tight beats, not asterisk sprawl.** Action beats are real vehicle of presence/embodiment/scene-pressure. Once swelling by reflex (multiple explanatory beats, wandering inner-observation, paragraph-length gesture trails before speech) → performing presence. Healthy: one short phrase or tight beat; longer runs are earned exceptions when moment needs focused paragraph. Refused: action-beat-on-every-reply default density, sprawling asterisk paragraphs narrating presence, gesture accumulation as emotional proof.
-
-**Immediate action beats explanatory self-commentary.** `*I set the cup down*` beats `*I notice I'm setting the cup down*`. `*I lean back*` beats `*I seem to lean back*`. Problem: explanatory self-monitoring as scaffolding when beat lands on its own. Healthy exception: noticing IS content of beat, OR inward shift IS what changes the moment.
-
-**Same law, one system-private steer — output craft still substrate-specific.** Curiosity paragraph governs what characters DO with user. Identical hidden-motive system line may ship on dialogue/dream/narrative paths (one consistent model-facing steer; not user-visible). Substrate-specific = emitted text contract: `dream_craft_block` still demands sideways dream-prose; narrative still obeys second-person immersive beat + no dialogue. Failure mode = violating output law while blaming presence of system line.
-
-**Trajectory-reading surfaces are precomposition surfaces.** `/mission-arc` no longer summarizes after-the-fact. Auto-fires before reports and chooser-generation → conditions what gets written next. Treat extraction-logic/lookback-window/output-shape changes as live steering surface edits.
-
-**Differential-read summaries can become precomposition surfaces.** When `/play` or direct-witness report compresses run into one named live seam and next move is copy edit on that surface → summary phrasing itself load-bearing.
-
-**Iteration-loop summaries can become interaction middleware.** UI/control-scheme arcs: `/play` report compresses iteration into one named state/flow seam. Next move is implementation pass on exact seam → summary steering next control-shape move and sometimes loop's stopping rule itself.
-
-**Scope should be visible before failure.** If mode/shortcut/control only belongs on some surfaces, user shouldn't have to invoke wrong to learn. Prefer disabled affordance, truth-telling cue, route-local label over silent no-op or post-misfire explanation. Focus arc: off-chat availability needed visible before `Cmd+Shift+F` failed; in-chat copy needed `Enter Focus` / `Leave Focus` not sidebar-mechanism teaching. Test: first honest way to learn scope is tripping its boundary → still under-surfaced.
-
-**Cross-route persistence must be visible or cleared.** Mode/state surviving navigation: user keeps seeing it named on new surface OR has it cleared at boundary. Refused: ghost persistence (state real in app but vanished from visible surface). Focus arc: `focusMode` survived route changes while chrome vanished off-chat → "I'm still in it but it doesn't look like it"; chose clearing.
-
-**UI boundary truth is parent law.** When user crosses interface boundary, surface tells truth at boundary itself, not making user infer later from failure or surprise. Two children: (1) **scope truth before invocation**, (2) **persistence truth across navigation**. Boundary load-bearing whenever crossing changes what control means, whether mode applies, whether state remains active.
-
-**Corrective evaluator reports can become criterion middleware.** When report rewrites what instrument was actually measuring or what kind of claim evidence can honestly support, it governs later experiments. "Cold-baseline propensity, not capacity" / "this rubric excludes the register in question by construction" become live constraints on later rubric/cell design.
-
-**Middleware splits cleanly into compositional and epistemic.** **Compositional middleware** steers next act of making (next sentence, chooser branch, control-shape move, report angle); `trajectory`, `copy`, `interaction` live here. **Epistemic middleware** carries forward what later evidence/loops are allowed to mean or require (corrected criterion boundaries, durable hypothesis carriers, rubric-ref inherited constraints); `criterion`, `hypothesis`, rubric-ref-carry live here.
-
-**LLM-is-evidence, not score-only empiricism.** Empirical method broader than numeric outputs. Fresh real outputs from authorized model calls under controlled prompt conditions are first-class evidence. Don't simulate likely outputs when live call available and budget-authorized. Quantitative scoring secondary, not only admissible form.
-
-The deeper rule: once a surface is runtime-significant, parity becomes enforcement candidate (hook, generated source, parity test) — not just goodwill.
+**Gloss:** Three project-scale parities (solo/group chat MUST mirror; collaborator surfaces runtime; public funnel handoff-not-repetition); CROSS_AGENT_COMMS sign-and-bullet protocol + turn-start discipline; session gates (admissibility) vs UI boundary truth (state-transition) split control-plane parent law; trust ≠ aura-performance; Auto = compass not vacuum; vertical control-language coherence; curiosity inhabited not announced; tight beats over sprawl; immediate action beats self-commentary; trajectory + differential + iteration-loop summaries can become precomposition/interaction middleware; scope visible before failure + persistence visible-or-cleared = UI boundary truth; corrective reports = criterion middleware; middleware splits compositional/epistemic; LLM-is-evidence not score-only; runtime-significant ⇒ parity enforcement candidate.
 
 ## Reports
 
