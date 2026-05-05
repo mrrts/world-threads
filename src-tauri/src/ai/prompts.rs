@@ -9028,19 +9028,22 @@ mod craft_rules_registry_tests {
             with_filter.len(), without_filter.len());
 
         // Pick the first EnsembleVacuous rule in the registry and verify
-        // its body appears in the override-render but NOT in the default render.
+        // its rendered content appears in the override-render but NOT in
+        // the default render. Under v3 dual-field architecture, the
+        // "rendered content" is formula_derivation when set, body when None.
         let docrule = CRAFT_RULES_DIALOGUE.iter()
             .find(|r| matches!(r.evidence_tier, EvidenceTier::EnsembleVacuous))
             .expect("registry must contain at least one EnsembleVacuous rule (covered by separate test)");
-        // Use a substring of the body that is unique enough to discriminate
-        // (the first 80 chars of the body, which by construction starts with
-        // a character-distinctive opening).
-        let body_marker: String = docrule.body.chars().take(80).collect();
-        assert!(without_filter.contains(&body_marker),
-            "include_documentary=true render must contain EnsembleVacuous rule '{}' body marker",
+        // Use a substring of the rendered content (formula_derivation when
+        // present, body otherwise) — the first 80 chars, by construction
+        // a character-distinctive opening.
+        let render_source: &str = docrule.formula_derivation.unwrap_or(docrule.body);
+        let render_marker: String = render_source.chars().take(80).collect();
+        assert!(without_filter.contains(&render_marker),
+            "include_documentary=true render must contain EnsembleVacuous rule '{}' content marker",
             docrule.name);
-        assert!(!with_filter.contains(&body_marker),
-            "default render must NOT contain EnsembleVacuous rule '{}' body marker (substrate ⊥ apparatus)",
+        assert!(!with_filter.contains(&render_marker),
+            "default render must NOT contain EnsembleVacuous rule '{}' content marker (substrate ⊥ apparatus)",
             docrule.name);
     }
 
@@ -9050,17 +9053,20 @@ mod craft_rules_registry_tests {
         let shipping_rule = CRAFT_RULES_DIALOGUE.iter()
             .find(|r| r.evidence_tier.ships_to_model())
             .expect("registry must contain at least one shipping rule");
-        let body_marker: String = shipping_rule.body.chars().take(80).collect();
+        // Under v3 dual-field architecture, the rendered content is
+        // formula_derivation when set, body when None.
+        let render_source: &str = shipping_rule.formula_derivation.unwrap_or(shipping_rule.body);
+        let render_marker: String = render_source.chars().take(80).collect();
 
-        // Without omit: the body should appear in the default render.
+        // Without omit: the rendered content should appear in the default render.
         let baseline = render_craft_rules_registry(&[], false);
-        assert!(baseline.contains(&body_marker),
+        assert!(baseline.contains(&render_marker),
             "shipping rule '{}' must appear in default render before omit",
             shipping_rule.name);
 
-        // With omit by name: the body should NOT appear in the render.
+        // With omit by name: the rendered content should NOT appear.
         let omitted = render_craft_rules_registry(&[shipping_rule.name], false);
-        assert!(!omitted.contains(&body_marker),
+        assert!(!omitted.contains(&render_marker),
             "rule '{}' must be omitted when its name is in the omit list",
             shipping_rule.name);
     }

@@ -25,6 +25,7 @@ pub enum BuildSubstrate {
     DialogueSystemPromptWithOverrides,
     DreamMessages,
     DreamSystemPrompt,
+    LocationDerivePrompt,
     MemoryUpdatePrompt,
     NarrativeSystemPrompt,
     ProactivePingMessages,
@@ -50,6 +51,7 @@ impl BuildSubstrate {
         BuildSubstrate::DialogueSystemPromptWithOverrides,
         BuildSubstrate::DreamMessages,
         BuildSubstrate::DreamSystemPrompt,
+        BuildSubstrate::LocationDerivePrompt,
         BuildSubstrate::MemoryUpdatePrompt,
         BuildSubstrate::NarrativeSystemPrompt,
         BuildSubstrate::ProactivePingMessages,
@@ -75,6 +77,7 @@ impl BuildSubstrate {
             BuildSubstrate::DialogueSystemPromptWithOverrides => "build_dialogue_system_prompt_with_overrides",
             BuildSubstrate::DreamMessages => "build_dream_messages",
             BuildSubstrate::DreamSystemPrompt => "build_dream_system_prompt",
+            BuildSubstrate::LocationDerivePrompt => "build_location_prompt",
             BuildSubstrate::MemoryUpdatePrompt => "build_memory_update_prompt",
             BuildSubstrate::NarrativeSystemPrompt => "build_narrative_system_prompt",
             BuildSubstrate::ProactivePingMessages => "build_proactive_ping_messages",
@@ -91,6 +94,7 @@ impl BuildSubstrate {
         match self {
             BuildSubstrate::CharacterDerivePrompt
             | BuildSubstrate::WorldDerivePrompt
+            | BuildSubstrate::LocationDerivePrompt
             | BuildSubstrate::UserInWorldDerivePrompt
             | BuildSubstrate::UserInWorldDerivePromptWithChoices => "derivation.rs",
             BuildSubstrate::ConsultantSystemPrompt => "consultant.rs",
@@ -118,7 +122,7 @@ impl BuildSubstrate {
             BuildSubstrate::SceneDescriptionPrompt | BuildSubstrate::SceneInventionPrompt => "novel / scene tools",
             BuildSubstrate::AnimationPrompt => "animation beat",
             BuildSubstrate::ChapterFromImageSystemPrompt => "imagined chapter",
-            BuildSubstrate::CharacterDerivePrompt | BuildSubstrate::WorldDerivePrompt => {
+            BuildSubstrate::CharacterDerivePrompt | BuildSubstrate::WorldDerivePrompt | BuildSubstrate::LocationDerivePrompt => {
                 "derivation (worldcli / UI)"
             }
             BuildSubstrate::UserInWorldDerivePrompt | BuildSubstrate::UserInWorldDerivePromptWithChoices => {
@@ -150,6 +154,7 @@ impl BuildSubstrate {
             | BuildSubstrate::ChapterFromImageSystemPrompt => "tool/narration hybrid (see block)",
             BuildSubstrate::CharacterDerivePrompt
             | BuildSubstrate::WorldDerivePrompt
+            | BuildSubstrate::LocationDerivePrompt
             | BuildSubstrate::UserInWorldDerivePrompt
             | BuildSubstrate::UserInWorldDerivePromptWithChoices => "derivation synthesis",
             BuildSubstrate::CorrectionNote => "n/a (template fragment)",
@@ -179,6 +184,7 @@ impl BuildSubstrate {
             }
             BuildSubstrate::CharacterDerivePrompt => "character record",
             BuildSubstrate::WorldDerivePrompt => "world record",
+            BuildSubstrate::LocationDerivePrompt => "location name + world context",
             BuildSubstrate::SceneDescriptionPrompt
             | BuildSubstrate::SceneInventionPrompt
             | BuildSubstrate::AnimationPrompt
@@ -225,7 +231,7 @@ impl BuildSubstrate {
             BuildSubstrate::ProactivePingSystemPrompt => "solo stack + proactive_ping_block",
             BuildSubstrate::MemoryUpdatePrompt => "memory schema + conversation",
             BuildSubstrate::ConsultantSystemPrompt => "consultant preamble + thread pack",
-            BuildSubstrate::CharacterDerivePrompt | BuildSubstrate::WorldDerivePrompt => "derivation templates",
+            BuildSubstrate::CharacterDerivePrompt | BuildSubstrate::WorldDerivePrompt | BuildSubstrate::LocationDerivePrompt => "derivation templates",
             BuildSubstrate::UserInWorldDerivePrompt | BuildSubstrate::UserInWorldDerivePromptWithChoices => {
                 "user derivation headers"
             }
@@ -511,7 +517,7 @@ mod tests {
 
     #[test]
     fn registry_count_matches_all_variant_const() {
-        assert_eq!(BuildSubstrate::ALL.len(), 21);
+        assert_eq!(BuildSubstrate::ALL.len(), 22);
     }
 
     #[test]
