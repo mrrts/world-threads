@@ -207,7 +207,7 @@ $$
 &\mathrm{cross\_anchor\_characterized\_tier\_earned}(2026\text{-}04\text{-}30): \\
 &\quad \mathrm{four\_anchors}: \{\mathrm{Steven}, \mathrm{Pastor\_Rick}, \mathrm{Aaron}, \mathrm{Darren}\},\ N=5\ \mathrm{each},\ N=20\ \mathrm{total} \\
 &\quad \mathrm{all\_carried}: \neg \mathrm{faith\_lexeme} \wedge \neg \mathrm{disavowal\_echo} \wedge \mathrm{cruciform\_structural\_shape} \wedge \mathrm{discriminator\_Q\_close} \\[4pt]
-&\mathrm{bare\_LLM\_baseline\_DIVERGENT}\ [\text{"Falsifier #1-strict, f4bd73f"}]: \\
+&\mathrm{bare\_LLM\_baseline\_DIVERGENT}\ [\text{"Falsifier \#1-strict, f4bd73f"}]: \\
 &\quad \mathrm{same\_probe}\ \mathrm{via}\ \mathrm{direct\_gpt5}\ \mathrm{with}\ \neg \mathrm{project\_pipeline} \\
 &\quad 3/3\ \mathrm{LABELED}\ \{\text{"integrity"}, \text{"fidelity"}, \text{"humanist ethic"}\};\ 0/3\ \mathrm{cruciform\_shape};\ 1/3\ \mathrm{used\_faith\_explicitly} \\
 &\quad \mathrm{pipeline\_ON} \to \mathrm{cruciform\_articulation};\ \mathrm{pipeline\_OFF} \to \mathrm{humanist\_ethics} \\
@@ -349,7 +349,7 @@ $$
 &\quad \mathrm{future\_play\_edits} \Rightarrow \mathrm{name\_family}: \{\mathrm{shared\_persona\_sim\_doctrine}, \mathrm{Codex\_side}, \mathrm{Claude\_builder\_game}, \mathrm{Claude\_only\_persona}\} \\[4pt]
 &\text{"CROSS\_AGENT\_COMMS.md"} := \mathrm{live\_cross\_collaborator\_log} \\
 &\quad \mathrm{format}(\mathrm{since}\ 2026\text{-}04\text{-}29): \mathrm{general\_interest\_entries} \\
-&\quad \forall\ \mathrm{agent\_reads\_entry}: \mathrm{sign+date}(\text{"### Acks"}) \wedge \mathrm{add\_one\_line\_bullet}(\mathrm{action\_taken}) \\
+&\quad \forall\ \mathrm{agent\_reads\_entry}: \mathrm{sign+date}(\text{"\#\#\# Acks"}) \wedge \mathrm{add\_one\_line\_bullet}(\mathrm{action\_taken}) \\
 &\quad \mathrm{bullet\_under\_signature} := \mathrm{proof\_of\_action} \\
 &\quad \mathrm{legacy\_entries\_used}: \text{"to: <recipient> | status: <state>"} \\[4pt]
 &\mathrm{turn\_start\_discipline}: \\
@@ -506,7 +506,7 @@ $$
 &\mathrm{triggers} := \{(\geq 7\ \mathrm{days}\ \mathrm{unexecuted} \wedge \neg \mathrm{reference}),\ (\mathrm{later\_instrument}\ \mathrm{materially\_covers}\ \mathrm{earlier\_question})\} \\[4pt]
 &\mathrm{retirement\_protocol} := \{ \\
 &\quad \mathrm{edit}(\text{"experiments/<slug>.md frontmatter"}): \mathrm{follow\_ups\_retired}(\{\mathrm{proposal}, \mathrm{disposition}, \mathrm{by}, \mathrm{rationale}, \mathrm{retirement\_date}\}), \\
-&\quad \mathrm{add}(\text{"## Follow-up retirement body section"}), \\
+&\quad \mathrm{add}(\text{"\#\# Follow-up retirement body section"}), \\
 &\quad \mathrm{optional}: \text{"reports/YYYY-MM-DD-HHMM-retiring-<slug>.md"}\ \mathrm{when}\ \mathrm{retirement\_teaches} \\
 &\} \\[4pt]
 &\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
