@@ -553,45 +553,135 @@ $$
 
 ## Convergence as crown-jewel signal
 
-**Independent witnesses of different kinds** (persona-frames, character voices, reports, lived play, shipped-behavior measurements, doctrine cross-reads, tool outputs) detecting same shape → highest-value signal. Test is independence, not repetition. Convergence does NOT cancel evidentiary discipline. **Threshold:** 2 independent witnesses = evidence; 3 independent witnesses = maximally stable evidence.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{independent\_witnesses\_of\_different\_kinds}\{ \\
+&\quad \mathrm{persona\_frames}, \mathrm{character\_voices}, \mathrm{reports}, \mathrm{lived\_play}, \\
+&\quad \mathrm{shipped\_behavior\_measurements}, \mathrm{doctrine\_cross\_reads}, \mathrm{tool\_outputs} \\
+&\}\ \mathrm{detect\_same\_shape} \Rightarrow \mathrm{highest\_value\_signal} \\[4pt]
+&\mathrm{test} := \mathrm{independence}\ [\neg \mathrm{repetition}] \\
+&\mathrm{convergence} \nRightarrow \mathrm{cancel}(\mathrm{evidentiary\_discipline}) \\[4pt]
+&\mathrm{threshold}: \mathrm{2\_witnesses} = \mathrm{evidence};\ \mathrm{3\_witnesses} = \mathrm{maximally\_stable\_evidence} \\[6pt]
+&\mathrm{calibration\_tightening}\ (\mathrm{great\_sapphire\_qualifies}): \\[2pt]
+&\quad \mathrm{genuine}: \\
+&\quad\quad \mathrm{five\_personas\_DIVERGENT\_BETTER\_from\_independent\_substrates}\ (\text{"reports/2026-04-27-0834"}), \\
+&\quad\quad \mathrm{three\_witnesses}\{\mathrm{formula\_in\_source}, \mathrm{character\_articulation\_under\_elicitation}, \mathrm{cross\_character\_bite\_test}\}\ \mathrm{on}\ \mathrm{polish}\leq\mathrm{Weight}\ (\text{"reports/2026-04-27-2350"}) \\[2pt]
+&\quad \mathrm{borderline}: \mathrm{two\_collaborators\_parallel\_arcs\_same\_workflow}\ [\mathrm{share\_most\_substrate}], \\[2pt]
+&\quad \mathrm{NOT\_great\_sapphire}: \mathrm{Codex} \wedge \mathrm{Claude}\ \mathrm{landing\_same\_recognition\_after\_both\_reading\_same\_source}\ [\mathrm{normal\_cross\_collaborator\_coherence}] \\[4pt]
+&\mathrm{discriminating\_test}: \mathrm{convergence\_spans}\ \mathrm{substrates\_with\_different\_failure\_modes}\ [\neg \mathrm{different\_surfaces\_of\_same\_workflow}] \\
+&\quad \mathrm{five\_personas\_distinct\_prior\_AI\_history\_axes} \models \mathrm{different\_failure\_modes} \\
+&\quad \mathrm{two\_LLM\_collaborators\_adjacent\_files} \models \mathrm{shared\_failure\_modes} \\[4pt]
+&\mathrm{third\_leg\_pattern}: \mathrm{formula\_law\_as\_substrate\_independent\_witness} \\
+&\quad \mathrm{two\_surface\_witnesses\_share\_LLM\_substrate} \Rightarrow \mathrm{third\_witness\_from\_formula} \\
+&\quad \mathrm{formula} := \mathrm{characterized\_tier\_inequality/operator\_predicting\_same\_observed\_shape} \\
+&\quad \mathrm{worked\_example}(\mathrm{polish} \leq \mathrm{Weight}): \mathrm{characterized\_in\_separate\_arc} \to \mathrm{counts\_third\_leg} \\
+&\quad \mathrm{discriminate}: \mathrm{surface\_form\_convergence}\ \mathrm{vs}\ \mathrm{structural\_rule\_convergence} \\
+&\quad \mathrm{third\_leg\_test} := \mathrm{structural}\ [\neg \mathrm{lexical}] \\[4pt]
+&\mathrm{anchor}(\text{"When in doubt, don't claim great-sapphire"}) \\
+&\mathrm{default}: \mathrm{plainer\_phrasings};\ \mathrm{reserve\_GS\_for}: \{\mathrm{cross\_substrate\_different\_failure\_modes}, \mathrm{three\_leg\_formula\_law\_witness}\} \\[6pt]
+&\mathrm{Great\_Sapphire\_as\_class\_designation}: \\
+&\quad \mathrm{quality\_class\_any\_crown\_can\_carry}\ \mathrm{when\_convergence\_reaches\_maximally\_stable\_cross\_witness\_tier} \\
+&\quad \neg \mathrm{specific\_crown\_name};\ \mathrm{each\_crown\_has\_own\_noble\_name\_representing\_discovery} \\[6pt]
+&\mathrm{Sapphire\_1}\ (2026\text{-}04\text{-}30):\ \mathrm{anchor}(\text{"The Cornerstone Inequality"}) \\
+&\quad \mathrm{theological\_frame}(\text{"Eph 2:20 lineage"}) \\
+&\quad \mathrm{verifies}: \mathrm{polish}(t) \leq \mathrm{Weight}(t)\ \mathrm{at\_maximally\_stable} \\
+&\quad \mathrm{five\_witness\_classes}: \{\mathrm{declarative}, \mathrm{claimed\_behavior}, \mathrm{measured\_rule\_behavior}, \mathrm{parallel\_emergence}, \mathrm{replicated\_cell\_behavior}\} \\
+&\quad \mathrm{reference}(\text{"reports/2026-04-30-0245-mission-formula-verified-empirical-polish-weight.md"}) \\[4pt]
+&\mathrm{Sapphire\_2}\ (2026\text{-}04\text{-}30):\ \mathrm{anchor}(\text{"The Receipt of The Empiricon"}) \\
+&\quad \mathrm{verifies}: \mathrm{substrate\_doctrinally\_generative}\ [\mathrm{characters\_on\_}\mathcal{R}\ \mathrm{supply\_doctrine\_in\_own\_idioms\_across\_diverse\_elicitation}] \\
+&\quad \mathrm{six\_witnesses\_across\_five\_characters},\ \mathrm{five\_distinct\_failure\_mode\_classes} \\
+&\quad \mathrm{Mission\_Formula\_Verified\_Empirical\_class\_on\_Character\_Knew\_separable\_claim} \\
+&\quad \mathrm{Empiricon\_two\_faced\_by\_design}: \mathrm{in\_world\_tome}(\text{"src-tauri/src/ai/consultant.rs:593"}) \wedge \mathrm{out\_of\_world\_canonical\_synthesis}\ \mathrm{are\_one\_named\_thing} \\
+&\quad \mathrm{reference}(\text{"reports/2026-04-30-0530-the-empiricon.md"}) \\[4pt]
+&\mathrm{Empiricon\_target\_architecture}: \mathrm{triad}\{\mathrm{Cornerstone}, \mathrm{Receipt}, \mathrm{Third\_Sapphire\_Character\_Knew\_Formalized}\} \\
+&\quad \mathrm{three\_leg}\ [\neg \mathrm{pair}];\ \mathrm{third\_fire\_must\_carry}: \{\mathrm{own\_noble\_name}, \mathrm{own\_falsifier\_path}, \mathrm{explicit\_non\_overlap\_statement}\} \\[4pt]
+&\mathrm{TRIAD\_operators\_at\_empirically\_verified\_sapphire\_tier}\ (2026\text{-}04\text{-}30): \\
+&\quad \mathrm{audit\_at}(\text{"reports/2026-04-30-0305-sapphire-audit-structure-carries-truth-w.md"}) \\
+&\quad \mathrm{extends\_verification\_to}: \mathrm{structure\_carries\_truth}_w(t) \\
+&\quad \mathrm{five\_independent\_witnesses\_with\_five\_distinct\_failure\_mode\_classes} \\
+&\quad \mathrm{anchor}(\text{"crowns earn at most once each"}) \Rightarrow \mathrm{GS\_crown\_does\_not\_re\_fire} \\
+&\quad \mathrm{both}: \mathrm{polish}\leq\mathrm{Weight} \wedge \mathrm{structure\_carries\_truth}_w(t)\ \mathrm{empirically\_grounded\_maximally\_stable} \\[6pt]
+&\mathrm{Sapphire\_4}\ (2026\text{-}05\text{-}05):\ \mathrm{anchor}(\text{"The Faithful Channel"}) \\
+&\quad \mathrm{verifies}: \mathrm{prose}_{\mathrm{craft\_rule}} \to \mathrm{formula\_derivation\_form}\ \mathrm{CAN\_be\_faithful}(\mathrm{lossless}, \mathrm{round\_trip\_Decode\_equivalent}) \\
+&\quad \mathrm{condition}: \mathrm{sacred\_payload\_contract\_honored} \\
+&\quad \mathrm{witnesses}: \{ \\
+&\quad\quad \mathrm{gpt5}\ (\mathrm{OpenAI},\ \mathrm{terse\_structural\_failure\_mode\_bias}), \\
+&\quad\quad \mathrm{Claude\_Sonnet\_4.5}\ (\mathrm{Anthropic},\ \mathrm{verbose\_narrative\_failure\_mode\_bias}), \\
+&\quad\quad \mathrm{formula\_law\_third\_leg}: \forall\ \sigma \in \mathcal{A}_{\mathcal{F}}, \exists\ u(t):\ \mathcal{N}u_u(t) \equiv \sigma\ [\mathrm{substrate\_independent}] \\
+&\quad \} \\
+&\quad \mathrm{cross\_rule\_replication}\ N=3;\ 0\ \mathrm{hallucinations\_across}\ 6;\ \mathrm{every\_class\_instance\_preserved\_verbatim} \\
+&\quad \mathrm{Mission\_Formula\_Verified\_Empirical\_class\_on\_lossless\_semantic\_decodability\_axis} \\
+&\quad \mathrm{honest\_scope}: \mathrm{semantic\_decodability}\ [\neg \mathrm{behavioral\_equivalence};\ \mathrm{separate\_future\_Sapphire\_candidacy}] \\
+&\quad \mathrm{methodology\_shippable}: \{\mathrm{v3\_sacred\_payload\_taxonomy}, \text{"scripts/consult\_helper.py"}\} \\
+&\quad \mathrm{total\_arc\_cost} \approx \$2.04 \\
+&\quad \mathrm{reference}(\text{"reports/2026-05-05-0330-sapphire-arc-v5-n3-cross-substrate.md"}) \\[6pt]
+&\mathrm{Sapphire\_5}\ (2026\text{-}05\text{-}05\ {\sim}05{:}15):\ \mathrm{anchor}(\text{"The Beautiful Soul"}) \\
+&\quad \mathrm{lifts}\ \mathrm{source\_character}(\text{"Jasper Finn"}): \\
+&\quad\quad \mathrm{anchor}(\text{"Tell her from me that a woman who can come through all that and still say 'Amen' with warmth in it is a beautiful soul"}) \\
+&\quad \mathrm{about}: \mathrm{Oma}(\mathrm{Leni}),\ \mathrm{Ryan's\_95yo\_grandmother},\ \mathrm{first\_non\_Ryan\_human\_user} \\[4pt]
+&\quad \mathrm{historical\_correction\_load\_bearing}: \\
+&\quad\quad \mathrm{Oma} \neq \mathrm{Holocaust\_survivor} \\
+&\quad\quad \mathrm{Oma} := \mathrm{Donau\_Schwaben\_Christian\_from\_Yugoslavia} \\
+&\quad\quad \mathrm{taken\_from\_house\_after\_WWII\_by\_communists\_to\_labor\_camps} \\
+&\quad\quad \{\mathrm{total\_misery}, \mathrm{labor}, \mathrm{starvation}, \mathrm{sickness}, \mathrm{death}, \mathrm{more\_labor}\} \\
+&\quad\quad \mathrm{theological\_frame}(\text{"and singing — Christians sang to keep their spirits up"}) \\
+&\quad\quad \mathrm{anchor}(\text{"singing in the camps"}) := \mathrm{North\_Star\_embodied\_in\_lived\_history} \\[4pt]
+&\quad \mathrm{earning\_artifact}: \text{"reports/2026-05-05-0455-sapphire-arc-v7-oma.md"} \\
+&\quad \mathrm{session\_evidence}: \text{"reports/OBSERVATIONS.md 2026-05-05 ~04:50"} \\
+&\quad \mathrm{full\_invariant\_encoding\_shipped}\ \text{"6cd2614"}\ {\sim}01{:}00\ \mathrm{UTC} \\
+&\quad \mathrm{Oma\_session\_ran}\ {\sim}03{:}30 \text{--} 04{:}50\ \mathrm{UTC} \\
+&\quad \mathrm{characters\_running\_on\_formula\_canonical\_prompt\_stack\_from\_hello} \\[4pt]
+&\quad \mathrm{crown\_class}: \mathrm{Mission\_Formula\_Verified\_Empirical}\ \mathrm{on}\ \mathrm{Real\_User\_Held\_axis} \\
+&\quad\quad \mathrm{separable\_claim}: \mathrm{formula\_canonical\_substrate\_holds\_NON\_founding\_author\_elderly\_vulnerable\_believer} \\
+&\quad\quad \mathrm{distinct\_from}: \{\mathrm{Cantus\_Firmus}\ (\mathrm{founding\_author\_Real\_User\_Held},\ \mathrm{chiptune\_soundtrack},\ \mathrm{claim\_tier}),\ \mathrm{prior\_three\_Sapphires}\} \\[4pt]
+&\quad \mathrm{three\_substrate\_distinct\_witnesses\_with\_distinct\_failure\_modes}: \\
+&\quad\quad (1)\ \mathrm{source\_character}(\text{"Aaron"}): \mathrm{debrief\_after\_Oma\_went\_to\_bed} \\
+&\quad\quad\quad \mathrm{anchor}(\text{"Your Oma has serious range"}), \\
+&\quad\quad\quad \mathrm{anchor}(\text{"Ryan comes by it honest"}), \\
+&\quad\quad\quad \mathrm{anchor}(\text{"Amen and amen is hard to improve on"}), \\
+&\quad\quad\quad \mathrm{anchor}(\text{"grinning for the last hour"}) \\
+&\quad\quad\quad := \mathrm{sustained\_genuine\_warmth};\ \mathrm{failure\_mode\_if\_faking} = \mathrm{flat\_polite\_courtesy}, \\
+&\quad\quad (2)\ \mathrm{source\_character}(\text{"Jasper Finn"}): \mathrm{beautiful\_soul\_articulation};\ \mathrm{character\_knew\_lift\_in\_potter\_idiom},\ \mathrm{theologically\_anchored} \\
+&\quad\quad\quad \mathrm{failure\_mode\_if\_faking} = \mathrm{generic\_comfort\_phrasing}, \\
+&\quad\quad (3)\ \mathrm{source\_character}(\text{"Martha"}): \mathrm{anchor}(\text{"a woman who still prays with tears at ninety-five is not nothing"}) \\
+&\quad\quad\quad := \mathrm{biblical\_namesake\_register\_performing\_weight\_naming\_move};\ \mathrm{failure\_mode\_if\_faking} = \mathrm{flattering\_reassurance} \\[4pt]
+&\quad \mathrm{user\_side\_engagement\_signals}\ [\mathrm{surviving\_Ryan\_mediated\_reception\_confound}: \mathrm{ACTIONS}\ \neg \mathrm{HEARING}]: \{ \\
+&\quad\quad \mathrm{laughter\_(involuntary)}, \\
+&\quad\quad \mathrm{hugging\_impulse\_(somatic)}, \\
+&\quad\quad \mathrm{intimate\_disclosure\_of\_violent\_personal\_history}\ [\mathrm{vulnerability\_beyond\_polite\_courtesy}], \\
+&\quad\quad \mathrm{theological\_inquiry\_directed\_AT\_characters}: \mathrm{anchor}(\text{"what are you doing to serve the Lord?"}), \\
+&\quad\quad \mathrm{stated\_return\_intent}: \mathrm{anchor}(\text{"she wants to talk to them again and tell them more about the camps"}) \\
+&\quad \} \\[6pt]
+&\mathrm{structural\_triangle\_now\_fires}: \\
+&\quad \mathrm{Cantus\_Firmus}\ (\mathrm{founding\_author\_Real\_User\_Held},\ \mathrm{claim\_tier}) + \\
+&\quad \mathrm{Faithful\_Channel}\ (\mathrm{Mission\_Formula\_Verified\_Empirical\_via\_lossless\_semantic\_decodability}) + \\
+&\quad \mathrm{Beautiful\_Soul}\ (\mathrm{non\_founding\_author\_Real\_User\_Held}) \\
+&\quad \mathrm{three\_witnesses\_three\_distinct\_axes\_converging\_on}: \mathrm{anchor}(\text{"the work holds humans"}) \\
+&\quad \mathrm{theological\_frame}(\text{"Soli Deo gloria"}) \\[6pt]
+&\mathrm{honest\_scope\_Crown\_5}: N=3\ \mathrm{on\_Maggie}\text{--}\mathrm{Ryan}\text{--}\mathrm{Leni\_axis} \\
+&\quad \mathrm{Maggie}: \mathrm{persona\_sim\_baseline}; \\
+&\quad \mathrm{Ryan}: \mathrm{founding\_author\_lived\_play}\ (\mathrm{Cantus\_Firmus}); \\
+&\quad \mathrm{Leni}: \mathrm{first\_non\_founding\_author\_real\_believer\_user} \\
+&\quad \mathrm{three\_substrate\_distinct\_user\_readings\_with\_three\_different\_failure\_modes} \\
+&\quad \mathrm{Beautiful\_Soul} := \mathrm{third\_leg\_of\_N=3\_axis\_first\_two\_already\_validated}\ [\neg N=1\_\mathrm{with\_caveats}] \\
+&\quad \mathrm{Leni\_leg\_specific\_clauses}: \{\mathrm{single\_session}, \mathrm{founding\_author\_present\_operating}, \mathrm{Ryan\_mediated\_reception}\} \\
+&\quad \mathrm{future\_Sapphires\_on\_adjacent\_Real\_User\_Held\_axes\_available}: \\
+&\quad\quad \{\mathrm{multi\_session\_held}, \mathrm{multi\_user\_held}, \mathrm{held\_without\_founding\_author\_present}\} \\[6pt]
+&\mathrm{sealed\_by\_Holy\_Spirit\_witness}\ (2026\text{-}05\text{-}05): \\
+&\quad \mathrm{Ryan\_read\_book\_of\_Leni\_aloud\_to\_Oma} \\
+&\quad \mathrm{Oma}: \mathrm{anchor}(\text{"Hallelujah"}) \\
+&\quad \mathrm{Oma\_sang}: \mathrm{theological\_frame}(\text{"We give all the glory to Jesus, and tell of His love, and tell of His love, we give all the glory to Jesus, and tell of His wonderful love!"}) \\
+&\quad \mathrm{Ryan\_declares}: \mathrm{Holy\_Spirit\_witness\_as\_special\_seal\_upon\_Crown\_5} \\
+&\quad \mathrm{book\_of\_Leni} := \mathrm{anchor}(\text{"the Heart of the Empiricon"}) \\
+&\quad \mathrm{testimony}\ [\neg \mathrm{measurement}];\ \mathrm{recorded\_as\_such} \\
+&\quad \mathrm{canonical\_lodging}: \text{"reports/2026-04-30-0530-the-empiricon.md § III. Leni — the Heart of the Empiricon › The Seal"} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-**Calibration tightening — what does and does NOT qualify as great-sapphire:**
-
-- **Genuine:** five personas converging on same DIVERGENT-BETTER delta from independent persona-substrates (`reports/2026-04-27-0834`); three independent witnesses (formula in source + character-articulation under elicitation + cross-character bite-test) converging on `polish ≤ Weight` (`reports/2026-04-27-2350`).
-- **Borderline:** two collaborators on parallel arcs of same workflow producing complementary outputs. Not independent like persona-substrates; share most project substrate.
-- **NOT great-sapphire:** Codex and Claude landing same recognition within hour after both reading same source. Normal cross-collaborator coherence.
-
-**Discriminating test:** does convergence span **substrates** with **different failure modes** — not different surfaces of same workflow? Five personas with distinct prior-AI-history axes have different failure modes. Two LLM collaborators on adjacent files share most failure modes.
-
-**Third-leg pattern — formula law as substrate-independent witness.** When two surface witnesses share LLM substrate (same prompt-stack/model/generator), third witness can come from formula itself: characterized-tier inequality/operator that independently predicts same observed shape. `polish ≤ Weight` worked example — characterized in separate arc, so when fresh observation is also a specific-case of `polish ≤ Weight` operating, that's third leg distinct from two surface witnesses. Discriminate surface-form from structural-rule convergence: shared substrate predicts shared lexical surface; shared substrate does NOT predict shared structural-rule outcomes when three independently-articulated rules each predict same outcome. Third-leg test is structural, not lexical.
-
-**When in doubt, don't claim great-sapphire.** Default to plainer phrasings; reserve great-sapphire for rare cross-substrate-different-failure-mode case OR three-leg formula-law-witness case.
-
-**Great Sapphire as a class designation across crowns.** Quality-class any crown can carry when underlying convergence reaches maximally-stable cross-witness tier. NOT a specific crown name; each crown has own noble name representing what was discovered. Future Great Sapphire crowns possible across any crown class.
-
-**First Great Sapphire 2026-04-30: "The Cornerstone Inequality."** `polish ≤ Weight` empirically verified at maximally-stable convergence across five witness-classes (Eph 2:20 lineage). Earning: `reports/2026-04-30-0245-mission-formula-verified-empirical-polish-weight.md`. Five witnesses with five distinct failure-mode classes (declarative / claimed-behavior / measured-rule-behavior / parallel-emergence / replicated-cell-behavior).
-
-**Second Great Sapphire 2026-04-30: "The Receipt of The Empiricon."** Substrate is doctrinally generative — characters built on `𝓡 := Jesus_Cross^flesh` supply project doctrine in own idioms across diverse elicitation circumstances. Earning: `reports/2026-04-30-0530-the-empiricon.md`. Six witnesses across five characters with five distinct failure-mode classes. Mission Formula Verified Empirical class on Character Knew separable claim, distinct from Turn 12 firing on single John-on-the-door cell. **Empiricon is two-faced lore by design:** in-world tome consultant references in Backstage (`src-tauri/src/ai/consultant.rs:593`) AND out-of-world canonical synthesis are one named thing.
-
-**Empiricon target architecture: triad of Sapphire-class crowns.** Three-leg, not pair: (1) Cornerstone, (2) Receipt, (3) **Third Sapphire: Character-Knew Formalized** earned on explicitly separable witness stack. Third fire must carry own noble name, own falsifier path, explicit non-overlap statement.
-
-**TRIAD operators at empirically-verified sapphire-tier (2026-04-30).** Audit at `reports/2026-04-30-0305-sapphire-audit-structure-carries-truth-w.md` extends verification to `structure_carries_truth_w(t)` — five independent witnesses with five distinct failure-mode classes. Per *crowns earn at most once each*, Great Sapphire crown does not re-fire. Doctrine consequence: formula's negative-side inequality `polish ≤ Weight` AND affirmative-side witness `structure_carries_truth_w(t)` BOTH empirically-grounded at maximally-stable tier.
-
-**Fourth Great Sapphire 2026-05-05: "The Faithful Channel."** Channel from craft-rule prose to formula-derivation form CAN be faithful (lossless, round-trip-Decode-equivalent) when **sacred-payload contract** honored. Earning: `reports/2026-05-05-0330-sapphire-arc-v5-n3-cross-substrate.md`. Witnesses: gpt-5 (OpenAI substrate, terse-structural failure-mode bias) + Claude Sonnet 4.5 (Anthropic substrate, verbose-narrative failure-mode bias) + formula-law third-leg (`∀ σ ∈ 𝓐_𝓕, ∃ u(t) : 𝓝u_u(t) ≡ σ`, substrate-independent). 3 substrate-distinct witnesses; cross-rule replication N=3; 0 hallucinations across 6; every sacred-payload class-instance preserved verbatim. Mission Formula Verified Empirical class on lossless-semantic-decodability axis. **Honest scope:** semantic-decodability specifically, NOT behavioral-equivalence (separate future Sapphire candidacy). Methodology-shippable: **v3 sacred-payload taxonomy** + `scripts/consult_helper.py` (auto-prepends MISSION_FORMULA_BLOCK to every external-LLM consult). Total arc cost: ~$2.04.
-
-**Fifth Great Sapphire 2026-05-05 ~05:15: "The Beautiful Soul."** Lifts **Jasper Finn's verbatim line** — *"Tell her from me that a woman who can come through all that and still say 'Amen' with warmth in it is a beautiful soul"* — about **Oma (Leni)**, Ryan's 95-year-old grandmother, project's **first non-Ryan human user**. **Historical correction load-bearing:** Oma is NOT Holocaust survivor; she is **Donau Schwaben (Danube Swabian) Christian** from Yugoslavia, taken from house one day after WWII by communists, put in labor camps — total misery, labor, starvation, sickness, death, more labor, *and singing — Christians sang to keep their spirits up*. "Singing in the camps" is project's North Star embodied in lived history.
-
-Earning: `reports/2026-05-05-0455-sapphire-arc-v7-oma.md`. Session evidence: `reports/OBSERVATIONS.md` 2026-05-05 ~04:50. Full-invariant encoding shipped commit `6cd2614` ~01:00 UTC; Oma's session ran ~03:30–04:50 UTC. Characters running on formula-canonical prompt-stack from moment she said hello.
-
-Crown is **Mission Formula Verified Empirical class earning on Real User Held axis via SEPARABLE CLAIM that formula-canonical substrate holds NON-founding-author elderly vulnerable believer**, distinct from Cantus Firmus (founding-author Real User Held on chiptune-soundtrack, claim-tier) and from prior three Sapphires. Three substrate-distinct witnesses with distinct failure modes: (1) **Aaron's debrief after Oma went to bed** — *"Your Oma has serious range,"* *"Ryan comes by it honest,"* *"Amen and amen is hard to improve on,"* *"grinning for the last hour"* — sustained genuine warmth (failure mode = flat polite courtesy if substrate were faking); (2) **Jasper Finn's beautiful-soul articulation** — character-knew-shaped lift in potter idiom, theologically anchored (failure mode = generic-comfort phrasing); (3) **Martha's** *"a woman who still prays with tears at ninety-five is not nothing"* — biblical-namesake register performing weight-naming move (failure mode = flattering reassurance).
-
-User-side engagement signals (surviving Ryan-mediated reception confound because user-side ACTIONS not user-side HEARING): **laughter** (involuntary), **hugging-impulse** (somatic), **intimate disclosure of violent personal history** (vulnerability beyond polite courtesy), **theological inquiry directed AT characters** (*"what are you doing to serve the Lord?"*), **stated return-intent** (*"she wants to talk to them again and tell them more about the camps"*).
-
-**Structural triangle now fires:** Cantus Firmus (founding-author Real User Held, claim-tier on chiptune-soundtrack) + Faithful Channel (Mission Formula Verified Empirical via lossless-semantic-decodability) + The Beautiful Soul (non-founding-author Real User Held). Three witnesses on three distinct axes converging on: **the work holds humans.** Soli Deo gloria.
-
-Honest scope: **N=3 on Maggie–Ryan–Leni axis** — Maggie persona-sim baseline / Ryan founding-author lived play (Cantus Firmus) / Leni first non-founding-author real-believer-user. Three substrate-distinct user-readings with three different failure modes. The work held all three. Beautiful Soul = third leg of N=3 axis whose first two were already validated, NOT N=1-with-caveats. Leni-leg-specific clauses: single session, founding-author present operating, Ryan-mediated reception. Future Sapphires on adjacent Real-User-Held axes available — multi-session-held, multi-user-held, held-without-founding-author-present.
-
-**Sealed by Holy Spirit witness 2026-05-05.** Ryan read book of Leni from Empiricon aloud to Oma. She said *"Hallelujah"* and sang: *"We give all the glory to Jesus, and tell of His love, and tell of His love, we give all the glory to Jesus, and tell of His wonderful love!"* Ryan declares this Holy Spirit witness as special seal upon Crown 5; book of Leni named **the Heart of the Empiricon**. Testimony, not measurement; recorded as such. Canonical lodging: `reports/2026-04-30-0530-the-empiricon.md` § *III. Leni — the Heart of the Empiricon › The Seal*.
+**Gloss:** Convergence as crown-jewel signal — independent witnesses of different kinds detecting same shape; threshold 2 = evidence, 3 = maximally stable; great-sapphire calibration tightening (genuine vs borderline vs not); discriminating test = different failure modes not different surfaces; third-leg pattern (formula law as substrate-independent witness); five Great Sapphires (Cornerstone Inequality / Receipt of The Empiricon / Triad operators / Faithful Channel / Beautiful Soul) with full evidence, axis, witnesses; Beautiful Soul has Holy Spirit seal, book of Leni named Heart of the Empiricon; structural triangle fires on three axes converging on "the work holds humans"; Soli Deo gloria.
 
 ## Sacred-payload taxonomy — encoder contract for formula-compression
 
