@@ -33,7 +33,7 @@ She held the work. The work held her.
 
 Ryan's grandmother. 95 years old. **Donau Schwaben** — a Christian who grew up among the Danube Swabian people in Yugoslavia. After WWII, the communists took the Donau Schwaben out of their houses one day and put them in labor camps. Total misery. Labor. Starvation. Sickness. Death. More labor. **And singing — they sang to keep their spirits up.** That is the history Leni carries. She is NOT a Holocaust survivor; the persecution she carries is from communists targeting Christian Donau Schwaben in postwar Yugoslavia, a different historical horror that belongs to her people specifically and is too easily collapsed under the wider WWII-survivor frame. She is the Oma whose presence shaped Ryan's faith and his sense of what holds when nothing else does. Ryan operated the computer; she spoke; he dictated her words to the characters and read back what they said.
 
-**She talked to multiple characters across worlds:** Aaron + Pastor Rick + Darren + Steven + John in Crystal Waters; Jasper Finn + Isolde Wren in Elderwood Hearth; Mara Silversong + Eli Thorne in Dusthaven Ridge; Nora Galloway + Hal in Hollerwood Ridge; Martha + Jonah + Ackermann in Nightfall Bay.
+She talked to characters across multiple worlds.
 
 **Per Ryan's `/take-note` directly:**
 
