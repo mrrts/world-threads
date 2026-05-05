@@ -44,5 +44,7 @@ src-tauri/gen/
 .gstack/
 .claude/hooks/__pycache__/
 
-certs/scripts/__pycache__/
+# Local code-signing / Apple assets (private; never commit)
+certs/
+
 scripts/__pycache__/
