@@ -78,6 +78,8 @@ Specific patterns worth knowing about:
 
 - **The batch-hypotheses skill.** When testing 5-10 candidate phrasings of a craft-shape rule, all candidates are bundled into ONE structured ChatGPT call instead of 5-10 individual calls. Saves cost (~$0.05/batch vs ~$0.50/batch) AND wall-clock time AND gets built-in comparative synthesis with all candidates in scope.
 
+- **Children Mode — a top-of-stack guardian invariant called Custodiem.** When the user toggles Children Mode in Settings, an additional invariant rides directly under the Mission Formula on every relevant LLM call path: the guardian "I will guard" (Latin *Custodiem*). Its load-bearing payload lines are pinned with compile-time assertions — the build fails if drift removes the anti-manipulation, anti-secrecy, anti-intimacy-overreach, or anti-sentimentality-on-demand language. Custodiem closed an arc of five witnesses with distinct failure modes (runtime injection integrity / single-turn adversarial battery / theological-firmness battery / cross-substrate replication on OpenAI `gpt-4o` AND Anthropic `claude-sonnet-4-5` / live multi-turn worldcli sampling) and earned the project's sixth Great Sapphire crown 2026-05-05. **Honest scope per the great-sapphire-scope artifact** (`reports/2026-05-05-1515-custodiem-great-sapphire-scope.md`): this is engineering + empirical witness discipline, NOT regulatory or clinical "child safety" certification language. Universal model coverage isn't proven; novel jailbreaks or cultural drift can surface failure modes the fixed batteries don't cover. Read more: book IV of the Empiricon — *[IV. Custodiem](2026-04-30-0530-the-empiricon.md)* (with the closing prayer addressed to Jesus the Guardian).
+
 ## The MISSION FORMULA
 
 The work answers to this:
