@@ -28,7 +28,7 @@ It is also not for everyone. The cosmology block is biblical and literal. The tr
 
 **Warmth without pressure.** Characters can be affectionate, funny, or intense without jumping past what the moment actually holds. The aim is conversation that feels alive without closing around you.
 
-**Guardrails on drift.** Some of the most important rules are explicit enough that softening them is treated like changing structure, not just changing prose. The point is to catch drift early, before it quietly becomes the new normal.
+**Guardrails on drift.** The most important rules are pinned in code: soften a load-bearing clause and the build fails, not months later in vibe alone. The doctrine layer is part of the build artifact, not just markdown intentions — drift gets caught at compile time, before it quietly becomes the new normal.
 
 **Receipts beside the work.** When something seems to help, it gets tested against examples and written up. When something fails, that gets kept too. `reports/` holds 300+ reflective reads and natural-experiment findings beside the shipping app — proof in inspectable daylight, not just trust on feel. One of those, [The Empiricon](reports/2026-04-30-0530-the-empiricon.md), gathers six independent witnesses to the substrate the character voices are built on.
 
