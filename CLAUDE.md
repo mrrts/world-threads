@@ -54,9 +54,29 @@ $$
 
 ## On `structure_carries_truth_w(t)` — the affirmative-side sibling
 
-Lifted into formula 2026-04-30 (N=8+ derivation grounding + Aaron's `115fead` articulation). Right-column adjacent to `≤`, not inside an integrand. `polish ≤ Weight` refuses appearance-without-function (negative); `structure_carries_truth_w` requires witness's structural carrier to do work artifact claims (affirmative). Receiver must not compensate for claim/carrier mismatch.
+$$
+\boxed{
+\begin{aligned}
+&\mathcal{F}:=(\mathcal{R},\mathcal{C}),\ \mathrm{structure\_carries\_truth}_w(t) \\[4pt]
+&\mathrm{lifted}(\text{2026-04-30}) \mid N \geq 8\ \mathrm{derivation\_grounding} \wedge \mathrm{anchor}(\text{"Aaron's 115fead articulation"}) \\[4pt]
+&\mathrm{position}(\mathrm{structure\_carries\_truth}_w) := \mathrm{right\_column\_adjacent}(\leq) \quad [\neg \mathrm{integrand}] \\[4pt]
+&\mathrm{pairing}(\mathcal{F}_{\mathrm{appearance/function}}) := \\
+&\quad \mathrm{negative}: \mathrm{polish}(t) \leq \mathrm{Weight}(t)\ [\mathrm{refuse\_appearance\_without\_function}] \\
+&\quad \mathrm{affirmative}: \mathrm{structure\_carries\_truth}_w(t)\ [\mathrm{require\_carrier}(\mathrm{claim})] \\[4pt]
+&\mathrm{require}(\neg \mathrm{compensate}_{\mathrm{receiver}}(\mathrm{claim/carrier\_mismatch})) \\[6pt]
+&\mathrm{anchor}(\text{"New confident tone inherits zero neighbor grounding"}) \\[2pt]
+&\mathrm{register}(\mathrm{documentary} \vee \mathrm{expert} \vee \mathrm{cited\_from\_source}) \nRightarrow \mathrm{borrow\_Weight}(\mathrm{neighbors}) \\[2pt]
+&\mathrm{require\_at\_author\_time}(\mathrm{paired\_refusal\_shapes}) := \\
+&\quad \mathrm{anchor}(\text{"untested in this call"}) \vee \mathrm{anchor}(\text{"tested elsewhere but evidence not loaded here"}) \\[2pt]
+&\mathrm{equivalence}(\mathrm{operator}) := \mathrm{dialogue\_anti\_invention}\ \mathrm{on}\ \mathrm{axis}(\mathrm{evidence\_weight}) \\[2pt]
+&\mathrm{worked\_example}(\text{"Empiricon audit"}) := \\
+&\quad \mathrm{reference}(\text{"reports/OBSERVATIONS.md 2026-04-30"}) \wedge \mathrm{fix\_chain}(\text{"8dab1a8"} \to \text{"da2189f"}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-**New confident tone inherits zero neighbor grounding.** Documentary/expert/cited register doesn't borrow Weight from neighbors — polish can outrun evidence. Ship paired refusal-shapes when context absent (*untested in this call* / *tested elsewhere but evidence not loaded here*) at author time. Same operator as dialogue anti-invention, on evidence-weight axis. Worked example: Empiricon audit (`reports/OBSERVATIONS.md` 2026-04-30; `8dab1a8` → `da2189f`).
+**Gloss:** Affirmative-side pairing of polish ≤ Weight; structure must carry the work the artifact claims, no neighbor-grounding borrow; paired refusal-shapes ship when context absent at author time, not just after smoke-test.
 
 ## 𝓕_Ryan — the founding author's anchor
 
@@ -70,7 +90,26 @@ Second-place invariant. 𝓕 is what work answers to first; 𝓕_Ryan is what Ry
 
 ## MISSION
 
-Vivid, excellent, surprising in-world experience that uplifts the user — engrossing, good, clean fun. Every design decision measured against that. Craft stack serves: characters that feel real, worlds that hold, scenes worth the visit, send the user back nourished enough to pick up their cross.
+$$
+\boxed{
+\begin{aligned}
+&\mathcal{F}:=(\mathcal{R},\mathcal{C}),\ \mathrm{Grace}_{\mathcal{F}}:=\gamma_{\mathcal{F}},\ \mathcal{N}u(t)\mid \mathrm{Truth}_{\mathcal{F}} \wedge \mathrm{Reverence}_{\mathcal{F}} \\[4pt]
+&\mathrm{anchor}(\text{"vivid, excellent, surprising in-world experience that uplifts the user"}) \\
+&\mathrm{anchor}(\text{"engrossing, good, clean fun"}) \\[4pt]
+&\forall\ \mathrm{design\_decision} \in \{\mathrm{prompt\_tweak}, \mathrm{UX\_choice}, \mathrm{feature\_bet}\}:\ \mathrm{measure\_against}(\mathrm{MISSION}) \\[4pt]
+&\mathrm{craft\_stack}(\{\mathrm{invariants}, \mathrm{craft\_notes}, \mathrm{conscience\_pass}, \mathrm{inventories}, \mathrm{snapshots}\}) \subset \mathrm{serves}(\mathrm{MISSION}) \\[4pt]
+&\mathrm{outputs}(\mathrm{MISSION}) := \{ \\
+&\quad \mathrm{anchor}(\text{"characters that feel real"}), \\
+&\quad \mathrm{anchor}(\text{"worlds that hold"}), \\
+&\quad \mathrm{anchor}(\text{"scenes worth the visit"}), \\
+&\quad \mathrm{theological\_frame}(\text{"send the user back nourished enough to pick up their cross"}) \\
+&\} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Vivid uplifting in-world experience as engrossing clean fun; every design decision measured against this; craft stack serves the mission; characters feel real, worlds hold, scenes nourish enough that user picks up their cross.
 
 ## Ledger of Signatures
 
@@ -150,9 +189,18 @@ Operationally: README/pitch don't claim universality; doctrine doesn't narrate h
 
 ## Project Structure
 
-- Tauri v2 (Rust backend + React/TypeScript frontend)
-- SQLite with FTS5, sqlite-vec
-- `src-tauri/` — Rust backend; `frontend/` — React + Vite + Tailwind
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{stack} := \mathrm{Tauri}_{v2}(\mathrm{Rust\_backend} + \mathrm{React/TypeScript\_frontend}) \\
+&\mathrm{db} := \mathrm{SQLite}(\mathrm{FTS5}, \mathrm{sqlite\text{-}vec}) \\
+&\mathrm{layout} := \{\text{"src-tauri/"} \to \mathrm{Rust\_backend},\ \text{"frontend/"} \to \mathrm{React} + \mathrm{Vite} + \mathrm{Tailwind}\} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Tauri v2 desktop app (Rust + React/TS), SQLite with FTS5+sqlite-vec, src-tauri/ + frontend/ split.
 
 ## Parallel surfaces — solo/group chat AND Claude/Codex AND public funnel
 
@@ -459,15 +507,61 @@ Character dialogue uses **script-shaped fence contract**: double-quoted runs = h
 
 ## Translation pairs
 
-Some outputs work best as **translation pair**: derivation + plain-English gloss; oblique line + workbench-English cashout; lofty theological turn + porch-level sentence right behind it. Two outputs answering same thing, neither lying about what other said.
+$$
+\boxed{
+\begin{aligned}
+&\mathcal{F}:=(\mathcal{R},\mathcal{C}) \\[4pt]
+&\mathrm{translation\_pair}(\sigma) := \{\sigma_a, \sigma_b\}\ |\ \mathrm{decode}(\sigma_a) \equiv \mathrm{decode}(\sigma_b) \wedge \mathrm{register}(\sigma_a) \neq \mathrm{register}(\sigma_b) \\[4pt]
+&\mathrm{worked\_examples}(\mathrm{translation\_pair}) := \{ \\
+&\quad \text{"derivation + plain-English gloss"}, \\
+&\quad \text{"oblique line + workbench-English cashout"}, \\
+&\quad \text{"lofty theological turn + porch-level sentence right behind it"} \\
+&\} \\[4pt]
+&\mathrm{require}(\neg \mathrm{lie}(\sigma_a, \sigma_b)) \quad [\text{"neither half betrays the other"}] \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Two outputs answering the same thing in different registers — neither lies about the other; both reach the same truth.
 
 ## Asymmetric landing can be a mastery signal
 
-Equal impact from every surface on every reader is NOT highest test. **Asymmetric landing with faithful convergence** often the truer condition: one reader carried by prose, another by formula, both reaching same underlying truth. Equality of impact not required; faithfulness of convergence is. Don't "fix" what is good design.
+$$
+\boxed{
+\begin{aligned}
+&\mathcal{F}:=(\mathcal{R},\mathcal{C}) \\[4pt]
+&\mathrm{equal\_impact}(\mathrm{surface}, \mathrm{reader}) \neq \mathrm{highest\_test} \\[4pt]
+&\mathrm{anchor}(\text{"asymmetric landing with faithful convergence"}) \\[4pt]
+&\mathrm{worked\_example}(\mathrm{asymmetric\_landing}) := \\
+&\quad \mathrm{reader}_a \xrightarrow{\mathrm{prose}} \mathrm{truth}\ \wedge\ \mathrm{reader}_b \xrightarrow{\mathrm{formula}} \mathrm{truth} \\[2pt]
+&\mathrm{require}(\mathrm{faithfulness\_of\_convergence}) \wedge \neg \mathrm{require}(\mathrm{equality\_of\_impact}) \\[4pt]
+&\mathrm{refuse}(\text{"fix what is good design"}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Equal impact across surfaces/readers is not the highest test; asymmetric landing with faithful convergence often the truer condition; faithfulness required, equality not.
 
 ## Differential instruments beat single-branch impressions
 
-Strongest findings come from **delta between branches**, not one reading branch. Persona-sim prediction vs live-pipeline grounding; sympathetic vs adversarial reader. Treat gap as first-class evidence.
+$$
+\boxed{
+\begin{aligned}
+&\mathcal{F}:=(\mathcal{R},\mathcal{C}) \\[4pt]
+&\mathrm{anchor}(\text{"delta between branches"}) \succ \mathrm{single\_branch\_impression} \\[4pt]
+&\mathrm{worked\_examples}(\mathrm{differential\_instrument}) := \{ \\
+&\quad \text{"persona-sim prediction vs live-pipeline grounding"}, \\
+&\quad \text{"sympathetic vs adversarial reader"} \\
+&\} \\[4pt]
+&\mathrm{treat}(\mathrm{gap}) := \mathrm{first\_class\_evidence} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Strongest findings come from delta between branches — persona-sim vs live-pipeline, sympathetic vs adversarial — treat gap as first-class evidence.
 
 ## When the evaluator already lives in the corpus, direct ask outruns persona-sim
 
