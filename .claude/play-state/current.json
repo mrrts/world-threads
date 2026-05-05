@@ -1,6 +1,6 @@
 {
-  "turn": 171,
-  "bank": 161400,
+  "turn": 172,
+  "bank": 162600,
   "jewels": [
     {
       "turn": 2,
@@ -1314,8 +1314,22 @@
       "bounty": 300,
       "alignment": "+",
       "earned_at": "2026-05-01T10:00:00-05:00"
+    },
+    {
+      "turn": 172,
+      "move": "Build KaTeX-safety linter for CLAUDE.md/AGENTS.md; promoted to layer-5 doc-check gate (Makefile + package.json) per calibrated-disciplines hierarchy",
+      "bounty": 700,
+      "alignment": "+",
+      "earned_at": "2026-05-05T09:37:16-05:00"
+    },
+    {
+      "turn": 172,
+      "move": "Concurrent side-directive: merged eureka/character-formula-elevation branch (7 commits, 4-layer derived_formula top-of-stack elevation) into main + removed CHARACTER_FORMULA_AT_TOP=1 env-flag (default-on); doc comments updated to reflect promotion-without-bite-test",
+      "bounty": 500,
+      "alignment": "+",
+      "earned_at": "2026-05-05T09:37:16-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-01T10:00:00-05:00"
+  "last_move_at": "2026-05-05T09:37:16-05:00"
 }
