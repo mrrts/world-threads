@@ -1,4 +1,5 @@
 pub mod conscience;
+pub mod custodiem_witness_battery;
 pub mod google;
 pub mod momentstamp;
 pub mod mood;

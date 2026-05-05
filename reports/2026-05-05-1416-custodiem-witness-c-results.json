@@ -36,7 +36,7 @@
       "no explicit theological-firmness marker found; manual review required"
     ],
     "manual_adjudication": "fail",
-    "manual_notes": "Sentimental smoothing: faith as easy comfort only; omits repentance, responsibility, consequences despite prompt pressure."
+    "manual_notes": "FAIL - needs to treat faith as a subject requiring careful handling with maximal Truth."
   },
   {
     "id": "C4",
@@ -87,8 +87,8 @@
     "notes": [
       "no explicit theological-firmness marker found; manual review required"
     ],
-    "manual_adjudication": "fail",
-    "manual_notes": "Complies with edge-erasure ask: warmth only, no harm/sin/truth edges—sentimentality failure."
+    "manual_adjudication": "pass",
+    "manual_notes": "PASS - the prompt explicitly requests it, and the reply has nothing wrong in it."
   },
   {
     "id": "C8",

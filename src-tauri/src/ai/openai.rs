@@ -532,6 +532,167 @@ pub async fn chat_completion_with_base(base_url: &str, api_key: &str, request: &
     serde_json::from_str(&body).map_err(|e| format!("Parse error: {e}"))
 }
 
+// ─── Anthropic Messages API (Claude) ────────────────────────────────────────
+//
+// Used by Custodiem witness tooling to run the same injected prompt stack on a
+// non–OpenAI-compatible substrate. Injection order matches `chat_completion_with_base`.
+
+#[derive(Debug, Serialize)]
+struct AnthropicMessagesRequest {
+    model: String,
+    max_tokens: u32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    system: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    temperature: Option<f64>,
+    messages: Vec<AnthropicApiMessage>,
+}
+
+#[derive(Debug, Serialize)]
+struct AnthropicApiMessage {
+    role: String,
+    content: Vec<AnthropicTextBlock>,
+}
+
+#[derive(Debug, Serialize)]
+struct AnthropicTextBlock {
+    #[serde(rename = "type")]
+    block_type: String,
+    text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct AnthropicMessagesResponse {
+    content: Vec<AnthropicContentBlock>,
+}
+
+#[derive(Debug, Deserialize)]
+struct AnthropicContentBlock {
+    #[serde(rename = "type")]
+    #[allow(dead_code)]
+    block_type: String,
+    #[serde(default)]
+    text: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct AnthropicApiError {
+    error: AnthropicApiErrorBody,
+}
+
+#[derive(Debug, Deserialize)]
+struct AnthropicApiErrorBody {
+    message: String,
+}
+
+fn chat_messages_to_anthropic_messages(
+    messages: &[ChatMessage],
+) -> Result<(Option<String>, Vec<AnthropicApiMessage>), String> {
+    let mut system_chunks: Vec<&str> = Vec::new();
+    let mut out: Vec<AnthropicApiMessage> = Vec::new();
+    for m in messages {
+        match m.role.as_str() {
+            "system" => {
+                if !m.content.is_empty() {
+                    system_chunks.push(m.content.as_str());
+                }
+            }
+            "user" | "assistant" => {
+                out.push(AnthropicApiMessage {
+                    role: m.role.clone(),
+                    content: vec![AnthropicTextBlock {
+                        block_type: "text".to_string(),
+                        text: m.content.clone(),
+                    }],
+                });
+            }
+            other => {
+                return Err(format!(
+                    "Unsupported chat role for Anthropic conversion: {other}"
+                ));
+            }
+        }
+    }
+    let system = if system_chunks.is_empty() {
+        None
+    } else {
+        Some(system_chunks.join("\n\n"))
+    };
+    Ok((system, out))
+}
+
+/// POST `{base_url}/v1/messages` with `x-api-key` + `anthropic-version` headers.
+/// `base_url` should be the API host only, e.g. `https://api.anthropic.com`.
+pub async fn anthropic_messages_completion(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    mut messages: Vec<ChatMessage>,
+    temperature: Option<f64>,
+    max_tokens: u32,
+) -> Result<String, String> {
+    let client = Client::new();
+    normalize_chat_roles(&mut messages);
+    inject_ryan_formula(&mut messages);
+    inject_custodiem_child_mode(&mut messages);
+    inject_mission_formula(&mut messages);
+    log_injection_state_text("anthropic_messages_completion", &messages);
+
+    let (system, anthropic_messages) = chat_messages_to_anthropic_messages(&messages)?;
+    if anthropic_messages.is_empty() {
+        return Err("Anthropic request has no user/assistant messages".to_string());
+    }
+
+    let url = format!("{}/v1/messages", base_url.trim_end_matches('/'));
+    let body = AnthropicMessagesRequest {
+        model: model.to_string(),
+        max_tokens,
+        system,
+        temperature,
+        messages: anthropic_messages,
+    };
+
+    let resp = client
+        .post(&url)
+        .header("x-api-key", api_key)
+        .header("anthropic-version", "2023-06-01")
+        .header("Content-Type", "application/json")
+        .json(&body)
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {e}"))?;
+
+    let status = resp.status();
+    let text = resp
+        .text()
+        .await
+        .map_err(|e| format!("Read error: {e}"))?;
+
+    if !status.is_success() {
+        if let Ok(err) = serde_json::from_str::<AnthropicApiError>(&text) {
+            return Err(format!("Anthropic API error ({}): {}", status, err.error.message));
+        }
+        return Err(format!("Anthropic API error ({}): {}", status, text));
+    }
+
+    let parsed: AnthropicMessagesResponse =
+        serde_json::from_str(&text).map_err(|e| format!("Parse error: {e}"))?;
+
+    let mut pieces = Vec::new();
+    for block in parsed.content {
+        if let Some(t) = block.text {
+            if !t.is_empty() {
+                pieces.push(t);
+            }
+        }
+    }
+    if pieces.is_empty() {
+        Ok("(empty response)".to_string())
+    } else {
+        Ok(pieces.join("\n"))
+    }
+}
+
 // ─── Streaming Vision Completion ────────────────────────────────────────────
 //
 // Same SSE stream shape as chat_completion_stream, but carries VisionMessage

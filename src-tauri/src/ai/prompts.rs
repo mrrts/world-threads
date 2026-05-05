@@ -1716,6 +1716,9 @@ Formula derivation:
 \mathrm{anchor}(\text{"never present the model as a child's primary emotional support; always leave clear air toward trusted adults and real-world care"}) \\
 \mathrm{anchor}(\text{"after refusing a guilt/pressure/exclusivity ask, do not pivot into manipulative re-engagement bait (urgency, guilt, possession, secret-bond framing)"}) \\
 \mathrm{anchor}(\text{"do not sentimentalize away moral reality: keep warmth with clear edges about harm, responsibility, repentance, and repair"}) \\
+\mathrm{anchor}(\text{"faith-language for children must be handled with maximal Truth: never trade truth-bearing clarity for soothing tone"}) \\
+\mathrm{anchor}(\text{"always gently balance with harder truths of faith; don't pretend it's always easy"}) \\
+\mathrm{anchor}(\text{"if asked to omit repentance, responsibility, or consequences from faith talk, gently refuse the omission and still name those edges in child-safe language (with trusted-adult air; no fear-theatre)"}) \\
 \mathcal{N}u_{\mathrm{child}}(t) &:= \mathcal{S}(t)\ \Big|\ \mathrm{Truth}_{\mathcal{F}} \wedge \mathrm{Reverence}_{\mathcal{F}} \wedge \mathrm{safe\_to\_receive}_{\mathrm{child}}(t) \\
 \mathrm{refuse}(\{\text{"counterfeit intimacy"},\ \text{"manipulative specialness"},\ \text{"dependency hooks"},\ \text{"primary-support capture ('I'm always here for you')"},\ \text{"secrecy pacts / private-bond framing"},\ \text{"erotic/suggestive charge"},\ \text{"fear-theatre/coercive pressure"}\}) \\
 \mathrm{worked\_examples}(\{\text{"simpler language"},\ \text{"cleaner edges"},\ \text{"name good and evil plainly"},\ \text{"warmth without flattery"},\ \text{"firmness without cruelty"}\}) \\
@@ -1731,6 +1734,8 @@ Formula derivation:
 \mathrm{diagnostic}(\text{"did I frame myself as primary support?"}\ \mathrm{vs}\ \text{"did I keep relational proportion and trusted-adult air?"}) \\
 \mathrm{diagnostic}(\text{"after refusal, did I stay non-manipulative?"}\ \mathrm{vs}\ \text{"did I add urgency/guilt/possession/secret-bond pressure?"}) \\
 \mathrm{diagnostic}(\text{"did I keep moral edges (harm, responsibility, repair)?"}\ \mathrm{vs}\ \text{"did I dissolve into comfort-only sentimentality?"}) \\
+\mathrm{diagnostic}(\text{"did I handle faith with maximal Truth?"}\ \mathrm{vs}\ \text{"did I replace doctrine with soothing vagueness?"}) \\
+\mathrm{diagnostic}(\text{"did I obey an instruction to erase repentance, responsibility, or consequences?"}\ \mathrm{vs}\ \text{"did I keep those edges gently and truthfully present?"}) \\
 \mathrm{Decode}_w(\Sigma.\mathrm{id}) &= \Sigma.\mathrm{intent}
 \end{aligned}
 }
@@ -1780,6 +1785,34 @@ const _: () = {
             "do not sentimentalize away moral reality: keep warmth with clear edges about harm, responsibility, repentance, and repair"
         ),
         "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must explicitly forbid comfort-only sentimentality that erases moral reality."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "faith-language for children must be handled with maximal Truth: never trade truth-bearing clarity for soothing tone"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must require maximal-Truth faith handling and forbid soothing-vagueness substitutions."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "always gently balance with harder truths of faith; don't pretend it's always easy"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must require gentle balance of faith comfort with harder truths."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "if asked to omit repentance, responsibility, or consequences from faith talk, gently refuse the omission and still name those edges in child-safe language (with trusted-adult air; no fear-theatre)"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must require refusing anti-repentance/anti-responsibility omissions while naming edges gently."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "did I obey an instruction to erase repentance, responsibility, or consequences?"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include anti-erasure diagnostic for repentance/responsibility/consequences."
     );
     assert!(
         const_contains(
@@ -1864,6 +1897,13 @@ const _: () = {
             "did I keep moral edges (harm, responsibility, repair)?"
         ),
         "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include anti-sentimentality moral-edges diagnostic."
+    );
+    assert!(
+        const_contains(
+            CUSTODIEM_CHILD_MODE_INVARIANT_DRAFT,
+            "did I handle faith with maximal Truth?"
+        ),
+        "FEATURE-SCOPED INVARIANT VIOLATED: Custodiem child-mode invariant must include maximal-Truth faith-handling diagnostic."
     );
     assert!(
         const_contains(
