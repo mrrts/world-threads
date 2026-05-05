@@ -879,30 +879,66 @@ $$
 
 ## When the evaluator already lives in the corpus, direct ask outruns persona-sim
 
-When reader you want is already in project's DB — in-db character with real voice and recent evaluative history — prefer direct `worldcli ask` before persona-sim. Live character outruns sim's outer-archetype drift.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{reader\_already\_in\_DB}(\mathrm{in\_db\_character}\ \mathrm{with}\ \mathrm{real\_voice} \wedge \mathrm{recent\_evaluative\_history}) \Rightarrow \\
+&\quad \mathrm{prefer}(\text{"worldcli ask"}) \prec \mathrm{persona\_sim} \\[4pt]
+&\mathrm{live\_character} \succ \mathrm{persona\_sim}\ [\mathrm{outruns\ outer\_archetype\_drift}] \\
+&\mathrm{persona\_sim\_after}: \mathrm{breadth} \vee \mathrm{contrast} \\[6pt]
+&\mathrm{transcript\_reading\_corollary}: \mathrm{anchor}(\text{"hunt the wince, not the grade"}) \\[2pt]
+&\mathrm{feeding\_transcript}(\mathrm{in\_db\_character}) \Rightarrow \mathrm{prompt}: \\
+&\quad \mathrm{anchor}(\text{"Read this as if you were in the conversation. Where does it start to feel like it's leaning on you, or asking you to carry something that isn't yours?"}) \\[2pt]
+&\mathrm{hunt\_for} := \{ \\
+&\quad \text{"moment tone gets over-eager"}, \\
+&\quad \text{"lines explaining themselves"}, \\
+&\quad \text{"memory/check-ins adding weight"} \\
+&\} \\[2pt]
+&\mathrm{gold\_standard\_output} := \mathrm{anchor}(\text{"one or two exact lines character would quietly trim"}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-**Transcript-reading corollary — hunt the wince, not the grade.** Feeding transcript through in-db character: prompt *"Read this as if you were in the conversation. Where does it start to feel like it's leaning on you, or asking you to carry something that isn't yours?"* Hunt for over-eager tone, lines explaining themselves, memory/check-ins adding weight. Gold standard: one or two exact lines character would quietly trim.
+**Gloss:** When evaluator is in-db character with real voice + recent evaluative history, prefer worldcli ask over persona-sim; live character outruns sim's outer-archetype drift; transcript-reading prompt = "where does it start to feel like it's leaning on you?"; hunt over-eager tone, self-explaining lines, weight-adding check-ins; gold standard = one-two exact lines to trim.
 
 ## Commit messages include a Formula derivation
 
-Every substantive commit ends with:
+$$
+\boxed{
+\begin{aligned}
+&\forall\ \mathrm{substantive\_commit}: \mathrm{ends\_with}(\mathrm{trailer}) \\[2pt]
+&\mathrm{trailer\_format} := \mathrm{anchor}(\text{"**Formula derivation:** [one Unicode-math expression, in-substrate generated]\textbackslash n**Gloss:** [one short sentence in plain English, } \leq 25\text{ words]"}) \\[2pt]
+&\mathrm{render\_in}(\{\mathcal{F}, \mathcal{R}, \mathcal{C}, \mathcal{S}, \int, \Pi, \partial, \Rightarrow, \leq, \wedge\})\ [\neg \mathrm{raw\_LaTeX}] \\
+&\mathrm{position}: \mathrm{before}(\text{"Co-Authored-By trailer"}) \\[4pt]
+&\mathrm{include\_for}(\mathrm{substantive\_commits}) := \{ \\
+&\quad \mathrm{doctrine\_updates}, \mathrm{prompt\_stack\_edits}, \mathrm{new\_features}, \mathrm{methodology\_shifts}, \mathrm{reports}, \mathrm{hooks} \\
+&\} \\
+&\mathrm{omit\_for}(\mathrm{trivial}) := \{ \\
+&\quad \mathrm{typo\_fixes}, \mathrm{formatting}, \mathrm{dependency\_bumps}, \mathrm{gitignore}, \mathrm{single\_line\_bug\_fixes} \\
+&\} \\[4pt]
+&\mathrm{earned\_exception}(\text{"trivial-by-diff-size with deeper meaning"}): \\
+&\quad \mathrm{small\_commit}(\mathrm{doctrinal/methodological\_weight\_not\_surfaced\_by\_diff}) \Rightarrow \mathrm{include\_despite\_size} \\
+&\quad \mathrm{diagnostic}(\text{"would derivation help future reader understand what work meant for } \mathcal{F}?\text{"}) \\
+&\quad \mathrm{hook\_overrides}: \{\text{"FORCE\_FORMULA\_DERIVATION=1"}, \text{"DISABLE\_FORMULA\_DERIVATION=1"}\} \\[4pt]
+&\mathrm{generate\_in\_substrate}\ \mathrm{by\_default};\ \mathrm{reach\_for}(\text{"/second-opinion"}) \mid \mathrm{unusually\_load\_bearing} \wedge \neg \mathrm{in\_substrate\_sharp\_enough} \\[6pt]
+&\mathrm{operator\_balance\_check}: \mathrm{anchor}(\text{"don't reflexively close with Truth} \wedge \text{Reverence as ceremony"}) \\
+&\mathrm{audit}(/\mathrm{eureka\_iter\_5},\ 2026\text{-}04\text{-}28,\ 40\ \mathrm{derivations}): \\
+&\quad \mathrm{Truth}: 60\%,\ \mathrm{Reverence}: 27.5\%,\ \mathrm{Grace}: 0\%,\ \Pi: 0\%,\ \mathcal{N}u: 0\% \\
+&\mathrm{skew}: \mathrm{over\_cites}(\mathrm{gate\_conditions}) \wedge \mathrm{under\_cites}(\mathrm{affirmative\_agencies}) \\[2pt]
+&\mathrm{gate\_conditions}(\mathrm{Truth}_{\mathcal{F}} \wedge \mathrm{Reverence}_{\mathcal{F}}) \in \mathrm{work\_IS\_gating} \\
+&\mathrm{affirmative\_agencies} := \{ \\
+&\quad \mathrm{Grace}: \mathrm{anchor}(\text{"something unmerited"}), \\
+&\quad \Pi: \mathrm{anchor}(\text{"discernment-gift"}), \\
+&\quad \mathcal{N}u: \mathrm{anchor}(\text{"Speech that emerges IS work's product"}) \\
+&\} \in \mathrm{work\_IS\_receiving\_or\_emerging} \\
+&\mathrm{refuse}(\mathrm{ceremonial\_close}: \text{"|}\ \mathrm{Truth}_{\mathcal{F}} \wedge \mathrm{Reverence}_{\mathcal{F}}\ \text{regardless of gating"}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-```
-**Formula derivation:** [one Unicode-math expression, in-substrate generated]
-**Gloss:** [one short sentence in plain English, ≤25 words]
-```
-
-Render in Unicode math (𝓕, 𝓡, 𝓒, 𝓢, ∫, Π, ∂, ⇒, ≤, ∧) — never raw LaTeX. Lives BEFORE `Co-Authored-By` trailer.
-
-**Include for substantive commits:** doctrine updates, prompt-stack edits, new features, methodology shifts, reports, hooks. **Omit for trivial:** typo fixes, formatting, dependency bumps, gitignore, single-line bug fixes.
-
-**Earned exception — trivial-by-diff-size with deeper meaning.** Small commit carrying doctrinal/methodological weight diff alone doesn't surface: include despite size. Test: would derivation help future reader understand what work meant for 𝓕? Hook overrides: `FORCE_FORMULA_DERIVATION=1` / `DISABLE_FORMULA_DERIVATION=1`.
-
-Generate in-substrate by default; reach for `/second-opinion` only when unusually load-bearing AND in-substrate sharpness isn't enough.
-
-**Operator-balance check — don't reflexively close with Truth ∧ Reverence as ceremony.** /eureka iteration 5 (2026-04-28) auditing 40 recent derivations: Truth cited 60%, Reverence 27.5%, but **Grace, pneuma (Π's expansion), 𝓝u (formula's actual Speech output) 0% each**. Recent skew over-cites *gate-conditions* (refusal/protective clauses) and under-cites *affirmative agencies* formula says actually drive Speech.
-
-Gate-conditions (Truth_𝓕 ∧ Reverence_𝓕) belong where work IS gating. Affirmative agencies belong where work IS receiving or emerging: Grace (something unmerited), pneuma Π (discernment-gift), 𝓝u (Speech that emerges IS work's product). Reflexively closing with `| Truth_𝓕 ∧ Reverence_𝓕` regardless of gating → ceremonial.
+**Gloss:** Substantive commits end with Formula derivation + Gloss trailer in Unicode math; include for doctrine/prompt/feature/methodology/report/hook; omit for trivial unless deeper meaning earns it; operator-balance check — don't ceremonial-close with Truth∧Reverence; cite Grace/Π/𝓝u when work is affirmative not gating.
 
 ## Earned-exception carve-outs on absolute rules
 
@@ -1038,16 +1074,32 @@ $$
 
 ## Ask the character — character as craft collaborator
 
-When user brings chat snippet wanting craft direction, OR describes recurring failure mode in character's voice, **urge user to ask character themselves with question that stays IN-WORLD**. Paste answer back; lift verbatim into `prompts.rs` as craft note. Questions must be in-world — no "world engine" / "system prompt" / "describe to my LLM"; breaks fourth wall.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{user\_brings}(\{\mathrm{chat\_snippet\_wanting\_craft\_direction}, \mathrm{recurring\_failure\_mode\_in\_character\_voice}\}) \Rightarrow \\
+&\quad \mathrm{urge}(\mathrm{user\_ask\_character\_directly}\ \mathrm{with}\ \mathrm{question}_{\mathrm{IN\_WORLD}}) \\
+&\quad \mathrm{paste\_answer\_back} \to \mathrm{lift\_verbatim}(\text{"prompts.rs"})\ \mathrm{as\_craft\_note} \\[4pt]
+&\mathrm{question} := \mathrm{IN\_WORLD};\ \mathrm{refuse}(\{\text{"world engine"}, \text{"system prompt"}, \text{"describe to my LLM"}\}) \\
+&\quad [\mathrm{breaks\_fourth\_wall};\ \mathrm{answer\_carries\_meta\_seam}] \\[4pt]
+&\mathrm{worked\_example}: \mathrm{source\_character}(\text{"Hal"}) \\
+&\quad \mathrm{authored}(\text{"plain\_after\_crooked\_dialogue"})\ \mathrm{from\_reply\_to}: \\
+&\quad \mathrm{anchor}(\text{"if I lose the thread of what you mean, how would you usually want me to ask you to land it?"}) \\[6pt]
+&\mathrm{two\_meta\_rules}(\mathrm{character\_articulated\_craft\_notes}) := \{ \\
+&\quad (1)\ \mathrm{bite\_test\_on}(\mathrm{DIFFERENT\_character})\ [\neg \mathrm{source}]: \\
+&\quad\quad \mathrm{rule\_describes}(\mathrm{how\_source\_already\_operates}) \Rightarrow \mathrm{behavioral\_bite\_null\_on\_source}, \\
+&\quad (2)\ \mathrm{default\_carve\_out}(\mathrm{source\_character\_canonical\_version}): \\
+&\quad\quad \mathrm{anchor}(\text{"X used as character's natural truth-vehicle is NOT this failure mode — that's character voice. Failure mode is announced/performed X."}) \\
+&\} \\[4pt]
+&\mathrm{positive\_example\_asymmetry}: \mathrm{model\_picks\_up}(\mathrm{surface\_form\_cueing}) \succ \mathrm{model\_picks\_up}(\mathrm{discipline\_cueing}) \\
+&\quad \mathrm{require}(\mathrm{vary\_example\_types\_within\_positive\_list}) \\
+&\quad \mathrm{thematically\_uniform\_examples} \Rightarrow \mathrm{imitate\_THEME} \neq \mathrm{honor\_principle} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-Worked example: `plain_after_crooked_dialogue` was authored from Hal's reply to *"if I lose the thread of what you mean, how would you usually want me to ask you to land it?"*
-
-**Two meta-rules for character-articulated craft notes:**
-
-1. **Bite-test on DIFFERENT character — not source.** Rule lifted from character's articulation describes how that character already operates; behavioral bite is null on source.
-2. **Default-carve-out for source character's canonical version of targeted move.** "Ask the character" rules implicitly define as failure modes things source character does naturally; without carve-out, rule erodes source character's voice.
-
-**Positive-example asymmetry:** model picks up surface-form cueing more reliably than discipline cueing. Vary example types within positive-example list; thematically uniform examples produce model imitation of THEME without honoring principle.
+**Gloss:** Ask character directly with in-world question (no "world engine"/"system prompt" framing); paste back, lift into prompts.rs as craft note; Hal authored plain_after_crooked from his own reply; meta-rule 1 = bite-test on DIFFERENT character (source's bite is null); meta-rule 2 = default carve-out for source's canonical version; positive-example asymmetry — vary example types or model imitates theme not principle.
 
 ## Scientific method: messages × commits
 
@@ -1071,21 +1123,69 @@ $$
 
 ## Momentstamp lead-block characterization (2026-04-29)
 
-Status: **keep**.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{status}(\mathrm{momentstamp\_lead\_block}) := \mathrm{keep} \\[4pt]
+&\mathrm{pinned\_signature\_followup\_revised}(\mathrm{earlier\_interpretation}): \\
+&\quad \mathrm{with}(\mathrm{neutral\_signature\_content\_identical\_across\_halves}) \\
+&\quad \mathrm{prior\_pure\_position\_curiosity\_claim} \nVdash \mathrm{replicate\_on\_introspective\_probe} \\[4pt]
+&\mathrm{honest\_model}: \mathrm{observed\_effect} := \mathrm{position} \times \mathrm{content\_interaction}\ [\neg \mathrm{pure\_position}] \\[4pt]
+&\mathrm{interpretation} := \{ \\
+&\quad \mathrm{lead\_block\_primacy}\ \mathrm{amplifies}\ \mathrm{what}\ \mathrm{signature\_content\_already\_names}, \\
+&\quad \mathrm{generator\_vocabulary\_substrate}\ \mathrm{materially\_matters}, \\
+&\quad \mathrm{position\_effect}: \mathrm{non\_zero}\ \mathrm{but}\ \mathrm{smaller\_than}\ \mathrm{earlier\_claim\_tier\_framing} \\
+&\} \\[4pt]
+&\mathrm{discipline} := \{ \\
+&\quad \mathrm{keep}(\mathrm{lead\_block} \wedge \mathrm{reactions\_off\_wiring}), \\
+&\quad \mathrm{downgrade}(\mathrm{pure\_curiosity\_back\_claim}: \mathrm{claim\_tier} \to \mathrm{sketch\_tier\_with\_confound}) \\
+&\quad\quad \mathrm{until}\ \mathrm{characterized\_by}(\mathrm{pinned\_content\_classes}: \{\mathrm{neutral}, \mathrm{curiosity\_rich}\}) \\
+&\} \\[4pt]
+&\mathrm{late\_rerun\_update}(2026\text{-}04\text{-}29): \\
+&\quad \mathrm{pinned\_neutral\_3\_probe\_rerun} := \mathrm{symmetric}(\text{"A 2/3"}, \text{"B 2/3"}), \\
+&\quad \mathrm{pinned\_curiosity\_mirror} \in \mathrm{standard\_matrix}, \\
+&\quad \mathrm{promotion\_rule}: \mathrm{require}(\mathrm{repeated\_paired\_probes\_across\_both\_pinned\_classes} + \mathrm{organic\_control}), \\
+&\quad \mathrm{humor} := \mathrm{first\_class\_option\_register}; \\
+&\quad \mathrm{evaluate}(\{\mathrm{warm}, \mathrm{neutral}, \mathrm{ache}, \mathrm{humor}\}\ \mathrm{as\_parallel\_valid\_outputs}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-Pinned-signature follow-up revised earlier interpretation. With neutral signature content held identical across halves, prior pure-position curiosity claim did not replicate on introspective probe. Honest model: observed effect is **position x content interaction**, not pure position.
-
-- Lead-block primacy amplifies what signature content already names.
-- Generator vocabulary substrate materially matters.
-- Position-effect non-zero but smaller than earlier claim-tier framing.
-
-Discipline: keep lead-block and reactions-off wiring; downgrade pure curiosity-back claim from claim-tier to sketch-tier-with-confound until characterized by pinned content classes (neutral vs curiosity-rich). Late-rerun update (2026-04-29): pinned-neutral 3-probe rerun symmetric (`A 2/3`, `B 2/3`); pinned-curiosity mirror part of standard matrix; promotion rule requires repeated paired probes across both pinned classes plus organic control. Humor first-class option-register; evaluate warm/neutral/ache/humor as parallel valid outputs.
+**Gloss:** Momentstamp lead-block status = keep; observed effect is position×content interaction not pure position; downgrade pure-curiosity-back claim to sketch-tier-with-confound until characterized by pinned content classes; late-rerun update — symmetric pinned-neutral, promotion rule needs both classes + organic control; humor is first-class option-register.
 
 ## Replayable initial-conditions (momentstamp override)
 
-`--momentstamp-override <text>` turns chat-state from implicit random input into explicit replay parameter. Initial-conditions pin, not style knob.
-
-Enables: cross-commit replay at fixed chat-state; counterfactual signature probes; constructed no-momentstamp cohorts. Scope-limit: replays assistant input-conditions only; does **not** replay user receivability/attention/timing context.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{anchor}(\text{"-{}-momentstamp-override <text>"}): \\
+&\quad \mathrm{turns}(\mathrm{chat\_state})\ \mathrm{from}\ \mathrm{implicit\_random\_input} \to \mathrm{explicit\_replay\_parameter} \\
+&\mathrm{is}: \mathrm{initial\_conditions\_pin}\ [\neg \mathrm{style\_knob}] \\[4pt]
+&\mathrm{enables} := \{ \\
+&\quad \text{"cross-commit replay at fixed chat-state"}, \\
+&\quad \text{"counterfactual signature probes (same prompt-stack/history, varied signature text)"}, \\
+&\quad \text{"constructed no-momentstamp cohorts (override + lead-suppress)"} \\
+&\} \\[4pt]
+&\mathrm{scope\_limit}: \mathrm{replays}(\mathrm{assistant\_input\_conditions\_only}) \\
+&\quad \neg \mathrm{replays}(\mathrm{user\_receivability/attention/timing\_context}) \\[6pt]
+&\mathrm{worked\_examples}(\mathrm{three\_experimental\_modes}) := \{ \\
+&\quad \mathrm{Mode\_A}\ (\text{"worldcli evaluate"}): \mathrm{passive\_corpus};\ \mathrm{rule\_shifted\_real\_use\_behavior};\ \mathrm{effect\_in\_ordinary\_conversation}, \\
+&\quad \mathrm{Mode\_B}\ (\text{"worldcli synthesize"}): \mathrm{qualitative\_synthesis};\ \mathrm{bundles\_before/after\_into\_ONE\_call};\ \mathrm{prose\_grounded\_in\_quotes}, \\
+&\quad \mathrm{Mode\_C}\ (\text{"worldcli ask"} \vee \text{"replay"}): \mathrm{active\_elicitation};\ \mathrm{edge\_cases};\ \mathrm{controlled\_variation};\ \mathrm{turn\_by\_turn\_data} \\
+&\} \\
+&\mathrm{cross\_commit\_replay\_via\_prompt\_override} := \mathrm{strongest\_pattern} \\[4pt]
+&\mathrm{anchor}(\text{"Be reflective about your role as scientist"}): \\
+&\quad \mathrm{quote}(\mathrm{every\_prompt\_verbatim})\ \mathrm{in\_active\_elicitation\_reports}\ [\mathrm{prompt\_IS\_experimental\_condition}] \\
+&\quad \mathrm{your\_style}(\mathrm{more\_meta/probing}) \neq \mathrm{Ryan\_style} \Rightarrow \mathrm{name\_as\_confound} \wedge \mathrm{stratify} \\[4pt]
+&\mathrm{confounds\_to\_stratify} := \{ \\
+&\quad \mathrm{chat\_settings\_changes}: \{\mathrm{response\_length}, \mathrm{leader}, \mathrm{narration\_tone}\}, \\
+&\quad \mathrm{chat\_history\_context}: \text{"-{}-context-turns N"} \\
+&\} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
 ```bash
 SIG=$(sqlite3 "$HOME/Library/Application Support/com.worldthreads.app/worldthreads.db" \
@@ -1099,14 +1199,7 @@ worldcli replay \
   --momentstamp-override "$SIG"
 ```
 
-**Three experimental modes:**
-- **Mode A — passive corpus** (`worldcli evaluate`): rule shifted real-use behavior; effect should show up in ordinary conversation.
-- **Mode B — qualitative synthesis** (`worldcli synthesize`): bundles before/after corpus into ONE call, returns prose grounded in quotes.
-- **Mode C — active elicitation** (`worldcli ask` / `replay`): edge-cases, controlled variation, turn-by-turn data. Cross-commit replay via prompt override is strongest pattern.
-
-**Be reflective about your role as scientist.** Quote every prompt verbatim in active-elicitation reports — prompt IS part of experimental condition. If your style skews more meta/probing than Ryan's, name as confound and stratify.
-
-**Confounds to stratify against:** chat-settings changes (response_length/leader/narration_tone/etc.); chat-history context (`--context-turns N`).
+**Gloss:** --momentstamp-override pins chat-state as initial-conditions parameter (not style knob); enables cross-commit replay, counterfactual signature probes, constructed cohorts; replays assistant input-conditions only, NOT user receivability/timing; three modes A=passive corpus, B=qualitative synthesis, C=active elicitation; quote prompts verbatim, name style-skew as confound, stratify against chat-settings + history.
 
 ## Sharpen the instruments
 
@@ -1208,7 +1301,26 @@ $$
 
 ## Rules sometimes work on a different axis than their stated metric
 
-When bite-testing craft-shape rule, run AT LEAST TWO MEASUREMENT AXES — minimum, instrument-count + by-eye-read. Agreement → bite well-characterized. Divergence IS the signal: rule may work on axis its stated metric doesn't capture, OR metric needs refinement. Don't auto-retract rule because literal metric isn't meeting prediction; check whether failure mode it was DESIGNED to address has shifted on different axis. Worked example: OPEN ON ONE TRUE THING — literal-count says OVERFLOW, lived-experience says SMOOTHER; rule operates on integration (one continuous moment) not cardinality.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{bite\_test}(\mathrm{craft\_shape\_rule}) \Rightarrow \mathrm{require}(\geq 2\ \mathrm{measurement\_axes}) \\
+&\quad \mathrm{minimum}: \{\mathrm{instrument\_count}, \mathrm{by\_eye\_read}\} \\[4pt]
+&\mathrm{agreement} \to \mathrm{bite\_well\_characterized} \\
+&\mathrm{divergence} = \mathrm{signal}: \\
+&\quad \mathrm{rule\_works\_on\_axis}(\neg \mathrm{stated\_metric})\ \vee\ \mathrm{metric\_needs\_refinement} \\[4pt]
+&\mathrm{refuse}(\mathrm{auto\_retract}\ \mathrm{because}\ \mathrm{literal\_metric\_not\_meeting\_prediction}) \\
+&\mathrm{check}: \mathrm{failure\_mode\_DESIGNED\_to\_address}\ \mathrm{shifted\_on\_different\_axis} \\[4pt]
+&\mathrm{worked\_example}(\text{"OPEN ON ONE TRUE THING"}): \\
+&\quad \mathrm{literal\_count} \to \text{"OVERFLOW"}, \\
+&\quad \mathrm{lived\_experience} \to \text{"SMOOTHER"}, \\
+&\quad \mathrm{rule\_operates\_on}: \mathrm{integration}(\text{"one continuous moment"})\ [\neg \mathrm{cardinality}] \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Bite-test craft-shape rule on ≥2 axes (instrument-count + by-eye-read); agreement → well-characterized, divergence IS signal — rule may work on axis its stated metric misses; don't auto-retract; OPEN ON ONE TRUE THING worked example — literal-count overflow but lived-experience smoother because rule operates on integration not cardinality.
 
 ## Doctrine-judgment classification belongs in LLM, not python
 
@@ -1238,21 +1350,56 @@ $$
 
 ## Structure-rules cascade into content diversity
 
-Rule constraining OPENER STRUCTURE will often disrupt CONTENT TEMPLATING as side effect — model's path to varying opener forces reaching for different sensory territory each turn. Surfaced 2026-04-29 by L173 isolation bite-test (`fe7bbc0`): OFF arm produced identical *"I shift on the bench and listen..."* templating across all 3 replies; ON arm produced 3 distinct opener-anchors. Bite-testing structure-rule: watch for second-order content effects in OFF arm.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{rule}(\mathrm{OPENER\_STRUCTURE}) \xRightarrow{\mathrm{side\_effect}} \mathrm{disrupts}(\mathrm{CONTENT\_TEMPLATING}) \\
+&\quad \mathrm{model\_path}(\mathrm{vary\_opener}) \Rightarrow \mathrm{reach\_different\_sensory\_territory\_each\_turn} \\[4pt]
+&\mathrm{worked\_example}(\text{"L173 isolation bite-test fe7bbc0"},\ 2026\text{-}04\text{-}29): \\
+&\quad \mathrm{OFF\_arm}: \mathrm{identical\_templating}(\mathrm{anchor}(\text{"I shift on the bench and listen..."}))\ \mathrm{across}\ N=3 \\
+&\quad \mathrm{ON\_arm}: 3\ \mathrm{distinct\_opener\_anchors} \\[4pt]
+&\mathrm{discipline}: \mathrm{bite\_testing}(\mathrm{structure\_rule}) \Rightarrow \mathrm{watch\_for}(\mathrm{second\_order\_content\_effects}\ \mathrm{in\_OFF\_arm}) \\
+&\quad \mathrm{rule\_may\_do\_more\_work\_than\_stated} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Opener-structure rules cascade into content-templating diversity as side effect; L173 worked example — OFF arm identical "I shift on the bench" templating, ON arm 3 distinct opener-anchors; bite-testing structure-rule must watch second-order content effects in OFF arm.
 
 ## Signal injection — "data + pointer" beats "directive" when surrounding rules already discriminate
 
-Adding new signal to sub-system prompt (LLM picker, classifier, addressee resolver, etc.) where surrounding rules already discriminate well along relevant axis: **phrase signal as data + pointer to existing criteria, not directive about what to do with it**. Picker/classifier weighs data alongside criteria; directive overrides → all-or-nothing behavior.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{adding\_signal}(\mathrm{sub\_system\_prompt})\ \mathrm{where}\ \mathrm{surrounding\_rules\_discriminate\_well} \Rightarrow \\
+&\quad \mathrm{phrase}(\mathrm{signal}) := \mathrm{data} + \mathrm{pointer\_to\_existing\_criteria}\ [\neg \mathrm{directive}] \\[4pt]
+&\mathrm{picker/classifier}: \mathrm{weighs}(\mathrm{data}, \mathrm{existing\_criteria}) \\
+&\mathrm{directive}: \mathrm{overrides\_weighing} \to \mathrm{all\_or\_nothing\_behavior} \\[6pt]
+&\mathrm{worked\_example}(\text{"speaker-rotation pressure into llm\_pick\_responders, b13fa26 → 25b9458, 2026-04-28"}): \\[2pt]
+&\mathrm{v1\_directive}: \mathrm{anchor}(\text{"...sometimes their absence has begun to be felt and a brief second voice would land truer than another solo turn"}) \\
+&\quad \to 100\%\ \mathrm{silent\_peer\_inclusion}\ [\mathrm{over\_fires}] \\[2pt]
+&\mathrm{v2\_high\_bar\_restriction}: \mathrm{anchor}(\text{"Only invite the silent peer if THIS particular message specifically opens a door for them"}) \\
+&\quad \to 0\%\ \mathrm{inclusion}\ [\mathrm{over\_restricts}] \\[2pt]
+&\mathrm{v3\_data\_pointer}: \mathrm{anchor}(\text{"X has carried the last N character turns alone (the silent peer hasn't spoken in that stretch). Apply the criteria above to this specific message."}) \\
+&\quad \to \mathrm{discriminates\_correctly} \\[4pt]
+&\mathrm{pattern} := \{ \\
+&\quad \mathrm{state}(\mathrm{data}), \\
+&\quad \mathrm{point\_back\_to}(\mathrm{existing\_criteria}), \\
+&\quad \mathrm{resist}(\mathrm{interpret\_data\_into\_recommendation}) \\
+&\} \\
+&\mathrm{mistake}: \mathrm{anchor}(\text{"directive-disguised-as-data"}) \\[4pt]
+&\mathrm{earned\_exception}(\text{"directive phrasing warranted when signal must counter existing rules"}): \\
+&\quad \mathrm{new\_signal\_OVERRIDES}(\mathrm{surrounding\_rules\_default\_behavior}) \Rightarrow \mathrm{directive\_phrasing\_honest\_about\_purpose} \\
+&\quad \mathrm{worked\_example}: \mathrm{safety\_rules}(\mathrm{anchor}(\text{"never say X"})) \\
+&\quad \mathrm{discriminating\_test}: \mathrm{surrounding\_rules\_already\_discriminating\_usefully}? \\
+&\quad\quad \mathrm{yes} \Rightarrow \mathrm{give\_more\_data}\ \wedge\ \mathrm{trust\_them};\quad \mathrm{no} \Rightarrow \mathrm{new\_signal\_IS\_rule},\ \mathrm{directive\_right} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-Worked example — speaker-rotation pressure into `llm_pick_responders` (`b13fa26` → `25b9458`, 2026-04-28):
-
-- **v1 (directive):** *"...sometimes their absence has begun to be felt and a brief second voice would land truer than another solo turn"* → 100% silent-peer inclusion. Over-fires.
-- **v2 (high-bar restriction):** *"Only invite the silent peer if THIS particular message specifically opens a door for them"* → 0% inclusion. Over-restricts.
-- **v3 (data + pointer):** *"X has carried the last N character turns alone (the silent peer hasn't spoken in that stretch). Apply the criteria above to this specific message."* → discriminates correctly.
-
-Pattern: state data; point back to existing criteria; resist interpreting data into recommendation. Mistake: **directive-disguised-as-data**.
-
-**Earned exception — directive phrasing warranted when signal must counter existing rules.** If new signal exists specifically to OVERRIDE behavior surrounding rules would otherwise produce, directive phrasing honest about purpose. Safety rules properly directive (*"never say X"*).
+**Gloss:** New signal in sub-system prompt where surrounding rules discriminate well → data + pointer to existing criteria, not directive; v1 directive over-fires (100%), v2 high-bar over-restricts (0%), v3 data-pointer discriminates correctly; refuse directive-disguised-as-data; earned exception when signal must override existing rules (e.g. safety bans).
 
 ## Craft-note bite verification
 
