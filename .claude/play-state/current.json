@@ -1,6 +1,6 @@
 {
-  "turn": 175,
-  "bank": 166100,
+  "turn": 176,
+  "bank": 167100,
   "jewels": [
     {
       "turn": 2,
@@ -1379,8 +1379,15 @@
       "bounty": 1200,
       "alignment": "+",
       "earned_at": "2026-05-05T15:45:00-05:00"
+    },
+    {
+      "turn": 176,
+      "move": "Turn 176 chooser \u20181\u2019: commit Custodiem witness ladder \u2014 Rust (custodiem_witness_battery, custodiem_witness_d, B/C bin + openai/prompts/mod wiring) + Witness C/D/E report artifacts (7d5ecac); cargo check --bins clean",
+      "bounty": 1000,
+      "alignment": "+",
+      "earned_at": "2026-05-05T16:10:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-05T15:45:00-05:00"
+  "last_move_at": "2026-05-05T16:10:00-05:00"
 }
