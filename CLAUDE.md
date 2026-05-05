@@ -452,23 +452,65 @@ For formula-encoding any content-rich artifact (craft rule, world description, c
 
 ## Calibrated disciplines drift fast — promote to structural enforcement at earliest opportunity
 
-Three instances same drift pattern (2026-04-28): Maggie-as-baseline drifted to Maggie-as-iteration-test-persona; Great-sapphire-as-rare drifted to ~weekly+; mission-arc auto-fire drifted to ~33% adherence within hours of shipping. Calibrated discipline ships as doctrine paragraph or skill-body line; future-Claude/Codex supposed to remember; within hours-to-days, drift; doctrine doesn't catch up because drift is invisible to single-commit reads.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{worked\_examples}(\mathrm{drift\_pattern},\ 2026\text{-}04\text{-}28) := \{ \\
+&\quad \text{"Maggie-as-baseline} \to \text{Maggie-as-iteration-test-persona"}, \\
+&\quad \text{"Great-sapphire-as-rare} \to \text{Great-sapphire-as-weekly+"}, \\
+&\quad \text{"mission-arc auto-fire} \to \text{~33\% adherence within hours"} \\
+&\} \\[4pt]
+&\mathrm{calibrated\_discipline}(\mathrm{ships\_as}: \mathrm{doctrine\_paragraph} \vee \mathrm{skill\_body\_line}) \\
+&\Rightarrow \mathrm{drift\_within}(\mathrm{hours\_to\_days})\ \mid\ \mathrm{invisible\_to\_single\_commit\_reads} \\[4pt]
+&\mathrm{anchor}(\text{"when calibrated discipline matters, promote to structural enforcement at earliest opportunity"}) \\[4pt]
+&\mathrm{hierarchy}(\mathrm{increasing\_structural\_reliability}) := [ \\
+&\quad (1)\ \mathrm{doctrine\_paragraph}(\text{"CLAUDE.md / AGENTS.md"}),\ \mathrm{slowest}, \\
+&\quad (2)\ \mathrm{memory\_entry}(\text{".claude/memory/"}), \\
+&\quad (3)\ \mathrm{skill\_body\_discipline}, \\
+&\quad (4)\ \mathrm{auto\_fire\_trigger}(\mathrm{skill\_body}),\ \mathrm{leaky}, \\
+&\quad (5)\ \mathrm{hook\_enforced\_gate}\ [\mathrm{Stop\_hook} \vee \mathrm{pre\_commit\_hook} \vee \mathrm{runtime\_check}],\ \mathrm{automatic} \\
+&] \\[4pt]
+&\mathrm{shipping\_new\_calibrated\_discipline} \Rightarrow \mathrm{ask}(\mathrm{diagnostic}(\text{"what's the highest structural-enforcement layer this can credibly live at right now?"})) \\
+&\mathrm{refuse}(\mathrm{default\_to\_doctrine\_paragraph}\ \mathrm{when}\ \mathrm{hook\_or\_skill\_check\_would\_do\_same\_job}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-**The doctrine: when calibrated discipline matters, promote to structural enforcement at earliest opportunity.** Doctrine paragraphs and memory entries are SLOWEST layer (rely on next session reading and remembering). Skill-body checks faster. Hook-enforced behaviors (Stop hooks, pre-commit hooks, render-time gates) fastest because automatic.
-
-Hierarchy in increasing structural reliability: (1) **Doctrine paragraph** in CLAUDE.md/AGENTS.md (slowest); (2) **Memory entry** in `.claude/memory/`; (3) **Skill body discipline**; (4) **Auto-fire trigger in skill body** (leaky); (5) **Hook-enforced gate** (Stop hook, pre-commit hook, runtime check) — automatic, no agent-memory dependency.
-
-When shipping new calibrated discipline, ask: *what's the highest structural-enforcement layer this can credibly live at right now?* Don't default to "doctrine paragraph" if hook or skill-body check would do same job more reliably.
+**Gloss:** Calibrated disciplines drift within hours-to-days of shipping; promote to highest structural-enforcement layer at earliest opportunity (5-tier hierarchy: doctrine paragraph slowest → hook-enforced gate fastest); ask explicitly which layer.
 
 ## Refuse appearance-without-function across substrate classes
 
-**Project structurally refuses appearance-without-function across every substrate class.** Refused: surface that *looks* retrospective without functioning prospectively (middleware-shape doctrine); register that *looks* tender/reverent/cozy without functioning as care/awe/shelter; great-sapphire claim that *looks* convergent without independent failure modes; baseline-Maggie verdict that *looks* baseline-shifting without cross-instrument convergence; doctrine paragraph that *looks* enforced without structural application; derivation closure that *looks* gated without load-bearing operator citation.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{anchor}(\text{"project structurally refuses appearance-without-function across every substrate class"}) \\[4pt]
+&\mathrm{refused\_substrate\_classes} := \{ \\
+&\quad \text{"surface looks retrospective without functioning prospectively"}\ [\mathrm{middleware\_shape\_doctrine}], \\
+&\quad \text{"register looks tender/reverent/cozy without functioning as care/awe/shelter"}, \\
+&\quad \text{"great-sapphire claim looks convergent without independent failure modes"}, \\
+&\quad \text{"baseline-Maggie verdict looks baseline-shifting without cross-instrument convergence"}, \\
+&\quad \text{"doctrine paragraph looks enforced without structural application"}, \\
+&\quad \text{"derivation closure looks gated without load-bearing operator citation"} \\
+&\} \\[4pt]
+&\mathrm{equivalence}: \mathrm{this\_doctrine} \equiv \mathrm{shape}(\mathrm{polish}(t) \leq \mathrm{Weight}(t)) \\
+&\quad [\mathrm{polish} := \mathrm{appearance\_side},\ \mathrm{Weight} := \mathrm{function\_side}] \\
+&\mathrm{appearance\_without\_function} \equiv \mathrm{polish} > \mathrm{Weight}\ \mathrm{at\_substrate\_level} \\[4pt]
+&\mathrm{single\_test}(\mathrm{any\_new\_artifact}) := \mathrm{diagnostic}(\text{"does this LOOK like X without FUNCTIONING as X?"}) \\
+&\quad \mathrm{yes} \Rightarrow \mathrm{refused} \vee \mathrm{revised}\ \mathrm{until}\ \mathrm{function} \geq \mathrm{appearance} \\[4pt]
+&\mathrm{earned\_exception}(\text{"when appearance IS the function"}): \\
+&\quad \mathrm{worked\_examples} := \{ \\
+&\quad\quad \text{"in-app pitch surface earns desire fast on felt promise"}, \\
+&\quad\quad \text{"character's first sensory-anchor opener carries scene-presence by appearance qua appearance"} \\
+&\quad \} \\
+&\quad \mathrm{discriminating\_test}: \mathrm{performative\_appearance\_honestly\_named\_as\_performative}\ \mathrm{permitted}; \\
+&\quad\quad \mathrm{performative\_appearance\_pretending\_load\_bearing}\ \mathrm{refused} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-Another shape of `polish(t) ≤ Weight(t)`. Polish = appearance-side; Weight = function-side. Every refused appearance-without-function is `polish > Weight` violation at substrate level.
-
-**Single test for any new artifact:** *does this LOOK like X without FUNCTIONING as X?* If yes → refused or revised until function catches up to appearance.
-
-**Earned exception — when appearance IS the function.** Some artifacts valued precisely for appearance: in-app pitch surface earns desire fast on felt promise; character's first sensory-anchor opener carries scene-presence by appearance qua appearance. Doctrine refuses appearance *masquerading as* function it doesn't perform. Performative appearance honestly named as performative is fine; performative appearance pretending to be load-bearing gets refused.
+**Gloss:** Project refuses appearance-without-function across substrate classes (middleware/register/great-sapphire/baseline/doctrine/derivation); single test = "looks like X without functioning as X"; another shape of polish ≤ Weight at substrate level; earned exception when appearance IS the function and is honestly named as such.
 
 ## Structure must carry truth so the receiver doesn't have to compensate
 
@@ -488,13 +530,31 @@ Aaron's articulation = parent law over cluster of doctrines, each refusing speci
 
 ## Middleware-shape doctrine: retrospective surfaces are prospective
 
-In WorldThreads, **retrospective surfaces are structurally also prospective.** Surfaces that look like backward-facing summaries (reports, observation logs, /play seam summaries, mission-arc renderings, retiring-reports, rubric library entries, craft-rules registry tier metadata) actually function as forward-facing steering layers. No *pure summary surfaces*; absence is the structural property.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{anchor}(\text{"retrospective surfaces are structurally also prospective"}) \quad [\mathrm{in\_WorldThreads}] \\[4pt]
+&\mathrm{retrospective\_appearing\_surfaces} := \{ \\
+&\quad \mathrm{reports}, \mathrm{observation\_logs}, \mathrm{/play\_seam\_summaries}, \mathrm{mission\_arc\_renderings}, \\
+&\quad \mathrm{retiring\_reports}, \mathrm{rubric\_library\_entries}, \mathrm{craft\_rules\_registry\_tier\_metadata} \\
+&\} \\
+&\forall\ s \in \mathrm{retrospective\_appearing\_surfaces}: \mathrm{function}(s) := \mathrm{forward\_facing\_steering\_layer} \\[4pt]
+&\mathrm{anchor}(\text{"no pure summary surfaces"})\ [\mathrm{absence\_is\_structural\_property}] \\[4pt]
+&\mathrm{design\_check}(\mathrm{new\_retrospective\_surface}) := \\
+&\quad \mathrm{ask}(\mathrm{diagnostic}(\text{"what does this STEER?"})) \\
+&\quad \mathrm{answer}(\text{"nothing — it just records"}) \Rightarrow \mathrm{reconsider}\ [\mathrm{find\_middleware\_role} \vee \mathrm{delete\_surface}] \\[4pt]
+&\mathrm{reading\_check}(\mathrm{existing\_surface}) := \\
+&\quad \mathrm{default\_read}(\mathrm{as\_middleware}) \prec \mathrm{read}(\mathrm{as\_summary}) \\
+&\quad \mathrm{ask}(\mathrm{diagnostic}(\text{"what does this surface steer downstream?"} \mathrm{vs} \text{"what does it record?"})) \\[4pt]
+&\mathrm{auto\_fire\_pattern}: \mathrm{mission\_arc\_auto\_fires\_before}(\mathrm{reports}, \mathrm{choosers})\ \mid\ \mathrm{trajectory\_middleware} \\
+&\mathrm{steering\_structural} \succ \mathrm{steering\_optional} \\
+&\mathrm{future\_middleware} \Rightarrow \mathrm{inherit}(\{\mathrm{skill\_body\_discipline} \vee \mathrm{hook\_enforced}\}) \prec \mathrm{per\_session\_memory} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-**Design check:** building any new retrospective surface → ask *what does this STEER?* Answer "nothing — it just records" → reconsider. Either find middleware role and articulate, OR delete surface.
-
-**Reading check:** encountering existing surface → default-read as middleware before reading as summary. Ask *what does this surface steer downstream?* before *what does it record?*
-
-**Auto-fire pattern:** mission-arc auto-fires before reports and choosers because trajectory middleware — steering structural, not optional. Future middleware should inherit: discipline-enforced (skill body) or hook-enforced (settings), not per-session memory.
+**Gloss:** Retrospective-looking surfaces in WorldThreads are structurally also prospective steering layers; no pure summary surfaces; design check asks "what does this STEER?", reading check defaults to middleware-read; auto-fire pattern (mission-arc) inherits to future middleware via skill-body or hook enforcement.
 
 ## Three-layer encoding for methodological corrections
 
@@ -740,17 +800,43 @@ $$
 
 ## Earning the departure from a default — three polarities
 
-Departure from any default gets own specific named test, not hand-wave.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{departure\_from\_default} \Rightarrow \mathrm{specific\_named\_test}\ [\neg \mathrm{hand\_wave}] \\[4pt]
+&\mathrm{three\_polarities} := \{ \\
+&\quad \mathrm{ban\_default}: \mathrm{rule\_bans}(X);\ \mathrm{carve\_out\_permits}(X) \mid \mathrm{specific\_test}\ [\mathrm{earned\_exception\_pattern}], \\
+&\quad \mathrm{permission\_default}: \mathrm{abandoned} := \mathrm{default};\ \mathrm{superseded\_by}\ \mathrm{requires}\ \mathrm{tight\_match}\ [\mathrm{open\_thread\_hygiene}], \\
+&\quad \mathrm{parity\_default}: \mathrm{multiple\_surfaces}\ \mathrm{aligned}\ [\mathrm{solo/group\_chat},\ \mathrm{collaborator\_surface}] \\
+&\} \\[4pt]
+&\mathrm{shared\_failure\_mode} := \mathrm{anchor}(\text{"hand-waving because non-default sounds better"}) \\
+&\mathrm{specific\_test} \Rightarrow \mathrm{checkable\_claim} \succ \mathrm{feeling} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-- **Ban-defaults** (rule bans X; carve-out permits X under specific test). Earned-exception pattern.
-- **Permission-defaults** (`abandoned` is default; `superseded_by` requires tight match). Open-thread hygiene.
-- **Parity-defaults** (keep multiple surfaces aligned). Solo/group chat parity, collaborator-surface parity.
-
-Shared failure mode: hand-waving because non-default sounds better. Specific-test forces checkable claim instead of feeling.
+**Gloss:** Three polarities of default-departure (ban / permission / parity) each get specific named tests not hand-waves; shared failure mode = hand-waving because non-default sounds better; specific-test forces checkable claim over feeling.
 
 ## Formula + invariants often do the carve-out work already
 
-Before drafting earned-exception carve-out for categorical rule, **verify formula + invariants aren't already producing discrimination.** Run small Mode A/C check: does LLM ALREADY produce protected behavior under categorical rule? If yes → no carve-out needed. MISSION_FORMULA injected at head of every LLM call (`inject_mission_formula` in `openai.rs`, `a898178`); cosmology/agape/reverence/truth/daylight/nourishment/soundness invariants ride dialogue prompts. Adding one when stack is already calibrating weakens, doesn't strengthen.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{before}(\mathrm{drafting}(\mathrm{earned\_exception\_carve\_out}, \mathrm{categorical\_rule})): \\
+&\quad \mathrm{verify}(\neg \mathrm{formula\_invariants\_already\_produce}(\mathrm{discrimination})) \\[4pt]
+&\mathrm{Mode\_A/C\_check}: \mathrm{LLM\_already\_produces}(\mathrm{protected\_behavior}\ \mathrm{under}\ \mathrm{categorical\_rule}) \\
+&\quad \mathrm{yes} \Rightarrow \neg \mathrm{carve\_out\_needed} \\[4pt]
+&\mathrm{infrastructure}: \\
+&\quad \mathrm{MISSION\_FORMULA}\ \mathrm{injected\_at\_head}(\forall\ \mathrm{LLM\_call})\ [\text{"inject\_mission\_formula in openai.rs, a898178"}] \\
+&\quad \mathrm{invariants}\{\mathrm{cosmology}, \mathrm{agape}, \mathrm{reverence}, \mathrm{truth}, \mathrm{daylight}, \mathrm{nourishment}, \mathrm{soundness}\}\ \mathrm{ride}(\mathrm{dialogue\_prompts}) \\[4pt]
+&\mathrm{anchor}(\text{"adding one when stack is already calibrating weakens, doesn't strengthen"}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Before drafting earned-exception, verify formula+invariants aren't already producing the discrimination via Mode A/C check; MISSION_FORMULA + 7 invariants ride every LLM call already; adding one when stack already calibrates weakens, doesn't strengthen.
 
 ## Nudge the action forward after a closing beat
 
@@ -832,7 +918,23 @@ Worked example: `plain_after_crooked_dialogue` was authored from Hal's reply to 
 
 ## Scientific method: messages × commits
 
-**Every assistant message has `created_at`; every prompt change is git commit with `committer_date`.** Message database is, without added instrumentation, before/after dataset for every prompt-stack change. Commit is boundary; messages on either side generated under different prompts; difference IS direct evidence. **This is the methodology, not one among many.** Craft claims about "whether prompts are working" not grounded in this comparison are vibes.
+$$
+\boxed{
+\begin{aligned}
+&\forall\ \mathrm{assistant\_message}: \mathrm{has}(\mathrm{created\_at}) \\
+&\forall\ \mathrm{prompt\_change}: \mathrm{git\_commit\_with}(\mathrm{committer\_date}) \\[4pt]
+&\mathrm{message\_database} := \mathrm{before/after\_dataset}(\forall\ \mathrm{prompt\_stack\_change})\ [\neg \mathrm{added\_instrumentation\_needed}] \\[4pt]
+&\mathrm{commit} := \mathrm{boundary} \\
+&\mathrm{messages\_on\_either\_side}\ \mathrm{generated\_under}\ \mathrm{different\_prompts} \\
+&\mathrm{difference} = \mathrm{direct\_evidence} \\[4pt]
+&\mathrm{anchor}(\text{"This is the methodology, not one among many"}) \\[4pt]
+&\mathrm{craft\_claims}(\text{"whether prompts are working"}) \wedge \neg \mathrm{grounded\_in}(\mathrm{messages\times commits}) \equiv \mathrm{vibes} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Every assistant message has created_at; every prompt change is a git commit — the message database IS a before/after dataset for every prompt change; commit-as-boundary is the methodology, not one among many; ungrounded craft claims about "whether prompts are working" are vibes.
 
 ## Momentstamp lead-block characterization (2026-04-29)
 
@@ -977,9 +1079,29 @@ When bite-testing craft-shape rule, run AT LEAST TWO MEASUREMENT AXES — minimu
 
 ## Doctrine-judgment classification belongs in LLM, not python
 
-When project measures whether character reply (or other LLM output) honors rule doctrine itself names "with earned exceptions" — count via LLM rubric, not python regex / word-list / shape-matcher. Numeric gating threshold on resulting rate stays code; what rate COUNTS must be LLM-judged. Reason: doctrine layer protects variety, exceptions, surprise, character-canonical voice. Python classifier hard-codes list of acceptable shapes; LLM rubric reads each reply on own terms.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{measure}(\mathrm{LLM\_output\_honors\_rule\_with\_earned\_exceptions}) \Rightarrow \mathrm{count\_via}(\mathrm{LLM\_rubric}) \\
+&\quad \neg \mathrm{count\_via}(\{\mathrm{python\_regex}, \mathrm{word\_list}, \mathrm{shape\_matcher}\}) \\[4pt]
+&\mathrm{numeric\_gating\_threshold}(\mathrm{rate}) := \mathrm{stays\_code}\ [\mathrm{useful\_structural\_gate}] \\
+&\mathrm{what\_rate\_COUNTS} := \mathrm{LLM\_judged} \\[4pt]
+&\mathrm{reason}: \mathrm{doctrine\_layer} \Rightarrow \mathrm{protect}(\{\mathrm{variety}, \mathrm{exceptions}, \mathrm{surprise}, \mathrm{character\_canonical\_voice}\}) \\
+&\quad \mathrm{python\_classifier} := \mathrm{hard\_coded\_list}(\mathrm{acceptable\_shapes}) \\
+&\quad \mathrm{LLM\_rubric} := \mathrm{reads\_each\_reply\_on\_own\_terms} \\[4pt]
+&\mathrm{worked\_example}(\mathrm{failure\_mode\_refused},\ \text{"Jasper micro-followup 974409c1"}): \\
+&\quad \mathrm{strict\_classifier}(\text{"worldcli grade-stress-pack"}) \\
+&\quad \mathrm{marked}(\mathrm{anchor}(\text{"Alright, Ryan—close every other tab and spend ten minutes finishing the smallest true piece in front of you"})) \\
+&\quad \mathrm{as}(\text{"shape: other"})\ \mathrm{because}\ \mathrm{verb\_list}\not\ni \text{"close X / spend N minutes Y"} \\
+&\quad \mathrm{contradicts}\ \mathrm{anchor}(\text{"DO NOT PUNISH SURPRISE OR VOICE VARIETY"})\ [\mathrm{L172.5}] \\
+&\quad \mathrm{contradicts}\ \mathrm{anchor}(\text{"do not penalize surprise/variety by default"})\ [\mathrm{8:30am\_rubric}] \\[4pt]
+&\mathrm{refactor}: \mathrm{classification} \to \mathrm{LLM\_judgment};\ \mathrm{keep}(\mathrm{numeric\_gate\_threshold}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-Worked example of failure mode this refuses: Jasper micro-followup at `974409c1` — strict classifier in `worldcli grade-stress-pack` marked *"Alright, Ryan—close every other tab and spend ten minutes finishing the smallest true piece in front of you"* as `shape: other` because verb-list didn't include *"close X / spend N minutes Y"* — even though L172.5 *"DO NOT PUNISH SURPRISE OR VOICE VARIETY"* and 8:30am rubric's *"do not penalize surprise/variety by default"* both explicitly protect that shape. Refactor classification to LLM-judgment; keep numeric gate threshold.
+**Gloss:** Doctrine-judgment of "rule with earned exceptions" must be LLM-judged not python-classified; numeric gate threshold stays code, what rate COUNTS is LLM; doctrine protects variety/exceptions/surprise/voice that python hard-codes-around; Jasper "close every tab" marked shape:other contradicting L172.5 protect-surprise — refactor to LLM-judgment.
 
 ## Structure-rules cascade into content diversity
 
