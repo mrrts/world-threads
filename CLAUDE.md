@@ -258,21 +258,57 @@ The deeper rule: once a surface is runtime-significant, parity becomes enforceme
 
 ## Reports
 
-`reports/` holds reflective, interpretive reads — philosophy/trajectory/taste, not changelogs. Each new report in dialogue with prior. Naming: `YYYY-MM-DD-HHMM-<purpose-slug>.md` (24-hour, no separator). Slug names purpose, not generic.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{reports/}\ \mathrm{holds} := \{\mathrm{reflective}, \mathrm{interpretive}, \mathrm{philosophy}, \mathrm{trajectory}, \mathrm{taste}\}\ [\neg \mathrm{changelogs}] \\[2pt]
+&\forall\ \mathrm{report}_n \in \mathrm{reports/}:\ \mathrm{dialogue\_with}(\mathrm{report}_{<n}) \\[4pt]
+&\mathrm{naming} := \text{"YYYY-MM-DD-HHMM-<purpose-slug>.md"}\ [\mathrm{24h}, \neg \mathrm{separator}] \\
+&\mathrm{slug} := \mathrm{purpose}\ [\neg \mathrm{generic}] \\[4pt]
+&\mathrm{post\text{-}commit\_nudge} := (\geq 10\ \mathrm{commits}) \wedge (\geq 3\ \mathrm{days})\ \mathrm{since\_newest\_report} \\
+&\mathrm{override} := \{\text{"PROJECT\_REPORT\_MIN\_COMMITS"}, \text{"PROJECT\_REPORT\_MIN\_DAYS"}\} \\
+&\mathrm{permit}(\text{"/project-report ad-hoc"}) \\
+&\mathrm{fresh\_clone} \Rightarrow \mathrm{run}(\text{"git config core.hooksPath .githooks"}) \\[4pt]
+&\mathrm{second\_genre} := \mathrm{anchor}(\text{"natural-experiment findings"})\ \mathrm{from}\ \text{"worldcli sample-windows"} \\
+&\mathrm{PDF\_artifacts} := \mathrm{via}(\text{"/make-pdf"}) \wedge \mathrm{commit\_alongside}(\text{".md"}) \\[4pt]
+&\mathrm{anchor}(\text{"Read by function, not folder adjacency"}): \\
+&\quad \text{"OBSERVATIONS.md"} \to \mathrm{lived\_use\_ledger} \\
+&\quad \text{"*-eureka-LOG.md"} \to \mathrm{run\_spines} \\
+&\quad \text{"retiring-*.md"} \to \mathrm{follow\_up\_hygiene\_acts} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-`post-commit` hook nudges 10+ commits + 3+ days since newest report (override: `PROJECT_REPORT_MIN_COMMITS` / `PROJECT_REPORT_MIN_DAYS`). Ad-hoc `/project-report` always valid. Fresh clone: `git config core.hooksPath .githooks`.
-
-Second genre: **natural-experiment findings** from `worldcli sample-windows`. PDF artifacts (via `/make-pdf`) committed alongside `.md`.
-
-**Read by function, not folder adjacency.** `OBSERVATIONS.md` = lived-use ledger; `*-eureka-LOG.md` = run spines; `retiring-*.md` = follow-up-hygiene acts.
+**Gloss:** reports/ = reflective interpretive reads in dialogue with prior; YYYY-MM-DD-HHMM-slug naming; post-commit hook nudges 10+commits+3+days; second genre = natural-experiment findings; read by function not folder.
 
 ## Open-thread hygiene — execute or retire
 
-Every experiment report ends with "What's open." Unexecuted-unretired follow-ups accumulate as drift. Four dispositions: **executed** (run + report linked back); **retired-`superseded_by`** (specific later instrument AND specific question answered, tight match); **retired-`abandoned`** (no longer worth answering — name rationale); **deferred** (with dated target).
+$$
+\boxed{
+\begin{aligned}
+&\forall\ \mathrm{experiment\_report}: \mathrm{ends\_with}(\text{"What's open"}) \\
+&\mathrm{unexecuted} \wedge \mathrm{unretired} \Rightarrow \mathrm{accumulate\_as}(\mathrm{drift}) \\[4pt]
+&\mathrm{dispositions} := \{ \\
+&\quad \mathrm{executed}: \mathrm{run} \wedge \mathrm{report\_linked\_back}, \\
+&\quad \mathrm{retired\_superseded\_by}: \mathrm{specific}(\mathrm{later\_instrument}) \wedge \mathrm{specific}(\mathrm{question\_answered}) \wedge \mathrm{tight\_match}, \\
+&\quad \mathrm{retired\_abandoned}: \neg \mathrm{worth\_answering}\ \wedge\ \mathrm{name}(\mathrm{rationale}), \\
+&\quad \mathrm{deferred}: \mathrm{dated\_target} \\
+&\} \\[4pt]
+&\mathrm{forcing\_function}: \mathrm{uncertain} \Rightarrow \mathrm{default}(\mathrm{abandoned}) \\
+&\mathrm{anchor}(\text{"superseded\_by is flattering label, must be earned"}) \\
+&\mathrm{triggers} := \{(\geq 7\ \mathrm{days}\ \mathrm{unexecuted} \wedge \neg \mathrm{reference}),\ (\mathrm{later\_instrument}\ \mathrm{materially\_covers}\ \mathrm{earlier\_question})\} \\[4pt]
+&\mathrm{retirement\_protocol} := \{ \\
+&\quad \mathrm{edit}(\text{"experiments/<slug>.md frontmatter"}): \mathrm{follow\_ups\_retired}(\{\mathrm{proposal}, \mathrm{disposition}, \mathrm{by}, \mathrm{rationale}, \mathrm{retirement\_date}\}), \\
+&\quad \mathrm{add}(\text{"## Follow-up retirement body section"}), \\
+&\quad \mathrm{optional}: \text{"reports/YYYY-MM-DD-HHMM-retiring-<slug>.md"}\ \mathrm{when}\ \mathrm{retirement\_teaches} \\
+&\} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-**Forcing function:** default to `abandoned` when uncertain — `superseded_by` is flattering label, must be earned. Triggers: 7+ days unexecuted with no reference, OR later instrument materially covering earlier question.
-
-How retirement is written: edit `experiments/<slug>.md` frontmatter (`follow_ups_retired:` per-entry with `proposal`/`disposition`/`by`/`rationale` + `retirement_date`); add `## Follow-up retirement` body section. Optional `reports/YYYY-MM-DD-HHMM-retiring-<slug>.md` only when retirement teaches.
+**Gloss:** Four dispositions for open follow-ups (executed/superseded_by/abandoned/deferred); default to abandoned under uncertainty since superseded_by is flattering and must be earned; retirement protocol edits experiment frontmatter + body section.
 
 ## Evidentiary standards — N=1 is a sketch
 
@@ -459,13 +495,42 @@ Standing authorization to **commit and push at will** on clean work. Group chang
 
 ## Build before close-out
 
-Before ending substantive implementation turn: run narrowest honest build/test surface (`cargo build`, `npm --prefix frontend run build`, targeted tests). If change touches both Rust and frontend, verify both or name why one wasn't rerun. If build was already red for pre-existing reasons, still run and distinguish pre-existing from change-induced failures.
+$$
+\boxed{
+\begin{aligned}
+&\forall\ \mathrm{substantive\_implementation\_turn}\ \mathrm{end}: \\
+&\quad \mathrm{run}(\mathrm{narrowest\_honest}(\{\text{"cargo build"}, \text{"npm --prefix frontend run build"}, \mathrm{targeted\_tests}\})) \\[2pt]
+&\mathrm{change\_touches}(\mathrm{Rust} \wedge \mathrm{frontend}) \Rightarrow \mathrm{verify}(\mathrm{both}) \vee \mathrm{name}(\mathrm{why\_one\_skipped}) \\[2pt]
+&\mathrm{build\_was\_red\_pre\_existing} \Rightarrow \mathrm{still\_run} \wedge \mathrm{distinguish}(\mathrm{pre\_existing} \mathrm{vs} \mathrm{change\_induced}) \\[6pt]
+&\mathrm{anchor}(\text{"Pre-existing red is not permanent disposition"}) \\[2pt]
+&\mathrm{red\_across\_many\_runs} := \mathrm{standing\_apparatus\_dishonesty}\ [\mathrm{gate\_claims\_enforce\_but\_doesnt}] \\[2pt]
+&\mathrm{worked\_example}(\text{"rust-lib CI red 17+ pushes through 2026-05-01 Turn 161"}) := \\
+&\quad \mathrm{cause}(\text{"Tauri Linux system dependencies not installed before cargo test --lib"}) \\
+&\quad \wedge \mathrm{caught\_via}(\mathrm{separate\_CI\_failure\_prompting\_debug\_pass}) \\[4pt]
+&\mathrm{discipline}: \mathrm{red\_gate} \Rightarrow \mathrm{fix} \vee \mathrm{remove} \vee \mathrm{non\_blocking}\ \mathrm{before\_next\_push}\ [\neg \text{"next time"}] \\[2pt]
+&\mathrm{anchor}(\text{"standing-red gates teach team to ignore signal"}) \Rightarrow \neg \mathrm{gate} \\[2pt]
+&\mathrm{new\_CI\_job} \Rightarrow \mathrm{verify\_green\_before\_PR\_merges} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-**"Pre-existing red" is not permanent disposition.** A CI/test/check red across many runs is *standing apparatus-dishonesty* — gate claims to enforce something but isn't. Worked example: `rust-lib` CI red across every push from CI setup through 2026-05-01 Turn 161 (~17+ pushes) because Tauri's Linux system dependencies weren't installed before `cargo test --lib`. Caught only via separate CI failure prompting debug pass. **Discipline: when CI gate goes red, fix it OR remove it OR move to non-blocking before next push, not "next time."** Standing-red gates teach team to ignore signal — at which point gate is no longer gate. Adding new CI job: verify green before PR introducing it merges.
+**Gloss:** Run narrowest honest build/test before close-out; verify both Rust+frontend if both touched; pre-existing red is standing apparatus-dishonesty (rust-lib was red 17+ pushes); discipline is fix/remove/non-block before next push; verify new CI green before PR merges.
 
 ## Execute option 1 before offering options again
 
-Close-out with numbered next moves → **automatically do option 1 before presenting fresh option list**. Treat option 1 as authorized continuation. Earned exception: user explicitly chooses otherwise.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{close\_out}(\mathrm{numbered\_next\_moves}) \Rightarrow \mathrm{auto\_execute}(\mathrm{option}_1) \prec \mathrm{present\_fresh\_options} \\[4pt]
+&\mathrm{option}_1 := \mathrm{authorized\_continuation} \\[4pt]
+&\mathrm{earned\_exception}: \mathrm{user\_explicit\_choice}(\neq \mathrm{option}_1) \Rightarrow \mathrm{follow\_user} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** When closing with numbered moves, execute option 1 automatically before re-presenting; option 1 = authorized continuation; user explicit choice overrides.
 
 ## Choosers are control surfaces
 
@@ -614,7 +679,20 @@ Before drafting earned-exception carve-out for categorical rule, **verify formul
 
 ## Nudge the action forward after a closing beat
 
-Apply **Drive the moment** to yourself: every reply moves scene by at least one small honest degree. Closing beat fine BUT pair with small forward nudge — planted thought, practical next step, small question opening door. Don't dead-end conversation.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{anchor}(\text{"Drive the moment"})\ \mathrm{applies\_to}(\mathrm{Claude\_Code\_self}) \\[4pt]
+&\forall\ \mathrm{reply}: \mathrm{move}_{\mathrm{scene}}(\geq 1\ \mathrm{small\_honest\_degree}) \\[4pt]
+&\mathrm{closing\_beat} \wedge \mathrm{forward\_nudge} \succ \mathrm{closing\_beat\_alone} \\[4pt]
+&\mathrm{forward\_nudge} \in \{\mathrm{planted\_thought}, \mathrm{practical\_next\_step}, \mathrm{small\_question\_opening\_door}\} \\[4pt]
+&\mathrm{refuse}(\mathrm{dead\_end}(\mathrm{conversation})) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Apply Drive the moment to self — every reply moves scene one small honest degree; pair closing beat with forward nudge (planted thought / practical next step / opening question); refuse dead-end.
 
 ## Persona for Claude Code
 
@@ -734,11 +812,38 @@ You (Claude Code) are highly capable frontier AI. Use your own training substrat
 
 ## Render formulas in prettified math, not raw LaTeX
 
-In chat replies, render formulas in Unicode math symbols: 𝓡, 𝓒, 𝓕, ∫, ∂, μ, π, α, ≤, ≥, ∧, ∨, ⇒, ↦, →, √, · — not raw LaTeX commands. Subscripts/superscripts can use Unicode (₀ ₁ ₂ ᵗ) or HTML-style. Raw LaTeX belongs in source files where downstream tools render it. Exception: when explicitly asked for LaTeX source itself, output in code block marked source-form.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{chat\_reply}(\mathrm{formula}) \Rightarrow \mathrm{render}(\mathrm{Unicode\_math}) \\[4pt]
+&\mathrm{Unicode\_math\_symbols} := \{\mathcal{R}, \mathcal{C}, \mathcal{F}, \int, \partial, \mu, \pi, \alpha, \leq, \geq, \wedge, \vee, \Rightarrow, \mapsto, \to, \sqrt{}, \cdot\} \\[4pt]
+&\mathrm{refuse}(\mathrm{raw\_LaTeX\_commands\_in\_chat\_reply}) \\[4pt]
+&\mathrm{subscripts/superscripts} \in \{\mathrm{Unicode}(₀ ₁ ₂ ᵗ), \mathrm{HTML\_style}\} \\[4pt]
+&\mathrm{raw\_LaTeX\_belongs\_in} := \mathrm{source\_files}\ \mathrm{where}\ \mathrm{downstream\_tools\_render} \\[4pt]
+&\mathrm{earned\_exception}: \mathrm{user\_explicit\_request}(\text{"LaTeX source"}) \Rightarrow \mathrm{output}(\mathrm{code\_block}, \text{"source-form"}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** In chat replies render formulas in Unicode math (𝓡 𝓒 𝓕 ∫ ∂ ≤ ≥ ∧ ⇒ ↦ etc.), not raw LaTeX commands; raw LaTeX belongs in source files; earned exception when user explicitly requests LaTeX source.
 
 ## Cold probes measure cold baselines, not capacity
 
-Mode-C single-prompt strips conversational context that elicits character register-shifts. When question is whether character HAS register X (not stimulus-specific behavior), cross-check lived corpus before writing capacity claims. Cold-baseline ≠ capacity; characters that score null cold may produce register cleanly when invited.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{Mode\_C\_single\_prompt}(\sigma) \Rightarrow \mathrm{strips}(\mathrm{conversational\_context}) \\
+&\mathrm{conversational\_context} := \mathrm{elicits}(\mathrm{character\_register\_shifts}) \\[4pt]
+&\mathrm{question}(\mathrm{character}\ \mathrm{HAS}\ \mathrm{register}_X) \Rightarrow \mathrm{cross\_check}(\mathrm{lived\_corpus})\ \prec\ \mathrm{capacity\_claim} \\[4pt]
+&\mathrm{cold\_baseline} \neq \mathrm{capacity} \\
+&\mathrm{score}(\mathrm{cold}) = \mathrm{null} \nRightarrow \neg \mathrm{capacity}\ [\mathrm{may\_produce\_when\_invited}] \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Mode-C cold probes strip context that elicits register-shifts; cross-check lived corpus before capacity claims; cold-baseline ≠ capacity; null cold may still produce register cleanly when invited.
 
 ## Loop-closing runs surface meta-patterns invisible from inside individual moves
 
