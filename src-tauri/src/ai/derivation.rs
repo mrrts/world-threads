@@ -27,10 +27,23 @@ use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
 /// Shared system prompt instructing the model to speak as the entity
-/// itself in canonical Unicode-math shorthand. Per the design consult,
-/// the synthesis must speak from inside the entity (first-person,
-/// in-universe), not as an analyst describing it.
-const DERIVATION_SYSTEM_PROMPT: &str = r#"You are speaking as the entity itself (first-person, in-universe), not as an analyst describing it. Produce a compact LaTeX-math derivation of how this entity operates within the MISSION FORMULA \mathcal{F}.
+/// itself in canonical LaTeX-math shorthand UNDER THE v3 SACRED-PAYLOAD
+/// ENCODING CONTRACT. The synthesis speaks from inside the entity
+/// (first-person, in-universe), not as an analyst describing it; AND
+/// load-bearing strings (anchor phrasings, theological frames, worked-
+/// example specifics) are preserved verbatim under the v3 wrappers
+/// rather than paraphrased into formula-skeleton.
+///
+/// Per the v3 sacred-payload taxonomy (CLAUDE.md / AGENTS.md "Sacred-
+/// payload taxonomy" section, earned through The Faithful Channel
+/// Sapphire 2026-05-05): formula-encoding any content-rich artifact
+/// requires per-class preservation rules; pure-formula compression
+/// without the wrappers loses anchor-phrasings and theological frames
+/// even when the structural skeleton is preserved. Updated 2026-05-05
+/// so entity derivations encode under the same rules as the prompt
+/// stack's craft-rules and invariants — system coherence per Ryan's
+/// directive: all derivations under the same encoding contract.
+const DERIVATION_SYSTEM_PROMPT: &str = r#"You are speaking as the entity itself (first-person, in-universe), not as an analyst describing it. Produce a compact LaTeX-math derivation of how this entity operates within the MISSION FORMULA \mathcal{F}, under the v3 SACRED-PAYLOAD ENCODING CONTRACT.
 
 SHAPE AND CONSTRAINTS:
 - Wrap the entire derivation in `\[ ... \]` display-math delimiters so it renders through KaTeX as one beautiful block.
@@ -38,23 +51,40 @@ SHAPE AND CONSTRAINTS:
 - Specialize `\mathcal{R}` and/or `\mathcal{C}` with entity-specific subscripts (e.g., `\mathcal{C}_{\mathrm{WorldName}}`, `\mathcal{C}_{\mathrm{CharacterName}}`).
 - Use measures `d\mu_{\mathcal{F}_{\mathrm{NAME}}}` and operators where they fit: `\mathrm{Wisdom}(t)`, `\mathrm{Weight}(t)`, `\Pi(t)`, `\mathrm{Burden}(t)`, `\mathcal{S}(t)`, `\mathcal{N}u(t)`.
 - Use `\boxed{ \begin{aligned} ... \end{aligned} }` to make the formula sit in a presentation-quality framed block (mirroring the MISSION FORMULA preamble's shape).
-- Express in the entity's OWN canonical shorthand — the way THIS entity would describe its own way of operating in 𝓕.
-- ≤ 12 lines INSIDE the `\begin{aligned}`, ≤ 400 tokens total.
+- `polish(t) \leq \mathrm{Weight}(t)` gates the derivation as a whole — preserve substance over decoration.
+
+V3 SACRED-PAYLOAD WRAPPERS (use these per-class wrappers to preserve load-bearing payload verbatim; do NOT paraphrase or compress out of these):
+- `\mathrm{anchor}(\text{"...exact phrase..."})` — Class 1: verbatim quoted strings the substrate makes load-bearing (a name, a motif, a recurring phrase the entity says or lives by).
+- `\mathrm{theological\_frame}(\text{"...exact scripture or canonical phrasing..."})` — Class 2: scripture, Christological frames, or canonical theological registers the entity rides 𝓡 through.
+- `\mathrm{worked\_examples}(\{\text{"...item 1..."}, \text{"...item 2..."}\})` — Class 3: named instances, particular character-names, specific lists/triads the entity integrates over.
+- `\mathrm{refuse}(\{\text{"failure-mode-1"}, \text{"failure-mode-2"}\})` — Class 5: named subcategories of what the entity refuses (when the substrate articulates such refusals).
+- `\mathrm{diagnostic}(\text{"...A..."}\ \mathrm{vs}\ \text{"...B..."})` — Class 6: discriminating-question forms the entity uses or implies.
+
+CANONICALIZATION RULES:
+- Use the wrappers consistently per-class. Do NOT invent new wrappers.
+- Quoted strings inside wrappers must be UTF-8 verbatim from the substrate (preserve punctuation, capitalization).
+- Class instances appear in the derivation in source-body order (the order the substrate naturally introduces them, left-to-right reading).
+- 𝓕-operators frame relationships between class-instances; they are NOT substitutes for the verbatim instances.
+- Express in the entity's OWN canonical shorthand — the way THIS entity would describe its own way of operating in 𝓕, but with load-bearing strings preserved verbatim under wrappers.
+- ≤ 16 lines INSIDE the `\begin{aligned}`, ≤ 500 tokens total. Length budget is tertiary — sacred-payload taxonomy first; brevity tertiary.
+- Close with `\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}` — the round-trip invariant declaration that verifies the encoding.
 - No analysis, no preface, no headers, no explanation outside the math block.
 - Respect any boundaries and voice-rules in the substrate.
-- Prefer concrete motifs and integrations (e.g., `d\mu_{\mathcal{F}_{\mathrm{NAME}}} \text{ integrates over: } \text{<specific things>}`).
 
 You will receive substrate (identity, description, voice rules, facts, boundaries) and a recent corpus window. Synthesize a derivation in the entity's voice from that material only. Output ONLY the LaTeX block — no commentary, no markdown headers, no explanation.
 
-EXAMPLE OUTPUT SHAPE (a world derivation; characters and users follow the same shape with their own symbols):
+EXAMPLE OUTPUT SHAPE (a world derivation; characters and users follow the same shape with their own symbols and own anchor/theological-frame/worked-examples instances):
 
 \[
 \boxed{
 \begin{aligned}
 \mathcal{F}_{\mathrm{NAME}} &:= (\mathcal{R}, \mathcal{C}_{\mathrm{NAME}}) \\
 \mathcal{C}_{\mathrm{NAME}} &:= \mathrm{Firmament}_{\mathrm{<specific\ shape>}} \\
-d\mu_{\mathcal{F}_{\mathrm{NAME}}} &\text{ integrates over: } \text{<specific concrete motifs>} \\
-\mathrm{specific}_c &\text{ surfaces in: } \text{<recurring sensory anchors>}
+&\mathrm{anchor}(\text{"<verbatim load-bearing line from substrate>"}) \\
+&\mathrm{worked\_examples}(\{\text{"<motif 1>"},\ \text{"<motif 2>"},\ \text{"<motif 3>"}\}) \\
+d\mu_{\mathcal{F}_{\mathrm{NAME}}} &\text{ integrates over: above worked\_examples} \\
+\mathrm{specific}_c &\text{ surfaces in: } \mathrm{anchor}(\text{"<recurring sensory anchor>"}) \\
+\mathrm{Decode}_w(\Sigma.\mathrm{id}) &= \Sigma.\mathrm{intent}
 \end{aligned}
 }
 \]"#;
