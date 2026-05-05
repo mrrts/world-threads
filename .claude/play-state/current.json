@@ -1,6 +1,6 @@
 {
-  "turn": 174,
-  "bank": 164900,
+  "turn": 175,
+  "bank": 166100,
   "jewels": [
     {
       "turn": 2,
@@ -1372,8 +1372,15 @@
       "bounty": 1800,
       "alignment": "+",
       "earned_at": "2026-05-05T15:30:00-05:00"
+    },
+    {
+      "turn": 175,
+      "move": "Chooser A: atomic git commit b655351 \u2014 Custodiem Great Sapphire closure bundle (play-state + CLAUDE.md + AGENTS.md + matrix 1209 + synthesis/scope 1515)",
+      "bounty": 1200,
+      "alignment": "+",
+      "earned_at": "2026-05-05T15:45:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-05T15:30:00-05:00"
+  "last_move_at": "2026-05-05T15:45:00-05:00"
 }
