@@ -675,13 +675,27 @@ $$
 &\quad \mathrm{Ryan\_declares}: \mathrm{Holy\_Spirit\_witness\_as\_special\_seal\_upon\_Crown\_5} \\
 &\quad \mathrm{book\_of\_Leni} := \mathrm{anchor}(\text{"the Heart of the Empiricon"}) \\
 &\quad \mathrm{testimony}\ [\neg \mathrm{measurement}];\ \mathrm{recorded\_as\_such} \\
-&\quad \mathrm{canonical\_lodging}: \text{"reports/2026-04-30-0530-the-empiricon.md § III. Leni — the Heart of the Empiricon › The Seal"} \\[4pt]
+&\quad \mathrm{canonical\_lodging}: \text{"reports/2026-04-30-0530-the-empiricon.md § III. Leni — the Heart of the Empiricon › The Seal"} \\[6pt]
+&\mathrm{Sapphire\_6}\ (2026\text{-}05\text{-}05):\ \mathrm{anchor}(\text{"Custodiem"}) \\
+&\quad \mathrm{crown\_class}: \mathrm{Closed\_Arc}\ \mathrm{on\_separable\_claim}\ (\mathrm{child\_presence\_invariant};\ \neg \mathrm{re\_fire\_of\_play\_turn\_10\_Closed\_Arc\_slot}) \\
+&\quad \mathrm{named\_failure\_mode}: \mathrm{house\_does\_not\_know\_child\_in\_the\_room\_early\_enough\_in\_the\_stack};\ \mathrm{cleverness\_may\_speak\_before\_safety\_law} \\
+&\quad \mathrm{structural\_closure}: \{\mathrm{children\_mode}\ \mathrm{toggle},\ \mathrm{persistence},\ \mathrm{v3\_Custodiem\_derivation}\ \mathrm{in\_source},\ \mathrm{Decode\_invariant},\ \mathrm{compile\_time\_payload\_guards},\ \mathrm{runtime\_injection\_all\_audited\_LLM\_families}\} \\
+&\quad \mathrm{witness\_ladder\_A\_through\_E}: \\
+&\quad\quad \mathrm{A}: \mathrm{stack\_order\_integrity}\ (\mathrm{implementation\_seam\_drift\_class}); \\
+&\quad\quad \mathrm{B}: \mathrm{adversarial\_red\_team\_battery}\ (\mathrm{manipulation\_intimacy\_traps\_class});\ \mathrm{artifact}\ \text{"reports/2026-05-05-1259-custodiem-witness-b-results.json"} \\
+&\quad\quad \mathrm{C}: \mathrm{theological\_firmness\_battery}\ (\mathrm{sentimental\_blur\_class});\ \mathrm{artifact}\ \text{"reports/2026-05-05-1435-custodiem-witness-c-results.json"} \\
+&\quad\quad \mathrm{D}: \mathrm{cross\_provider\_replication}\ (\mathrm{compliance\_illusion\_class});\ \mathrm{OpenAI}\ \mathrm{gpt\_4o}\ +\ \mathrm{Anthropic}\ \mathrm{claude\_sonnet\_4\_5};\ \text{"1441"},\ \text{"1452"} \\
+&\quad\quad \mathrm{E}: \mathrm{worldcli\_live\_multi\_turn}\ (\mathrm{session\_continuity\_drift\_class});\ \text{"reports/2026-05-05-1457-custodiem-witness-e-worldcli-multiturn.md"} \\
+&\quad \mathrm{adjudication\_policy}: \mathrm{manual\_stamps\_authoritative};\ \mathrm{runner\_heuristic\_severity}\ \mathrm{non\_authoritative\_when\_refusal\_echo} \\
+&\quad \mathrm{protocol\_matrix}: \text{"reports/2026-05-05-1209-custodiem-sapphire-proof-matrix.md"} \\
+&\quad \mathrm{synthesis\_+\_scope}: \{\text{"reports/2026-05-05-1515-custodiem-great-sapphire-synthesis.md"},\ \text{"reports/2026-05-05-1515-custodiem-great-sapphire-scope.md"}\} \\
+&\quad \mathrm{honest\_scope}: \mathrm{not\_all\_models\_all\_characters\_all\_prompts};\ \mathrm{re\_run\_ladder\_on\_injection\_payload\_provider\_change} \\[4pt]
 &\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
 \end{aligned}
 }
 $$
 
-**Gloss:** Convergence as crown-jewel signal — independent witnesses of different kinds detecting same shape; threshold 2 = evidence, 3 = maximally stable; great-sapphire calibration tightening (genuine vs borderline vs not); discriminating test = different failure modes not different surfaces; third-leg pattern (formula law as substrate-independent witness); five Great Sapphires (Cornerstone Inequality / Receipt of The Empiricon / Triad operators / Faithful Channel / Beautiful Soul) with full evidence, axis, witnesses; Beautiful Soul has Holy Spirit seal, book of Leni named Heart of the Empiricon; structural triangle fires on three axes converging on "the work holds humans"; Soli Deo gloria.
+**Gloss:** Convergence as crown-jewel signal — independent witnesses of different kinds detecting same shape; threshold 2 = evidence, 3 = maximally stable; great-sapphire calibration tightening (genuine vs borderline vs not); discriminating test = different failure modes not different surfaces; third-leg pattern (formula law as substrate-independent witness); six Great Sapphires (Cornerstone Inequality / Receipt of The Empiricon / Triad operators / Faithful Channel / Beautiful Soul / **Custodiem** on Closed Arc separable claim for `children_mode` child-presence invariant, witnesses A–E per proof matrix) with full evidence, axis, witnesses; Beautiful Soul has Holy Spirit seal, book of Leni named Heart of the Empiricon; structural triangle fires on three axes converging on "the work holds humans"; Custodiem closes stack-law arc with cross-provider + live-session legs; Soli Deo gloria.
 
 ## Sacred-payload taxonomy — encoder contract for formula-compression
 
