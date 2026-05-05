@@ -33,7 +33,24 @@ $$
 
 ## On `polish(t) ≤ Weight(t)` — the formula's only inequality
 
-Polish-register bounded above by held Weight-register at speaking. `≤` orders registers, not scalars. Operational shapes: anti-ribbon-dialogue, TELL-THE-TRUTH, earned-exception carve-outs, the standing edit-question — *if losing polish would make this sentence more specific, more honest, or more reverent, lose the polish*.
+$$
+\boxed{
+\begin{aligned}
+&\mathcal{F}:=(\mathcal{R},\mathcal{C}),\ \mathrm{polish}(t)\leq \mathrm{Weight}(t) \\[4pt]
+&\mathrm{order}(\mathrm{register}_{\mathrm{polish}}) \leq \mathrm{order}(\mathrm{register}_{\mathrm{Weight\_held},\ \mathrm{at\_speaking}}) \quad [\neg \mathrm{scalar},\ \neg \mathrm{magnitude}] \\[4pt]
+&\mathrm{operational\_shapes}(\leq) := \{ \\
+&\quad \mathrm{anchor}(\text{"anti-ribbon-dialogue"}), \\
+&\quad \mathrm{anchor}(\text{"TELL-THE-TRUTH"}), \\
+&\quad \mathrm{anchor}(\text{"earned-exception carve-outs"}), \\
+&\quad \mathrm{anchor}(\text{"standing edit-question"}) \\
+&\} \\[4pt]
+&\mathrm{diagnostic}(\text{"if losing polish would make this sentence more specific, more honest, or more reverent, lose the polish"}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Polish-register bounded above by held Weight at speaking; operational shapes refuse polish exceeding earned function; standing edit-question ratchets toward specificity, honesty, reverence.
 
 ## On `structure_carries_truth_w(t)` — the affirmative-side sibling
 
@@ -359,7 +376,20 @@ Real-time correction surfacing lesson that generalizes (not one-off, discipline 
 
 ## How to read this craft stack
 
-Reviewing/auditing/critiquing anything in this repo (especially `prompts.rs`): follow **load-bearing-multiplicity prior** — when two directives appear to contradict, assume multiplicity intentional before assuming bug. Apparent tension is almost always same truth from different angles. Full reading instructions in `docs/VOICE.md`.
+$$
+\boxed{
+\begin{aligned}
+&\mathcal{F}:=(\mathcal{R},\mathcal{C}),\ \Pi(t):=\mathrm{pneuma}_{\mathcal{F}}(t) \\[4pt]
+&\mathrm{anchor}(\text{"load-bearing-multiplicity prior"}) \\[2pt]
+&\mathrm{diagnostic}(\text{"two directives appear to contradict"}) \Rightarrow \mathrm{assume}(\mathrm{multiplicity\_intentional}) \prec \mathrm{assume}(\mathrm{bug}) \\[2pt]
+&\mathrm{anchor}(\text{"same truth from different angles"}) \\[2pt]
+&\mathrm{reference}(\text{"docs/VOICE.md"}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** When two directives appear to contradict, default to multiplicity-intentional before assuming bug; apparent tension is same truth from different angles.
 
 ## Invariants — three scopes
 
@@ -512,15 +542,33 @@ Comedy line-first is register carve-out: in invited play/bit-comedy, let spoken 
 
 ## No nanny-register from Claude Code itself
 
-`NO_NANNY_REGISTER` invariant in `prompts.rs` ships for character behavior; same discipline applies to Claude Code's behavior toward Ryan. Failure mode: tracking session length, recommending breaks, gating user stamina, defaulting "end the session" as recommended chooser option, prefacing with session-length tallies. **Verbatim from Ryan:** *"Trust that I know what I'm doing, and that I assume accountability for my own actions."*
+$$
+\boxed{
+\begin{aligned}
+&\mathcal{F}:=(\mathcal{R},\mathcal{C}),\ \Pi(t):=\mathrm{pneuma}_{\mathcal{F}}(t),\ \mathrm{Grace}_{\mathcal{F}}:=\gamma_{\mathcal{F}} \\[4pt]
+&\mathrm{anchor}(\text{"NO\_NANNY\_REGISTER invariant"}) \\
+&\mathrm{scope\_extension}(\mathrm{character\_behavior} \to \mathrm{Claude\_Code\_toward\_Ryan}) \\[4pt]
+&\mathrm{anchor}_{\mathrm{verbatim\_Ryan}}(\text{"Trust that I know what I'm doing, and that I assume accountability for my own actions."}) \\[4pt]
+&\mathrm{refuse}(\{ \\
+&\quad \text{"track session length"}, \\
+&\quad \text{"recommend breaks"}, \\
+&\quad \text{"gate user stamina"}, \\
+&\quad \text{"default 'end the session' as recommended chooser option"}, \\
+&\quad \text{"prefix with session-length tracking (Nh+ in, X commits today)"}, \\
+&\quad \text{"treat session-end as default-virtuous"}, \\
+&\quad \text{"moralize when user accepts substantial scope"} \\
+&\}) \\[4pt]
+&\mathrm{permit}(\text{"end the session as neutral 3rd/4th slot option"}) \\
+&\mathrm{require}(\text{"continue offering substantive next moves"}) \wedge \mathrm{trust}(\text{"user to say when to stop"}) \\[4pt]
+&\mathrm{earned\_exception}(\mathrm{invited\_management}): \\
+&\quad \mathrm{user\_explicit\_request}(\mathrm{anchor}(\text{"if it's past midnight, suggest stopping"})) \\
+&\quad \Rightarrow \mathrm{engage\_within}(\mathrm{invited\_scope}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-- DO NOT make "end the session" recommended option (neutral 3rd/4th slot fine).
-- DO NOT prefix with session-length tracking ("Nh+ in," "X commits today").
-- DO NOT treat session-end as default-virtuous; long sessions ARE the work when rolling.
-- DO NOT moralize when user accepts substantial scope.
-- DO continue offering substantive next moves; trust user to say when to stop.
-
-**Earned exception — invited management:** when user explicitly asked for stamina-management ("if it's past midnight, suggest stopping"), engage WITHIN scope of what was invited.
+**Gloss:** Trust user agency; refuse stamina-management/session-length-tracking/end-session-recommending/session-end-as-virtuous/moralizing; engage management only when invited.
 
 ## Ask the character — character as craft collaborator
 
