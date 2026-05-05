@@ -1820,11 +1820,29 @@ $$
 
 ## Direct character access — the `worldcli` dev tool
 
-CLI binary at `src-tauri/src/bin/worldcli.rs` lets you converse with characters and inspect db state DIRECTLY. **Reach for it whenever you want to verify prompt theory, A/B test, or apply "ask the character" pattern without round-tripping through user.**
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{worldcli} := \text{"src-tauri/src/bin/worldcli.rs"}\ [\mathrm{CLI\_binary}] \\
+&\mathrm{capability}: \mathrm{converse\_with\_characters} \wedge \mathrm{inspect\_db\_state\_DIRECTLY} \\[4pt]
+&\mathrm{anchor}(\text{"Reach for it whenever you want to verify prompt theory, A/B test, or apply 'ask the character' pattern without round-tripping through user"}) \\[6pt]
+&\mathrm{what\_it\_actually\_is} := \{\mathrm{temporal\_braid\_surface}, \mathrm{fossilizing\_lab}\} \\
+&\mathrm{cost\_gated\_calls}\{\text{"ask"}, \text{"consult"}, \text{"evaluate"}, \text{"synthesize"}, \text{"replay"}\} := \mathrm{front\_edge} \\
+&\mathrm{deeper\_center}: \forall\ \mathrm{expensive\_move}: \mathrm{fossilizes\_into}(\mathrm{queryable\_substrate}) \\
+&\quad \mathrm{queryable\_substrate} := \{\text{"~/.worldcli/runs/"}, \text{"evaluate-runs"}, \text{"synthesize-runs"}, \text{"replay-runs"}, \mathrm{experiment\_registry}, \text{"commit-context"}\} \\
+&\mathrm{read\_only\_run\_log\_interrogation} := \mathrm{lab\_core\_thrift\_discipline} \\[4pt]
+&\mathrm{doctrine}: \mathrm{anchor}(\text{"prefer braid-legible compression over artifact sprawl"}) \\
+&\quad \mathrm{question\_can\_be\_made\_more\_legible\_by} \in \{ \\
+&\quad\quad \mathrm{sharpening\_existing\_worldcli\_surface}, \\
+&\quad\quad \mathrm{appending\_to\_existing\_log}, \\
+&\quad\quad \mathrm{tightening\_linkage}(\mathrm{run\_ids} \times \mathrm{commits} \times \mathrm{follow\_ups}) \\
+&\quad \} \Rightarrow \mathrm{prefer\_that\_before\_creating\_new\_file} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-**What it actually is:** temporal braid surface and fossilizing lab. Cost-gated calls (`ask`, `consult`, `evaluate`, `synthesize`, `replay`) front edge; deeper center is every expensive move fossilizes into cheap, queryable substrate (`~/.worldcli/runs/`, `evaluate-runs`, `synthesize-runs`, `replay-runs`, experiment registry, `commit-context`). Read-only run-log interrogation = lab's core thrift discipline.
-
-**Doctrine — prefer braid-legible compression over artifact sprawl.** If question can be made more legible by sharpening existing `worldcli` surface, appending to existing log, or tightening linkage among run ids / commits / follow-ups → prefer that before creating new file.
+**Gloss:** worldcli = CLI for direct character access + db inspection; reach for it to verify prompt theory / A-B test / ask-the-character without user round-trip; temporal braid surface + fossilizing lab (cost-gated front edge → queryable substrate); doctrine = prefer braid-legible compression over artifact sprawl.
 
 ### Build it once
 
@@ -1867,15 +1885,41 @@ Cold session sequence: (1) `worldcli --help`; (2) `worldcli register-shift --hel
 
 **Rubric library:** `rubric list/show/search` against `reports/rubrics/`. `--rubric-ref <name>` to auto-append run history.
 
-**Rubric refs can carry criterion middleware.** Corrective report sharpening what rubric is honestly allowed to count, embodied in named rubric → later `worldcli evaluate --rubric-ref <name>` calls inherit corrected criterion automatically.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{rubric\_refs\_carry\_criterion\_middleware}: \\
+&\quad \mathrm{corrective\_report\_sharpening\_what\_rubric\_allowed\_to\_count} \\
+&\quad \xRightarrow{\mathrm{embodied\_in\_named\_rubric}} \\
+&\quad \forall\ \mathrm{later}\ \text{"worldcli evaluate --rubric-ref <name>"}\ \mathrm{calls}: \mathrm{inherit}(\mathrm{corrected\_criterion})\ [\mathrm{automatic}] \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Rubric refs carry criterion middleware — corrective report's sharpened criterion gets inherited automatically by later --rubric-ref calls.
 
 **Experiment registry (lab):** `lab list/open/show/search/propose/resolve/link-run/scenario`. Hypothesis slug = durable memory unit; run ids = evidence attachments.
 
-**Lab registry surfaces can become hypothesis middleware.** `propose → link-run → resolve` enforces what disciplined experiment loop must minimally include.
+$$
+\boxed{
+\begin{aligned}
+&\mathrm{lab\_registry\_surfaces\_can\_become\_hypothesis\_middleware}: \\
+&\quad \mathrm{propose} \to \mathrm{link\_run} \to \mathrm{resolve} \\
+&\quad \mathrm{enforces}(\mathrm{disciplined\_experiment\_loop\_minimal\_includes}) \\[4pt]
+&\mathrm{fully\_resolved\_registry\_becomes\_outcome\_topology}: \\
+&\quad \text{"lab open"} \to 0 \Rightarrow \mathrm{shelf\_reads\_as\_map}(\mathrm{lab\_actual\_bet\_classes}) \\[4pt]
+&\mathrm{outcome\_topology\_reveals\_higher\_order\_bet\_families}: \\
+&\quad \mathrm{statuses\_cluster\_by\_claim\_shape}: \\
+&\quad\quad \mathrm{structural\_bite\_bets} \to \mathrm{confirm}\ [\mathrm{diagnostic}(\text{"does rule/stack-layer exert real force at all?"})], \\
+&\quad\quad \mathrm{scope\_and\_direction\_bets} \to \mathrm{refute}\ [\mathrm{diagnostic}(\text{"does that force generalize cleanly across characters/registers/user-boundary in exact predicted direction?"})], \\
+&\quad\quad \mathrm{partial\_real\_but\_instrument\_sensitive\_bets} \to \mathrm{discrepant} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
 
-**Fully-resolved registry becomes outcome topology.** When `lab open` drains to zero, shelf reads as map of lab's actual bet-classes.
-
-**Outcome topology can reveal higher-order bet families.** Statuses cluster by claim-shape: **structural-bite bets** confirm (does rule/stack-layer exert real force at all?); **scope-and-direction bets** refute (does that force generalize cleanly across characters/registers/user-boundary in exact predicted direction?); **partial-real-but-instrument-sensitive bets** land discrepant.
+**Gloss:** Lab registry surfaces (propose → link-run → resolve) enforce disciplined experiment loop minimums; fully-resolved registry becomes outcome topology mapping bet-classes; statuses cluster by claim-shape (structural-bite confirm / scope-and-direction refute / partial-real-instrument-sensitive discrepant).
 
 **Sessions:** `session-show/clear/list`. Sessions persist to `dev_chat_sessions`; clear individually when stale.
 
