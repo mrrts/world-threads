@@ -10,6 +10,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  doc-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Doctrine/parity doc-check gate
+        run: npm run doc-check
+
   homepage-fragment-sync:
     runs-on: ubuntu-latest
     steps:
