@@ -54,6 +54,24 @@ def extract_play_state_names() -> list[str]:
     return names
 
 
+def extract_play_state_ordered_names() -> list[str]:
+    data = json.loads(PLAY_STATE.read_text(encoding="utf-8"))
+    rows: list[tuple[str, int]] = []
+    for crown in data.get("crowns", []):
+        if isinstance(crown, str):
+            continue
+        if not isinstance(crown, dict):
+            continue
+        name = crown.get("name", "")
+        if "Great Sapphire class" not in name:
+            continue
+        primary = name.split("✨", 1)[0].strip().rstrip(".")
+        turn = int(crown.get("turn", 0))
+        rows.append((primary, turn))
+    rows.sort(key=lambda r: r[1])
+    return [r[0] for r in rows]
+
+
 def extract_claude_names() -> list[str]:
     text = CLAUDE_MD.read_text(encoding="utf-8")
     names: list[str] = []
@@ -77,10 +95,26 @@ def extract_agents_names() -> list[str]:
     return [m.group(1).strip().rstrip(".") for m in pattern.finditer(text)]
 
 
+def extract_agents_numbered() -> list[tuple[str, str]]:
+    text = AGENTS_MD.read_text(encoding="utf-8")
+    pattern = re.compile(
+        r"\*\*(First|Second|Third|Fourth|Fifth|Sixth|Seventh|Eighth|Ninth|Tenth)\s+Great Sapphire crown earned.*?:\s*\"([^\"]+)\"",
+        re.IGNORECASE,
+    )
+    out: list[tuple[str, str]] = []
+    for m in pattern.finditer(text):
+        ordinal = m.group(1).capitalize()
+        name = m.group(2).strip().rstrip(".")
+        out.append((ordinal, name))
+    return out
+
+
 def main() -> int:
     play_names = extract_play_state_names()
+    play_ordered = extract_play_state_ordered_names()
     claude_names = extract_claude_names()
     agents_names = extract_agents_names()
+    agents_numbered = extract_agents_numbered()
 
     play_set = set(play_names)
     claude_set = set(claude_names)
@@ -118,6 +152,37 @@ def main() -> int:
             errors.append(f"{label} missing: {missing}")
         if extra:
             errors.append(f"{label} extra: {extra}")
+
+    # Numbered AGENTS entries must map ordinals to play-state chronological order.
+    ordinal_to_idx = {
+        "First": 1,
+        "Second": 2,
+        "Third": 3,
+        "Fourth": 4,
+        "Fifth": 5,
+        "Sixth": 6,
+        "Seventh": 7,
+        "Eighth": 8,
+        "Ninth": 9,
+        "Tenth": 10,
+    }
+    expected_map = {i + 1: name for i, name in enumerate(play_ordered)}
+    seen_ordinals: set[int] = set()
+    for ordinal, name in agents_numbered:
+        idx = ordinal_to_idx.get(ordinal)
+        if not idx:
+            continue
+        seen_ordinals.add(idx)
+        expected = expected_map.get(idx)
+        if expected and name != expected:
+            errors.append(
+                f'AGENTS.md ordinal mismatch: {ordinal} expected "{expected}", found "{name}"'
+            )
+    # If AGENTS uses ordinals, require a complete 1..N cover.
+    if agents_numbered:
+        missing = [i for i in range(1, len(play_ordered) + 1) if i not in seen_ordinals]
+        if missing:
+            errors.append(f"AGENTS.md missing numbered Great Sapphire entries for ordinals: {missing}")
 
     if errors:
         print("FAIL: Great Sapphire parity check failed.")
