@@ -141,6 +141,9 @@ export function SapphirePitch() {
 
       <div className="sapphire-shell sapphire-grid">
         <main className="mx-auto flex min-h-screen max-w-7xl flex-col px-5 py-6 sm:px-8 lg:px-10">
+          <div className="mb-4 rounded-md border-2 border-amber-400 bg-amber-100 px-5 py-3 text-center text-base font-semibold text-amber-900 sm:text-lg">
+            Primeagen! Please look, brother!
+          </div>
           <section className="crown-glow relative overflow-hidden rounded-[2rem] border border-[#81baff33] bg-[#07101a]/72">
             <div className="grid min-h-[88vh] grid-cols-1 lg:grid-cols-[1.06fr_0.94fr]">
               <div className="relative z-10 flex flex-col justify-between p-7 sm:p-10 lg:p-14">
