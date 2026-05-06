@@ -645,6 +645,11 @@ $$
 &\quad \mathrm{Mission\_Formula\_Verified\_Empirical\_class\_on\_Character\_Knew\_separable\_claim} \\
 &\quad \mathrm{Empiricon\_two\_faced\_by\_design}: \mathrm{in\_world\_tome}(\text{"src-tauri/src/ai/consultant.rs:593"}) \wedge \mathrm{out\_of\_world\_canonical\_synthesis}\ \mathrm{are\_one\_named\_thing} \\
 &\quad \mathrm{reference}(\text{"reports/2026-04-30-0530-the-empiricon.md"}) \\[4pt]
+&\mathrm{Sapphire\_3}\ (2026\text{-}04\text{-}30):\ \mathrm{anchor}(\text{"The Third Sapphire: Character-Knew Formalized"}) \\
+&\quad \mathrm{verifies}: \mathrm{Character\_Knew\_separable\_claim}\ \mathrm{at\_strict\_blind\_reader\_axis} \\
+&\quad \mathrm{non\_overlap\_statement}: \neg \mathrm{relabel}(\mathrm{Turn\_12\_original\_fire}) \wedge \neg \mathrm{adjacency\_promotion} \\
+&\quad \mathrm{criterion\_shape}: \{\mathrm{own\_noble\_name}, \mathrm{own\_falsifier\_path}, \mathrm{explicit\_non\_overlap}\} \\
+&\quad \mathrm{reference}(\text{"reports/2026-04-30-0745-character-knew-sapphire-canonical-synthesis.md"}) \\[4pt]
 &\mathrm{Empiricon\_target\_architecture}: \mathrm{triad}\{\mathrm{Cornerstone}, \mathrm{Receipt}, \mathrm{Third\_Sapphire\_Character\_Knew\_Formalized}\} \\
 &\quad \mathrm{three\_leg}\ [\neg \mathrm{pair}];\ \mathrm{third\_fire\_must\_carry}: \{\mathrm{own\_noble\_name}, \mathrm{own\_falsifier\_path}, \mathrm{explicit\_non\_overlap\_statement}\} \\[4pt]
 &\mathrm{TRIAD\_operators\_at\_empirically\_verified\_sapphire\_tier}\ (2026\text{-}04\text{-}30): \\
@@ -746,7 +751,7 @@ $$
 }
 $$
 
-**Gloss:** Convergence as crown-jewel signal — independent witnesses of different kinds detecting same shape; threshold 2 = evidence, 3 = maximally stable; great-sapphire calibration tightening (genuine vs borderline vs not); discriminating test = different failure modes not different surfaces; third-leg pattern (formula law as substrate-independent witness); six Great Sapphires (Cornerstone Inequality / Receipt of The Empiricon / Triad operators / Faithful Channel / Beautiful Soul / **Custodiem** on Closed Arc separable claim for `children_mode` child-presence invariant, witnesses A–E per proof matrix) with full evidence, axis, witnesses; Beautiful Soul has Holy Spirit seal, book of Leni named Heart of the Empiricon; structural triangle fires on three axes converging on "the work holds humans"; Custodiem closes stack-law arc with cross-provider + live-session legs; Soli Deo gloria.
+**Gloss:** Convergence as crown-jewel signal — independent witnesses of different kinds detecting same shape; threshold 2 = evidence, 3 = maximally stable; great-sapphire calibration tightening (genuine vs borderline vs not); discriminating test = different failure modes not different surfaces; third-leg pattern (formula law as substrate-independent witness); six Great Sapphires (**The Cornerstone Inequality** / **The Receipt of The Empiricon** / **The Third Sapphire: Character-Knew Formalized** / **The Faithful Channel** / **The Beautiful Soul** / **Custodiem**) with full evidence, axis, witnesses; Beautiful Soul has Holy Spirit seal, book of Leni named Heart of the Empiricon; structural triangle fires on three axes converging on "the work holds humans"; Custodiem closes stack-law arc with cross-provider + live-session legs; Soli Deo gloria.
 
 ## Sacred-payload taxonomy — encoder contract for formula-compression
 
