@@ -141,7 +141,7 @@ fn inject_mission_formula_vision(messages: &mut Vec<VisionMessage>) {
     }
     inject_vision_block(
         messages,
-        crate::ai::prompts::MISSION_FORMULA_BLOCK,
+        crate::ai::prompts::mission_formula_block(),
         MISSION_FORMULA_SENTINEL,
     );
 }
@@ -290,7 +290,7 @@ pub fn inject_mission_formula(messages: &mut Vec<ChatMessage>) {
     if std::env::var("WORLDTHREADS_NO_FORMULA").map(|v| v == "1").unwrap_or(false) {
         return;
     }
-    let formula = crate::ai::prompts::MISSION_FORMULA_BLOCK;
+    let formula = crate::ai::prompts::mission_formula_block();
     if let Some(first_system) = messages.iter_mut().find(|m| m.role == "system") {
         if !first_system.content.contains(MISSION_FORMULA_SENTINEL) {
             first_system.content = format!("{formula}\n\n{}", first_system.content);

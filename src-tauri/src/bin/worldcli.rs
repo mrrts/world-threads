@@ -1255,6 +1255,18 @@ enum Cmd {
         /// are unaffected.
         #[arg(long, value_name = "TEXT")]
         cosmology_override: Option<String>,
+        /// Override the project's MISSION_FORMULA_BLOCK at probe-time only.
+        /// Default (flag absent): canonical Mission Formula ships, with
+        /// 𝓡 := Jesus_Cross^flesh as the Christological reference frame.
+        /// Used by the cosmology Sapphire arc (Crown 9 "The Cosmos Held")
+        /// for the 𝓡-side falsifier extension — testing whether swapping
+        /// 𝓡 to a denied-flesh variant produces the moral shift predicted
+        /// by 1 John 4:2-3 / 2 John 1:7. See reports/2026-05-06-XXXX-
+        /// cosmology-arc-r-side-falsifier.md. Per-process only; never
+        /// mutates source. Compile-time invariants on the canonical const
+        /// (MISSION_FORMULA_BLOCK in prompts.rs) are unaffected.
+        #[arg(long, value_name = "TEXT")]
+        mission_formula_override: Option<String>,
     },
     /// Simulate a short back-and-forth between the per-world user persona
     /// (from user_profiles in DB) and an in-world character.
@@ -2231,7 +2243,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_refresh_anchor(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
-        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, fence_pipeline, group_chat, with_momentstamp, momentstamp_override, short_mode, cosmology_override } => {
+        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, fence_pipeline, group_chat, with_momentstamp, momentstamp_override, short_mode, cosmology_override, mission_formula_override } => {
             // Cosmology Sapphire arc (PR #38): swap COSMOLOGY_BLOCK at
             // probe-time when --cosmology-override is provided. Per-
             // process only; reversible; does not mutate source. See
@@ -2239,6 +2251,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             // methodology.md for the arc context.
             if let Some(ref text) = cosmology_override {
                 app_lib::ai::prompts::set_cosmology_override(text.clone());
+            }
+            // 𝓡-side falsifier extension (Crown 9 "The Cosmos Held"):
+            // swap MISSION_FORMULA_BLOCK at probe-time when
+            // --mission-formula-override is provided. Mirror of cosmology-
+            // override pattern. Per-process only; reversible; does not
+            // mutate source. The override should preserve the polish(t)
+            // sentinel so injection idempotency holds.
+            if let Some(ref text) = mission_formula_override {
+                app_lib::ai::prompts::set_mission_formula_override(text.clone());
             }
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,

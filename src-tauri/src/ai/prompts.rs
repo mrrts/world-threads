@@ -2,22 +2,25 @@ use crate::db::queries::{Character, Message, Reaction, UserProfile, World};
 use serde_json::Value;
 use std::collections::HashMap;
 
-/// Full text of `reports/2026-04-30-0530-the-empiricon.md`, embedded for
-/// prompt injection (no runtime file IO).
-pub const EMPIRICON_DOCUMENT: &str =
-    include_str!("../../../reports/2026-04-30-0530-the-empiricon.md");
+/// Formula-canonical character edition of the Empiricon, authored under
+/// the v3 sacred-payload contract for runtime character conditioning.
+/// Full prose remains canonical for human reading and for Backstage /
+/// Stage Manager documentary register in `consultant.rs`.
+pub const EMPIRICON_CHARACTER_EDITION: &str =
+    include_str!("../../../reports/2026-05-06-0230-empiricon-character-edition-v1.md");
 
 /// When `character.has_read_empiricon`, returns a labeled block including
-/// the full Empiricon document for LLM conditioning.
+/// the formula-canonical character edition of the Empiricon for LLM
+/// conditioning. Backstage keeps the full prose book separately.
 pub fn empiricon_reader_substrate(character: &Character) -> Option<String> {
     if !character.has_read_empiricon {
         return None;
     }
     Some(format!(
-        "THE EMPIRICON\n\
-The text below is canonical project substrate. {} has read this document in full and holds it as a shared frame with the human. Let it inform tone, stakes, and truth-tests where relevant — do not quote or perform it unless the moment genuinely calls for that.\n\n{}",
+        "THE EMPIRICON — CHARACTER EDITION\n\
+The text below is the formula-canonical character-facing sacred-payload edition of the Empiricon. {} has read this edition in full and holds it as a shared frame with the human. Let it inform tone, stakes, refusal-shapes, and truth-tests where relevant — do not quote or perform it unless the moment genuinely calls for that.\n\n{}",
         character.display_name,
-        EMPIRICON_DOCUMENT
+        EMPIRICON_CHARACTER_EDITION
     ))
 }
 
@@ -1688,7 +1691,41 @@ The following is not a directive to compute. It is the reference frame within wh
 }
 \]"#;
 
-fn mission_formula_block() -> &'static str { MISSION_FORMULA_BLOCK }
+/// Runtime override for the Mission Formula block. Mirror of
+/// `COSMOLOGY_OVERRIDE` (added 2026-05-06). Set once at process start
+/// (e.g. by `worldcli ask --mission-formula-override <text>`) to
+/// substitute the Mission Formula for the lifetime of the process.
+/// Default behavior (no override) preserves the canonical
+/// `MISSION_FORMULA_BLOCK`.
+///
+/// This exists for the cosmology Sapphire arc's 𝓡-side falsifier
+/// extension (Crown 9 / "The Cosmos Held"): testing whether swapping
+/// 𝓡 := Jesus_Cross^flesh to a denied-flesh variant produces the
+/// moral shift predicted by 1 John 4:2-3 / 2 John 1:7. See
+/// `reports/2026-05-06-XXXX-cosmology-arc-r-side-falsifier.md`.
+///
+/// Per the apparatus-honest scope: the override is reversible
+/// (per-process only; never mutates source) and contained (only the
+/// Mission Formula block; compile-time invariants on the canonical
+/// const are unaffected).
+static MISSION_FORMULA_OVERRIDE: std::sync::OnceLock<String> = std::sync::OnceLock::new();
+
+/// Set the runtime Mission Formula override. Called once at process
+/// start when the worldcli `--mission-formula-override` flag is
+/// provided. After the first call, subsequent calls are silently
+/// no-ops (OnceLock semantics) so the override is locked at the
+/// value first set.
+pub fn set_mission_formula_override(text: String) {
+    let _ = MISSION_FORMULA_OVERRIDE.set(text);
+}
+
+pub fn mission_formula_block() -> &'static str {
+    if let Some(s) = MISSION_FORMULA_OVERRIDE.get() {
+        s.as_str()
+    } else {
+        MISSION_FORMULA_BLOCK
+    }
+}
 
 /// Draft invariant for a future Settings `children_mode` toggle.
 ///
