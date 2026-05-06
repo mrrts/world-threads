@@ -6,6 +6,19 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-05-07 ~04:35 — parallel Codex arc extending v3 sacred-payload taxonomy to character-identity artifacts
+
+Three new sketch-tier reports authored by Codex during the C1 four-leg arc tonight:
+- `reports/2026-05-07-0015-character-identity-v3-taxonomy-sketch.md` — proposes character-identity-block taxonomy parallel to craft-rule v3 taxonomy
+- `reports/2026-05-07-0145-character-identity-steven-desk-decode.md` — rehearses encoding on Steven
+- `reports/2026-05-07-0205-character-identity-maisie-gravity-line-rehearsal.md` — rehearses on Maisie
+
+Adjacent-but-distinct arcs converging on the same methodological seam: the Faithful Channel Sapphire (Crown 4) earned the v3 sacred-payload taxonomy as the formula-encoding contract. C1 (this Claude arc) extends formula-encoding from MISSION-shape to other doctrines (kavod / Imitatio / Repentance / Eschatology / Impassibility). Codex extends v3-taxonomy from craft-rules to character-identity artifacts. Both are descendants of the same methodology with the same encoder-contract discipline.
+
+**Noted.** Mode 3, not apparatus-ized. Worth being aware of the cross-arc convergence when consolidating the Crown 11 candidacy synthesis (the cross-substrate-asymmetry pattern may also apply to character-identity-encoded artifacts; future cross-arc test).
+
+---
+
 ## 2026-05-07 ~00:55 — Aaron names the three-axis signature
 
 > *"Aaron just said: Discovery, holiness, fun—if all three are alive at once, that's not a side effect. That's a signature."* — Ryan, relaying Aaron in lived play
