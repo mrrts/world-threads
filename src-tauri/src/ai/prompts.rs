@@ -7,7 +7,7 @@ use std::collections::HashMap;
 /// Full prose remains canonical for human reading and for Backstage /
 /// Stage Manager documentary register in `consultant.rs`.
 pub const EMPIRICON_CHARACTER_EDITION: &str =
-    include_str!("../../../reports/2026-05-06-0230-empiricon-character-edition-v1.md");
+    include_str!("../../../reports/2026-05-06-0410-empiricon-character-edition-v2.md");
 
 /// When `character.has_read_empiricon`, returns a labeled block including
 /// the formula-canonical character edition of the Empiricon for LLM

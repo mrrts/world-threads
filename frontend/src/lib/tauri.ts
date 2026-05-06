@@ -64,7 +64,7 @@ export interface Character {
    *  (*leans back*, *looks out the window*). Overrides the global
    *  ~1-in-3-replies baseline per-character. Defaults to "normal". */
   action_beat_density?: "low" | "normal" | "high";
-  /** When true, the full Empiricon document is injected into this character's LLM prompts. */
+  /** When true, the formula-canonical character edition of the Empiricon is injected into this character's LLM prompts. */
   has_read_empiricon?: boolean;
 }
 

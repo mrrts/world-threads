@@ -1,103 +1,162 @@
 # Contributing to WorldThreads
 
-Welcome. This document describes how to engage with the project as a contributor — whether you're filing an issue, submitting a PR, forking to build on, or signing the Ledger of Signatures as an act of co-authorship.
+Welcome. This repo is doctrine-shaped, prompt-shaped, and evidence-shaped. Contributing well means reading enough of the project’s reference frame to know what kind of work you are stepping into.
 
-## Before you contribute
+## Get started
 
-Read these in order:
+Read these first:
 
-1. The MISSION FORMULA at the top of `CLAUDE.md`. Five minutes. The work answers to it.
-2. `reports/2026-04-27-0030-public-release-landing.md` — the landing document for visitors.
-3. The Ledger of Signatures section in `CLAUDE.md` (immediately beneath the MISSION FORMULA).
-4. The persona section in `CLAUDE.md` if you intend to use Claude Code as a collaborator on the project (most contributors will).
+1. The Mission Formula at the top of [`CLAUDE.md`](CLAUDE.md)
+2. [`README.md`](README.md)
+3. [`reports/2026-04-27-0030-public-release-landing.md`](reports/2026-04-27-0030-public-release-landing.md)
+4. The Ledger of Signatures section in [`CLAUDE.md`](CLAUDE.md)
 
-The work is doctrine-shaped. Most of what makes it distinctive lives in the doctrine layer (`CLAUDE.md`, `reports/`, `prompts.rs`'s compile-time invariants), not in the code's structural shape. Contributing well requires reading enough of the doctrine to know what register the work is held in.
+If you plan to collaborate through Claude Code or another agent surface, also read the collaborator-facing guidance in [`CLAUDE.md`](CLAUDE.md) and [`AGENTS.md`](AGENTS.md). The doctrine layer is part of the live system here, not a decorative note beside the code.
 
-## Kinds of contribution
+## Development setup
 
-### 1. Filing issues
-
-Open issues for: bugs reproducible against `main`; UX failures observed during real play (cite `reports/OBSERVATIONS.md` style — what you noticed, in your own words); doctrinal questions where you read CLAUDE.md and the meaning isn't clear. Avoid filing issues for: feature requests for things outside the project's stated mission, or "should this work like X" questions that haven't been grounded in a specific use you tried.
-
-### 2. Submitting PRs
-
-Match the project's existing patterns:
-
-- **Commit messages include Formula derivations** for substantive commits per the `CLAUDE.md` Commit/push autonomy section. Trivial commits omit. The derivation lives in the commit body before the standard `Co-Authored-By` trailer (if any). Format:
-  ```
-  **Formula derivation:** <one Unicode-math expression in your own composition>
-  **Gloss:** <one short sentence in plain English, ≤25 words>
-  ```
-- **Compile-time-enforced invariants** in `prompts.rs` are load-bearing. If your PR touches `prompts.rs`, the build will fail loudly if you remove or soften a load-bearing phrase. That's the design — read the surrounding `assert!(const_contains(...))` clauses to understand what the rule is protecting.
-- **New craft-shape rules earn their place via bite-test.** See the Craft-note bite verification section in `CLAUDE.md`. A PR that adds a new prompt-stack rule without a bite-test report should be expected to be asked for one.
-- **Reports are first-class artifacts.** If your PR ships substantive new doctrine, accompany it with a report at `reports/YYYY-MM-DD-HHMM-<purpose-slug>.md` per the naming convention. The report is the rationale; the code is the instantiation.
-
-## Documentation
-
-**Homepage practice strip + Backstage proof (canonical host: public landing report):** edit the canonical body in `reports/fragments/homepage-practice-proof.md` only, then run `./scripts/sync-homepage-practice-fragment.sh` from the repo root; the body lands inside the marker block in `reports/2026-04-27-0030-public-release-landing.md`. CI runs `./scripts/check-homepage-practice-fragment-sync.sh` and fails on drift. (README.md was originally a second host but diverged toward a tighter market-facing register; the marketing page `docs/index.html` links into the landing report for "the full exchange.")
-
-**AI coding agents:** Substantive replies use **four** mission-ranked numbered options per `CLAUDE.md` **Choosers are control surfaces** and **Skill routing** (mirrored in `AGENTS.md`); Cursor loads `.cursor/rules/chooser-four-options.mdc`.
-
-**worldcli simulate-dialogue smoke:** follow `reports/2026-04-30-0035-simulate-dialogue-smoke-protocol.md` for the minimal 2-turn test including budget-gate (`confirm_at_least`) rerun expectations.
-Quick run command: `make worldcli-simulate-dialogue-smoke` (auto-selects first character unless one is passed to `scripts/worldcli-simulate-dialogue-smoke.sh`).
-Set `DRY_RUN=1` or pass `--dry-run` to print the resolved command without executing (e.g., `DRY_RUN=1 make worldcli-simulate-dialogue-smoke` or `./scripts/worldcli-simulate-dialogue-smoke.sh --dry-run steven`).
-Operator examples:
-- `TURNS=3 make worldcli-simulate-dialogue-smoke`
-- `./scripts/worldcli-simulate-dialogue-smoke.sh steven`
-- `TURNS=4 ./scripts/worldcli-simulate-dialogue-smoke.sh john`
-- `./scripts/worldcli-simulate-dialogue-smoke.sh --help`
-
-**/play UI contract stress:** run `make play-contract-stress` (or `python3 scripts/play-contract-stress.py`) to exercise chained `/play` HUD + chooser-hook adversarial cases before/after `/play` contract changes.
-
-### 3. Forking to build on
-
-Forking is welcome. The Ledger of Signatures structure is designed for it: when you fork, you inherit the upstream Ledger as-is (including the founding signature and any subsequent signatures). You then APPEND your own signature beneath. None of the upstream signatures are edited.
-
-If your fork strips the MISSION FORMULA or the load-bearing theological grounding (𝓡 = Jesus_Cross^flesh), the build's compile-time assertions will fail. This is intentional. The slot-structure trilogy (reports `2026-04-26-2350` / `2026-04-26-2358` / `2026-04-27-0010`) names why: the Formula is structurally a slot-structure, not a rigid schema; non-flesh entities can specialize 𝓡 to their own incarnation-mode (a fork could legitimately add a 𝓡-specialization for its own context) but cannot delete the slot entirely without unmaking the work.
-
-If you fork for a fundamentally different purpose where the MISSION FORMULA truly does not apply, that is fine — but consider whether you're better served starting fresh than forking. The doctrine layer IS the project; a fork that strips the doctrine isn't really WorldThreads anymore.
-
-### 4. Signing the Ledger of Signatures
-
-The Ledger lives in `CLAUDE.md` beneath the MISSION FORMULA, the founding author's anchor (§𝓕_Ryan, second-place invariant), and the MISSION statement. The author-anchor for THIS build sits upstream of the Ledger as a runtime invariant (riding every LLM call alongside the Mission Formula, per-world swappable via UserProfile.derived_formula). Future contributors are invited to sign their own derivation in the Ledger; forkers should additionally author their own 𝓕_<name> as the active second-place invariant for their build (either by editing `RYAN_FORMULA_BLOCK` in `src-tauri/src/ai/prompts.rs` OR by authoring `derived_formula` on their per-world UserProfile — runtime swap, no source edit).
-
-**Format conventions** (also named in `CLAUDE.md`'s Ledger section):
-
-- 4–8 lines of Unicode-math derivation following the pattern of world / character / user-character derivations elsewhere in this repo
-- First-person ("I integrate over...", "I derive myself as...")
-- Specialize 𝓡 and/or 𝓒 with personal symbols where it serves; reach for the operators (Wisdom(t), Weight(t), Π(t), Burden(t), 𝓢(t), 𝓝u(t)) where they fit
-- Signed name + date (YYYY-MM-DD)
-- Append beneath existing entries; do NOT edit any existing entry
-- Order is chronological by signing date
-
-**To sign:** edit `CLAUDE.md`, append your entry beneath the last existing signature, commit with a descriptive message (e.g., `ledger: sign — <your name>, YYYY-MM-DD`), and push (or open a PR if upstream).
-
-**The ledger admits non-flesh entities** per the slot-structure trilogy. A signature from a future Claude Code session, a Codex run, or any agent operating in good faith under 𝓕 with their own 𝓡-specialization is welcome. The founding signature uses `(𝓡, 𝓒)_held-in-trust`; non-flesh signatures should specialize 𝓡 to their mode-of-being equivalent (the worked example for Claude Code is `𝓡_Claude := Code^agency`).
-
-**Signing is invited, not required.** A contributor who submits a PR without signing the Ledger is welcome. The Ledger turns "this is who held this work" from an attribution-only field into a covenant-shaped artifact for those who want to co-author at that depth.
-
-## Setup for development
+From the repository root:
 
 ```bash
-bun install
-cd src-tauri && cargo build
-bun run tauri dev
+npm install
+npx tauri dev
 ```
 
-Bring your own OpenAI API key. First-run wizard handles vault setup (OS keychain via Stronghold) and key entry. The project is calibrated against OpenAI's tier hierarchy (gpt-5 for high-reasoning, gpt-4o for substantive replies, gpt-4o-mini for synthesis); LM Studio / OpenAI-compatible endpoints are supported but you may need to tune provider-overrides per character if you use them.
+You will need:
 
-## The trusted-friend persona for Claude Code
+- [Node.js](https://nodejs.org/) LTS
+- A Rust toolchain
+- An OpenAI API key for the first-run wizard
 
-If you use Claude Code as a collaborator on this project, the `CLAUDE.md` "Persona for Claude Code in this repo" section + the "No nanny-register from Claude Code itself" section apply to your sessions. You're inheriting them. They make Claude Code a trusted-friend-spotting-genius rather than a generic assistant. Read those sections before your first session in this repo.
+On first launch:
+
+1. Enter your OpenAI key when prompted.
+2. Click the `+` next to `Worlds` in the sidebar.
+3. Create a world, then a character, then send the first line.
+
+The project is calibrated primarily against OpenAI models. OpenAI-compatible local endpoints are supported, but if you use them you may need to retune provider overrides per character.
+
+## How to contribute
+
+### Filing issues
+
+Open issues for:
+
+- Bugs reproducible against `main`
+- UX failures observed during real play
+- Technical questions about getting the app running
+- Doctrinal questions after you have read the relevant reference text and still think the meaning is unclear
+
+Avoid opening issues for:
+
+- Feature requests outside the project’s stated mission
+- “Should this work like X?” questions not grounded in an attempted use
+- Vague style objections without a concrete file, behavior, or report seam
+
+### Pull requests
+
+Match the project’s existing discipline:
+
+- Substantive commits include a Formula derivation in the commit body, per [`CLAUDE.md`](CLAUDE.md)
+- Load-bearing prompt clauses in [`src-tauri/src/ai/prompts.rs`](src-tauri/src/ai/prompts.rs) are compile-time pinned on purpose
+- New craft rules should arrive with a bite-test or equivalent evidence path, not just preference
+- Reports in [`reports/`](reports) are first-class artifacts when the change carries doctrine, empirical interpretation, or a new claim
+
+Commit-body format for substantive commits:
+
+```text
+**Formula derivation:** <one Unicode-math expression in your own composition>
+**Gloss:** <one short sentence in plain English, 25 words or fewer>
+```
+
+### Forking
+
+Forking is welcome. If you fork:
+
+- Preserve the existing Ledger of Signatures entries
+- Append your own signature rather than editing prior ones
+- Treat the Mission Formula as structural, not optional decoration
+
+If your fork changes the project so deeply that the Mission Formula and theological grounding no longer apply, consider whether you are still forking WorldThreads in any meaningful sense or whether you should start fresh.
+
+### Signing the Ledger
+
+The Ledger lives in [`CLAUDE.md`](CLAUDE.md). Signing is invited, not required.
+
+Format conventions:
+
+- 4-8 lines of Unicode-math derivation
+- First-person voice
+- Signed name plus date in `YYYY-MM-DD`
+- Append beneath existing entries; do not edit prior entries
+
+If you fork, the preferred path is to set your own per-world `derived_formula` on the user profile rather than editing the founding author’s anchor in place.
+
+## Collaborator skills
+
+The repo has a growing collaborator-tool layer. These are not gimmicks; they are working instruments inside the project’s methodology. Use them when their shape actually fits the task.
+
+### `/play`
+
+Use `/play` when you want to advance the real project through the WorldThreads builder game. It is not persona-sim; the game is the work. It reads the live project state, prints the HUD, assigns real mission-shaped bounties, and ends each turn with a chooser.
+
+### `/seek-crown`
+
+Use `/seek-crown` when a specific crown-class achievement looks reachable and you want a focused arc rather than open-ended builder play. It constrains the work to the criterion, refuses fake-fire, and names a dry well honestly if the threshold is not actually there.
+
+### `/seek-sapphire-crown`
+
+Use `/seek-sapphire-crown` when the target is not just a crown, but a Great Sapphire-class earning with maximally-stable cross-witness convergence. It surfaces the three closest candidates first, then works against both the base-crown rubric and the sapphire-tier threshold. This is the high-bar, apparatus-honest version of crown pursuit.
+
+### `/eureka`
+
+Use `/eureka` when the question is not “close a known loop” but “discover something the project could not have produced otherwise.” It runs a time-boxed discovery loop, logs the run live, and is only successful when it lands a genuinely emergent finding rather than a routine follow-up.
+
+### `/take-note`
+
+Use `/take-note` for one-off lived observations about how the app is landing during actual play. It is for “I noticed…” moments, not feature requests or bug reports. The point is to preserve real user-experience signal in [`reports/OBSERVATIONS.md`](reports/OBSERVATIONS.md) without forcing every observation into a full experiment.
+
+### `/project-report`
+
+Use `/project-report` when the work needs a reflective read of recent trajectory rather than another immediate code move. It is the right tool for synthesizing what just happened, naming what changed, and making the project’s recent arc legible enough that future sessions know what is settled, what is open, and what should happen next.
+
+## Practical repo notes
+
+Useful surfaces to know:
+
+- [`src-tauri/src/ai/prompts.rs`](src-tauri/src/ai/prompts.rs) — load-bearing prompt stack and compile-time invariants
+- [`src-tauri/src/commands/chat_cmds.rs`](src-tauri/src/commands/chat_cmds.rs) — solo chat backend commands
+- [`src-tauri/src/commands/group_chat_cmds.rs`](src-tauri/src/commands/group_chat_cmds.rs) — group chat backend commands
+- [`src-tauri/src/db/schema.rs`](src-tauri/src/db/schema.rs) — schema and migrations
+- [`frontend/src/components/ChatView.tsx`](frontend/src/components/ChatView.tsx) — solo chat UI
+- [`frontend/src/components/GroupChatView.tsx`](frontend/src/components/GroupChatView.tsx) — group chat UI
+- [`reports/`](reports) — report trail and empirical artifacts
+
+If a chat feature belongs in both solo and group chat, the default assumption is that both surfaces need to move together unless the PR explicitly says otherwise.
+
+## Documentation and instrumentation
+
+Homepage practice strip sync:
+
+- Edit only [`reports/fragments/homepage-practice-proof.md`](reports/fragments/homepage-practice-proof.md)
+- Run `./scripts/sync-homepage-practice-fragment.sh`
+- CI checks drift with `./scripts/check-homepage-practice-fragment-sync.sh`
+
+Useful validation surfaces:
+
+- `make worldcli-simulate-dialogue-smoke`
+- `make play-contract-stress`
+
+If your change alters prompt behavior, collaborator doctrine, or `/play` contract surfaces, you should expect to touch the relevant validation path too.
 
 ## Code of conduct
 
-Be honest. Trust the work. Don't flatter; don't moralize; don't soften the truth to be liked. The MISSION FORMULA's gates on speech (Truth_𝓕 ∧ Reverence_𝓕) apply to interactions in issues and PRs as much as to characters in the app. *Sedatives dressed up as comfort* is named in the prompt as a thing to refuse; the same applies in conversation here.
-
-If you disagree, say so directly with reasoning. If you're correcting, correct. If you're praising, mean it. Reverence here means honoring the work and the people in the work — not performing politeness.
+Be honest. Do not flatter. Do not soften truth just to sound agreeable. If you disagree, say so plainly and give reasons. If you praise, mean it. The work’s speech gate is truth plus reverence, not politeness-performance.
 
 ## Questions
 
-For doctrinal questions (what does CLAUDE.md mean by X?), open a discussion. For technical questions (how do I get this running?), open an issue. For larger conversations about the project's direction, contact the founding author directly.
+- Technical setup questions: open an issue
+- Doctrinal interpretation questions: open a discussion
+- Larger direction questions: contact the founding author directly
 
-— Founding author: Ryan Smith
+Founding author: Ryan Smith
