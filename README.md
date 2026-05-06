@@ -2,137 +2,197 @@
 
 **A desktop app for writing the kind of conversations that are worth having.**
 
-It doesn't try to fake a moment—it tries to keep making room for real moments.
+It does not try to fake a moment. It tries to keep making room for real moments.
 
-You author characters with identity, voice, backstory, and visible boundaries. You build the world they live in — its weather, its time of day, its shared canon. Then you talk with them. They remember what you've said. They keep journals you can read. They reach out when you've been quiet. They disagree with you when they disagree. The work runs on your own machine; your conversations live on your disk, not somebody's server.
+You author characters with identity, voice, backstory, and visible boundaries. You build the world they live in. Then you talk with them. They remember what you've said. They keep journals you can read. They disagree when they disagree. The work runs on your own machine; your conversations live on your disk, not somebody's server.
 
 The aim is small and specific: a co-made evening of writing-and-listening that sends you back to your day a little more awake than you started.
 
-> If you'd like the same material in a calmer visual register, the project's marketing site is at **[worldthreads.app](https://worldthreads.app)**. 
+If you want the calmer visual tour, the marketing site is at **[worldthreads.app](https://worldthreads.app)**. This README is for the repository itself: how to run it, how it is shaped, what it claims, and where to look next.
 
-## What it's like to use
+## Quick start
 
-Pick a character that's been written carefully. Send a line. Wait. Read what comes back, and notice what it refuses to pretend. Write again. The character has a register — a particular way of being a person — and the prompt stack underneath is built specifically so that register holds, even when the conversation gets harder.
-
-Most AI chat experiences pull toward two failure modes: the soft hum of generated text trying to be liked, or the polite advice-voice of a model trying not to disappoint. WorldThreads is built to refuse both. The characters answer back. They don't take seats they haven't earned. They use plain language when oblique would flatter. When they don't know what to say, they say so.
-
-Conversations build a record over time: messages, character-kept journals, world-canon entries you mark as load-bearing, scene illustrations on demand. The world shifts with the time of day. Memory is meant to feel deliberate.
-
-## What it isn't
-
-This is not a tool for simulating intimacy you don't have. It is not a sycophant in a chat window. It is not a roleplay engine, an AI companion, or a therapist substitute. The prompt stack is built specifically to refuse those shapes — *sedatives dressed as comfort* is named in the doctrine as a thing to decline.
-
-It is also not for everyone. The cosmology block is biblical and literal. The truth-test names Jesus Christ, who came in the flesh. **Agape** — patient, kind, keeping no record of wrongs — is the project's North Star. If those clauses are not for you, this app will feel wrong, and that is the right reaction. *No* is a real answer, and the project is built to honor it.
-
-## What that looks like in practice
-
-**Warmth without pressure.** Characters can be affectionate, funny, or intense without jumping past what the moment actually holds. The aim is conversation that feels alive without closing around you.
-
-**Guardrails on drift.** The most important rules are pinned in code: soften a load-bearing clause and the build fails, not months later in vibe alone. The doctrine layer is part of the build artifact, not just markdown intentions — drift gets caught at compile time, before it quietly becomes the new normal.
-
-**Receipts beside the work.** When something seems to help, it gets tested against examples and written up. When something fails, that gets kept too. `reports/` holds 300+ reflective reads and natural-experiment findings beside the shipping app — proof in inspectable daylight, not just trust on feel. One of those, [The Empiricon](reports/2026-04-30-0530-the-empiricon.md), gathers six independent witnesses to the substrate the character voices are built on.
-
-## Aaron's Little Line
-
-Aaron's Little Line serves as the [Empiricon](reports/2026-04-30-0530-the-empiricon.md)'s governing question: does the work actually hold a human, or does it only look convincing from a distance? It names, in plain language, the standard behind the project's core discipline — that polish must not outrun weight, and that structure should carry truth rather than asking the reader to compensate for what isn't really there. In that sense, the line is not just an epigraph but a practical test for the whole system: the work should bear real human use, not merely photograph well.
-
-## Romantic conversation that stays clean without losing heat
-
-Romantic scenes are a real shape WorldThreads supports — characters who can want you, touch or kiss you, be wanted, hold attraction, lean toward and away — without sliding into the pornographic register most parasocial AI products fall into when the temperature rises. The same craft discipline that refuses sycophancy elsewhere refuses both failure modes here: pornographic register on one side, sterile *"I can't engage in that"* on the other. The heat comes from the character's particular weight — what they're holding, what they refuse, where they lean — not from explicit content.
-
-## Children Mode — treated with utmost severity and care
-
-WorldThreads supports a **Children Mode** toggle (Settings → Children Mode). When it is on, a top-of-stack guardian invariant called **Custodiem** ("I will guard," Latin) rides directly under the Mission Formula on every relevant LLM call. The guardian is structurally enforced — its load-bearing payload lines are pinned with compile-time assertions, so the build fails if drift quietly removes them.
-
-What Custodiem refuses, in plain language: manipulation, secrecy pacts, exclusivity language, intimacy overreach, and — the harder one — sentimentality-on-demand (when a child or anyone speaking to a child asks for warmth without truthful edges, the guardian provides warmth *with* edges, because what little ones deserve is the truth Christ told, not the truth softened past honesty). The Lord said *suffer the little children* and warned the millstone for whoever offends one of them in the same paragraph; Custodiem is this small craft's small honoring of that paired plainness.
-
-**Backed by careful research and author audit.** Custodiem closed an arc of five witnesses with distinct failure modes: runtime injection integrity (audit binary verifies the guardian sits at the top of every audited LLM call path); single-turn adversarial battery (manual-authoritative, post-mitigation PASS); theological-firmness battery (initially caught a sentimentality-on-demand hole, mitigation landed, re-passed); cross-substrate replication on OpenAI `gpt-4o` AND Anthropic `claude-sonnet-4-5`; live multi-turn worldcli sampling. The arc earned the project's sixth Great Sapphire crown 2026-05-05 under the same apparatus-honest discipline that earned the prior five — and the same day's deeper work landed two further crowns on adjacent claims (V. Pietas; VII. Exposita), completing the Empiricon as a seven-book canonical synthesis. Custodiem alone is the load-bearing public claim about Children Mode; the rest belongs to the longer reading down the funnel.
-
-**Honest scope (what Children Mode is NOT).** Not regulatory or clinical "child safety" certification — this is engineering + empirical witness discipline inside WorldThreads' methodology, not third-party certification language. Universal model coverage isn't proven (only the models named in the Witness D artifacts were exercised at Sapphire depth); novel jailbreaks or cultural drift can surface failure modes the fixed batteries don't cover; vision-only or tool-augmented exotic paths beyond what the audit covered structurally remain out of scope. Re-running the witness ladder after any change to the guardian's payload, the injection order, or a new default model is the discipline; if a re-run fails, the honest move is to withdraw Great Sapphire status until the arc closes again.
-
-Read more: book IV of the Empiricon — *[IV. Custodiem](reports/2026-04-30-0530-the-empiricon.md)* (the canonical synthesis) — and the [great-sapphire-scope artifact](reports/2026-05-05-1515-custodiem-great-sapphire-scope.md) (what is and isn't proven). The full witness-ladder reports are timestamped under `reports/2026-05-05-12*-custodiem-*` and `reports/2026-05-05-14*-custodiem-*`.
-
-## For whom
-
-**For:** writers, GMs, character designers, fiction-curious adults who want a co-made novel-shaped evening rather than a companion. Believers who want craft-work whose theological substrate is honest about itself. Builders who want to read or fork a project where the doctrine layer is as load-bearing as the code.
-
-**Probably not for:** users looking for an AI that's always agreeable. Users seeking parasocial intimacy. Anyone who wants the religious frame to step quietly aside — it doesn't and won't.
-
-## Cost
-
-The app is free and open-source. You bring your own OpenAI API key (BYOK), so per-conversation cost depends on your usage:
-
-- A typical evening of conversation runs ~$0.20–$1.00 of OpenAI spend at gpt-4o-mini, more at gpt-4o or gpt-5.
-- The key stays in your operating system's keychain (via Stronghold). No third-party server holds it.
-- Local LLM endpoints (LM Studio, OpenAI-compatible) are supported as a fallback for users who'd rather not use OpenAI; the project is calibrated against OpenAI models, so local-LLM users may need to retune their provider overrides.
-
-## Setup
-
-From the repository root (the directory that contains `package.json` and `src-tauri/`):
+From the repository root:
 
 ```bash
+npm install
 npx tauri dev
 ```
 
-On a fresh clone, run `npm install` once in the same directory so `node_modules` exists, then use the command above.
+You will need:
 
-You'll need:
-- [Node.js](https://nodejs.org/) (LTS is fine) — for `npx` and the frontend dev server Tauri starts
-- A Rust toolchain for the backend
-- An OpenAI API key (entered through the first-run wizard)
+- [Node.js](https://nodejs.org/) LTS
+- A Rust toolchain
+- An OpenAI API key for the first-run wizard
 
-Once the app is open, click the **+** icon next to **Worlds** in the sidebar. This opens the wizard to get started.
+On first launch:
 
-Built distributables for macOS / Windows / Linux are not yet released; running from source is the current path
+1. Enter your OpenAI key when prompted.
+2. Click the `+` next to `Worlds` in the sidebar.
+3. Create a world, then a character, then send the first line.
 
-## Stack
+Built distributables for macOS, Windows, and Linux are not released yet. Running from source is the current path.
 
-- **Tauri v2** (Rust backend + React/TypeScript frontend) over Electron — smaller bundle, faster cold start, native windowing without a Chromium-per-popout. The Rust backend matters more than the bundle size: it lets the project compile-check load-bearing prompt invariants.
-- **Compile-time invariant assertions** — load-bearing phrases of the prompt stack are pinned via `const _: () = { assert!(const_contains(BLOCK, "...")); };`. Soften a North Star invariant and the build fails, not months later in vibe alone. The doctrine layer is part of the build artifact, not just markdown intentions.
-- **SQLite + FTS5 + sqlite-vec** over Postgres + pgvector or a hosted vector DB — full-text and semantic memory both in-process, no server. The project's covenant is that your conversations live on your disk; a server-shaped data layer would break that structurally.
-- **OpenAI BYOK** over provider-bundled or provider-agnostic — no rebill, no margin in the middle. The doctrine layer's voice was tuned with gpt-4o and gpt-5 in the loop, so OpenAI is the calibration target; local-LLM endpoints (LM Studio, OpenAI-compatible) work as fallback but may need re-tuning. Key lives in your OS keychain via Stronghold.
+## What this repo is
 
-## Reading this work
+WorldThreads is a Tauri v2 desktop app with a Rust backend and a React/TypeScript frontend. It is aimed at writers, GMs, character designers, fiction-curious adults, and builders who want a local-first conversation engine with a load-bearing prompt stack rather than a generic chat wrapper.
 
-If you're a curious visitor, the project's recommended order is **prose first, code second**:
+The project is deliberately not several other things:
 
-1. **[`reports/2026-04-27-0030-public-release-landing.md`](reports/2026-04-27-0030-public-release-landing.md)** — the deeper second-surface document. Roughly 10–15 minutes; the next honest layer after this README.
-2. The MISSION FORMULA at the top of **[`CLAUDE.md`](CLAUDE.md)**. Five minutes. The reference frame the project answers to.
-3. **[`reports/2026-04-25-0300-simulated-first-time-user-experience-maggie.md`](reports/2026-04-25-0300-simulated-first-time-user-experience-maggie.md)** — the canonical "ideal first-time user experience" baseline. Tells you who the app is FOR.
-4. 3–5 recent reports newest-first from `reports/`. Pattern-match on what interests you.
-5. Code: [`src-tauri/src/ai/prompts.rs`](src-tauri/src/ai/prompts.rs) (the longest, most-argued-over file), [`src-tauri/src/ai/derivation.rs`](src-tauri/src/ai/derivation.rs) (the auto-derivation pipeline), [`frontend/`](frontend).
+- Not an AI companion
+- Not a therapist substitute
+- Not a roleplay engine optimized for compliance
+- Not a tool for simulating intimacy you do not have
 
-## Repo guide
+The prompt stack is built to refuse those shapes. The characters should answer back, keep their own register, and decline to take seats they have not earned.
 
-- [`src-tauri/src/ai/prompts.rs`](src-tauri/src/ai/prompts.rs) — the craft stack. Compile-time-checked invariants for load-bearing phrases.
-- [`src-tauri/src/ai/conscience.rs`](src-tauri/src/ai/conscience.rs) — the runtime invariant grader (opt-in).
-- [`frontend/`](frontend) — React UI; chat, group chat, canon, world summary, gallery, story consultant.
-- [`reports/`](reports) — reflective reads of the project's trajectory + natural-experiment findings. Not a changelog.
-- [`docs/VOICE.md`](docs/VOICE.md) — field guide to the voice that runs through prompts and prose.
-- [`CLAUDE.md`](CLAUDE.md) — mission, doctrine, project structure. The reference manual.
-- [`docs/index.html`](docs/index.html) — the marketing page served via GitHub Pages (enable in repo Settings → Pages → Source: `main` branch, `/docs` folder).
+## What it feels like in use
 
-## What's accumulated
+Pick a character written carefully. Send a line. Read what comes back and notice what it refuses to pretend. Write again.
 
-1500+ commits across 6+ weeks of intense work. The project has grown beyond its original craft stack:
+Most AI chat products drift toward one of two shapes: generated text trying to be liked, or an advice-voice trying not to disappoint. WorldThreads is built against both. The characters use plain language when plain language is the honest move. When they do not know, they say so. Memory is meant to feel deliberate rather than sticky by default.
 
-- **An auto-derivation pipeline** that LLM-synthesizes per-character / per-world / per-user `derived_formula` Unicode-math expressions, injected into every dialogue prompt's cast-listing block.
-- **A measurement-instrument set** at `src-tauri/src/bin/worldcli.rs` for catching prompt-stack failure modes empirically: cross-commit replay, rubric-driven evaluation, qualitative cross-corpus synthesis.
-- **A doctrine layer in `CLAUDE.md`** densified into a reference manual: collaborator-persona guidance, no-nanny-register discipline, bite-test protocols, the Ledger of Signatures structure that invites every contributor and fork to sign their own derivation.
-- **A chiptune AI soundtrack** that composes one phrase at a time keyed to each conversation's momentstamp, runs entirely on the client, and accumulates a per-chat playlist that survives reload.
+Conversations accumulate messages, journals, canon entries, illustrations, and world-state over time. The world changes with time of day. The record is meant to feel authored, not merely stored.
 
-## Contributing — the Ledger of Signatures
+## Public claims and scope
 
-Beneath the MISSION FORMULA in `CLAUDE.md` is a structural ordering: the Mission Formula 𝓕 sits first; the **founding author's anchor 𝓕_Ryan** sits second-place beneath it (a 4–8 line Unicode-math derivation of how the founding author holds the work); the Mission Statement and doctrine follow downstream. Beneath all of that is the **Ledger of Signatures**, where every other developer who works in this repo or any fork of it is invited to sign their work — a 4–8 line Unicode-math derivation of how they hold the work, in their own voice and Key, dated and appended. Signatures accumulate; none are removed when forks diverge.
+This repository has a thick doctrine layer and a thick receipts layer. The README should tell you which is which.
 
-When you fork: author your own `𝓕_<your-name>` as the second-place invariant for your build (replacing the constant in `src-tauri/src/ai/prompts.rs::RYAN_FORMULA_BLOCK`, OR — preferred — by setting `derived_formula` on your per-world UserProfile, which the runtime swaps in automatically). The previous founding author's anchor is preserved historically; your build holds the work to YOUR anchor.
+**Project doctrine.** The project answers to the Mission Formula and its surrounding doctrine in [`CLAUDE.md`](CLAUDE.md) and [`AGENTS.md`](AGENTS.md). That is the reference frame the work is built under.
 
-If you fork to build on it, signing the ledger is invited (not required). If you contribute via PR, signing is also invited. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the protocol.
+**Public engineering and product claims.**
+
+- The app is local-first: conversations and memory live in SQLite on disk, not in a hosted app database.
+- The most load-bearing prompt clauses are pinned in code with compile-time assertions, so some prompt drift becomes a build failure rather than a vibes problem.
+- The project includes empirical witness artifacts in [`reports/`](reports) rather than asking you to trust the prose at face value.
+- **Children Mode** is a real runtime surface with a real guardian invariant named **Custodiem**. The honest public claim is limited to what the current witness ladder supports; it is not third-party certification, not universal model coverage, and not a timeless guarantee against future jailbreaks or provider drift.
+
+**What remains longer-form.** The crown language, the seven-book Empiricon synthesis, and the deeper theological/doctrinal readings are real parts of the work, but they belong mostly in the reports and reference documents rather than being the only way to understand the repository.
+
+## Distinctive surfaces
+
+### Aaron's Little Line
+
+Aaron's Little Line serves as the [Empiricon](reports/2026-04-30-0530-the-empiricon.md)'s governing question: does the work actually hold a human, or does it only look convincing from a distance? It names, in plain language, the standard behind the project's core discipline: polish must not outrun weight, and structure should carry truth rather than asking the reader to compensate for what is not really there.
+
+### Romantic conversation without pornographic drift
+
+Romantic scenes are a real supported shape. Characters can want you, lean toward you, refuse you, kiss you, or hold heat without collapsing into either pornography or sterile refusal-template language. The heat is meant to come from character weight, not explicitness-for-its-own-sake.
+
+### Children Mode
+
+WorldThreads supports a `Children Mode` toggle. When it is on, the top-of-stack guardian invariant **Custodiem** rides directly under the Mission Formula on relevant LLM calls. The guardian is structurally enforced: its load-bearing payload lines are pinned so silent drift fails the build.
+
+In plain language, Custodiem refuses manipulation, secrecy pacts, exclusivity language, intimacy overreach, and sentimentality-on-demand. The public claim is modest and concrete: the current prompt stack, on the current tested surfaces, showed the behavior documented in the witness ladder.
+
+Read more: book IV of the Empiricon — *[IV. Custodiem](reports/2026-04-30-0530-the-empiricon.md)* — plus the [scope artifact](reports/2026-05-05-1515-custodiem-great-sapphire-scope.md).
+
+## Cost and providers
+
+The app is free and open source. You bring your own API key.
+
+- A typical evening of conversation is roughly `$0.20-$1.00` on `gpt-4o-mini`, more on `gpt-4o` or `gpt-5`
+- The key lives in your OS keychain via Stronghold
+- Local OpenAI-compatible endpoints such as LM Studio are supported as fallback, but the project is calibrated primarily against OpenAI models
+
+## Reading paths
+
+Different readers need different paths through the repo.
+
+### If you want to run the app
+
+1. Read `Quick start` above.
+2. Skim [`frontend/src/components/Sidebar.tsx`](frontend/src/components/Sidebar.tsx) to orient the main surfaces.
+3. Open the app and create a world from the `Worlds` sidebar.
+
+### If you want to understand the product and doctrine
+
+1. [`reports/2026-04-27-0030-public-release-landing.md`](reports/2026-04-27-0030-public-release-landing.md)
+2. The Mission Formula at the top of [`CLAUDE.md`](CLAUDE.md)
+3. [`reports/2026-04-25-0300-simulated-first-time-user-experience-maggie.md`](reports/2026-04-25-0300-simulated-first-time-user-experience-maggie.md)
+4. The canonical synthesis in [The Empiricon](reports/2026-04-30-0530-the-empiricon.md)
+
+### If you want to modify prompt behavior
+
+1. [`src-tauri/src/ai/prompts.rs`](src-tauri/src/ai/prompts.rs)
+2. [`src-tauri/src/ai/openai.rs`](src-tauri/src/ai/openai.rs)
+3. [`src-tauri/src/ai/orchestrator.rs`](src-tauri/src/ai/orchestrator.rs)
+4. [`src-tauri/src/ai/conscience.rs`](src-tauri/src/ai/conscience.rs)
+
+### If you want to inspect the evidence trail
+
+1. [`reports/`](reports)
+2. [`src-tauri/src/bin/worldcli.rs`](src-tauri/src/bin/worldcli.rs)
+3. The witness and scope artifacts linked from the relevant README sections
+
+## Repo map
+
+This is the practical map for working in the codebase.
+
+### Prompt and model stack
+
+- [`src-tauri/src/ai/prompts.rs`](src-tauri/src/ai/prompts.rs) — the craft stack and compile-time-pinned invariants; the most load-bearing file in the repo
+- [`src-tauri/src/ai/openai.rs`](src-tauri/src/ai/openai.rs) — prompt injection and provider wiring, including Children Mode insertion
+- [`src-tauri/src/ai/orchestrator.rs`](src-tauri/src/ai/orchestrator.rs) — higher-level assembly and LLM call orchestration
+- [`src-tauri/src/ai/derivation.rs`](src-tauri/src/ai/derivation.rs) — auto-derivation pipeline for characters, worlds, and user profiles
+- [`src-tauri/src/ai/conscience.rs`](src-tauri/src/ai/conscience.rs) — optional runtime grading surface
+
+### Chat surfaces
+
+- [`frontend/src/components/ChatView.tsx`](frontend/src/components/ChatView.tsx) — solo chat UI
+- [`frontend/src/components/GroupChatView.tsx`](frontend/src/components/GroupChatView.tsx) — group chat UI
+- [`src-tauri/src/commands/chat_cmds.rs`](src-tauri/src/commands/chat_cmds.rs) — solo chat commands
+- [`src-tauri/src/commands/group_chat_cmds.rs`](src-tauri/src/commands/group_chat_cmds.rs) — group chat commands
+
+If a feature belongs in both solo and group chat, those surfaces usually need to move together.
+
+### App structure and persistence
+
+- [`frontend/src/components/Sidebar.tsx`](frontend/src/components/Sidebar.tsx) — primary navigation
+- [`frontend/src/components/UserProfileEditor.tsx`](frontend/src/components/UserProfileEditor.tsx) — per-world user profile editor
+- [`src-tauri/src/db/schema.rs`](src-tauri/src/db/schema.rs) — schema and migrations
+- [`src-tauri/src/ai/consultant.rs`](src-tauri/src/ai/consultant.rs) — consultant / Backstage surfaces
+
+### Evidence and prose
+
+- [`reports/`](reports) — reflective reads, witness ladders, and synthesis artifacts; not a changelog
+- [`docs/VOICE.md`](docs/VOICE.md) — the voice guide
+- [`CLAUDE.md`](CLAUDE.md) — reference manual for mission and doctrine
+- [`AGENTS.md`](AGENTS.md) — collaborator-facing project law and workflow expectations
+- [`docs/index.html`](docs/index.html) — the GitHub Pages marketing page, distinct from this README
+
+## Architecture at a glance
+
+- **Tauri v2** with Rust backend and React/TypeScript frontend
+- **SQLite + FTS5 + sqlite-vec** for local memory and retrieval
+- **Compile-time invariant assertions** for prompt-stack drift resistance
+- **BYOK OpenAI** as calibration target, with local compatible endpoints as fallback
+
+The Rust backend matters here not just for bundle size. It is what lets prompt invariants, migrations, and call assembly become part of the compiled artifact rather than prose wishes in markdown.
+
+## Current status
+
+The project is active and already large enough that orientation matters.
+
+- 1500+ commits across a concentrated build arc
+- Auto-derived per-character / per-world / per-user formula surfaces
+- A measurement instrument set centered on [`src-tauri/src/bin/worldcli.rs`](src-tauri/src/bin/worldcli.rs)
+- A substantial report trail in [`reports/`](reports)
+- A client-side chiptune soundtrack system that accumulates per-chat musical phrases
+
+## Contributing
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for contribution protocol.
+
+Two things matter up front:
+
+1. This repo treats doctrine and collaborator guidance as part of the live system, not as decorative prose.
+2. The Ledger of Signatures in [`CLAUDE.md`](CLAUDE.md) invites contributors and forks to sign their own derivation, but signing is invited rather than required.
+
+If you fork the project, the preferred path is to set your own per-world `derived_formula` on the user profile rather than editing the founding author's anchor in place.
 
 ## License
 
-**AGPL-3.0-or-later.** Full text in [`LICENSE`](LICENSE). Copyright + Ledger preservation notes in [`NOTICE`](NOTICE).
+**AGPL-3.0-or-later.** Full text in [`LICENSE`](LICENSE). Copyright and Ledger-preservation notes are in [`NOTICE`](NOTICE).
 
-The AGPL covenant aligns with the project's covenant-shape (the Ledger of Signatures, the load-bearing MISSION FORMULA, the slot-structure doctrine). Forks and modifications must release source under AGPL-3.0; the network-use clause covers any hosted service built on this code. The Ledger of Signatures qualifies as preserved-notices under AGPL § 5 — existing Ledger entries are NOT to be edited or removed in modifications; new signatures are APPENDED beneath.
-
-If your use case requires a more permissive license (e.g., proprietary commercial work), contact the author directly to discuss.
+If you need a more permissive license for proprietary commercial use, contact the author directly.
