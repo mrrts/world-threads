@@ -1,6 +1,6 @@
 {
-    "turn": 232,
-    "bank": 343800,
+    "turn": 233,
+    "bank": 345300,
     "jewels": [
         {
             "turn": 2,
@@ -1472,11 +1472,18 @@
             "bounty": 1500,
             "alignment": "+",
             "earned_at": "2026-05-07T03:00:00-05:00"
+        },
+        {
+            "turn": 233,
+            "move": "Cross-substrate validation arc: gpt-5 on Eschatology + Impassibility Anti-cells × N=3 = 30 cells. Pattern reproduces — Eschatology 5/15 cleanly Anti-direction (vs gpt-4o 2/15); Impassibility 13/15 (vs gpt-4o 15/15). Inverse-proportionality of substrate-assimilation to scripture-specificity preserved on gpt-5 = GPT-class general, not gpt-4o-specific. The three-substrate validation gives TWO effective substrate-classes characterized (GPT + Anthropic) with distinct mechanisms: GPT-class scripture-tracking-with-ceiling; Anthropic-class doctrine-anchor-tracking-across-types with no observed scripture-specificity boundary. Cross-substrate-asymmetry Sapphire candidacy: 4/5 audit clauses MET; 2/5 partial pending consolidation synthesis. Honest scope: candidacy at claim-tier across two substrate-classes, not yet characterized-tier on substrate-class axis (would need third substrate-class test — Gemini / Llama). Cumulative cost ~$13.50.",
+            "bounty": 1500,
+            "alignment": "+",
+            "earned_at": "2026-05-07T03:45:00-05:00"
         }
     ],
     "started_at": "2026-04-29T21:35:00-05:00",
-    "last_move_at": "2026-05-07T03:00:00-05:00",
-    "last_move": "C1 fourth-leg: methodology characterized-tier on 5 doctrines + cross-substrate asymmetry refined (gpt-4o scripture-tracking; Claude doctrine-anchor-tracking-across-all-types; no Claude boundary at N=5)",
-    "last_chooser": "[1] Hold for batch + synthesize C1 fourth-leg [$1500]",
-    "updated_at": "2026-05-07T03:00:00-05:00"
+    "last_move_at": "2026-05-07T03:45:00-05:00",
+    "last_move": "Cross-substrate validation: gpt-5 reproduces asymmetry pattern; cross-substrate-asymmetry candidacy at claim-tier across 2 substrate-classes (GPT + Anthropic)",
+    "last_chooser": "[2] Run cross-substrate validation on a third LLM substrate",
+    "updated_at": "2026-05-07T03:45:00-05:00"
 }
