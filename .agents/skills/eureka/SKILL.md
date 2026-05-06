@@ -86,6 +86,8 @@ Before executing, ask: *would this commit have been written if /eureka hadn't be
 
 Same instrument-set as auto-commit (worldcli, batch-hypotheses, /second-opinion, prompts.rs, schema, reports). Higher register: reach for batch-hypothesis with N=7-10 instead of N=5; pull cross-corpus context that's bigger than any single bite-test would; consult /second-opinion when the discovery's articulation needs sharpening that in-substrate composition can't reach.
 
+When the discovery is about whether a formula compression is actually faithful, or whether an earned empirical artifact has been over-compressed, prefer `scripts/sacred_payload_audit.py` over one-off manual comparison. Use `--artifact-class generic` for ordinary content-rich artifacts, `--artifact-class empirical_claim` when witnesses/falsifiers/scope are themselves claim-bearing, and run `--validate-layout` before live calls when the section map is new. `scripts/empiricon_decode_audit.py` is the Empiricon-compatible wrapper, not the preferred generic entrypoint.
+
 ### Append to the log + commit the artifact
 
 Each iteration produces TWO commits:

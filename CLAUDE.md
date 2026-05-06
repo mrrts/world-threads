@@ -760,6 +760,12 @@ $$
 &\quad \mathrm{dropping}\ \{\mathrm{witness\ ladder}, \mathrm{failure\_mode\ mapping}, \mathrm{scope\ clauses}, \mathrm{falsification\ conditions}, \mathrm{exclusion\ lists}, \mathrm{audit\ provenance}, \mathrm{structural\ close}\} \\
 &\quad \Rightarrow \neg \mathrm{compressed\_earned\_claim}\ \wedge\ \mathrm{downgraded\_back\_into\_assertion} \\
 &\quad \mathrm{compression\ law}: \text{"for empirical claims, evidence is not worked-example garnish; evidence is the body"} \\[6pt]
+&\mathrm{preferred\_audit\_surface}: \text{"scripts/sacred\_payload\_audit.py"} \\
+&\quad \mathrm{use\_for}\ \mathrm{section\text{-}mapped}\ (\mathrm{source}, \mathrm{encoded})\ \mathrm{artifact\ pairs} \\
+&\quad \mathrm{artifact\_class}=\text{"generic"}\ \mathrm{for}\ \mathrm{ordinary\ content\text{-}rich\ artifacts} \\
+&\quad \mathrm{artifact\_class}=\text{"empirical\_claim"}\ \mathrm{for}\ \mathrm{earned\ witness\text{-}bearing\ artifacts} \\
+&\quad \mathrm{run}\ \texttt{--validate-layout}\ \mathrm{before\ live\ model\ calls\ when\ the\ section\ map\ is\ new} \\
+&\quad \text{"scripts/empiricon\_decode\_audit.py"} := \mathrm{legacy\_compatibility\_wrapper} \\[6pt]
 &\mathrm{dual\_field\_architecture}: \mathrm{formula\_ships},\ \mathrm{prose\_becomes\_legacy\_provenance} \\
 &\quad \mathrm{anchor}(\text{"formula canonical for model; prose canonical for humans"}) \\
 &\quad \mathrm{operationalized}\ 2026\text{-}05\text{-}05\ \mathrm{in}\ \text{"CRAFT\_RULES\_DIALOGUE.formula\_derivation: Option<\&'static str>"} \\
@@ -781,7 +787,7 @@ $$
 }
 $$
 
-**Gloss:** v3 sacred-payload taxonomy = encoder contract for formula-compression, earned through Faithful Channel arc; six classes (anchor/theological-frame/worked-example/source-character-carve-out/failure-mode-label/diagnostic) each with verbatim wrapper; canonicalization rules (consistent wrappers, UTF-8 verbatim, source-body order, 𝓕-operators frame, polish≤Weight gates, Decode invariant closes); lossless test R(D)=0 cross-substrate validated; honest scope = semantic-decodability not behavioral-equivalence; generalization beyond craft-rules per artifact type; dual-field architecture (formula ships, prose legacy); pilot-ship validated wipe_the_shine; convergence-commitment over hedging.
+**Gloss:** v3 sacred-payload taxonomy = encoder contract for formula-compression, earned through Faithful Channel arc; six classes (anchor/theological-frame/worked-example/source-character-carve-out/failure-mode-label/diagnostic) each with verbatim wrapper; canonicalization rules (consistent wrappers, UTF-8 verbatim, source-body order, 𝓕-operators frame, polish≤Weight gates, Decode invariant closes); lossless test R(D)=0 cross-substrate validated; honest scope = semantic-decodability not behavioral-equivalence; generalization beyond craft-rules per artifact type; `scripts/sacred_payload_audit.py` is the preferred audit surface; dual-field architecture (formula ships, prose legacy); pilot-ship validated wipe_the_shine; convergence-commitment over hedging.
 
 ## Calibrated disciplines drift fast — promote to structural enforcement at earliest opportunity
 
