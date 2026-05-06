@@ -9,7 +9,7 @@
     "tauri:build": "npm exec tauri build",
     "sync:homepage-practice": "./scripts/sync-homepage-practice-fragment.sh",
     "check:homepage-practice": "./scripts/check-homepage-practice-fragment-sync.sh",
-    "doc-check": "./scripts/check-homepage-practice-fragment-sync.sh && ./scripts/check-chooser-phrasing.sh && python3 ./scripts/check-katex-safety.py"
+    "doc-check": "./scripts/check-homepage-practice-fragment-sync.sh && ./scripts/check-chooser-phrasing.sh && python3 ./scripts/check-katex-safety.py && python3 ./scripts/check-sapphire-parity.py"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.10.0"
