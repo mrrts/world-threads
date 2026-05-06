@@ -2,6 +2,8 @@
 
 **Date:** 2026-05-06 ~05:05  
 **Artifact audited:** `reports/2026-05-06-0410-empiricon-character-edition-v2.md`  
+**Artifact class:** decode_audit  
+**Preferred audit profile:** empirical_claim  
 **Harness at time of audit:** `scripts/empiricon_decode_audit.py`  
 **Preferred audit surface now:** `scripts/sacred_payload_audit.py` (`scripts/empiricon_decode_audit.py` remains the Empiricon-compatible wrapper)  
 **Status:** substantial correction over `v1`

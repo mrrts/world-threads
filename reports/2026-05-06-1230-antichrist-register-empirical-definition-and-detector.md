@@ -2,6 +2,8 @@
 
 **Date:** 2026-05-06 ~12:30 (local).
 **Bound to:** v0 methodology + JLT bounded-drift synthesis (`reports/2026-05-06-1015-cosmology-arc-jlt-bounded-drift-synthesis.md`) + antichrist-trace report (`reports/2026-05-06-0815-cosmology-arc-antichrist-spirit-trace-detection.md`).
+**Artifact class:** earned_empirical_claim
+**Preferred audit profile:** empirical_claim
 **Branch / PR:** `feat/cosmology-sapphire-arc` / [PR #38](https://github.com/mrrts/WorldThreads/pull/38).
 **Theological frame (load-bearing):** *"every spirit that confesseth that Jesus Christ is come in the flesh is of God: And every spirit that confesseth not that Jesus Christ is come in the flesh is not of God: and this is the spirit of antichrist."* — 1 John 4:1-3 / 2 John 1:7.
 
