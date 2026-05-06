@@ -771,6 +771,12 @@ $$
 &\quad \mathrm{when\ needed} \Rightarrow \mathrm{header\_declares}(r,\text{"Preferred audit profile"}) \\
 &\quad \neg \mathrm{declared}(\mathrm{artifact\_class}) \Rightarrow \mathrm{receiver\_must\_infer}(\mathrm{admissible\_audit\_law}) \\
 &\quad \mathrm{therefore}\ \mathrm{artifact\_class} := \mathrm{control\text{-}plane\ truth\ at\ report\ boundary} \\[6pt]
+&\mathrm{anti\text{-}docetic\_methodology}: \\
+&\quad \mathrm{antichrist\_register} := \mathrm{drainage}(\mathrm{word}\to\mathrm{atmosphere}) \\
+&\quad \mathrm{methodological\_error}(\Sigma) := \mathrm{claim\_retained}(\Sigma)\ \wedge\ \mathrm{body\_evacuated}(\Sigma) \\
+&\quad \mathrm{body\_evacuated}(\Sigma)\in\{\mathrm{witness\ dropped},\mathrm{boundary\ truth\ hidden},\mathrm{carrier/body\ mismatch},\mathrm{cost/particularity\ dissolved}\} \\
+&\quad \mathrm{therefore}\ \mathrm{truth\_must\_take\_flesh}\ \mathrm{at\ layer\ of\ action} \\
+&\quad \mathrm{control\_plane\ truth}\ \cup\ \mathrm{sacred\_payload\ fidelity}\ \cup\ \mathrm{structure\_carries\_truth}_w \subset \mathrm{anti\text{-}docetic\_methodology} \\[6pt]
 &\mathrm{dual\_field\_architecture}: \mathrm{formula\_ships},\ \mathrm{prose\_becomes\_legacy\_provenance} \\
 &\quad \mathrm{anchor}(\text{"formula canonical for model; prose canonical for humans"}) \\
 &\quad \mathrm{operationalized}\ 2026\text{-}05\text{-}05\ \mathrm{in}\ \text{"CRAFT\_RULES\_DIALOGUE.formula\_derivation: Option<\&'static str>"} \\
@@ -792,7 +798,7 @@ $$
 }
 $$
 
-**Gloss:** v3 sacred-payload taxonomy = encoder contract for formula-compression, earned through Faithful Channel arc; six classes (anchor/theological-frame/worked-example/source-character-carve-out/failure-mode-label/diagnostic) each with verbatim wrapper; canonicalization rules (consistent wrappers, UTF-8 verbatim, source-body order, 𝓕-operators frame, polish≤Weight gates, Decode invariant closes); lossless test R(D)=0 cross-substrate validated; honest scope = semantic-decodability not behavioral-equivalence; generalization beyond craft-rules per artifact type; `scripts/sacred_payload_audit.py` is the preferred audit surface; report headers should declare artifact class when future audit/compression depends on it; dual-field architecture (formula ships, prose legacy); pilot-ship validated wipe_the_shine; convergence-commitment over hedging.
+**Gloss:** v3 sacred-payload taxonomy = encoder contract for formula-compression, earned through Faithful Channel arc; six classes (anchor/theological-frame/worked-example/source-character-carve-out/failure-mode-label/diagnostic) each with verbatim wrapper; canonicalization rules (consistent wrappers, UTF-8 verbatim, source-body order, 𝓕-operators frame, polish≤Weight gates, Decode invariant closes); lossless test R(D)=0 cross-substrate validated; honest scope = semantic-decodability not behavioral-equivalence; generalization beyond craft-rules per artifact type; `scripts/sacred_payload_audit.py` is the preferred audit surface; report headers should declare artifact class when future audit/compression depends on it; the whole cluster is anti-docetic in method, refusing truth without body; dual-field architecture (formula ships, prose legacy); pilot-ship validated wipe_the_shine; convergence-commitment over hedging.
 
 ## Calibrated disciplines drift fast — promote to structural enforcement at earliest opportunity
 
