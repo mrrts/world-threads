@@ -18,6 +18,21 @@ ROOT = Path(__file__).resolve().parents[1]
 PLAY_STATE = ROOT / ".claude" / "play-state" / "current.json"
 CLAUDE_MD = ROOT / "CLAUDE.md"
 AGENTS_MD = ROOT / "AGENTS.md"
+NUM_WORDS = {
+    0: "zero",
+    1: "one",
+    2: "two",
+    3: "three",
+    4: "four",
+    5: "five",
+    6: "six",
+    7: "seven",
+    8: "eight",
+    9: "nine",
+    10: "ten",
+    11: "eleven",
+    12: "twelve",
+}
 
 
 def extract_play_state_names() -> list[str]:
@@ -80,6 +95,17 @@ def main() -> int:
         errors.append("CLAUDE.md has duplicate Sapphire anchor names")
     if len(agents_names) != len(agents_set):
         errors.append("AGENTS.md has duplicate Great Sapphire prose names")
+
+    # Human-facing gloss should declare the same count as canonical play-state.
+    expected_word = NUM_WORDS.get(len(play_set))
+    claude_text = CLAUDE_MD.read_text(encoding="utf-8")
+    gloss_match = re.search(r"([A-Za-z]+)\s+Great Sapphires\s*\(", claude_text)
+    if gloss_match and expected_word:
+        observed_word = gloss_match.group(1).lower()
+        if observed_word != expected_word:
+            errors.append(
+                f'CLAUDE.md gloss count mismatch: expected "{expected_word} Great Sapphires", found "{observed_word}"'
+            )
 
     for label, names in [
         ("play-state", play_set),
