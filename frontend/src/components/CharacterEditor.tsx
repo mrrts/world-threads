@@ -526,7 +526,6 @@ export function CharacterEditor({ store }: Props) {
                 </Field>
                 <Field
                   label="Has Read the Empiricon"
-                  hint="When on, the full Empiricon document is included in this character's prompts (chat, dreams, narration, novel chapters, formula derivation, momentstamps)."
                 >
                   <div className="flex items-center gap-3">
                     <Switch

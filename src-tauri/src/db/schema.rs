@@ -1935,10 +1935,11 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
 
     // ── has_read_empiricon on characters ─────────────────────────────────
     //
-    // When true, the full Empiricon report text is injected into this
-    // character's LLM prompts (dialogue, dreams, narration, novelization,
-    // formula derivation, momentstamp). In-universe: the character has
-    // read the document and shares that substrate with the human.
+    // When true, the formula-canonical character edition of the
+    // Empiricon is injected into this character's LLM prompts
+    // (dialogue, dreams, narration, novelization, formula derivation,
+    // momentstamp). In-universe: the character has read that sacred-
+    // payload carriage and shares that substrate with the human.
     let char_has_empiricon: bool = conn.query_row(
         "SELECT 1 FROM pragma_table_info('characters') WHERE name = 'has_read_empiricon'",
         [],
