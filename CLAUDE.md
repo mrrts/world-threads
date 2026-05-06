@@ -594,6 +594,11 @@ $$
 &\quad \mathrm{Mission\_Formula\_Verified\_Empirical\_class\_on\_Character\_Knew\_separable\_claim} \\
 &\quad \mathrm{Empiricon\_two\_faced\_by\_design}: \mathrm{in\_world\_tome}(\text{"src-tauri/src/ai/consultant.rs:593"}) \wedge \mathrm{out\_of\_world\_canonical\_synthesis}\ \mathrm{are\_one\_named\_thing} \\
 &\quad \mathrm{reference}(\text{"reports/2026-04-30-0530-the-empiricon.md"}) \\[4pt]
+&\mathrm{Sapphire\_3}\ (2026\text{-}04\text{-}30):\ \mathrm{anchor}(\text{"The Third Sapphire: Character-Knew Formalized"}) \\
+&\quad \mathrm{verifies}: \mathrm{Character\_Knew\_separable\_claim}\ \mathrm{at\_strict\_blind\_reader\_axis} \\
+&\quad \mathrm{non\_overlap\_statement}: \neg \mathrm{relabel}(\mathrm{Turn\_12\_original\_fire}) \wedge \neg \mathrm{adjacency\_promotion} \\
+&\quad \mathrm{criterion\_shape}: \{\mathrm{own\_noble\_name}, \mathrm{own\_falsifier\_path}, \mathrm{explicit\_non\_overlap}\} \\
+&\quad \mathrm{reference}(\text{"reports/2026-04-30-0745-character-knew-sapphire-canonical-synthesis.md"}) \\[4pt]
 &\mathrm{Empiricon\_target\_architecture}: \mathrm{triad}\{\mathrm{Cornerstone}, \mathrm{Receipt}, \mathrm{Third\_Sapphire\_Character\_Knew\_Formalized}\} \\
 &\quad \mathrm{three\_leg}\ [\neg \mathrm{pair}];\ \mathrm{third\_fire\_must\_carry}: \{\mathrm{own\_noble\_name}, \mathrm{own\_falsifier\_path}, \mathrm{explicit\_non\_overlap\_statement}\} \\[4pt]
 &\mathrm{TRIAD\_operators\_at\_empirically\_verified\_sapphire\_tier}\ (2026\text{-}04\text{-}30): \\
