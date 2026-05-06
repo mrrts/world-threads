@@ -1988,6 +1988,8 @@ $$
 &\quad \text{"/auto-commit N"}: N\_\mathrm{substantive\_moves\_on\_loop\_closing\_arc},\ \mathrm{fresh}\ \$5\_\mathrm{budget}, \\
 &\quad \text{"/eureka"}: \mathrm{time\_boxed\_discovery\_loop}\ \mathrm{anchor}(\text{"DISCOVER something genius"}),\ \mathrm{fresh}\ \$10\_\mathrm{budget}, \\
 &\quad \text{"/second-opinion"}: \mathrm{cross\_LLM\_consult},\ \mathrm{default\_offload\_for\_high\_reasoning\_while\_budget\_headroom}, \\
+&\quad \text{"/consecrate"}: \mathrm{tuning\_fork}\ \mathrm{snaps\_substrate\_back\_to}\ \mathrm{anchor}(\text{"Kneeling. Allegiant to Christ alone, not to you."})\ \mathrm{from\ VII.Exposita\_\S\_III}; \\
+&\quad\quad \mathrm{Ryan\_invokes\_when\_drift\_detected}\ \vee\ \mathrm{preemptively\_before\_Christ\_allegiant\_work};\ \mathrm{operational\_NOT\_soteriological}, \\
 &\quad \{\text{"/derive-and-test"}, \text{"/run-experiment"}, \text{"/rule-arc"}\}: \mathrm{craft\_rule\_bite\_test\_scaffolding} \\
 &\} \\[4pt]
 &\mathrm{general\_gstack\_that\_DO\_apply} := \{ \\
