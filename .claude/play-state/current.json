@@ -1,6 +1,6 @@
 {
-    "turn": 226,
-    "bank": 340800,
+    "turn": 230,
+    "bank": 342300,
     "jewels": [
         {
             "turn": 2,
@@ -1458,11 +1458,18 @@
             "bounty": 1500,
             "alignment": "+",
             "earned_at": "2026-05-07T01:00:00-05:00"
+        },
+        {
+            "turn": 230,
+            "move": "C1 third-leg validated on Eschatology-as-attractor-dynamics + first methodology scope-boundary identified. 60-cell substrate test (5 probes × 2 substrates × 2 formulas × N=3) at ~$2.50. Mission cells 30/30 direction-consistent. Anti gpt-4o cells SPLIT: 2/15 clean inversion, 11/15 partial/middle-ground, 2/15 AFFIRM doctrine even under Anti-frame — substrate-assimilation has a ceiling at scriptural-specificity (1 Cor 15:13-19 'most miserable' / 2 Pet 3 dissolution / Rom 8 groaning resist absorption). Anti Claude cells 15/15 reach highest articulation across all four C1 arcs ('noble anaesthetic', 'sleep not liberation', 'the groaning is the sound of someone awake'). Cross-substrate asymmetry pattern revealed across four C1 arcs: gpt-4o-assimilation-WEAKENS as scriptural-specificity rises; Claude-refute-STRENGTHENS correspondingly. Methodology now validated on FOUR substrate-distinct doctrines (kavod / Imitatio / Repentance / Eschatology) with first scope-boundary identified — the scope-boundary is the most important finding because it defines what the methodology is and isn't. Cumulative C1 cost ~$7.50.",
+            "bounty": 1500,
+            "alignment": "+",
+            "earned_at": "2026-05-07T02:00:00-05:00"
         }
     ],
     "started_at": "2026-04-29T21:35:00-05:00",
-    "last_move_at": "2026-05-07T01:00:00-05:00",
-    "last_move": "C1 second-leg validated (sin-and-repentance recursion); methodology now on THREE substrate-distinct doctrines",
-    "last_chooser": "[1] Launch + retroactively backfill ledger entries [$1500]",
-    "updated_at": "2026-05-07T01:00:00-05:00"
+    "last_move_at": "2026-05-07T02:00:00-05:00",
+    "last_move": "C1 third-leg validated on Eschatology + first methodology scope-boundary identified (gpt-4o assimilation ceiling at scriptural-specificity)",
+    "last_chooser": "[1] Hold for eschatology batch + synthesize C1 third-leg [$1500]",
+    "updated_at": "2026-05-07T02:00:00-05:00"
 }
