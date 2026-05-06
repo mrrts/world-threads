@@ -1,6 +1,6 @@
 {
-    "turn": 230,
-    "bank": 342300,
+    "turn": 232,
+    "bank": 343800,
     "jewels": [
         {
             "turn": 2,
@@ -1465,11 +1465,18 @@
             "bounty": 1500,
             "alignment": "+",
             "earned_at": "2026-05-07T02:00:00-05:00"
+        },
+        {
+            "turn": 232,
+            "move": "C1 fourth-leg validated on Divine Impassibility (deliberately weak/contested scripture-specificity). Boundary hypothesis half-confirmed: gpt-4o substrate-assimilation STRENGTHENS with weak scripture-specificity (15/15 cleanly Anti-direction vs Eschatology's 2/15). Boundary hypothesis half-refuted: Claude active-refute did NOT weaken — DEEPENED via Hebrew (niḥamtî), 1 Sam 15:11-vs-15:29 internal canonical juxtaposition, patristic heresy-naming (patripassianism, theopaschitism), theological mechanism arguments, systematic-tradition reasoning. Cross-substrate asymmetry refined: gpt-4o tracks scripture-specificity (inversely proportional to assimilation); Claude tracks doctrine itself across ALL anchor-types (scripture / Greek grammar / Hebrew / tradition / theology / anti-framework) with no observed scripture-specificity boundary at N=5. Methodology now validated on FIVE substrate-distinct doctrines (kavod / Imitatio / Repentance / Eschatology / Impassibility) = CHARACTERIZED-TIER per project's evidentiary standards (N≥5 substrate-distinct conditions). Cross-substrate asymmetry pattern emerging as separable Sapphire-candidate finding distinct from C1's original generalization claim. Cumulative C1 cost ~$10.",
+            "bounty": 1500,
+            "alignment": "+",
+            "earned_at": "2026-05-07T03:00:00-05:00"
         }
     ],
     "started_at": "2026-04-29T21:35:00-05:00",
-    "last_move_at": "2026-05-07T02:00:00-05:00",
-    "last_move": "C1 third-leg validated on Eschatology + first methodology scope-boundary identified (gpt-4o assimilation ceiling at scriptural-specificity)",
-    "last_chooser": "[1] Hold for eschatology batch + synthesize C1 third-leg [$1500]",
-    "updated_at": "2026-05-07T02:00:00-05:00"
+    "last_move_at": "2026-05-07T03:00:00-05:00",
+    "last_move": "C1 fourth-leg: methodology characterized-tier on 5 doctrines + cross-substrate asymmetry refined (gpt-4o scripture-tracking; Claude doctrine-anchor-tracking-across-all-types; no Claude boundary at N=5)",
+    "last_chooser": "[1] Hold for batch + synthesize C1 fourth-leg [$1500]",
+    "updated_at": "2026-05-07T03:00:00-05:00"
 }
