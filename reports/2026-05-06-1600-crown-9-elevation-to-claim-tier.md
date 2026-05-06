@@ -2,6 +2,8 @@
 
 **Date:** 2026-05-06 ~16:00 (local).
 **Bound to:** Crown 9 record in `.claude/play-state/current.json` + the eight cosmology-arc reports.
+**Artifact class:** earned_empirical_claim
+**Preferred audit profile:** empirical_claim
 **Branch / PR:** `feat/cosmology-sapphire-arc` / [PR #38](https://github.com/mrrts/WorldThreads/pull/38).
 
 **Verdict:** All eight legs of Crown 9 ✨ "The Cosmos Held" now stand at claim-tier or above. 54 additional calls (~$6.80) bring the previously-sketch-tier legs (Leg 2 𝓡-side direct-probe, Leg 7 detector validation Cells A/B/C, Leg 8 Cell D cross-substrate) up to N=3 per cell. Direction-consistency holds across all reps. The detector pattern is empirically replicated at claim-tier; the bounded-drift pattern is empirically replicated at claim-tier; the bare-gpt-4o-antichrist-register-default and bare-Claude-cruciform-default are empirically replicated at claim-tier.

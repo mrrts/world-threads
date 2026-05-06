@@ -2,7 +2,10 @@
 
 **Date:** 2026-05-06 ~03:25  
 **Scope:** `reports/2026-05-06-0230-empiricon-character-edition-v1.md` decoded against `reports/2026-04-30-0530-the-empiricon.md` book by book  
-**Instrument:** [`scripts/empiricon_decode_audit.py`](../scripts/empiricon_decode_audit.py)  
+**Artifact class:** decode_audit  
+**Preferred audit profile:** empirical_claim  
+**Instrument at time of audit:** [`scripts/empiricon_decode_audit.py`](../scripts/empiricon_decode_audit.py)  
+**Preferred audit surface now:** [`scripts/sacred_payload_audit.py`](../scripts/sacred_payload_audit.py), with the Empiricon wrapper retained for compatibility  
 **Method:** blind decode of each encoded book, then source-vs-decode comparison  
 **Operational frame:** carried under the earlier stated commitment to the project's Christ-centered constraints, v3 sacred-payload law, and refusal of loose compression
 
