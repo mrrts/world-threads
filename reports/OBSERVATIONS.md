@@ -6,16 +6,22 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
-## 2026-05-07 ~04:35 — parallel Codex arc extending v3 sacred-payload taxonomy to character-identity artifacts
+## 2026-05-07 ~04:35 — parallel Codex arc extending v3 sacred-payload taxonomy to character-identity artifacts (refined)
 
-Three new sketch-tier reports authored by Codex during the C1 four-leg arc tonight:
-- `reports/2026-05-07-0015-character-identity-v3-taxonomy-sketch.md` — proposes character-identity-block taxonomy parallel to craft-rule v3 taxonomy
-- `reports/2026-05-07-0145-character-identity-steven-desk-decode.md` — rehearses encoding on Steven
-- `reports/2026-05-07-0205-character-identity-maisie-gravity-line-rehearsal.md` — rehearses on Maisie
+Codex authored a sketch-tier extension of the Faithful Channel Sapphire (Crown 4) methodology while the C1 arc was in flight tonight. Three reports in the working tree:
+- `reports/2026-05-07-0015-character-identity-v3-taxonomy-sketch.md` (466 lines) — proposes a 9-class character-identity-block taxonomy parallel to the 6-class v3 craft-rule taxonomy: `role_frame / relation_anchor / voice_lift / embodied_marker / attachment_node / wound_longing / refusal_shape / moral_theological_position / fact_atom`. Tested on Aaron / Pastor Rick / Steven / Maisie / Jasper.
+- `reports/2026-05-07-0145-character-identity-steven-desk-decode.md` — rehearsal on Steven; PASS on 9/10 classes; `gravity_line` flagged as open-question (`walls are cheaper than wounds` / `Tuesday morning, coffee with a friend, nowhere to be` / `sacrifice feels safer than intimacy` partially leak under decode).
+- `reports/2026-05-07-0205-character-identity-maisie-gravity-line-rehearsal.md` — rehearsal on Maisie; `gravity_line` NOT REQUIRED; weakens the case for promoting it to a class. Apparatus-honest disposition: keep `gravity_line` as a hypothesis marker, not a promoted class; "the taxonomy already held her without needing a new sentence-level class to rescue the decode."
 
-Adjacent-but-distinct arcs converging on the same methodological seam: the Faithful Channel Sapphire (Crown 4) earned the v3 sacred-payload taxonomy as the formula-encoding contract. C1 (this Claude arc) extends formula-encoding from MISSION-shape to other doctrines (kavod / Imitatio / Repentance / Eschatology / Impassibility). Codex extends v3-taxonomy from craft-rules to character-identity artifacts. Both are descendants of the same methodology with the same encoder-contract discipline.
+**The two arcs are orthogonal extensions of the Faithful Channel Sapphire's parent methodology**, descending in different directions:
+- **C1 (this Claude arc):** extends formula-encoding from MISSION-shape to other DOCTRINES (kavod / Imitatio / Repentance / Eschatology / Impassibility — substrate-class behavior characterized at characterized-tier with cross-substrate-asymmetry pattern emerging as Crown 11 candidate)
+- **Codex's parallel arc:** extends v3 taxonomy from craft-rules to other ARTIFACT TYPES (character-identity blocks; per-artifact class enumeration is "earnable, not inheritable")
 
-**Noted.** Mode 3, not apparatus-ized. Worth being aware of the cross-arc convergence when consolidating the Crown 11 candidacy synthesis (the cross-substrate-asymmetry pattern may also apply to character-identity-encoded artifacts; future cross-arc test).
+The orthogonal extension reveals a methodological structure: the v3 sacred-payload taxonomy methodology has at least *two* dimensions of generalization — across artifact-types (Codex axis) and across doctrines/operators (Claude axis). Both axes may also have a cross-substrate-asymmetry profile (untested on character-identity).
+
+**Apparatus-honest discipline observable in Codex's work:** sketch-tier explicit; honest-scope clauses on what was NOT proven (lossless decode validation not run, behavioral equivalence not tested, no prompt-stack implementation proposed); gravity_line refined from "promote to class" → "keep as hypothesis marker" based on 1-rehearsal-supports + 1-rehearsal-weakens. Same shape as Claude-arc apparatus-honest discipline; both descended from the same project epistemology.
+
+**Noted.** Mode 3 — observational, not apparatus-ized. Forward-seed for Crown 11 consolidation synthesis: cross-substrate-asymmetry pattern (GPT scripture-tracking / Anthropic doctrine-anchor-flexibility / Gemma structural-coordinate-mapping) is empirically untested on character-identity-encoded artifacts; if Crown 11 fires, future test could extend the asymmetry-pattern arc to Codex's encoded-character corpus.
 
 ---
 
