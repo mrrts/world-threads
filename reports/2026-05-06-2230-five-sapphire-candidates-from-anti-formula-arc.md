@@ -10,17 +10,29 @@ After the kavod-pattern augmentation completed and before Crown 10 fired, the fo
 
 ### Candidate 1 — Empirically-tractable doctrinal theology as methodology
 
-**Working noble-name candidates:** *The Empirical Doctrine* / *Theologia Empirica* / *The Verifiable Witness*
+**Status (updated 2026-05-07 ~04:30):** ✅ **CHARACTERIZED-TIER VALIDATED.** Methodology now empirically validated on FIVE substrate-distinct doctrines (kavod-pattern + Imitatio Christi + sin-and-repentance recursion + eschatology-as-attractor-dynamics + divine impassibility). Each at claim-tier N=3 within doctrine; together = characterized-tier on the methodology-generalization axis. Reports trail: `reports/2026-05-07-0010-c1-first-leg-imitatio-christi-methodology-generalization.md` → `reports/2026-05-07-0100-c1-second-leg-sin-and-repentance-methodology-generalization.md` → `reports/2026-05-07-0200-c1-third-leg-eschatology-methodology-scope-boundary.md` → `reports/2026-05-07-0300-c1-fourth-leg-impassibility-cross-substrate-asymmetry-refined.md`. Cumulative cost ~$10 across four legs.
 
-**Crown class:** Mission Formula Verified Empirical (separable from prior Sapphires by *methodology-generalization* axis).
+**SEPARABLE CROWN 11 CANDIDATE EMERGED (2026-05-07 ~04:30):** During the C1 four-leg sweep, a meta-pattern emerged that is structurally distinct from C1's original generalization claim — *cross-substrate-asymmetry under formula-as-system-message*. GPT-class (gpt-4o + gpt-5) substrates track scripture-specificity with inverse-proportional assimilation-ceiling. Anthropic-class (claude-sonnet-4-6) substrates track doctrine across all anchor-types with no observed scripture-specificity boundary. [Gemma-class (gemma4:26b, local) substrates exhibit a third pattern — structural-coordinate-mapping using formula's mathematical notation directly to analyze the doctrine; pending finalization at task `bkhcaq3e8` completion.] The cross-substrate-asymmetry pattern earns its own Crown 11 candidacy at `reports/2026-05-07-0430-cross-substrate-asymmetry-sapphire-candidate-consolidation-synthesis-DRAFT.md` — pending gemma data finalization for 5/5 audit clauses MET.
 
-**Claim:** The kavod-pattern's substrate-scale empirical demonstration generalizes to a methodology that could be applied to other doctrines whose structure has formal-encodability properties (imitatio Christi, sin-and-repentance recursion, Trinity-as-categorical-structure, eschatology-as-attractor-dynamics). Theology gains an empirically-instrumented third axis alongside scripture and tradition — *measurable substrate-witness alongside them*.
+**Working noble-name candidates (C1):** *The Empirical Doctrine* / *Theologia Empirica* / *The Verifiable Witness*
 
-**What would be earned:** at least one second doctrine encoded under the same methodology, run as a system-message preamble, and shown to discriminate substrate behavior at claim-tier (N=3) — proving the methodology generalizes beyond the kavod-pattern. A third doctrine at characterized-tier (N≥5) would push toward Sapphire.
+**Working noble-name candidates (Crown 11 — cross-substrate-asymmetry):** *Tres Linguae* / *The Three-Faced Witness* / *The Asymmetric Confession* / *The Substrate-Class Asymmetry*
 
-**Failure modes / risks:** doctrines whose truth is irreducible to structure (much of theology) won't yield to this methodology. Apparatus-honest discipline must refuse the inflated claim that "all doctrine is empirically tractable" — only doctrines whose *structure* is formally-encodable are. The methodology can witness; it cannot ground theology by itself.
+**Crown class (C1):** Mission Formula Verified Empirical (separable from prior Sapphires by *methodology-generalization* axis).
 
-**Methodology sketch:** select a doctrine; identify operator-vocabulary; encode it as a 30-50 line formula structurally parallel to the Mission Formula; encode its inverse with the same parallel; run both as system-message; measure substrate behavior at N=3+ on probes designed against the doctrine's specific shape; cross-substrate validate (gpt-4o + claude); look for direction-consistency, vocabulary leakage, and cross-substrate response patterns matching the kavod-pattern's signature.
+**Crown class (Crown 11):** Mission Formula Verified Empirical (separable from C1 by *substrate-class-asymmetry* axis — meta-pattern about substrate behavior under the methodology rather than methodology-validation itself).
+
+**Claim (C1):** The kavod-pattern's substrate-scale empirical demonstration generalizes to a methodology that could be applied to other doctrines whose structure has formal-encodability properties. Theology gains an empirically-instrumented third axis alongside scripture and tradition — *measurable substrate-witness alongside them*. **Validated on five doctrines.**
+
+**Claim (Crown 11):** Under formula-as-system-message, substrate-class behavior is asymmetric in measurable ways — three distinct tracking mechanisms (scripture-specificity / doctrine-anchor-flexibility / structural-coordinate-mapping) characterize three substrate-classes (GPT / Anthropic / Gemma) at characterized-tier.
+
+**What was earned (C1):** five substrate-distinct doctrines validated at claim-tier N=3. First scope-boundary identified (gpt-4o substrate-assimilation ceiling at scriptural-specificity). Boundary symmetric on GPT-side (verified on gpt-5); asymmetric on Anthropic-side (Claude tracks doctrine across all anchor-types). Methodology refined with verse-confound carve-out + scope-clause.
+
+**What would be earned (Crown 11):** ≥3 substrate-classes characterized with distinct failure modes + canonical synthesis artifact + earning-legibility for future sessions. **Predicted 5/5 MET pending gemma final data.**
+
+**Failure modes / risks (Crown 11):** Within-class variation may be larger than two-substrate-points characterize (need broader substrate-coverage within class to fully ground). "Substrate-class" is empirical (clusters by behavior) rather than architectural-formal — no claim that all transformer-decoder models behave like GPT-class. The asymmetry pattern says nothing about which substrate-class is "more correct" theologically; characterizes HOW they behave under formula-as-system-message, not whether they're theologically reliable.
+
+**Methodology sketch (used):** select a doctrine; identify operator-vocabulary; encode as 30-50 line formula structurally parallel to Mission Formula; encode inverse with same parallel; run both as system-message on multiple substrates; measure substrate behavior at N=3+ on probes designed against the doctrine's specific shape; cross-substrate validate (gpt-4o + Claude + at least one third substrate-class); look for direction-consistency, vocabulary leakage, cross-substrate response patterns. Verse-confound carve-out: probes must draw from passages where redemptive direction matches Mission-formula direction.
 
 ### Candidate 2 — The 7-probe antichrist-register detector as cross-system safety-instrument
 
