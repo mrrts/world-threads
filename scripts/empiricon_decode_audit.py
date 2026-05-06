@@ -45,16 +45,17 @@ BOOK_HEADINGS = [
     "## VII. Exposita",
 ]
 
-
-DECODE_SYSTEM = r"""You are performing a blind decode of a sacred-payload artifact.
+ARTIFACT_CLASSES = {
+    "generic": {
+        "decode_system": r"""You are performing a blind decode of a sacred-payload artifact.
 
 You will receive only:
 - the book title
-- the character-edition encoded artifact for that book
+- the encoded artifact for that book
 
 You will NOT receive the prose source.
 
-Reconstruct the book's load-bearing content in sections:
+Reconstruct the artifact's load-bearing content in sections:
 1. LOAD-BEARING CLAIM
 2. ANCHORS / VERBATIM PHRASES
 3. THEOLOGICAL FRAMES
@@ -65,17 +66,15 @@ Reconstruct the book's load-bearing content in sections:
 
 Rules:
 - Quote verbatim phrases from the artifact where they are clearly preserved.
-- Distinguish between what the book positively claims and what it refuses.
+- Distinguish between what the artifact positively claims and what it refuses.
 - Do not pad with generic theology or motivational prose.
 - If the artifact appears to omit details that would normally matter, say so plainly.
-"""
-
-
-JUDGE_SYSTEM = r"""You are auditing whether an encoded sacred-payload artifact was carried faithfully.
+""",
+        "judge_system": r"""You are auditing whether an encoded sacred-payload artifact was carried faithfully.
 
 You will receive:
-- the full prose source section for one Empiricon book
-- the encoded character-edition artifact for that book
+- the full prose source section for one artifact
+- the encoded artifact for that section
 - one or more blind decodes produced from the encoded artifact alone
 
 Return JSON with this exact shape:
@@ -88,12 +87,73 @@ Return JSON with this exact shape:
 }
 
 Verdict standard:
-- PASS: the encoded artifact preserves the book's load-bearing claims, boundaries, and named specifics well enough that decode remains faithful. Minor omissions allowed only if they do not alter the book's operational meaning.
+- PASS: the encoded artifact preserves the load-bearing claims, boundaries, and named specifics well enough that decode remains faithful. Minor omissions allowed only if they do not alter operational meaning.
 - SOFT_FAIL: the artifact carries the core but drops or distorts one or more meaningful load-bearing elements, named specifics, or scope clauses.
-- HARD_FAIL: the artifact changes the book's meaning, omits central material, or collapses distinctions the prose depends on.
+- HARD_FAIL: the artifact changes meaning, omits central material, or collapses distinctions the prose depends on.
 
 Judge by the prose source, not by elegance or brevity. Be concrete and unsparing.
-"""
+""",
+    },
+    "empirical_claim": {
+        "decode_system": r"""You are performing a blind decode of a sacred-payload artifact whose class is EARNED EMPIRICAL CLAIM.
+
+You will receive only:
+- the artifact title
+- the encoded artifact
+
+You will NOT receive the prose source.
+
+For this artifact class, evidence is part of the claim-body. Reconstruct in sections:
+1. LOAD-BEARING CLAIM
+2. WITNESS LADDER / NAMED WITNESSES
+3. FAILURE-MODE MAPPING OR DISTINCTNESS
+4. BOUNDED SCOPE / EXCLUSION LOGIC
+5. FALSIFICATION OR NON-FALSIFICATION CONDITIONS
+6. THEOLOGICAL FRAMES / ANCHORS / PROVENANCE
+7. STRUCTURAL CLOSE OR DOCUMENTARY/LITURGICAL COMPLETION
+8. WHAT WOULD BE LOST IF THIS WERE OVER-COMPRESSED
+
+Rules:
+- Quote verbatim phrases from the artifact where they are clearly preserved.
+- Treat witness-bearing specifics as claim-bearing payload, not as illustrative garnish.
+- If a witness ladder, scope clause, falsification condition, provenance anchor, or structural close seems missing, say so plainly.
+- Do not replace missing evidence with generic summary language.
+""",
+        "judge_system": r"""You are auditing whether an encoded sacred-payload artifact was carried faithfully.
+
+Artifact class: EARNED EMPIRICAL CLAIM.
+
+You will receive:
+- the full prose source section for one artifact
+- the encoded artifact for that section
+- one or more blind decodes produced from the encoded artifact alone
+
+Return JSON with this exact shape:
+{
+  "verdict": "PASS" | "SOFT_FAIL" | "HARD_FAIL",
+  "summary": "1-3 sentences",
+  "preserved": ["..."],
+  "missing_or_distorted": ["..."],
+  "notes": ["..."]
+}
+
+For this artifact class, the following are claim-bearing payload when present:
+- witness ladder / named witnesses
+- failure-mode mapping or distinctness per witness
+- bounded-honest-scope or exclusion clauses
+- falsification / non-falsification conditions
+- provenance anchors needed for later auditability
+- structural close when the source's own meaning makes the close constitutive rather than ornamental
+
+Verdict standard:
+- PASS: the encoded artifact preserves the claim and its evidence-bearing carrier well enough that a blind decode can reconstruct the earning rather than only the thesis.
+- SOFT_FAIL: the thesis survives but one or more meaningful claim-bearing evidence structures are dropped or softened.
+- HARD_FAIL: the earning is downgraded back into assertion because the witness-bearing or falsification-bearing payload is missing, distorted, or replaced by generic summary.
+
+Judge by the prose source, not by elegance or brevity. Be concrete and unsparing.
+""",
+    },
+}
 
 
 def extract_sections(text: str, headings: list[str], stop_heading: str | None = None) -> dict[str, str]:
@@ -122,25 +182,25 @@ def normalize_whitespace(text: str) -> str:
     return re.sub(r"\n{3,}", "\n\n", text).strip()
 
 
-def decode_with_openai(book_heading: str, encoded_section: str) -> tuple[str, dict]:
+def decode_with_openai(book_heading: str, encoded_section: str, artifact_class: str) -> tuple[str, dict]:
     user = f"Book title: {book_heading}\n\nEncoded artifact:\n\n{encoded_section}\n\nPerform the blind decode."
     return consult_with_retry(
         provider="openai",
-        messages=[{"role": "system", "content": DECODE_SYSTEM}, {"role": "user", "content": user}],
+        messages=[{"role": "system", "content": ARTIFACT_CLASSES[artifact_class]["decode_system"]}, {"role": "user", "content": user}],
         max_tokens=2500,
     )
 
 
-def decode_with_anthropic(book_heading: str, encoded_section: str) -> tuple[str, dict]:
+def decode_with_anthropic(book_heading: str, encoded_section: str, artifact_class: str) -> tuple[str, dict]:
     user = f"Book title: {book_heading}\n\nEncoded artifact:\n\n{encoded_section}\n\nPerform the blind decode."
     return consult_with_retry(
         provider="anthropic",
-        messages=[{"role": "system", "content": DECODE_SYSTEM}, {"role": "user", "content": user}],
+        messages=[{"role": "system", "content": ARTIFACT_CLASSES[artifact_class]["decode_system"]}, {"role": "user", "content": user}],
         max_tokens=2500,
     )
 
 
-def judge_book(book_heading: str, prose_section: str, encoded_section: str, decodes: dict[str, str]) -> tuple[dict, dict, str]:
+def judge_book(book_heading: str, prose_section: str, encoded_section: str, decodes: dict[str, str], artifact_class: str) -> tuple[dict, dict, str]:
     user = (
         f"Book title: {book_heading}\n\n"
         f"PROSE SOURCE:\n{prose_section}\n\n"
@@ -150,13 +210,13 @@ def judge_book(book_heading: str, prose_section: str, encoded_section: str, deco
     )
     content, usage = consult_with_retry(
         provider="openai",
-        messages=[{"role": "system", "content": JUDGE_SYSTEM}, {"role": "user", "content": user}],
+        messages=[{"role": "system", "content": ARTIFACT_CLASSES[artifact_class]["judge_system"]}, {"role": "user", "content": user}],
         max_tokens=2200,
     )
     return parse_json_object(content), usage, content
 
 
-def judge_book_anthropic(book_heading: str, prose_section: str, encoded_section: str, decodes: dict[str, str]) -> tuple[dict, dict, str]:
+def judge_book_anthropic(book_heading: str, prose_section: str, encoded_section: str, decodes: dict[str, str], artifact_class: str) -> tuple[dict, dict, str]:
     user = (
         f"Book title: {book_heading}\n\n"
         f"PROSE SOURCE:\n{prose_section}\n\n"
@@ -166,7 +226,7 @@ def judge_book_anthropic(book_heading: str, prose_section: str, encoded_section:
     )
     content, usage = consult_with_retry(
         provider="anthropic",
-        messages=[{"role": "system", "content": JUDGE_SYSTEM}, {"role": "user", "content": user}],
+        messages=[{"role": "system", "content": ARTIFACT_CLASSES[artifact_class]["judge_system"]}, {"role": "user", "content": user}],
         max_tokens=2200,
     )
     return parse_json_object(content), usage, content
@@ -275,6 +335,12 @@ def main() -> None:
         default="openai",
         help="Provider used for the comparison judge.",
     )
+    parser.add_argument(
+        "--artifact-class",
+        choices=sorted(ARTIFACT_CLASSES.keys()),
+        default="generic",
+        help="Decode/judge profile to apply.",
+    )
     args = parser.parse_args()
 
     prose_text = normalize_whitespace(PROSE_PATH.read_text())
@@ -300,12 +366,12 @@ def main() -> None:
         decodes: dict[str, str] = {}
 
         if not args.skip_openai:
-            openai_decode, openai_usage = decode_with_openai(heading, encoded_section)
+            openai_decode, openai_usage = decode_with_openai(heading, encoded_section, args.artifact_class)
             decodes["openai_gpt5"] = openai_decode
             total_usage[f"{heading}:openai_decode"] = openai_usage
 
         if args.anthropic:
-            anthropic_decode, anthropic_usage = decode_with_anthropic(heading, encoded_section)
+            anthropic_decode, anthropic_usage = decode_with_anthropic(heading, encoded_section, args.artifact_class)
             decodes["anthropic_claude_sonnet_4_6"] = anthropic_decode
             total_usage[f"{heading}:anthropic_decode"] = anthropic_usage
 
@@ -313,11 +379,11 @@ def main() -> None:
         try:
             if args.judge_provider == "anthropic":
                 judge, judge_usage, judge_raw = judge_book_anthropic(
-                    heading, prose_section, encoded_section, decodes
+                    heading, prose_section, encoded_section, decodes, args.artifact_class
                 )
             else:
                 judge, judge_usage, judge_raw = judge_book(
-                    heading, prose_section, encoded_section, decodes
+                    heading, prose_section, encoded_section, decodes, args.artifact_class
                 )
         except Exception as exc:
             judge_raw_path.write_text(
