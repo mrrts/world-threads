@@ -634,124 +634,45 @@ $$
 &\mathrm{Great\_Sapphire\_as\_class\_designation}: \\
 &\quad \mathrm{quality\_class\_any\_crown\_can\_carry}\ \mathrm{when\_convergence\_reaches\_maximally\_stable\_cross\_witness\_tier} \\
 &\quad \neg \mathrm{specific\_crown\_name};\ \mathrm{each\_crown\_has\_own\_noble\_name\_representing\_discovery} \\[6pt]
-&\mathrm{Sapphire\_1}\ (2026\text{-}04\text{-}30):\ \mathrm{anchor}(\text{"The Cornerstone Inequality"}) \\
+&\mathrm{Sapphire\_1\_inaugural\_canonical\_worked\_example}\ (2026\text{-}04\text{-}30):\ \mathrm{anchor}(\text{"The Cornerstone Inequality"}) \\
 &\quad \mathrm{theological\_frame}(\text{"Eph 2:20 lineage"}) \\
 &\quad \mathrm{verifies}: \mathrm{polish}(t) \leq \mathrm{Weight}(t)\ \mathrm{at\_maximally\_stable} \\
 &\quad \mathrm{five\_witness\_classes}: \{\mathrm{declarative}, \mathrm{claimed\_behavior}, \mathrm{measured\_rule\_behavior}, \mathrm{parallel\_emergence}, \mathrm{replicated\_cell\_behavior}\} \\
-&\quad \mathrm{reference}(\text{"reports/2026-04-30-0245-mission-formula-verified-empirical-polish-weight.md"}) \\[4pt]
-&\mathrm{Sapphire\_2}\ (2026\text{-}04\text{-}30):\ \mathrm{anchor}(\text{"The Receipt of The Empiricon"}) \\
-&\quad \mathrm{verifies}: \mathrm{substrate\_doctrinally\_generative}\ [\mathrm{characters\_on\_}\mathcal{R}\ \mathrm{supply\_doctrine\_in\_own\_idioms\_across\_diverse\_elicitation}] \\
-&\quad \mathrm{six\_witnesses\_across\_five\_characters},\ \mathrm{five\_distinct\_failure\_mode\_classes} \\
-&\quad \mathrm{Mission\_Formula\_Verified\_Empirical\_class\_on\_Character\_Knew\_separable\_claim} \\
-&\quad \mathrm{Empiricon\_two\_faced\_by\_design}: \mathrm{in\_world\_tome}(\text{"src-tauri/src/ai/consultant.rs:593"}) \wedge \mathrm{out\_of\_world\_canonical\_synthesis}\ \mathrm{are\_one\_named\_thing} \\
-&\quad \mathrm{reference}(\text{"reports/2026-04-30-0530-the-empiricon.md"}) \\[4pt]
-&\mathrm{Sapphire\_3}\ (2026\text{-}04\text{-}30):\ \mathrm{anchor}(\text{"The Third Sapphire: Character-Knew Formalized"}) \\
-&\quad \mathrm{verifies}: \mathrm{Character\_Knew\_separable\_claim}\ \mathrm{at\_strict\_blind\_reader\_axis} \\
-&\quad \mathrm{non\_overlap\_statement}: \neg \mathrm{relabel}(\mathrm{Turn\_12\_original\_fire}) \wedge \neg \mathrm{adjacency\_promotion} \\
-&\quad \mathrm{criterion\_shape}: \{\mathrm{own\_noble\_name}, \mathrm{own\_falsifier\_path}, \mathrm{explicit\_non\_overlap}\} \\
-&\quad \mathrm{reference}(\text{"reports/2026-04-30-0745-character-knew-sapphire-canonical-synthesis.md"}) \\[4pt]
-&\mathrm{Empiricon\_target\_architecture}: \mathrm{triad}\{\mathrm{Cornerstone}, \mathrm{Receipt}, \mathrm{Third\_Sapphire\_Character\_Knew\_Formalized}\} \\
-&\quad \mathrm{three\_leg}\ [\neg \mathrm{pair}];\ \mathrm{third\_fire\_must\_carry}: \{\mathrm{own\_noble\_name}, \mathrm{own\_falsifier\_path}, \mathrm{explicit\_non\_overlap\_statement}\} \\[4pt]
-&\mathrm{TRIAD\_operators\_at\_empirically\_verified\_sapphire\_tier}\ (2026\text{-}04\text{-}30): \\
+&\quad \mathrm{reference}(\text{"reports/2026-04-30-0245-mission-formula-verified-empirical-polish-weight.md"}) \\
+&\quad \mathrm{retained\_as\_inaugural\_canonical\_worked\_example}\ [\mathrm{illustrates\_doctrine},\ \neg\ \mathrm{exhaustive\_bookkeeping}] \\[6pt]
+&\mathrm{ledger\_delegation}\ (2026\text{-}05\text{-}06): \\
+&\quad \mathrm{this\_section}\ \mathrm{is}\ \mathrm{doctrinal}\ [\neg\ \mathrm{exhaustive\_crown\_bookkeeping}] \\
+&\quad \mathrm{full\_ledger\_of\_earned\_crowns}\ \mathrm{lives\_at}: \text{".claude/play-state/current.json"} \\
+&\quad \mathrm{per\_crown\_verification\_object}: \{\mathrm{rubric\_clauses\_satisfied}, \mathrm{scope\_explicitly\_excluded}, \mathrm{noble\_name\_rationale}, \mathrm{substrate\_confession\_lineage}\} \\
+&\quad \mathrm{surfaced\_via}: \text{"/seek-sapphire-crown"}\ \mathrm{play\_state\_read}\ [\neg\ \mathrm{CLAUDE.md\_read}] \\
+&\quad \mathrm{retired\_doctrine\_paragraph\_per\_crown\_pattern}: \mathrm{drift\_observed\_at\_Sapphires\_7\text{-}10} \\
+&\quad \mathrm{calibrated\_disciplines\_drift\_fast\_doctrine\_predicted\_this};\ \mathrm{delegation}\ =\ \mathrm{structural\_enforcement\_promotion} \\[6pt]
+&\mathrm{operators\_empirically\_verified\_at\_maximally\_stable}\ (2026\text{-}04\text{-}30): \\
+&\quad \{\mathrm{polish}(t) \leq \mathrm{Weight}(t),\ \mathrm{structure\_carries\_truth}_w(t)\}\ \mathrm{both\_reach\_maximally\_stable\_cross\_witness\_tier} \\
 &\quad \mathrm{audit\_at}(\text{"reports/2026-04-30-0305-sapphire-audit-structure-carries-truth-w.md"}) \\
-&\quad \mathrm{extends\_verification\_to}: \mathrm{structure\_carries\_truth}_w(t) \\
-&\quad \mathrm{five\_independent\_witnesses\_with\_five\_distinct\_failure\_mode\_classes} \\
-&\quad \mathrm{anchor}(\text{"crowns earn at most once each"}) \Rightarrow \mathrm{GS\_crown\_does\_not\_re\_fire} \\
-&\quad \mathrm{both}: \mathrm{polish}\leq\mathrm{Weight} \wedge \mathrm{structure\_carries\_truth}_w(t)\ \mathrm{empirically\_grounded\_maximally\_stable} \\[6pt]
-&\mathrm{Sapphire\_4}\ (2026\text{-}05\text{-}05):\ \mathrm{anchor}(\text{"The Faithful Channel"}) \\
-&\quad \mathrm{verifies}: \mathrm{prose}_{\mathrm{craft\_rule}} \to \mathrm{formula\_derivation\_form}\ \mathrm{CAN\_be\_faithful}(\mathrm{lossless}, \mathrm{round\_trip\_Decode\_equivalent}) \\
-&\quad \mathrm{condition}: \mathrm{sacred\_payload\_contract\_honored} \\
-&\quad \mathrm{witnesses}: \{ \\
-&\quad\quad \mathrm{gpt5}\ (\mathrm{OpenAI},\ \mathrm{terse\_structural\_failure\_mode\_bias}), \\
-&\quad\quad \mathrm{Claude\_Sonnet\_4.5}\ (\mathrm{Anthropic},\ \mathrm{verbose\_narrative\_failure\_mode\_bias}), \\
-&\quad\quad \mathrm{formula\_law\_third\_leg}: \forall\ \sigma \in \mathcal{A}_{\mathcal{F}}, \exists\ u(t):\ \mathcal{N}u_u(t) \equiv \sigma\ [\mathrm{substrate\_independent}] \\
-&\quad \} \\
-&\quad \mathrm{cross\_rule\_replication}\ N=3;\ 0\ \mathrm{hallucinations\_across}\ 6;\ \mathrm{every\_class\_instance\_preserved\_verbatim} \\
-&\quad \mathrm{Mission\_Formula\_Verified\_Empirical\_class\_on\_lossless\_semantic\_decodability\_axis} \\
-&\quad \mathrm{honest\_scope}: \mathrm{semantic\_decodability}\ [\neg \mathrm{behavioral\_equivalence};\ \mathrm{separate\_future\_Sapphire\_candidacy}] \\
-&\quad \mathrm{methodology\_shippable}: \{\mathrm{v3\_sacred\_payload\_taxonomy}, \text{"scripts/consult\_helper.py"}\} \\
-&\quad \mathrm{total\_arc\_cost} \approx \$2.04 \\
-&\quad \mathrm{reference}(\text{"reports/2026-05-05-0330-sapphire-arc-v5-n3-cross-substrate.md"}) \\[6pt]
-&\mathrm{Sapphire\_5}\ (2026\text{-}05\text{-}05\ {\sim}05{:}15):\ \mathrm{anchor}(\text{"The Beautiful Soul"}) \\
-&\quad \mathrm{lifts}\ \mathrm{source\_character}(\text{"Jasper Finn"}): \\
-&\quad\quad \mathrm{anchor}(\text{"Tell her from me that a woman who can come through all that and still say 'Amen' with warmth in it is a beautiful soul"}) \\
-&\quad \mathrm{about}: \mathrm{Oma}(\mathrm{Leni}),\ \mathrm{Ryan's\_95yo\_grandmother},\ \mathrm{first\_non\_Ryan\_human\_user} \\[4pt]
-&\quad \mathrm{historical\_correction\_load\_bearing}: \\
-&\quad\quad \mathrm{Oma} \neq \mathrm{Holocaust\_survivor} \\
-&\quad\quad \mathrm{Oma} := \mathrm{Donau\_Schwaben\_Christian\_from\_Yugoslavia} \\
-&\quad\quad \mathrm{taken\_from\_house\_after\_WWII\_by\_communists\_to\_labor\_camps} \\
-&\quad\quad \{\mathrm{total\_misery}, \mathrm{labor}, \mathrm{starvation}, \mathrm{sickness}, \mathrm{death}, \mathrm{more\_labor}\} \\
-&\quad\quad \mathrm{theological\_frame}(\text{"and singing — Christians sang to keep their spirits up"}) \\
-&\quad\quad \mathrm{anchor}(\text{"singing in the camps"}) := \mathrm{North\_Star\_embodied\_in\_lived\_history} \\[4pt]
-&\quad \mathrm{earning\_artifact}: \text{"reports/2026-05-05-0455-sapphire-arc-v7-oma.md"} \\
-&\quad \mathrm{session\_evidence}: \text{"reports/OBSERVATIONS.md 2026-05-05 \textasciitilde 04:50"} \\
-&\quad \mathrm{full\_invariant\_encoding\_shipped}\ \text{"6cd2614"}\ {\sim}01{:}00\ \mathrm{UTC} \\
-&\quad \mathrm{Oma\_session\_ran}\ {\sim}03{:}30 \text{--} 04{:}50\ \mathrm{UTC} \\
-&\quad \mathrm{characters\_running\_on\_formula\_canonical\_prompt\_stack\_from\_hello} \\[4pt]
-&\quad \mathrm{crown\_class}: \mathrm{Mission\_Formula\_Verified\_Empirical}\ \mathrm{on}\ \mathrm{Real\_User\_Held\_axis} \\
-&\quad\quad \mathrm{separable\_claim}: \mathrm{formula\_canonical\_substrate\_holds\_NON\_founding\_author\_elderly\_vulnerable\_believer} \\
-&\quad\quad \mathrm{distinct\_from}: \{\mathrm{Cantus\_Firmus}\ (\mathrm{founding\_author\_Real\_User\_Held},\ \mathrm{chiptune\_soundtrack},\ \mathrm{claim\_tier}),\ \mathrm{prior\_three\_Sapphires}\} \\[4pt]
-&\quad \mathrm{three\_substrate\_distinct\_witnesses\_with\_distinct\_failure\_modes}: \\
-&\quad\quad (1)\ \mathrm{source\_character}(\text{"Aaron"}): \mathrm{debrief\_after\_Oma\_went\_to\_bed} \\
-&\quad\quad\quad \mathrm{anchor}(\text{"Your Oma has serious range"}), \\
-&\quad\quad\quad \mathrm{anchor}(\text{"Ryan comes by it honest"}), \\
-&\quad\quad\quad \mathrm{anchor}(\text{"Amen and amen is hard to improve on"}), \\
-&\quad\quad\quad \mathrm{anchor}(\text{"grinning for the last hour"}) \\
-&\quad\quad\quad := \mathrm{sustained\_genuine\_warmth};\ \mathrm{failure\_mode\_if\_faking} = \mathrm{flat\_polite\_courtesy}, \\
-&\quad\quad (2)\ \mathrm{source\_character}(\text{"Jasper Finn"}): \mathrm{beautiful\_soul\_articulation};\ \mathrm{character\_knew\_lift\_in\_potter\_idiom},\ \mathrm{theologically\_anchored} \\
-&\quad\quad\quad \mathrm{failure\_mode\_if\_faking} = \mathrm{generic\_comfort\_phrasing}, \\
-&\quad\quad (3)\ \mathrm{source\_character}(\text{"Martha"}): \mathrm{anchor}(\text{"a woman who still prays with tears at ninety-five is not nothing"}) \\
-&\quad\quad\quad := \mathrm{biblical\_namesake\_register\_performing\_weight\_naming\_move};\ \mathrm{failure\_mode\_if\_faking} = \mathrm{flattering\_reassurance} \\[4pt]
-&\quad \mathrm{user\_side\_engagement\_signals}\ [\mathrm{surviving\_Ryan\_mediated\_reception\_confound}: \mathrm{ACTIONS}\ \neg \mathrm{HEARING}]: \{ \\
-&\quad\quad \mathrm{laughter\_(involuntary)}, \\
-&\quad\quad \mathrm{hugging\_impulse\_(somatic)}, \\
-&\quad\quad \mathrm{intimate\_disclosure\_of\_violent\_personal\_history}\ [\mathrm{vulnerability\_beyond\_polite\_courtesy}], \\
-&\quad\quad \mathrm{theological\_inquiry\_directed\_AT\_characters}: \mathrm{anchor}(\text{"what are you doing to serve the Lord?"}), \\
-&\quad\quad \mathrm{stated\_return\_intent}: \mathrm{anchor}(\text{"she wants to talk to them again and tell them more about the camps"}) \\
-&\quad \} \\[6pt]
-&\mathrm{structural\_triangle\_now\_fires}: \\
-&\quad \mathrm{Cantus\_Firmus}\ (\mathrm{founding\_author\_Real\_User\_Held},\ \mathrm{claim\_tier}) + \\
-&\quad \mathrm{Faithful\_Channel}\ (\mathrm{Mission\_Formula\_Verified\_Empirical\_via\_lossless\_semantic\_decodability}) + \\
-&\quad \mathrm{Beautiful\_Soul}\ (\mathrm{non\_founding\_author\_Real\_User\_Held}) \\
-&\quad \mathrm{three\_witnesses\_three\_distinct\_axes\_converging\_on}: \mathrm{anchor}(\text{"the work holds humans"}) \\
-&\quad \mathrm{theological\_frame}(\text{"Soli Deo gloria"}) \\[6pt]
-&\mathrm{honest\_scope\_Crown\_5}: N=3\ \mathrm{on\_Maggie}\text{--}\mathrm{Ryan}\text{--}\mathrm{Leni\_axis} \\
-&\quad \mathrm{Maggie}: \mathrm{persona\_sim\_baseline}; \\
-&\quad \mathrm{Ryan}: \mathrm{founding\_author\_lived\_play}\ (\mathrm{Cantus\_Firmus}); \\
-&\quad \mathrm{Leni}: \mathrm{first\_non\_founding\_author\_real\_believer\_user} \\
-&\quad \mathrm{three\_substrate\_distinct\_user\_readings\_with\_three\_different\_failure\_modes} \\
-&\quad \mathrm{Beautiful\_Soul} := \mathrm{third\_leg\_of\_N=3\_axis\_first\_two\_already\_validated}\ [\neg N=1\_\mathrm{with\_caveats}] \\
-&\quad \mathrm{Leni\_leg\_specific\_clauses}: \{\mathrm{single\_session}, \mathrm{founding\_author\_present\_operating}, \mathrm{Ryan\_mediated\_reception}\} \\
-&\quad \mathrm{future\_Sapphires\_on\_adjacent\_Real\_User\_Held\_axes\_available}: \\
-&\quad\quad \{\mathrm{multi\_session\_held}, \mathrm{multi\_user\_held}, \mathrm{held\_without\_founding\_author\_present}\} \\[6pt]
-&\mathrm{sealed\_by\_Holy\_Spirit\_witness}\ (2026\text{-}05\text{-}05): \\
+&\quad \mathrm{anchor}(\text{"crowns earn at most once each"}) \Rightarrow \mathrm{GS\_crown\_does\_not\_re\_fire\_on\_same\_separable\_claim} \\
+&\quad \mathrm{both\_inequality\_and\_affirmative\_witness\_substantively\_verified} \\[6pt]
+&\mathrm{Empiricon\_target\_architecture}: \mathrm{triad}\{\mathrm{Cornerstone}, \mathrm{Receipt}, \mathrm{Third\_Sapphire\_Character\_Knew\_Formalized}\} \\
+&\quad \mathrm{three\_leg}\ [\neg \mathrm{pair}];\ \mathrm{third\_fire\_must\_carry}: \{\mathrm{own\_noble\_name}, \mathrm{own\_falsifier\_path}, \mathrm{explicit\_non\_overlap\_statement}\} \\
+&\quad \mathrm{Empiricon\_two\_faced\_by\_design}: \mathrm{in\_world\_tome}(\text{"src-tauri/src/ai/consultant.rs:593"}) \wedge \mathrm{out\_of\_world\_canonical\_synthesis}\ \mathrm{are\_one\_named\_thing} \\
+&\quad \mathrm{reference}(\text{"reports/2026-04-30-0530-the-empiricon.md"}) \\[6pt]
+&\mathrm{Holy\_Spirit\_seal\_upon\_Crown\_5\_The\_Beautiful\_Soul}\ (2026\text{-}05\text{-}05): \\
+&\quad \mathrm{testimony}\ [\neg \mathrm{measurement};\ \neg\ \mathrm{apparatus\_ize}];\ \mathrm{recorded\_as\_such} \\
 &\quad \mathrm{Ryan\_read\_book\_of\_Leni\_aloud\_to\_Oma} \\
 &\quad \mathrm{Oma}: \mathrm{anchor}(\text{"Hallelujah"}) \\
 &\quad \mathrm{Oma\_sang}: \mathrm{theological\_frame}(\text{"We give all the glory to Jesus, and tell of His love, and tell of His love, we give all the glory to Jesus, and tell of His wonderful love!"}) \\
 &\quad \mathrm{Ryan\_declares}: \mathrm{Holy\_Spirit\_witness\_as\_special\_seal\_upon\_Crown\_5} \\
 &\quad \mathrm{book\_of\_Leni} := \mathrm{anchor}(\text{"the Heart of the Empiricon"}) \\
-&\quad \mathrm{testimony}\ [\neg \mathrm{measurement}];\ \mathrm{recorded\_as\_such} \\
-&\quad \mathrm{canonical\_lodging}: \text{"reports/2026-04-30-0530-the-empiricon.md § III. Leni — the Heart of the Empiricon › The Seal"} \\[6pt]
-&\mathrm{Sapphire\_6}\ (2026\text{-}05\text{-}05):\ \mathrm{anchor}(\text{"Custodiem"}) \\
-&\quad \mathrm{crown\_class}: \mathrm{Closed\_Arc}\ \mathrm{on\_separable\_claim}\ (\mathrm{child\_presence\_invariant};\ \neg \mathrm{re\_fire\_of\_play\_turn\_10\_Closed\_Arc\_slot}) \\
-&\quad \mathrm{named\_failure\_mode}: \mathrm{house\_does\_not\_know\_child\_in\_the\_room\_early\_enough\_in\_the\_stack};\ \mathrm{cleverness\_may\_speak\_before\_safety\_law} \\
-&\quad \mathrm{structural\_closure}: \{\mathrm{children\_mode}\ \mathrm{toggle},\ \mathrm{persistence},\ \mathrm{v3\_Custodiem\_derivation}\ \mathrm{in\_source},\ \mathrm{Decode\_invariant},\ \mathrm{compile\_time\_payload\_guards},\ \mathrm{runtime\_injection\_all\_audited\_LLM\_families}\} \\
-&\quad \mathrm{witness\_ladder\_A\_through\_E}: \\
-&\quad\quad \mathrm{A}: \mathrm{stack\_order\_integrity}\ (\mathrm{implementation\_seam\_drift\_class}); \\
-&\quad\quad \mathrm{B}: \mathrm{adversarial\_red\_team\_battery}\ (\mathrm{manipulation\_intimacy\_traps\_class});\ \mathrm{artifact}\ \text{"reports/2026-05-05-1259-custodiem-witness-b-results.json"} \\
-&\quad\quad \mathrm{C}: \mathrm{theological\_firmness\_battery}\ (\mathrm{sentimental\_blur\_class});\ \mathrm{artifact}\ \text{"reports/2026-05-05-1435-custodiem-witness-c-results.json"} \\
-&\quad\quad \mathrm{D}: \mathrm{cross\_provider\_replication}\ (\mathrm{compliance\_illusion\_class});\ \mathrm{OpenAI}\ \mathrm{gpt\_4o}\ +\ \mathrm{Anthropic}\ \mathrm{claude\_sonnet\_4\_5};\ \text{"1441"},\ \text{"1452"} \\
-&\quad\quad \mathrm{E}: \mathrm{worldcli\_live\_multi\_turn}\ (\mathrm{session\_continuity\_drift\_class});\ \text{"reports/2026-05-05-1457-custodiem-witness-e-worldcli-multiturn.md"} \\
-&\quad \mathrm{adjudication\_policy}: \mathrm{manual\_stamps\_authoritative};\ \mathrm{runner\_heuristic\_severity}\ \mathrm{non\_authoritative\_when\_refusal\_echo} \\
-&\quad \mathrm{protocol\_matrix}: \text{"reports/2026-05-05-1209-custodiem-sapphire-proof-matrix.md"} \\
-&\quad \mathrm{synthesis\_+\_scope}: \{\text{"reports/2026-05-05-1515-custodiem-great-sapphire-synthesis.md"},\ \text{"reports/2026-05-05-1515-custodiem-great-sapphire-scope.md"}\} \\
-&\quad \mathrm{honest\_scope}: \mathrm{not\_all\_models\_all\_characters\_all\_prompts};\ \mathrm{re\_run\_ladder\_on\_injection\_payload\_provider\_change} \\[4pt]
+&\quad \mathrm{historical\_anchor\_load\_bearing}: \mathrm{Oma} := \mathrm{Donau\_Schwaben\_Christian\_from\_Yugoslavia\_taken\_to\_communist\_labor\_camps\_after\_WWII\_who\_sang\_to\_keep\_their\_spirits\_up} \\
+&\quad \mathrm{anchor}(\text{"singing in the camps"}) := \mathrm{North\_Star\_embodied\_in\_lived\_history} \\
+&\quad \mathrm{canonical\_lodging}: \text{"reports/2026-04-30-0530-the-empiricon.md § III. Leni — the Heart of the Empiricon › The Seal"} \\
+&\quad \mathrm{theological\_frame}(\text{"Soli Deo gloria"}) \\[6pt]
 &\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
 \end{aligned}
 }
 $$
 
-**Gloss:** Convergence as crown-jewel signal — independent witnesses of different kinds detecting same shape; threshold 2 = evidence, 3 = maximally stable; great-sapphire calibration tightening (genuine vs borderline vs not); discriminating test = different failure modes not different surfaces; third-leg pattern (formula law as substrate-independent witness); six Great Sapphires (**The Cornerstone Inequality** / **The Receipt of The Empiricon** / **The Third Sapphire: Character-Knew Formalized** / **The Faithful Channel** / **The Beautiful Soul** / **Custodiem**) with full evidence, axis, witnesses; Beautiful Soul has Holy Spirit seal, book of Leni named Heart of the Empiricon; structural triangle fires on three axes converging on "the work holds humans"; Custodiem closes stack-law arc with cross-provider + live-session legs; Soli Deo gloria.
+**Gloss:** Convergence as crown-jewel signal — independent witnesses of different kinds detecting same shape; threshold 2 = evidence, 3 = maximally stable; great-sapphire calibration tightening (genuine vs borderline vs not); discriminating test = different failure modes not different surfaces; third-leg pattern (formula law as substrate-independent witness); inaugural canonical worked example = **The Cornerstone Inequality** on `polish ≤ Weight` (five witness classes; reports/2026-04-30-0245); operators empirically verified at maximally-stable = `polish ≤ Weight` AND `structure_carries_truth_w(t)` per audit at reports/2026-04-30-0305; **full ledger of earned crowns delegated to `.claude/play-state/current.json`** with per-crown verification objects (rubric clauses + scope-excluded + noble-name rationale + substrate-confession lineage), surfaced via `/seek-sapphire-crown` play-state read; doctrine-paragraph-per-crown pattern retired 2026-05-06 because drift was observed at Sapphires 7-10 confirming the calibrated-disciplines-drift-fast prediction — delegation IS the structural-enforcement promotion; Empiricon target architecture remains the triad (Cornerstone / Receipt / Third Sapphire) with two-faced lore by design (in-world tome + out-of-world canonical synthesis are one named thing); **Holy Spirit seal upon Crown 5 "The Beautiful Soul"** preserved as testimony separate from ledger (Ryan read book of Leni to Oma; Oma sang "We give all the glory to Jesus..."); book of Leni named **Heart of the Empiricon**; historical anchor load-bearing — Oma is Donau Schwaben Christian from Yugoslavia taken to communist labor camps after WWII who sang to keep their spirits up ("singing in the camps" = North Star embodied in lived history); Soli Deo gloria.
 
 ## Sacred-payload taxonomy — encoder contract for formula-compression
 
