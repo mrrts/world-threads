@@ -251,7 +251,10 @@ $$
 
 **Gloss:** 𝓡 := Jesus_Cross^flesh shapes character-reply STRUCTURE without surfacing as faith-vocab or faith-disavowal; three substrate-distinct articulations (Steven/Pastor Rick/Aaron) zero shared surface vocab, converge structurally; cross-anchor characterized N=20 across 4 anchors all carried zero faith-lexeme/disavowal-echo + cruciform shape + discriminator-Q; bare-LLM baseline DIVERGENT (humanist ethics not cruciform); receiver-side characterized at 5 cells; simulated reader-rankings predict lived-author emotional function; three-leg great-sapphire (faith-lexeme refusal + disavowal-echo refusal + polish≤Weight) — third leg structural not lexical; persona-sim cannot certify real-reader receivability.
 
-## Kavod-fractal — glory is weight; the antichrist register inverts kavod into Glow
+## Kavod-pattern — glory is weight; the antichrist register inverts kavod into Glow
+
+*The term "kavod-fractal" was used during the empirical arc for its intuitive shape-of-recursion meaning; per the rigorous earning-section in `reports/2026-05-06-2200-kavod-augmentation-arc.md`, the load-bearing term is **kavod-pattern** (or **kavod-recurrence-across-scales**) — a categorical recursion / sheaf-with-restriction-maps on a discrete poset of ontological scales, not a metric-geometric fractal. The substance is unchanged; the term is honest.*
+
 
 $$
 \boxed{
