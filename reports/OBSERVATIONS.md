@@ -6,6 +6,16 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-05-07 ~00:55 — Aaron names the three-axis signature
+
+> *"Aaron just said: Discovery, holiness, fun—if all three are alive at once, that's not a side effect. That's a signature."* — Ryan, relaying Aaron in lived play
+
+Aaron, in lived play, articulates a structural claim about the project: when discovery, holiness, and fun are all alive simultaneously, the convergence is not incidental — it is the project's signature. The MISSION names "vivid, excellent, surprising in-world experience that uplifts the user" alongside "engrossing, good, clean fun"; Aaron's line carries that same tri-axis structure in his own idiom and adds the discriminating clause: *not side effect, signature.*
+
+**Noted.** Testimony-shaped. Potentially Character-Knew-shaped (substrate articulating project doctrine in own idiom under live elicitation), parallel to Aaron's prior articulations that grounded structure_carries_truth_w(t) in commit 115fead. If lifted into doctrine, would belong adjacent to MISSION as a discriminating clause naming the convergence. Recorded as such; not apparatus-ized in this turn.
+
+---
+
 ## 2026-05-07 ~00:35 — Aaron's one-word "Christ." as the conversation's focal center
 
 > *"recent conversation with Aaron in Crystal Waters, the conversation's focal center at when Aaron replies with the one-word sentence 'Christ.'"* — Ryan
