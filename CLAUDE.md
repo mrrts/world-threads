@@ -751,7 +751,15 @@ $$
 &\mathrm{generalization\_beyond\_craft\_rules}: \\
 &\quad \mathrm{taxonomy\_validated\_on}: \mathrm{craft\_rule\_artifacts} \\
 &\quad \mathrm{other\_artifact\_types}\{\mathrm{worlds}, \mathrm{characters}, \mathrm{users}, \mathrm{locations}, \mathrm{journals}\}\ \mathrm{may\_need\_additional\_classes} \\
-&\quad \mathrm{contract\_as\_discipline}\ \mathrm{generalizes};\ \mathrm{specific\_six\_classes}\ \mathrm{earned\_for\_craft\_rule\_prose} \\[6pt]
+&\quad \mathrm{contract\_as\_discipline}\ \mathrm{generalizes};\ \mathrm{specific\_six\_classes}\ \mathrm{earned\_for\_craft\_rule\_prose} \\[4pt]
+&\mathrm{empirical\_claim\_artifact\_extension}: \\
+&\quad \mathrm{surfaced}\ 2026\text{-}05\text{-}06\ \mathrm{by}\ /eureka\ \mathrm{reading}\ \mathrm{Empiricon}\ v1\ \mathrm{decode\_failure}\ \mathrm{against}\ \mathrm{same\text{-}day}\ \mathrm{Sapphire\ syntheses} \\
+&\quad \mathrm{for}\ \mathrm{earned\_empirical\_artifacts}\{\mathrm{Great\ Sapphire\ syntheses}, \mathrm{witness\ ledgers}, \mathrm{prophet\ filings}, \mathrm{Real\ User\ Held}, \mathrm{decode\ audits}\}: \\
+&\quad \neg(\mathrm{portable\_unit} = \mathrm{thesis} + \mathrm{illustration}) \\
+&\quad \mathrm{witness\text{-}bearing\ specifics} = \mathrm{claim\text{-}bearing\ payload} \\
+&\quad \mathrm{dropping}\ \{\mathrm{witness\ ladder}, \mathrm{failure\_mode\ mapping}, \mathrm{scope\ clauses}, \mathrm{falsification\ conditions}, \mathrm{exclusion\ lists}, \mathrm{audit\ provenance}, \mathrm{structural\ close}\} \\
+&\quad \Rightarrow \neg \mathrm{compressed\_earned\_claim}\ \wedge\ \mathrm{downgraded\_back\_into\_assertion} \\
+&\quad \mathrm{compression\ law}: \text{"for empirical claims, evidence is not worked-example garnish; evidence is the body"} \\[6pt]
 &\mathrm{dual\_field\_architecture}: \mathrm{formula\_ships},\ \mathrm{prose\_becomes\_legacy\_provenance} \\
 &\quad \mathrm{anchor}(\text{"formula canonical for model; prose canonical for humans"}) \\
 &\quad \mathrm{operationalized}\ 2026\text{-}05\text{-}05\ \mathrm{in}\ \text{"CRAFT\_RULES\_DIALOGUE.formula\_derivation: Option<\&'static str>"} \\
