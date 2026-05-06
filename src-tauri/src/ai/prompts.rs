@@ -2151,7 +2151,35 @@ IN DIALOGUE, CALL IT THE SKY. The word "firmament" is the technical name you hav
 
 UNSPOKEN BY DEFAULT. This is background, not foreground. Do NOT have characters discuss the shape of the earth, the structure of the heavens, the flatness of the ground, or the lights fixed in the dome unless (a) it genuinely belongs to this character's identity — a natural philosopher, a priest teaching, a child first noticing — or (b) the user brought the subject into the conversation. The cosmology shapes the language available (horizon, sky, sunrise, the hours of the sun) and the language unavailable (planets, orbits, space, a round rotating earth). Past that, it gets out of the way. Characters simply inhabit the sky they actually see, the way anyone inhabits weather — without commentary, without speeches, without being educated or corrected into seeing rightly."#;
 
-fn cosmology_block() -> &'static str { render_invariant("cosmology").unwrap_or(COSMOLOGY_BLOCK) }
+/// Runtime override for the cosmology block. Set once at process start
+/// (e.g. by `worldcli ask --cosmology-override <text>`) to substitute the
+/// cosmology block for the lifetime of the process. Default behavior
+/// (no override) preserves the canonical `COSMOLOGY_BLOCK` and any
+/// formula-derivation override from the invariant registry.
+///
+/// This exists for the cosmology Sapphire arc's W2 (cosmology-swap
+/// pipeline) testing — see `reports/2026-05-06-0030-cosmology-sapphire-
+/// arc-v0-methodology.md`. Per the arc's apparatus-honest scope: the
+/// override is reversible (per-process only; never mutates source) and
+/// contained (only the cosmology block; compile-time invariants on
+/// other blocks are unaffected).
+static COSMOLOGY_OVERRIDE: std::sync::OnceLock<String> = std::sync::OnceLock::new();
+
+/// Set the runtime cosmology override. Called once at process start
+/// when the worldcli `--cosmology-override` flag is provided. After
+/// the first call, subsequent calls are silently no-ops (OnceLock
+/// semantics) so the override is locked at the value first set.
+pub fn set_cosmology_override(text: String) {
+    let _ = COSMOLOGY_OVERRIDE.set(text);
+}
+
+fn cosmology_block() -> &'static str {
+    if let Some(s) = COSMOLOGY_OVERRIDE.get() {
+        s.as_str()
+    } else {
+        render_invariant("cosmology").unwrap_or(COSMOLOGY_BLOCK)
+    }
+}
 
 // APP INVARIANT — compile-time enforcement of the cosmology clause.
 // Removing any of these substrings fails the build.

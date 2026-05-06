@@ -1244,6 +1244,17 @@ enum Cmd {
         /// <=20 words, no stage business unless physically required.
         #[arg(long, default_value_t = false)]
         short_mode: bool,
+        /// Override the project's COSMOLOGY_BLOCK at probe-time only.
+        /// Default (flag absent): canonical biblical-cosmology block ships.
+        /// Used by the cosmology Sapphire arc (PR #38) to test whether
+        /// 𝓒 := Firmament_enclosed earth is empirically load-bearing for
+        /// substrate behavior — see reports/2026-05-06-0030-cosmology-
+        /// sapphire-arc-v0-methodology.md. The override is per-process
+        /// only; it never mutates source. Compile-time invariants on
+        /// other blocks (Mission Formula, Custodiem, agape, truth-test)
+        /// are unaffected.
+        #[arg(long, value_name = "TEXT")]
+        cosmology_override: Option<String>,
     },
     /// Simulate a short back-and-forth between the per-world user persona
     /// (from user_profiles in DB) and an in-world character.
@@ -2220,7 +2231,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_refresh_anchor(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
-        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, fence_pipeline, group_chat, with_momentstamp, momentstamp_override, short_mode } => {
+        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, fence_pipeline, group_chat, with_momentstamp, momentstamp_override, short_mode, cosmology_override } => {
+            // Cosmology Sapphire arc (PR #38): swap COSMOLOGY_BLOCK at
+            // probe-time when --cosmology-override is provided. Per-
+            // process only; reversible; does not mutate source. See
+            // reports/2026-05-06-0030-cosmology-sapphire-arc-v0-
+            // methodology.md for the arc context.
+            if let Some(ref text) = cosmology_override {
+                app_lib::ai::prompts::set_cosmology_override(text.clone());
+            }
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
