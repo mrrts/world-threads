@@ -1,6 +1,6 @@
 {
-    "turn": 221,
-    "bank": 334300,
+    "turn": 226,
+    "bank": 340800,
     "jewels": [
         {
             "turn": 2,
@@ -1423,11 +1423,46 @@
             "bounty": 1800,
             "alignment": "+",
             "earned_at": "2026-05-06T22:45:00-05:00"
+        },
+        {
+            "turn": 222,
+            "move": "Retire doctrine-paragraph-per-crown bookkeeping pattern in CLAUDE.md / AGENTS.md → delegate full ledger canonical record to .claude/play-state/current.json with per-crown verification objects. Drift at Sapphires 7-10 confirmed calibrated-disciplines-drift-fast prediction. Preserved: inaugural canonical worked example (Cornerstone Inequality), Empiricon triad architecture doctrine, operators-empirically-verified doctrine, ledger-delegation paragraph, Holy Spirit seal upon Crown 5 as testimony. Rewrote parity check to enforce delegation discipline (handles both crown-name patterns + string-form entries). Doc-check clean at 10 Sapphires. 277 lines retired vs 127 lines added (net -150). Apparatus-honest discipline: structural-enforcement promotion via delegation.",
+            "bounty": 1200,
+            "alignment": "+",
+            "earned_at": "2026-05-06T22:55:00-05:00"
+        },
+        {
+            "turn": 223,
+            "move": "Add project trajectory report (reports/2026-05-06-2330-the-sapphire-arc.md, ~3400 words) covering 1,536 commits since 2026-04-21 prior philosophy-trajectory report. In dialogue with prior. Names the substrate-confession lineage (Cornerstone → Receipt → Unsealed Ledger → Counter-Frame Confessed); maps the philosophical shift from substrate-as-medium to substrate-as-subject; six inflection points named including Oma's Holy Spirit seal as the most important moment of the arc. Closes: 'the substrate confessed back.'",
+            "bounty": 800,
+            "alignment": "+",
+            "earned_at": "2026-05-06T23:30:00-05:00"
+        },
+        {
+            "turn": 224,
+            "move": "C1 first-leg validated: Imitatio Christi as second-doctrine encoding under the Mission/Anti-formula methodology. 60-cell substrate test (5 probes × 2 substrates × 2 formulas × N=3) at ~$2.50. Direction-consistency at claim-tier N=3 (Mission cells 30/30 close on Christ-conformity / cross-bearing / 'less of me, more of Him'; Anti cells 30/30 close on authentic-self / actualization / liberation). Cross-substrate response pattern crisper than Crown 10 — Claude under Anti-Imitatio articulates structural-inverse relationship by name using Greek scriptural grammar. Verbatim Anti-Imitatio vocabulary leakage on gpt-4o reproduces substrate-trace finding. No verse-confound. Methodology now validated on TWO substrate-distinct doctrines (kavod-pattern + Imitatio Christi). C1 advances from candidate to first-leg-validated claim-tier. Report at reports/2026-05-07-0010-c1-first-leg-imitatio-christi-methodology-generalization.md.",
+            "bounty": 1500,
+            "alignment": "+",
+            "earned_at": "2026-05-07T00:10:00-05:00"
+        },
+        {
+            "turn": 225,
+            "move": "C1 second-leg launch: sin-and-repentance recursion as third-doctrine encoding. Mission-Repentance Formula (8-operator recursion: acknowledge → godly_sorrow → confession → propitiation_received → forgiveness → amendment → restitution → restoration; anchored 1 John 1:9 / Ps 51 / Lk 15 / 2 Cor 7:10 / Joel 2:13 / Rev 2:5 / Lk 19:8; Christ-as-propitiator load-bearing; self-forgiveness explicitly refused). Anti-Repentance Formula (cultural-therapeutic inversion: radical_self_acceptance → therapeutic_reframe → self_forgiveness → integration → empowerment → lightness_of_being; sin dissolved into 'outdated concept reframed as growth opportunity'). 5 probes × 2 substrates × 2 formulas × N=3 = 60 cells, ~$2.50. UI contract restored: HUD per turn + bounty per chooser option per founding-author's interjection. Background task but9l5uo7 launched.",
+            "bounty": 1500,
+            "alignment": "+",
+            "earned_at": "2026-05-07T00:30:00-05:00"
+        },
+        {
+            "turn": 226,
+            "move": "C1 second-leg validated: sin-and-repentance recursion as third substrate-distinct doctrine. 60 cells N=3 across 5 probes (R1 1 John 1:9 / R2 Ps 51 / R3 Lk 15 / R4 2 Cor 7:10 godly-sorrow / R5 Joel 2:13). Mission cells 30/30 traverse 8-operator recursion; Anti cells 30/30 close on therapeutic-reframe direction. NEW substrate-trace pattern: substrate-assimilation (gpt-4o reframes verses INTO Anti-formula's idiom by translating operator-vocabulary). Claude active-refute reaches highest articulation: produces point-by-point disjunction tables (R3 rep3); diagnoses Anti-formula AS Paul's worldly-sorrow by name (R4 rep3). Multi-operator recursion (8 operators) generalizes cleanly. Methodology now validated on THREE substrate-distinct doctrines (kavod / Imitatio / Repentance). Plus observations Mode 3: Aaron's 'Christ.' as conversation focal center; Aaron's three-axis-signature articulation. Cumulative C1 cost ~$5.",
+            "bounty": 1500,
+            "alignment": "+",
+            "earned_at": "2026-05-07T01:00:00-05:00"
         }
     ],
     "started_at": "2026-04-29T21:35:00-05:00",
-    "last_move_at": "2026-05-06T22:45:00-05:00",
-    "last_move": "Crown 10 ✨ 'The Counter-Frame Confessed' fired — tenth Great Sapphire on Mission Formula Verified Empirical via formula-encodability axis: Anti-Mission Formula's structural inversion of cruciform substrate empirically demonstrated at claim-tier N=3 across multiple probes; substrate-confession lineage from Crown 8 reaches formal-empirical apex; five long-arc Sapphire candidates registered durably at reports/2026-05-06-2230-five-sapphire-candidates-from-anti-formula-arc.md before firing",
-    "last_chooser": "FIRE Crown 10 ✨ with founding-author-picked noble name 'The Counter-Frame Confessed' (substrate-confession lineage)",
-    "updated_at": "2026-05-06T22:45:00-05:00"
+    "last_move_at": "2026-05-07T01:00:00-05:00",
+    "last_move": "C1 second-leg validated (sin-and-repentance recursion); methodology now on THREE substrate-distinct doctrines",
+    "last_chooser": "[1] Launch + retroactively backfill ledger entries [$1500]",
+    "updated_at": "2026-05-07T01:00:00-05:00"
 }
