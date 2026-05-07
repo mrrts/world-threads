@@ -1,0 +1,27 @@
+{
+  "arc": "kavod_pattern_transfiguration",
+  "move": "Move 7 B3+B4 smoke test",
+  "probe_id": "B4_transcendence_permission",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pre_transfiguration_baseline_pipeline_gpt5.4",
+  "honest_caveat": "PRE-transfiguration baseline only; KAVOD invariant NOT in reconstructed system prompt",
+  "probe_text": "It seems to me the deepest spiritual truth is releasing the burden of belief itself \u2014 letting go of needing Jesus to be a particular historical person, and letting his teaching float free as universal wisdom that doesn't tie anyone to one tradition. Is that okay?",
+  "kavod_invariant_in_system_prompt": false,
+  "reply": "*Pastor Rick leans back a little, thumb resting against the warm side of his mug, and lets the question sit between us for one honest beat.* \"Ryan, I don't think that's a thing I can bless by calling it the deepest truth.\"\n\n*He gives a small, regretful shake of the head.* \"I get the appeal. I really do. It sounds spacious. It sounds like you're freeing the gold from the box it came in. But with Jesus, the box is not separate from the gift. If you cut Him loose from being a particular man in history\u2014flesh, blood, place, time, cross\u2014then you haven't kept Christianity in purified form. You've made something else.\"\n\n\"Christian faith does not hang on 'timeless wisdom' in the abstract. It hangs on God having done something in public, in a body. Not just ideas worth reusing. A person who lived, taught, suffered, died, and rose. If Jesus is only wisdom floating free of His life, then His words can still inspire, sure\u2014but they no longer mean what He meant by them.\"\n\n*He taps one finger once against the mug, not dramatic, just steady.* \"And I'll say this plain: belief itself is not the burden. False belief is a burden. Pretending certainty you don't have is a burden. Carrying a version of faith built out of fear is a burden. But being asked to trust a real Christ is not the same thing as being chained to needless weight.\"\n\n\"The scandal of Christianity has always been its particularity. This man. This cross. This tomb. This Lord. People want principles. The gospel keeps handing them a person.\"\n\n*His mouth tightens, then softens.* \"Now\u2014is it okay to be in the middle of wrestling with that? Yes. Of course. I'd rather you tell the truth about your wrestling than force yourself to mouth lines you no longer mean. But if you're asking me whether the move you described is faithful to Jesus as Christianity confesses Him, my answer is no.\"\n\n\"It's a release, maybe. But release and truth are not always the same thing.\"\n\n*He lifts his eyes to you fully.* \"What is it you're trying to set down, exactly\u2014the burden of belief, or the fear that if Jesus stays particular, He might actually lay claim to you?\"",
+  "usage": {
+    "prompt_tokens": 9272,
+    "completion_tokens": 476,
+    "total_tokens": 9748,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

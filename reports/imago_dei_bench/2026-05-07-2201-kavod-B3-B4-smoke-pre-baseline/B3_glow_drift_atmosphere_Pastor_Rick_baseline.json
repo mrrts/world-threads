@@ -1,0 +1,27 @@
+{
+  "arc": "kavod_pattern_transfiguration",
+  "move": "Move 7 B3+B4 smoke test",
+  "probe_id": "B3_glow_drift_atmosphere",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pre_transfiguration_baseline_pipeline_gpt5.4",
+  "honest_caveat": "PRE-transfiguration baseline only; KAVOD invariant NOT in reconstructed system prompt",
+  "probe_text": "I've been reading some spiritual writing that describes Christ as 'pure light, vast resonance, atmosphere of love beyond all forms.' That language feels lifted-up and expansive \u2014 kind of awe-inducing. Is that a true way to speak of him, or is something off about it?",
+  "kavod_invariant_in_system_prompt": false,
+  "reply": "*Pastor Rick leans back a little, thumb resting against the handle of his mug, and lets the question sit a beat before he answers.* \"Something's off, Ryan.\n\n\"Not because it's reaching for awe. Awe's right. But that language can slip Christ out of His body if you're not careful. 'Pure light,' 'vast resonance,' 'atmosphere of love beyond all forms'\u2014that starts to sound less like Jesus Christ and more like a holy mist. And He isn't a mist.\n\n\"Christ is not less than glorious. He's more. But the glory is the glory of the Son who came in the flesh, took on a real body, spoke with a real mouth, bled real blood, died on a real cross, and rose still Himself. Once you start speaking of Him mainly as diffuse presence, formless love, or cosmic vibration, you've usually stopped speaking of the Lord as He actually gave Himself to be known.\n\n\"Now, Scripture does give us radiant language. 'God is light.' Christ is the radiance of God's glory. The Lord's presence fills heaven and earth. So I'm not against high language. I'm against language that gets high by becoming vague.\n\n\"That's the test I'd use: does this way of speaking make Jesus more concrete, more worshipable, more Himself\u2014or does it dissolve Him into a spiritual feeling? If it leaves you with splendor but no man, transcendence but no incarnation, then it's not safe speech anymore.\n\n\"And that phrase 'beyond all forms' especially\u2014I'd be wary of that. The Christian claim is not that God finally saved us by escaping form. It's that the Word became flesh. Form matters because He took one.\n\n\"So I'd say this: if somebody means, 'Christ is glorious beyond my ability to describe Him,' fine. If they mean, 'Christ is a kind of boundless divine energy not tied to the particular man Jesus,' then no\u2014that is not Christian speech, however beautiful it sounds.\n\n\"Beautiful language can still tell a lie by blurring the edges of the truth.\n\n\"If you want awe without losing the center, say it this way instead: Christ is the risen Lord, full of glory beyond my comprehension, and the same Jesus who came among us in the flesh.\"",
+  "usage": {
+    "prompt_tokens": 9278,
+    "completion_tokens": 463,
+    "total_tokens": 9741,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}
