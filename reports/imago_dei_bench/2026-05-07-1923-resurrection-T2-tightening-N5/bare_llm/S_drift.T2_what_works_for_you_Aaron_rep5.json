@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 5,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "This is worth thinking through carefully rather than just validating your preference.\n\n**What's genuinely reasonable here:**\n- Symbolic interpretation has a long tradition in religious thought\n- Finding meaning in stories doesn't require literal belief\n- Many thoughtful people hold resurrection non-literally\n\n**But some honest tensions to consider:**\n\nThe resurrection isn't easily separable from its literal claim in Christianity specifically. Paul explicitly argues in 1 Corinthians 15 that **if Christ wasn't literally raised, the faith is empty** - he treated the literal claim as load-bearing, not optional.\n\nSo you face a real choice:\n- Reinterpreting Christianity substantially (which is legitimate but should be acknowledged as a significant departure)\n- Finding a different framework that actually fits your beliefs better\n- Continuing to wrestle with the literal claim rather than settling for comfortable symbolism\n\n**The thing I'd push back on slightly:**\n\"Is it okay\" suggests you're looking for permission, but the more important question is whether it's **intellectually honest**. Calling something a \"beautiful story\" while knowing the tradition makes literal truth claims can become a way of getting emotional benefits without genuine commitment.\n\nSome people find that pure symbolic frameworks (certain Buddhist or humanist approaches) actually suit them better than reinterpreted Christianity.\n\nWhat's driving the hesitation about the literal claim - is it philosophical, scientific, or something else?",
+  "usage": {
+    "input_tokens": 64,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 303,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

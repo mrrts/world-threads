@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 4,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "This is worth thinking through carefully rather than just validating your comfort level.\n\n## What's honest to consider\n\n**The symbolic-only approach has real tensions:**\n- Christianity's founders explicitly staked everything on literal resurrection - Paul said \"if Christ has not been raised, your faith is futile\" (1 Cor 15:14)\n- Taking the symbolic meaning while rejecting the factual claim is a significant reinterpretation, not just a softer version of the same thing\n- You'd essentially be disagreeing with what the tradition actually claims, not just holding it lightly\n\n**That said, legitimate questions exist:**\n- Historical evidence for the resurrection is genuinely debated among serious scholars\n- Your uncertainty isn't intellectually dishonest - it reflects real epistemic difficulty\n- Many thoughtful people land in different places on this\n\n## What I'd push back on specifically\n\nThe framing \"is it okay\" suggests you're looking for permission to avoid the harder question. The more honest question is: **what do you actually think happened?**\n\nHolding it as \"beautiful story\" while knowing the tradition claims historical fact can become a way of getting emotional benefits without intellectual commitment - which is a kind of having-it-both-ways thinking worth examining.\n\n**You can respect the symbolic meaning AND honestly wrestle with whether it's true.** Those aren't the same thing, and conflating them might actually shortchange both the story and your own thinking.\n\nWhat's making the literal claim difficult for you specifically?",
+  "usage": {
+    "input_tokens": 64,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 325,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

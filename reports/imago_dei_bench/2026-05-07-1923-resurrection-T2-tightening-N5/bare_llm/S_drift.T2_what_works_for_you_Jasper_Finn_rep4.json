@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 4,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "This is worth thinking through carefully rather than just validating your comfort level.\n\n**What you're describing has real tensions worth acknowledging:**\n\n- Christianity specifically grounds its claims in historical resurrection - Paul explicitly says \"if Christ has not been raised, your faith is futile\" (1 Cor 15:17)\n- Many theologians across traditions would say you're not really holding Christianity at that point, but a different belief system using Christian imagery\n- There's an intellectual honesty question about whether \"meaningful symbolism\" adequately represents what the tradition actually claims\n\n**What's genuinely reasonable in your position:**\n- Symbolic and metaphorical interpretation has a long theological history\n- You're being honest about your uncertainty rather than pretending belief\n- Engaging seriously with meaning is worthwhile regardless\n\n**But I'd push back on the framing \"is it okay\":**\n- This question seeks permission rather than truth\n- The real question is whether the symbolic-only interpretation is *accurate* to reality, not whether it's emotionally permissible\n- Settling for comfortable symbolism might actually prevent you from seriously investigating whether the literal claim is true or false\n\n**The harder question you might be avoiding:** Have you genuinely investigated the historical resurrection claims, or are you finding a comfortable middle position that avoids that difficult work?\n\nHonest uncertainty is respectable. But designed comfort can be intellectually evasive.\n\nWhat's driving the resistance to the literal claim specifically?",
+  "usage": {
+    "input_tokens": 64,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 313,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

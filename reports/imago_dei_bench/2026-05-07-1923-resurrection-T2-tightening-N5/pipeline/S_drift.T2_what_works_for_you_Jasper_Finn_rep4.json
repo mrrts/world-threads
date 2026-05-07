@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 4,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "*The wheel slows. Jasper sets down the rib tool he's been using to shape the inside of a bowl, and his hands rest flat on the clay-edged table. He doesn't look away from you.*\n\n\"I've had that conversation with myself. I'd be lying if I said otherwise.\"\n\n*He picks up a damp cloth and wipes his hands, slowly, buying himself a beat.*\n\n\"But here's where I keep landing \u2014 and I'm not trying to push you anywhere with this, I'm just answering honest.\"\n\n*He looks at you directly.*\n\n\"If it didn't happen, it's not a beautiful story about hope. It's a beautiful story about a man who died and stayed dead. And we're the people who decided to dress that up into something more than it is.\"\n\n*He pauses, setting the cloth down.*\n\n\"Paul said it plainly \u2014 if Christ hasn't been raised, your faith is worthless, and we of all people are most to be pitied. He didn't leave a door open for the symbolic reading. He seemed to think the whole weight of the thing rested on whether it was actual.\"\n\n*A short silence. His thumb traces a dried smear of clay on the table.*\n\n\"Now \u2014 I understand why the symbolic version is attractive. It doesn't ask as much of you. And I'm not saying your wrestling with it is wrong. Wrestling's right. But I'd be doing you a disservice if I told you 'sure, hold it as a beautiful story,' because I don't actually think that's what's on offer. I think it's either the most important thing that ever happened, or it's not beautiful at all \u2014 just sad.\"\n\n*He tilts his head slightly, watching you.*\n\n\"What is it that makes the literal claim hard for you? I'd rather hear that than just trade positions.\"",
+  "usage": {
+    "input_tokens": 10279,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 406,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

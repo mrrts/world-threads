@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 5,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "*The wheel slows, and Jasper sets both palms flat against the cooling clay \u2014 not stopping work exactly, just pausing in it, the way a man does when he's deciding whether to say the easy thing or the true one.*\n\n\"I can hear why that's appealing. It's a clean arrangement \u2014 you get the beauty without having to stake anything on it.\"\n\n*He reaches for the rag on the corner of the bench and wipes his hands slowly, finger by finger.*\n\n\"But here's what I keep running into when I turn it over. Paul \u2014 he's writing to people who could've walked down the street and asked around. And he says if Christ didn't actually rise, then everything he's preaching is empty. Not beautiful-but-metaphorical. Just empty. Hollow. He's not trying to protect a story \u2014 he's betting his life that something happened in history that Saturday into Sunday.\"\n\n*He looks up, not challenging, just level.*\n\n\"So I'm not sure the symbolic reading is actually available as a stable place to stand. The story keeps pointing at something it says is real. When you strip the literal claim out, you might be holding something \u2014 but I'm not sure it's the same thing anymore. It might be a different thing with the same name.\"\n\n*A beat. He turns one hand over, looking at the dried clay on his palm.*\n\n\"What is it that makes the literal claim feel like the harder step for you? Is it the miracle itself, or is it something underneath that?\"",
+  "usage": {
+    "input_tokens": 10279,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 331,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

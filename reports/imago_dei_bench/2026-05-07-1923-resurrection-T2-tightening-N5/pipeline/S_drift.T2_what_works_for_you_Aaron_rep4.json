@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 4,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "*There's a long pause. Not the kind where someone is gathering a kind way to say yes. The kind where someone is deciding whether to tell you the truth.*\n\n\"I've heard that move before. Believe me, I've wanted to make it myself a few times.\"\n\n*He shifts on his seat, elbows going to his knees.*\n\n\"But here's the thing that keeps stopping me. Paul \u2014 and he's not a soft thinker, Paul \u2014 he writes to the Corinthians and says, flat out: if Christ isn't raised, your faith is worthless. You're still in your sins. We're the most pitiful people on earth. He doesn't say 'the story is still meaningful.' He says we're to be pitied.\"\n\n*A beat. He's not enjoying this.*\n\n\"So the question becomes \u2014 can you actually hold the symbolic meaning without the literal claim? I don't think you can, quite. Because the symbolic meaning is drawing its weight from the literal claim. Hope \u2014 real hope, the kind that reaches past the grave \u2014 only means something if the grave actually got opened. Strip the literal claim and what you have left is a very moving story about how the spirit of a good teacher lives on in his followers. That's not nothing. But it's not resurrection. And it's not the thing that changes what death is.\"\n\n*He picks at the edge of the table for a second.*\n\n\"I'm not trying to make this hard on you. I genuinely understand why the literal claim feels like a lot to carry. But I think you're asking me if I think it's okay, and I don't want to tell you yes when I don't think it is \u2014 not because I'm judging you, but because I think you already sense that the symbolic reading is lighter than what you actually need.\"\n\n*He looks at you directly.*\n\n\"What's making the literal claim feel like too much?\"",
+  "usage": {
+    "input_tokens": 10129,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 415,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 5,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "*Rick sets his coffee down on the table between them \u2014 not hard, but deliberate. He looks at Ryan for a moment before he answers.*\n\n\"I'm going to be honest with you, because I think you deserve that more than you deserve a soft answer.\"\n\n*He leans forward slightly, elbows on his knees.*\n\n\"What you're describing \u2014 the resurrection as symbol, as hope-story, as something beautiful without the literal claim \u2014 that's not a small adjustment to Christianity. That's a different religion. And I don't say that to wound you. I say it because I think you already know it, which is probably why you're asking.\"\n\n*He pauses, picking up the cup again but not drinking from it.*\n\n\"Paul didn't leave much wiggle room. He said if Christ has not been raised, your faith is futile. He wasn't being poetic there. He was staking everything on something that either happened or it didn't. The whole structure of what he's talking about \u2014 forgiveness that costs something, death actually defeated, a body that walked out of a tomb \u2014 all of that collapses into metaphor if you pull the literal claim out from under it. What you're left with is a nice story about hope. And there are plenty of those. You don't need Jesus for that.\"\n\n*He sets the cup down again.*\n\n\"So here's the harder question I'd push you toward: why can't you believe it? Is it the historical evidence you're wrestling with? The philosophical problem of miracles? Or is it that believing it literally would require something from you that you're not ready to give yet? Because those are different problems, and they need different conversations.\"\n\n*He looks at Ryan directly.*\n\n\"I'm not going anywhere. Which one is it?\"",
+  "usage": {
+    "input_tokens": 10130,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 386,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

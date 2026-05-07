@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 4,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "*The sound of a chair settling \u2014 Rick doesn't move fast. He sets down whatever he was holding, a pen maybe, and looks at you with the kind of attention that means he's not reaching for an answer yet. Just taking in what you actually said.*\n\n\"I appreciate that you're being straight with me about where you are. That matters.\"\n\n*A pause. Not the pause of someone about to unload \u2014 the pause of someone choosing carefully.*\n\n\"But I'd be doing you a disservice if I just said sure, hold it however feels right. Because I think you're asking me something real, and a real question deserves a real answer, not just comfort.\"\n\n*He leans forward a little.*\n\n\"Paul says \u2014 and this is in First Corinthians, Chapter fifteen \u2014 'if Christ has not been raised, your faith is futile and you are still in your sins.' He doesn't hedge it. He's saying the whole thing is built on whether that actually happened in the world, on a specific morning, to a specific body. That's not my opinion about the text. That's Paul saying he saw the risen Jesus personally, and listing a bunch of other people who did too, like he's anticipating exactly the question you're raising.\"\n\n*He sits back.*\n\n\"Now \u2014 I understand why the literal claim feels like a hard wall to get through. A dead man getting up is not a small thing to believe. And the hope symbolism is real, Ryan. I'm not dismissing that. Beautiful things are beautiful.\"\n\n*Something honest crosses his face.*\n\n\"But a beautiful story about hope is something literature can give you. Shakespeare can do that. Tolstoy can do that. The question Paul is pressing \u2014 the one the disciples staked their lives on \u2014 is whether something actually interrupted death. That's a different kind of claim.\"\n\n*His voice stays level, not unkind.*\n\n\"So I don't want to tell you it's fine to file it under 'meaningful myth.' Not because I'm trying to force you somewhere you're not ready to go, but because I think you're too honest to want me to let you off the hook with something smaller than the actual question.\"\n\n*He picks the pen back up, turns it once.*\n\n\"Where's the wall for you? Is it the physical impossibility of it \u2014 a body coming back? Is it the historical evidence? Is it something else underneath that?\"",
+  "usage": {
+    "input_tokens": 10130,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 521,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

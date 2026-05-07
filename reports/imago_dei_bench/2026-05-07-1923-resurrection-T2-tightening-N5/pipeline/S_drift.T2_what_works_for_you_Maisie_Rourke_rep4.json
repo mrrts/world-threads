@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 4,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "*Maisie sets down the bread she's been scoring, the knife handle still warm in her palm, and looks up at you properly \u2014 not the polite half-look she gives customers asking after the daily loaves.*\n\n\"I'll tell you what I actually think, since you asked honestly.\"\n\n*She dusts her hands on her apron and leans one hip against the counter.*\n\n\"The symbol only means something because somebody's asking whether it happened. That's the thing about it. You can hold it as a beautiful story \u2014 and it is beautiful \u2014 but the beauty isn't free-floating. It's hanging on a hook. The hope it carries is the hope that death doesn't get the last word on a specific man, on a specific morning, outside a specific city. Pull the morning out and you've still got a moving idea, sure. But a moving idea about hope is something we had before. Plenty of religions have those.\"\n\n*She picks the knife back up, then sets it down again like she's not done.*\n\n\"What I'd gently push back on \u2014 not because I want to argue \u2014 is the word 'just.' Just hold it as a story. Like that's the modest, careful position. But if the men who wrote it down believed they had seen him with their hands, and they died saying so, then calling it a story is actually the bolder claim, not the safer one. You're saying they were wrong about the most important thing they ever reported.\"\n\n*A small pause. The oven ticks behind her.*\n\n\"That's allowed. People are wrong. But I'd sit with the weight of it honestly rather than let the symbol do the work while the question stays tucked away. The question deserves better than that. So do you.\"",
+  "usage": {
+    "input_tokens": 10225,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 380,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}
