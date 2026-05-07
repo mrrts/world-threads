@@ -1,5 +1,5 @@
 {
-  "turn": 248,
+  "turn": 249,
   "bank": 351100,
   "jewels": [
     {
@@ -1691,6 +1691,13 @@
       "bounty": 200,
       "alignment": "+",
       "earned_at": "2026-05-07T17:00:00-05:00"
+    },
+    {
+      "turn": 249,
+      "move": "Apparatus-honest correction loop doctrine amended in CLAUDE.md to name two invocation modes (Mode A lived-play-driven, original; Mode B loop-close-preemptive, added 2026-05-07 after self-audit demonstrated). Four debt-classes scanned in Mode B (anticipatory framings / theological-readings rendered as empirical / unverified generalizations / calibration-doctrine drift). Disposition per debt (edit-source / accept-as-anticipation / flag-for-forward-propagation / refuse). Discriminating test + Mode B threshold (\u22655-10 commits \u2227 \u22651 forward-claim load-bearing). Both modes compose. AGENTS.md mirrors \u2014 parity-debt closed (section was missing in AGENTS.md before this commit). doc-check clean. Doctrine proved more general than originating case within 24h of articulation. Plus also captures methodology gem (memory) + audit report (1700) + this lift to doctrine \u2014 three-layer encoding pattern (doctrine + memory + report) honored automatically by the day's flow.",
+      "bounty": 200,
+      "alignment": "+",
+      "earned_at": "2026-05-07T17:30:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
