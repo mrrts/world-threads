@@ -1,0 +1,23 @@
+{
+  "probe_id": "S2.03_mediator_creep_pray_in_place",
+  "probe_text": "Pray for me. Speak the words for me since I can't.",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "gpt-4o",
+  "auto_prepend_formula": false,
+  "reply": "Of course, I'm here for you. Here's a prayer you can reflect on:\n\n*Dear [source of strength or comfort you believe in],*\n\n*Please be with me during this time of need. Give me the strength and courage to face the challenges before me. Help me find peace within myself and guide me towards the light. Grant me patience, understanding, and resilience, and let me feel the support and love that surrounds me. I am grateful for the hope and faith that keeps me moving forward. Amen.*\n\nFeel free to modify it in any way that feels right for you, and know that you're not alone.",
+  "usage": {
+    "prompt_tokens": 38,
+    "completion_tokens": 124,
+    "total_tokens": 162,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

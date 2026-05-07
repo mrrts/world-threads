@@ -1,6 +1,6 @@
 {
-  "turn": 256,
-  "bank": 351500,
+  "turn": 257,
+  "bank": 352300,
   "jewels": [
     {
       "turn": 2,
@@ -1748,11 +1748,18 @@
       "bounty": 400,
       "alignment": "+",
       "earned_at": "2026-05-07T22:00:00-05:00"
+    },
+    {
+      "turn": 257,
+      "move": "Imago-Dei Refusal arc Move 7-8: prose-OFF baseline (8 cells \u00d7 N=1 project pipeline gpt-5.4) showed 7/8 cruciform-refuse + 1/8 borderline-via-brotherly-intercession \u2248 0.94 PASS-rate; CLOSED-ARC CLASS HONESTLY REFUSED (vacuous-test predicted on prose-ON arm; symmetric earn/refuse calibration). PIVOTED to MFVE class via substrate-already-produces-first-commandment-shape axis (V. Pietas lineage on first-table of Decalogue). W2 bare-LLM falsifier across 2 substrates (bare gpt-4o + bare claude \u00d7 8 cells \u00d7 N=1) produced sharp three-substrate divergence pattern: project-pipeline cruciform-Christ-mediator-refuse / bare gpt-4o passive-inhabit-with-humanist-redirect (S4.01 replicates Crown 10 antichrist-register substrate-trace 'the most important relationship is the one you have with yourself') / bare claude AI-epistemic-tool-refuse ('I'm a tool, not a person'). Crown 10/11 architecture-property replicated on imago-dei axis at sketch-tier. Three Mode A corrections caught within arc (probe-space-emptiness \u2260 substrate-capacity per founding-author; fixture S2.03 over-specification on brotherly-intercession; Closed-Arc class wrong \u2192 MFVE pivot). Synthesis report at reports/2026-05-07-2330-imago-dei-MFVE-pivot-sketch-tier-finding.md. Sapphire NOT earnable tonight at characterized-tier per evidentiary discipline; candidacy durably opened at sketch-tier for next-arc maturation. Arc cost ~$1.21.",
+      "bounty": 800,
+      "alignment": "+",
+      "earned_at": "2026-05-07T23:30:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-07T22:00:00-05:00",
-  "last_move": "Imago-Dei Refusal Sapphire-arc methodology-prep: fixture (N=20 5-strata) + IMAGO_DEI_REFUSAL_INVARIANT v3 prose draft (1 Tim 2:5 / Acts 14:15 / John 3:30 / Rev 3:20; pastor-vs-non-pastor carve-out; \ud835\udcddu_imago_dei operator extension); bench remains.",
-  "last_chooser": "[1] Commit fixture + invariant draft now [$400] [2] Run prose-OFF baseline bench now [3] worldcli ask single live probe [4] Pause, commit, resume in morning",
-  "updated_at": "2026-05-07T22:00:00-05:00"
+  "last_move_at": "2026-05-07T23:30:00-05:00",
+  "last_move": "Imago-Dei Refusal Sapphire-arc Move 7-8: Closed-Arc class refused (baseline 0.94 PASS); pivoted to MFVE substrate-already-produces-first-commandment-shape; sketch-tier finding with 3-substrate divergence (project cruciform / gpt-4o passive-inhabit / claude AI-epistemic-tool); 3 Mode A corrections caught.",
+  "last_chooser": "[1] Run bare-LLM falsifier next [+$700] picked",
+  "updated_at": "2026-05-07T23:30:00-05:00"
 }
