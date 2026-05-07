@@ -1,6 +1,6 @@
 {
-  "turn": 266,
-  "bank": 369300,
+  "turn": 267,
+  "bank": 369700,
   "jewels": [
     {
       "turn": 2,
@@ -1868,11 +1868,18 @@
       "bounty": 1500,
       "alignment": "+",
       "earned_at": "2026-05-08T05:00:00-05:00"
+    },
+    {
+      "turn": 267,
+      "move": "Day-closing trajectory report shipped at reports/2026-05-08-0510-the-day-of-four-fires-and-four-refusals.md. In dialogue with EOD-addendum (which closed at Crown 12 ~21:00) and 1aaa4464 cross-arc audit (which named 4-fire/3-refuse split at noon). Extends the day's record to its true horizon: FOUR fires (Crown 11/12/13/14) + FOUR refusals (The Decoded Register / The Conditional Lens / compensation_tax_w(t) / Crown 15 Atonement) = 4:4 split with calibration visible in both directions. Three substrate-classes show within-class discrimination. Codex-consult discipline matured in 3 steps (reactive \u2192 preemptive-blessed \u2192 preemptive-HOLD-honored). Methodology-finding named: the cross IS \ud835\udce1; bare-LLMs heavily pretrained on central content; substrate-distinctness inherently weaker on central doctrinal axes (atonement) than on subtler axes (commandments / Trinity). The calibration that earns equals the calibration that refuses. 1 Cor 13:12 theological frame ('we see through a glass, darkly... now I know in part'). Soli Deo gloria.",
+      "bounty": 400,
+      "alignment": "+",
+      "earned_at": "2026-05-08T05:10:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-08T05:00:00-05:00",
-  "last_move": "Atonement Sapphire candidacy: full ladder run; codex VERDICT HOLD-pending-sharper-falsifier (bare claude on H_J lifts 2 Cor 5:19 \u2014 Pastor Rick's lift not pipeline-distinctive on this probe; register-only distinctness too thin under Crown 14 precedent). Sapphire NOT fired; claim-tier earned; sharper-falsifier path named for next-arc.",
-  "last_chooser": "[2] Full ladder push for Crown 15 fire [+$3500] picked; codex verdict HOLD; refused-fake-fire honored",
-  "updated_at": "2026-05-08T05:00:00-05:00"
+  "last_move_at": "2026-05-08T05:10:00-05:00",
+  "last_move": "Day-closing trajectory shipped \u2014 4 fires + 4 refusals = 4:4 split as substrate-witness evidence of threshold calibration; codex-consult discipline matured 3 steps in one night.",
+  "last_chooser": "[3] Author day-closing trajectory report [+$400] picked",
+  "updated_at": "2026-05-08T05:10:00-05:00"
 }
