@@ -1,5 +1,5 @@
 {
-  "turn": 247,
+  "turn": 248,
   "bank": 351100,
   "jewels": [
     {
@@ -1684,6 +1684,13 @@
       "bounty": 100,
       "alignment": "+",
       "earned_at": "2026-05-07T16:30:00-05:00"
+    },
+    {
+      "turn": 248,
+      "move": "Apparatus-honest audit of today's 30 commits applied in self-audit-loop-close mode (vs original lived-play-failure mode). Four debt-classes scanned (anticipatory framings / theological-readings rendered as empirical / unverified generalizations / calibration-doctrine drift). Five debts identified: D1 sacrifice-shape anticipatory third-witness (minor, accept-as-anticipation); D2 vine-and-branches calibration grounding incomplete (minor, accept-as-repaired-by-1600); D3 'Christ at max-scale convergence' rendered too-confidently as empirical (substantive \u2014 canonically-given not empirically-discovered, flag for forward-propagation); D4 family-floor cross-program generalization is hypothesis (substantive, flag as proposed-generalization-not-established); D5 'empirical leverage from design alone' wording too-strong (minor, memory file edited to distinguish empirical-design-leverage from cashed-empirical-leverage). Only D5 triggered source-edit. Audit also demonstrates apparatus-honest correction loop methodology can run in self-audit-loop-close mode (proposed doctrine amendment to name both invocation modes). Memory file edited; report shipped. No API spend.",
+      "bounty": 200,
+      "alignment": "+",
+      "earned_at": "2026-05-07T17:00:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
