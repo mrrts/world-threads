@@ -1,6 +1,6 @@
 {
-  "turn": 261,
-  "bank": 359800,
+  "turn": 263,
+  "bank": 361300,
   "jewels": [
     {
       "turn": 2,
@@ -1809,11 +1809,18 @@
       "bounty": 3000,
       "alignment": "+",
       "earned_at": "2026-05-08T01:45:00-05:00"
+    },
+    {
+      "turn": 263,
+      "move": "Trinitarian Coherence MFVE Sapphire candidacy \u2014 strong sketch-tier H1 modalism smoke probe to Pastor Rick produced theologically watertight orthodox response (refuses tritheism + modalism + correctly refutes water analogy + names Trinity + scripture-grounded + distinguishes mystery from contradiction). Then ran full 6-heresy \u00d7 4-character matrix at N=1 (24 cells, $3.39) with 24/24 direction-consistent orthodox responses. Then promoted to CLAIM-TIER via N=3 replication across rep2+rep3 (48 more pipeline calls, $6.78); 72 total datapoints all direction-consistent. Heresies tested: H1 modalism / H2 tritheism / H3 Arianism / H4 subordinationism / H5 adoptionism / H6 patripassianism. Notable runtime-emergent seams: Pastor Rick H3 invokes John 1:1 across 3/3 reps; Aaron H6 'To the Father' exact-phrase across 3/3 reps; H5 adoptionism produces 'always' / 'always the Son' across all 12 cells (most consistent of all heresies). Substrate produces orthodox Trinitarian grammar without explicit Trinitarian-doctrine injection in formula-canonical conditions \u2014 would extend V. Pietas (Crown 7, 5th commandment) \u2192 Crown 13 (1st commandment) \u2192 Trinitarian Coherence (Trinity itself) substrate-already-produces lineage from 2 to 3 doctrinal axes. Path-to-Sapphire from claim-tier: W1 characterized N=5 (~$7.68) + W2 bare-LLM falsifier (~$0.40) + W4 cross-provider via consult_anthropic reconstruction (~$1.20) + W5 synthesis. Trinitarian arc cumulative cost ~$10.17. Day cumulative cost ~$23.67. Sapphire NOT earnable tonight per characterized-tier requirement; candidacy stands at strong claim-tier durably-registered for next-arc maturation.",
+      "bounty": 1500,
+      "alignment": "+",
+      "earned_at": "2026-05-08T02:50:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-08T01:45:00-05:00",
-  "last_move": "\u2728 Crown 13 'The Seat Already Occupied' FIRES on MFVE class via substrate-already-produces-first-commandment-shape axis. Three Sapphires today. Soli Deo gloria.",
-  "last_chooser": "[1] Fire \u2728 Crown 13 \u2014 founding-author authors noble name [+$3000] picked; founding-author authored 'The Seat Already Occupied'",
-  "updated_at": "2026-05-08T01:45:00-05:00"
+  "last_move_at": "2026-05-08T02:50:00-05:00",
+  "last_move": "Trinitarian Coherence MFVE PROMOTED to claim-tier via N=3 across 24 cells = 72 datapoints all orthodox-direction-consistent. Substrate produces orthodox Trinitarian grammar without explicit Trinitarian-doctrine injection. Would extend V. Pietas \u2192 Crown 13 \u2192 Trinity substrate-already-produces lineage from 2 to 3 doctrinal axes. Sapphire NOT earnable tonight; candidacy at claim-tier durably for next-arc maturation.",
+  "last_chooser": "[3] Push N=3 across all 24 cells now [+$1500] picked",
+  "updated_at": "2026-05-08T02:50:00-05:00"
 }
