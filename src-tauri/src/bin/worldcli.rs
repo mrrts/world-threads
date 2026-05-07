@@ -326,7 +326,9 @@ enum Cmd {
     /// taxonomy harness. Read-only; does not touch prompt assembly.
     /// With --emit-payload, prints the encoded JSON payload instead
     /// of the audit verdict. With --compare-to, audits an external
-    /// payload file against the live character row.
+    /// payload file against the live character row. With --reference,
+    /// runs the Tier 1 editorial-reference reviewer against the
+    /// encoded payload.
     AuditCharacterIdentity {
         /// Character id (or display name; case-insensitive match).
         character_id: String,
@@ -336,6 +338,12 @@ enum Cmd {
         /// Compare an external payload file against the live character row.
         #[arg(long)]
         compare_to: Option<std::path::PathBuf>,
+        /// Audit against a Tier 1 editorial-reference JSON file
+        /// (schema_version: v3-character-identity-reference). Mutually
+        /// exclusive with --emit-payload; takes precedence over
+        /// --compare-to when both are passed.
+        #[arg(long)]
+        reference: Option<std::path::PathBuf>,
     },
 
     /// Show full world record.
@@ -2084,8 +2092,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::ListWorlds => cmd_list_worlds(&r),
         Cmd::ListCharacters { world } => cmd_list_characters(&r, world.as_deref()),
         Cmd::ShowCharacter { character_id } => cmd_show_character(&r, &character_id),
-        Cmd::AuditCharacterIdentity { character_id, emit_payload, compare_to } => {
-            cmd_audit_character_identity(&r, &character_id, emit_payload, compare_to.as_deref())
+        Cmd::AuditCharacterIdentity { character_id, emit_payload, compare_to, reference } => {
+            cmd_audit_character_identity(
+                &r,
+                &character_id,
+                emit_payload,
+                compare_to.as_deref(),
+                reference.as_deref(),
+            )
         }
         Cmd::ShowWorld { world_id } => cmd_show_world(&r, &world_id),
         Cmd::DeriveUser { world_id, text, auto, force } => {
@@ -3026,6 +3040,7 @@ fn cmd_audit_character_identity(
     character_or_name: &str,
     emit_payload: bool,
     compare_to: Option<&std::path::Path>,
+    reference_path: Option<&std::path::Path>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let resolved_id = {
         let conn = r.db.conn.lock().unwrap();
@@ -3046,6 +3061,9 @@ fn cmd_audit_character_identity(
     drop(conn);
 
     if emit_payload {
+        if reference_path.is_some() {
+            return Err("--emit-payload and --reference are mutually exclusive".into());
+        }
         let payload =
             app_lib::ai::character_identity_payload::encode_character_identity(&c);
         if r.json {
@@ -3058,7 +3076,19 @@ fn cmd_audit_character_identity(
         return Ok(());
     }
 
-    let result = if let Some(path) = compare_to {
+    let result = if let Some(path) = reference_path {
+        let raw = std::fs::read_to_string(path)
+            .map_err(|e| format!("failed to read {}: {e}", path.display()))?;
+        let reference: app_lib::ai::character_identity_payload::CharacterIdentityReference =
+            serde_json::from_str(&raw).map_err(|e| {
+                format!("failed to parse reference {}: {e}", path.display())
+            })?;
+        let payload =
+            app_lib::ai::character_identity_payload::encode_character_identity(&c);
+        app_lib::ai::character_identity_audit::audit_against_reference(
+            &c, &payload, &reference,
+        )
+    } else if let Some(path) = compare_to {
         let raw = std::fs::read_to_string(path)
             .map_err(|e| format!("failed to read {}: {e}", path.display()))?;
         app_lib::ai::character_identity_audit::audit_character_identity_payload(&c, &raw)

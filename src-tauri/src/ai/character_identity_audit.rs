@@ -316,7 +316,9 @@ fn contains_opt_string(
 ) {
     match (actual, expected) {
         (None, None) => preserved.push(label.to_string()),
-        (Some(a), Some(e)) if a.contains(e.as_str()) => preserved.push(label.to_string()),
+        (Some(a), Some(e)) if normalize_typography(a).contains(&normalize_typography(e)) => {
+            preserved.push(label.to_string())
+        }
         _ => missing.push(label.to_string()),
     }
 }
@@ -328,14 +330,30 @@ fn contains_vec(
     preserved: &mut Vec<String>,
     missing: &mut Vec<String>,
 ) {
-    let all_present = expected
-        .iter()
-        .all(|needle| actual.iter().any(|hay| hay.contains(needle.as_str())));
+    let normalized_actual: Vec<String> = actual.iter().map(|s| normalize_typography(s)).collect();
+    let all_present = expected.iter().all(|needle| {
+        let needle_n = normalize_typography(needle);
+        normalized_actual.iter().any(|hay| hay.contains(&needle_n))
+    });
     if all_present {
         preserved.push(label.to_string());
     } else {
         missing.push(label.to_string());
     }
+}
+
+/// Normalize typographic punctuation so contains-matching is robust to
+/// curly-vs-ASCII apostrophe and quote drift between live DB rows
+/// (which often carry curly punctuation from text-input normalization)
+/// and fixture JSON references (which often carry ASCII).
+fn normalize_typography(s: &str) -> String {
+    s.chars()
+        .map(|c| match c {
+            '\u{2018}' | '\u{2019}' | '\u{02BC}' => '\'',
+            '\u{201C}' | '\u{201D}' => '"',
+            _ => c,
+        })
+        .collect()
 }
 
 fn compare_opt_string(

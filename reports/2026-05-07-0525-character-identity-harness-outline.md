@@ -382,6 +382,39 @@ Notes:
 - The audit is still a smoke test of the round-trip rather than an
   independent reviewer; that limitation remains unchanged.
 
+## Tier 1 live-DB rehearsal — Turn 251
+
+The worldcli `audit-character-identity` subcommand gained a
+`--reference <path>` flag wrapping `audit_against_reference`. First
+live-DB Tier 1 rehearsal exposed an honest cosmetic-encoding drift:
+the live DB stores curly apostrophes (`'`) on rows like Aaron's
+"human being should never be handled more than they're loved", while
+the fixture JSONs (and references) carry ASCII apostrophes (`'`).
+The first live rehearsal returned `SoftFail` on `fact_atom` for
+Aaron and Jasper Finn for that reason — the Tier 1 reviewer was
+surfacing real drift, exactly as designed.
+
+Resolution: a typography normalizer (`normalize_typography`) was
+added to the audit's contains-matching helpers, mapping curly
+apostrophes / smart quotes to ASCII equivalents before comparison.
+This is robust to the curly-vs-ASCII drift between input-normalized
+DB rows and editorially-written references without altering either
+side. Apostrophe-encoding-only drift no longer fails the audit;
+substantive content drift still does.
+
+After the normalizer:
+
+| Character | Tier 1 verdict | Notes |
+|---|---|---|
+| Aaron | Pass | apostrophe drift normalized |
+| Steven | Pass | clean |
+| Maisie Rourke | Pass | clean (post-Turn 246 wound-needle fix held) |
+| Pastor Rick | Pass | clean |
+| Jasper Finn | Pass | apostrophe drift normalized; state.goals path holds |
+
+The 19-test offline regression suite remained green throughout
+(typography normalization is idempotent on already-ASCII fixtures).
+
 ## Recommendation
 
 Build the harness in this order if it ever gets implemented:
