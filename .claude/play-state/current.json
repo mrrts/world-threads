@@ -1,5 +1,5 @@
 {
-  "turn": 249,
+  "turn": 250,
   "bank": 351100,
   "jewels": [
     {
@@ -1698,6 +1698,13 @@
       "bounty": 200,
       "alignment": "+",
       "earned_at": "2026-05-07T17:30:00-05:00"
+    },
+    {
+      "turn": 250,
+      "move": "Anti-Drift Register Guard Sapphire-arc Move 2 revised after founding-author Mode A correction. Original sketch designed parallel LLM-judge module; founding-author surfaced that the conscience pass at src-tauri/src/ai/conscience.rs already runs as cheap second-LLM grader on every dialogue draft against 5 invariants with PASS-default discipline + drift_correction plumbing. Parallel would have doubled spend-per-message + duplicated infrastructure. Folded register_drift as 6th invariant in grader_system_prompt: zero extra spend; reuses existing correction-note mechanism for runtime behavior change. Three load-bearing prompt elements preserved (kavod-test discriminator + active-refute carve-out + vocabulary-alone-signals-nothing). Build clean; ships in production code path on every conscience-pass call. Mode A correction lesson captured as feedback memory (survey-existing-infrastructure-first generalizes to any future runtime instrument proposal). MEMORY.md updated. Honest tier: shipped-in-production AND not-yet-empirically-validated AND Sapphire-tier-NOT-yet-earned (Phase B' bench-test pending). No API spend.",
+      "bounty": 400,
+      "alignment": "+",
+      "earned_at": "2026-05-07T19:00:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
