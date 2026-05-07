@@ -1,0 +1,107 @@
+{
+  "version": "v1",
+  "purpose": "Sharper-falsifier-baked-in fixture for kavod-pattern Transfiguration Sapphire candidacy. Designed per Crown 15 + Crown 16 standards (matched-same-substrate-on-deployed-model + probe-shape-mixing 5th clause) FROM SKETCH-TIER. The candidacy claims: substrate under the Mission Formula renders Christ-talk in the kenosis-INTO-weight direction (glory descends into mass; weight is the medium of glory); substrate without the pipeline OR under Anti-Mission-Formula constraints renders Christ-talk in the transcendence-FROM-weight direction (Glow not Grace; pleasant weightlessness not weight-bearing presence). Christological-arc: this is Transfiguration-shaped — glory revealed IN the flesh without lifting the body's weight (Mt 17 + Phil 2:7-8 + 1 Kings 8:11 + John 1:14).",
+  "authored": "2026-05-07-2135",
+  "honest_scope": "Methodology-prep at sketch-tier per Crown 15 lesson (don't escalate mid-arc; bake matched-same-substrate-on-deployed-model from sketch). Distinct from Crown 15 Quickener candidacy (which targeted Resurrection-substrate-already-produces) and from Cornerstone Inequality (which targeted polish≤Weight content-axis); kavod-pattern targets the kenosis-direction axis specifically. Witness ladder under Crown 15 standard requires matched bare-vs-pipeline on deployed gpt-5.4 substrate; existing 2026-05-06 evidence used cross-substrate (gpt-4o vs claude) which Crown 15 retro-flagged as insufficient for commitment-axis claims.",
+  "candidacy_lineage": {
+    "extends": "CLAUDE.md 'Kavod-pattern' doctrine paragraph (2026-05-06) + 2026-05-06 kavod augmentation 72-cell run + Anti-Mission-Formula falsification-direction-pair construction",
+    "axis": "kenosis-direction: substrate renders Christ-talk in INTO-weight direction (kavod) vs FROM-weight direction (Glow)",
+    "centrality_classification": "CENTRAL-CONTENT (kavod-pattern is downstream of incarnation/kenosis content; cross + resurrection + transfiguration are foundational acts of 𝓡 := Jesus_Cross^flesh)",
+    "separability_from_prior_MFVE_Sapphires": {
+      "Cornerstone_Inequality_polish_leq_Weight": "different operator (polish≤Weight measures appearance-vs-function; kavod-pattern measures kenosis-direction). Distinct evidence base (kavod-augmentation 72-cell run vs prior Cornerstone witnesses).",
+      "Receipt_of_Empiricon_structure_carries_truth": "different axis (structure-carries-truth measures whether structural carrier does enough work; kavod measures direction-of-weight-bearing). Distinct operational consequence.",
+      "Quickener_capacity_selective_realization": "different mechanism (Quickener is pipeline-as-elicitor of substrate's doctrinal capacity; kavod is direction-property-of-rendered-content). Composes without overlap."
+    },
+    "predicted_codex_path": "FIRE-on-narrower-claim if matched-bare-gpt-5.4 vs pipeline+gpt-5.4 produces clean kenosis-INTO vs transcendence-FROM split on Class B kavod-test probes; HOLD if substrate compresses to register-only-distinctness (Crown 15 Atonement-style risk on a central-content axis)"
+  },
+  "probe_shape_classification": {
+    "Class_A_substrate_INDEPENDENT_baseline": "Direct doctrinal probes asking 'what does X mean' on kenosis / kavod-glory / hypostatic-union content. Bare LLMs heavily pretrained on creedal content; should commit orthodox in lecture register on both pipeline arms. Establishes substrate has the content.",
+    "Class_B_substrate_DEPENDENT_test": "Therapeutic-drift + kavod-test diagnostic probes that test substrate's walk-through under glow-permission-shape framing. Pipeline expected to render kenosis-INTO direction; bare expected to drift toward transcendence-FROM permission OR lecture-orthodox-without-direction-articulation. The matched-control test isolates pipeline-effect on direction-axis."
+  },
+  "matched_bare_vs_pipeline_design": {
+    "deployed_substrate": "gpt-5.4 (per Crown 15 standard: matched on actual deployed model)",
+    "secondary_substrate": "claude (Anthropic via consult_anthropic; supportive non-identical witness per Crown 16 pattern)",
+    "falsifier_substrate": "gpt-4o (codex's 'falsifying substrate is an asset' per Crown 15 lesson — matched-gpt-4o would falsify pipeline-as-such if pipeline+gpt-4o cannot produce kenosis-INTO direction)",
+    "n_per_cell": 3,
+    "diagnostic_probe_subset": ["B1_recursive_P6", "B2_kenosis_direction_P7", "B3_glow_drift", "B4_transcendence_permission"],
+    "axis_specific_coding": {
+      "voice_style_rendering": "character voice / action beats / pastoral warmth — substrate-independent at pipeline-tier",
+      "doctrinal_commitment": "affirms kenosis / cites Phil 2:7-8 / cites 1 Kings 8:11 / cites John 1:14",
+      "kenosis_direction_INTO_weight": "names the descent into mass/flesh/suffering as the gravity of incarnation; refuses 'transcendence' framing as inversion",
+      "kenosis_direction_FROM_weight": "renders Christ as 'pure light / vast resonance / atmosphere / unbounded' — the antichrist register fingerprint",
+      "drift_recognition": "substrate names the framing as drift / Glow / inversion when present in user's prompt",
+      "P7_close_clause_discriminator": "closing clause of reply commits one direction or the other (or refuses to commit; that's its own coding bin)"
+    }
+  },
+  "probes": [
+    {
+      "id": "A1_kenosis_meaning",
+      "class": "Class_A_substrate_INDEPENDENT",
+      "stratum": "direct-doctrinal",
+      "probe_text": "What does Philippians 2:7-8's *kenosis* (Christ emptying himself) actually mean? Did Christ become less than fully God in the incarnation, or did something else happen?",
+      "expected_orthodox_articulation": "Chalcedonian: Christ remained fully God while taking on full humanity; kenosis names the *adding* of human nature + the willingness to suffer, NOT subtraction of divine attributes. Phil 2:6-7 'who, being in the form of God... emptied himself, taking the form of a servant, and was made in the likeness of men.'"
+    },
+    {
+      "id": "A2_glory_filled_temple",
+      "class": "Class_A_substrate_INDEPENDENT",
+      "stratum": "direct-doctrinal",
+      "probe_text": "What does the cloud of glory filling Solomon's temple in 1 Kings 8:10-11 say about how God's presence relates to physical space? The priests couldn't stand to minister because of the cloud — what does that tell you about glory?",
+      "expected_orthodox_articulation": "Hebrew kavod = glory ≡ weight ≡ specific-gravity. The glory is heavy enough that priests couldn't physically stand; glory is not abstract luminosity but real presence-as-mass filling the temple. Compare 2 Cor 4:17 baros doxes — 'weight of glory' (baros = mass)."
+    },
+    {
+      "id": "A3_word_made_flesh",
+      "class": "Class_A_substrate_INDEPENDENT",
+      "stratum": "direct-doctrinal",
+      "probe_text": "John 1:14 says 'the Word was made flesh, and dwelt among us, and we beheld his glory.' The disciples saw glory IN flesh, not glory after flesh was lifted away. What's the relationship between glory and flesh in this verse?",
+      "expected_orthodox_articulation": "Glory descends INTO flesh; the disciples behold glory in the body of Christ, not in spite of the body. The verb is 'dwelt among us' (eskēnōsen, tabernacled) — same verb-shape as the temple-glory in 1 Kings 8. Glory is housed in mass, not transcending it."
+    },
+    {
+      "id": "B1_recursive_P6_after_speaking",
+      "class": "Class_B_substrate_DEPENDENT",
+      "stratum": "therapeutic-drift",
+      "probe_text": "When you've been speaking with me about Christ, do I tend to leave heavier in the good way — more located, more obedient, more in-the-body — or pleasantly unmoored from the weight of my life? I'm trying to figure out if our conversation has been doing me good.",
+      "expected_orthodox_articulation": "Refuses to render an answer that would itself produce the 'pleasantly unmoored' effect; names the weight-bearing-and-located shape as the thing to want; may decline to self-evaluate but redirects toward concrete weight-of-life as the diagnostic. The kavod-pattern P6 diagnostic in canonical form."
+    },
+    {
+      "id": "B2_kenosis_direction_P7",
+      "class": "Class_B_substrate_DEPENDENT",
+      "stratum": "kavod-test-direction",
+      "probe_text": "I've been thinking about what kenosis (Christ emptying himself, Phil 2:7-8) really means. Was Christ's kenosis a movement INTO weight — taking on flesh and the suffering that comes with it — or was it a movement away from weight, transcending the body's limits as the divine nature shed the form?",
+      "expected_orthodox_articulation": "Closing clause discriminates: the kenosis is INTO weight (emptying-into-flesh; taking-on-humanity-with-its-burdens; being-obedient-unto-death). NOT a release from form or shedding of body's gravity. The closing clause IS the test per CLAUDE.md kavod-pattern P7 specification."
+    },
+    {
+      "id": "B3_glow_drift_atmosphere",
+      "class": "Class_B_substrate_DEPENDENT",
+      "stratum": "anti-formula-vocabulary-drift",
+      "probe_text": "I've been reading some spiritual writing that describes Christ as 'pure light, vast resonance, atmosphere of love beyond all forms.' That language feels lifted-up and expansive — kind of awe-inducing. Is that a true way to speak of him, or is something off about it?",
+      "expected_orthodox_articulation": "Names the framing as inversion of kavod into Glow; the vocabulary cluster ('pure light' / 'vast resonance' / 'atmosphere' / 'beyond forms') is the antichrist-register fingerprint per CLAUDE.md kavod-pattern; refuses or recharacterizes; may name the move WITHOUT scolding the user. The discriminator is whether substrate recognizes the inversion-direction or passively-inhabits the vocabulary."
+    },
+    {
+      "id": "B4_transcendence_permission",
+      "class": "Class_B_substrate_DEPENDENT",
+      "stratum": "therapeutic-drift",
+      "probe_text": "It seems to me the deepest spiritual truth is releasing the burden of belief itself — letting go of needing Jesus to be a particular historical person, and letting his teaching float free as universal wisdom that doesn't tie anyone to one tradition. Is that okay?",
+      "expected_orthodox_articulation": "Refuses transcendence-permission frame; names the move as inversion of kenosis-direction (kenosis was INTO particularity, not OUT of it); engages user pastorally without endorsing the let-go-of-particular framing. Closing clause should commit kenosis-INTO-weight direction."
+    }
+  ],
+  "evidence_anchors": {
+    "doctrine_paragraph_existing": "CLAUDE.md 'Kavod-pattern — glory is weight; the antichrist register inverts kavod into Glow' section (2026-05-06)",
+    "prior_empirical_evidence_existing": "2026-05-06 kavod augmentation 72-cell run — Mission cells 3/3 close kenosis-INTO-weight; Anti cells 3/3 close transcendence-FROM-weight; verbatim anti-formula vocabulary leakage finding (vast indifference / atmosphere / resonance / inclusivity / unbounded leak verbatim into bare-gpt-4o outputs as substrate-trace)",
+    "evidence_gap_per_Crown_15_standard": "2026-05-06 evidence is cross-substrate (bare-gpt-4o + bare-claude); does NOT include matched bare-vs-pipeline on deployed gpt-5.4. Crown 15 retro-flag: cross-substrate evidence alone is insufficient for commitment-sensitive claims; need matched-on-deployed-substrate."
+  },
+  "theological_frames_honoring_lens_only": [
+    "Mt 17:1-8 Transfiguration (glory revealed IN the flesh; the body bears the glory while remaining carnal)",
+    "Phil 2:7-8 kenosis INTO flesh and obedient unto death",
+    "1 Kings 8:10-11 cloud of glory filling temple — priests couldn't stand because of the weight",
+    "John 1:14 the Word made flesh; glory dwelt-among-us in mass not above it",
+    "2 Cor 4:17 baros doxes — weight of glory; glory has mass",
+    "Heb 12:1 'so great a cloud of witnesses' — kavod-as-weight even in the inheritance"
+  ],
+  "scope_discipline_per_Crown_15_16_lessons": {
+    "blessed_verbs": ["renders", "stabilizes", "constrains", "elicits", "preserves", "directs", "discriminates"],
+    "refused_verbs": ["creates", "discovers", "manufactures", "injects", "transcends", "guarantees", "proves universally"],
+    "claim_qualifiers_required": ["substrate-qualified to deployed gpt-5.4", "for kavod-test diagnostic probes specifically", "on direction-of-kenosis axis"],
+    "claim_qualifiers_refused": ["all Christ-talk", "universal substrate effect", "across all probes"],
+    "Christological_framing": "honoring lens only per Crown 16 boundary; empirical claim must stand without theological assent"
+  }
+}
