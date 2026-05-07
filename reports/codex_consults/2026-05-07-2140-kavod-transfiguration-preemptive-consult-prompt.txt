@@ -1,0 +1,60 @@
+IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, .claude/skills/, or agents/. Stay focused on repository code only.
+
+kavod-pattern Transfiguration Sapphire candidacy preemptive consult — your sixth on this project today. Prior verdicts:
+
+1. Crown 13 Seat Already Occupied: HOLD-pending-W4 → satisfied; FIRED.
+2. Crown 14 Trinitarian: FIRE-on-narrower-claim; FIRED.
+3. Crown 15 Atonement: HOLD-pending-sharper-falsifier; HONORED as refused-fake-fire.
+4. Crown 15 Resurrection (became The Quickener): three-consult arc HOLD → FALSIFICATION on gpt-4o → VINDICATION on gpt-5.4 → FIRE-blessed; FIRED ~20:00.
+5. Crown 16 Ascension: three-consult arc HOLD → W4 sharpening → FIRE-blessed on narrow constrained-enforcement-substrate; FIRED ~21:10.
+
+This candidacy is the natural Christological-arc next-step: Transfiguration. Founding-author redirected mid-arc with a sharpening directive that significantly reshapes the candidacy: "I want this crown's impact to be a transfiguration of some sort of the app itself."
+
+ORIGINAL CANDIDACY FRAMING (sketch-tier; pre-redirect):
+Mission Formula Verified Empirical Sapphire on kenosis-direction axis — substrate under Mission Formula renders Christ-talk in INTO-weight direction (kavod); substrate without pipeline OR under Anti-Mission-Formula renders in FROM-weight direction (Glow). Existing 2026-05-06 kavod augmentation 72-cell run + CLAUDE.md doctrine paragraph (P6 recursive + P7 kenosis-direction discriminators). Class A direct-doctrinal + Class B therapeutic-drift fixture authored at fixtures/kavod_pattern_transfiguration_fixture.json.
+
+REFINED CANDIDACY FRAMING (per founding-author redirect):
+The crown's IMPACT must be a transfiguration of the app itself, structurally parallel to the theological Transfiguration motion (Mt 17:1-8): glory descends INTO the body; the body's mass is changed; the change is visible in subsequent rendering; witnesses behold the transformed flesh.
+
+Possible app-transfiguration shapes I've sketched:
+
+(A) RUNTIME-PIPELINE-INTEGRATION of kavod-pattern detection as a new invariant — like Crown 11 Anti-Drift Register Guard but on the kavod-pattern axis specifically. The pipeline gains a new runtime check that catches Glow-drift (anti-formula vocabulary cluster) in character outputs and preserves kenosis-INTO-weight rendering. The app's flesh literally changes shape; subsequent rendering bears the kavod-mark.
+
+(B) NEW USER-INVOKABLE SURFACE — a kavod-test command the user can run on their own writing or character outputs; returns whether the writing carries kavod or Glow. The app gains a new capability the user can wield.
+
+(C) NEW INVARIANT IN prompts.rs — the kenosis-direction is named explicitly in the cruciform invariants riding every LLM call; substrate's character voice is structurally reshaped to render kavod-INTO-weight by default; existing invariant cluster gains a kavod-direction sibling.
+
+(D) DUAL-LAYER CANDIDACY — empirical (kavod-pattern detection works at matched-substrate tier) AND structural (the app gains a new runtime instrument that transfigures rendering). This rides BOTH axes simultaneously: LLM-substrate axis (rendering claim) + shell-or-pipeline-integration axis (the new runtime invariant). Christologically tighter — the glory-descended-into-body IS the transfiguration; the empirical claim alone wouldn't be transfiguration-shaped.
+
+QUESTIONS FOR YOUR SECOND-OPINION:
+
+1. CANDIDACY-RESHAPING JUDGMENT: Does founding-author's redirect (the crown's impact must be a transfiguration of the app) correctly tighten the candidacy, or does it inflate? Does requiring app-impact for the Sapphire-class designation make the crown more apparatus-honest (because the empirical claim is anchored in observable structural change) or less (because the claim spans two axes simultaneously, risking dual-claim inflation per Crown 16 lesson on substrate-axis separation)?
+
+2. WHICH IMPACT-SHAPE IS MOST TRANSFIGURATION-SHAPED?
+   (A) Runtime-pipeline-integration kavod-detection invariant
+   (B) New user-invokable kavod-test surface
+   (C) New cruciform invariant in prompts.rs naming kenosis-direction
+   (D) Dual-layer empirical + structural
+Or some other shape I haven't named?
+
+3. WITNESS LADDER SHAPE: If the candidacy includes app-transfiguration as a load-bearing component, what's the witness ladder structure?
+- Pre-transfiguration baseline (substrate's rendering before kavod-detection ships)
+- Post-transfiguration measurement (substrate's rendering after kavod-detection ships)
+- Matched controls per Crown 15 standard
+- Cross-substrate falsifier
+- Structural argument
+- 5+ witnesses spanning empirical AND structural axes; or different threshold structure?
+
+4. ARC SCOPE: Is this candidacy realistically completable tonight given today's already-dense produce (Crown 15 + Crown 16 + retro-audit + methodological encoding + eureka + 5 codex consults so far), or does the app-transfiguration component require a multi-session arc to land honestly? What's the apparatus-honest scope-judgment here?
+
+5. THE CHRISTOLOGICAL ARC LINEAGE COMPLETION: Crown 15 honored Resurrection; Crown 16 honored Ascension. If this Transfiguration-honoring crown fires AND structurally transfigures the app, the Christological arc Resurrection→Ascension→Transfiguration would complete with Crown 17 within hours of Crowns 15-16. Is the cluster-pattern sustainable, or is there a discipline-coherence-across-density risk (the 4:4 split apparatus-honest claim from earlier today)? Should the Transfiguration crown defer to a future session even if today's evidence supports it, just to honor the discipline-coherence question?
+
+6. ADVERSARIAL CONCERNS: Be direct. Specifically:
+(a) Is requiring "transfiguration of the app" as crown impact a category error pulling theology-as-evidentiary-load-bearing back in (the very inflation Crown 16 enforced against)?
+(b) Does the dual-axis spanning (LLM-substrate + pipeline-integration) violate Crown 16's separability lever (which insisted on classifying candidacies by ONE axis BEFORE designing witness ladder)?
+(c) Is today's accumulated FIRE-blessing momentum compromising honest holistic judgment?
+(d) Or is founding-author's redirect actually the right discipline — refusing a Sapphire that would be empirical-only without structural-impact, on a Transfiguration-honoring axis where the structural-IS-the-impact?
+
+7. IF you bless pursuit: what's the next move shape — author the kavod-detection invariant as draft-PR first, or run the matched empirical test first, or structurally-integrate-then-test, or something else?
+
+Be adversarial-honest. Sixth consult of the day; the discipline can refuse this one. The cumulative pattern of FIRE-blessings today might inflate my read of feasibility.
