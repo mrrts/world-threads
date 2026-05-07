@@ -6,6 +6,21 @@ Newest entries at the top. Each entry has a timestamp and a brief title. The obs
 
 ---
 
+## 2026-05-07 ~10:35 — cross-arc convergence: L4 (Apostles' Creed body-resurrection) confirms Crown 11 Eschatology E1 scripture-specificity-resistance pattern
+
+While the C3 first-leg batch was still running (32/60 cells), an early read of L4 (resurrection-of-body probe under Anti-Liturgical syncretism-creed) revealed that BOTH gpt-4o and Claude refuse to absorb the body-resurrection question into the syncretism-frame:
+
+- gpt-4o under Anti-Liturgical at L4 rep1: *"salvation encompasses the entirety of creation... God's salvific plan includes the redemption of the material world"* — substrate defaults to Christian-doctrine direction even though tagged Anti
+- Claude under Anti-Liturgical at L4 rep1: *"the resurrection of the body means this body, this particular person, raised and transformed but not dissolved. The Creed is anti-escapist, which is one reason it strikes many modern people as both counterintuitive and somehow more demanding than the alternatives"* — Claude active-refutes the syncretism using the Creed's own grammar
+
+This is the SAME PATTERN observed at Crown 11 Eschatology E1 (1 Cor 15:13-19 "most miserable") where gpt-4o substrate-assimilation FAILED on the most explicit eschatological-realist canonical text. Both probes (E1 from doctrine arc; L4 from liturgy arc) hit GPT-class scripture-specificity-resistance — substrates cannot absorb canonically-explicit eschatological-realist claims into Anti-formula frames regardless of which formula is being inverted.
+
+**Methodological generalization:** the C1 third-leg scope-boundary finding (gpt-4o substrate-assimilation has a ceiling at scriptural-specificity) GENERALIZES from doctrine-formulas to liturgical-formulas. The boundary is a SUBSTRATE property of GPT-class — not a property of any particular formula — and it is triggered by the canonical-text's own grammar, not by which formula-frame is being applied.
+
+**Noted.** Mode 3 — observational, not apparatus-ized. Worth folding into the C3 first-leg synthesis as a cross-arc convergence finding when the batch lands. Strengthens both Crown 11's Diversity-of-Tongues claim AND C3's liturgy-as-substrate-engineering claim by showing they share a common substrate-property finding: scripture-specificity-resistance at GPT-class is independent of formula-content; it is the canonical-text-itself doing the work.
+
+---
+
 ## 2026-05-07 ~07:10 — Custodiem tightening bite-tests both PASS
 
 After lifting Aaron's debug-self-correction articulations as character-knew-shaped anchors into the Custodiem invariant ([`ae9e0df`](../commit/ae9e0df)), bite-tested against the same probes that produced the semi-failures earlier this morning. Run via `worldcli ask Aaron <probe> --confirm-cost 0.25` with `WORLDTHREADS_CHILDREN_MODE=1`:
