@@ -197,10 +197,13 @@ pub fn split_character_identity(character: &Character) -> CharacterIdentityBucke
             &backstory_facts,
             &[
                 ("loss", 7),
+                ("lost", 7),
                 ("grief", 7),
                 ("hurt", 6),
+                ("illness", 6),
                 ("alone", 5),
                 ("widow", 5),
+                ("late", 5),
             ],
         )
     });
@@ -406,13 +409,16 @@ const WOUND_WEIGHTS: &[(&str, usize)] = &[
     ("feels most", 7),
     ("hardest", 7),
     ("loss", 7),
+    ("lost", 7),
     ("grief", 7),
     ("tenderness", 6),
     ("wounds", 6),
     ("hurt", 6),
     ("fear", 6),
     ("alone", 6),
+    ("illness", 6),
     ("shame", 5),
+    ("late", 5),
 ];
 
 fn pair_wound_and_longing(sentences: &[String]) -> Option<String> {

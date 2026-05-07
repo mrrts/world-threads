@@ -364,7 +364,7 @@ with `--scope full`. Five grounded characters audited; all returned
 |---|---|---|---|
 | Aaron | Pass | all 9 | "doesn't have a vocabulary yet for some of what he feels most…" |
 | Steven | Pass | all 9 | "He drifts not because he loves freedom…" |
-| Maisie Rourke | Pass | all 9 | none |
+| Maisie Rourke | Pass | all 9 | none (Turn 246: wound_longing now surfaces "lost her husband to a sudden illness" via the closed wound-needle gap) |
 | Pastor Rick | Pass | all 9 | "White hair, clean-shaven, and nearly always in his navy button-up shirt with a white tie…" |
 | Jasper Finn | Pass | all 9 | none |
 

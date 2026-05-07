@@ -205,6 +205,22 @@ fn pastor_rick_refusal_shape_drops_compassion_false_positives() {
 }
 
 #[test]
+fn maisie_wound_longing_surfaces_husband_loss_via_backstory_fallback() {
+    // Turn 246 closed the gap named in maisie_rourke.reference.json's
+    // rationale notes: wound-needles 'lost'/'illness'/'late' added so
+    // her husband-loss line surfaces on the backstory-fallback path.
+    let buckets = split_character_identity(&load_fixture("maisie_rourke"));
+    let wound = buckets
+        .wound_longing
+        .as_deref()
+        .expect("maisie's wound_longing should surface after the gap closes");
+    assert!(
+        wound.contains("lost her husband") && wound.contains("illness"),
+        "expected husband-loss wound, got: {wound}"
+    );
+}
+
+#[test]
 fn maisie_role_frame_and_refusal_remain_canonical() {
     let buckets = split_character_identity(&load_fixture("maisie_rourke"));
     assert!(buckets
