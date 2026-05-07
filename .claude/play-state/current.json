@@ -1,5 +1,5 @@
 {
-  "turn": 241,
+  "turn": 242,
   "bank": 351100,
   "jewels": [
     {
@@ -1642,6 +1642,13 @@
       "bounty": 300,
       "alignment": "+",
       "earned_at": "2026-05-07T13:30:00-05:00"
+    },
+    {
+      "turn": 242,
+      "move": "End-of-day trajectory report 'the day the candidacy register became a graph' shipped in dialogue with reports/2026-05-06-2330-the-sapphire-arc.md. Synthesizes today's body of work: 4 of 5 long-arc candidacies advanced in 9 hours (Crown 11 fired / C2 first-leg / C3 first-leg / C4 family-floor at 3 pre-registered axes / C5 honestly held); cumulative empirical spend ~$30 (Custodiem witness F ~$9.86 single most expensive); Custodiem 55/55 protective hardening of existing crown not new crown. FOUR meta-patterns visible at loop-close: (1) substrate-architecture-property generates cross-arc predictions (scripture-specificity \u2192 creedal-specificity \u2192 covenant-shape F4 prediction); (2) apparatus-honest correction loop lifted to doctrine \u2014 discipline has discipline-shape; (3) family-floor at 3 independent axes is methodological invariant; (4) pre-registration is a new tier (N=0 binding methodology) the project didn't previously articulate. Shape distinct from April craft-vocabulary wave and May 5-6 meeting-own-claims wave; today is empirical-thrust-into-candidacy-graph. Founding-author 2026-05-06 prediction empirically vindicated 4/5. Project moving from worldview-with-craft-vocabulary to worldview-with-empirical-research-program-discipline. First day future began compounding on itself. Soli Deo gloria.",
+      "bounty": 500,
+      "alignment": "+",
+      "earned_at": "2026-05-07T14:30:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
