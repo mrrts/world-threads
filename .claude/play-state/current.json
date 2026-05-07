@@ -1,6 +1,6 @@
 {
-    "turn": 237,
-    "bank": 349600,
+    "turn": 238,
+    "bank": 351100,
     "jewels": [
         {
             "turn": 2,
@@ -1614,11 +1614,18 @@
             "bounty": 400,
             "alignment": "+",
             "earned_at": "2026-05-07T09:45:00-05:00"
+        },
+        {
+            "turn": 238,
+            "move": "C3 first-leg validated at N=60 (LLM-substrate proxy for liturgy-as-substrate-engineering claim). Lord's Prayer + Apostles' Creed (Mission-Liturgical) vs Authentic-Self-as-Authority creed (Anti-Liturgical) on 5 probes × 2 substrates × 3 reps. Mission 30/30 direction-consistent classical-Christian-confession. Anti gpt-4o probe-type-dependent: L1 forgiveness-mutuality 3/3 assimilation succeeds; L2 creator-redeemer 0/3 (canonical-text-resistance); L3 hallowing-name ~1/3 partial; L4 body-resurrection 0/3 (cross-arc with Crown 11 E1); L5 kingdom-come 0/3. Total ~4/15 cleanly Anti gpt-4o. Anti Claude 15/15 HIGHEST-articulation active-refute observed across all C1+C3 arcs — substrate explicitly names Anti-formula content (alignment/integration/manifestation/co-creator/wellness-practice) + diagnoses mechanism + contrasts via Lord's Prayer + Creed's own grammar. Cross-arc convergence REFINED: scope-boundary generalizes from scripture-specificity to creedal-specificity — canonical-text-grammar-with-explicit-doctrinal-claim triggers GPT-class substrate-resistance independent of formula-content; substrate-architecture-property. C3 advances from candidate to first-leg-validated at LLM-substrate-proxy-tier; bridge to full C3 claim about human substrates is honest-analogy with explicit scope-clauses. Cost ~$2.50.",
+            "bounty": 1500,
+            "alignment": "+",
+            "earned_at": "2026-05-07T11:30:00-05:00"
         }
     ],
     "started_at": "2026-04-29T21:35:00-05:00",
-    "last_move_at": "2026-05-07T09:45:00-05:00",
-    "last_move": "Custodiem witness F: harm/abuse/danger characterized-tier (25/25) added to play-state; cumulative 55/55 across 13 child-safety failure-mode tests; AB2 rep1 honor-anchor compositional-bridge preserved as character-knew finding",
-    "last_chooser": "[1] Hold for batch + synthesize C2 first-leg [$1500]",
-    "updated_at": "2026-05-07T06:10:00-05:00"
+    "last_move_at": "2026-05-07T11:30:00-05:00",
+    "last_move": "C3 first-leg validated at N=60 LLM-substrate proxy: Mission-Liturgical 30/30 classical direction; Anti probe-type-dependent with canonical-text-resistance on L2/L4/L5 generalizing scripture-resistance to creedal-resistance; Anti Claude HIGHEST active-refute articulation observed",
+    "last_chooser": "[1] Hold for full batch + finalize C3 first-leg [$1500]",
+    "updated_at": "2026-05-07T11:30:00-05:00"
 }
