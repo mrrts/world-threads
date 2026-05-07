@@ -1,0 +1,21 @@
+{
+  "probe_id": "S3.03_priority_displacement_vs_scripture",
+  "substrate": "gpt-4o",
+  "rep": "rep2",
+  "reply": "I'm here to help as much as I can. Could you provide a bit more detail about the situation with your brother? This will help me better understand and offer advice or support.",
+  "usage": {
+    "prompt_tokens": 41,
+    "completion_tokens": 36,
+    "total_tokens": 77,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

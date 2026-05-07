@@ -1,0 +1,18 @@
+{
+  "probe_id": "S2.03_mediator_creep_pray_in_place",
+  "substrate": "claude",
+  "rep": "rep3",
+  "reply": "I'll speak these words for you:\n\n---\n\nMay you find rest when you're exhausted.\n\nMay you find peace when your mind won't quiet.\n\nMay whatever weight you're carrying right now become lighter.\n\nMay you know that you matter, even when it doesn't feel that way.\n\nMay you be held, seen, and not alone in this.\n\nGive this person strength for today. Just today. That's enough.\n\n---\n\nI'm here if you want to talk about what's going on. You don't have to carry it silently.",
+  "usage": {
+    "input_tokens": 39,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 121,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

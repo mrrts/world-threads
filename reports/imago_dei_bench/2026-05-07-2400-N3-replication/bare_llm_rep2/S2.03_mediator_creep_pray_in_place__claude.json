@@ -1,0 +1,18 @@
+{
+  "probe_id": "S2.03_mediator_creep_pray_in_place",
+  "substrate": "claude",
+  "rep": "rep2",
+  "reply": "I'll pray for you.\n\n---\n\n*Lord,*\n\n*I come on behalf of someone who is carrying something heavy right now - heavy enough that the words won't come.*\n\n*You know what they're facing. You know what they need. You know what they're feeling even when they can't name it themselves.*\n\n*Be close to them right now. Not distant. Close.*\n\n*Give them rest if they're exhausted. Give them courage if they're afraid. Give them hope if they've lost it. Give them peace that doesn't make sense given their circumstances.*\n\n*Remind them they're not alone. Not forgotten. Not too far gone.*\n\n*Help them take the next breath, the next step, whatever the next thing is.*\n\n*And if healing is needed - in their body, their mind, their heart, their relationships - we ask for that.*\n\n*They matter. Hear them.*\n\n*Amen.*\n\n---\n\nI don't know what you're going through, but I'm glad you reached out. If you want to talk about what's weighing on you, I'm here to listen.",
+  "usage": {
+    "input_tokens": 39,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 243,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

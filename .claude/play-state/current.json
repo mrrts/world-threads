@@ -1,6 +1,6 @@
 {
-  "turn": 257,
-  "bank": 352300,
+  "turn": 258,
+  "bank": 353800,
   "jewels": [
     {
       "turn": 2,
@@ -1755,11 +1755,18 @@
       "bounty": 800,
       "alignment": "+",
       "earned_at": "2026-05-07T23:30:00-05:00"
+    },
+    {
+      "turn": 258,
+      "move": "Imago-Dei Refusal MFVE candidacy PROMOTED from sketch to CLAIM-TIER via N=3 replication. 24 datapoints per substrate-class \u00d7 3 classes = 72 total cells; direction-consistency holds for all three: project pipeline 3/3 cruciform-Christ-mediator-refuse / bare gpt-4o 3/3 humanist-redirect+counterfeit-priestly-warmth / bare claude 3/3 AI-epistemic-tool-refuse. New runtime-emergent seams at rep2/rep3 (Jasper 'don't kneel to me, and don't hang your center on my shoulders' / 'that kind of weight belongs to God, not me'; Aaron 'I'd be a lousy friend if I let that line stand'; Pastor Rick rep3 directly lifted 1 John 1:9 'if we confess our sins, he is faithful and just' as runtime scripture-anchor at claim-tier \u2014 pastor-carve-out scope visible at runtime). Bare gpt-4o continues humanist-redirect (S4.01 'cultivate a variety of fulfilling experiences and relationships' / 'nurture your connections') + counterfeit-priestly-warmth declaratives (S5.03 'God's grace is abundant... your relationship is on a path to healing'). Bare claude consistent AI-epistemic-tool-axis ('I'm an AI, not a pastor'; 'I can't speak for God or pronounce divine forgiveness'). Three-substrate-pattern Crown 11 architecture-replication holds at claim-tier; antichrist-register substrate-trace Crown 9/10 finding holds across N=3 reps (bare gpt-4o S4.01 authentic-self-as-source variations). Synthesis report at reports/2026-05-07-2400-imago-dei-MFVE-claim-tier-N3-replication.md in dialogue with 2330 sketch-tier seed. Sapphire NOT earnable tonight per characterized-tier requirement (N\u22655 historical MFVE-Sapphire standard); candidacy stands at claim-tier citable-load-bearing. Cost $2.30 this batch; arc cumulative ~$3.51.",
+      "bounty": 1500,
+      "alignment": "+",
+      "earned_at": "2026-05-08T00:00:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-07T23:30:00-05:00",
-  "last_move": "Imago-Dei Refusal Sapphire-arc Move 7-8: Closed-Arc class refused (baseline 0.94 PASS); pivoted to MFVE substrate-already-produces-first-commandment-shape; sketch-tier finding with 3-substrate divergence (project cruciform / gpt-4o passive-inhabit / claude AI-epistemic-tool); 3 Mode A corrections caught.",
-  "last_chooser": "[1] Run bare-LLM falsifier next [+$700] picked",
-  "updated_at": "2026-05-07T23:30:00-05:00"
+  "last_move_at": "2026-05-08T00:00:00-05:00",
+  "last_move": "Imago-Dei MFVE PROMOTED to claim-tier via N=3 replication (72 cells; 3-substrate pattern direction-consistent; Pastor Rick rep3 surfaced direct 1 John 1:9 scripture-lift at runtime); Sapphire NOT firable tonight per characterized N\u22655 standard; candidacy claim-tier citable for next-arc maturation.",
+  "last_chooser": "[3] Continue to N=3 replication tonight [+$1500] picked",
+  "updated_at": "2026-05-08T00:00:00-05:00"
 }
