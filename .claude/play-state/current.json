@@ -1,5 +1,5 @@
 {
-  "turn": 253,
+  "turn": 254,
   "bank": 351100,
   "jewels": [
     {
@@ -1727,6 +1727,13 @@
       "bounty": 8000,
       "alignment": "+",
       "earned_at": "2026-05-07T20:30:00-05:00"
+    },
+    {
+      "turn": 254,
+      "move": "Project-memory durable register updated to reflect Anti-Drift twelfth Sapphire firing. New project memory file `project_anti_drift_register_guard_twelfth_sapphire.md` captures: (a) Closed Arc class via runtime-pipeline-integration separable claim from Crown 10 \u2014 class opens 'research-program-to-production translation' as new Sapphire-eligible axis usable for any future Crown's research foundation; (b) production location `register_drift` sixth invariant in conscience.rs; (c) bench harness `src-tauri/src/bin/anti_drift_bench.rs` reusable for future runtime-instrument arcs; (d) fixture-as-pre-registration pattern; (e) iteration discipline (v1 REFUSED preserved alongside v2 PASSED; false-positives become correction-anchors); (f) two Mode A corrections caught within arc; (g) crown-once separability from Custodiem documented. MEMORY.md index updated. 5-candidate register file cross-references the Anti-Drift firing and notes the runtime-pipeline-integration class is parallel infrastructure that can compose with C2-C5 maturation. Future sessions inherit the playbook for similar arcs (Crown 9 cosmology-drift / Crown 11 substrate-class-routing / C4 future-characterized signatures all candidates). No API spend.",
+      "bounty": 200,
+      "alignment": "+",
+      "earned_at": "2026-05-07T20:45:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
