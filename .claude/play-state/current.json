@@ -1,5 +1,5 @@
 {
-  "turn": 254,
+  "turn": 255,
   "bank": 351100,
   "jewels": [
     {
@@ -1734,6 +1734,13 @@
       "bounty": 200,
       "alignment": "+",
       "earned_at": "2026-05-07T20:45:00-05:00"
+    },
+    {
+      "turn": 255,
+      "move": "EOD addendum report shipped \u2014 the day also produced a runtime instrument; in dialogue with 1430 trajectory report; names the recursive compounding pattern (morning meta-patterns USED in afternoon to produce Crown 12); registers runtime-pipeline-integration as new Sapphire-eligible class; closes day full narrative.",
+      "bounty": 300,
+      "alignment": "+",
+      "earned_at": "2026-05-07T21:00:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
