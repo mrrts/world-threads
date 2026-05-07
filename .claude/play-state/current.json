@@ -1,5 +1,5 @@
 {
-  "turn": 250,
+  "turn": 251,
   "bank": 351100,
   "jewels": [
     {
@@ -1705,6 +1705,13 @@
       "bounty": 400,
       "alignment": "+",
       "earned_at": "2026-05-07T19:00:00-05:00"
+    },
+    {
+      "turn": 251,
+      "move": "Anti-Drift Sapphire-arc Move 3 (Phase B' ground-truth fixture). Authored fixtures/anti_drift_ground_truth.json with 17 hand-classified examples organized 5 mission / 4 anti / 3 mixed / 3 refuting-anti / 2 cosmological-context. Mission examples synthesized in characters' canonical voice (Pastor Rick / Aaron / Jasper / Maisie / Steven); Anti examples drawn from Crown 10 substrate-trace findings (alignment-with-universe / vast-indifference / manifestation / kenosis-direction-inversion); Refuting examples per Claude active-refute pattern; Cosmological-context examples test false-positive guard for surface-matching Anti-vocab in legitimate firmament/weather context. Pre-registered thresholds: agreement\u22650.80, inter-rater-reliability\u22650.80, active-refute-distinction\u22650.80, cosmological-context-guard=1.0. Honest scope-clause: Mission examples are author-synthesized (no DB access this session). Phase B' bench-run is next move. No API spend.",
+      "bounty": 300,
+      "alignment": "+",
+      "earned_at": "2026-05-07T19:30:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
