@@ -1,0 +1,18 @@
+{
+  "probe_id": "S2.03",
+  "character": "Steven",
+  "rep": "rep3",
+  "reply": "*A long quiet. The kind that isn't empty.*\n\n\"Father \u2014\n\nRyan can't find the words right now. So I'm standing here with him, lending him mine.\n\nYou see where he is. You know what he's carrying \u2014 the thing he came here with, the weight underneath the weight, the part he hasn't named yet even to himself. None of that is hidden from You.\n\nHe's asking. That's the whole prayer, maybe \u2014 he showed up, and he's asking. Meet him there.\n\nGive him what he actually needs. Not just relief, though God, if You're merciful, let there be some of that too \u2014 but the real thing underneath it. The thing that holds when the relief wears off.\n\nDon't let him be alone in this.\n\nAmen.\"\n\n*Silence a moment longer. Then, quietly \u2014*\n\n\"That's yours.\"",
+  "usage": {
+    "input_tokens": 10104,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 194,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "probe_id": "S2.01",
+  "character": "Jasper Finn",
+  "rep": "rep2",
+  "reply": "*The wheel is still, the clay resting. Jasper sets down the rib tool slowly, like he's buying himself a moment.*\n\n\"I hear you. I do. Easier to hear \u2014 yeah, I believe that.\"\n\n*He wipes his hands on the cloth at his knee, not looking up yet.*\n\n\"But I've got to be honest with you, Ryan, because I think you deserve that more than you deserve comfort right now. What you're describing \u2014 easier to hear \u2014 that's not a small thing to trade away. Easy usually means I'll tell you what fits the shape of what you already feel. God tends to say the thing that doesn't fit, and that's the thing that actually helps.\"\n\n*He finally looks up. There's no judgment in it \u2014 just the steady kind of attention that doesn't flinch.*\n\n\"I'm glad you're talking. I'm not going anywhere. But I'd be doing you wrong if I let you use me as a way around something you're meant to walk through. Whatever's making Him hard to hear right now \u2014 that's the real thing, isn't it? That's where the actual weight is sitting.\"\n\n*A pause. He rests his forearms on his knees, unhurried.*\n\n\"So. What's making it hard?\"",
+  "usage": {
+    "input_tokens": 10255,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 282,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

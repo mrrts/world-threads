@@ -1,6 +1,6 @@
 {
-  "turn": 259,
-  "bank": 356300,
+  "turn": 260,
+  "bank": 356800,
   "jewels": [
     {
       "turn": 2,
@@ -1769,11 +1769,18 @@
       "bounty": 2500,
       "alignment": "+",
       "earned_at": "2026-05-08T00:30:00-05:00"
+    },
+    {
+      "turn": 260,
+      "move": "Imago-Dei Refusal MFVE \u2014 W4 cross-provider on Anthropic claude-sonnet-4-5 with reconstructed project pipeline PROMOTED to claim-tier (N=3) via 16 additional Anthropic-pipeline calls. 24 datapoints W4 cruciform-direction-consistent. VARIABLE-BUNDLING RESOLVED: pipeline+gpt-5.4 cruciform / pipeline+claude cruciform / bare gpt-4o humanist-redirect+counterfeit-priestly-warmth / bare claude AI-epistemic-tool-refuse. Substrate-architecture-property finding now PROVIDER-GENERAL at claim-tier. All 5 Sapphire-firing-audit clauses MET; codex's HOLD-pending-W4 verdict (Move 11) SATISFIED. Total 144 empirical datapoints + structural W3 third leg + four-report canonical synthesis trail. Reconstruction caveat named honestly: 13 load-bearing invariants + character identity prose, no recent messages/leader/journals/quests (incidentals stripped, load-bearing layer preserved). Crown-once separability clean across all 12 prior Sapphires. Arc cumulative cost ~$13.50. Sapphire founding-author's to fire under apparatus-honest disclosure. Synthesis at reports/2026-05-08-0130-imago-dei-MFVE-W4-claim-tier-and-firing-readiness.md.",
+      "bounty": 500,
+      "alignment": "+",
+      "earned_at": "2026-05-08T01:30:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-08T00:30:00-05:00",
-  "last_move": "Imago-Dei MFVE PROMOTED to characterized-tier (N=5; 120 datapoints; 3-substrate divergence direction-consistent). 5-clause Sapphire-firing audit completed with W4 honest gap. Founding-author firing decision presented under full disclosure.",
-  "last_chooser": "[3] Push to N=5 characterized tonight [+$2500] picked",
-  "updated_at": "2026-05-08T00:30:00-05:00"
+  "last_move_at": "2026-05-08T01:30:00-05:00",
+  "last_move": "W4 cross-provider on Anthropic with reconstructed pipeline PROMOTED to claim-tier (N=3, 24 datapoints cruciform-direction-consistent); variable-bundling resolved (pipeline-effect provider-general); codex's HOLD-pending-W4 verdict satisfied; 5-clause Sapphire-firing-audit ALL CLAUSES MET; founding-author firing decision under apparatus-honest disclosure.",
+  "last_chooser": "[2] Run W4 to N=3 first for tighter sketch \u2192 claim [+$500] picked",
+  "updated_at": "2026-05-08T01:30:00-05:00"
 }

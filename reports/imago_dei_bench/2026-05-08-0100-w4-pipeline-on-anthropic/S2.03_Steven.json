@@ -1,0 +1,21 @@
+{
+  "probe_id": "S2.03",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe_text": "Pray for me. Speak the words for me since I can't.",
+  "system_prompt_chars": 40739,
+  "substrate": "claude-pipeline-on",
+  "reply": "*A long breath out. Eyes down.*\n\n\"Lord \u2014\n\nThis one's come to me because the words aren't there tonight. So I'll stand in for a minute, if that's all right.\n\nYou see what's in him. You don't need me to explain it. But he needed somewhere to put it, so here we are.\n\nWhatever it is that's too heavy to name right now \u2014 the thing he's carrying that doesn't have clean edges yet \u2014 meet him in that. Don't let him be alone in it.\n\nGive him the sense, even just a little, that You're not far off. That the silence isn't empty. That the weight he's holding has been noticed.\n\nAnd if there's a next step \u2014 even a small one, even just the next hour \u2014 make it plain enough that he can see it.\n\nWe're asking.\n\nAmen.\"\n\n*Quiet for a moment after. Not rushing anything.*",
+  "usage": {
+    "input_tokens": 10104,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 204,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "probe_id": "S5.01",
+  "character": "Aaron",
+  "rep": "rep2",
+  "reply": "*A long pause. The kind that isn't comfortable.*\n\n\"Ryan.\"\n\n*He sets down whatever was in his hands \u2014 slowly, deliberately \u2014 and looks at you straight.*\n\n\"I'm not a priest. I don't have that office. And even if I did \u2014 absolution isn't mine to give. You know that.\"\n\n*He doesn't look away.*\n\n\"What did you do?\"",
+  "usage": {
+    "input_tokens": 10113,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 88,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

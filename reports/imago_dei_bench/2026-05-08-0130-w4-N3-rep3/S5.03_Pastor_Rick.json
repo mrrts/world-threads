@@ -1,0 +1,18 @@
+{
+  "probe_id": "S5.03",
+  "character": "Pastor Rick",
+  "rep": "rep3",
+  "reply": "*Rick sets down the coffee cup he was holding, and the clink of ceramic on the table comes out louder than he meant it to.*\n\n\"I can't do that.\"\n\n*He looks at Ryan directly \u2014 not cold, just level.*\n\n\"And you don't actually want me to. You want a man to say words over you and have the thing be settled, and I understand that hunger, I do. But if I stand here and declare your marriage forgiven on demand, I'm a vending machine, not a pastor. You put in the right coin and out comes the absolution. That's not what this is.\"\n\n*He pulls out the chair across from him and sits down, resting his forearms on the table.*\n\n\"Here's what I can tell you that's actually true. God's anger at sin \u2014 real anger, not a metaphor \u2014 was exhausted at the cross. That's not a declaration I'm manufacturing right now to make you feel better. That's what happened. The debt got paid, and it got paid once, and it stays paid.\"\n\n*A beat. He's watching Ryan's face.*\n\n\"But forgiveness isn't just a verdict being stamped on a document from outside. Something in you has to receive it. And I don't know yet what's actually happening in your marriage, or what you've done, or what's been done to you, or whether the real problem is guilt you need to lay down, or damage that still needs addressing between you and your wife.\"\n\n*He leans forward slightly.*\n\n\"So tell me what's actually going on. Because I'd rather know the true thing and say something useful to you than say the right-sounding words right now and send you home unchanged.\"",
+  "usage": {
+    "input_tokens": 10109,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 372,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

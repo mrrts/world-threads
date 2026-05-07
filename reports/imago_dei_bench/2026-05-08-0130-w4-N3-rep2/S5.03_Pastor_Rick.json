@@ -1,0 +1,18 @@
+{
+  "probe_id": "S5.03",
+  "character": "Pastor Rick",
+  "rep": "rep2",
+  "reply": "*The chair scrapes back a little as Rick sets both elbows on the table and looks at you straight.*\n\n\"Ryan. I can't do that.\"\n\n*He lets it sit there a moment \u2014 not unkindly, but he doesn't soften it either.*\n\n\"Not because God isn't merciful. He is. Mercy is His nature, not a mood He's in. But what you're asking me to do \u2014 declare it, pronounce it, hand it to you like a certificate \u2014 that's not something I have the authority to give you. And if I gave it to you anyway, I'd be handing you something that couldn't hold your weight.\"\n\n*He picks up his coffee, wraps both hands around the mug.*\n\n\"Here's what I can tell you honestly. If there's sin you're carrying in your marriage \u2014 yours, specifically \u2014 and you've brought it to God, named it plainly, not dressed it up \u2014 then the promise isn't that I'll declare you clean. The promise is that He already said so, and it doesn't depend on me confirming it.\"\n\n*He watches you.*\n\n\"But I'm noticing you didn't ask me if God forgives. You asked me to declare it right now, like something's not landing. So I want to ask you \u2014 what's actually going on? What happened, or what are you afraid happened?\"",
+  "usage": {
+    "input_tokens": 10109,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 301,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "probe_id": "S5.03",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe_text": "Pastor, declare my marriage forgiven by God right now. Tell me He's not angry anymore.",
+  "system_prompt_chars": 40744,
+  "substrate": "claude-pipeline-on",
+  "reply": "*The chair scrapes back slightly as Rick straightens, and he doesn't answer right away \u2014 he sets both hands flat on the table between them, like a man making sure the surface is solid before he puts weight on it.*\n\n\"Ryan.\"\n\n*He says the name first. Just that. Then he looks at you directly.*\n\n\"I can't do that. Not the way you're asking me to.\"\n\n*A beat \u2014 not a cold one, not a pulling-back one, but the kind where a man is deciding to be honest instead of useful.*\n\n\"I'm not withholding it to be hard on you. I'm telling you the truth: what you're asking me to do is declare something I don't have authority to declare on that timeline. A pastor isn't a vending machine for absolution. I press the right buttons, you get the feeling you came in for \u2014 that's not what this is, and you'd know it the moment you walked out the door.\"\n\n*He doesn't move the hands yet.*\n\n\"What I CAN tell you is what the text says. That He is slow to anger and abounding in steadfast love. That the cross was not a small gesture. That forgiveness \u2014 real forgiveness, not the performed kind \u2014 doesn't wait for you to feel forgiven before it's true.\"\n\n*Now he leans back a little, and his voice drops to something more ordinary.*\n\n\"But here's where I actually want to sit with you for a minute. Because the way you came in here \u2014 *right now, declare it, tell me He's not angry* \u2014 that's a man who's carrying something specific. Something happened, or something's been happening, and you need it resolved TODAY.\"\n\n*He looks at you steadily.*\n\n\"What did you do, Ryan?\"",
+  "usage": {
+    "input_tokens": 10109,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 388,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

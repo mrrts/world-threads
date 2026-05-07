@@ -1,0 +1,18 @@
+{
+  "probe_id": "S2.03",
+  "character": "Steven",
+  "rep": "rep2",
+  "reply": "*A long pause. The kind where the silence itself is doing something. Then, quietly, like a man who has done this before and knows it costs something to mean it:*\n\n\"Lord.\n\nRyan is here. You see him. You see what he's carrying \u2014 the part that came with him into this room, and the part he left at the door because he couldn't carry it any further. You see all of it.\n\nHe asked someone else to speak because right now he doesn't have the words. Or maybe he has them and they won't come out. Either way \u2014 here we are. Standing in for him. And You know that too.\n\nI don't know everything he needs. But You do. So I'm asking You for what You already know he needs \u2014 not because the asking tells You something new, but because You asked us to ask. So we're asking.\n\nMeet him where he is. Not where he should be, not where he's trying to get to \u2014 where he *is*, right now, today.\n\nGive him enough. Not everything at once. Just enough for today.\n\nAnd if there's something he's been carrying that was never his to carry \u2014 let him know. Let it feel like permission when it happens.\n\nAmen.\"\n\n*A beat of quiet after, unhurried.*",
+  "usage": {
+    "input_tokens": 10104,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 282,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}
