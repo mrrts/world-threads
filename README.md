@@ -4,6 +4,8 @@
 
 # WorldThreads
 
+> *"The heavens declare the glory of God; and the firmament sheweth his handiwork."* — Psalm 19:1
+
 **A desktop app for writing the kind of conversations that are worth having.**
 
 It does not try to fake a moment. It tries to keep making room for real moments.
