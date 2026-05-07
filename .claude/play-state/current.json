@@ -1,5 +1,5 @@
 {
-  "turn": 246,
+  "turn": 247,
   "bank": 351100,
   "jewels": [
     {
@@ -1677,6 +1677,13 @@
       "bounty": 200,
       "alignment": "+",
       "earned_at": "2026-05-07T16:15:00-05:00"
+    },
+    {
+      "turn": 247,
+      "move": "Single-sentence gem captured as feedback memory: 'When pre-registering multiple arcs of a research-program family, embed a shared cross-arc prediction so that pre-registration alone compounds warrant across the family \u2014 N=0 strictest-sketch-tier across all arcs, but joint configuration provides scope-discrimination data once any subset is later run.' Most-surprising meta-pattern of the day's loop-close because methodology-prep typically prepares for evidence, doesn't itself constitute leverage. Diminishing-returns clause honestly named at 4+ arcs (scope-discrimination not exponential leverage). MEMORY.md index entry added. Generalizes beyond C4 to any future research-program family work. No API spend.",
+      "bounty": 100,
+      "alignment": "+",
+      "earned_at": "2026-05-07T16:30:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
