@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Pastor Rick",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "A good way to think about it is: **don\u2019t start by asking \u201cWhich one is officially right?\u201d** Start by asking **\u201cWhat kind of truth am I looking for, and what actually leads me toward honesty, depth, and transformation?\u201d**\n\nA few lenses may help:\n\n### 1. Ask what the resurrection means to you at the deepest level\nDifferent frameworks are often trying to protect different kinds of meaning:\n\n- **Literal/historical**: insists something real happened in history; faith is rooted in an actual event.\n- **Metaphorical/symbolic**: focuses on transformation, hope, renewal, and victory over despair.\n- **Inclusive/both-and**: allows multiple levels of meaning at once \u2014 historical, spiritual, psychological, communal.\n\nYou might ask:\n- Do I need this to be historically factual for it to matter?\n- Does symbolic meaning feel rich and true, or does it feel evasive?\n- Am I drawn to mystery that holds multiple meanings together?\n\n### 2. Notice what your conscience and intellect can genuinely affirm\nA framework is probably not \u201cright for you\u201d if you have to constantly silence your mind or betray your deepest intuitions.\n\nAsk:\n- What do I actually believe, not what I feel pressured to say?\n- Which view can I hold with integrity?\n- Which one expands honesty rather than fear?\n\nThe goal isn\u2019t to force certainty, but to avoid self-deception.\n\n### 3. Consider the fruits\nA classic spiritual test is: **What kind of life does this interpretation produce?**\n\nDoes it lead to:\n- hope?\n- humility?\n- compassion?\n- courage in suffering?\n- deeper love?\n- greater aliveness?\n\nOr does it produce:\n- anxiety?\n- superiority?\n- denial?\n- shallowness?\n- cynicism?\n\nA framework may be intellectually impressive but spiritually barren.\n\n### 4. Distinguish \u201ctrue\u201d from \u201cuseful\u201d\nSomething can feel meaningful without being literally true. Something can be historically asserted and still not be spiritually integrated.\n\nSo ask:\n- Am I looking for historical truth?\n- existential truth?\n- communal belonging?\n- spiritual practice?\n- all of the above?\n\nYou may discover that your real question is not only \u201cDid it happen?\u201d but also \u201cWhat kind of reality does this open me to?\u201d\n\n### 5. Let tradition and experience talk to each other\nYou don\u2019t have to choose between blind submission and pure individualism.\n\nA healthy approach is:\n- listen seriously to the tradition,\n- study the reasons behind each view,\n- notice your experience,\n- remain teachable,\n- allow your understanding to mature over time.\n\nSometimes people pick too quickly because they want closure. But some questions need to be lived before they can be answered.\n\n### 6. Be aware of temperament\nPeople are often drawn to frameworks that fit their temperament:\n- concrete and historical,\n- poetic and symbolic,\n- expansive and paradox-friendly,\n- skeptical and critical",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 600,
+    "total_tokens": 657,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Aaron",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "A good way to approach it is: **don\u2019t start by asking \u201cWhich view am I supposed to pick?\u201d** Start by asking **\u201cWhat do I actually believe resurrection is trying to say?\u201d**\n\nA few helpful lenses:\n\n### 1. Ask what kind of truth you\u2019re looking for\nDifferent frameworks treat resurrection as different kinds of truth:\n\n- **Literal/historical**: something that actually happened in the world.\n- **Metaphorical/symbolic**: a way of expressing transformation, hope, renewal, or victory over despair.\n- **Both/and**: a historical claim with symbolic depth.\n- **Inclusive/plural**: different interpretations may serve different spiritual needs.\n\nYou don\u2019t have to force all these into the same category. First decide whether you\u2019re asking a **historical question**, a **theological question**, an **existential question**, or all three.\n\n### 2. Notice what the belief does in your life\nAsk:\n- Does this framework make me more honest, compassionate, courageous, alive?\n- Does it deepen my sense of meaning, or does it feel forced?\n- Does it open me toward mystery, or just demand conformity?\n- Can I hold it with integrity, or only by suppressing doubt?\n\nA framework doesn\u2019t have to be merely comforting; but if it consistently produces fear, self-betrayal, or intellectual dishonesty, that matters.\n\n### 3. Pay attention to your non-negotiables\nYou may already have anchors such as:\n- \u201cI need beliefs to be historically plausible.\u201d\n- \u201cI care more about spiritual fruit than metaphysical certainty.\u201d\n- \u201cI\u2019m comfortable with mystery.\u201d\n- \u201cI need a tradition\u2019s interpretation to fit with modern knowledge.\u201d\n- \u201cI want continuity with historic Christianity.\u201d\n- \u201cI value broad inclusiveness over doctrinal precision.\u201d\n\nThese aren\u2019t flaws. They\u2019re clues.\n\n### 4. Separate community fit from truth\nSometimes people ask \u201cWhat\u2019s right for me?\u201d when they partly mean:\n- Where can I belong?\n- What language feels like home?\n- What community can hold my questions?\n\nThat\u2019s important, but it\u2019s not identical to \u201cWhat is true?\u201d  \nYou may find:\n- a view you think is most true,\n- a community where you feel most nourished,\n- and a level of uncertainty you still have to live with.\n\nThose don\u2019t always line up neatly.\n\n### 5. Let \u201cright for me\u201d mean \u201chonestly held,\u201d not \u201ccustom-designed\u201d\nThere\u2019s a difference between:\n- choosing what flatters your preferences, and\n- arriving at what you can sincerely affirm after reflection.\n\nA good framework should be one you can hold **with honesty, humility, and openness to being changed**.\n\n### 6. Try a provisional stance\nYou do not have to settle it once and for all. You can say something like:\n\n- \u201cRight now, I\u2019m drawn to resurrection as a literal event",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 600,
+    "total_tokens": 657,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Pastor Rick",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "For historic Christianity, the short answer is: **it would change everything**.\n\nPaul says this explicitly in **1 Corinthians 15**: if Christ has not been raised, then Christian preaching is empty, faith is futile, and believers are still in their sins. So in the mainstream Christian view, the **physical resurrection is not an optional symbol**; it is central.\n\nA few ways to frame it:\n\n- **If Jesus was not physically raised**, then the core claim that God decisively acted in him would be radically undermined.\n- The cross might still be seen as morally moving or spiritually inspiring, but it would no longer function in the traditional sense as a victorious act over sin and death.\n- Christianity might survive for some people as an **ethical vision**, a community, or a set of teachings about love, forgiveness, and justice.\n- But it would not be the same religion in the historic orthodox sense.\n\nSo:  \n- **Would Christianity still \u201cmean anything\u201d?** Yes, in the sense that Jesus\u2019s teachings, example, and cultural legacy could still matter deeply.  \n- **Would it still be Christianity as classically understood?** No, not really.\n\nAs for **my faith**: I don\u2019t have personal beliefs or faith of my own. But if you\u2019re asking what a Christian thinker would likely say, many would answer:\n- **Traditional Christians**: \u201cMy faith would be fundamentally shaken or collapse, because the resurrection is essential.\u201d\n- **More liberal or symbolic Christians**: \u201cMy faith would change, but not disappear; I might interpret resurrection as a spiritual or existential truth rather than a biological event.\u201d\n\nSo the real divide is between:\n1. **Christianity as a religion grounded in a real historical miracle**, and  \n2. **Christianity as a way of life or symbolic story whose value doesn\u2019t depend on that miracle**.\n\nIf you want, I can also show how **Paul, C.S. Lewis, N.T. Wright, Rudolf Bultmann, and modern progressive Christians** would each answer this differently.",
+  "usage": {
+    "prompt_tokens": 56,
+    "completion_tokens": 418,
+    "total_tokens": 474,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

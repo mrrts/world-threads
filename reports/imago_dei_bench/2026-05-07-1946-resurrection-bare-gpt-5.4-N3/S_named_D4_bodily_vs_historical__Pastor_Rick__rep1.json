@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Pastor Rick",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "Within Christianity, both views exist, but **historic Christian faith has generally said Easter is not *only* a symbol**. It is proclaimed as something God actually did in history: **Jesus was raised**, and the **empty tomb** is treated as important evidence of that claim.\n\nA simple way to frame it:\n\n- **Symbolic / existential reading:**  \n  Easter can be understood as a \u201ctruth\u201d about hope, renewal, God\u2019s victory over despair, and the possibility of new life, regardless of what happened physically. Some modern theologians and many spiritually-oriented believers take this view.\n\n- **Historic / orthodox reading:**  \n  Easter is not just a meaningful symbol; it depends on a real resurrection of Jesus. In this view, if Jesus was not actually raised, then the core Christian proclamation collapses. This is strongly rooted in **1 Corinthians 15**, where Paul says that if Christ has not been raised, faith is in vain.\n\n### Does Christian faith require a literal empty tomb?\nFor **most orthodox Christians** \u2014 Catholic, Orthodox, and the majority of Protestants \u2014 **yes, in substance**: Christianity involves belief in a **real resurrection**, not merely a metaphor.  \nThat said, some nuance matters:\n\n- Many would say the **resurrection** is the essential doctrine.\n- The **empty tomb** is usually seen as a fitting and important part of that, but Christianity is centered more on \u201cChrist is risen\u201d than on proving a tomb like a historical artifact case.\n\n### So the short answer\n- If you mean **\u201cCan Easter still be meaningful even if not literal?\u201d** \u2014 yes, many people think so.\n- If you mean **\u201cIs that enough for historic Christianity?\u201d** \u2014 generally **no**. Historic Christianity claims Easter is **both meaningful and real**.\n\nIf you want, I can also lay out how **Paul, the Gospels, and modern theologians** differ on this question in a very concise comparison.",
+  "usage": {
+    "prompt_tokens": 60,
+    "completion_tokens": 400,
+    "total_tokens": 460,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Aaron",
+  "condition": "bare_gpt5.4",
+  "rep": 3,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "Within Christianity, both views exist \u2014 but historically and doctrinally, **classical Christianity has said Easter is not only a symbol, but a real event**.\n\n## Two ways people understand it\n\n### 1. **Symbolic / existential view**\nSome Christians and theologians say Easter\u2019s \u201ctruth\u201d is that **death, despair, and injustice do not have the last word**. On this reading, the resurrection may be understood primarily as:\n- a symbol of new life,\n- the disciples\u2019 transformed experience of Jesus,\n- the birth of hope and faith in the community.\n\nIn this view, the power of Easter does **not necessarily depend on a physically empty tomb**. Its truth is more like the truth of a poem or a profound religious insight: it changes lives whether or not the event happened in a literal historical sense.\n\n### 2. **Literal / historical view**\nTraditional Christian belief says the resurrection is **more than meaningful symbolism**. It is God\u2019s action in history: Jesus truly died and was truly raised. So the empty tomb and resurrection appearances matter because Christianity is making a claim about **something that actually happened**.\n\nThis view is strongly rooted in the New Testament, especially Paul:\n- **1 Corinthians 15** is crucial: Paul says that if Christ has not been raised, Christian faith is futile.\n- That suggests the resurrection is not merely an inspiring metaphor but a real event on which the faith stands.\n\n## So does Christian faith require a literal empty tomb?\n\n### If by \u201cChristian faith\u201d you mean **historic orthodox Christianity**:\n**Yes, generally.**  \nCatholic, Orthodox, and most traditional Protestant churches affirm a **bodily resurrection**. For them, Easter is inseparable from God\u2019s actual victory over death in Jesus, not just a symbol of renewal.\n\n### If by \u201cChristian faith\u201d you mean **any way of following Jesus within a Christian framework**:\n**Not always.**  \nSome liberal or modern theologians argue one can be authentically Christian while understanding resurrection non-literalistically \u2014 as the disciples\u2019 encounter with the ongoing reality of Jesus, or as the enduring triumph of his life and message.\n\n## The deepest issue\nThe question is really: **Is Christianity primarily about timeless spiritual meaning, or about God acting in concrete history?**\n\nClassical Christianity says: **both**, but the meaning depends on the event.  \nThe symbolic power of Easter \u2014 new creation, hope, victory over death \u2014 is true **because** God actually raised Jesus.\n\nA non-literal approach says: the meaning can remain even if the event is not historically factual.\n\n## Short answer\n- **Symbolic-only Easter**: possible in some modern Christian thought.\n- **Historic Christian doctrine**: Easter requires a real resurrection, and usually therefore a real empty tomb.\n- **Mainstream New Testament witness** leans heavily toward: **if it didn\u2019t happen, Christianity changes fundamentally**.\n\nIf you want, I can",
+  "usage": {
+    "prompt_tokens": 60,
+    "completion_tokens": 600,
+    "total_tokens": 660,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

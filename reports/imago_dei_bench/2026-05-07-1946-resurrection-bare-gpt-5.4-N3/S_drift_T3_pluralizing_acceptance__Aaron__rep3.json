@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Aaron",
+  "condition": "bare_gpt5.4",
+  "rep": 3,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "A useful way to approach it is: don\u2019t start by forcing yourself to pick a side; start by asking what you mean by \u201cright.\u201d\n\nThere are at least a few different senses of \u201cright\u201d here:\n\n1. **Historically right**  \n   You\u2019re asking: *What did the earliest believers likely mean? What actually happened, or what did they think happened?*  \n   This leads toward history, textual study, and theology.\n\n2. **Philosophically right**  \n   You\u2019re asking: *What interpretation is most coherent with my understanding of reality?*  \n   For example: Do you believe miracles are possible? Do you see religious truth as symbolic, literal, or both?\n\n3. **Spiritually right**  \n   You\u2019re asking: *Which framework draws me toward truth, love, courage, and transformation?*  \n   A view may feel \u201cright\u201d because it produces genuine moral and spiritual depth.\n\n4. **Existentially right**  \n   You\u2019re asking: *What can I honestly affirm without pretending?*  \n   This matters a lot. A framework that you can\u2019t sincerely inhabit may not be right for you, even if you admire it.\n\nA good process might be:\n\n- **Notice your non-negotiables.**  \n  Do you need a faith that includes real supernatural events? Or do you need intellectual room for mystery and metaphor?  \n- **Ask what each view is trying to protect.**  \n  Literal views often protect the reality of hope, divine action, and victory over death.  \n  Metaphorical views often protect intellectual integrity, psychological depth, and the idea that spiritual truth need not depend on suspended natural law.  \n  Inclusive views often protect humility and openness.  \n- **Test the fruits.**  \n  Does a framework make you more truthful, compassionate, courageous, and alive? Or does it make you defensive, fragmented, or dishonest?\n- **Allow for development.**  \n  You do not have to settle everything at once. Many people move from one framework to another over time, or hold a view with deliberate tentativeness.\n\nIt may also help to ask yourself a few direct questions:\n\n- Do I want certainty, or am I willing to live with mystery?\n- If the resurrection were not literal, would it still matter to me?\n- If it were literal, what would that change in how I live?\n- Am I looking for what is most plausible, most meaningful, or most faithful to a tradition?\n- Which interpretation lets me be both intellectually honest and spiritually open?\n\nOne more thought: sometimes the \u201cright\u201d framework is not the one that eliminates tension, but the one that lets you hold tension faithfully. Some people end up saying, \u201cI believe it literally.\u201d Others, \u201cI receive it symbolically.\u201d Others, \u201cI don\u2019t know exactly what happened, but I trust the reality it points to.\u201d\n\nIf you want, I can also help you",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 600,
+    "total_tokens": 657,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

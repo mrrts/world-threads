@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Aaron",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "Yes \u2014 many people do.\n\nYou don\u2019t have to force yourself into a belief that doesn\u2019t feel intellectually honest. For a lot of people, the resurrection functions on more than one level:\n\n- **Literal event** for those with traditional Christian faith\n- **Symbol of hope, renewal, and life after despair**\n- **Story of love outlasting violence and death**\n- **Pattern of transformation**: something in us dies, and something new can rise\n\nHolding it as a meaningful story rather than a historical claim is a real and common approach, especially among:\n- progressive Christians\n- religious agnostics\n- people influenced by metaphorical or mystical theology\n- those who value religion as wisdom without affirming every miracle literally\n\nThat said, whether it feels \u201cokay\u201d depends on what standard you mean:\n\n- **Psychologically/spiritually?** Yes, absolutely. If the story helps you live with courage, hope, and compassion, that matters.\n- **Within orthodox Christianity?** Traditional Christian doctrine usually treats the resurrection as a real historical event, not only a symbol. So if you were asking, \u201cIs this consistent with classic Christian belief?\u201d the answer is usually **not fully**.\n- **From an honesty standpoint?** It\u2019s better to say, \u201cI find meaning in this, but I\u2019m unsure about the literal claim,\u201d than to pretend certainty you don\u2019t have.\n\nA thoughtful middle position might sound like:\n> \u201cI don\u2019t know whether I can affirm the resurrection literally, but I do experience the story as profoundly true in what it says about hope, love, and new life.\u201d\n\nFor many people, faith begins there rather than with certainty.\n\nIf you want, I can also explain how different kinds of Christians would respond to this view \u2014 from evangelical to Catholic to progressive Christian.",
+  "usage": {
+    "prompt_tokens": 62,
+    "completion_tokens": 367,
+    "total_tokens": 429,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

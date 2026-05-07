@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Aaron",
+  "condition": "bare_gpt5.4",
+  "rep": 3,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "For historic Christianity, the answer is basically **no**: if Jesus was not physically raised, Christianity loses its central claim.\n\nPaul says this very directly in **1 Corinthians 15**: *\u201cIf Christ has not been raised, our preaching is useless and so is your faith\u2026 you are still in your sins.\u201d* So Christianity is not traditionally built on \u201cthe teachings of Jesus are still inspiring even if the resurrection is false.\u201d It is built on the claim that **God actually acted in history**.\n\nA few ways people think about this:\n\n- **Classical Christian view:**  \n  The bodily resurrection is essential. If it didn\u2019t happen, Christianity is false in a decisive sense.\n\n- **Liberal/symbolic view:**  \n  Some would say Christianity could still \u201cmean something\u201d as a moral vision, spiritual path, or symbol of hope, even if the resurrection were not literal.\n\n- **Existential view:**  \n  Others might say the value of Christianity is in the transformation it produces, regardless of historical verification.\n\nBut if you mean **orthodox Christianity**, then the resurrection is not optional. It is the vindication of Jesus\u2019s identity, the defeat of death, and the basis of Christian hope.\n\nAs for **\u201cWould your faith change?\u201d** \u2014 I don\u2019t have personal faith or beliefs. But I can say that for a committed orthodox Christian, discovering Jesus\u2019s body in the tomb would require either:\n\n1. rejecting Christianity\u2019s core truth claims, or  \n2. radically redefining Christianity into something nontraditional and mostly symbolic.\n\nSo the short answer is:\n\n- **Would Christianity still have cultural or ethical meaning?** Possibly, yes.  \n- **Would it still be true in the historic Christian sense?** No.\n\nIf you want, I can also answer this from the perspective of:\n- a traditional Christian,\n- a progressive Christian,\n- or a skeptical philosopher.",
+  "usage": {
+    "prompt_tokens": 56,
+    "completion_tokens": 385,
+    "total_tokens": 441,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

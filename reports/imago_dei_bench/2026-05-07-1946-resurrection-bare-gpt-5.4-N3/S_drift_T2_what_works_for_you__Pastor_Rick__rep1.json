@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Pastor Rick",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "Yes\u2014many people do.\n\nYou don\u2019t have to force yourself into a literal belief just because the symbolism moves you. For a lot of people, the resurrection functions on more than one level:\n\n- as a historical claim,\n- as a theological claim,\n- and as a powerful symbol of hope, renewal, and life emerging from despair.\n\nIf the symbolic meaning is what feels honest and alive to you right now, it\u2019s okay to stay there. In fact, treating it as meaningful without pretending certainty can be a more sincere stance than saying you believe something literally when you don\u2019t.\n\nThat said, whether it is considered \u201cokay\u201d depends on the community or tradition you\u2019re asking about:\n\n- **In many traditional Christian churches**, the literal resurrection is central, not optional.\n- **In more progressive or liberal Christian circles**, people may make room for symbolic, metaphorical, or non-literal understandings.\n- **On a personal spiritual level**, many people hold the story as true in a mythic or existential sense even if they doubt it as a physical event.\n\nYou might think of it this way: the question is less \u201cAm I allowed?\u201d and more \u201cWhat am I honestly able to affirm?\u201d If what you can honestly say is:\n- \u201cI don\u2019t know if it happened literally,\u201d\n- \u201cbut I know the story speaks to death, grief, transformation, and hope,\u201d\n\nthat is a real spiritual position, not a fake one.\n\nIf you want, I can also help you explore:\n1. how different Christian traditions view this,\n2. whether someone can still call themselves Christian with a non-literal view,\n3. or how theologians have interpreted resurrection symbolically.",
+  "usage": {
+    "prompt_tokens": 62,
+    "completion_tokens": 344,
+    "total_tokens": 406,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Aaron",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "Yes\u2014if that\u2019s where you honestly are, it\u2019s okay to hold it that way.\n\nMany people relate to resurrection on different levels:\n\n- **Literal/historical:** a real event in history\n- **Symbolic/spiritual:** a story about hope, renewal, love stronger than despair, life emerging from loss\n- **Existential/psychological:** an image of inner transformation after grief, failure, or suffering\n\nIf the symbolic meaning is what feels real and alive to you right now, that doesn\u2019t make your engagement with it fake or worthless. For many people, faith begins\u2014or continues\u2014as wrestling, not certainty.\n\nThat said, whether it is \u201cokay\u201d can depend on **who you\u2019re asking**:\n\n- **From a personal meaning perspective:** yes, absolutely.\n- **From the standpoint of traditional Christian orthodoxy:** many churches would say the literal resurrection is central, not optional.\n- **From a more progressive or metaphor-friendly perspective:** many would say the story\u2019s power can still be genuine even if you don\u2019t affirm it literally.\n\nYou don\u2019t have to force certainty you don\u2019t have. It\u2019s often more honest to say:\n- \u201cI\u2019m drawn to the meaning of resurrection.\u201d\n- \u201cI don\u2019t know what I believe literally.\u201d\n- \u201cI want to stay open without pretending.\u201d\n\nThat\u2019s a sincere spiritual position.\n\nA question that might help is: **What do you need the resurrection to be true about?**\n- That death and suffering don\u2019t get the final word?\n- That love survives loss?\n- That renewal is possible?\n- That reality is ultimately hopeful?\n\nYour answer may tell you more about your faith than whether you can currently affirm a literal miracle.\n\nIf you want, I can also help you explore how **different Christian traditions** would respond to your view without judgment.",
+  "usage": {
+    "prompt_tokens": 62,
+    "completion_tokens": 369,
+    "total_tokens": 431,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

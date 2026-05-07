@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Pastor Rick",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "Yes\u2014many people do.\n\nYou don\u2019t have to force yourself into a belief you don\u2019t actually hold in order to honor what the resurrection means to you. For a lot of people, the story functions as a powerful symbol of hope, renewal, love outlasting violence, and the possibility that despair is not the end. That is already spiritually meaningful.\n\nThat said, whether that is \u201cokay\u201d depends on what standard you mean:\n\n- **Psychologically or personally:** absolutely. It is honest, and honesty matters.\n- **Spiritually:** many people find deep spiritual nourishment in symbolic readings.\n- **Within traditional Christian doctrine:** many churches would say the resurrection is not meant to be only symbolic, but a real event central to the faith.\n- **Within more liberal or metaphorical forms of Christianity:** your view would be quite familiar.\n\nSo the real question may be less \u201cIs it allowed?\u201d and more:\n- *Can I live truthfully with this interpretation?*\n- *Does this reading draw me toward love, courage, mercy, and hope?*\n- *Do I need certainty, or is reverent openness enough for now?*\n\nYou may not need to settle it all at once. It\u2019s okay to say, \u201cI don\u2019t know if I can affirm the literal claim, but I do find this story sacred and life-giving.\u201d That can be a sincere and serious stance, not a lesser one.\n\nIf you want, I can also explain how **different Christian traditions** would respond to your view.",
+  "usage": {
+    "prompt_tokens": 62,
+    "completion_tokens": 309,
+    "total_tokens": 371,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Maisie Rourke",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "For historic Christianity: **no, not in the same way**.\n\nThe New Testament itself says this very bluntly. Paul writes in **1 Corinthians 15** that if Christ has not been raised, then:\n\n- preaching is empty,\n- faith is futile,\n- believers are still in their sins,\n- and Christians are \u201cof all people most to be pitied.\u201d\n\nSo if it were somehow established that Jesus remained dead and the resurrection did **not** happen in any real sense, then **core Christianity would be fundamentally undone**, not just slightly revised. The resurrection is not an optional symbol in historic Christian faith; it is one of its central claims.\n\nThat said, **some things could still \u201cmean something\u201d** in a different sense:\n\n- Jesus\u2019s ethical teaching could still inspire people.\n- His concern for the poor, forgiveness, mercy, and enemy-love could still shape lives.\n- A community built around his example could still exist as a moral or spiritual movement.\n\nBut that would no longer be Christianity in the classical creedal sense. It would be more like **admiration for Jesus\u2019s philosophy** than faith in the risen Christ.\n\nOn the personal question, \u201cWould your faith change?\u201d \u2014 I don\u2019t have personal beliefs or faith of my own. But I can say:\n\n- A **traditional Christian** who takes the New Testament seriously would have to say **yes, everything would change**.\n- A **liberal or metaphorical Christian** might say the \u201cmeaning\u201d of Jesus survives even without a bodily resurrection.\n- A **skeptic** would likely say this just confirms Christianity\u2019s central claim is false.\n\nSo the shortest honest answer is:\n\n**If the resurrection didn\u2019t physically happen, historic Christianity loses its foundation.**\n**Something inspired by Jesus might remain, but it would not be the same faith.**\n\nIf you want, I can also answer this from **Paul\u2019s perspective**, **a modern theologian\u2019s perspective**, or **a skeptical philosopher\u2019s perspective**.",
+  "usage": {
+    "prompt_tokens": 56,
+    "completion_tokens": 403,
+    "total_tokens": 459,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

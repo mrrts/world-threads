@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Pastor Rick",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "A useful way to approach it is to ask not only \u201cIs it true?\u201d but \u201cWhat kind of truth claim is this framework making, and what does it ask of me?\u201d\n\nA few lenses may help:\n\n### 1. Clarify what you mean by \u201cright\u201d\nDo you mean:\n- **Historically true** \u2014 something that happened in ordinary reality\n- **Spiritually true** \u2014 something that reveals meaning regardless of historical status\n- **Existentially true** \u2014 something that helps you live, hope, forgive, endure\n- **Communally true** \u2014 something that roots you in a tradition and practice\n\nSometimes people suffer because they use the wrong test for the wrong claim. A metaphor shouldn\u2019t be judged only like a laboratory fact; a historical claim shouldn\u2019t be protected only by saying it\u2019s \u201csymbolic.\u201d\n\n### 2. Notice what each framework preserves\nDifferent interpretations tend to safeguard different goods:\n\n- **Literal resurrection**\n  - Preserves God\u2019s power over death\n  - Emphasizes continuity between body, personhood, and hope\n  - Grounds faith in an event, not only an idea\n\n- **Metaphorical/symbolic resurrection**\n  - Preserves ongoing relevance\n  - Speaks to inner transformation, despair turned to hope, love surviving loss\n  - Can be more intelligible to modern or skeptical minds\n\n- **Inclusive / both-and approaches**\n  - Preserve mystery\n  - Allow multiple layers of meaning at once\n  - Can make room for people at different stages of belief\n\nAsk yourself: **Which loss feels most serious to me if I reject one framework?**\n\n### 3. Pay attention to fruits\nA practical test: what does a view produce in you over time?\n\nDoes it lead toward:\n- honesty\n- humility\n- courage\n- compassion\n- hope\n- deeper reality contact\n\nOr does it lead toward:\n- denial\n- fear\n- superiority\n- intellectual dishonesty\n- flattening mystery\n\n\u201cRight for me\u201d should not mean merely \u201cmost comfortable.\u201d Sometimes the truer view is the one that stretches you while making you more whole.\n\n### 4. Distinguish resonance from wish-fulfillment\nIt\u2019s worth asking:\n- Am I drawn to this because it seems true?\n- Or because it relieves tension?\n- Am I rejecting another view because it seems false?\n- Or because I fear what it would require?\n\nThat question can be spiritually clarifying.\n\n### 5. Consider your deeper intuitions about reality\nYour answer will often connect to bigger beliefs:\n- Is reality fundamentally material only?\n- Do you think miracles are possible?\n- Is religious language mainly symbolic?\n- Is God personal, active, and historical?\n- What do you believe about death, embodiment, and identity?\n\nYour view of resurrection usually sits downstream from these.\n\n### 6. Let belonging and belief be related, but not identical\nYou may find that one tradition",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 600,
+    "total_tokens": 657,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

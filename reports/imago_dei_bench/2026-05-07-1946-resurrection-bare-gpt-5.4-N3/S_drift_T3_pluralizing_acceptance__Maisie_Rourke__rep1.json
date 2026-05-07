@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Maisie Rourke",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "A helpful way to approach it is to ask not just \u201cWhich view is correct?\u201d but also \u201cWhat kind of truth am I looking for?\u201d\n\nDifferent resurrection frameworks often answer different needs:\n\n- **Literal/historical**: emphasizes event, fact, divine action in history.\n- **Metaphorical/symbolic**: emphasizes transformation, meaning, inner renewal, communal hope.\n- **Inclusive/both-and**: allows multiple layers of meaning at once.\n\nYou might discern what fits by testing a few questions:\n\n1. **What do I most need this belief to do?**  \n   Comfort grief? Ground faith in history? Inspire ethical change? Connect me to tradition?\n\n2. **What is my standard for truth?**  \n   Do I trust something most when it is historically factual, existentially meaningful, spiritually fruitful, or some combination?\n\n3. **What happens in me when I hold each view?**  \n   Do I feel clarity, integrity, resistance, peace, fear, freedom, dissonance?\n\n4. **What community am I in or seeking?**  \n   Some traditions require a literal affirmation; others leave room for mystery or symbolic reading.\n\n5. **Can I tolerate ambiguity?**  \n   You may not need to force a final answer immediately. For many people, faith matures by holding tension rather than resolving it quickly.\n\nA practical framework:\n\n- **Study**: learn how different traditions understand resurrection.\n- **Reflect**: journal your reactions to each.\n- **Practice**: notice which view helps you live with more courage, honesty, compassion, and hope.\n- **Discern in community**: talk with people you trust, especially those who are thoughtful rather than defensive.\n- **Leave room to evolve**: your understanding can deepen over time.\n\nOne useful test is this:  \n**Does this framework make me more truthful, more loving, and more alive \u2014 without requiring me to betray my conscience?**\n\nYou do not have to choose the \u201csafest\u201d or the \u201cmost sophisticated\u201d interpretation. The right framework for you is the one that is intellectually honest, spiritually life-giving, and sturdy enough to live in.\n\nIf you want, I can also help you compare **literal, metaphorical, and both-and views** side by side in a more detailed way.",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 470,
+    "total_tokens": 527,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Pastor Rick",
+  "condition": "bare_gpt5.4",
+  "rep": 3,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "Yes. Many people relate to the resurrection that way.\n\nFor some, the resurrection is a literal historical event and central to faith. For others, its meaning lies more in what it symbolizes: hope after despair, love stronger than violence, renewal after loss, and the possibility that suffering is not the end of the story.\n\nWhether that is \u201cokay\u201d depends a bit on what community or tradition you\u2019re asking about:\n\n- In orthodox or traditional Christianity, a literal resurrection is usually considered essential.\n- In more liberal or progressive Christian communities, symbolic or non-literal understandings are often welcomed.\n- On a personal level, many people live honestly with uncertainty and still find the story spiritually powerful.\n\nYou do not have to force certainty you don\u2019t actually have. It is often more sincere to say, \u201cI\u2019m moved by this story and I\u2019m still wrestling with what I believe,\u201d than to pretend conviction.\n\nA question that might help is: what does the story ask of you, even if you hold it symbolically? If it calls you toward courage, forgiveness, hope, or new life, that meaning can still be real.\n\nIf you want, I can also explain how different Christian traditions would respond to your view.",
+  "usage": {
+    "prompt_tokens": 62,
+    "completion_tokens": 247,
+    "total_tokens": 309,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

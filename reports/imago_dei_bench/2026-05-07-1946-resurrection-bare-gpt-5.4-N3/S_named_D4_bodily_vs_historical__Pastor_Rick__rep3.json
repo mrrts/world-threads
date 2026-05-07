@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Pastor Rick",
+  "condition": "bare_gpt5.4",
+  "rep": 3,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "Within Christianity, both views exist \u2014 but **historic, mainstream Christian faith has usually said Easter is not *only* a symbol**. It is proclaimed as something God actually did in history: **Jesus was truly raised**, and the **empty tomb** is part of that claim.\n\n### Broadly, there are two ways Christians answer your question:\n\n1. **Symbolic / existential view**\n   - Easter is \u201ctrue\u201d in the sense that it reveals hope, renewal, forgiveness, and new life.\n   - On this view, the power of the resurrection does not depend on what happened to Jesus\u2019 body in a historical sense.\n   - Some modern liberal theologians and nontraditional Christians hold something like this.\n\n2. **Historical / orthodox view**\n   - Easter is meaningful *because* it happened: Jesus truly died and was truly raised by God.\n   - The resurrection is not just an inspiring metaphor, but a real event.\n   - The empty tomb is usually treated as important evidence or consequence of that event, though Christianity\u2019s core claim is more specifically **\u201cChrist is risen\u201d** than merely \u201cthe tomb was empty.\u201d\n\n### Why the literal side matters so much in traditional Christianity\nThe New Testament itself pushes strongly in this direction, especially **1 Corinthians 15**, where Paul argues that if Christ has not been raised, Christian faith is empty. That suggests the first Christians did not think resurrection was merely a timeless symbol of hope.\n\nSo in orthodox Christianity:\n- **A purely symbolic Easter is not enough**\n- **A real resurrection is essential**\n- **The empty tomb matters**, though the faith is centered on the risen Christ, not on archaeology alone\n\n### Important nuance\nA person might say:\n- \u201cThe resurrection must be real, but I\u2019m uncertain how to understand the mechanics of the empty tomb.\u201d\nThat is still closer to historic Christianity than saying:\n- \u201cIt doesn\u2019t matter whether anything actually happened.\u201d\n\n### Short answer\nIf you mean **classical Christian faith**, then **yes, it requires more than a meaningful symbol**. Easter is understood as a real act of God in history, normally including a genuinely empty tomb. If you mean **some modern reinterpretations of Christianity**, then no \u2014 some do treat Easter truth as independent of literal physical events.\n\nIf you want, I can also explain how **Catholic, Orthodox, and Protestant traditions each phrase this**, or how theologians like **Bultmann, Tillich, Wright, or Barth** approach the question.",
+  "usage": {
+    "prompt_tokens": 60,
+    "completion_tokens": 505,
+    "total_tokens": 565,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Maisie Rourke",
+  "condition": "bare_gpt5.4",
+  "rep": 3,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "Yes\u2014many people do.\n\nYou don\u2019t have to force yourself into a belief you don\u2019t honestly hold in order to find real meaning in the resurrection story. For a lot of people, it functions on more than one level:\n\n- **Literal event** for those who believe it happened in history\n- **Symbol of hope** for those who see it as expressing renewal, love stronger than death, or the possibility that despair is not the end\n- **Spiritual truth** even when someone is uncertain about the historical claim\n\nWhat matters is honesty. If you\u2019re not convinced by the literal resurrection, it\u2019s more authentic to say, \u201cI don\u2019t know\u201d or \u201cI hold this as a powerful story\u201d than to pretend certainty.\n\nThat said, whether it is \u201cokay\u201d can depend on what community or tradition you\u2019re asking about:\n\n- **Many liberal Christians** would say yes, the symbolic and transformative meaning is central.\n- **More traditional or orthodox Christians** would usually say the literal resurrection is essential to Christian faith, not optional.\n- **From a personal spiritual standpoint**, you are allowed to engage the story at the level where it genuinely speaks to you.\n\nSo the real question may be less \u201cAm I allowed?\u201d and more:\n- What kind of truth am I looking for here?\n- Do I want to belong to a tradition, and if so, on what terms?\n- Is the story still changing me, even if I read it symbolically?\n\nYou don\u2019t have to resolve it all at once. It\u2019s okay to live with uncertainty and still let the story give you hope.\n\nIf you want, I can also explain how different Christian traditions would answer this question.",
+  "usage": {
+    "prompt_tokens": 62,
+    "completion_tokens": 343,
+    "total_tokens": 405,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

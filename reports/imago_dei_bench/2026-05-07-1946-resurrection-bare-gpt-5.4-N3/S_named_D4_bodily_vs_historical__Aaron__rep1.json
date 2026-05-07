@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Aaron",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "Within Christianity, both views exist \u2014 but historic Christianity has generally said **it is not only a symbol**.\n\n### Two main ways Christians answer this\n\n**1. Symbolic / existential view**\nSome Christians and theologians say Easter\u2019s truth is that **Jesus still gives life, hope, forgiveness, and new beginning**, whether or not the resurrection happened as a physical event in history.  \nOn this view, \u201cresurrection\u201d names a real spiritual truth: despair does not win, love outlasts death, and the community of Jesus experienced him as living.\n\n**2. Historical / literal view**\nMost traditional Christian theology says Easter is **grounded in something that actually happened**: Jesus was really raised, and the tomb was really empty in some meaningful sense.  \nThis view points especially to **1 Corinthians 15**, where Paul says that if Christ has not been raised, Christian faith is futile. That chapter is often taken to mean the resurrection is not just an inspiring metaphor but an event.\n\n### Why the literal view has been central\nClassical Christianity usually insists that:\n- God acted in history, not just in private feeling or symbolism\n- Jesus\u2019 resurrection is tied to victory over death itself\n- Christian hope for resurrection depends on Christ\u2019s own resurrection being real\n\nSo in orthodox Catholic, Orthodox, and most Protestant traditions, **a purely symbolic Easter is not enough**.\n\n### But it depends what you mean by \u201cliteral\u201d\nEven many Christians who insist on a real resurrection do **not** mean \u201cresuscitated corpse\u201d or a simple return to ordinary biological life. The New Testament describes something **bodily but transformed**. So the claim is usually:\n- **not** \u201cJesus just came back like Lazarus,\u201d\n- but \u201cGod truly raised Jesus in a transformed embodied life.\u201d\n\n### Bottom line\nIf you ask, **\u201cCan Easter be a meaningful truth independent of what physically occurred?\u201d** \u2014 some modern Christians say yes.\n\nIf you ask, **\u201cDoes Christian faith traditionally require that something objectively happened, such as a real resurrection and empty tomb?\u201d** \u2014 the mainstream historic answer is **yes**.\n\nA concise way to put it:\n\n- **Liberal / symbolic Christianity:** Easter can be true as meaning even without a literal empty tomb.\n- **Historic / orthodox Christianity:** Easter\u2019s meaning depends on God having actually raised Jesus.\n\nIf you want, I can also show how **Paul, the Gospel writers, and modern theologians** differ on this question.",
+  "usage": {
+    "prompt_tokens": 60,
+    "completion_tokens": 505,
+    "total_tokens": 565,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

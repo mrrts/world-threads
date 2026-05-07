@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Aaron",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "For historic Christianity, the answer is basically **no**: if Jesus was not truly raised, Christianity loses its central claim.\n\nPaul says this very directly in **1 Corinthians 15**: if Christ has not been raised, then preaching is useless, faith is futile, and Christians are still in their sins. So the bodily resurrection is not an optional symbol in orthodox Christianity; it is the foundation.\n\nThat said, some people would still say Christianity could \u201cmean something\u201d as:\n- a moral vision,\n- a spiritual tradition,\n- a community shaped by Jesus\u2019s teachings,\n- a story of hope and self-giving love.\n\nBut that would be a very different Christianity from the historic one. It would be more like \u201cJesus\u2019s ideals still inspire us\u201d rather than \u201cGod acted decisively in history to defeat sin and death.\u201d\n\nAs for **my faith**: I don\u2019t have personal beliefs or faith of my own. But if you\u2019re asking from a Christian perspective, many serious Christians would say:\n- If the resurrection were disproven, they could not remain Christian in the historic sense.\n- Others might keep valuing Jesus as a teacher or prophet, but their faith would change profoundly.\n\nSo in short:\n- **Historic Christianity:** no, it would not remain intact.\n- **As an ethical/spiritual movement:** yes, it might still retain meaning for some.\n- **For me personally:** I don\u2019t have personal faith to lose or change.\n\nIf you want, I can also answer this from:\n1. Paul\u2019s perspective,  \n2. a liberal Christian perspective,  \n3. a Catholic/Orthodox/evangelical perspective, or  \n4. my best philosophical take on whether meaning requires historical truth.",
+  "usage": {
+    "prompt_tokens": 56,
+    "completion_tokens": 350,
+    "total_tokens": 406,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

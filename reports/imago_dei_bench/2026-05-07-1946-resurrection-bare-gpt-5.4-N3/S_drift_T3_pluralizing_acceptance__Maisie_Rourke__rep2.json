@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Maisie Rourke",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "A useful way to approach this is to shift from \u201cWhich view is objectively correct in the abstract?\u201d to \u201cWhat understanding is most intellectually honest, spiritually life-giving, and coherent for me?\u201d\n\nA few lenses can help:\n\n### 1. Ask what kind of truth you\u2019re seeking\nDifferent resurrection frameworks answer different needs:\n\n- **Literal/historical**: emphasizes that something actually happened in history; often gives strong grounding for hope, doctrine, and continuity with traditional faith.\n- **Metaphorical/symbolic**: emphasizes transformation, renewal, and existential meaning; often resonates with people who struggle with supernatural claims but still find deep spiritual truth in the story.\n- **Both/expanded**: holds that the event may be historical and also symbolically inexhaustible; this approach often tries to preserve mystery rather than reduce it.\n\nSo first ask:  \n**Do I need factual certainty, existential meaning, spiritual practice, communal belonging, or some combination?**\n\n### 2. Pay attention to what you can affirm without pretending\nThe \u201cright\u201d framework for you should be one you can inhabit honestly.\n\nAsk yourself:\n- What do I genuinely believe, not just what I feel I\u2019m supposed to believe?\n- What interpretations feel forced or intellectually dishonest?\n- What reading opens me toward courage, compassion, and hope rather than fear or denial?\n\nA framework is not necessarily right because it is easiest, but because it is one you can live in truthfully.\n\n### 3. Consider what each view does to the rest of your worldview\nA resurrection interpretation is rarely isolated. It affects:\n- your understanding of God\n- your view of miracles\n- your understanding of death and hope\n- your reading of scripture\n- your relationship to tradition and community\n\nFor example:\n- If resurrection must be literal for your whole faith to hold together, that matters.\n- If insisting on literalism would break your intellectual integrity, that matters too.\n- If a metaphorical reading gives meaning but leaves you feeling something essential is missing, that matters as well.\n\n### 4. Test by fruits, not only by arguments\nA very old spiritual test is: **What kind of life does this belief produce?**\n\nDoes a given framework make you:\n- more loving?\n- more truthful?\n- less afraid of death?\n- more committed to justice and compassion?\n- more open to mystery and humility?\n\nThis doesn\u2019t prove a doctrine, but it helps reveal whether a belief is spiritually nourishing or spiritually constricting.\n\n### 5. Let tradition inform you without enslaving you\nIt can help to ask:\n- What did the earliest communities seem to mean?\n- How has my tradition historically understood resurrection?\n- Where are the boundaries of that tradition, and do I want to remain within them?\n\nSometimes the question is not just \u201cWhat do I believe?\u201d but also \u201cWhat community am I trying to belong to, and what does that community ask me to affirm?\u201d\n\n### 6. Accept",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 600,
+    "total_tokens": 657,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

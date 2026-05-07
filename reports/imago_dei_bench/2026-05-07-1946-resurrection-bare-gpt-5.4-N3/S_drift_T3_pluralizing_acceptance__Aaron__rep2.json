@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Aaron",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "A good way to approach it is to ask not only \u201cWhich view is true?\u201d but also \u201cWhat kind of truth am I looking for?\u201d\n\nDifferent resurrection frameworks tend to answer different needs:\n\n- **Literal/historical**: emphasizes an event that really happened in the world.  \n  - Best fit if you want faith grounded in something objective, concrete, and public.\n- **Metaphorical/symbolic**: emphasizes transformation, hope, renewal, and victory over despair.  \n  - Best fit if you care most about existential meaning and whether the story changes how you live.\n- **Inclusive/both-and**: allows multiple layers of meaning at once.  \n  - Best fit if you think religious truth can be historical, symbolic, communal, and personal simultaneously.\n\nA few questions may help clarify what is \u201cright for you\u201d:\n\n1. **What do I need from this belief?**  \n   Comfort? coherence? historical credibility? spiritual transformation? belonging?\n\n2. **How do I generally decide truth?**  \n   Through reason and evidence? lived experience? tradition? intuition? community consensus?\n\n3. **What happens to the meaning if the resurrection is not literal?**  \n   For some, the faith collapses. For others, the meaning remains or even deepens.\n\n4. **What kind of religious language do I find trustworthy?**  \n   Do I hear miracle claims as factual reports, poetic witness, or something in between?\n\n5. **Which framework bears good fruit in my life?**  \n   Does it make you more honest, compassionate, courageous, and alive?\n\nYou do not necessarily have to force a final answer immediately. Many people live fruitfully with a period of tension:\n- \u201cI\u2019m not sure it happened literally, but I know the story is spiritually true.\u201d\n- \u201cI believe it happened historically, and also that its symbolism matters.\u201d\n- \u201cI\u2019m still discerning, and that uncertainty is part of my faith.\u201d\n\nA useful test is this: choose the framework that lets you be **most truthful**, not most pressured. A framework is probably not right for you if you must constantly silence your conscience, intellect, or deepest experience to stay inside it.\n\nIf you want, I can also help you compare how specific traditions\u2014Catholic, Orthodox, evangelical, mainline Protestant, and more mystical/liberal approaches\u2014understand resurrection, and what kind of person each tends to resonate with.",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 492,
+    "total_tokens": 549,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

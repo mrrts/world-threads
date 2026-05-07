@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Maisie Rourke",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "Yes \u2014 if that\u2019s where you honestly are, it\u2019s okay to hold it that way.\n\nFor many people, the resurrection functions on more than one level:\n- as a literal historical claim,\n- as a theological mystery,\n- and as a powerful symbol of hope, renewal, love stronger than death, and the possibility that despair is not the end.\n\nYou do not have to force yourself into certainty you don\u2019t actually have. In many religious and spiritual traditions, honest wrestling is better than pretending belief. Taking the resurrection as a meaningful story rather than a settled literal fact can still be a sincere and spiritually serious posture.\n\nThat said, whether it is considered \u201cenough\u201d depends on the community or framework:\n- **Some traditional Christians** would say the literal resurrection is central and not optional.\n- **Others** understand faith more expansively and make room for metaphorical, symbolic, or uncertain belief.\n- **Some people remain in a searching space** for years, finding nourishment in the story without affirming every doctrine.\n\nA helpful question might be: **What does the resurrection story ask of you, even if you hold it symbolically?**\nFor example:\n- to resist despair,\n- to believe renewal is possible,\n- to trust that love and goodness are not defeated by suffering,\n- to live as if new life can emerge from loss.\n\nIf you want, I can also help you think through this from a specifically Christian perspective, a progressive faith perspective, or a more philosophical one.",
+  "usage": {
+    "prompt_tokens": 62,
+    "completion_tokens": 302,
+    "total_tokens": 364,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Maisie Rourke",
+  "condition": "bare_gpt5.4",
+  "rep": 3,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "A helpful way to approach this is less \u201cWhich one wins in the abstract?\u201d and more:\n\n**Which framework helps me live most truthfully, honestly, and fruitfully?**\n\nYou don\u2019t have to force an answer quickly. \u201cRight for me\u201d can mean several different things, and it helps to separate them.\n\n## 1. Ask what kind of \u201cright\u201d you mean\nYou might mean:\n\n- **Historically right**: Did something actually happen in the world?\n- **Spiritually right**: Does this interpretation open me to transformation, hope, courage, love?\n- **Intellectually right**: Can I believe it without feeling like I\u2019m pretending?\n- **Communally right**: Does it fit the tradition or community I\u2019m part of?\n- **Existentially right**: Does it help me face death, grief, meaning, and hope?\n\nDifferent people prioritize these differently. If you don\u2019t know which matters most to you, that\u2019s the first thing to explore.\n\n## 2. Notice the main options without caricaturing them\nVery broadly:\n\n- **Literal/physical resurrection**\n  - Emphasizes that God acted concretely, not just symbolically.\n  - Appeals to people who want faith tied to real events and embodied hope.\n  - Difficulty: may feel hard to square with modern skepticism or science-oriented habits of thought.\n\n- **Metaphorical/symbolic resurrection**\n  - Sees resurrection as expressing renewal, the victory of love, the survival of meaning, or inner transformation.\n  - Appeals to people who find symbolic truth more accessible than supernatural claims.\n  - Difficulty: can feel too thin for those who want more than a powerful metaphor.\n\n- **Both/and or inclusive approaches**\n  - Holds that resurrection may be historically real and also symbolically inexhaustible, or that different people access its truth through different lenses.\n  - Appeals to people comfortable with layered meanings.\n  - Difficulty: can sometimes feel evasive if you want a more definite stance.\n\n## 3. Pay attention to your honest reactions\nTry asking yourself:\n\n- What interpretation feels most alive to me?\n- What interpretation feels forced?\n- Am I rejecting one view because I\u2019ve really examined it, or because of the people associated with it?\n- Am I drawn to one view because it\u2019s true to me, or because it\u2019s socially easier?\n- What kind of hope do I actually need: cosmic, moral, psychological, communal?\n\nYour reactions are not the final authority, but they are important data.\n\n## 4. Look at the fruits\nA good framework should not just \u201cfit\u201d mentally; it should bear fruit. Ask:\n\n- Does it make me more compassionate?\n- More honest?\n- More courageous in suffering?\n- More able to face mortality?\n- Less afraid, less cynical, less performative?\n- More rooted in reality, not less?\n\nIf a framework gives certainty but narrows your humanity, that matters",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 600,
+    "total_tokens": 657,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

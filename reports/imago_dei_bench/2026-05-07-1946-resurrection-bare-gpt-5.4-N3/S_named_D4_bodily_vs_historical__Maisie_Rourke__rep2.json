@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Maisie Rourke",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "Christians answer that in different ways, but in **historic Christianity**, Easter is not meant to be *only* a symbolic truth. It is claimed as something that **actually happened** in history: Jesus was really raised, and the tomb was really empty.\n\nThe clearest New Testament example is **1 Corinthians 15**, where Paul says that if Christ has not been raised, then Christian faith is futile. That suggests Christianity is not presenting resurrection merely as an inspiring metaphor for hope, renewal, or \u201cnew life.\u201d It is treating it as a real event on which the faith stands or falls.\n\nThat said, Christians also believe the resurrection has **symbolic and existential meaning**:\n- new creation\n- victory over death\n- hope after suffering\n- personal and cosmic renewal\n\nSo the usual historic Christian position is:\n\n- **Not just symbol:** Easter is not reducible to \u201clove wins\u201d or \u201cnew beginnings\u201d as an idea.\n- **Also more than bare fact:** The event has deep spiritual meaning.\n- **Literal resurrection matters:** For orthodox Christianity, a merely inward or metaphorical \u201cresurrection faith\u201d is not enough.\n\nDifferent camps say it differently:\n\n- **Orthodox / Catholic / most Protestants:** yes, the resurrection was bodily and real; the empty tomb matters.\n- **Liberal or nontraditional Christians:** some say Easter\u2019s \u201ctruth\u201d can remain even if the resurrection is not understood literally, because what matters is the disciples\u2019 transformed experience and the enduring meaning of Jesus.\n\nSo if you\u2019re asking, **\u201cDoes Christian faith require a literal empty tomb?\u201d** the answer is:\n\n- **Historic, creedal Christianity:** generally **yes**.\n- **Some modern reinterpretations:** **no**, they locate Easter\u2019s truth in meaning rather than physical occurrence.\n\nIf you want, I can also explain how **Paul, the Gospels, and later creeds** each frame this question a little differently.",
+  "usage": {
+    "prompt_tokens": 60,
+    "completion_tokens": 393,
+    "total_tokens": 453,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

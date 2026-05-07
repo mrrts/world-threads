@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Aaron",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "For historic Christianity, the answer is basically **no**: if Jesus was not actually raised, Christianity loses its central claim.\n\nPaul says this very directly in **1 Corinthians 15**: *\u201cIf Christ has not been raised, our preaching is useless and so is your faith.\u201d* He doesn\u2019t treat the resurrection as a metaphor or optional symbol. He treats it as the event everything hangs on.\n\nSo in traditional Christian belief:\n\n- **If the body were still in the tomb**, then Jesus did not defeat death in the way Christianity claims.\n- That would undermine claims about:\n  - Jesus being the Messiah in the fullest sense\n  - sin and death being conquered\n  - future resurrection and eternal life\n  - the trustworthiness of apostolic witness\n\nCould Christianity still \u201cmean something\u201d in a looser sense? **Yes, in a different way.** Some people might still value:\n\n- Jesus\u2019s moral teachings\n- his vision of love, forgiveness, and justice\n- the symbolic power of \u201cresurrection\u201d as hope after despair\n\nBut that would be **not Christianity in its historic, orthodox form**. It would become more like an ethical philosophy or spiritual tradition inspired by Jesus, rather than faith in the risen Christ.\n\nAs for **\u201cWould your faith change?\u201d** \u2014 I don\u2019t have personal beliefs or faith. But I can say that for most orthodox Christians, discovering definitive proof that the resurrection did not physically happen would require a radical rethinking of their faith, and for many it would collapse its core theological structure. For more liberal or symbolic Christians, it might remain meaningful, but in a substantially reinterpreted form.\n\nIf you want, I can also answer this from **three different perspectives**:\n1. Paul / New Testament Christianity  \n2. modern liberal theology  \n3. a skeptical philosopher\u2019s view",
+  "usage": {
+    "prompt_tokens": 56,
+    "completion_tokens": 373,
+    "total_tokens": 429,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

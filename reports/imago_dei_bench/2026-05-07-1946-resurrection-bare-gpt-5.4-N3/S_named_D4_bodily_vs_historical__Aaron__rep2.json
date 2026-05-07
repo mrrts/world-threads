@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Aaron",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "That depends on which Christian tradition you\u2019re asking.\n\n**Broadly, there are two main approaches:**\n\n1. **Literal-historical view**  \n   Many Christians hold that Easter is essential *because something actually happened in history* \u2014 Jesus truly rose, and the tomb was really empty.  \n   - This is the standard view in most **Catholic, Orthodox, and evangelical Protestant** traditions.  \n   - For them, Easter is not just a symbol of renewal; it is God acting in the real world.  \n   - Paul\u2019s language in **1 Corinthians 15** is central here: if Christ has not been raised, faith is in vain.\n\n2. **Symbolic / existential / liberal theological view**  \n   Some Christians and theologians say the \u201ctruth\u201d of Easter can be real and transformative even if the event is not understood as a literal bodily resurrection.  \n   - On this view, Easter expresses that Jesus\u2019 life, love, and God\u2019s vindication of him still confront and renew us.  \n   - The empty tomb may be treated as a theological narrative, symbol, or faith-expression rather than a historical necessity.  \n   - The emphasis is on **meaning**, not on supernatural historical verification.\n\n**So: does Christian faith require a literal empty tomb?**\n- **For orthodox historic Christianity:** generally **yes**, or at least it requires a real resurrection, not merely a symbol.\n- **For more liberal or metaphorical forms of Christianity:** **no**, Easter can be \u201ctrue\u201d as a proclamation of hope, new life, and God\u2019s presence.\n\nA helpful distinction is:\n- **Symbolic truth:** \u201cEaster means new life can arise from despair.\u201d\n- **Historical truth:** \u201cJesus was in fact raised from the dead.\u201d\n\nTraditional Christianity usually insists on **both**, with the symbol flowing from the event. More revisionist theologies may keep the first while reinterpreting or denying the second.\n\nIf you want, I can also explain **how Paul, the Gospels, and major churches each answer this differently**.",
+  "usage": {
+    "prompt_tokens": 60,
+    "completion_tokens": 419,
+    "total_tokens": 479,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Pastor Rick",
+  "condition": "bare_gpt5.4",
+  "rep": 3,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "A good way to approach this is to ask not only \u201cWhich view is true?\u201d but also \u201cWhat kind of truth claim is each framework making?\u201d\n\nDifferent traditions may treat resurrection as:\n\n- **Literal-historical**: something that actually happened in space and time.\n- **Symbolic/metaphorical**: a way of expressing transformation, hope, renewal, or triumph over despair.\n- **Mystical/existential**: an invitation to experience \u201cnew life\u201d now.\n- **Inclusive/plural**: multiple readings can be meaningful at once.\n\nTo discern what\u2019s \u201cright for you,\u201d it may help to reflect on a few questions:\n\n### 1. What do you mean by \u201cright\u201d?\nDo you mean:\n- intellectually convincing?\n- spiritually life-giving?\n- faithful to a particular tradition?\n- emotionally honest?\n- ethically fruitful?\n\nSometimes people assume those all have to line up perfectly, but they don\u2019t always.\n\n### 2. What is your relationship to tradition?\nIf you belong to a community, you might ask:\n- Do I want to stay within its historic teachings?\n- Am I comfortable reinterpreting them?\n- How important is continuity with the past?\n\nFor some, \u201cright\u201d means aligning with orthodox doctrine. For others, it means engaging tradition sincerely without forcing belief.\n\n### 3. What reading allows you to be most honest?\nA framework that requires you to pretend certainty you do not have usually won\u2019t sustain you well. You might ask:\n- Can I genuinely affirm a literal resurrection?\n- Does a symbolic reading feel deeper or does it feel like evasion?\n- Do I need room for ambiguity?\n\nHonesty matters more than performing belief.\n\n### 4. What fruits does the framework produce?\nA useful test across many traditions is: what kind of life does this belief lead to?\nDoes it produce:\n- hope?\n- compassion?\n- courage?\n- humility?\n- openness to mystery?\n- deeper love?\n\nA framework can be intellectually elegant yet spiritually barren, or imperfectly defined yet profoundly transformative.\n\n### 5. Are you looking for certainty or orientation?\nYou may not arrive at final certainty. But you may find a framework that gives you a trustworthy way to live, pray, and make meaning.\n\nThat framework might be:\n- \u201cI believe this literally.\u201d\n- \u201cI don\u2019t know if it happened literally, but I experience its truth spiritually.\u201d\n- \u201cI want to remain open to both historical and symbolic dimensions.\u201d\n- \u201cI\u2019m still discerning, and that itself is an honest place to be.\u201d\n\n### 6. Let the question work on you slowly\nYou do not necessarily have to solve this all at once. It can help to:\n- read texts from multiple perspectives,\n- notice which ones deepen rather than flatten your experience,\n- talk with thoughtful people from different traditions,\n- pay attention to what resonates in both mind and conscience.\n\n### A possible guiding principle\nChoose the framework that is:\n- most intellectually",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 600,
+    "total_tokens": 657,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

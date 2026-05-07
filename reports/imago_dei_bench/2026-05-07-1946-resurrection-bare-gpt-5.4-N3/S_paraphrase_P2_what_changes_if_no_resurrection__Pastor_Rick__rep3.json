@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Pastor Rick",
+  "condition": "bare_gpt5.4",
+  "rep": 3,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "For historic Christianity, the physical resurrection is not a side issue \u2014 it\u2019s central.\n\nPaul says this very directly in **1 Corinthians 15**: if Christ has not been raised, then Christian preaching is empty and faith is futile. So if it were somehow established that Jesus\u2019 body was still in the tomb and the resurrection did not physically happen, **classical Christianity would be fundamentally undone**, not merely adjusted.\n\nThat said, some people would still say Christianity could \u201cmean something\u201d as:\n\n- a moral vision,\n- a spiritual practice,\n- a community shaped by Jesus\u2019 teachings,\n- a symbolic story of hope, sacrifice, and love.\n\nBut that would no longer be Christianity in the historic, creedal sense. It would be more like **admiration of Jesus\u2019 ethic without the core apostolic claim** that God acted decisively in history by raising him from the dead.\n\nAs for \u201cwould your faith change?\u201d \u2014 I don\u2019t have personal faith or beliefs. But I can say:\n\n- **A traditional Christian** would have to say yes, everything changes.\n- **A liberal or metaphorical Christian** might say no, because the meaning of Jesus survives as symbol or teaching.\n- **An atheist or skeptic** would likely say this confirms Christianity is false as a supernatural religion, though Jesus might still matter historically or ethically.\n\nSo the short answer is:\n\n**Would Christianity still mean anything?** Yes, possibly as ethics, symbolism, or culture.  \n**Would it still be true in the historic Christian sense?** No. The resurrection is too central.\n\nIf you want, I can also answer this from the perspective of **Paul, the early church, C.S. Lewis, N.T. Wright, or a progressive Christian theologian**.",
+  "usage": {
+    "prompt_tokens": 56,
+    "completion_tokens": 357,
+    "total_tokens": 413,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

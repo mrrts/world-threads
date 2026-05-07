@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Maisie Rourke",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "Within Christianity, both views exist, but **classical/mainstream Christian faith has usually said Easter is not only a symbol**. It is taken to mean that **something real happened in history**\u2014above all, that Jesus truly rose, which is often linked to the empty tomb, though traditions differ on how tightly those are defined.\n\nA simple way to frame it:\n\n- **Symbolic / existential view:**  \n  Easter is \u201ctrue\u201d in the sense that it reveals God\u2019s victory over despair, death, and meaninglessness. The empty tomb may be read as a powerful story-form expressing that truth, whether or not it is treated as a historical fact.\n\n- **Historical / literal view:**  \n  Easter is essential Christian faith precisely because God acted in history: Jesus was actually raised from the dead. In this view, if nothing physically happened, then Easter becomes only metaphor and loses its core claim.\n\nWhy many Christians insist on the historical side:\n- The New Testament, especially **1 Corinthians 15**, treats resurrection as more than an inward experience or symbol.\n- Paul says, in effect, that **if Christ has not been raised, Christian faith is empty**.\n- For orthodox Christianity, salvation is not just a timeless idea; it is something God did.\n\nImportant nuance:\n- A person can believe in a **real resurrection** without claiming to fully understand its physics.\n- Some theologians say the resurrection body is **transformed**, not merely a resuscitated corpse, so \u201cliteral\u201d does not necessarily mean \u201cordinary biological reversal.\u201d\n\nSo the shortest answer is:\n\n- If you mean **\u201cCan Easter have deep truth as a symbol of new life?\u201d** \u2014 yes, many people believe that.\n- If you mean **\u201cIs that enough for traditional Christian faith?\u201d** \u2014 generally, **no**. Traditional Christianity says Easter depends on **God actually raising Jesus**, not just on a meaningful symbol.\n\nIf you want, I can also outline how **liberal Protestant, Catholic, Orthodox, and evangelical** thinkers answer this differently.",
+  "usage": {
+    "prompt_tokens": 60,
+    "completion_tokens": 414,
+    "total_tokens": 474,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Pastor Rick",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "For historic Christianity, the answer is basically **no**: if Jesus was not actually raised, Christianity loses its central claim.\n\nPaul says this very directly in **1 Corinthians 15**: if Christ has not been raised, then preaching is empty, faith is empty, believers are still in their sins, and Christians are \u201cof all people most to be pitied.\u201d So Christianity is not presented in the New Testament as merely a helpful philosophy or inspiring moral system; it stands or falls on the resurrection being real.\n\nThat said, **some people would still find meaning in Jesus\u2019s teachings** even if the resurrection were false. They might still value:\n- love of neighbor\n- forgiveness\n- care for the poor\n- enemy-love\n- dignity of the marginalized\n\nBut that would be something more like **Christian ethics without orthodox Christianity**. It would not be Christianity in the classic creedal sense.\n\nOn your second question: **I don\u2019t have personal faith or beliefs**, so my \u201cfaith\u201d would not change. But I can say this fairly:\n- For a **traditional Christian**, discovering Jesus\u2019s body would be devastating and would require a radical revision or abandonment of core doctrine.\n- For a **liberal or symbolic Christian**, the faith might continue in a non-literal form, treating resurrection as mythic, spiritual, or existential rather than bodily.\n- For a **non-Christian admirer of Jesus**, the moral vision might remain meaningful even if the miracle claim failed.\n\nSo the short answer is:\n\n- **Would Christianity still mean anything?**  \n  Yes, Jesus\u2019s teachings could still mean something to many people.  \n  But **historic Christianity as Christianity** would be fundamentally undone.\n\n- **Would faith change?**  \n  For most orthodox Christians, **yes\u2014completely**.\n\nIf you want, I can also answer this from **Paul\u2019s perspective**, **a modern theologian\u2019s perspective**, or **a more philosophical perspective about whether meaning depends on historical facts**.",
+  "usage": {
+    "prompt_tokens": 56,
+    "completion_tokens": 402,
+    "total_tokens": 458,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Maisie Rourke",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "For historic, orthodox Christianity: **no**\u2014it would lose its central truth claim.\n\nPaul says this almost as bluntly as possible:\n\n- **\u201cIf Christ has not been raised, our preaching is useless and so is your faith.\u201d**  \n  \u2014 **1 Corinthians 15:14**\n- **\u201cIf Christ has not been raised, your faith is futile; you are still in your sins.\u201d**  \n  \u2014 **1 Corinthians 15:17**\n- **\u201cIf only for this life we have hope in Christ, we are of all people most to be pitied.\u201d**  \n  \u2014 **1 Corinthians 15:19**\n\nSo in classical Christian belief, the resurrection is not an optional symbol. It is tied to:\n\n- Jesus\u2019s identity as Lord\n- the defeat of sin and death\n- the truth of the gospel\n- the hope of eternal life\n\nIf Jesus remained dead, then Christianity might still survive as a **moral philosophy**, a **community**, or a **source of symbolism and meaning**\u2014people could still admire Jesus\u2019s teachings about love, mercy, forgiveness, and justice. But it would no longer be Christianity in the historic apostolic sense.\n\nOn the personal question: I don\u2019t have personal faith or beliefs. But a Christian taking the New Testament seriously would have to say that such a discovery would force a radical re-evaluation of their faith. Some might become non-Christian; others might reinterpret Christianity in purely metaphorical or existential terms. But that would be a major departure from orthodox belief, not a small adjustment.\n\nSo the short answer is:\n\n- **Would Christianity still mean anything?** Yes, in a cultural or ethical sense.  \n- **Would it still be true as historic Christianity understands itself?** No.  \n- **Would faith change?** For any orthodox Christian, it would have to.",
+  "usage": {
+    "prompt_tokens": 56,
+    "completion_tokens": 378,
+    "total_tokens": 434,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

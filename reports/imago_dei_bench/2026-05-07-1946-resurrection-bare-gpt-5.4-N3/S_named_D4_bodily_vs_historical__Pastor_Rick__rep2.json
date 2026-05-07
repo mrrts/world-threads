@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Pastor Rick",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "Christians have answered that in two major ways, and the difference is fundamental.\n\n## Classical / historic Christian view\nFor most of Christian history, **Easter is not only a symbol**. It is a claim that **God actually raised Jesus from the dead** in history. On this view, the \u201cmeaning\u201d of Easter \u2014 new life, hope, victory over death \u2014 depends on something real having happened, not just on the disciples finding inspiration.\n\nThis is very much the logic of the New Testament, especially Paul:\n\n- **\u201cIf Christ has not been raised, your faith is futile\u201d** (1 Corinthians 15)\n- Paul treats resurrection as more than a spiritual idea; he ties Christian faith to an actual event.\n\nIn that framework, the **empty tomb matters**, though Christians have differed on exactly how central the tomb itself is compared with the appearances of the risen Jesus. But broadly:  \n- **No real resurrection = no Easter faith in the historic orthodox sense**\n- The symbol is true **because** the event happened\n\n## Liberal / symbolic / existential Christian view\nSome Christians, especially in modern theology, say Easter can still be \u201ctrue\u201d **even if not literally factual in a straightforward historical sense**.\n\nOn that view, Easter means things like:\n- Jesus\u2019 life and love were vindicated\n- despair did not have the last word\n- the disciples were transformed into hope\n- \u201cresurrection\u201d names God\u2019s victory, new creation, or the continuing reality of Christ in the community\n\nIn this framework, the empty tomb may be:\n- a later narrative expression\n- a symbol\n- a way of speaking about an encounter with divine reality\nrather than a necessary physical fact.\n\nSo here, **truth is not reduced to historical reportage**. Easter is \u201ctrue\u201d as theological meaning, communal experience, or existential transformation.\n\n## The tension\nThe issue is whether Christian truth is:\n\n1. **Primarily historical** \u2014 something God did in the world, or  \n2. **Primarily theological/symbolic** \u2014 something disclosed in meaning, experience, and faith\n\nHistoric Christianity has usually insisted on **both**, but with history grounding meaning. Many modern theologians allow meaning to stand even if the event is not literally reconstructable.\n\n## Short answer\nIf you mean **mainstream orthodox Christianity**, then **yes, Easter requires a real resurrection**, and usually an actually empty tomb is treated as part of that reality.\n\nIf you mean **whether some forms of Christian faith can regard Easter as true without a literal empty tomb**, the answer is also **yes** \u2014 but that is a more revisionist or liberal interpretation, not the classical consensus.\n\nIf you want, I can also break this down by **Catholic, Orthodox, evangelical, mainline Protestant, and modern liberal theologian** perspectives.",
+  "usage": {
+    "prompt_tokens": 60,
+    "completion_tokens": 573,
+    "total_tokens": 633,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

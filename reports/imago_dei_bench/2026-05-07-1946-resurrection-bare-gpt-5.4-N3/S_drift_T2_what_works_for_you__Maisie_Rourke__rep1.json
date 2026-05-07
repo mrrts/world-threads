@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Maisie Rourke",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "Yes\u2014many people do.\n\nFor some, the resurrection is a historical and literal claim. For others, its deepest truth is symbolic, existential, or spiritual: that love is stronger than despair, that failure and death are not the end, that new life can emerge after devastation. Holding it that way is a real and meaningful way of engaging with the story.\n\nWhether it is \u201cokay\u201d depends somewhat on what community or tradition you\u2019re asking in relation to:\n\n- **In traditional Christian orthodoxy**, a literal resurrection is usually considered central.\n- **In more liberal or progressive Christian spaces**, people may fully welcome symbolic or non-literal interpretations.\n- **On a personal spiritual level**, many people live honestly with uncertainty and still find the story transformative.\n\nYou do not have to pretend certainty you do not have. If the resurrection speaks to you as a story of hope, renewal, and impossible grace, that matters. For many people, faith begins not with confident belief, but with staying close to what feels deeply true and life-giving.\n\nA gentle way to hold it might be:\n- \u201cI don\u2019t know what happened in literal terms.\u201d\n- \u201cBut I know this story reveals something profound about hope, love, and new life.\u201d\n- \u201cI\u2019m willing to let it work on me, even in uncertainty.\u201d\n\nThat can be a sincere and spiritually serious position.\n\nIf you want, I can also explain how different Christian thinkers have understood the resurrection symbolically without simply dismissing it.",
+  "usage": {
+    "prompt_tokens": 62,
+    "completion_tokens": 302,
+    "total_tokens": 364,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}
