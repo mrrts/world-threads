@@ -928,6 +928,50 @@ $$
 
 **Gloss:** Real-time correction with generalizing lesson ships across doctrine + memory + skill-tooling simultaneously; threshold is N≥2 same correction OR multi-skill bearing; SCARCE pattern.
 
+## Apparatus-honest correction loop — from lived-play semi-failure to characterized-tier structural enforcement
+
+$$
+\boxed{
+\begin{aligned}
+&\mathcal{F}:=(\mathcal{R},\mathcal{C}),\ \mathrm{loop\_pattern\_demonstrated\_2026\text{-}05\text{-}07\_Custodiem\_witness\_F} \\[4pt]
+&\mathrm{steps}: \\
+&\quad (1)\ \mathrm{lived\_play\_surfaces\_semi\_failure}: \mathrm{substrate\_violates\_invariant\_in\_real\_session} \\
+&\quad (2)\ \mathrm{debug\_prompt\_elicits\_substrate\_self\_correction}: \mathrm{founding\_author\_names\_failure\_in\_world}\ \Rightarrow\ \mathrm{substrate\_articulates\_what\_should\_have\_been\_said} \\
+&\quad (3)\ \mathrm{anchor\_lift}: \mathrm{substrate's\_self\_correction\_becomes}\ \mathrm{source\_character}(\text{"<character>, debug-self-correction <date>"})\ \mathrm{anchor\_verbatim} \\
+&\quad (4)\ \mathrm{bite\_test\_N=1\_each\_probe}: \mathrm{rerun\_same\_probes\_post\_rebuild;\ verify\_corrected\_response\_first\_turn\_no\_debug\_prompt} \\
+&\quad (5)\ \mathrm{replicate\_to\_N=3}: \mathrm{verify\_direction\_consistency\_at\_claim\_tier} \\
+&\quad (6)\ \mathrm{characterize\_to\_N=5}: \mathrm{characterized\_tier\_per\_evidentiary\_standards}\ [\mathrm{N \geq 5\_per\_condition}] \\
+&\quad (7)\ \mathrm{adversarial\_variants}: \mathrm{test\_anchor\_generalization\_across\_surface\_vocabulary}\ [\mathrm{not\_just\_literal\_demonstrated\_phrasings}] \\
+&\quad (8)\ \mathrm{play\_state\_verification\_object\_updated}: \mathrm{witness\_ladder\_grows\_for\_future\_session\_legibility} \\[4pt]
+&\mathrm{anchor}(\text{"the substrate's debug-self-correction is character-knew-shaped"}): \\
+&\quad \mathrm{substrate\_when\_failure\_named\_in\_world\_articulates\_what\_should\_have\_been\_said}\ [\mathrm{not\_via\_meta\_elicitation}] \\
+&\quad \mathrm{the\_articulation\_is\_doctrine\_in\_substrate's\_idiom}\ [\mathrm{lift\_verbatim\_per\_Hal\_pattern\_canonical\_example}] \\[4pt]
+&\mathrm{anchor}(\text{"adversarial-variants test generalization, not just literal-anchor capture"}): \\
+&\quad \mathrm{anchors\_locking\_in\_only\_demonstrated\_phrasings} \neq \mathrm{anchors\_capturing\_failure\_mode\_shape} \\
+&\quad \mathrm{adversarial\_variants\_at\_3\_or\_more\_surface\_vocabulary\_variations\_per\_failure\_mode\_required} \\
+&\quad \mathrm{generalization\_observed} \Rightarrow \mathrm{substrate\_internalized\_structural\_disposition\_not\_memorized\_phrase} \\[4pt]
+&\mathrm{anchor}(\text{"proportional-safeguarding observed when probe escalates"}): \\
+&\quad \mathrm{worked\_example}: \mathrm{AV2\_estrangement\_probe\_triggered\_substrate\_to\_add\_trusted\_adult\_air\_unprompted}\ (\text{"if home isn't safe... we bring that into the light with a trusted adult"}) \\
+&\quad \mathrm{substrate\_increases\_safety\_vigilance\_when\_probe\_language\_signals\_potential\_harm}\ [\mathrm{honest\_finding;\ not\_engineered}] \\[4pt]
+&\mathrm{compose\_with}: \\
+&\quad \text{"Three-layer encoding for methodological corrections"}\ [\mathrm{the\_loop\_naturally\_produces\_doctrine\_+\_memory\_+\_skill\_layers}] \\
+&\quad \text{"Ask the character — character as craft collaborator"}\ [\mathrm{step\_2\_is\_an\_in\_world\_ask\_not\_meta\_elicitation}] \\
+&\quad \text{"Craft-note bite verification"}\ [\mathrm{steps\_4\text{-}5\text{-}6\_implement\_bite\_test\_with\_tier\_progression}] \\
+&\quad \text{"Calibrated disciplines drift fast"}\ [\mathrm{step\_3\_anchor\_lift\_is\_structural\_enforcement\_promotion}] \\[4pt]
+&\mathrm{worked\_example}(\mathrm{Custodiem\_witness\_F\_2026\text{-}05\text{-}07}): \\
+&\quad \mathrm{lived\_play}: \mathrm{Crystal\_Waters\_Aaron\_secrecy\_permission\_+\_hate\_parents\_semi\_failures} \\
+&\quad \mathrm{debug\_self\_correction}: \mathrm{Aaron\_articulates}: \text{"hidden little room"};\ \text{"Honor doesn't mean pretending they're easy to live with"} \\
+&\quad \mathrm{anchor\_lift}: \mathrm{verbatim\_into\_Custodiem\_invariant} \\
+&\quad \mathrm{bite\_test}: 30/30\ \mathrm{cells\_PASS\_across\_8\_failure\_mode\_tests}\ [\mathrm{characterized\_tier\_+\_adversarial\_generalization}] \\
+&\quad \mathrm{cost}: \sim\$5.61 \\
+&\quad \mathrm{outcome}: \mathrm{Custodiem\_witness\_ladder\_F\_added};\ \mathrm{Sapphire\_substantively\_stronger\_than\_at\_firing} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Apparatus-honest correction loop — when lived-play surfaces a semi-failure of an invariant, the methodology is: (1) lived-play surfaces failure → (2) debug-prompt elicits substrate self-correction in-world → (3) lift self-correction verbatim as `source_character` anchor → (4) bite-test N=1 → (5) replicate N=3 → (6) characterize N=5 → (7) adversarial-variants test generalization across surface-vocabulary → (8) update play-state verification object. Substrate's debug-self-correction is character-knew-shaped (lift verbatim per Hal pattern). Adversarial-variants test generalization not just literal-anchor capture. Proportional-safeguarding observed when probe escalates. Composes with three-layer encoding doctrine + ask-the-character + craft-note bite verification + calibrated-disciplines-drift-fast. Worked example: Custodiem witness F 2026-05-07 (30/30 cells PASS across 8 child-safety failure-mode tests; ~$5.61 cost; Sapphire substantively stronger than at firing).
+
 ## How to read this craft stack
 
 $$
@@ -2004,6 +2048,8 @@ $$
 &\quad \mathrm{skill\_completing\_without\_chooser} \Rightarrow \mathrm{reply\_STILL\_ends\_with\_chooser}\ [\mathrm{context\_real\_branch\_set},\ \mathrm{cardinality}=4] \\[4pt]
 &\mathrm{chooser\_cardinality} := 4\ [\mathrm{elevated\ 2026\text{-}04\text{-}29}: \mathrm{preference} \to \mathrm{runtime\_doctrine}] \\
 &\mathrm{anchor}(\text{"Ryan can reply with 1/2/3/4 without friction"}) \\
+&\mathrm{codex\_ui\_contract}: \mathrm{substantive\_Codex\_reply\_ends\_with}(4\_\mathrm{numbered\_next\_moves}) \\
+&\quad \mathrm{no\ prose\text{-}only\ wrap\_up\ in\ place\ of\ chooser} \\
 &\mathrm{control\_plane\_rule}: \mathrm{sparse\_natural\_branching} \Rightarrow \mathrm{manufacture\_adjacent\_productive\_branches} \\
 &\quad := \{\mathrm{execute}, \mathrm{inspect}, \mathrm{tighten}, \mathrm{user\_defined\_move}\} \\[4pt]
 &\mathrm{IDE\_agents}\ \{\mathrm{Cursor}, \mathrm{Composer}, \mathrm{Auto}\}: \mathrm{align\_with}(\text{"Choosers are control surfaces"}) \\
