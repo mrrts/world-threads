@@ -3023,13 +3023,26 @@ fn cmd_show_character(r: &Resolved, character_id: &str) -> Result<(), Box<dyn st
 
 fn cmd_audit_character_identity(
     r: &Resolved,
-    character_id: &str,
+    character_or_name: &str,
     emit_payload: bool,
     compare_to: Option<&std::path::Path>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let _ = r.check_character(character_id)?;
+    let resolved_id = {
+        let conn = r.db.conn.lock().unwrap();
+        let mut stmt = conn.prepare(
+            "SELECT character_id FROM characters
+             WHERE character_id = ?1 OR display_name = ?1 COLLATE NOCASE
+             ORDER BY CASE WHEN character_id = ?1 THEN 0 ELSE 1 END
+             LIMIT 1",
+        )?;
+        stmt.query_row(params![character_or_name], |row| row.get::<_, String>(0))
+            .map_err(|e| {
+                CliError::NotFound(format!("character {character_or_name}: {e}"))
+            })?
+    };
+    let _ = r.check_character(&resolved_id)?;
     let conn = r.db.conn.lock().unwrap();
-    let c = get_character(&conn, character_id)?;
+    let c = get_character(&conn, &resolved_id)?;
     drop(conn);
 
     if emit_payload {

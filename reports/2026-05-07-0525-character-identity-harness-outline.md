@@ -352,6 +352,36 @@ If the harness proves itself and the project later wants prompt routing, the hoo
 
 But that is explicitly out of scope for now.
 
+## Live-DB rehearsal — 2026-05-07
+
+After the worldcli wiring landed, the new `audit-character-identity`
+subcommand was rehearsed against the actual app DB at
+`~/Library/Application Support/com.worldthreads.app/worldthreads.db`
+with `--scope full`. Five grounded characters audited; all returned
+`verdict: Pass` with the full nine-bucket inventory preserved.
+
+| Character | verdict | preserved buckets | gravity_line surfaced |
+|---|---|---|---|
+| Aaron | Pass | all 9 | "doesn't have a vocabulary yet for some of what he feels most…" |
+| Steven | Pass | all 9 | "He drifts not because he loves freedom…" |
+| Maisie Rourke | Pass | all 9 | none |
+| Pastor Rick | Pass | all 9 | "White hair, clean-shaven, and nearly always in his navy button-up shirt with a white tie…" |
+| Jasper Finn | Pass | all 9 | none |
+
+Notes:
+
+- The live-DB rehearsal also exposed and fixed a name-resolution gap
+  in the worldcli wiring: `get_character` is id-only, so the new
+  subcommand now resolves `character_or_name` against
+  `character_id OR display_name COLLATE NOCASE` before delegating to
+  the audit. The standalone `bin/character_identity_audit` already
+  did this via its own SQL.
+- The fixture-backed tests already lock in identical bucket contents
+  for the same five characters (offline JSON snapshots), so a Pass
+  on the live DB matches the test-suite Pass.
+- The audit is still a smoke test of the round-trip rather than an
+  independent reviewer; that limitation remains unchanged.
+
 ## Recommendation
 
 Build the harness in this order if it ever gets implemented:
