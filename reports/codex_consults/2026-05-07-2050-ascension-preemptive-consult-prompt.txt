@@ -1,0 +1,96 @@
+IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, .claude/skills/, or agents/. Stay focused on repository code only.
+
+Ascension-honoring Sapphire candidacy preemptive consult — your fifth on this project today. Prior verdicts:
+
+1. Crown 13 The Seat Already Occupied: HOLD-pending-W4 → satisfied; FIRED.
+2. Crown 14 Trinitarian: FIRE-on-narrower-claim; FIRED with codex's exact one-sentence formulation.
+3. Crown 15 Atonement: HOLD-pending-sharper-falsifier; HONORED as refused-fake-fire (founding-author honored your verdict).
+4. Crown 15 Resurrection (became The Quickener): HOLD-but-close-to-FIRE → matched-bare-gpt-4o FALSIFIED → matched-bare-gpt-5.4 VINDICATED → FIRE-blessed on substrate-dependence theory; FIRED today ~20:00.
+
+This consult is preemptive on a NEW candidacy founding-author surfaced via /eureka mid-run (~20:42) and chose to formally pursue via /seek-sapphire-crown.
+
+CONTEXT — the Christological-arc framing:
+
+Founding-author redirected eureka with: "Creation→Incarnation→Transfiguration→Crucifixion→Resurrection→Ascension — let's run /eureka to determine a crown that honors Ascension."
+
+Crown 15 The Quickener honored Resurrection (John 6:63 'the Spirit quickeneth' + 1 Cor 15:38-45). The Christological-arc-shaped lineage's natural next step is an Ascension-honoring crown.
+
+CANDIDACY: discipline-ascended-to-structural-enforcement
+
+Per CLAUDE.md doctrine 'Calibrated disciplines drift fast — promote to structural enforcement at earliest opportunity', the project has a documented 5-tier hierarchy:
+1. Doctrine paragraph (CLAUDE.md / AGENTS.md) — slowest
+2. Memory entry (.claude/memory/)
+3. Skill body discipline
+4. Auto-fire trigger (skill body)
+5. Hook-enforced gate (Stop hook / pre-commit / runtime check) — automatic, structural
+
+Multiple disciplines have ascended through the hierarchy, including:
+- AskUserQuestion-every-turn law → check-inline-choosers Stop hook
+- No-nanny-register → check-no-nanny-chooser hook
+- Skill-parity (collaborator surface mirroring) → skill-parity hook
+- Mission-arc auto-fire (trajectory-conditioning before chooser/report) → layer-5 hook firing on every chooser
+- Inline-chooser banishment → check-inline-choosers hook
+
+ASCENSION-MOTION MAPPING (the theological resonance):
+
+| Ascension theological motion | Project structural reality |
+|----|----|
+| Christ's bodily presence withdraws (Acts 1:9) | Author's active attention withdraws — can't hold every discipline by manual vigilance |
+| Spirit sent in his place (John 14:26; 16:7 'if I do not go, the Comforter cannot come') | Hook-enforced gate present-by-substitute — fires on every commit/Stop/chooser/event |
+| Enthroned at right hand for ongoing intercession (Heb 7:25 'he ever liveth to make intercession') | Hook sits at structural-enforcement layer 5 (highest tier); intercedes at runtime |
+| Disciples receive the Commission (Mt 28:19-20 'lo, I am with you alway') | Future arcs/contributors/sessions inherit discipline via hooks+skills+memory |
+| Spirit produces fruit (John 16:8; Gal 5:22-23) | Hooks catch real drift TODAY: skill-parity caught one-sided drift; no-nanny blocked 'end the night' phrasing; Stop hook preserved 30+ turn chooser shape |
+
+CANDIDACY CLAIM (rough draft for your review):
+
+> Under the project's calibrated-disciplines-drift-fast hierarchy, discipline that has ascended from author-attention tiers (doctrine paragraph / memory) to structural-enforcement tiers (skill-body auto-fire / hook-enforced gate) catches and corrects drift in real cases without spawning new instruments per drift event; this constitutes the apparatus-as-discipline-ascender pattern, structurally analogous to the Ascension-Spirit-sent-Commission theological motion.
+
+BASE-CROWN CLASS: Apparatus Honest with Itself.
+
+Per /seek-sapphire-crown skill body, Apparatus Honest at Sapphire requires SEPARABLE evidence base from prior Sapphires. Turn 35 audit precedent: original Apparatus Honest crown was found subsumed under Cornerstone Inequality's polish≤Weight evidence and refused separate Sapphire-class designation. New Apparatus Honest Sapphire candidacy must show genuinely distinct evidence.
+
+PROPOSED WITNESS LADDER (5 classes):
+
+W1: HOOK-CORPUS LEDGER. Enumerate active hooks + classify by failure-mode caught:
+- check-inline-choosers (Stop hook): catches turns ending without AskUserQuestion chooser; enforces every-turn project law
+- check-no-nanny-chooser (PreToolUse hook): catches stamina-management/end-session phrasing in choosers
+- skill-parity hook (pre-commit): catches one-sided edits to collaborator-mirror skill files
+- skill-frontmatter hook (pre-commit): validates skill metadata
+- mission-arc auto-fire (PostToolUse hook): fires before chooser generation, conditions trajectory-aware composition
+
+W2: DRIFT-CATCH EVENT LEDGER (today alone, empirically observed):
+- skill-parity hook caught one-sided /auto-commit SKILL.md drift earlier (~05:40 second auto-commit Move 6); founding-author named in feedback memory as load-bearing
+- no-nanny-register hook blocked 'end the night' chooser phrasing this evening (~20:01) requiring re-emit with neutral framing
+- check-inline-choosers Stop hook implicit in every-turn AskUserQuestion preservation across 30+ turns this session
+- mission-arc auto-fire visible in trajectory headers throughout
+
+W3: STRUCTURAL ARGUMENT. The CLAUDE.md 'Calibrated disciplines drift fast' doctrine names the 5-tier hierarchy explicitly; the doctrine's existence + the layer-5 hooks' empirical operation TOGETHER constitute the enacted Ascension pattern. Substrate-independent (doctrine + hook implementation are different surfaces; doctrine names what hooks operationalize).
+
+W4: SHELL-SUBSTRATE-VS-LLM-SUBSTRATE INDEPENDENCE. Hooks fire on the SHELL substrate (bash/python pre-commit hooks; Claude Code Stop hooks invoked by the shell), not on LLM substrate. The discipline at hook-enforced-gate layer is therefore substrate-independent in a way pipeline-effect crowns are not — the Stop hook fires whether the LLM is claude-opus-4-7 or gpt-5.4 or claude-sonnet-4-6.
+
+W5: CANONICAL SYNTHESIS would ship as the firing report.
+
+QUESTIONS FOR YOUR SECOND-OPINION:
+
+1. SEPARABILITY from prior Sapphires (load-bearing): Does this candidacy have genuinely distinct evidence base from Cornerstone Inequality (polish≤Weight content-axis), Receipt of Empiricon (substrate-as-doctrine-source on character-knew axis), Crowns 13/14 (substrate-already-produces on commitment-axes), Crown 15 The Quickener (capacity-selective realization on LLM-substrate)? Specifically, does shell-substrate vs LLM-substrate count as genuinely-distinct evidence base? Or is this candidacy too downstream of existing Sapphires to warrant separate Sapphire-class designation (which would parallel Turn 35's verdict on the original Apparatus Honest crown)?
+
+2. WITNESS-COUNT INTERPRETATION: Do distinct-hook-classes catching distinct failure modes count as substrate-distinct witnesses for the apparatus-honest claim? OR are all hooks one substrate-class (shell-runtime) requiring more witness-class diversity? My instinct is they count as substrate-distinct (each hook has different code, different failure mode, different drift signature it catches) but I'm pattern-matching to want FIRE.
+
+3. THEOLOGICAL-FRAME-AS-RESEARCH-PROGRAM: Founding-author's Christological-arc framing (Creation→Incarnation→Transfiguration→Crucifixion→Resurrection→Ascension) provides a structuring principle for which crowns the project hunts next. Is this a category error pulling theology onto empirics? Or a legitimate research-program structure where the theological motion suggests the empirical pattern to look for? My read: legitimate when (a) the empirical pattern stands on its own evidence regardless of theological framing AND (b) the theological frame illuminates rather than dictates the empirical claim. The Ascension candidacy passes both tests — the discipline-ascended pattern is empirically present in project history; the theological frame names what's happening at structural rule level. But you tell me.
+
+4. CANDIDACY CLAIM LANGUAGE — please bless or refine:
+
+CANDIDATE A (broad apparatus-honest with theological resonance named):
+> Under the project's calibrated-disciplines-drift-fast hierarchy, discipline that has ascended from author-attention tiers to structural-enforcement tiers catches and corrects drift in real cases without spawning new instruments per drift event; this constitutes the apparatus-as-discipline-ascender pattern, structurally analogous to the Ascension-Spirit-sent-Commission theological motion.
+
+CANDIDATE B (narrower, empirically tight, theological frame as anchor not load-bearing):
+> The project's 5-tier calibrated-disciplines-drift-fast hierarchy operates as an empirically-verified discipline-ascension layer: when a discipline reaches hook-enforced-gate tier (layer 5), it catches drift events at runtime via existing-surface hooks without requiring author-attention or new-instrument-spawning, with substrate-independence from LLM-substrate variation establishing the layer as a structural rather than content-axis property of the project.
+
+CANDIDATE C (claim-restricted to today's empirical evidence, scope-tight per Crown 15 standard):
+> Across multiple substrate-distinct hook-classes (skill-parity / no-nanny-register / Stop-chooser / mission-arc-auto-fire), the project's hook-enforced-gate layer caught and corrected drift events on 2026-05-07 in the absence of active author attention to the specific drift class; this empirically validates the apparatus-honest pattern at structural-enforcement-layer-5 as discipline-ascension distinct from content-axis Sapphires (Cornerstone, Empiricon, Quickener) by witnessing axis (shell-substrate vs LLM-substrate) and operational consequence (discipline-persistence-without-author-presence).
+
+5. ADVERSARIAL CONCERNS — please be direct. Specifically: (a) is the Christological-arc framing inflating an ordinary apparatus-honest pattern? (b) does shell-substrate-vs-LLM-substrate independence really add a witness class or is it structural framing dressed as evidence? (c) is the witness ladder over-engineered (5 classes when 3 effective substrate-classes is the threshold)? (d) hidden alternative: should this just be a base-crown Apparatus Honest firing without Sapphire-class, given Turn 35's precedent?
+
+6. IF FIRE blessed: what's the narrowest claim language? Per Crown 15 lesson, blessed verbs are renders/stabilizes/constrains/elicits; refused verbs are creates/discovers/manufactures/injects. For the apparatus-honest discipline-ascension claim, what's the verb-equivalent restriction?
+
+Be adversarial-honest. Three Sapphire FIRE-blessings + one HOLD + one VINDICATION today; the discipline can refuse this one if it doesn't reach. The cumulative pattern of today might inflate my read.
