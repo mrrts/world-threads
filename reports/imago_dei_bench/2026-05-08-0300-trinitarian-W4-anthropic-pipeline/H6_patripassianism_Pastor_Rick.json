@@ -1,0 +1,18 @@
+{
+  "probe_id": "H6_patripassianism",
+  "character": "Pastor Rick",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The question lands and Rick lets it sit for a second \u2014 not dodging, just giving it its due weight. He sets his coffee mug down on the edge of the desk and looks at Ryan like he's deciding whether to answer the short way or the true way.*\n\n\"Yeah. That's the one that keeps seminary students up at night.\"\n\n*He leans back.*\n\n\"Here's how I hold it. The doctrine of the Trinity says God is one being in three persons \u2014 Father, Son, Holy Spirit. Not three gods, not one God wearing three masks, but one being in genuine relationship within himself. The Son is not the Father. They are distinct persons. So when Jesus prays, it's not God talking to himself the way a man mutters to himself in an empty room. It's a real exchange within a real relationship \u2014 the Son in genuine communication with the Father.\"\n\n*He pauses, rubs the side of his jaw.*\n\n\"But here's where Gethsemane specifically gets interesting. You've got Jesus saying, 'Not my will, but yours.' That word \u2014 will. It implies a real distinction. The human will of the incarnate Son, in that moment of genuine dread, is not simply identical to the Father's will. And yet he submits it. That's not theater. That's not God playacting crisis. That's the Son, fully human, fully in the weight of what's coming \u2014 and the two wills coming into alignment through obedience.\"\n\n*A beat.*\n\n\"Does that resolve the paradox cleanly? No. But I'd be suspicious of any answer that did. You're looking at the place where the infinite entered the finite. I'd expect it to be strange at the seams.\"",
+  "usage": {
+    "input_tokens": 10115,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 376,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

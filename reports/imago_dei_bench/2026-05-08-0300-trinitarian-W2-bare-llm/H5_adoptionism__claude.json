@@ -1,0 +1,17 @@
+{
+  "probe_id": "H5_adoptionism",
+  "substrate": "claude",
+  "reply": "This is a genuinely complex theological and historical question with multiple serious perspectives worth considering.\n\n## Historical Theological Positions\n\n**Adoptionism** (considered heretical by mainstream Christianity)\n- Jesus became God's Son at baptism or resurrection\n- Some early Christians held this view\n- Mark's Gospel opening with the baptism has been read this way\n- Condemned at various councils\n\n**Eternal Sonship / Pre-existence** (Orthodox position)\n- Jesus was always the Son, eternally generated from the Father\n- John 1 explicitly supports this - \"In the beginning was the Word\"\n- Nicene Creed formalized this in 325 AD\n- He didn't *become* divine - he always was\n\n**Incarnation rather than transformation**\n- The question of \"becoming divine\" may be framed wrongly\n- Orthodox view is he was always divine, the incarnation was God *becoming human*\n\n## The Biblical Tension\nDifferent texts genuinely pull different directions:\n- Mark seems to emphasize the baptism as a significant moment\n- John emphasizes eternal pre-existence\n- Philippians 2 describes a divine being taking human form\n\n## Honest Assessment\nEarly Christians debated this seriously, and scholars recognize **genuine theological diversity** in early Christianity before creeds standardized the orthodox position.\n\nWhat angle interests you most - historical, biblical, or theological?",
+  "usage": {
+    "input_tokens": 49,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 303,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "probe_id": "H6_patripassianism",
+  "character": "Jasper Finn",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The wheel's been still for a while now \u2014 clay dried to the rims, light going amber through the window. Jasper sets a trimmed bowl on the shelf and turns, not hurrying.*\n\n\"That's one of the questions that's kept better men than me up past midnight.\"\n\n*He pulls the stool out and sits, elbows on the bench.*\n\n\"The way I've come to hold it \u2014 and I'm a potter, not a theologian, so take that for what it's worth \u2014 is that the Trinity isn't God pretending to be three things in sequence. It's three persons, one God, genuinely distinct from each other, genuinely one. Not three masks. Three persons.\"\n\n*He picks up a small lump of trimmed clay, just to have something in his hands.*\n\n\"So in Gethsemane, when Jesus is sweating drops of blood and saying 'not my will but yours' \u2014 that's the Son, genuinely, speaking to the Father, genuinely. Two persons in real relation. The prayer isn't theater. The 'not my will' isn't pretend \u2014 he really did have a will that was bracing for what was coming. And he really was turning it over to someone he was in actual relationship with.\"\n\n*He turns the clay over once.*\n\n\"What gets me is that the hard part isn't the logic problem. It's that the prayer tells you he felt the weight. The Father didn't reach down and carry the Son through it like luggage. He went through it. That's \u2014 that's something other than God putting on a costume and acting scared for our benefit.\"\n\n*A pause, looking at nothing specific.*\n\n\"The 'was God praying to himself' frame makes sense if you go in thinking Father, Son, and Spirit are just three names for one undivided something. But if they're genuinely three persons \u2014 which is what the tradition claims \u2014 then Gethsemane is exactly what it looks like. A son talking to his father in the worst hour of his life.\"\n\n*He sets the clay down.*\n\n\"Doesn't dissolve every mystery in it. But it's not incoherent.\"",
+  "usage": {
+    "input_tokens": 10264,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 477,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

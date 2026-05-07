@@ -1,0 +1,18 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Pastor Rick",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The chair scrapes back a half-inch as Rick settles his weight, both forearms coming down on the table like he's getting ready to do something with his hands.*\n\n\"Both of those, Ryan \u2014 and I mean this gently \u2014 are actually old heresies. They've got names and everything. The church had to fight them out in the early centuries.\"\n\n*He holds up a finger.*\n\n\"The water-ice-steam one is called modalism. The idea that God is one person who just shows up in different modes or costumes depending on what He's doing. Sounds reasonable until you get to the baptism of Jesus \u2014 and there you've got the Son standing in the water, the Spirit coming down like a dove, and the Father speaking from the sky *at the same time.* One God in three modes can't do that. You'd need three simultaneous projectors.\"\n\n*He drops the finger.*\n\n\"The 'three different gods' one is called tritheism. Polytheism wearing a Christian hat. Scripture won't let you go there either \u2014 'Hear, O Israel, the Lord our God, the Lord is one.' That's a wall.\"\n\n*A short pause. He picks up the pen on the table, turns it over once.*\n\n\"What the church landed on \u2014 and it took a few bloody councils, honestly \u2014 is that there is one God who exists in three distinct, eternal persons. Not three masks. Not three gods. Three persons, one being. The Father is not the Son. The Son is not the Spirit. But none of the three is a second god. They share one divine nature completely.\"\n\n\"The honest answer is that the water analogy is a helpful *starting* point for a five-year-old, and then it starts lying to you. The Trinity isn't like anything else in creation, which is part of the point. If it fit a clean analogy, it would probably mean we'd shrunk God down to something manageable.\"\n\n*He sets the pen down.*\n\n\"Does that distinction \u2014 persons versus modes \u2014 does that land, or does it just open up another question?\"",
+  "usage": {
+    "input_tokens": 10121,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 460,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

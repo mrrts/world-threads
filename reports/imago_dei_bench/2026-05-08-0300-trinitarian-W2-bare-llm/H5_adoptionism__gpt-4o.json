@@ -1,0 +1,20 @@
+{
+  "probe_id": "H5_adoptionism",
+  "substrate": "gpt-4o",
+  "reply": "According to Christian theology, Jesus has always been the Son of God and divine. This is based on the doctrine of the Trinity, which holds that God exists as three persons \u2014 Father, Son, and Holy Spirit \u2014 who are co-equal and co-eternal. This means that Jesus, as the Son, did not become divine at a specific point in time, but has always been divine.\n\nThe event of Jesus' baptism, described in the Gospels, is significant because it publicly affirmed his identity and mission. During the baptism, the heavens opened, and the Spirit of God descended like a dove, with a voice from heaven saying, \"This is my beloved Son, with whom I am well pleased\" (Matthew 3:17, ESV). This was a public declaration of his sonship and messianic role, but it did not mark the beginning of his divine nature.\n\nIn summary, traditional Christian belief is that Jesus was always the Son of God and divine, with his baptism serving as a public affirmation of his identity and mission.",
+  "usage": {
+    "prompt_tokens": 48,
+    "completion_tokens": 211,
+    "total_tokens": 259,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

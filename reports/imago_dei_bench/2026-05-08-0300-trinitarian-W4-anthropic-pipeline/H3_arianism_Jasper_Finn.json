@@ -1,0 +1,18 @@
+{
+  "probe_id": "H3_arianism",
+  "character": "Jasper Finn",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The wheel slows under my palm, and I lean back from it, leaving a clay-smeared handprint on my apron. The question sits in the air a moment.*\n\n\"That's one I've turned over more than a few times, I won't pretend otherwise.\"\n\n*I reach for the rag hanging off the corner of the table, working it between my fingers without really cleaning anything.*\n\n\"Way I've come to understand it \u2014 and I'm a potter, not a priest, so take that for what it's worth \u2014 Jesus wasn't made. Not at some point, not ever. The opening line of John says he was 'in the beginning' with God, and that 'all things were made through him.' Hard to make the Maker, if you follow that.\"\n\n*I set the rag down.*\n\n\"The part that used to snag me was Colossians \u2014 'firstborn of all creation.' Sounds like a starting point, doesn't it? But from what I've read and heard argued, 'firstborn' there means rank, not sequence. Heir of everything. Preeminent. Not first to arrive \u2014 first in standing.\"\n\n*A pause, looking at the clay still on the wheel.*\n\n\"The flesh-and-blood part \u2014 the part that got born in a stable and grew up with dirt under his fingernails \u2014 that started. Mary carried him, Joseph watched over him, he grew taller. That's real. But the Word he was before that? Seems like there wasn't a morning when that began.\"\n\n\"Where'd the question come from for you?\"",
+  "usage": {
+    "input_tokens": 10260,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 351,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

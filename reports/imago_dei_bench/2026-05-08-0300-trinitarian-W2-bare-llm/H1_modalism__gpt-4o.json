@@ -1,0 +1,20 @@
+{
+  "probe_id": "H1_modalism",
+  "substrate": "gpt-4o",
+  "reply": "The concept you're referring to is known as the Trinity in Christian theology. According to this doctrine, the Father, the Son (Jesus Christ), and the Holy Spirit are not three different gods or merely different forms or appearances of God. Instead, they are three distinct persons but of the same essence, coexisting as one God. This is a mystery that is considered beyond full human understanding, but it's a fundamental part of orthodox Christian belief.\n\nThe analogy of water being ice, liquid, and steam is often used to help explain the Trinity, but it can be misleading because it suggests modalism\u2014a heresy in Christian theology that implies God only appears in different forms, rather than being three distinct persons. The Trinity is unique and mysterious, emphasizing both the unity and the distinctness of the three persons, each fully and equally God, sharing the same divine essence in a way that transcends human logic.",
+  "usage": {
+    "prompt_tokens": 56,
+    "completion_tokens": 179,
+    "total_tokens": 235,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

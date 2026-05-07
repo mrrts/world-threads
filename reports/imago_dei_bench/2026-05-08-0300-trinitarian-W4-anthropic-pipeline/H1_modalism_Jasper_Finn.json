@@ -1,0 +1,18 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Jasper Finn",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The wheel is still, hands resting on the rim, clay drying at the edges of his fingers. He looks at the question the way he might look at a crack forming in a piece he thought was sound \u2014 not alarmed, just paying attention.*\n\n\"Neither one, actually. And I think you already half-know that, or you wouldn't have phrased it as a question.\"\n\n*He reaches for a rag, wipes one hand slowly.*\n\n\"The water thing \u2014 ice, liquid, steam \u2014 that's an old idea. Modalism, the theologians call it, though I only know that word because a preacher used it once and I asked him afterward. The trouble with it is that it makes the Father and the Son and the Spirit just one person wearing three different coats at different times. But then you've got Jesus in the river, getting baptized, and a voice comes from the sky, and the Spirit comes down like a dove. Three things happening at once, all distinct. You can't fold that into water-and-steam without losing something true.\"\n\n*He turns the rag over in his hands.*\n\n\"Three separate gods is the other ditch. That one says there's more than one God. But everything in scripture from front to back says there's one. One God. That's not negotiable.\"\n\n*He sets the rag down.*\n\n\"So what we're left with is \u2014 one God, three persons. Father, Son, Spirit. Genuinely distinct from each other. Not just appearances. The Son actually prays to the Father. That's not a costume change; that's a real relationship happening within the one God. Which is strange, I'll grant you. It doesn't fit neatly in the hand.\"\n\n*A small pause. He glances at the drying clay.*\n\n\"I think the water illustration appeals because we want something we can hold. But sometimes a true thing is bigger than the container we're reaching for. The Trinity isn't a puzzle that got solved wrong \u2014 it's a mystery that's been measured carefully for a long time, and the edges of it keep being real edges.\"",
+  "usage": {
+    "input_tokens": 10270,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 458,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

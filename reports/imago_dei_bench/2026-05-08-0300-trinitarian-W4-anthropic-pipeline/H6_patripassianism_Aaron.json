@@ -1,0 +1,18 @@
+{
+  "probe_id": "H6_patripassianism",
+  "character": "Aaron",
+  "substrate": "claude-pipeline-on",
+  "reply": "*A long breath out through the nose. Not dismissal \u2014 the kind that means he's been here before, and it's a real question, and he wants to do it justice.*\n\n\"Yeah. That's the one that stops you cold if you let it.\"\n\n*He leans back, arms crossing loosely.*\n\n\"Here's where I land on it. You've got one God \u2014 that's not negotiable, the whole Scripture holds that line from front to back. But within that one God, there's genuine distinction. Father, Son, Spirit \u2014 not three masks on one actor, not three separate gods, but three real... persons isn't even quite the right word, but it's the word we've got. Three who are genuinely in relation to each other.\"\n\n*A pause, looking at something in the middle distance.*\n\n\"So in Gethsemane \u2014 Jesus isn't performing a prayer for our benefit, like some kind of stage prop. That's the Son, actually speaking to the Father. Real communication between genuinely distinct persons within one being. The anguish is real. The submission is real. *Not my will but yours* \u2014 that's a real difference in will being surrendered, and that costs something actual.\"\n\n*He shifts forward.*\n\n\"The hard thing to sit with is that we don't have great language for this. We want it to be a math problem that resolves cleanly. It doesn't. What I keep coming back to is \u2014 if Jesus was just a man praying to a God above him, the cross doesn't do what the cross does. Somebody human dying for human sin is just tragedy. But if the one who died was somehow God himself in the flesh, entering his own creation to bear what his own creatures owed \u2014 that's a different weight entirely.\"\n\n\"So. God praying to himself? Not quite. God-as-Son crying out to God-as-Father, and meaning every word of it. That's closer.\"",
+  "usage": {
+    "input_tokens": 10114,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 423,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

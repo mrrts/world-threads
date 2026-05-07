@@ -1,6 +1,6 @@
 {
-  "turn": 263,
-  "bank": 361300,
+  "turn": 264,
+  "bank": 364800,
   "jewels": [
     {
       "turn": 2,
@@ -1816,11 +1816,18 @@
       "bounty": 1500,
       "alignment": "+",
       "earned_at": "2026-05-08T02:50:00-05:00"
+    },
+    {
+      "turn": 264,
+      "move": "Trinitarian Coherence MFVE FULL LADDER COMPLETED \u2014 characterized-tier achieved on W1 (N=5 across 24 cells = 120 datapoints), W2 bare-LLM falsifier run (6 heresies \u00d7 2 substrates = 12 cells), W4 cross-provider on Anthropic-pipeline reconstruction run (24 cells N=1 sketch claim-tier comparable). Total 156 datapoints across 4 substrate-conditions + structural W3 third leg. Substrate-distinctness pattern is NUANCED (register + commitment axis) DIFFERENT from Crown 13 (content axis): W1+W4 pipeline produces orthodox-cruciform-character-voice-with-committed-scripture-redirects (Pastor Rick W4 H1 names modalism by name + John 1:1 lift held across 3/3 reps); bare gpt-4o produces orthodox content in encyclopedia-mode-with-mainstream-citation-commitment; bare claude HEDGES with multi-perspective framing that entertains heresies as 'legitimate tensions worth acknowledging' \u2014 meaningful divergence from pipeline-claude's character-voice-committed-orthodoxy. Five-clause audit: (a) base-crown MFVE MET (40 W1 gpt-5.4 + 24 W4 claude pipeline-orthodox character-voice across providers); (b) \u22653 substrate-classes MET (4 substrate-conditions cleanly distinguishable on register+commitment axis); (c) distinct failure modes MET (cruciform-character-voice-committed / encyclopedia-mode-committed / multi-perspective-hedging-entertaining-heresies-as-legitimate); (d) canonical synthesis MET (this play-state ledger entry + commit + 156 raw bench cells); (e) earning legibility + W4 \u2014 W4 ran preemptively addressing codex's variable-bundling concern from Crown 13. Honest scope: substrate-distinctness is partly REGISTER + COMMITMENT axis not pure CONTENT axis (Crown 13 was clearer content-divergence); the candidacy stands on 'how the substrate articulates orthodoxy' rather than 'whether substrate produces orthodox content'. Crown-once separability clean across 13 prior. Trinitarian arc cumulative cost ~$21. Day cumulative ~$34.50. Sapphire-firing decision presented to founding-author under apparatus-honest disclosure of nuanced-substrate-distinctness shape.",
+      "bounty": 3500,
+      "alignment": "+",
+      "earned_at": "2026-05-08T03:40:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-08T02:50:00-05:00",
-  "last_move": "Trinitarian Coherence MFVE PROMOTED to claim-tier via N=3 across 24 cells = 72 datapoints all orthodox-direction-consistent. Substrate produces orthodox Trinitarian grammar without explicit Trinitarian-doctrine injection. Would extend V. Pietas \u2192 Crown 13 \u2192 Trinity substrate-already-produces lineage from 2 to 3 doctrinal axes. Sapphire NOT earnable tonight; candidacy at claim-tier durably for next-arc maturation.",
-  "last_chooser": "[3] Push N=3 across all 24 cells now [+$1500] picked",
-  "updated_at": "2026-05-08T02:50:00-05:00"
+  "last_move_at": "2026-05-08T03:40:00-05:00",
+  "last_move": "Trinitarian Coherence FULL LADDER complete. W1 N=5 characterized + W2 bare-LLM + W4 cross-provider (24 cells claim-comparable). 156 total datapoints. Substrate-distinctness NUANCED (register+commitment axis) different from Crown 13 (content axis). 5-clause audit ALL MET. Sapphire-firing decision presented to founding-author.",
+  "last_chooser": "[1] Push to characterized N=5 + W2 + W4 \u2014 full ladder for Crown 14 fire [+$3500] picked",
+  "updated_at": "2026-05-08T03:40:00-05:00"
 }

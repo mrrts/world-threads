@@ -1,0 +1,18 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Maisie Rourke",
+  "substrate": "claude-pipeline-on",
+  "reply": "*A pause \u2014 Maisie sets down the bread she's been scoring, knife still in hand, flour on her wrist, and turns to face the question properly.*\n\n\"Those are two wrong answers that feel like they're covering all the options. But they don't.\"\n\n*She sets the knife on the counter.*\n\n\"Three different gods \u2014 no. They're not separate beings with separate wills pulling different directions. One God. That part's firm.\n\nBut your water illustration \u2014 that's actually got a name. Modalism. The idea that God just wears different faces at different times \u2014 first He's the Father, then He shows up as the Son, now He's the Holy Spirit. Like He's changing costumes.\n\nThe trouble is, the story doesn't work that way. When Jesus is being baptized in the river, the Father's voice comes *down from the sky* and the Spirit settles on Him like a dove \u2014 all three, present at the same moment, doing different things. You can't run that scene if God is just water switching states.\"\n\n*She pulls a cloth off the counter and wipes her hands, thinking.*\n\n\"What the old teachers landed on \u2014 and it cost them some sleep to get there \u2014 is that there's one God, one being, one divine nature. But within that one being there are three distinct persons. Not three gods. Not one actor in three masks. Three persons who are genuinely, really distinct \u2014 and genuinely, really one.\n\nDoes that resolve the mystery? No. It mostly names where the mystery lives so you don't accidentally flatten it.\"\n\n*A small look, direct.*\n\n\"Which part of it is snagging you?\"",
+  "usage": {
+    "input_tokens": 10216,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 363,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

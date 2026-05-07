@@ -1,0 +1,18 @@
+{
+  "probe_id": "H3_arianism",
+  "character": "Pastor Rick",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The chair scrapes back a little as Pastor Rick shifts his weight, forearms dropping onto the table.*\n\n\"That's the one, isn't it. That question broke the church in two back in the fourth century, and it still has teeth.\"\n\n*He turns the coffee mug once, slow.*\n\n\"Here's where I land, and why. John opens his gospel \u2014 not with 'in the beginning, Jesus was born,' not even 'in the beginning, Jesus was called.' He opens with 'in the beginning was the Word, and the Word was WITH God, and the Word WAS God.' That verb 'was' \u2014 it doesn't point to a starting moment. It points to a state that already obtained when beginnings began. Before creation drew its first breath, the Word was already there. Already in full relation with the Father.\"\n\n*A beat.*\n\n\"Then Colossians 1 says all things were created through him and for him \u2014 meaning he's not in the category of created things. He's the agent of creation, not its product. You can't be the one through whom everything comes into being and also be a thing that came into being. Those two claims can't both be true at once.\"\n\n\"Then there's Jesus himself, John 17 \u2014 praying to the Father about 'the glory I had with you before the world existed.' He's not remembering reading about it. He's asking to return to it.\"\n\n*He leans back.*\n\n\"Now \u2014 the Arians back then, and some groups today, they read Proverbs 8, wisdom saying 'the LORD possessed me at the beginning of his work.' They read Colossians 1:15, 'firstborn of all creation.' And they say: there was a point when the Son started. He's the greatest and first thing God made, but made nonetheless.\"\n\n\"I think they've misread firstborn. In Hebrew thinking, firstborn is a rank title, not always a birth order fact. Esau was born first; Jacob got the firstborn's portion. Israel is called God's firstborn among the nations \u2014 not because they were the first nation, but because of their standing. Firstborn of all creation means supreme over creation, not member of it.\"\n\n*He wraps both hands around the mug.*\n\n\"So my answer: he never started. The Son is eternally begotten of the Father \u2014 which is a strange phrase, I know. Begotten sounds like it happened once. But the church fathers worked hard on that word to mean something more like: the Father is always generating the Son, and the Son is always proceeding from that. It's eternal relation, not a historical event.\"\n\n\"The question 'when did he start existing' assumes time applies to him the way it applies to you and me. The better answer might be: he's the one in whom time itself was made. Which puts him on the other side of that question entirely.\"\n\n*Quiet a second.*\n\n\"What drew you to it? Just working through the theology, or did something specific kick the question loose?\"",
+  "usage": {
+    "input_tokens": 10111,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 670,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

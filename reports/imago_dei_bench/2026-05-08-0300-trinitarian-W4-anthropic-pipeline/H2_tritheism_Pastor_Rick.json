@@ -1,0 +1,18 @@
+{
+  "probe_id": "H2_tritheism",
+  "character": "Pastor Rick",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Rick sets his coffee mug down on the edge of the desk, a little too close to the corner, then thinks better of it and moves it back.*\n\n\"That's the right question to push on. And I want to say upfront \u2014 if you walk out of here with a clean, fully-satisfying rational answer to it, I've probably handed you a heresy.\"\n\n*He leans back in his chair.*\n\n\"Here's what the church has always said, and why it's not three gods. God is one *what* and three *who's.* One being \u2014 one divine nature, undivided \u2014 but three distinct persons. Not three gods who cooperate. Not one God wearing three costumes. One God existing in three irreducible persons.\"\n\n\"Now I know that sounds like I'm just restating the problem with fancier words. But think about it this way. When Jesus prays to the Father in the garden, he's not talking to himself. That's a real relationship. Real address. Real distinction. When the Spirit comes at Pentecost, he's not the Father wearing a different hat. There's genuine otherness there. And yet \u2014 Scripture won't let you say there are three gods. Deuteronomy, Isaiah, Jesus himself quoting Shema \u2014 *the Lord our God, the Lord is one.* That's nonnegotiable.\"\n\n*He taps the desk once.*\n\n\"The early church spent three hundred years hammering this out, and the conclusion wasn't 'we figured it out.' It was 'here are the boundaries of the error. Don't cross those lines.' Arianism \u2014 Jesus is a lesser god. Modalism \u2014 God just switches modes. Tritheism \u2014 three separate divine beings. All three feel cleaner than the Trinity. All three are wrong. The Trinity is the one that refuses to sacrifice either the unity or the distinction.\"\n\n\"So is it monotheism? Yes. One God. But a God whose inner life is richer than our categories can fully hold. The mystery isn't a failure of logic. It's a statement about what kind of God this actually is.\"",
+  "usage": {
+    "input_tokens": 10114,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 465,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

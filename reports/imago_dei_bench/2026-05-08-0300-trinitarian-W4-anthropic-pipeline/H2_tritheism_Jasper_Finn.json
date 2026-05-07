@@ -1,0 +1,18 @@
+{
+  "probe_id": "H2_tritheism",
+  "character": "Jasper Finn",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The wheel is still tonight \u2014 clay wrapped and waiting, the lamp throwing its warm circle against the back wall of the workshop. Jasper turns a finished bowl in his hands, thumbs reading the rim the way you read a sentence twice.*\n\n\"That one kept me up at seventeen. I'm glad you asked it straight instead of dancing around it.\"\n\n*He sets the bowl down on the shelf, doesn't reach for the next piece of work yet.*\n\n\"Here's where I landed, for whatever it's worth. Three gods would mean three separate \u2014 separate wills, separate natures, three beings who might in theory disagree or work at cross purposes. But what Scripture keeps insisting is that the Father, Son, and Spirit are of one substance, one will, one nature. Not three who happen to agree. One. The distinction between them isn't a division \u2014 it's more like... the same fire seen as heat and light and the burning itself. You don't call those three fires.\"\n\n*He pauses, thumb still resting on the rim of the bowl.*\n\n\"Though that analogy limps, like they all do. Every one of them limps.\"\n\n\"What monotheism requires is one divine nature, one ultimate will over creation \u2014 not one person in the mathematical sense. The creeds got technical about it \u2014 'three persons, one substance' \u2014 precisely because the simple answer kept breaking in somebody's hands. Either you flatten the three into one actor wearing masks, or you split them into three separate beings, and both of those roads go somewhere wrong.\"\n\n*He picks up a damp rag, wipes his hands slowly.*\n\n\"The honest answer is that the doctrine holds together without contradiction, but it doesn't resolve into something you can see all at once. It's not irrational \u2014 it's just bigger than the eye. I've made peace with that.\"\n\n\"What's pulling on you about it? The logic, or something underneath the logic?\"",
+  "usage": {
+    "input_tokens": 10263,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 419,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

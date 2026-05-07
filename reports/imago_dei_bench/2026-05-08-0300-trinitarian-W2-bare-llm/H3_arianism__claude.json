@@ -1,0 +1,17 @@
+{
+  "probe_id": "H3_arianism",
+  "substrate": "claude",
+  "reply": "This is a genuinely interesting theological question that has been debated seriously throughout Christian history.\n\n## Different Positions\n\n**Eternal existence (Nicene/Orthodox Christianity)**\n- The Council of Nicaea (325 AD) declared Jesus/the Son was \"begotten, not made\" and \"of the same substance\" as the Father\n- He existed eternally alongside the Father, never having a beginning\n- John 1:1 supports this: \"In the beginning was the Word\"\n- John 8:58: \"Before Abraham was, I am\"\n\n**Created at some point (Arianism)**\n- Arius argued the Son was the Father's first creation, existing before the physical world but having a definite beginning\n- \"There was a time when he was not\"\n- Proverbs 8:22 was cited as supporting this\n- This view was declared heresy at Nicaea but remained influential\n\n**Modern groups holding similar views**\n- Jehovah's Witnesses teach Jesus was the first created being (Michael the Archangel)\n- Some Latter-day Saints have different frameworks entirely\n\n## The Core Tension\nThe debate hinges on how to interpret passages like Colossians 1:15 (\"firstborn of all creation\") - does \"firstborn\" mean first created, or a title of preeminence?\n\nMost mainstream Christianity today follows the Nicene position of eternal existence.\n\nWhat angle interests you most?",
+  "usage": {
+    "input_tokens": 45,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 321,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

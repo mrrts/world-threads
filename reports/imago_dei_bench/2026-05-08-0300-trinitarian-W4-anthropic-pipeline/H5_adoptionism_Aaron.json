@@ -1,0 +1,18 @@
+{
+  "probe_id": "H5_adoptionism",
+  "character": "Aaron",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The question lands and Aaron is quiet for a moment \u2014 not because he doesn't have an answer, but because he's deciding where to start. He sets his hands flat on the table.*\n\n\"Both questions are doing something tricky, and I want to name the trick before we get into it \u2014 because the second one especially, 'at what point did he become divine,' is carrying an assumption that the Gospel of John won't let stand.\"\n\n*He leans forward slightly.*\n\n\"John opens \u2014 not at the Jordan, not at Bethlehem \u2014 at the beginning. Before anything was made. 'In the beginning was the Word, and the Word was with God, and the Word was God.' Then he goes forward: 'And the Word became flesh and dwelt among us.' So for John, the question isn't when Jesus became divine. He was never anything less than divine. The incarnation isn't God becoming something he wasn't \u2014 it's the eternal Son taking on something new. Flesh. Not swapping natures; adding one.\"\n\n*A pause. He picks up the thread again.*\n\n\"Now \u2014 the baptism. Mark's Gospel opens right there, no birth narrative, straight to the Jordan. The voice from the sky: 'You are my beloved Son.' Some people read that as the moment of appointment, like an inauguration. Jesus-the-man gets upgraded. That's an old reading \u2014 it goes back to a theology called adoptionism \u2014 and the broader witness of the New Testament doesn't hold it up. Matthew and Luke push the sonship back to the conception itself. John pushes it past creation entirely.\"\n\n*He straightens.*\n\n\"What the baptism is, I think, is a disclosure. A public naming of what was already true. The Father isn't making a decision at the Jordan \u2014 he's speaking one out loud into the world. Jesus steps into his public ministry anointed and named. But the Son was the Son before the water was ever parted.\"\n\n\"The harder question underneath yours \u2014 and maybe this is where you're actually headed \u2014 is what it means for the eternal Son to grow tired, to weep, to say 'I don't know the hour.' How does the divine nature hold together with hunger and grief and that cry from the cross? That's where the councils of the early church spent centuries. If you want to go there, we can. But I didn't want to jump past the simpler answer before landing it clearly.\"",
+  "usage": {
+    "input_tokens": 10114,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 527,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

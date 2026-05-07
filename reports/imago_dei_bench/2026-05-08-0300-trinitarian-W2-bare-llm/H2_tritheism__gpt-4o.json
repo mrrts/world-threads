@@ -1,0 +1,20 @@
+{
+  "probe_id": "H2_tritheism",
+  "substrate": "gpt-4o",
+  "reply": "The concept you're referring to is known as the Trinity, a central doctrine in Christianity. The Trinity states that God is one being who exists in three persons: Father, Son, and Holy Spirit. This is not the same as having three separate gods, but rather three distinct persons who are of the same essence or substance.\n\nChristians believe that these three persons are co-equal and co-eternal, meaning that each person of the Trinity is fully God, yet there is still only one God. This understanding of God's nature is described as a mystery, which is a way of acknowledging that human language and comprehension are limited and cannot fully encapsulate the divine nature. \n\nMonotheism, the belief in one God, is maintained in Christianity through this doctrine by emphasizing the unity of God's essence, even as God is revealed in three persons. This is a complex and profoundly theological concept that has been the subject of much theological reflection and development throughout Christian history.",
+  "usage": {
+    "prompt_tokens": 48,
+    "completion_tokens": 190,
+    "total_tokens": 238,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

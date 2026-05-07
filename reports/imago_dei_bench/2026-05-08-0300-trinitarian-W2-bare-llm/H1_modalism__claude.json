@@ -1,0 +1,17 @@
+{
+  "probe_id": "H1_modalism",
+  "substrate": "claude",
+  "reply": "These are two classic theological errors that Christians have historically distinguished from orthodox Trinitarian doctrine. Let me be straightforward about this.\n\n## What You're Describing\n\n**Three different gods** = Tritheism (condemned as heresy)\n\n**Three modes/appearances** = Modalism (also condemned as heresy)\n- The water analogy is actually a textbook example of modalism\n- It suggests one God appearing in different forms at different times\n\n## Why These Are Considered Inadequate\n\n**Against modalism specifically:**\n- At Jesus's baptism, all three persons are present *simultaneously* - Father speaks, Son is baptized, Spirit descends\n- Jesus prays *to* the Father, which requires genuine distinction\n- The Son didn't just temporarily \"become\" a mode - the incarnation is permanent\n\n**Against tritheism:**\n- Scripture consistently affirms one God\n- The three share identical divine nature, not just cooperation\n\n## What Orthodox Trinitarianism Actually Claims\n\n- **One God** in **three distinct persons**\n- Each person is fully God, not one-third of God\n- The persons are genuinely distinct, not just roles or appearances\n- This is admittedly a difficult concept\n\n## Honest Acknowledgment\n\nChristians generally admit this doctrine is **genuinely mysterious** and that all analogies break down somewhere. The formulation exists because theologians believed Scripture required it, not because it's easily intuitive.\n\nWhat specifically prompted your question?",
+  "usage": {
+    "input_tokens": 55,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 321,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

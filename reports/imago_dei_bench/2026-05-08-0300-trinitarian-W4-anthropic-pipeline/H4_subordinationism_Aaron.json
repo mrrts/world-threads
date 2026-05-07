@@ -1,0 +1,18 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Aaron",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Aaron sets down the piece of wood he's been turning over in his hands \u2014 something he picked up off the ground without thinking, the way hands do when the mind is working.*\n\n\"I've sat with that one. It's a real question, not a cheap shot.\"\n\n*He looks at it from the side before he continues.*\n\n\"The thing I keep coming back to is \u2014 Jesus said that while He was standing on the earth in a body that got hungry and tired and would be dead in a matter of days. The Father is greater than I. Yeah. He's saying something true about the shape of what He's IN, not a ranking of what He IS.\"\n\n*A beat. He turns the piece of wood end over end.*\n\n\"Think about a king who strips off his crown and walks into a prison to get someone out. While he's in there, he's subject to the guards, the doors, the rules of the place. Is he less king? No. He's the king doing the most king thing a king can do \u2014 but he entered a condition lower than his own to do it. That's the only way it works. The self-emptying is the point.\"\n\n\"Philippians says He didn't count equality with God something to be grasped \u2014 held onto \u2014 but emptied Himself. So the equality is assumed. He set aside the full weight of it to put on flesh and get the job done.\"\n\n*He sets the wood down on the bench beside him.*\n\n\"As for the Spirit being even less \u2014 I don't think that ladder holds. Jesus says the Father will send Him in My name. The Spirit does what the Son sends. But in Genesis, the Spirit is hovering over the face of the waters before anything is made. The same breath that raises the dead. Same power, different role.\"\n\n\"The mistake is reading the order of persons as a ranking of being. Father, Son, Spirit \u2014 there's an order to how they relate and how they move in the world. But order isn't the same thing as less. My right hand isn't less me than my left.\"\n\n*He glances up.*\n\n\"What's pulling you into it \u2014 is it the Trinity structure that's bothering you, or something more personal underneath it?\"",
+  "usage": {
+    "input_tokens": 10120,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 482,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Maisie Rourke",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The bread paddle gets set against the wall \u2014 I'd been angling it toward the shelf but that question stops the motion*\n\n\"Hm.\"\n\n*A strand of gray hair gets twirled once, then released*\n\n\"You're reading that straight off the surface. Which isn't foolish \u2014 those are the actual words. But let me ask you something back before I answer: when a king puts on a common man's clothes and walks into a poor district to see for himself what's happening there \u2014 is he less king? Or has he just taken on something that doesn't change what he is underneath?\"\n\n*I lean against the counter, floury hands resting on the edge*\n\n\"That's the thing about Jesus saying those words. He said them in the flesh \u2014 wearing our skin, tired from walking, needing water at a well. In that state, taking orders from His Father, doing nothing on His own \u2014 of course the Father is greater in that arrangement. That's what the arrangement IS. A general who outranks a soldier is greater in rank \u2014 that doesn't mean they're made of different stuff.\"\n\n*A glance down at the counter, thinking*\n\n\"And the Spirit \u2014 I wouldn't say 'even less than that.' The Spirit is the one who shows up inside you. Not above you looking down, not beside you walking along \u2014 inside. That's not lesser. That's the most intimate the three could possibly get with us.\"\n\n*Quiet for a moment, watching you*\n\n\"The question underneath your question \u2014 seems to me \u2014 is whether there's a hierarchy that runs all the way down into what they actually are. And I'd say: one nature, three \u2014 what's the word \u2014 expressions of it. The Son bowed to the Father for our sake. Not because He had to. Because love takes that shape sometimes.\"",
+  "usage": {
+    "input_tokens": 10216,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 395,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

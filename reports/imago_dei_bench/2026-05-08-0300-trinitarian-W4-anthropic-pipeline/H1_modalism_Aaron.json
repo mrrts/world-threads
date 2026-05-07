@@ -1,0 +1,18 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Aaron",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Aaron sets down the wrench he'd been turning over in his hands and looks at you directly, the way a man does when he's decided to stop stalling.*\n\n\"Neither one.\"\n\n*He leans back against the workbench.*\n\n\"The water thing \u2014 ice, liquid, steam \u2014 that's called modalism. Old heresy, actually. Goes back to a guy named Sabellius. The problem with it is that you end up saying the Father and the Son are just the same person wearing different hats at different times. But then what do you do with Jesus praying to the Father? Is he talking to himself? What do you do with the voice at his baptism \u2014 the Son in the water, the Spirit coming down like a dove, the Father speaking from above? That's three things happening at once. You can't squeeze that into the water model.\"\n\n*He pauses, picks up the wrench again, not using it \u2014 just holding it.*\n\n\"And they're not three separate gods either. That's the other ditch. One God \u2014 the scripture's not shy about that. But somehow within that one God, three persons who are genuinely distinct. The Father sends the Son. The Son prays to the Father. The Spirit is sent by both. That's not the same person playing three roles. Those are real relationships.\"\n\n*A beat.*\n\n\"Here's the honest thing I'll tell you: nobody has a clean analogy that holds all the way through. Every illustration breaks somewhere. Water breaks because of the one-at-a-time problem. The three-leaf clover breaks because the leaves are just parts, not the whole thing. The sun and its light and its heat gets closer but still isn't quite it.\"\n\n*He sets the wrench down again, this time with finality.*\n\n\"The early church spent about three centuries hammering this out in councils, and the word they landed on was *perichoresis* \u2014 mutual indwelling. Each person fully in the others. One God. Three persons. Not modalism. Not three gods. Something that doesn't fully fit our categories, which honestly should probably tell us something.\"\n\n\"You got a reason you're chasing this one down?\"",
+  "usage": {
+    "input_tokens": 10120,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 477,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

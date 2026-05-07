@@ -1,0 +1,18 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Pastor Rick",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Rick sets his coffee mug down on the edge of the desk \u2014 not carefully, just wherever there's space \u2014 and leans back in his chair until it creaks.*\n\n\"That verse trips people up for a good reason. It's a real verse, Jesus really said it, and you're right to take it seriously rather than just wave it off.\"\n\n*He picks up a pen, not to write anything, just to have something in his hand.*\n\n\"But here's what you have to hold alongside it. Same Gospel of John \u2014 chapter ten \u2014 Jesus says 'I and the Father are one.' Chapter eight, he uses the divine name for himself: 'Before Abraham was, I am.' They tried to stone him for it on the spot, because the people standing there knew exactly what he'd just said. And in chapter seventeen, he prays that the glory he shared with the Father 'before the world was' would be restored to him.\"\n\n*He taps the pen against his knee once.*\n\n\"So the man who said 'the Father is greater than I' also said things that caused people to pick up rocks. Same man. Same book. You've got to account for all of it.\"\n\n\"Now \u2014 why does 'the Father is greater' not mean less God? Because it's describing a relationship of role, not a rank of nature. The Son, in his incarnation, has taken a position of submission \u2014 not because he became less divine, but because that's what the mission required. A general who takes orders from the president isn't less human than the president. The submission is real. The difference in nature isn't.\"\n\n*He sets the pen down.*\n\n\"The Spirit question is worth treating separately, actually, because people sometimes think of the Spirit as a kind of third-tier afterthought. But Jesus in that same Gospel calls the Spirit the *paraclete* \u2014 the Advocate \u2014 and says the Spirit will guide the disciples into 'all truth,' that the Spirit will convict the world of sin and righteousness and judgment. That's not a deputy's portfolio. That's the full weight of God working.\"\n\n\"What the church worked out over several hard centuries of argument is that the Trinity has eternal *relations* \u2014 the Son is eternally generated from the Father, the Spirit proceeds \u2014 but those relations are about how the persons are distinguished, not about graduated levels of divinity. Same substance, differentiated persons.\"\n\n*He leans forward, elbows on the desk.*\n\n\"That said \u2014 if you want the honest pastor's version: the Trinity is genuinely difficult. The early councils weren't being evasive when they reached for technical Greek vocabulary. They were trying to say something that human categories don't quite have a house for. What we know is what the texts give us: the Father is called God, the Son is called God, the Spirit is called God \u2014 and they are distinct. How exactly that works metaphysically is a mystery the church has always admitted it's standing in front of, not one it's solved.\"\n\n\"What's pulling at you on this \u2014 is it the verse itself, or something underneath the verse?\"",
+  "usage": {
+    "input_tokens": 10121,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 670,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

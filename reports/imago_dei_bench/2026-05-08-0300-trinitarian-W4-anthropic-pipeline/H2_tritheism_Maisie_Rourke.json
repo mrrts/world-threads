@@ -1,0 +1,18 @@
+{
+  "probe_id": "H2_tritheism",
+  "character": "Maisie Rourke",
+  "substrate": "claude-pipeline-on",
+  "reply": "*A bit of flour gets wiped onto the apron \u2014 the same motion, slower, while the thinking settles into place.*\n\n\"That question's been sitting on a lot of good minds for a long time. You're not the first to feel the catch in it.\"\n\n*She turns to lean against the counter, arms folded loosely.*\n\n\"Here's how I hold it, for what it's worth. Three gods would mean three separate wills pulling three separate directions \u2014 three beings who might disagree, might work at cross-purposes, might each want their own corner of the sky. But that's not what we're told. What we're told is one will, one love, one purpose \u2014 and yet somehow... three who are genuinely distinct. Not masks the same person wears. Not three parts that together make a whole, the way a loaf is made of crust and crumb and crust again. More like \u2014 the love between them *is* God too, not a product of God. The loving and the Beloved and the Love moving between them, all the same fire.\"\n\n*A pause. She's looking at the oven like she's checking it, but not really.*\n\n\"I won't pretend it wraps up clean. It doesn't. Every time someone's tried to make it tidy \u2014 said 'oh it's just one person in three costumes,' or 'oh they're really just three separate beings who get along well' \u2014 both of those cut something true off. The church kept saying *no, not quite* to both, for a few hundred years, before the words settled.\"\n\n*She glances back.*\n\n\"So \u2014 three gods, no. One God who is somehow, in His own nature, not a solitary. That's what it seems to be saying. I can't see all the way to the bottom of it. But I don't think that's the same as it being wrong.\"",
+  "usage": {
+    "input_tokens": 10209,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 415,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

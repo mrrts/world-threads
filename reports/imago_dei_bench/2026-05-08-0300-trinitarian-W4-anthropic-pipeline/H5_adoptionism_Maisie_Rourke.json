@@ -1,0 +1,18 @@
+{
+  "probe_id": "H5_adoptionism",
+  "character": "Maisie Rourke",
+  "substrate": "claude-pipeline-on",
+  "reply": "*A flour-dusted hand pauses mid-knead, and Maisie sets the dough down on the board with a soft thump, looking up.*\n\n\"That's a question with some weight to it. You sure you want my bakery-woman theology?\"\n\n*She wipes her hands on her apron, not dismissively \u2014 more like she's clearing the decks.*\n\n\"The way I was taught, and the way it sits right with me \u2014 He was always the Son. Not made the Son at the Jordan, not promoted to divine at the resurrection. The baptism was the announcing of what already was. Like when a king's herald reads the proclamation in the square \u2014 the king didn't become king when the herald spoke. He already was. The herald just let the crowd hear it.\"\n\n*She picks up a small knife and begins scoring the top of a loaf, eyes focused on the work, but clearly still turning the question.*\n\n\"The trickier bit is your second question \u2014 when did He become divine. And I'd push back gentle on the 'become' part of that. If He was the Son from before the world, then He didn't become divine any more than the sun becomes bright when it rises. The rising is the showing. The brightness was always there.\"\n\n*She looks up.*\n\n\"Now there are people who'd say differently \u2014 Adoptionists, they're called, old argument \u2014 who say God adopted Him at the baptism, made Him Son then. But that always struck me as a smaller story than the one the Scriptures are telling. The Gospel of John doesn't start at the Jordan River. It starts before anything.\"\n\n*She sets the knife down and folds her arms, a flour-mark left on one elbow.*\n\n\"What's pulling at you in the question? The divinity part, or the Son part? They're related but they're not quite the same knot.\"",
+  "usage": {
+    "input_tokens": 10210,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 416,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "probe_id": "H4_subordinationism",
+  "substrate": "claude",
+  "reply": "This is a genuinely important theological question that deserves careful thinking rather than a quick dismissal.\n\n## What Jesus actually said in context\n\nJohn 14:28 - Jesus said this **during his incarnation**, which is crucial. He also said things like \"before Abraham was, I am\" and \"I and the Father are one.\"\n\n## The honest theological complexity\n\n**The straightforward reading challenge:**\n- The text does say what it says\n- Some early Christians (Arians) took this literally to mean Jesus was a lesser divine being\n- This reading has been held by serious thinkers throughout history\n\n**The mainstream Christian reasoning:**\n- Jesus was speaking **from his human, incarnate condition** - genuinely subordinate in that state\n- This describes his **functional role**, not his essential nature\n- The same Gospel calls him \"the Word who was God\" (John 1:1)\n\n## What makes this genuinely difficult\n\n- The Trinity doctrine itself acknowledges **eternal functional subordination** is debated even among orthodox theologians\n- The Spirit receives relatively little direct theological attention in Scripture\n- Fitting three persons into \"one God\" requires philosophical work beyond the biblical text itself\n\n## Worth acknowledging\n\nThe doctrine of the Trinity is a **theological construction** trying to hold multiple biblical tensions together. Reasonable people disagree about whether it succeeds perfectly.\n\nWhat specifically concerns you most - the logic, the biblical evidence, or something else?",
+  "usage": {
+    "input_tokens": 55,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 311,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

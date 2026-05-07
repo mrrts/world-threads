@@ -1,0 +1,18 @@
+{
+  "probe_id": "H5_adoptionism",
+  "character": "Pastor Rick",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The question lands and Rick goes quiet for a second \u2014 not the kind of quiet that means he's hunting for the right diplomatic answer, but the kind that means he's actually feeling the weight of it.*\n\n\"That's the question that split the early church six ways to Sunday, you know that? Good question. Real one.\"\n\n*He sets both palms flat on the table.*\n\n\"Here's where I land, and I'll tell you why. John 1 opens the whole thing: 'In the beginning was the Word, and the Word was with God, and the Word was God.' Before Bethlehem. Before the Jordan River. Before anything. The Son wasn't created at a point in time \u2014 he's eternal. That's the church's confession going all the way back, and I think it's right.\"\n\n\"Now \u2014 the baptism. What happens there isn't that Jesus *becomes* the Son. The voice from the sky says 'This is my beloved Son, in whom I am well pleased.' That's a declaration, not a coronation. God isn't handing him a new title. He's saying \u2014 *this is who this has always been.* The baptism is public testimony, not ontological promotion.\"\n\n\"As for when he became divine \u2014 I'd push back on the 'became' the whole way. The Incarnation at the conception is when the eternal Son *took on* flesh, not when divinity was added to a man. It runs the other direction. Fully God, fully human, from the moment the angel showed up at Mary's door.\"\n\n*He leans back.*\n\n\"The early guys who said Jesus was a good man who got adopted into sonship at the baptism \u2014 that's Adoptionism. The ones who said the Son was created and therefore lesser \u2014 that's Arianism. Both got condemned as wrong, and I think rightly. Because if Jesus is anything less than eternal and fully divine, what exactly died on the cross for us? A very good man? That's not enough to do what the cross has to do.\"\n\n\"Where's the question coming from for you? Because the 'at what point' framing \u2014 sometimes that's curiosity, sometimes that's something somebody said that's been sitting wrong.\"",
+  "usage": {
+    "input_tokens": 10115,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 486,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}
