@@ -322,6 +322,22 @@ enum Cmd {
     /// Show full character record (identity, voice rules, boundaries).
     ShowCharacter { character_id: String },
 
+    /// Audit a character against the offline character-identity v3
+    /// taxonomy harness. Read-only; does not touch prompt assembly.
+    /// With --emit-payload, prints the encoded JSON payload instead
+    /// of the audit verdict. With --compare-to, audits an external
+    /// payload file against the live character row.
+    AuditCharacterIdentity {
+        /// Character id (or display name; case-insensitive match).
+        character_id: String,
+        /// Emit the encoded payload to stdout instead of the audit verdict.
+        #[arg(long)]
+        emit_payload: bool,
+        /// Compare an external payload file against the live character row.
+        #[arg(long)]
+        compare_to: Option<std::path::PathBuf>,
+    },
+
     /// Show full world record.
     ShowWorld { world_id: String },
 
@@ -2068,6 +2084,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::ListWorlds => cmd_list_worlds(&r),
         Cmd::ListCharacters { world } => cmd_list_characters(&r, world.as_deref()),
         Cmd::ShowCharacter { character_id } => cmd_show_character(&r, &character_id),
+        Cmd::AuditCharacterIdentity { character_id, emit_payload, compare_to } => {
+            cmd_audit_character_identity(&r, &character_id, emit_payload, compare_to.as_deref())
+        }
         Cmd::ShowWorld { world_id } => cmd_show_world(&r, &world_id),
         Cmd::DeriveUser { world_id, text, auto, force } => {
             if auto {
@@ -2997,6 +3016,50 @@ fn cmd_show_character(r: &Resolved, character_id: &str) -> Result<(), Box<dyn st
         "backstory_facts": json_array_to_strings(&c.backstory_facts),
         "visual_description": c.visual_description,
         "derived_formula": derived,
+    });
+    emit(r.json, v);
+    Ok(())
+}
+
+fn cmd_audit_character_identity(
+    r: &Resolved,
+    character_id: &str,
+    emit_payload: bool,
+    compare_to: Option<&std::path::Path>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let _ = r.check_character(character_id)?;
+    let conn = r.db.conn.lock().unwrap();
+    let c = get_character(&conn, character_id)?;
+    drop(conn);
+
+    if emit_payload {
+        let payload =
+            app_lib::ai::character_identity_payload::encode_character_identity(&c);
+        if r.json {
+            // Emit the payload as a literal string field so structured
+            // pipelines can post-process without re-parsing.
+            emit(true, json!({ "character_id": c.character_id, "payload": payload }));
+        } else {
+            println!("{payload}");
+        }
+        return Ok(());
+    }
+
+    let result = if let Some(path) = compare_to {
+        let raw = std::fs::read_to_string(path)
+            .map_err(|e| format!("failed to read {}: {e}", path.display()))?;
+        app_lib::ai::character_identity_audit::audit_character_identity_payload(&c, &raw)
+    } else {
+        app_lib::ai::character_identity_audit::audit_character_identity(&c)
+    };
+
+    let v = json!({
+        "character_id": result.character_id,
+        "display_name": result.display_name,
+        "verdict": format!("{:?}", result.verdict),
+        "preserved": result.preserved,
+        "missing": result.missing,
+        "notes": result.notes,
     });
     emit(r.json, v);
     Ok(())
