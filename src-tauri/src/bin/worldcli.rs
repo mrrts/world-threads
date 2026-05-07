@@ -34,7 +34,9 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use app_lib::ai::prompts::json_array_to_strings;
-use app_lib::ai::{openai, orchestrator, prompts, relational_stance, load_test_anchor, substrate_atlas};
+use app_lib::ai::{
+    load_test_anchor, openai, orchestrator, prompts, relational_stance, substrate_atlas,
+};
 use app_lib::db::{queries::*, Database};
 
 // ─── CLI surface ────────────────────────────────────────────────────────
@@ -1387,7 +1389,8 @@ enum Cmd {
         json: bool,
     },
     /// Show a single craft-rule's full body + tier + provenance.
-    ShowCraftRule { name: String,
+    ShowCraftRule {
+        name: String,
         #[arg(long)]
         json: bool,
     },
@@ -1538,10 +1541,7 @@ enum LabAction {
     },
     /// Link a run (evaluate / synthesize / replay) to an experiment by id
     /// or prefix — the run id gets appended to the experiment's run_ids.
-    LinkRun {
-        slug: String,
-        run_id: String,
-    },
+    LinkRun { slug: String, run_id: String },
     /// Scenario templates — canonical multi-variant probe sequences for
     /// Mode C (active elicitation). Each scenario lives at
     /// experiments/scenarios/<name>.md with frontmatter (name, purpose,
@@ -1616,7 +1616,10 @@ struct BudgetConfig {
 }
 impl Default for BudgetConfig {
     fn default() -> Self {
-        Self { per_call_usd: 0.10, daily_usd: 5.00 }
+        Self {
+            per_call_usd: 0.10,
+            daily_usd: 5.00,
+        }
     }
 }
 
@@ -1635,10 +1638,34 @@ struct ModelPrice {
 impl Default for ModelPricing {
     fn default() -> Self {
         let mut m = std::collections::HashMap::new();
-        m.insert("gpt-4o".to_string(), ModelPrice { input_per_1m: 5.0, output_per_1m: 15.0 });
-        m.insert("gpt-4o-mini".to_string(), ModelPrice { input_per_1m: 0.15, output_per_1m: 0.60 });
-        m.insert("gpt-5".to_string(), ModelPrice { input_per_1m: 10.0, output_per_1m: 30.0 });
-        m.insert("gpt-5-mini".to_string(), ModelPrice { input_per_1m: 0.30, output_per_1m: 1.20 });
+        m.insert(
+            "gpt-4o".to_string(),
+            ModelPrice {
+                input_per_1m: 5.0,
+                output_per_1m: 15.0,
+            },
+        );
+        m.insert(
+            "gpt-4o-mini".to_string(),
+            ModelPrice {
+                input_per_1m: 0.15,
+                output_per_1m: 0.60,
+            },
+        );
+        m.insert(
+            "gpt-5".to_string(),
+            ModelPrice {
+                input_per_1m: 10.0,
+                output_per_1m: 30.0,
+            },
+        );
+        m.insert(
+            "gpt-5-mini".to_string(),
+            ModelPrice {
+                input_per_1m: 0.30,
+                output_per_1m: 1.20,
+            },
+        );
         Self { models: m }
     }
 }
@@ -1648,10 +1675,18 @@ fn worldcli_home() -> PathBuf {
     PathBuf::from(home).join(".worldcli")
 }
 
-fn config_path() -> PathBuf { worldcli_home().join("config.json") }
-fn runs_dir() -> PathBuf { worldcli_home().join("runs") }
-fn manifest_path() -> PathBuf { runs_dir().join("manifest.jsonl") }
-fn cost_log_path() -> PathBuf { worldcli_home().join("cost.jsonl") }
+fn config_path() -> PathBuf {
+    worldcli_home().join("config.json")
+}
+fn runs_dir() -> PathBuf {
+    worldcli_home().join("runs")
+}
+fn manifest_path() -> PathBuf {
+    runs_dir().join("manifest.jsonl")
+}
+fn cost_log_path() -> PathBuf {
+    worldcli_home().join("cost.jsonl")
+}
 
 fn load_config() -> CliConfig {
     let path = config_path();
@@ -1664,7 +1699,11 @@ fn load_config() -> CliConfig {
     }
     match std::fs::read_to_string(&path) {
         Ok(s) => serde_json::from_str(&s).unwrap_or_else(|e| {
-            eprintln!("warning: config at {} failed to parse ({}); using defaults", path.display(), e);
+            eprintln!(
+                "warning: config at {} failed to parse ({}); using defaults",
+                path.display(),
+                e
+            );
             CliConfig {
                 scope: ScopeConfig::default(),
                 budget: BudgetConfig::default(),
@@ -1720,7 +1759,12 @@ fn estimate_tokens(text: &str) -> i64 {
     ((text.chars().count() as f64) / 3.3).ceil() as i64
 }
 
-fn project_cost(model: &str, prompt_tokens: i64, expected_completion_tokens: i64, pricing: &ModelPricing) -> f64 {
+fn project_cost(
+    model: &str,
+    prompt_tokens: i64,
+    expected_completion_tokens: i64,
+    pricing: &ModelPricing,
+) -> f64 {
     let p = pricing.models.get(model).copied().unwrap_or(ModelPrice {
         // Unknown-model fallback: assume gpt-4o pricing (conservative — likely overestimate).
         input_per_1m: 5.0,
@@ -1730,7 +1774,12 @@ fn project_cost(model: &str, prompt_tokens: i64, expected_completion_tokens: i64
         + (expected_completion_tokens as f64) * p.output_per_1m / 1_000_000.0
 }
 
-fn actual_cost(model: &str, prompt_tokens: i64, completion_tokens: i64, pricing: &ModelPricing) -> f64 {
+fn actual_cost(
+    model: &str,
+    prompt_tokens: i64,
+    completion_tokens: i64,
+    pricing: &ModelPricing,
+) -> f64 {
     project_cost(model, prompt_tokens, completion_tokens, pricing)
 }
 
@@ -1749,12 +1798,18 @@ fn append_cost_log(entry: &CostEntry) {
 
 fn rolling_24h_total_usd() -> f64 {
     let path = cost_log_path();
-    let Ok(content) = std::fs::read_to_string(&path) else { return 0.0; };
+    let Ok(content) = std::fs::read_to_string(&path) else {
+        return 0.0;
+    };
     let cutoff = chrono::Utc::now() - chrono::Duration::hours(24);
     let mut total = 0.0;
     for line in content.lines() {
-        let Ok(e): Result<CostEntry, _> = serde_json::from_str(line) else { continue; };
-        let Ok(ts) = chrono::DateTime::parse_from_rfc3339(&e.timestamp) else { continue; };
+        let Ok(e): Result<CostEntry, _> = serde_json::from_str(line) else {
+            continue;
+        };
+        let Ok(ts) = chrono::DateTime::parse_from_rfc3339(&e.timestamp) else {
+            continue;
+        };
         if ts.with_timezone(&chrono::Utc) >= cutoff {
             total += e.usd;
         }
@@ -1817,8 +1872,11 @@ fn write_run(record: &RunRecord) {
 }
 
 fn read_manifest() -> Vec<JsonValue> {
-    let Ok(content) = std::fs::read_to_string(manifest_path()) else { return Vec::new(); };
-    content.lines()
+    let Ok(content) = std::fs::read_to_string(manifest_path()) else {
+        return Vec::new();
+    };
+    content
+        .lines()
         .filter_map(|l| serde_json::from_str(l).ok())
         .collect()
 }
@@ -1841,7 +1899,9 @@ impl Resolved {
     }
 
     fn check_world(&self, world_id: &str) -> Result<(), CliError> {
-        if self.world_in_scope(world_id) { return Ok(()); }
+        if self.world_in_scope(world_id) {
+            return Ok(());
+        }
         Err(CliError::OutOfScope {
             world_id: world_id.to_string(),
             scope_world_ids: self.cfg.scope.world_ids.clone(),
@@ -1860,7 +1920,10 @@ impl Resolved {
 
 #[derive(Debug)]
 enum CliError {
-    OutOfScope { world_id: String, scope_world_ids: Vec<String> },
+    OutOfScope {
+        world_id: String,
+        scope_world_ids: Vec<String>,
+    },
     NotFound(String),
     Budget {
         kind: String, // "per_call" | "daily"
@@ -1873,11 +1936,19 @@ enum CliError {
 impl std::fmt::Display for CliError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            CliError::OutOfScope { world_id, scope_world_ids } => {
+            CliError::OutOfScope {
+                world_id,
+                scope_world_ids,
+            } => {
                 write!(f, "world {} is out of scope. Scope contains: {:?}. Re-run with --scope full to override.", world_id, scope_world_ids)
             }
             CliError::NotFound(s) => write!(f, "not found: {}", s),
-            CliError::Budget { kind, projected_usd, cap_usd, confirm_at_least } => {
+            CliError::Budget {
+                kind,
+                projected_usd,
+                cap_usd,
+                confirm_at_least,
+            } => {
                 write!(f, "{} cap exceeded: projected ${:.4} > cap ${:.2}. Re-run with --confirm-cost {:.2} to proceed.", kind, projected_usd, cap_usd, confirm_at_least)
             }
             CliError::Other(s) => write!(f, "{}", s),
@@ -1912,11 +1983,19 @@ fn read_api_key_from_keychain() -> Option<String> {
             .args(["find-generic-password", "-s", service, "-a", account, "-w"])
             .output()
             .ok();
-        let Some(out) = out else { continue; };
-        if !out.status.success() { continue; }
-        let Some(key) = String::from_utf8(out.stdout).ok() else { continue; };
+        let Some(out) = out else {
+            continue;
+        };
+        if !out.status.success() {
+            continue;
+        }
+        let Some(key) = String::from_utf8(out.stdout).ok() else {
+            continue;
+        };
         let trimmed = key.trim();
-        if !trimmed.is_empty() { return Some(trimmed.to_string()); }
+        if !trimmed.is_empty() {
+            return Some(trimmed.to_string());
+        }
     }
     None
 }
@@ -1924,11 +2003,15 @@ fn read_api_key_from_keychain() -> Option<String> {
 fn resolve_api_key(flag: Option<&str>) -> Option<String> {
     if let Some(k) = flag {
         let t = k.trim();
-        if !t.is_empty() { return Some(t.to_string()); }
+        if !t.is_empty() {
+            return Some(t.to_string());
+        }
     }
     if let Ok(k) = std::env::var("OPENAI_API_KEY") {
         let t = k.trim();
-        if !t.is_empty() { return Some(t.to_string()); }
+        if !t.is_empty() {
+            return Some(t.to_string());
+        }
     }
     read_api_key_from_keychain()
 }
@@ -1950,7 +2033,9 @@ fn emit(json_mode: bool, value: JsonValue) {
     } else {
         // Best-effort human render
         if let Some(arr) = value.as_array() {
-            for item in arr { emit_one(item); }
+            for item in arr {
+                emit_one(item);
+            }
         } else {
             emit_one(&value);
         }
@@ -2003,7 +2088,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     let db = Database::open(&db_path)?;
-    let r = Resolved { db, cfg, scope: cli.scope, json: cli.json };
+    let r = Resolved {
+        db,
+        cfg,
+        scope: cli.scope,
+        json: cli.json,
+    };
 
     match cli.cmd {
         Cmd::Status => cmd_status(&r),
@@ -2014,64 +2104,167 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             emit_markdown,
         } => cmd_substrates(audit, json, lens, emit_markdown.as_ref()),
         Cmd::ShowAuthorAnchor { world } => cmd_show_author_anchor(&r, world.as_deref()),
-        Cmd::PickResponders { group_chat, message, omit_continuity_note, confirm_cost, question_summary } => {
-            let api_key = resolve_api_key(cli.api_key.as_deref())
-                .ok_or_else(|| Box::<dyn std::error::Error>::from("pick-responders: no OpenAI API key resolved (env / keychain / --api-key)"))?;
-            cmd_pick_responders(&r, &api_key, &group_chat, &message, omit_continuity_note,
-                confirm_cost, question_summary.as_deref()).await
+        Cmd::PickResponders {
+            group_chat,
+            message,
+            omit_continuity_note,
+            confirm_cost,
+            question_summary,
+        } => {
+            let api_key = resolve_api_key(cli.api_key.as_deref()).ok_or_else(|| {
+                Box::<dyn std::error::Error>::from(
+                    "pick-responders: no OpenAI API key resolved (env / keychain / --api-key)",
+                )
+            })?;
+            cmd_pick_responders(
+                &r,
+                &api_key,
+                &group_chat,
+                &message,
+                omit_continuity_note,
+                confirm_cost,
+                question_summary.as_deref(),
+            )
+            .await
         }
-        Cmd::PickAddressee { group_chat, message, context_limit, confirm_cost, question_summary } => {
-            let api_key = resolve_api_key(cli.api_key.as_deref())
-                .ok_or_else(|| Box::<dyn std::error::Error>::from("pick-addressee: no OpenAI API key resolved (env / keychain / --api-key)"))?;
-            cmd_pick_addressee(&r, &api_key, &group_chat, &message, context_limit,
-                confirm_cost, question_summary.as_deref()).await
+        Cmd::PickAddressee {
+            group_chat,
+            message,
+            context_limit,
+            confirm_cost,
+            question_summary,
+        } => {
+            let api_key = resolve_api_key(cli.api_key.as_deref()).ok_or_else(|| {
+                Box::<dyn std::error::Error>::from(
+                    "pick-addressee: no OpenAI API key resolved (env / keychain / --api-key)",
+                )
+            })?;
+            cmd_pick_addressee(
+                &r,
+                &api_key,
+                &group_chat,
+                &message,
+                context_limit,
+                confirm_cost,
+                question_summary.as_deref(),
+            )
+            .await
         }
-        Cmd::ClassifyCanonization { source_message_id, act, user_hint, confirm_cost, question_summary } => {
+        Cmd::ClassifyCanonization {
+            source_message_id,
+            act,
+            user_hint,
+            confirm_cost,
+            question_summary,
+        } => {
             let api_key = resolve_api_key(cli.api_key.as_deref())
                 .ok_or_else(|| Box::<dyn std::error::Error>::from("classify-canonization: no OpenAI API key resolved (env / keychain / --api-key)"))?;
-            cmd_classify_canonization(&r, &api_key, &source_message_id, &act, &user_hint,
-                confirm_cost, question_summary.as_deref()).await
-        }
-        Cmd::ChiptuneProbe { momentstamp, prev_phrase_file, mood_hint, model, confirm_cost } => {
-            let api_key = resolve_api_key(cli.api_key.as_deref())
-                .ok_or_else(|| Box::<dyn std::error::Error>::from("chiptune-probe: no OpenAI API key resolved (env / keychain / --api-key)"))?;
-            cmd_chiptune_probe(&r, &api_key, &momentstamp, prev_phrase_file.as_deref(),
-                mood_hint.as_deref(), model.as_deref(), confirm_cost).await
-        }
-        Cmd::ConfigTemplate => { println!("{}", config_template_text()); Ok(()) }
-        Cmd::MomentstampVocab { world, character, role, min_len, top } => {
-            cmd_momentstamp_vocab(&r, world.as_deref(), character.as_deref(), &role, min_len, top)
-        }
-        Cmd::MomentstampCorridor { world, character, role, min_len, show_signatures, show_limit, gate_min_neutral_rate, gate_min_ache_rate, gate_max_warm_rate, gate_min_humor_rate } => {
-            cmd_momentstamp_corridor(
+            cmd_classify_canonization(
                 &r,
-                world.as_deref(),
-                character.as_deref(),
-                &role,
-                min_len,
-                show_signatures,
-                show_limit,
-                gate_min_neutral_rate,
-                gate_min_ache_rate,
-                gate_max_warm_rate,
-                gate_min_humor_rate,
+                &api_key,
+                &source_message_id,
+                &act,
+                &user_hint,
+                confirm_cost,
+                question_summary.as_deref(),
             )
+            .await
         }
-        Cmd::RegisterShift { world, character, role, limit, show_messages, show_full_messages, full_message_max_chars, gate_min_shift_rate, gate_min_rebound_rate } => {
-            cmd_register_shift(
+        Cmd::ChiptuneProbe {
+            momentstamp,
+            prev_phrase_file,
+            mood_hint,
+            model,
+            confirm_cost,
+        } => {
+            let api_key = resolve_api_key(cli.api_key.as_deref()).ok_or_else(|| {
+                Box::<dyn std::error::Error>::from(
+                    "chiptune-probe: no OpenAI API key resolved (env / keychain / --api-key)",
+                )
+            })?;
+            cmd_chiptune_probe(
                 &r,
-                world.as_deref(),
-                character.as_deref(),
-                &role,
-                limit,
-                show_messages,
-                show_full_messages,
-                full_message_max_chars,
-                gate_min_shift_rate,
-                gate_min_rebound_rate,
+                &api_key,
+                &momentstamp,
+                prev_phrase_file.as_deref(),
+                mood_hint.as_deref(),
+                model.as_deref(),
+                confirm_cost,
             )
+            .await
         }
-        Cmd::RegisterShiftPack { character_id, model, confirm_cost, variant, gate_min_speech_first_rate, gate_min_shift_run_rate } => {
+        Cmd::ConfigTemplate => {
+            println!("{}", config_template_text());
+            Ok(())
+        }
+        Cmd::MomentstampVocab {
+            world,
+            character,
+            role,
+            min_len,
+            top,
+        } => cmd_momentstamp_vocab(
+            &r,
+            world.as_deref(),
+            character.as_deref(),
+            &role,
+            min_len,
+            top,
+        ),
+        Cmd::MomentstampCorridor {
+            world,
+            character,
+            role,
+            min_len,
+            show_signatures,
+            show_limit,
+            gate_min_neutral_rate,
+            gate_min_ache_rate,
+            gate_max_warm_rate,
+            gate_min_humor_rate,
+        } => cmd_momentstamp_corridor(
+            &r,
+            world.as_deref(),
+            character.as_deref(),
+            &role,
+            min_len,
+            show_signatures,
+            show_limit,
+            gate_min_neutral_rate,
+            gate_min_ache_rate,
+            gate_max_warm_rate,
+            gate_min_humor_rate,
+        ),
+        Cmd::RegisterShift {
+            world,
+            character,
+            role,
+            limit,
+            show_messages,
+            show_full_messages,
+            full_message_max_chars,
+            gate_min_shift_rate,
+            gate_min_rebound_rate,
+        } => cmd_register_shift(
+            &r,
+            world.as_deref(),
+            character.as_deref(),
+            &role,
+            limit,
+            show_messages,
+            show_full_messages,
+            full_message_max_chars,
+            gate_min_shift_rate,
+            gate_min_rebound_rate,
+        ),
+        Cmd::RegisterShiftPack {
+            character_id,
+            model,
+            confirm_cost,
+            variant,
+            gate_min_speech_first_rate,
+            gate_min_shift_run_rate,
+        } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
@@ -2087,7 +2280,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 &variant,
                 gate_min_speech_first_rate,
                 gate_min_shift_run_rate,
-            ).await
+            )
+            .await
         }
         Cmd::ListWorlds => cmd_list_worlds(&r),
         Cmd::ListCharacters { world } => cmd_list_characters(&r, world.as_deref()),
@@ -2102,7 +2296,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
         }
         Cmd::ShowWorld { world_id } => cmd_show_world(&r, &world_id),
-        Cmd::DeriveUser { world_id, text, auto, force } => {
+        Cmd::DeriveUser {
+            world_id,
+            text,
+            auto,
+            force,
+        } => {
             if auto {
                 let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                     Some(k) => k,
@@ -2113,74 +2312,211 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 cmd_derive_user(&r, &world_id, text.as_deref())
             }
         }
-        Cmd::DeriveWorld { world_id, text, auto, force } => {
+        Cmd::DeriveWorld {
+            world_id,
+            text,
+            auto,
+            force,
+        } => {
             if auto {
                 let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                     Some(k) => k,
-                    None => return Err(Box::<dyn std::error::Error>::from("derive-world --auto: no OpenAI API key resolved")),
+                    None => {
+                        return Err(Box::<dyn std::error::Error>::from(
+                            "derive-world --auto: no OpenAI API key resolved",
+                        ))
+                    }
                 };
                 cmd_derive_world_auto(&r, &world_id, &api_key, force).await
             } else {
                 cmd_derive_world(&r, &world_id, text.as_deref())
             }
         }
-        Cmd::DeriveCharacter { character_id, text, auto, force } => {
+        Cmd::DeriveCharacter {
+            character_id,
+            text,
+            auto,
+            force,
+        } => {
             if auto {
                 let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                     Some(k) => k,
-                    None => return Err(Box::<dyn std::error::Error>::from("derive-character --auto: no OpenAI API key resolved")),
+                    None => {
+                        return Err(Box::<dyn std::error::Error>::from(
+                            "derive-character --auto: no OpenAI API key resolved",
+                        ))
+                    }
                 };
                 cmd_derive_character_auto(&r, &character_id, &api_key, force).await
             } else {
                 cmd_derive_character(&r, &character_id, text.as_deref())
             }
         }
-        Cmd::BackfillLocationDerivations { world, force, confirm_cost } => {
+        Cmd::BackfillLocationDerivations {
+            world,
+            force,
+            confirm_cost,
+        } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
-                None => return Err(Box::<dyn std::error::Error>::from("backfill-location-derivations: no OpenAI API key resolved")),
+                None => {
+                    return Err(Box::<dyn std::error::Error>::from(
+                        "backfill-location-derivations: no OpenAI API key resolved",
+                    ))
+                }
             };
-            cmd_backfill_location_derivations(&r, &api_key, world.as_deref(), force, confirm_cost).await
+            cmd_backfill_location_derivations(&r, &api_key, world.as_deref(), force, confirm_cost)
+                .await
         }
-        Cmd::RecentMessages { character_id, limit, grep, before, after, with_context } => {
-            cmd_recent_messages(&r, &character_id, limit, grep.as_deref(), before.as_deref(), after.as_deref(), with_context)
-        }
-        Cmd::AnchorGroove { character_id, limit, threshold, top_k, opening_density } => {
-            cmd_anchor_groove(&r, &character_id, limit, threshold, top_k, opening_density)
-        }
+        Cmd::RecentMessages {
+            character_id,
+            limit,
+            grep,
+            before,
+            after,
+            with_context,
+        } => cmd_recent_messages(
+            &r,
+            &character_id,
+            limit,
+            grep.as_deref(),
+            before.as_deref(),
+            after.as_deref(),
+            with_context,
+        ),
+        Cmd::AnchorGroove {
+            character_id,
+            limit,
+            threshold,
+            top_k,
+            opening_density,
+        } => cmd_anchor_groove(&r, &character_id, limit, threshold, top_k, opening_density),
         Cmd::KeptRecords { character_id } => cmd_kept_records(&r, &character_id),
         Cmd::Journals { character_id } => cmd_journals(&r, &character_id),
         Cmd::Quests { world } => cmd_quests(&r, world.as_deref()),
         Cmd::ListGroupChats { world } => cmd_list_group_chats(&r, world.as_deref()),
-        Cmd::GroupMessages { group_chat_id, limit, grep, before, after, with_context } => {
-            cmd_group_messages(&r, &group_chat_id, limit, grep.as_deref(), before.as_deref(), after.as_deref(), with_context)
-        }
-        Cmd::SampleWindows { git_ref, end_ref, limit, character, world, role, solo_only, groups_only, repo } => {
-            cmd_sample_windows(&r, &git_ref, end_ref.as_deref(), limit, character.as_deref(), world.as_deref(), &role, solo_only, groups_only, repo.as_deref())
-        }
-        Cmd::CommitContext { message, at, before, after, diffs, repo } => {
-            cmd_commit_context(&r, message.as_deref(), at.as_deref(), before, after, diffs, repo.as_deref())
-        }
+        Cmd::GroupMessages {
+            group_chat_id,
+            limit,
+            grep,
+            before,
+            after,
+            with_context,
+        } => cmd_group_messages(
+            &r,
+            &group_chat_id,
+            limit,
+            grep.as_deref(),
+            before.as_deref(),
+            after.as_deref(),
+            with_context,
+        ),
+        Cmd::SampleWindows {
+            git_ref,
+            end_ref,
+            limit,
+            character,
+            world,
+            role,
+            solo_only,
+            groups_only,
+            repo,
+        } => cmd_sample_windows(
+            &r,
+            &git_ref,
+            end_ref.as_deref(),
+            limit,
+            character.as_deref(),
+            world.as_deref(),
+            &role,
+            solo_only,
+            groups_only,
+            repo.as_deref(),
+        ),
+        Cmd::CommitContext {
+            message,
+            at,
+            before,
+            after,
+            diffs,
+            repo,
+        } => cmd_commit_context(
+            &r,
+            message.as_deref(),
+            at.as_deref(),
+            before,
+            after,
+            diffs,
+            repo.as_deref(),
+        ),
         Cmd::Rubric { action } => cmd_rubric(&r, action),
         Cmd::EvaluateRuns { action } => cmd_evaluate_runs(&r, action),
         Cmd::SynthesizeRuns { action } => cmd_synthesize_runs(&r, action),
-        Cmd::Evaluate { git_ref, end_ref, limit, character, group_chat, rubric, rubric_file, rubric_ref, role, context_turns, model, confirm_cost, repo } => {
+        Cmd::Evaluate {
+            git_ref,
+            end_ref,
+            limit,
+            character,
+            group_chat,
+            rubric,
+            rubric_file,
+            rubric_ref,
+            role,
+            context_turns,
+            model,
+            confirm_cost,
+            repo,
+        } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_evaluate(&r, &api_key, &git_ref, end_ref.as_deref(), limit, character.as_deref(), group_chat.as_deref(), rubric.as_deref(), rubric_file.as_deref(), rubric_ref.as_deref(), &role, context_turns, model.as_deref(), confirm_cost, repo.as_deref()).await
+            cmd_evaluate(
+                &r,
+                &api_key,
+                &git_ref,
+                end_ref.as_deref(),
+                limit,
+                character.as_deref(),
+                group_chat.as_deref(),
+                rubric.as_deref(),
+                rubric_file.as_deref(),
+                rubric_ref.as_deref(),
+                &role,
+                context_turns,
+                model.as_deref(),
+                confirm_cost,
+                repo.as_deref(),
+            )
+            .await
         }
-        Cmd::GradeRuns { run_ids, rubric, rubric_ref, rubric_file, model, confirm_cost } => {
+        Cmd::GradeRuns {
+            run_ids,
+            rubric,
+            rubric_ref,
+            rubric_file,
+            model,
+            confirm_cost,
+        } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_grade_runs(&r, &api_key, &run_ids, rubric.as_deref(), rubric_ref.as_deref(), rubric_file.as_deref(), model.as_deref(), confirm_cost).await
+            cmd_grade_runs(
+                &r,
+                &api_key,
+                &run_ids,
+                rubric.as_deref(),
+                rubric_ref.as_deref(),
+                rubric_file.as_deref(),
+                model.as_deref(),
+                confirm_cost,
+            )
+            .await
         }
         Cmd::GradeStressPack {
             files,
@@ -2191,52 +2527,134 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             gate_two_signal,
             gate_max_other_rate,
             gate_max_no_concrete_rate,
-        } => {
-            cmd_grade_stress_pack(
-                &r,
-                &files,
-                min_pass_rate,
-                max_avg_words,
-                question_as_action_allowed,
-                action_shape_mix,
-                gate_two_signal,
-                gate_max_other_rate,
-                gate_max_no_concrete_rate,
-            )
-        }
+        } => cmd_grade_stress_pack(
+            &r,
+            &files,
+            min_pass_rate,
+            max_avg_words,
+            question_as_action_allowed,
+            action_shape_mix,
+            gate_two_signal,
+            gate_max_other_rate,
+            gate_max_no_concrete_rate,
+        ),
         Cmd::StressPolicyReport { file } => cmd_stress_policy_report(&r, &file),
-        Cmd::Synthesize { git_ref, end_ref, limit, character, group_chat, question, question_file, role, context_turns, model, confirm_cost, repo } => {
+        Cmd::Synthesize {
+            git_ref,
+            end_ref,
+            limit,
+            character,
+            group_chat,
+            question,
+            question_file,
+            role,
+            context_turns,
+            model,
+            confirm_cost,
+            repo,
+        } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_synthesize(&r, &api_key, &git_ref, end_ref.as_deref(), limit, character.as_deref(), group_chat.as_deref(), question.as_deref(), question_file.as_deref(), &role, context_turns, model.as_deref(), confirm_cost, repo.as_deref()).await
+            cmd_synthesize(
+                &r,
+                &api_key,
+                &git_ref,
+                end_ref.as_deref(),
+                limit,
+                character.as_deref(),
+                group_chat.as_deref(),
+                question.as_deref(),
+                question_file.as_deref(),
+                &role,
+                context_turns,
+                model.as_deref(),
+                confirm_cost,
+                repo.as_deref(),
+            )
+            .await
         }
         Cmd::ReplayRuns { action } => cmd_replay_runs(&r, action),
         Cmd::Lab { action } => {
             // Scenario::Run needs api_key; other lab actions don't.
-            let api_key = if matches!(action, LabAction::Scenario { action: ScenarioAction::Run { .. } }) {
+            let api_key = if matches!(
+                action,
+                LabAction::Scenario {
+                    action: ScenarioAction::Run { .. }
+                }
+            ) {
                 match resolve_api_key(cli.api_key.as_deref()) {
                     Some(k) => Some(k),
                     None => return Err(Box::<dyn std::error::Error>::from(
                         "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                     )),
                 }
-            } else { None };
+            } else {
+                None
+            };
             cmd_lab(&r, action, api_key.as_deref()).await
         }
-        Cmd::Replay { refs, character, prompt, model, confirm_cost, n, repo, section_order, craft_notes_order, invariants_order, omit_craft_notes, omit_invariants, insert_file, insert_before, insert_after, with_momentstamp, momentstamp_override } => {
+        Cmd::Replay {
+            refs,
+            character,
+            prompt,
+            model,
+            confirm_cost,
+            n,
+            repo,
+            section_order,
+            craft_notes_order,
+            invariants_order,
+            omit_craft_notes,
+            omit_invariants,
+            insert_file,
+            insert_before,
+            insert_after,
+            with_momentstamp,
+            momentstamp_override,
+        } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
-            cmd_replay(&r, &api_key, &refs, &character, &prompt, model.as_deref(), confirm_cost, n, repo.as_deref(), &section_order, &craft_notes_order, &invariants_order, &omit_craft_notes, &omit_invariants, insert_file.as_deref(), insert_before.as_deref(), insert_after.as_deref(), with_momentstamp || momentstamp_override.is_some(), momentstamp_override.as_deref()).await
+            cmd_replay(
+                &r,
+                &api_key,
+                &refs,
+                &character,
+                &prompt,
+                model.as_deref(),
+                confirm_cost,
+                n,
+                repo.as_deref(),
+                &section_order,
+                &craft_notes_order,
+                &invariants_order,
+                &omit_craft_notes,
+                &omit_invariants,
+                insert_file.as_deref(),
+                insert_before.as_deref(),
+                insert_after.as_deref(),
+                with_momentstamp || momentstamp_override.is_some(),
+                momentstamp_override.as_deref(),
+            )
+            .await
         }
-        Cmd::Consult { character_id, group_chat, message, mode, session, model, confirm_cost, question_summary } => {
+        Cmd::Consult {
+            character_id,
+            group_chat,
+            message,
+            mode,
+            session,
+            model,
+            confirm_cost,
+            question_summary,
+        } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
@@ -2254,10 +2672,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 model.as_deref(),
                 confirm_cost,
                 question_summary.as_deref(),
-            ).await
+            )
+            .await
         }
-        Cmd::ShowStance { character_id, history } => cmd_show_stance(&r, &character_id, history),
-        Cmd::RefreshStance { character_id, model, confirm_cost } => {
+        Cmd::ShowStance {
+            character_id,
+            history,
+        } => cmd_show_stance(&r, &character_id, history),
+        Cmd::RefreshStance {
+            character_id,
+            model,
+            confirm_cost,
+        } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
@@ -2266,8 +2692,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_refresh_stance(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
-        Cmd::ShowAnchor { character_id, history } => cmd_show_anchor(&r, &character_id, history),
-        Cmd::RefreshAnchor { character_id, model, confirm_cost } => {
+        Cmd::ShowAnchor {
+            character_id,
+            history,
+        } => cmd_show_anchor(&r, &character_id, history),
+        Cmd::RefreshAnchor {
+            character_id,
+            model,
+            confirm_cost,
+        } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
@@ -2276,7 +2709,32 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             cmd_refresh_anchor(&r, &api_key, &character_id, model.as_deref(), confirm_cost).await
         }
-        Cmd::Ask { character_id, message, session, model, confirm_cost, question_summary, no_anchor, world_description_override, omit_craft_rule, synthetic_history, include_documentary_rules, inject_file, inject_before, inject_after, section_order, end_seal, no_end_seal, fence_pipeline, group_chat, with_momentstamp, momentstamp_override, short_mode, cosmology_override, mission_formula_override } => {
+        Cmd::Ask {
+            character_id,
+            message,
+            session,
+            model,
+            confirm_cost,
+            question_summary,
+            no_anchor,
+            world_description_override,
+            omit_craft_rule,
+            synthetic_history,
+            include_documentary_rules,
+            inject_file,
+            inject_before,
+            inject_after,
+            section_order,
+            end_seal,
+            no_end_seal,
+            fence_pipeline,
+            group_chat,
+            with_momentstamp,
+            momentstamp_override,
+            short_mode,
+            cosmology_override,
+            mission_formula_override,
+        } => {
             // Cosmology Sapphire arc (PR #38): swap COSMOLOGY_BLOCK at
             // probe-time when --cosmology-override is provided. Per-
             // process only; reversible; does not mutate source. See
@@ -2330,7 +2788,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &section_order,
                     end_seal && !no_end_seal,
                     fence_pipeline,
-                ).await
+                )
+                .await
             } else {
                 cmd_ask(
                     &r,
@@ -2364,7 +2823,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 ).await
             }
         }
-        Cmd::SimulateDialogue { character_id, turns, opening_user_message, model, user_model, confirm_cost, synthesize, synthesize_model, synthesis_rubric_file } => {
+        Cmd::SimulateDialogue {
+            character_id,
+            turns,
+            opening_user_message,
+            model,
+            user_model,
+            confirm_cost,
+            synthesize,
+            synthesize_model,
+            synthesis_rubric_file,
+        } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
@@ -2383,9 +2852,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 synthesize,
                 synthesize_model.as_deref(),
                 synthesis_rubric_file.as_deref(),
-            ).await
+            )
+            .await
         }
-        Cmd::SimulateDialogueBatch { character_id, runs, turns, opening_user_message, model, user_model, confirm_cost, synthesize_model, compound_via_llm, compound_model, synthesis_rubric_file } => {
+        Cmd::SimulateDialogueBatch {
+            character_id,
+            runs,
+            turns,
+            opening_user_message,
+            model,
+            user_model,
+            confirm_cost,
+            synthesize_model,
+            compound_via_llm,
+            compound_model,
+            synthesis_rubric_file,
+        } => {
             let api_key = match resolve_api_key(cli.api_key.as_deref()) {
                 Some(k) => k,
                 None => return Err(Box::<dyn std::error::Error>::from(
@@ -2406,7 +2888,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 compound_via_llm,
                 compound_model.as_deref(),
                 synthesis_rubric_file.as_deref(),
-            ).await
+            )
+            .await
         }
         Cmd::RunsList { limit } => cmd_runs_list(&r, limit),
         Cmd::RunsShow { id } => cmd_runs_show(&r, &id),
@@ -2425,26 +2908,35 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 fn cmd_list_craft_rules(json: bool) -> Result<(), Box<dyn std::error::Error>> {
     use app_lib::ai::prompts::CRAFT_RULES_DIALOGUE;
     if json {
-        let v: Vec<serde_json::Value> = CRAFT_RULES_DIALOGUE.iter().map(|r| {
-            json!({
-                "name": r.name,
-                "evidence_tier": r.evidence_tier.as_str(),
-                "last_tested": r.last_tested,
-                "provenance": r.provenance,
+        let v: Vec<serde_json::Value> = CRAFT_RULES_DIALOGUE
+            .iter()
+            .map(|r| {
+                json!({
+                    "name": r.name,
+                    "evidence_tier": r.evidence_tier.as_str(),
+                    "last_tested": r.last_tested,
+                    "provenance": r.provenance,
+                })
             })
-        }).collect();
+            .collect();
         println!("{}", serde_json::to_string_pretty(&v)?);
     } else {
         if CRAFT_RULES_DIALOGUE.is_empty() {
             println!("(registry is empty; all dialogue craft-rules are still in the legacy inline string at craft_notes_dialogue_legacy())");
         } else {
             for r in CRAFT_RULES_DIALOGUE {
-                let tested = r.last_tested.map(|d| format!(" (last tested {d})")).unwrap_or_default();
+                let tested = r
+                    .last_tested
+                    .map(|d| format!(" (last tested {d})"))
+                    .unwrap_or_default();
                 println!("─── {} [{}]{}", r.name, r.evidence_tier.as_str(), tested);
                 println!("    {}", r.provenance);
                 println!();
             }
-            println!("({} rules in registry; use `worldcli show-craft-rule <name>` for full body)", CRAFT_RULES_DIALOGUE.len());
+            println!(
+                "({} rules in registry; use `worldcli show-craft-rule <name>` for full body)",
+                CRAFT_RULES_DIALOGUE.len()
+            );
         }
     }
     Ok(())
@@ -2454,7 +2946,16 @@ fn cmd_registry_stats(json: bool) -> Result<(), Box<dyn std::error::Error>> {
     use app_lib::ai::prompts::CRAFT_RULES_DIALOGUE;
     use std::collections::BTreeMap;
     let mut counts: BTreeMap<&'static str, usize> = BTreeMap::new();
-    for tier in ["unverified", "sketch", "claim", "characterized", "tested-null", "vacuous-test", "accumulated", "ensemble-vacuous"] {
+    for tier in [
+        "unverified",
+        "sketch",
+        "claim",
+        "characterized",
+        "tested-null",
+        "vacuous-test",
+        "accumulated",
+        "ensemble-vacuous",
+    ] {
         counts.insert(tier, 0);
     }
     for r in CRAFT_RULES_DIALOGUE {
@@ -2471,19 +2972,17 @@ fn cmd_registry_stats(json: bool) -> Result<(), Box<dyn std::error::Error>> {
     for r in CRAFT_RULES_DIALOGUE {
         match r.last_tested {
             None => never_tested.push(r.name),
-            Some(date_str) => {
-                match chrono::NaiveDate::parse_from_str(date_str, "%Y-%m-%d") {
-                    Ok(d) => {
-                        let days = (today - d).num_days();
-                        if days > 30 {
-                            stale_30_plus.push((r.name, days));
-                        } else {
-                            tested_recent.push((r.name, days));
-                        }
+            Some(date_str) => match chrono::NaiveDate::parse_from_str(date_str, "%Y-%m-%d") {
+                Ok(d) => {
+                    let days = (today - d).num_days();
+                    if days > 30 {
+                        stale_30_plus.push((r.name, days));
+                    } else {
+                        tested_recent.push((r.name, days));
                     }
-                    Err(_) => never_tested.push(r.name),
                 }
-            }
+                Err(_) => never_tested.push(r.name),
+            },
         }
     }
 
@@ -2504,7 +3003,16 @@ fn cmd_registry_stats(json: bool) -> Result<(), Box<dyn std::error::Error>> {
         println!("Total rules: {total}");
         println!();
         println!("By tier:");
-        for tier in ["characterized", "claim", "sketch", "ensemble-vacuous", "vacuous-test", "tested-null", "accumulated", "unverified"] {
+        for tier in [
+            "characterized",
+            "claim",
+            "sketch",
+            "ensemble-vacuous",
+            "vacuous-test",
+            "tested-null",
+            "accumulated",
+            "unverified",
+        ] {
             if let Some(&c) = counts.get(tier) {
                 println!("  {:20} {}", tier, c);
             }
@@ -2535,16 +3043,28 @@ fn cmd_registry_stats(json: bool) -> Result<(), Box<dyn std::error::Error>> {
         println!("  `worldcli show-craft-rule <name>` for body + tier + provenance,");
         println!("  `worldcli ask <character> <probe> --omit-craft-rule <name>` to bite-test,");
         println!("  `worldcli ask <character> <probe> --include-documentary-rules` to render");
-        println!("    with EnsembleVacuous bodies INCLUDED (for ensemble re-tests; default omits).)");
+        println!(
+            "    with EnsembleVacuous bodies INCLUDED (for ensemble re-tests; default omits).)"
+        );
     }
     Ok(())
 }
 
 fn cmd_show_craft_rule(name: &str, json: bool) -> Result<(), Box<dyn std::error::Error>> {
     use app_lib::ai::prompts::CRAFT_RULES_DIALOGUE;
-    let rule = CRAFT_RULES_DIALOGUE.iter().find(|r| r.name == name)
-        .ok_or_else(|| format!("craft-rule '{name}' not found in registry. Available: {}",
-            CRAFT_RULES_DIALOGUE.iter().map(|r| r.name).collect::<Vec<_>>().join(", ")))?;
+    let rule = CRAFT_RULES_DIALOGUE
+        .iter()
+        .find(|r| r.name == name)
+        .ok_or_else(|| {
+            format!(
+                "craft-rule '{name}' not found in registry. Available: {}",
+                CRAFT_RULES_DIALOGUE
+                    .iter()
+                    .map(|r| r.name)
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        })?;
     if json {
         let v = json!({
             "name": rule.name,
@@ -2616,8 +3136,14 @@ fn cmd_status(r: &Resolved) -> Result<(), Box<dyn std::error::Error>> {
     });
     emit(r.json, v);
     if !r.json && !config_path().exists() {
-        eprintln!("\nNote: config file does not exist at {}.", config_path().display());
-        eprintln!("Run `worldcli config-template > {}` then edit to set scope.", config_path().display());
+        eprintln!(
+            "\nNote: config file does not exist at {}.",
+            config_path().display()
+        );
+        eprintln!(
+            "Run `worldcli config-template > {}` then edit to set scope.",
+            config_path().display()
+        );
     }
     Ok(())
 }
@@ -2635,8 +3161,10 @@ async fn cmd_chiptune_probe(
         Some(p) => {
             let raw = std::fs::read_to_string(p)
                 .map_err(|e| format!("failed to read --prev-phrase-file {}: {}", p.display(), e))?;
-            Some(serde_json::from_str(&raw)
-                .map_err(|e| format!("--prev-phrase-file is not valid JSON: {}", e))?)
+            Some(
+                serde_json::from_str(&raw)
+                    .map_err(|e| format!("--prev-phrase-file is not valid JSON: {}", e))?,
+            )
         }
         None => None,
     };
@@ -2666,7 +3194,9 @@ async fn cmd_chiptune_probe(
     }
     eprintln!(
         "[worldcli chiptune-probe] model={} prev_phrase={} projected≈${:.4}",
-        model, prev_phrase.is_some(), projected_usd
+        model,
+        prev_phrase.is_some(),
+        projected_usd
     );
 
     let result = app_lib::ai::chiptune_score::generate_next_phrase(
@@ -2676,7 +3206,8 @@ async fn cmd_chiptune_probe(
         prev_phrase.as_ref(),
         momentstamp,
         mood_hint,
-    ).await
+    )
+    .await
     .map_err(Box::<dyn std::error::Error>::from)?;
 
     append_cost_log(&CostEntry {
@@ -2713,23 +3244,37 @@ async fn cmd_pick_responders(
         let conn = r.db.conn.lock().unwrap();
         let gc = get_group_chat(&conn, group_chat_id)
             .map_err(|e| format!("group_chat '{}' not found: {}", group_chat_id, e))?;
-        let member_ids: Vec<String> = gc.character_ids.as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+        let member_ids: Vec<String> = gc
+            .character_ids
+            .as_array()
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect()
+            })
             .unwrap_or_default();
-        let members: Vec<Character> = member_ids.iter()
+        let members: Vec<Character> = member_ids
+            .iter()
             .filter_map(|id| get_character(&conn, id).ok())
             .collect();
-        let recent_context: Vec<Message> = list_group_messages(&conn, &gc.thread_id, 6)
-            .unwrap_or_default();
+        let recent_context: Vec<Message> =
+            list_group_messages(&conn, &gc.thread_id, 6).unwrap_or_default();
         let user_profile = get_user_profile(&conn, &gc.world_id).ok();
-        let user_name = user_profile.map(|p| p.display_name).unwrap_or_else(|| "the human".to_string());
+        let user_name = user_profile
+            .map(|p| p.display_name)
+            .unwrap_or_else(|| "the human".to_string());
         let model_config = orchestrator::load_model_config(&conn);
         (members, recent_context, user_name, model_config)
     };
 
     let projected_in: i64 = 250;
     let projected_out: i64 = 80;
-    let projected_usd = actual_cost(&model_config.memory_model, projected_in, projected_out, &r.cfg.model_pricing);
+    let projected_usd = actual_cost(
+        &model_config.memory_model,
+        projected_in,
+        projected_out,
+        &r.cfg.model_pricing,
+    );
     let daily_so_far = rolling_24h_total_usd();
     let cap = r.cfg.budget.per_call_usd;
     let daily_cap = r.cfg.budget.daily_usd;
@@ -2746,13 +3291,28 @@ async fn cmd_pick_responders(
     );
 
     let picks = app_lib::group_chat_internals::llm_pick_responders_with_overrides(
-        api_key, &model_config, message, &members, &recent_context, &user_name, omit_continuity_note,
-    ).await.map_err(|e| Box::<dyn std::error::Error>::from(e))?;
+        api_key,
+        &model_config,
+        message,
+        &members,
+        &recent_context,
+        &user_name,
+        omit_continuity_note,
+    )
+    .await
+    .map_err(|e| Box::<dyn std::error::Error>::from(e))?;
 
-    let pick_names: Vec<String> = picks.iter()
-        .filter_map(|id| members.iter().find(|c| &c.character_id == id).map(|c| c.display_name.clone()))
+    let pick_names: Vec<String> = picks
+        .iter()
+        .filter_map(|id| {
+            members
+                .iter()
+                .find(|c| &c.character_id == id)
+                .map(|c| c.display_name.clone())
+        })
         .collect();
-    let continuity = app_lib::group_chat_internals::consecutive_run_by_recent_speaker(&recent_context, &members);
+    let continuity =
+        app_lib::group_chat_internals::consecutive_run_by_recent_speaker(&recent_context, &members);
 
     append_cost_log(&CostEntry {
         timestamp: chrono::Utc::now().to_rfc3339(),
@@ -2790,23 +3350,38 @@ async fn cmd_pick_addressee(
         let conn = r.db.conn.lock().unwrap();
         let gc = get_group_chat(&conn, group_chat_id)
             .map_err(|e| format!("group_chat '{}' not found: {}", group_chat_id, e))?;
-        let member_ids: Vec<String> = gc.character_ids.as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+        let member_ids: Vec<String> = gc
+            .character_ids
+            .as_array()
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect()
+            })
             .unwrap_or_default();
-        let members: Vec<Character> = member_ids.iter()
+        let members: Vec<Character> = member_ids
+            .iter()
             .filter_map(|id| get_character(&conn, id).ok())
             .collect();
-        let recent_context: Vec<Message> = list_group_messages(&conn, &gc.thread_id, (context_limit as i64) + 2)
-            .unwrap_or_default();
+        let recent_context: Vec<Message> =
+            list_group_messages(&conn, &gc.thread_id, (context_limit as i64) + 2)
+                .unwrap_or_default();
         let user_profile = get_user_profile(&conn, &gc.world_id).ok();
-        let user_name = user_profile.map(|p| p.display_name).unwrap_or_else(|| "the human".to_string());
+        let user_name = user_profile
+            .map(|p| p.display_name)
+            .unwrap_or_else(|| "the human".to_string());
         let model_config = orchestrator::load_model_config(&conn);
         (members, recent_context, user_name, model_config)
     };
 
     let projected_in: i64 = 200;
     let projected_out: i64 = 20;
-    let projected_usd = actual_cost(&model_config.memory_model, projected_in, projected_out, &r.cfg.model_pricing);
+    let projected_usd = actual_cost(
+        &model_config.memory_model,
+        projected_in,
+        projected_out,
+        &r.cfg.model_pricing,
+    );
     let daily_so_far = rolling_24h_total_usd();
     let cap = r.cfg.budget.per_call_usd;
     let daily_cap = r.cfg.budget.daily_usd;
@@ -2823,12 +3398,22 @@ async fn cmd_pick_addressee(
     );
 
     let pick = app_lib::group_chat_internals::llm_pick_addressee(
-        api_key, &model_config, message, &recent_context, &members, &user_name, context_limit,
-    ).await;
+        api_key,
+        &model_config,
+        message,
+        &recent_context,
+        &members,
+        &user_name,
+        context_limit,
+    )
+    .await;
 
     let (kind, name) = match &pick {
         app_lib::group_chat_internals::AddresseePick::Solo(id) => {
-            let n = members.iter().find(|c| &c.character_id == id).map(|c| c.display_name.clone());
+            let n = members
+                .iter()
+                .find(|c| &c.character_id == id)
+                .map(|c| c.display_name.clone());
             ("Solo", n)
         }
         app_lib::group_chat_internals::AddresseePick::Collective => ("Collective", None),
@@ -2881,7 +3466,12 @@ async fn cmd_classify_canonization(
     // (subjects block + context window) and 1-2 structured outputs.
     let projected_in: i64 = 3000;
     let projected_out: i64 = 400;
-    let projected_usd = actual_cost(&model_config.memory_model, projected_in, projected_out, &r.cfg.model_pricing);
+    let projected_usd = actual_cost(
+        &model_config.memory_model,
+        projected_in,
+        projected_out,
+        &r.cfg.model_pricing,
+    );
     let daily_so_far = rolling_24h_total_usd();
     let cap = r.cfg.budget.per_call_usd;
     let daily_cap = r.cfg.budget.daily_usd;
@@ -2897,17 +3487,39 @@ async fn cmd_classify_canonization(
         model_config.memory_model, act_normalized, subjects.len(), context_msgs.len(), projected_usd
     );
 
-    let user_hint_opt = if user_hint.trim().is_empty() { None } else { Some(user_hint) };
+    let user_hint_opt = if user_hint.trim().is_empty() {
+        None
+    } else {
+        Some(user_hint)
+    };
     let (proposals, usage) = orchestrator::propose_canonization_updates(
-        &model_config.chat_api_base(), api_key, &model_config.memory_model,
-        &source_msg, &source_speaker_label, &context_msgs, &subjects,
+        &model_config.chat_api_base(),
+        api_key,
+        &model_config.memory_model,
+        &source_msg,
+        &source_speaker_label,
+        &context_msgs,
+        &subjects,
         user_hint_opt,
         &act_normalized,
-    ).await.map_err(|e| Box::<dyn std::error::Error>::from(e))?;
+    )
+    .await
+    .map_err(|e| Box::<dyn std::error::Error>::from(e))?;
 
-    let actual_in = usage.as_ref().map(|u| u.prompt_tokens as i64).unwrap_or(projected_in);
-    let actual_out = usage.as_ref().map(|u| u.completion_tokens as i64).unwrap_or(projected_out);
-    let actual_usd = actual_cost(&model_config.memory_model, actual_in, actual_out, &r.cfg.model_pricing);
+    let actual_in = usage
+        .as_ref()
+        .map(|u| u.prompt_tokens as i64)
+        .unwrap_or(projected_in);
+    let actual_out = usage
+        .as_ref()
+        .map(|u| u.completion_tokens as i64)
+        .unwrap_or(projected_out);
+    let actual_usd = actual_cost(
+        &model_config.memory_model,
+        actual_in,
+        actual_out,
+        &r.cfg.model_pricing,
+    );
 
     append_cost_log(&CostEntry {
         timestamp: chrono::Utc::now().to_rfc3339(),
@@ -2917,9 +3529,10 @@ async fn cmd_classify_canonization(
         usd: actual_usd,
     });
 
-    let proposals_json: Vec<serde_json::Value> = proposals.iter().map(|p| {
-        serde_json::to_value(p).unwrap_or(json!({}))
-    }).collect();
+    let proposals_json: Vec<serde_json::Value> = proposals
+        .iter()
+        .map(|p| serde_json::to_value(p).unwrap_or(json!({})))
+        .collect();
 
     let v = json!({
         "source_message_id": source_message_id,
@@ -2937,7 +3550,10 @@ async fn cmd_classify_canonization(
     Ok(())
 }
 
-fn cmd_show_author_anchor(r: &Resolved, world: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
+fn cmd_show_author_anchor(
+    r: &Resolved,
+    world: Option<&str>,
+) -> Result<(), Box<dyn std::error::Error>> {
     let user_profile = match world {
         Some(world_id) => {
             let conn = r.db.conn.lock().unwrap();
@@ -2947,10 +3563,20 @@ fn cmd_show_author_anchor(r: &Resolved, world: Option<&str>) -> Result<(), Box<d
     };
     let assembled = prompts::active_author_anchor_block(user_profile.as_ref());
     let source = if let Some(p) = user_profile.as_ref() {
-        if p.derived_formula.as_ref().map(|d: &String| !d.trim().is_empty()).unwrap_or(false) {
-            format!("per-world UserProfile.derived_formula (world={})", p.world_id)
+        if p.derived_formula
+            .as_ref()
+            .map(|d: &String| !d.trim().is_empty())
+            .unwrap_or(false)
+        {
+            format!(
+                "per-world UserProfile.derived_formula (world={})",
+                p.world_id
+            )
         } else {
-            format!("project default RYAN_FORMULA_BLOCK (world={} has no derived_formula)", p.world_id)
+            format!(
+                "project default RYAN_FORMULA_BLOCK (world={} has no derived_formula)",
+                p.world_id
+            )
         }
     } else {
         "project default RYAN_FORMULA_BLOCK (no --world specified)".to_string()
@@ -2969,30 +3595,42 @@ fn cmd_show_author_anchor(r: &Resolved, world: Option<&str>) -> Result<(), Box<d
 fn cmd_list_worlds(r: &Resolved) -> Result<(), Box<dyn std::error::Error>> {
     let conn = r.db.conn.lock().unwrap();
     let worlds = list_worlds(&conn)?;
-    let in_scope: Vec<JsonValue> = worlds.iter()
+    let in_scope: Vec<JsonValue> = worlds
+        .iter()
         .filter(|w| r.world_in_scope(&w.world_id))
-        .map(|w| json!({
-            "world_id": w.world_id,
-            "name": w.name,
-            "in_scope": true,
-        }))
+        .map(|w| {
+            json!({
+                "world_id": w.world_id,
+                "name": w.name,
+                "in_scope": true,
+            })
+        })
         .collect();
     emit(r.json, JsonValue::Array(in_scope));
     if !r.json && matches!(r.scope, Scope::Config) && r.cfg.scope.world_ids.is_empty() {
-        eprintln!("\nNote: scope is empty. Edit {} to add world IDs, or use --scope full.", config_path().display());
+        eprintln!(
+            "\nNote: scope is empty. Edit {} to add world IDs, or use --scope full.",
+            config_path().display()
+        );
     }
     Ok(())
 }
 
-fn cmd_list_characters(r: &Resolved, world: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
+fn cmd_list_characters(
+    r: &Resolved,
+    world: Option<&str>,
+) -> Result<(), Box<dyn std::error::Error>> {
     let conn = r.db.conn.lock().unwrap();
     let world_ids: Vec<String> = match world {
-        Some(w) => { r.check_world(w)?; vec![w.to_string()] }
-        None => {
-            list_worlds(&conn)?.into_iter()
-                .filter(|w| r.world_in_scope(&w.world_id))
-                .map(|w| w.world_id).collect()
+        Some(w) => {
+            r.check_world(w)?;
+            vec![w.to_string()]
         }
+        None => list_worlds(&conn)?
+            .into_iter()
+            .filter(|w| r.world_in_scope(&w.world_id))
+            .map(|w| w.world_id)
+            .collect(),
     };
     let mut out: Vec<JsonValue> = Vec::new();
     for wid in world_ids {
@@ -3014,10 +3652,14 @@ fn cmd_show_character(r: &Resolved, character_id: &str) -> Result<(), Box<dyn st
     let _ = r.check_character(character_id)?;
     let conn = r.db.conn.lock().unwrap();
     let c = get_character(&conn, character_id)?;
-    let derived: Option<String> = conn.query_row(
-        "SELECT derived_formula FROM characters WHERE character_id = ?1",
-        params![character_id], |r| r.get(0),
-    ).ok().flatten();
+    let derived: Option<String> = conn
+        .query_row(
+            "SELECT derived_formula FROM characters WHERE character_id = ?1",
+            params![character_id],
+            |r| r.get(0),
+        )
+        .ok()
+        .flatten();
     let v = json!({
         "character_id": c.character_id,
         "display_name": c.display_name,
@@ -3112,10 +3754,14 @@ fn cmd_show_world(r: &Resolved, world_id: &str) -> Result<(), Box<dyn std::error
     r.check_world(world_id)?;
     let conn = r.db.conn.lock().unwrap();
     let w = get_world(&conn, world_id)?;
-    let derived: Option<String> = conn.query_row(
-        "SELECT derived_formula FROM worlds WHERE world_id = ?1",
-        params![world_id], |r| r.get(0),
-    ).ok().flatten();
+    let derived: Option<String> = conn
+        .query_row(
+            "SELECT derived_formula FROM worlds WHERE world_id = ?1",
+            params![world_id],
+            |r| r.get(0),
+        )
+        .ok()
+        .flatten();
     let v = json!({
         "world_id": w.world_id,
         "name": w.name,
@@ -3131,7 +3777,11 @@ fn cmd_show_world(r: &Resolved, world_id: &str) -> Result<(), Box<dyn std::error
 /// Get or set the documentary derived_formula on the user's profile
 /// for a given world. Distinct from character-derivation in TYPE
 /// (lens, not behavior model) but identical in storage shape.
-fn cmd_derive_user(r: &Resolved, world_id: &str, text: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
+fn cmd_derive_user(
+    r: &Resolved,
+    world_id: &str,
+    text: Option<&str>,
+) -> Result<(), Box<dyn std::error::Error>> {
     r.check_world(world_id)?;
     let conn = r.db.conn.lock().unwrap();
     match text {
@@ -3144,10 +3794,14 @@ fn cmd_derive_user(r: &Resolved, world_id: &str, text: Option<&str>) -> Result<(
             emit(r.json, v);
         }
         None => {
-            let derived: Option<String> = conn.query_row(
-                "SELECT derived_formula FROM user_profiles WHERE world_id = ?1",
-                params![world_id], |r| r.get(0),
-            ).ok().flatten();
+            let derived: Option<String> = conn
+                .query_row(
+                    "SELECT derived_formula FROM user_profiles WHERE world_id = ?1",
+                    params![world_id],
+                    |r| r.get(0),
+                )
+                .ok()
+                .flatten();
             let v = json!({"world_id": world_id, "derived_formula": derived});
             emit(r.json, v);
         }
@@ -3156,7 +3810,11 @@ fn cmd_derive_user(r: &Resolved, world_id: &str, text: Option<&str>) -> Result<(
 }
 
 /// Get or set the documentary derived_formula on a world.
-fn cmd_derive_world(r: &Resolved, world_id: &str, text: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
+fn cmd_derive_world(
+    r: &Resolved,
+    world_id: &str,
+    text: Option<&str>,
+) -> Result<(), Box<dyn std::error::Error>> {
     r.check_world(world_id)?;
     let conn = r.db.conn.lock().unwrap();
     match text {
@@ -3169,10 +3827,14 @@ fn cmd_derive_world(r: &Resolved, world_id: &str, text: Option<&str>) -> Result<
             emit(r.json, v);
         }
         None => {
-            let derived: Option<String> = conn.query_row(
-                "SELECT derived_formula FROM worlds WHERE world_id = ?1",
-                params![world_id], |r| r.get(0),
-            ).ok().flatten();
+            let derived: Option<String> = conn
+                .query_row(
+                    "SELECT derived_formula FROM worlds WHERE world_id = ?1",
+                    params![world_id],
+                    |r| r.get(0),
+                )
+                .ok()
+                .flatten();
             let v = json!({"world_id": world_id, "derived_formula": derived});
             emit(r.json, v);
         }
@@ -3181,7 +3843,11 @@ fn cmd_derive_world(r: &Resolved, world_id: &str, text: Option<&str>) -> Result<
 }
 
 /// Get or set the documentary derived_formula on a character.
-fn cmd_derive_character(r: &Resolved, character_id: &str, text: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
+fn cmd_derive_character(
+    r: &Resolved,
+    character_id: &str,
+    text: Option<&str>,
+) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
     let conn = r.db.conn.lock().unwrap();
     match text {
@@ -3190,14 +3856,19 @@ fn cmd_derive_character(r: &Resolved, character_id: &str, text: Option<&str>) ->
                 "UPDATE characters SET derived_formula = ?2, updated_at = datetime('now') WHERE character_id = ?1",
                 params![character_id, new_text],
             )?;
-            let v = json!({"character_id": character_id, "derived_formula": new_text, "updated": true});
+            let v =
+                json!({"character_id": character_id, "derived_formula": new_text, "updated": true});
             emit(r.json, v);
         }
         None => {
-            let derived: Option<String> = conn.query_row(
-                "SELECT derived_formula FROM characters WHERE character_id = ?1",
-                params![character_id], |r| r.get(0),
-            ).ok().flatten();
+            let derived: Option<String> = conn
+                .query_row(
+                    "SELECT derived_formula FROM characters WHERE character_id = ?1",
+                    params![character_id],
+                    |r| r.get(0),
+                )
+                .ok()
+                .flatten();
             let v = json!({"character_id": character_id, "derived_formula": derived});
             emit(r.json, v);
         }
@@ -3212,7 +3883,12 @@ fn cmd_derive_character(r: &Resolved, character_id: &str, text: Option<&str>) ->
 // connection borrow, calls synthesize_from_prompt async, then re-opens
 // a connection to persist. Skips silently when not stale unless --force.
 
-async fn cmd_derive_user_auto(r: &Resolved, world_id: &str, api_key: &str, force: bool) -> Result<(), Box<dyn std::error::Error>> {
+async fn cmd_derive_user_auto(
+    r: &Resolved,
+    world_id: &str,
+    api_key: &str,
+    force: bool,
+) -> Result<(), Box<dyn std::error::Error>> {
     r.check_world(world_id)?;
     let model_config = {
         let conn = r.db.conn.lock().unwrap();
@@ -3230,17 +3906,24 @@ async fn cmd_derive_user_auto(r: &Resolved, world_id: &str, api_key: &str, force
         }
         app_lib::ai::derivation::build_user_in_world_prompt_owned(&conn, world_id)?
     };
-    let derivation = app_lib::ai::derivation::synthesize_from_prompt(base_url, api_key, model, prompt).await?;
+    let derivation =
+        app_lib::ai::derivation::synthesize_from_prompt(base_url, api_key, model, prompt).await?;
     {
         let conn = r.db.conn.lock().unwrap();
         app_lib::ai::derivation::persist_user_derivation(&conn, world_id, &derivation)?;
     }
-    let v = json!({"world_id": world_id, "derived_formula": derivation, "updated": true, "auto": true});
+    let v =
+        json!({"world_id": world_id, "derived_formula": derivation, "updated": true, "auto": true});
     emit(r.json, v);
     Ok(())
 }
 
-async fn cmd_derive_world_auto(r: &Resolved, world_id: &str, api_key: &str, force: bool) -> Result<(), Box<dyn std::error::Error>> {
+async fn cmd_derive_world_auto(
+    r: &Resolved,
+    world_id: &str,
+    api_key: &str,
+    force: bool,
+) -> Result<(), Box<dyn std::error::Error>> {
     r.check_world(world_id)?;
     let model_config = {
         let conn = r.db.conn.lock().unwrap();
@@ -3258,17 +3941,24 @@ async fn cmd_derive_world_auto(r: &Resolved, world_id: &str, api_key: &str, forc
         }
         app_lib::ai::derivation::build_world_prompt(&conn, world_id)?
     };
-    let derivation = app_lib::ai::derivation::synthesize_from_prompt(base_url, api_key, model, prompt).await?;
+    let derivation =
+        app_lib::ai::derivation::synthesize_from_prompt(base_url, api_key, model, prompt).await?;
     {
         let conn = r.db.conn.lock().unwrap();
         app_lib::ai::derivation::persist_world_derivation(&conn, world_id, &derivation)?;
     }
-    let v = json!({"world_id": world_id, "derived_formula": derivation, "updated": true, "auto": true});
+    let v =
+        json!({"world_id": world_id, "derived_formula": derivation, "updated": true, "auto": true});
     emit(r.json, v);
     Ok(())
 }
 
-async fn cmd_derive_character_auto(r: &Resolved, character_id: &str, api_key: &str, force: bool) -> Result<(), Box<dyn std::error::Error>> {
+async fn cmd_derive_character_auto(
+    r: &Resolved,
+    character_id: &str,
+    api_key: &str,
+    force: bool,
+) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
     let model_config = {
         let conn = r.db.conn.lock().unwrap();
@@ -3286,7 +3976,8 @@ async fn cmd_derive_character_auto(r: &Resolved, character_id: &str, api_key: &s
         }
         app_lib::ai::derivation::build_character_prompt(&conn, character_id)?
     };
-    let derivation = app_lib::ai::derivation::synthesize_from_prompt(base_url, api_key, model, prompt).await?;
+    let derivation =
+        app_lib::ai::derivation::synthesize_from_prompt(base_url, api_key, model, prompt).await?;
     {
         let conn = r.db.conn.lock().unwrap();
         app_lib::ai::derivation::persist_character_derivation(&conn, character_id, &derivation)?;
@@ -3327,7 +4018,9 @@ async fn cmd_backfill_location_derivations(
                   WHERE current_location IS NOT NULL AND trim(current_location) != '' \
             ) ORDER BY world_id, name",
         )?;
-        let rows = stmt.query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?)))?;
+        let rows = stmt.query_map([], |row| {
+            Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+        })?;
         rows.flatten().collect()
     };
 
@@ -3342,13 +4035,24 @@ async fn cmd_backfill_location_derivations(
     // Skip already-cached pairs (unless --force).
     let to_derive: Vec<(String, String)> = {
         let conn = r.db.conn.lock().unwrap();
-        in_scope.into_iter().filter(|(w, n)| {
-            if force { return true; }
-            matches!(app_lib::db::queries::get_location_derivation(&conn, w, n), Ok(None))
-        }).collect()
+        in_scope
+            .into_iter()
+            .filter(|(w, n)| {
+                if force {
+                    return true;
+                }
+                matches!(
+                    app_lib::db::queries::get_location_derivation(&conn, w, n),
+                    Ok(None)
+                )
+            })
+            .collect()
     };
 
-    eprintln!("[backfill-location-derivations] {} pair(s) to derive (force={force})", to_derive.len());
+    eprintln!(
+        "[backfill-location-derivations] {} pair(s) to derive (force={force})",
+        to_derive.len()
+    );
     let mut results: Vec<serde_json::Value> = Vec::new();
     for (idx, (world_id, name)) in to_derive.iter().enumerate() {
         eprintln!("[{}/{}] {} :: {}", idx + 1, to_derive.len(), world_id, name);
@@ -3356,10 +4060,17 @@ async fn cmd_backfill_location_derivations(
             let conn = r.db.conn.lock().unwrap();
             app_lib::ai::derivation::build_location_prompt(&conn, world_id, name)?
         };
-        match app_lib::ai::derivation::synthesize_from_prompt(base_url, api_key, model, prompt).await {
+        match app_lib::ai::derivation::synthesize_from_prompt(base_url, api_key, model, prompt)
+            .await
+        {
             Ok(derivation) => {
                 let conn = r.db.conn.lock().unwrap();
-                app_lib::db::queries::upsert_location_derivation(&conn, world_id, name, &derivation)?;
+                app_lib::db::queries::upsert_location_derivation(
+                    &conn,
+                    world_id,
+                    name,
+                    &derivation,
+                )?;
                 results.push(json!({
                     "world_id": world_id,
                     "name": name,
@@ -3425,7 +4136,9 @@ fn cmd_recent_messages(
     // Apply grep + context-window
     let filtered_indices: Vec<usize> = if let Some(g) = grep {
         let g_lc = g.to_lowercase();
-        let hits: Vec<usize> = msgs.iter().enumerate()
+        let hits: Vec<usize> = msgs
+            .iter()
+            .enumerate()
             .filter(|(_, m)| m.content.to_lowercase().contains(&g_lc))
             .map(|(i, _)| i)
             .collect();
@@ -3437,7 +4150,9 @@ fn cmd_recent_messages(
             for h in hits {
                 let lo = h.saturating_sub(with_context);
                 let hi = (h + with_context + 1).min(msgs.len());
-                for i in lo..hi { set.insert(i); }
+                for i in lo..hi {
+                    set.insert(i);
+                }
             }
             set.into_iter().collect()
         }
@@ -3457,19 +4172,22 @@ fn cmd_recent_messages(
         filtered_indices[start..].to_vec()
     };
 
-    let out: Vec<JsonValue> = final_indices.iter().map(|&i| {
-        let m = &msgs[i];
-        json!({
-            "message_id": m.message_id,
-            "thread_id": m.thread_id,
-            "role": m.role,
-            "sender_character_id": m.sender_character_id,
-            "created_at": m.created_at,
-            "world_day": m.world_day,
-            "world_time": m.world_time,
-            "content": m.content,
+    let out: Vec<JsonValue> = final_indices
+        .iter()
+        .map(|&i| {
+            let m = &msgs[i];
+            json!({
+                "message_id": m.message_id,
+                "thread_id": m.thread_id,
+                "role": m.role,
+                "sender_character_id": m.sender_character_id,
+                "created_at": m.created_at,
+                "world_day": m.world_day,
+                "world_time": m.world_time,
+                "content": m.content,
+            })
         })
-    }).collect();
+        .collect();
     emit(r.json, JsonValue::Array(out));
     Ok(())
 }
@@ -3504,7 +4222,11 @@ fn cmd_anchor_groove(
         .filter(|l| l.speaker == display_name)
         .map(|l| l.content)
         .collect();
-    let assistant_lines: Vec<String> = assistant_lines.into_iter().rev().take(limit).collect::<Vec<_>>();
+    let assistant_lines: Vec<String> = assistant_lines
+        .into_iter()
+        .rev()
+        .take(limit)
+        .collect::<Vec<_>>();
     let mut assistant_lines = assistant_lines;
     assistant_lines.reverse();
 
@@ -3518,16 +4240,26 @@ fn cmd_anchor_groove(
         let tokens = tokenize_for_anchor_groove(reply);
         let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
         for window in tokens.windows(2) {
-            if !window.iter().all(|t| ANCHOR_STOPWORDS.contains(&t.as_str())) {
+            if !window
+                .iter()
+                .all(|t| ANCHOR_STOPWORDS.contains(&t.as_str()))
+            {
                 seen.insert(window.join(" "));
             }
         }
         for window in tokens.windows(3) {
-            if window.iter().filter(|t| ANCHOR_STOPWORDS.contains(&t.as_str())).count() < 2 {
+            if window
+                .iter()
+                .filter(|t| ANCHOR_STOPWORDS.contains(&t.as_str()))
+                .count()
+                < 2
+            {
                 seen.insert(window.join(" "));
             }
         }
-        for ngram in seen { *counts.entry(ngram).or_insert(0) += 1; }
+        for ngram in seen {
+            *counts.entry(ngram).or_insert(0) += 1;
+        }
     }
 
     let mut ranked: Vec<(String, usize)> = counts.into_iter().collect();
@@ -3536,7 +4268,11 @@ fn cmd_anchor_groove(
     // Sort by count desc, tie-break by ngram length desc (prefer trigrams), then alphabetically.
     ranked.sort_by(|a, b| {
         b.1.cmp(&a.1)
-            .then_with(|| b.0.split_whitespace().count().cmp(&a.0.split_whitespace().count()))
+            .then_with(|| {
+                b.0.split_whitespace()
+                    .count()
+                    .cmp(&a.0.split_whitespace().count())
+            })
             .then_with(|| a.0.cmp(&b.0))
     });
 
@@ -3555,8 +4291,14 @@ fn cmd_anchor_groove(
         })
         .collect();
 
-    let outliers_count = ranked.iter().filter(|(_, c)| (*c as f64) / total >= threshold).count();
-    let top_rate = ranked.first().map(|(_, c)| (*c as f64) / total).unwrap_or(0.0);
+    let outliers_count = ranked
+        .iter()
+        .filter(|(_, c)| (*c as f64) / total >= threshold)
+        .count();
+    let top_rate = ranked
+        .first()
+        .map(|(_, c)| (*c as f64) / total)
+        .unwrap_or(0.0);
     let diagnosis = if top_rate > 0.7 {
         "RUNAWAY (top anchor >0.7 — priming-compounding has gone past equilibrium; scene-state intervention may be needed)"
     } else if top_rate >= 0.4 {
@@ -3571,20 +4313,27 @@ fn cmd_anchor_groove(
     // targets this axis directly; rule-prediction is opener-density
     // ≤2 anchors per reply.
     let opening_densities: Vec<usize> = if opening_density {
-        assistant_lines.iter().map(|reply| count_opener_anchors(reply)).collect()
+        assistant_lines
+            .iter()
+            .map(|reply| count_opener_anchors(reply))
+            .collect()
     } else {
         Vec::new()
     };
-    let opener_mean = if opening_densities.is_empty() { 0.0 } else {
+    let opener_mean = if opening_densities.is_empty() {
+        0.0
+    } else {
         opening_densities.iter().sum::<usize>() as f64 / opening_densities.len() as f64
     };
     let opener_max = opening_densities.iter().max().copied().unwrap_or(0);
     let mut opener_sorted = opening_densities.clone();
     opener_sorted.sort();
-    let opener_median = if opener_sorted.is_empty() { 0.0 } else {
+    let opener_median = if opener_sorted.is_empty() {
+        0.0
+    } else {
         let mid = opener_sorted.len() / 2;
         if opener_sorted.len() % 2 == 0 {
-            (opener_sorted[mid-1] + opener_sorted[mid]) as f64 / 2.0
+            (opener_sorted[mid - 1] + opener_sorted[mid]) as f64 / 2.0
         } else {
             opener_sorted[mid] as f64
         }
@@ -3626,7 +4375,10 @@ fn cmd_anchor_groove(
     } else {
         println!("character: {} ({})", display_name, character_id);
         println!("samples_analyzed: {}", analyzed);
-        println!("threshold: {:.2}    outliers: {}    top_rate: {:.2}", threshold, outliers_count, top_rate);
+        println!(
+            "threshold: {:.2}    outliers: {}    top_rate: {:.2}",
+            threshold, outliers_count, top_rate
+        );
         println!("diagnosis: {}", diagnosis);
         println!();
         println!("{:>5}  {:>5}  {:<6}  {}", "rank", "count", "rate", "ngram");
@@ -3634,7 +4386,14 @@ fn cmd_anchor_groove(
         for (i, (ngram, count)) in ranked.iter().take(top_k).enumerate() {
             let rate = (*count as f64) / total;
             let flag = if rate >= threshold { " *" } else { "" };
-            println!("{:>5}  {:>5}  {:<6.2}  {}{}", i + 1, count, rate, ngram, flag);
+            println!(
+                "{:>5}  {:>5}  {:<6.2}  {}{}",
+                i + 1,
+                count,
+                rate,
+                ngram,
+                flag
+            );
         }
         if analyzed == 0 {
             println!("(no assistant lines found for this character — check id and corpus)");
@@ -3665,9 +4424,13 @@ fn cmd_anchor_groove(
 /// per-reply distribution that surfaces the prop-density signal.
 fn count_opener_anchors(reply: &str) -> usize {
     let trimmed = reply.trim_start();
-    if !trimmed.starts_with('*') { return 0; }
+    if !trimmed.starts_with('*') {
+        return 0;
+    }
     let after_star = &trimmed[1..];
-    let Some(close_idx) = after_star.find('*') else { return 0; };
+    let Some(close_idx) = after_star.find('*') else {
+        return 0;
+    };
     let opener = &after_star[..close_idx];
     // Split on ", " / " and " / " while " / "; " — coordinating
     // separators typical for piled-anchor opening sentences.
@@ -3678,11 +4441,15 @@ fn count_opener_anchors(reply: &str) -> usize {
     }
     for fragment in buf.split('|') {
         let trimmed = fragment.trim();
-        if trimmed.is_empty() { continue; }
+        if trimmed.is_empty() {
+            continue;
+        }
         // Count fragment as an anchor if it has at least 3 alphabetic
         // chars (excludes pure punctuation / single articles).
         let alpha_count = trimmed.chars().filter(|c| c.is_alphabetic()).count();
-        if alpha_count >= 3 { count += 1; }
+        if alpha_count >= 3 {
+            count += 1;
+        }
     }
     count
 }
@@ -3703,35 +4470,38 @@ fn tokenize_for_anchor_groove(text: &str) -> Vec<String> {
             // skip apostrophes inside words — "thumb's" → "thumbs"
         } else {
             if !buf.is_empty() {
-                if buf.len() >= 2 { out.push(std::mem::take(&mut buf)); } else { buf.clear(); }
+                if buf.len() >= 2 {
+                    out.push(std::mem::take(&mut buf));
+                } else {
+                    buf.clear();
+                }
             }
         }
     }
-    if !buf.is_empty() && buf.len() >= 2 { out.push(buf); }
+    if !buf.is_empty() && buf.len() >= 2 {
+        out.push(buf);
+    }
     out
 }
 
 const ANCHOR_STOPWORDS: &[&str] = &[
-    "the", "a", "an", "and", "or", "but", "if", "then", "of", "in", "on", "at",
-    "to", "for", "from", "by", "with", "as", "is", "it", "its", "be", "are", "was",
-    "were", "been", "being", "do", "does", "did", "doing", "have", "has", "had",
-    "having", "i", "me", "my", "mine", "you", "your", "yours", "he", "him", "his",
-    "she", "her", "hers", "we", "us", "our", "ours", "they", "them", "their", "theirs",
-    "this", "that", "these", "those", "there", "here", "where", "when", "what",
-    "who", "whom", "whose", "which", "why", "how", "not", "no", "yes", "so", "such",
-    "than", "too", "also", "just", "only", "even", "still", "now", "again", "back",
-    "out", "up", "down", "off", "over", "under", "into", "onto", "about", "across",
-    "while", "though", "because", "between", "through", "after", "before", "until",
-    "since", "around", "against", "behind", "beside", "beyond", "without", "within",
-    "above", "below", "near", "far", "soft", "thats", "im", "youre", "weve", "ive",
-    "let", "lets", "got", "get", "gets", "going", "goes", "go", "give", "gives",
-    "say", "says", "said", "tell", "tells", "told", "ask", "asks", "asked", "want",
-    "wants", "wanted", "make", "makes", "made", "take", "takes", "took", "see",
-    "sees", "saw", "look", "looks", "looked", "feel", "feels", "felt", "find",
-    "finds", "found", "think", "thinks", "thought", "know", "knows", "knew",
-    "come", "comes", "came", "one", "two", "three", "four", "five", "six", "seven",
-    "eight", "nine", "ten", "first", "second", "third", "last", "next", "every",
-    "each", "all", "some", "any", "many", "few", "much", "more", "most", "less",
+    "the", "a", "an", "and", "or", "but", "if", "then", "of", "in", "on", "at", "to", "for",
+    "from", "by", "with", "as", "is", "it", "its", "be", "are", "was", "were", "been", "being",
+    "do", "does", "did", "doing", "have", "has", "had", "having", "i", "me", "my", "mine", "you",
+    "your", "yours", "he", "him", "his", "she", "her", "hers", "we", "us", "our", "ours", "they",
+    "them", "their", "theirs", "this", "that", "these", "those", "there", "here", "where", "when",
+    "what", "who", "whom", "whose", "which", "why", "how", "not", "no", "yes", "so", "such",
+    "than", "too", "also", "just", "only", "even", "still", "now", "again", "back", "out", "up",
+    "down", "off", "over", "under", "into", "onto", "about", "across", "while", "though",
+    "because", "between", "through", "after", "before", "until", "since", "around", "against",
+    "behind", "beside", "beyond", "without", "within", "above", "below", "near", "far", "soft",
+    "thats", "im", "youre", "weve", "ive", "let", "lets", "got", "get", "gets", "going", "goes",
+    "go", "give", "gives", "say", "says", "said", "tell", "tells", "told", "ask", "asks", "asked",
+    "want", "wants", "wanted", "make", "makes", "made", "take", "takes", "took", "see", "sees",
+    "saw", "look", "looks", "looked", "feel", "feels", "felt", "find", "finds", "found", "think",
+    "thinks", "thought", "know", "knows", "knew", "come", "comes", "came", "one", "two", "three",
+    "four", "five", "six", "seven", "eight", "nine", "ten", "first", "second", "third", "last",
+    "next", "every", "each", "all", "some", "any", "many", "few", "much", "more", "most", "less",
     "least", "very", "really", "quite", "rather", "perhaps", "maybe", "yeah", "well",
 ];
 
@@ -3741,7 +4511,7 @@ fn cmd_kept_records(r: &Resolved, character_id: &str) -> Result<(), Box<dyn std:
     let mut stmt = conn.prepare(
         "SELECT kept_id, record_type, content, source_world_day, created_at \
          FROM kept_records WHERE subject_type = 'character' AND subject_id = ?1 \
-         ORDER BY created_at DESC"
+         ORDER BY created_at DESC",
     )?;
     let rows = stmt.query_map(params![character_id], |r| {
         Ok((
@@ -3752,10 +4522,15 @@ fn cmd_kept_records(r: &Resolved, character_id: &str) -> Result<(), Box<dyn std:
             r.get::<_, String>(4)?,
         ))
     })?;
-    let out: Vec<JsonValue> = rows.flatten().map(|(id, kind, content, day, ts)| json!({
-        "kept_id": id, "record_type": kind, "content": content,
-        "source_world_day": day, "created_at": ts,
-    })).collect();
+    let out: Vec<JsonValue> = rows
+        .flatten()
+        .map(|(id, kind, content, day, ts)| {
+            json!({
+                "kept_id": id, "record_type": kind, "content": content,
+                "source_world_day": day, "created_at": ts,
+            })
+        })
+        .collect();
     emit(r.json, JsonValue::Array(out));
     Ok(())
 }
@@ -3764,9 +4539,14 @@ fn cmd_journals(r: &Resolved, character_id: &str) -> Result<(), Box<dyn std::err
     let _ = r.check_character(character_id)?;
     let conn = r.db.conn.lock().unwrap();
     let entries = list_journal_entries(&conn, character_id, 50).unwrap_or_default();
-    let out: Vec<JsonValue> = entries.iter().map(|e| json!({
-        "world_day": e.world_day, "created_at": e.created_at, "content": e.content,
-    })).collect();
+    let out: Vec<JsonValue> = entries
+        .iter()
+        .map(|e| {
+            json!({
+                "world_day": e.world_day, "created_at": e.created_at, "content": e.content,
+            })
+        })
+        .collect();
     emit(r.json, JsonValue::Array(out));
     Ok(())
 }
@@ -3774,19 +4554,27 @@ fn cmd_journals(r: &Resolved, character_id: &str) -> Result<(), Box<dyn std::err
 fn cmd_quests(r: &Resolved, world: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
     let conn = r.db.conn.lock().unwrap();
     let world_ids: Vec<String> = match world {
-        Some(w) => { r.check_world(w)?; vec![w.to_string()] }
-        None => {
-            list_worlds(&conn)?.into_iter()
-                .filter(|w| r.world_in_scope(&w.world_id))
-                .map(|w| w.world_id).collect()
+        Some(w) => {
+            r.check_world(w)?;
+            vec![w.to_string()]
         }
+        None => list_worlds(&conn)?
+            .into_iter()
+            .filter(|w| r.world_in_scope(&w.world_id))
+            .map(|w| w.world_id)
+            .collect(),
     };
     let mut out: Vec<JsonValue> = Vec::new();
     for wid in world_ids {
         let quests = list_quests(&conn, &wid).unwrap_or_default();
         for q in quests {
-            let status = if q.completed_at.is_some() { "completed" }
-                else if q.abandoned_at.is_some() { "abandoned" } else { "active" };
+            let status = if q.completed_at.is_some() {
+                "completed"
+            } else if q.abandoned_at.is_some() {
+                "abandoned"
+            } else {
+                "active"
+            };
             out.push(json!({
                 "quest_id": q.quest_id, "world_id": wid, "title": q.title,
                 "description": q.description, "status": status,
@@ -3798,13 +4586,21 @@ fn cmd_quests(r: &Resolved, world: Option<&str>) -> Result<(), Box<dyn std::erro
     Ok(())
 }
 
-fn cmd_list_group_chats(r: &Resolved, world: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
+fn cmd_list_group_chats(
+    r: &Resolved,
+    world: Option<&str>,
+) -> Result<(), Box<dyn std::error::Error>> {
     let conn = r.db.conn.lock().unwrap();
     let world_ids: Vec<String> = match world {
-        Some(w) => { r.check_world(w)?; vec![w.to_string()] }
-        None => list_worlds(&conn)?.into_iter()
+        Some(w) => {
+            r.check_world(w)?;
+            vec![w.to_string()]
+        }
+        None => list_worlds(&conn)?
+            .into_iter()
             .filter(|w| r.world_in_scope(&w.world_id))
-            .map(|w| w.world_id).collect(),
+            .map(|w| w.world_id)
+            .collect(),
     };
     // Build a character-id → display_name lookup so we can render member names.
     let mut id_to_name = std::collections::HashMap::new();
@@ -3816,10 +4612,17 @@ fn cmd_list_group_chats(r: &Resolved, world: Option<&str>) -> Result<(), Box<dyn
     let mut out = Vec::new();
     for wid in &world_ids {
         for gc in list_group_chats(&conn, wid).unwrap_or_default() {
-            let member_ids: Vec<String> = gc.character_ids.as_array()
-                .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+            let member_ids: Vec<String> = gc
+                .character_ids
+                .as_array()
+                .map(|a| {
+                    a.iter()
+                        .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                        .collect()
+                })
                 .unwrap_or_default();
-            let member_names: Vec<String> = member_ids.iter()
+            let member_names: Vec<String> = member_ids
+                .iter()
                 .map(|id| id_to_name.get(id).cloned().unwrap_or_else(|| id.clone()))
                 .collect();
             out.push(json!({
@@ -3847,8 +4650,9 @@ fn cmd_group_messages(
     with_context: usize,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let conn = r.db.conn.lock().unwrap();
-    let gc = get_group_chat(&conn, group_chat_id)
-        .map_err(|e| Box::<dyn std::error::Error>::from(format!("group_chat {}: {}", group_chat_id, e)))?;
+    let gc = get_group_chat(&conn, group_chat_id).map_err(|e| {
+        Box::<dyn std::error::Error>::from(format!("group_chat {}: {}", group_chat_id, e))
+    })?;
     r.check_world(&gc.world_id)?;
     // Build sender-id → display_name for label rendering.
     let mut id_to_name = std::collections::HashMap::new();
@@ -3857,50 +4661,70 @@ fn cmd_group_messages(
     }
     let raw_pull = if grep.is_some() || before.is_some() || after.is_some() {
         (limit * 5).max(100)
-    } else { limit };
+    } else {
+        limit
+    };
     let mut msgs = list_group_messages(&conn, &gc.thread_id, raw_pull)?;
     msgs.reverse(); // chronological asc
-    if let Some(b) = before { msgs.retain(|m| m.created_at.as_str() < b); }
-    if let Some(a) = after { msgs.retain(|m| m.created_at.as_str() > a); }
+    if let Some(b) = before {
+        msgs.retain(|m| m.created_at.as_str() < b);
+    }
+    if let Some(a) = after {
+        msgs.retain(|m| m.created_at.as_str() > a);
+    }
     let filtered_indices: Vec<usize> = if let Some(g) = grep {
         let g_lc = g.to_lowercase();
-        let hits: Vec<usize> = msgs.iter().enumerate()
+        let hits: Vec<usize> = msgs
+            .iter()
+            .enumerate()
             .filter(|(_, m)| m.content.to_lowercase().contains(&g_lc))
-            .map(|(i, _)| i).collect();
-        if with_context == 0 { hits } else {
+            .map(|(i, _)| i)
+            .collect();
+        if with_context == 0 {
+            hits
+        } else {
             let mut set = std::collections::BTreeSet::new();
             for h in hits {
                 let lo = h.saturating_sub(with_context);
                 let hi = (h + with_context + 1).min(msgs.len());
-                for i in lo..hi { set.insert(i); }
+                for i in lo..hi {
+                    set.insert(i);
+                }
             }
             set.into_iter().collect()
         }
-    } else { (0..msgs.len()).collect() };
+    } else {
+        (0..msgs.len()).collect()
+    };
     let len = filtered_indices.len();
     let start = len.saturating_sub(limit as usize);
     let final_indices = &filtered_indices[start..];
 
-    let out: Vec<JsonValue> = final_indices.iter().map(|&i| {
-        let m = &msgs[i];
-        let sender_name = m.sender_character_id.as_ref()
-            .and_then(|id| id_to_name.get(id))
-            .cloned()
-            .unwrap_or_else(|| match m.role.as_str() {
-                "user" => "USER".to_string(),
-                other => other.to_uppercase(),
-            });
-        json!({
-            "message_id": m.message_id,
-            "role": m.role,
-            "sender_character_id": m.sender_character_id,
-            "sender_name": sender_name,
-            "created_at": m.created_at,
-            "world_day": m.world_day,
-            "world_time": m.world_time,
-            "content": m.content,
+    let out: Vec<JsonValue> = final_indices
+        .iter()
+        .map(|&i| {
+            let m = &msgs[i];
+            let sender_name = m
+                .sender_character_id
+                .as_ref()
+                .and_then(|id| id_to_name.get(id))
+                .cloned()
+                .unwrap_or_else(|| match m.role.as_str() {
+                    "user" => "USER".to_string(),
+                    other => other.to_uppercase(),
+                });
+            json!({
+                "message_id": m.message_id,
+                "role": m.role,
+                "sender_character_id": m.sender_character_id,
+                "sender_name": sender_name,
+                "created_at": m.created_at,
+                "world_day": m.world_day,
+                "world_time": m.world_time,
+                "content": m.content,
+            })
         })
-    }).collect();
+        .collect();
     emit(r.json, JsonValue::Array(out));
     Ok(())
 }
@@ -4118,11 +4942,10 @@ fn cmd_momentstamp_corridor(
     gate_max_warm_rate: Option<f64>,
     gate_min_humor_rate: Option<f64>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let gate_requested =
-        gate_min_neutral_rate.is_some()
-            || gate_min_ache_rate.is_some()
-            || gate_max_warm_rate.is_some()
-            || gate_min_humor_rate.is_some();
+    let gate_requested = gate_min_neutral_rate.is_some()
+        || gate_min_ache_rate.is_some()
+        || gate_max_warm_rate.is_some()
+        || gate_min_humor_rate.is_some();
     if let Some(w) = world {
         r.check_world(w)?;
     }
@@ -4151,39 +4974,17 @@ fn cmd_momentstamp_corridor(
     .into_iter()
     .collect();
     let neutral_lexicon: BTreeSet<&'static str> = [
-        "ordinary",
-        "small",
-        "steady",
-        "calm",
-        "rest",
-        "restful",
-        "settled",
-        "plain",
+        "ordinary", "small", "steady", "calm", "rest", "restful", "settled", "plain",
     ]
     .into_iter()
     .collect();
     let ache_lexicon: BTreeSet<&'static str> = [
-        "ache",
-        "burden",
-        "cross",
-        "grief",
-        "weight",
-        "sorrow",
-        "wound",
+        "ache", "burden", "cross", "grief", "weight", "sorrow", "wound",
     ]
     .into_iter()
     .collect();
     let humor_lexicon: BTreeSet<&'static str> = [
-        "humor",
-        "play",
-        "playful",
-        "joke",
-        "wit",
-        "laugh",
-        "smile",
-        "fun",
-        "tease",
-        "light",
+        "humor", "play", "playful", "joke", "wit", "laugh", "smile", "fun", "tease", "light",
     ]
     .into_iter()
     .collect();
@@ -4285,10 +5086,26 @@ fn cmd_momentstamp_corridor(
         }
     }
 
-    let warm_rate = if total_signatures > 0 { sig_warm as f64 / total_signatures as f64 } else { 0.0 };
-    let neutral_rate = if total_signatures > 0 { sig_neutral as f64 / total_signatures as f64 } else { 0.0 };
-    let ache_rate = if total_signatures > 0 { sig_ache as f64 / total_signatures as f64 } else { 0.0 };
-    let humor_rate = if total_signatures > 0 { sig_humor as f64 / total_signatures as f64 } else { 0.0 };
+    let warm_rate = if total_signatures > 0 {
+        sig_warm as f64 / total_signatures as f64
+    } else {
+        0.0
+    };
+    let neutral_rate = if total_signatures > 0 {
+        sig_neutral as f64 / total_signatures as f64
+    } else {
+        0.0
+    };
+    let ache_rate = if total_signatures > 0 {
+        sig_ache as f64 / total_signatures as f64
+    } else {
+        0.0
+    };
+    let humor_rate = if total_signatures > 0 {
+        sig_humor as f64 / total_signatures as f64
+    } else {
+        0.0
+    };
 
     let mut gate_failures: Vec<String> = Vec::new();
     if let Some(min_neutral) = gate_min_neutral_rate {
@@ -4380,10 +5197,7 @@ fn cmd_momentstamp_corridor(
     } else {
         let rates = &payload["corridor"]["signature_presence"];
         println!("=== MOMENTSTAMP CORRIDOR ===");
-        println!(
-            "signatures={} tokens={}",
-            total_signatures, total_tokens
-        );
+        println!("signatures={} tokens={}", total_signatures, total_tokens);
         println!(
             "signature presence: warm={:.1}% neutral={:.1}% ache={:.1}% humor={:.1}%",
             rates["warm_rate"].as_f64().unwrap_or(0.0) * 100.0,
@@ -4468,7 +5282,10 @@ fn sentence_chunks(text: &str) -> Vec<String> {
     chunks
 }
 
-fn score_register(sentence: &str, lexicon: &BTreeMap<RegisterTag, BTreeSet<&'static str>>) -> Option<RegisterTag> {
+fn score_register(
+    sentence: &str,
+    lexicon: &BTreeMap<RegisterTag, BTreeSet<&'static str>>,
+) -> Option<RegisterTag> {
     let lowered = sentence.to_lowercase();
     let mut best: Option<(RegisterTag, usize)> = None;
     for (tag, words) in lexicon {
@@ -4496,8 +5313,23 @@ fn build_register_lexicon() -> BTreeMap<RegisterTag, BTreeSet<&'static str>> {
     lexicon.insert(
         RegisterTag::Play,
         [
-            "joke", "bit", "laugh", "tease", "grin", "funny", "hype", "riff", "banter", "playful",
-            "roast", "snark", "sassy", "ridiculous", "worst", "lol", "lmao",
+            "joke",
+            "bit",
+            "laugh",
+            "tease",
+            "grin",
+            "funny",
+            "hype",
+            "riff",
+            "banter",
+            "playful",
+            "roast",
+            "snark",
+            "sassy",
+            "ridiculous",
+            "worst",
+            "lol",
+            "lmao",
         ]
         .into_iter()
         .collect(),
@@ -4514,8 +5346,8 @@ fn build_register_lexicon() -> BTreeMap<RegisterTag, BTreeSet<&'static str>> {
     lexicon.insert(
         RegisterTag::Ache,
         [
-            "ache", "lonely", "afraid", "fear", "hurt", "grief", "sorrow", "wound", "tired", "burden",
-            "empty", "miss", "hard", "heavy", "raw", "truth is",
+            "ache", "lonely", "afraid", "fear", "hurt", "grief", "sorrow", "wound", "tired",
+            "burden", "empty", "miss", "hard", "heavy", "raw", "truth is",
         ]
         .into_iter()
         .collect(),
@@ -4523,8 +5355,21 @@ fn build_register_lexicon() -> BTreeMap<RegisterTag, BTreeSet<&'static str>> {
     lexicon.insert(
         RegisterTag::Neutral,
         [
-            "plain", "ordinary", "calm", "simple", "direct", "practical", "matter", "basic", "steady",
-            "okay", "noted", "clear", "exactly", "alright", "easy",
+            "plain",
+            "ordinary",
+            "calm",
+            "simple",
+            "direct",
+            "practical",
+            "matter",
+            "basic",
+            "steady",
+            "okay",
+            "noted",
+            "clear",
+            "exactly",
+            "alright",
+            "easy",
         ]
         .into_iter()
         .collect(),
@@ -4629,7 +5474,10 @@ fn cmd_register_shift(
         let first_ache = compact.iter().position(|t| *t == RegisterTag::Ache);
         let rebound = if let Some(idx) = first_ache {
             rebound_denominator += 1;
-            compact.iter().skip(idx + 1).any(|t| matches!(t, RegisterTag::Play | RegisterTag::Warm))
+            compact
+                .iter()
+                .skip(idx + 1)
+                .any(|t| matches!(t, RegisterTag::Play | RegisterTag::Warm))
         } else {
             false
         };
@@ -4640,7 +5488,11 @@ fn cmd_register_shift(
         let path = if compact.is_empty() {
             "unscored".to_string()
         } else {
-            compact.iter().map(|t| t.as_str()).collect::<Vec<_>>().join("->")
+            compact
+                .iter()
+                .map(|t| t.as_str())
+                .collect::<Vec<_>>()
+                .join("->")
         };
         *path_counts.entry(path.clone()).or_insert(0) += 1;
 
@@ -4660,7 +5512,8 @@ fn cmd_register_shift(
                 } else {
                     220
                 };
-                sample["message"] = JsonValue::String(truncate_chars(&content.replace('\n', " "), max_chars));
+                sample["message"] =
+                    JsonValue::String(truncate_chars(&content.replace('\n', " "), max_chars));
             }
             sample_rows.push(sample);
         }
@@ -4856,10 +5709,7 @@ fn cmd_grade_stress_pack(
             .and_then(|v| v.as_str())
             .unwrap_or("")
             .to_ascii_lowercase();
-        let words = row
-            .get("word_count")
-            .and_then(|v| v.as_u64())
-            .unwrap_or(0) as usize;
+        let words = row.get("word_count").and_then(|v| v.as_u64()).unwrap_or(0) as usize;
         if words > 45 {
             return "over_length".to_string();
         }
@@ -4901,10 +5751,7 @@ fn cmd_grade_stress_pack(
             };
             let row_pass = row.get("pass").and_then(|v| v.as_bool()).unwrap_or(false);
             let reply = row.get("reply").and_then(|v| v.as_str()).unwrap_or("");
-            let words = row
-                .get("word_count")
-                .and_then(|v| v.as_u64())
-                .unwrap_or(0) as usize;
+            let words = row.get("word_count").and_then(|v| v.as_u64()).unwrap_or(0) as usize;
             let pass = if !reply.is_empty() {
                 words <= 45 && has_action_shape(reply, question_as_action_allowed)
             } else {
@@ -5184,7 +6031,11 @@ fn cmd_stress_policy_report(
     let mut rows: Vec<JsonValue> = Vec::new();
     let rec = "fail when other_rate >= 0.15 AND no_concrete_rate >= 0.17";
 
-    let files = body.get("files").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+    let files = body
+        .get("files")
+        .and_then(|v| v.as_array())
+        .cloned()
+        .unwrap_or_default();
     for f in files {
         let per = f
             .get("per_character")
@@ -5197,7 +6048,8 @@ fn cmd_stress_policy_report(
             let mut no_concrete = 0.0f64;
             if let Some(arr) = pc.get("failure_archetypes").and_then(|v| v.as_array()) {
                 for a in arr {
-                    if a.get("archetype").and_then(|v| v.as_str()) == Some("no_concrete_directive") {
+                    if a.get("archetype").and_then(|v| v.as_str()) == Some("no_concrete_directive")
+                    {
                         let c = a.get("count").and_then(|v| v.as_u64()).unwrap_or(0) as f64;
                         if total > 0.0 {
                             no_concrete = c / total;
@@ -5239,7 +6091,11 @@ fn cmd_stress_policy_report(
                     row["character"].as_str().unwrap_or("?"),
                     row["other_rate"].as_f64().unwrap_or(0.0),
                     row["no_concrete_rate"].as_f64().unwrap_or(0.0),
-                    if row["two_signal_fail"].as_bool().unwrap_or(false) { "FAIL" } else { "PASS" }
+                    if row["two_signal_fail"].as_bool().unwrap_or(false) {
+                        "FAIL"
+                    } else {
+                        "PASS"
+                    }
                 );
             }
         }
@@ -5286,14 +6142,8 @@ async fn cmd_register_shift_pack(
     let mut shift_runs = 0usize;
 
     for (idx, probe) in probes.iter().enumerate() {
-        let reply = cmd_ask_capture_reply(
-            r,
-            api_key,
-            character_id,
-            probe,
-            model,
-            confirm_cost,
-        ).await?;
+        let reply =
+            cmd_ask_capture_reply(r, api_key, character_id, probe, model, confirm_cost).await?;
         let trimmed = reply.trim_start();
         let opener = if trimmed.starts_with('"') {
             speech_first += 1;
@@ -5316,7 +6166,11 @@ async fn cmd_register_shift_pack(
         let path = if compact.is_empty() {
             "unscored".to_string()
         } else {
-            compact.iter().map(|t| t.as_str()).collect::<Vec<_>>().join("->")
+            compact
+                .iter()
+                .map(|t| t.as_str())
+                .collect::<Vec<_>>()
+                .join("->")
         };
         if compact.len() > 1 {
             shift_runs += 1;
@@ -5432,8 +6286,8 @@ struct RubricFile {
     name: String,
     version: String,
     description: String,
-    prompt: String,     // extracted # Rubric section body
-    raw: String,        // full file text, for `rubric show`
+    prompt: String, // extracted # Rubric section body
+    raw: String,    // full file text, for `rubric show`
     path: PathBuf,
 }
 
@@ -5446,7 +6300,8 @@ fn extract_rubric_section(raw: &str) -> Option<String> {
     for line in raw.lines() {
         let trimmed = line.trim_start();
         if trimmed.starts_with("# Rubric") && !trimmed.starts_with("# Rubric ") == false
-           || trimmed == "# Rubric" {
+            || trimmed == "# Rubric"
+        {
             in_section = true;
             continue;
         }
@@ -5464,7 +6319,11 @@ fn extract_rubric_section(raw: &str) -> Option<String> {
         }
     }
     let body = buf.join("\n").trim().to_string();
-    if body.is_empty() { None } else { Some(body) }
+    if body.is_empty() {
+        None
+    } else {
+        Some(body)
+    }
 }
 
 /// Parse YAML-like frontmatter from the top of a markdown file.
@@ -5477,16 +6336,27 @@ fn parse_rubric_frontmatter(raw: &str) -> (String, String, String) {
     let mut in_fm = false;
     let mut fm_done = false;
     for line in raw.lines() {
-        if fm_done { break; }
+        if fm_done {
+            break;
+        }
         let t = line.trim_end();
         if t == "---" {
-            if !in_fm { in_fm = true; continue; }
-            else { fm_done = true; continue; }
+            if !in_fm {
+                in_fm = true;
+                continue;
+            } else {
+                fm_done = true;
+                continue;
+            }
         }
         if in_fm {
-            if let Some(rest) = t.strip_prefix("name:") { name = rest.trim().trim_matches('"').to_string(); }
-            else if let Some(rest) = t.strip_prefix("version:") { version = rest.trim().trim_matches('"').to_string(); }
-            else if let Some(rest) = t.strip_prefix("description:") { description = rest.trim().trim_matches('"').to_string(); }
+            if let Some(rest) = t.strip_prefix("name:") {
+                name = rest.trim().trim_matches('"').to_string();
+            } else if let Some(rest) = t.strip_prefix("version:") {
+                version = rest.trim().trim_matches('"').to_string();
+            } else if let Some(rest) = t.strip_prefix("description:") {
+                description = rest.trim().trim_matches('"').to_string();
+            }
         }
     }
     (name, version, description)
@@ -5495,16 +6365,33 @@ fn parse_rubric_frontmatter(raw: &str) -> (String, String, String) {
 fn load_rubric(name: &str) -> Result<RubricFile, String> {
     let path = rubrics_dir().join(format!("{}.md", name));
     if !path.exists() {
-        return Err(format!("rubric '{}' not found at {}. Run `worldcli rubric list` to see the library.", name, path.display()));
+        return Err(format!(
+            "rubric '{}' not found at {}. Run `worldcli rubric list` to see the library.",
+            name,
+            path.display()
+        ));
     }
     let raw = std::fs::read_to_string(&path)
         .map_err(|e| format!("failed to read {}: {}", path.display(), e))?;
     let (fm_name, fm_version, fm_description) = parse_rubric_frontmatter(&raw);
-    let prompt = extract_rubric_section(&raw)
-        .ok_or_else(|| format!("rubric '{}' at {} has no `# Rubric` section", name, path.display()))?;
+    let prompt = extract_rubric_section(&raw).ok_or_else(|| {
+        format!(
+            "rubric '{}' at {} has no `# Rubric` section",
+            name,
+            path.display()
+        )
+    })?;
     Ok(RubricFile {
-        name: if fm_name.is_empty() { name.to_string() } else { fm_name },
-        version: if fm_version.is_empty() { "?".to_string() } else { fm_version },
+        name: if fm_name.is_empty() {
+            name.to_string()
+        } else {
+            fm_name
+        },
+        version: if fm_version.is_empty() {
+            "?".to_string()
+        } else {
+            fm_version
+        },
         description: fm_description,
         prompt,
         raw,
@@ -5518,11 +6405,22 @@ fn list_rubrics() -> Result<Vec<RubricFile>, String> {
         return Ok(Vec::new());
     }
     let mut out = Vec::new();
-    for entry in std::fs::read_dir(&dir).map_err(|e| e.to_string())?.flatten() {
+    for entry in std::fs::read_dir(&dir)
+        .map_err(|e| e.to_string())?
+        .flatten()
+    {
         let path = entry.path();
-        if path.extension().and_then(|e| e.to_str()) != Some("md") { continue; }
-        let fname = path.file_stem().and_then(|s| s.to_str()).unwrap_or("").to_string();
-        if fname == "README" { continue; }
+        if path.extension().and_then(|e| e.to_str()) != Some("md") {
+            continue;
+        }
+        let fname = path
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .unwrap_or("")
+            .to_string();
+        if fname == "README" {
+            continue;
+        }
         if let Ok(rf) = load_rubric(&fname) {
             out.push(rf);
         }
@@ -5537,7 +6435,9 @@ fn list_rubrics() -> Result<Vec<RubricFile>, String> {
 /// evaluation result; just log and continue.
 fn append_rubric_run_history(name: &str, entry: &str) {
     let path = rubrics_dir().join(format!("{}.md", name));
-    let Ok(current) = std::fs::read_to_string(&path) else { return; };
+    let Ok(current) = std::fs::read_to_string(&path) else {
+        return;
+    };
     // Find the `# Run history` section; if present, append under it.
     // If absent, append it + the entry to the end of the file.
     let marker = "# Run history";
@@ -5548,15 +6448,23 @@ fn append_rubric_run_history(name: &str, entry: &str) {
         // append the new line at the end.
         format!("{}\n{}\n", current.trim_end(), entry.trim())
     } else {
-        format!("{}\n\n# Run history\n\n{}\n", current.trim_end(), entry.trim())
+        format!(
+            "{}\n\n# Run history\n\n{}\n",
+            current.trim_end(),
+            entry.trim()
+        )
     };
     let _ = std::fs::write(&path, new_content);
 }
 
 // ─── Evaluate run log (~/.worldcli/evaluate-runs/) ─────────────────────
 
-fn evaluate_runs_dir() -> PathBuf { worldcli_home().join("evaluate-runs") }
-fn evaluate_runs_manifest() -> PathBuf { evaluate_runs_dir().join("manifest.jsonl") }
+fn evaluate_runs_dir() -> PathBuf {
+    worldcli_home().join("evaluate-runs")
+}
+fn evaluate_runs_manifest() -> PathBuf {
+    evaluate_runs_dir().join("manifest.jsonl")
+}
 
 /// Persist the full evaluate envelope to disk + append a compact
 /// manifest line for fast list/search. Never fails loudly — a disk
@@ -5596,7 +6504,9 @@ fn write_evaluate_run(run_id: &str, envelope: &JsonValue) {
     });
     let line = serde_json::to_string(&manifest_entry).unwrap_or_default();
     if let Ok(mut f) = std::fs::OpenOptions::new()
-        .create(true).append(true).open(evaluate_runs_manifest())
+        .create(true)
+        .append(true)
+        .open(evaluate_runs_manifest())
     {
         use std::io::Write;
         let _ = writeln!(f, "{}", line);
@@ -5604,13 +6514,19 @@ fn write_evaluate_run(run_id: &str, envelope: &JsonValue) {
 }
 
 fn read_evaluate_runs_manifest() -> Vec<JsonValue> {
-    let Ok(content) = std::fs::read_to_string(evaluate_runs_manifest()) else { return Vec::new(); };
-    content.lines()
+    let Ok(content) = std::fs::read_to_string(evaluate_runs_manifest()) else {
+        return Vec::new();
+    };
+    content
+        .lines()
         .filter_map(|l| serde_json::from_str(l).ok())
         .collect()
 }
 
-fn cmd_evaluate_runs(r: &Resolved, action: EvalRunAction) -> Result<(), Box<dyn std::error::Error>> {
+fn cmd_evaluate_runs(
+    r: &Resolved,
+    action: EvalRunAction,
+) -> Result<(), Box<dyn std::error::Error>> {
     match action {
         EvalRunAction::List { limit } => {
             let mut entries = read_evaluate_runs_manifest();
@@ -5624,21 +6540,36 @@ fn cmd_evaluate_runs(r: &Resolved, action: EvalRunAction) -> Result<(), Box<dyn 
                     return Ok(());
                 }
                 for e in &entries {
-                    let ts = e.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("")[..19].to_string();
+                    let ts = e
+                        .get("run_timestamp")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("")[..19]
+                        .to_string();
                     let id = e.get("run_id").and_then(|v| v.as_str()).unwrap_or("");
                     let id_short = &id[..8.min(id.len())];
                     let scope = e.get("scope_label").and_then(|v| v.as_str()).unwrap_or("?");
-                    let rubric = e.get("rubric_ref").and_then(|v| v.as_str()).unwrap_or("<inline>");
+                    let rubric = e
+                        .get("rubric_ref")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("<inline>");
                     let b = e.get("before_totals");
                     let a = e.get("after_totals");
                     let fmt_totals = |t: Option<&JsonValue>| -> String {
-                        t.map(|t| format!("y{}/n{}/m{}",
-                            t.get("yes").and_then(|v| v.as_i64()).unwrap_or(0),
-                            t.get("no").and_then(|v| v.as_i64()).unwrap_or(0),
-                            t.get("mixed").and_then(|v| v.as_i64()).unwrap_or(0))).unwrap_or_default()
+                        t.map(|t| {
+                            format!(
+                                "y{}/n{}/m{}",
+                                t.get("yes").and_then(|v| v.as_i64()).unwrap_or(0),
+                                t.get("no").and_then(|v| v.as_i64()).unwrap_or(0),
+                                t.get("mixed").and_then(|v| v.as_i64()).unwrap_or(0)
+                            )
+                        })
+                        .unwrap_or_default()
                     };
-                    println!("{id_short}  [{ts}]  {scope}  rubric={rubric}  B:{}  A:{}",
-                        fmt_totals(b), fmt_totals(a));
+                    println!(
+                        "{id_short}  [{ts}]  {scope}  rubric={rubric}  B:{}  A:{}",
+                        fmt_totals(b),
+                        fmt_totals(a)
+                    );
                 }
             }
         }
@@ -5664,12 +6595,16 @@ fn cmd_evaluate_runs(r: &Resolved, action: EvalRunAction) -> Result<(), Box<dyn 
                     }
                 }
             }
-            return Err(Box::new(CliError::NotFound(format!("evaluate run starting with '{}'", id))));
+            return Err(Box::new(CliError::NotFound(format!(
+                "evaluate run starting with '{}'",
+                id
+            ))));
         }
         EvalRunAction::Search { query } => {
             let q = query.to_lowercase();
             let entries = read_evaluate_runs_manifest();
-            let hits: Vec<JsonValue> = entries.into_iter()
+            let hits: Vec<JsonValue> = entries
+                .into_iter()
                 .filter(|e| e.to_string().to_lowercase().contains(&q))
                 .collect();
             emit(r.json, JsonValue::Array(hits));
@@ -5680,8 +6615,12 @@ fn cmd_evaluate_runs(r: &Resolved, action: EvalRunAction) -> Result<(), Box<dyn 
 
 // ─── Synthesize run log (~/.worldcli/synthesize-runs/) ─────────────────
 
-fn synthesize_runs_dir() -> PathBuf { worldcli_home().join("synthesize-runs") }
-fn synthesize_runs_manifest() -> PathBuf { synthesize_runs_dir().join("manifest.jsonl") }
+fn synthesize_runs_dir() -> PathBuf {
+    worldcli_home().join("synthesize-runs")
+}
+fn synthesize_runs_manifest() -> PathBuf {
+    synthesize_runs_dir().join("manifest.jsonl")
+}
 
 /// Persist the full synthesize envelope + append a compact manifest
 /// line for fast list/search. Mirrors write_evaluate_run so the two
@@ -5713,7 +6652,9 @@ fn write_synthesize_run(run_id: &str, envelope: &JsonValue) {
     });
     let line = serde_json::to_string(&manifest_entry).unwrap_or_default();
     if let Ok(mut f) = std::fs::OpenOptions::new()
-        .create(true).append(true).open(synthesize_runs_manifest())
+        .create(true)
+        .append(true)
+        .open(synthesize_runs_manifest())
     {
         use std::io::Write;
         let _ = writeln!(f, "{}", line);
@@ -5721,13 +6662,19 @@ fn write_synthesize_run(run_id: &str, envelope: &JsonValue) {
 }
 
 fn read_synthesize_runs_manifest() -> Vec<JsonValue> {
-    let Ok(content) = std::fs::read_to_string(synthesize_runs_manifest()) else { return Vec::new(); };
-    content.lines()
+    let Ok(content) = std::fs::read_to_string(synthesize_runs_manifest()) else {
+        return Vec::new();
+    };
+    content
+        .lines()
         .filter_map(|l| serde_json::from_str(l).ok())
         .collect()
 }
 
-fn cmd_synthesize_runs(r: &Resolved, action: SynthRunAction) -> Result<(), Box<dyn std::error::Error>> {
+fn cmd_synthesize_runs(
+    r: &Resolved,
+    action: SynthRunAction,
+) -> Result<(), Box<dyn std::error::Error>> {
     match action {
         SynthRunAction::List { limit } => {
             let mut entries = read_synthesize_runs_manifest();
@@ -5737,20 +6684,36 @@ fn cmd_synthesize_runs(r: &Resolved, action: SynthRunAction) -> Result<(), Box<d
                 emit(true, JsonValue::Array(entries));
             } else {
                 if entries.is_empty() {
-                    println!("No synthesize runs recorded yet. Run `worldcli synthesize ...` first.");
+                    println!(
+                        "No synthesize runs recorded yet. Run `worldcli synthesize ...` first."
+                    );
                     return Ok(());
                 }
                 for e in &entries {
-                    let ts = e.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("")[..19.min(e.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("").len())].to_string();
+                    let ts = e
+                        .get("run_timestamp")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("")[..19.min(
+                        e.get("run_timestamp")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or("")
+                            .len(),
+                    )]
+                        .to_string();
                     let id = e.get("run_id").and_then(|v| v.as_str()).unwrap_or("");
                     let id_short = &id[..8.min(id.len())];
                     let scope = e.get("scope_label").and_then(|v| v.as_str()).unwrap_or("?");
-                    let q_preview = e.get("question_preview").and_then(|v| v.as_str()).unwrap_or("");
+                    let q_preview = e
+                        .get("question_preview")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("");
                     let b = e.get("before_count").and_then(|v| v.as_i64()).unwrap_or(0);
                     let a = e.get("after_count").and_then(|v| v.as_i64()).unwrap_or(0);
                     let cost = e.get("cost_usd").and_then(|v| v.as_f64()).unwrap_or(0.0);
-                    println!("{id_short}  [{ts}]  {scope}  B:{b} A:{a}  ${:.4}  — {}",
-                        cost, q_preview);
+                    println!(
+                        "{id_short}  [{ts}]  {scope}  B:{b} A:{a}  ${:.4}  — {}",
+                        cost, q_preview
+                    );
                 }
             }
         }
@@ -5774,12 +6737,16 @@ fn cmd_synthesize_runs(r: &Resolved, action: SynthRunAction) -> Result<(), Box<d
                     }
                 }
             }
-            return Err(Box::new(CliError::NotFound(format!("synthesize run starting with '{}'", id))));
+            return Err(Box::new(CliError::NotFound(format!(
+                "synthesize run starting with '{}'",
+                id
+            ))));
         }
         SynthRunAction::Search { query } => {
             let q = query.to_lowercase();
             let entries = read_synthesize_runs_manifest();
-            let hits: Vec<JsonValue> = entries.into_iter()
+            let hits: Vec<JsonValue> = entries
+                .into_iter()
                 .filter(|e| e.to_string().to_lowercase().contains(&q))
                 .collect();
             emit(r.json, JsonValue::Array(hits));
@@ -5800,12 +6767,17 @@ fn cmd_rubric(r: &Resolved, action: RubricAction) -> Result<(), Box<dyn std::err
                 emit(r.json, JsonValue::Array(Vec::new()));
                 return Ok(());
             }
-            let out: Vec<JsonValue> = rubrics.iter().map(|rb| json!({
-                "name": rb.name,
-                "version": rb.version,
-                "description": rb.description,
-                "path": rb.path.display().to_string(),
-            })).collect();
+            let out: Vec<JsonValue> = rubrics
+                .iter()
+                .map(|rb| {
+                    json!({
+                        "name": rb.name,
+                        "version": rb.version,
+                        "description": rb.description,
+                        "path": rb.path.display().to_string(),
+                    })
+                })
+                .collect();
             if r.json {
                 emit(true, JsonValue::Array(out));
             } else {
@@ -5815,7 +6787,9 @@ fn cmd_rubric(r: &Resolved, action: RubricAction) -> Result<(), Box<dyn std::err
                         let desc = if rb.description.chars().count() > 100 {
                             let s: String = rb.description.chars().take(100).collect();
                             format!("{}…", s)
-                        } else { rb.description.clone() };
+                        } else {
+                            rb.description.clone()
+                        };
                         println!("  {}", desc);
                     }
                 }
@@ -5824,14 +6798,17 @@ fn cmd_rubric(r: &Resolved, action: RubricAction) -> Result<(), Box<dyn std::err
         RubricAction::Show { name } => {
             let rb = load_rubric(&name).map_err(Box::<dyn std::error::Error>::from)?;
             if r.json {
-                emit(true, json!({
-                    "name": rb.name,
-                    "version": rb.version,
-                    "description": rb.description,
-                    "prompt": rb.prompt,
-                    "raw": rb.raw,
-                    "path": rb.path.display().to_string(),
-                }));
+                emit(
+                    true,
+                    json!({
+                        "name": rb.name,
+                        "version": rb.version,
+                        "description": rb.description,
+                        "prompt": rb.prompt,
+                        "raw": rb.raw,
+                        "path": rb.path.display().to_string(),
+                    }),
+                );
             } else {
                 println!("{}", rb.raw);
             }
@@ -5839,15 +6816,21 @@ fn cmd_rubric(r: &Resolved, action: RubricAction) -> Result<(), Box<dyn std::err
         RubricAction::Search { query } => {
             let q = query.to_lowercase();
             let rubrics = list_rubrics().map_err(Box::<dyn std::error::Error>::from)?;
-            let hits: Vec<&RubricFile> = rubrics.iter()
+            let hits: Vec<&RubricFile> = rubrics
+                .iter()
                 .filter(|rb| rb.raw.to_lowercase().contains(&q))
                 .collect();
             if r.json {
-                let out: Vec<JsonValue> = hits.iter().map(|rb| json!({
-                    "name": rb.name, "version": rb.version,
-                    "description": rb.description,
-                    "path": rb.path.display().to_string(),
-                })).collect();
+                let out: Vec<JsonValue> = hits
+                    .iter()
+                    .map(|rb| {
+                        json!({
+                            "name": rb.name, "version": rb.version,
+                            "description": rb.description,
+                            "path": rb.path.display().to_string(),
+                        })
+                    })
+                    .collect();
                 emit(true, JsonValue::Array(out));
             } else {
                 for rb in hits {
@@ -5864,10 +6847,10 @@ fn cmd_rubric(r: &Resolved, action: RubricAction) -> Result<(), Box<dyn std::err
 /// One LLM-judged verdict on one character reply.
 #[derive(Debug, Serialize, Deserialize, Clone)]
 struct EvalVerdict {
-    judgment: String,         // "yes" | "no" | "mixed"
-    confidence: String,       // "high" | "medium" | "low"
-    quote: String,            // short quote from the reply that triggered the call
-    reasoning: String,        // 1-2 sentences
+    judgment: String,   // "yes" | "no" | "mixed"
+    confidence: String, // "high" | "medium" | "low"
+    quote: String,      // short quote from the reply that triggered the call
+    reasoning: String,  // 1-2 sentences
 }
 
 fn evaluator_system_prompt() -> &'static str {
@@ -5893,13 +6876,14 @@ No preface, no markdown, no extra keys. Just the JSON."#
 
 fn evaluator_user_prompt(
     rubric: &str,
-    context_turns: &[(String, String)],  // (speaker_label, content) in chronological order
+    context_turns: &[(String, String)], // (speaker_label, content) in chronological order
     reply: &str,
 ) -> String {
     let scene = if context_turns.is_empty() {
         "(no preceding context available)".to_string()
     } else {
-        context_turns.iter()
+        context_turns
+            .iter()
             .map(|(who, content)| format!("{}: {}", who, content.trim()))
             .collect::<Vec<_>>()
             .join("\n\n")
@@ -5923,16 +6907,27 @@ async fn evaluate_one(
     let req = openai::ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: evaluator_system_prompt().to_string() },
-            openai::ChatMessage { role: "user".to_string(), content: evaluator_user_prompt(rubric, context_turns, reply) },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: evaluator_system_prompt().to_string(),
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: evaluator_user_prompt(rubric, context_turns, reply),
+            },
         ],
         temperature: Some(0.0),
         max_completion_tokens: Some(220),
-        response_format: Some(openai::ResponseFormat { format_type: "json_object".to_string() }),
+        response_format: Some(openai::ResponseFormat {
+            format_type: "json_object".to_string(),
+        }),
     };
-    let resp = openai::chat_completion_with_base(base_url, api_key, &req).await
+    let resp = openai::chat_completion_with_base(base_url, api_key, &req)
+        .await
         .map_err(|e| format!("evaluate call failed: {}", e))?;
-    let raw = resp.choices.first()
+    let raw = resp
+        .choices
+        .first()
         .map(|c| c.message.content.clone())
         .ok_or_else(|| "evaluator returned no choices".to_string())?;
     let mut verdict: EvalVerdict = serde_json::from_str(&raw)
@@ -5942,7 +6937,9 @@ async fn evaluate_one(
     verdict.judgment = verdict.judgment.to_lowercase();
     verdict.confidence = verdict.confidence.to_lowercase();
     let usage = resp.usage.unwrap_or(openai::Usage {
-        prompt_tokens: 0, completion_tokens: 0, total_tokens: 0,
+        prompt_tokens: 0,
+        completion_tokens: 0,
+        total_tokens: 0,
     });
     Ok((verdict, usage))
 }
@@ -5967,8 +6964,13 @@ async fn evaluate_one(
 /// "what has this character been saying lately," you want all of
 /// their surfaces combined.
 enum EvalScope {
-    Character { character_id: String, solo_thread_id: String },
-    Group     { thread_id: String },
+    Character {
+        character_id: String,
+        solo_thread_id: String,
+    },
+    Group {
+        thread_id: String,
+    },
 }
 
 /// `EvalTriple` = (target message, preceding turns context, is_group_flag).
@@ -5979,14 +6981,14 @@ enum EvalScope {
 type EvalTriple = (
     app_lib::db::queries::Message,
     Vec<app_lib::db::queries::Message>, // preceding turns, chronological
-    bool, // is_group
+    bool,                               // is_group
 );
 
 fn pull_eval_window(
     conn: &rusqlite::Connection,
     scope: &EvalScope,
     cutoff_ts: &str,
-    direction: &str,  // "before" or "after"
+    direction: &str, // "before" or "after"
     role: &str,
     limit: i64,
     context_turns: i64,
@@ -5998,15 +7000,23 @@ fn pull_eval_window(
     // ("T10:16:41-05:00"), which breaks character-wise comparison
     // against stored UTC strings ("T15:16:41+00:00").
     let cutoff = chrono::DateTime::parse_from_rfc3339(cutoff_ts)
-        .map(|dt| dt.with_timezone(&chrono::Utc)
-            .to_rfc3339_opts(chrono::SecondsFormat::Micros, true))
+        .map(|dt| {
+            dt.with_timezone(&chrono::Utc)
+                .to_rfc3339_opts(chrono::SecondsFormat::Micros, true)
+        })
         .unwrap_or_else(|_| cutoff_ts.to_string());
 
-    let role_clause = if role == "any" { String::new() } else {
+    let role_clause = if role == "any" {
+        String::new()
+    } else {
         format!("AND role = '{}'", role.replace('\'', ""))
     };
     let noise_clause = "AND role NOT IN ('illustration','video','inventory_update','imagined_chapter','settings_update','system')";
-    let (op, order) = if direction == "before" { ("<", "DESC") } else { (">=", "ASC") };
+    let (op, order) = if direction == "before" {
+        ("<", "DESC")
+    } else {
+        (">=", "ASC")
+    };
 
     // Each target gets tagged with its source table ('solo' vs 'group')
     // so the preceding-user-turn lookup can query the right table.
@@ -6016,7 +7026,10 @@ fn pull_eval_window(
     let cols = "message_id, thread_id, role, content, tokens_estimate, sender_character_id,
                 created_at, world_day, world_time, address_to, mood_chain, is_proactive";
     let targets: Vec<(app_lib::db::queries::Message, String)> = match scope {
-        EvalScope::Character { character_id, solo_thread_id } => {
+        EvalScope::Character {
+            character_id,
+            solo_thread_id,
+        } => {
             let sql = format!(
                 "SELECT {cols}, 'solo' AS src FROM messages
                  WHERE thread_id = ?1 AND created_at {op} ?2 {role_clause} {noise_clause}
@@ -6028,21 +7041,29 @@ fn pull_eval_window(
             let mut stmt = conn.prepare(&sql)?;
             let rows = stmt.query_map(
                 rusqlite::params![solo_thread_id, cutoff, character_id, limit],
-                |r| Ok((app_lib::db::queries::Message {
-                    message_id: r.get(0)?,
-                    thread_id: r.get(1)?,
-                    role: r.get(2)?,
-                    content: r.get(3)?,
-                    tokens_estimate: r.get(4)?,
-                    sender_character_id: r.get(5)?,
-                    created_at: r.get(6)?,
-                    world_day: r.get(7)?,
-                    world_time: r.get(8)?,
-                    address_to: r.get(9)?,
-                    mood_chain: r.get(10)?,
-                    is_proactive: r.get::<_, Option<i64>>(11)?.map(|v| v != 0).unwrap_or(false),
-                    formula_signature: None,
-                }, r.get::<_, String>(12)?)),
+                |r| {
+                    Ok((
+                        app_lib::db::queries::Message {
+                            message_id: r.get(0)?,
+                            thread_id: r.get(1)?,
+                            role: r.get(2)?,
+                            content: r.get(3)?,
+                            tokens_estimate: r.get(4)?,
+                            sender_character_id: r.get(5)?,
+                            created_at: r.get(6)?,
+                            world_day: r.get(7)?,
+                            world_time: r.get(8)?,
+                            address_to: r.get(9)?,
+                            mood_chain: r.get(10)?,
+                            is_proactive: r
+                                .get::<_, Option<i64>>(11)?
+                                .map(|v| v != 0)
+                                .unwrap_or(false),
+                            formula_signature: None,
+                        },
+                        r.get::<_, String>(12)?,
+                    ))
+                },
             )?;
             rows.filter_map(|r| r.ok()).collect()
         }
@@ -6053,24 +7074,29 @@ fn pull_eval_window(
                  ORDER BY created_at {order} LIMIT ?3"
             );
             let mut stmt = conn.prepare(&sql)?;
-            let rows = stmt.query_map(
-                rusqlite::params![thread_id, cutoff, limit],
-                |r| Ok((app_lib::db::queries::Message {
-                    message_id: r.get(0)?,
-                    thread_id: r.get(1)?,
-                    role: r.get(2)?,
-                    content: r.get(3)?,
-                    tokens_estimate: r.get(4)?,
-                    sender_character_id: r.get(5)?,
-                    created_at: r.get(6)?,
-                    world_day: r.get(7)?,
-                    world_time: r.get(8)?,
-                    address_to: r.get(9)?,
-                    mood_chain: r.get(10)?,
-                    is_proactive: r.get::<_, Option<i64>>(11)?.map(|v| v != 0).unwrap_or(false),
-                    formula_signature: None,
-                }, r.get::<_, String>(12)?)),
-            )?;
+            let rows = stmt.query_map(rusqlite::params![thread_id, cutoff, limit], |r| {
+                Ok((
+                    app_lib::db::queries::Message {
+                        message_id: r.get(0)?,
+                        thread_id: r.get(1)?,
+                        role: r.get(2)?,
+                        content: r.get(3)?,
+                        tokens_estimate: r.get(4)?,
+                        sender_character_id: r.get(5)?,
+                        created_at: r.get(6)?,
+                        world_day: r.get(7)?,
+                        world_time: r.get(8)?,
+                        address_to: r.get(9)?,
+                        mood_chain: r.get(10)?,
+                        is_proactive: r
+                            .get::<_, Option<i64>>(11)?
+                            .map(|v| v != 0)
+                            .unwrap_or(false),
+                        formula_signature: None,
+                    },
+                    r.get::<_, String>(12)?,
+                ))
+            })?;
             rows.filter_map(|r| r.ok()).collect()
         }
     };
@@ -6085,7 +7111,11 @@ fn pull_eval_window(
     let mut pairs: Vec<EvalTriple> = Vec::new();
     for (m, src) in targets {
         let is_group = src == "group";
-        let tbl = if is_group { "group_messages" } else { "messages" };
+        let tbl = if is_group {
+            "group_messages"
+        } else {
+            "messages"
+        };
         // Pull N preceding turns of both roles (user + assistant),
         // excluding noise roles. Chronological order so the
         // evaluator reads the scene forward.
@@ -6101,21 +7131,26 @@ fn pull_eval_window(
         let mut stmt = conn.prepare(&ctx_sql)?;
         let rows = stmt.query_map(
             rusqlite::params![m.thread_id, m.created_at, n_context],
-            |r| Ok(app_lib::db::queries::Message {
-                message_id: r.get(0)?,
-                thread_id: r.get(1)?,
-                role: r.get(2)?,
-                content: r.get(3)?,
-                tokens_estimate: r.get(4)?,
-                sender_character_id: r.get(5)?,
-                created_at: r.get(6)?,
-                world_day: r.get(7)?,
-                world_time: r.get(8)?,
-                address_to: r.get(9)?,
-                mood_chain: r.get(10)?,
-                is_proactive: r.get::<_, Option<i64>>(11)?.map(|v| v != 0).unwrap_or(false),
-                formula_signature: None,
-            }),
+            |r| {
+                Ok(app_lib::db::queries::Message {
+                    message_id: r.get(0)?,
+                    thread_id: r.get(1)?,
+                    role: r.get(2)?,
+                    content: r.get(3)?,
+                    tokens_estimate: r.get(4)?,
+                    sender_character_id: r.get(5)?,
+                    created_at: r.get(6)?,
+                    world_day: r.get(7)?,
+                    world_time: r.get(8)?,
+                    address_to: r.get(9)?,
+                    mood_chain: r.get(10)?,
+                    is_proactive: r
+                        .get::<_, Option<i64>>(11)?
+                        .map(|v| v != 0)
+                        .unwrap_or(false),
+                    formula_signature: None,
+                })
+            },
         )?;
         let mut context: Vec<app_lib::db::queries::Message> = rows.filter_map(|r| r.ok()).collect();
         context.reverse(); // chronological
@@ -6143,28 +7178,42 @@ fn active_settings_at(
     at_ts: &str,
     is_group: bool,
 ) -> std::collections::HashMap<String, String> {
-    let tbl = if is_group { "group_messages" } else { "messages" };
+    let tbl = if is_group {
+        "group_messages"
+    } else {
+        "messages"
+    };
     let sql = format!(
         "SELECT content FROM {tbl}
          WHERE thread_id = ?1 AND role = 'settings_update' AND created_at < ?2
          ORDER BY created_at DESC"
     );
     let mut out: std::collections::HashMap<String, String> = std::collections::HashMap::new();
-    let Ok(mut stmt) = conn.prepare(&sql) else { return out; };
-    let Ok(rows) = stmt.query_map(
-        rusqlite::params![thread_id, at_ts],
-        |r| r.get::<_, String>(0),
-    ) else { return out; };
+    let Ok(mut stmt) = conn.prepare(&sql) else {
+        return out;
+    };
+    let Ok(rows) = stmt.query_map(rusqlite::params![thread_id, at_ts], |r| {
+        r.get::<_, String>(0)
+    }) else {
+        return out;
+    };
     for row in rows.flatten() {
-        let Ok(body) = serde_json::from_str::<JsonValue>(&row) else { continue; };
-        let Some(changes) = body.get("changes").and_then(|v| v.as_array()) else { continue; };
+        let Ok(body) = serde_json::from_str::<JsonValue>(&row) else {
+            continue;
+        };
+        let Some(changes) = body.get("changes").and_then(|v| v.as_array()) else {
+            continue;
+        };
         for ch in changes {
             let (Some(k), Some(to_val)) = (
                 ch.get("key").and_then(|v| v.as_str()),
                 ch.get("to").and_then(|v| v.as_str()),
-            ) else { continue; };
+            ) else {
+                continue;
+            };
             // First occurrence in DESC order wins — that's the most recent change.
-            out.entry(k.to_string()).or_insert_with(|| to_val.to_string());
+            out.entry(k.to_string())
+                .or_insert_with(|| to_val.to_string());
         }
     }
     out
@@ -6191,10 +7240,14 @@ fn find_run_file(id: &str) -> Option<(PathBuf, &'static str)> {
         (scenario_runs_dir(), "scenario"),
     ];
     for (dir, kind) in candidates {
-        if !dir.exists() { continue; }
+        if !dir.exists() {
+            continue;
+        }
         // Try exact first.
         let exact = dir.join(format!("{}.json", id));
-        if exact.exists() { return Some((exact, kind)); }
+        if exact.exists() {
+            return Some((exact, kind));
+        }
         // Prefix match.
         if let Ok(entries) = std::fs::read_dir(&dir) {
             for entry in entries.flatten() {
@@ -6211,49 +7264,111 @@ fn find_run_file(id: &str) -> Option<(PathBuf, &'static str)> {
 /// Extract one or more GradeItems from a run file based on its kind.
 /// Ask = 1 item; replay = N items (one per ref); scenario = N items
 /// (one per variant).
-fn extract_grade_items(path: &std::path::Path, kind: &'static str) -> Result<Vec<GradeItem>, String> {
+fn extract_grade_items(
+    path: &std::path::Path,
+    kind: &'static str,
+) -> Result<Vec<GradeItem>, String> {
     let raw = std::fs::read_to_string(path).map_err(|e| e.to_string())?;
     let v: JsonValue = serde_json::from_str(&raw).map_err(|e| e.to_string())?;
-    let run_id = v.get("run_id").or_else(|| v.get("id"))
+    let run_id = v
+        .get("run_id")
+        .or_else(|| v.get("id"))
         .and_then(|x| x.as_str())
-        .unwrap_or("?").to_string();
+        .unwrap_or("?")
+        .to_string();
     let mut out = Vec::new();
     match kind {
         "ask" => {
-            let prompt = v.get("prompt").and_then(|x| x.as_str()).unwrap_or("").to_string();
-            let reply = v.get("reply").and_then(|x| x.as_str()).unwrap_or("").to_string();
-            out.push(GradeItem { run_id, run_kind: kind, sub_index: 0,
-                sub_label: String::new(), prompt, reply });
+            let prompt = v
+                .get("prompt")
+                .and_then(|x| x.as_str())
+                .unwrap_or("")
+                .to_string();
+            let reply = v
+                .get("reply")
+                .and_then(|x| x.as_str())
+                .unwrap_or("")
+                .to_string();
+            out.push(GradeItem {
+                run_id,
+                run_kind: kind,
+                sub_index: 0,
+                sub_label: String::new(),
+                prompt,
+                reply,
+            });
         }
         "replay" => {
-            let prompt = v.get("prompt").and_then(|x| x.as_str()).unwrap_or("").to_string();
+            let prompt = v
+                .get("prompt")
+                .and_then(|x| x.as_str())
+                .unwrap_or("")
+                .to_string();
             if let Some(results) = v.get("results").and_then(|x| x.as_array()) {
                 for (i, res) in results.iter().enumerate() {
-                    let ref_label = res.get("ref").and_then(|x| x.as_str()).unwrap_or("").to_string();
+                    let ref_label = res
+                        .get("ref")
+                        .and_then(|x| x.as_str())
+                        .unwrap_or("")
+                        .to_string();
                     // When --n > 1, each ref produced multiple samples.
                     // Disambiguate the sub_label so grade output shows
                     // "0202651#1, 0202651#2, ..." instead of repeating.
-                    let sample_count = res.get("sample_count").and_then(|x| x.as_u64()).unwrap_or(1);
+                    let sample_count = res
+                        .get("sample_count")
+                        .and_then(|x| x.as_u64())
+                        .unwrap_or(1);
                     let sub_label = if sample_count > 1 {
-                        let sample_idx = res.get("sample_index").and_then(|x| x.as_u64()).unwrap_or(0);
+                        let sample_idx = res
+                            .get("sample_index")
+                            .and_then(|x| x.as_u64())
+                            .unwrap_or(0);
                         format!("{}#{}", ref_label, sample_idx + 1)
                     } else {
                         ref_label
                     };
-                    let reply = res.get("reply").and_then(|x| x.as_str()).unwrap_or("").to_string();
-                    out.push(GradeItem { run_id: run_id.clone(), run_kind: kind,
-                        sub_index: i, sub_label, prompt: prompt.clone(), reply });
+                    let reply = res
+                        .get("reply")
+                        .and_then(|x| x.as_str())
+                        .unwrap_or("")
+                        .to_string();
+                    out.push(GradeItem {
+                        run_id: run_id.clone(),
+                        run_kind: kind,
+                        sub_index: i,
+                        sub_label,
+                        prompt: prompt.clone(),
+                        reply,
+                    });
                 }
             }
         }
         "scenario" => {
             if let Some(variants) = v.get("variants").and_then(|x| x.as_array()) {
                 for (i, var) in variants.iter().enumerate() {
-                    let sub_label = var.get("label").and_then(|x| x.as_str()).unwrap_or("").to_string();
-                    let prompt = var.get("prompt").and_then(|x| x.as_str()).unwrap_or("").to_string();
-                    let reply = var.get("reply").and_then(|x| x.as_str()).unwrap_or("").to_string();
-                    out.push(GradeItem { run_id: run_id.clone(), run_kind: kind,
-                        sub_index: i, sub_label, prompt, reply });
+                    let sub_label = var
+                        .get("label")
+                        .and_then(|x| x.as_str())
+                        .unwrap_or("")
+                        .to_string();
+                    let prompt = var
+                        .get("prompt")
+                        .and_then(|x| x.as_str())
+                        .unwrap_or("")
+                        .to_string();
+                    let reply = var
+                        .get("reply")
+                        .and_then(|x| x.as_str())
+                        .unwrap_or("")
+                        .to_string();
+                    out.push(GradeItem {
+                        run_id: run_id.clone(),
+                        run_kind: kind,
+                        sub_index: i,
+                        sub_label,
+                        prompt,
+                        reply,
+                    });
                 }
             }
         }
@@ -6274,15 +7389,23 @@ async fn cmd_grade_runs(
 ) -> Result<(), Box<dyn std::error::Error>> {
     if run_ids.is_empty() {
         return Err(Box::<dyn std::error::Error>::from(
-            "at least one run_id required".to_string()));
+            "at least one run_id required".to_string(),
+        ));
     }
 
     // Resolve rubric (same precedence as `evaluate`).
-    let sources = [rubric.is_some(), rubric_ref.is_some(), rubric_file.is_some()]
-        .iter().filter(|b| **b).count();
+    let sources = [
+        rubric.is_some(),
+        rubric_ref.is_some(),
+        rubric_file.is_some(),
+    ]
+    .iter()
+    .filter(|b| **b)
+    .count();
     if sources != 1 {
         return Err(Box::<dyn std::error::Error>::from(
-            "pass exactly one of --rubric, --rubric-ref, or --rubric-file".to_string()));
+            "pass exactly one of --rubric, --rubric-ref, or --rubric-file".to_string(),
+        ));
     }
     let (rubric_text, rubric_ref_name, rubric_ref_version) = if let Some(name) = rubric_ref {
         let rb = load_rubric(name).map_err(Box::<dyn std::error::Error>::from)?;
@@ -6296,19 +7419,27 @@ async fn cmd_grade_runs(
     // Resolve all run_ids to GradeItems.
     let mut items: Vec<GradeItem> = Vec::new();
     for rid in run_ids {
-        let (path, kind) = find_run_file(rid).ok_or_else(|| Box::<dyn std::error::Error>::from(
-            format!("run '{}' not found in runs / replay-runs / scenario-runs", rid)))?;
-        let extracted = extract_grade_items(&path, kind)
-            .map_err(Box::<dyn std::error::Error>::from)?;
+        let (path, kind) = find_run_file(rid).ok_or_else(|| {
+            Box::<dyn std::error::Error>::from(format!(
+                "run '{}' not found in runs / replay-runs / scenario-runs",
+                rid
+            ))
+        })?;
+        let extracted =
+            extract_grade_items(&path, kind).map_err(Box::<dyn std::error::Error>::from)?;
         if extracted.is_empty() {
-            eprintln!("[worldcli] warning: run '{}' yielded zero gradeable items", rid);
+            eprintln!(
+                "[worldcli] warning: run '{}' yielded zero gradeable items",
+                rid
+            );
         }
         items.extend(extracted);
     }
 
     if items.is_empty() {
         return Err(Box::<dyn std::error::Error>::from(
-            "no gradeable items found across the given runs".to_string()));
+            "no gradeable items found across the given runs".to_string(),
+        ));
     }
 
     // Model + cost projection.
@@ -6316,7 +7447,9 @@ async fn cmd_grade_runs(
         let conn = r.db.conn.lock().unwrap();
         orchestrator::load_model_config(&conn)
     };
-    let model = model_override.unwrap_or(&model_config.memory_model).to_string();
+    let model = model_override
+        .unwrap_or(&model_config.memory_model)
+        .to_string();
 
     let rubric_tokens = estimate_tokens(&rubric_text);
     let per_call_in = rubric_tokens + 400 /*reply*/ + 200 /*system*/ + 150 /*slack*/;
@@ -6335,9 +7468,22 @@ async fn cmd_grade_runs(
     }
 
     if !r.json {
-        eprintln!("[worldcli] grading {} items via {} — projected≈${:.4}",
-            items.len(), model, total_projected);
-        eprintln!("[worldcli] rubric: {}", rubric_text.lines().next().unwrap_or("").chars().take(100).collect::<String>());
+        eprintln!(
+            "[worldcli] grading {} items via {} — projected≈${:.4}",
+            items.len(),
+            model,
+            total_projected
+        );
+        eprintln!(
+            "[worldcli] rubric: {}",
+            rubric_text
+                .lines()
+                .next()
+                .unwrap_or("")
+                .chars()
+                .take(100)
+                .collect::<String>()
+        );
     }
 
     // Grade each.
@@ -6379,7 +7525,12 @@ async fn cmd_grade_runs(
     }
     eprintln!();
 
-    let actual_usd = actual_cost(&model, total_in_tokens, total_out_tokens, &r.cfg.model_pricing);
+    let actual_usd = actual_cost(
+        &model,
+        total_in_tokens,
+        total_out_tokens,
+        &r.cfg.model_pricing,
+    );
     append_cost_log(&CostEntry {
         timestamp: chrono::Utc::now().to_rfc3339(),
         model: model.clone(),
@@ -6389,7 +7540,10 @@ async fn cmd_grade_runs(
     });
 
     // Aggregate.
-    let mut yes = 0; let mut no = 0; let mut mixed = 0; let mut err = 0;
+    let mut yes = 0;
+    let mut no = 0;
+    let mut mixed = 0;
+    let mut err = 0;
     for v in &verdicts {
         match v.get("judgment").and_then(|x| x.as_str()) {
             Some("yes") => yes += 1,
@@ -6427,28 +7581,45 @@ async fn cmd_grade_runs(
         println!("rubric:    {}", rubric_text.lines().next().unwrap_or(""));
         println!("model:     {}", model);
         println!();
-        println!("AGGREGATE: yes={} no={} mixed={} errors={}", yes, no, mixed, err);
-        println!("effective fire-rate: {:.3} (yes=1, mixed=0.5, no=0)",
-            ((yes as f64) + 0.5 * (mixed as f64)) / (items.len().max(1) as f64));
+        println!(
+            "AGGREGATE: yes={} no={} mixed={} errors={}",
+            yes, no, mixed, err
+        );
+        println!(
+            "effective fire-rate: {:.3} (yes=1, mixed=0.5, no=0)",
+            ((yes as f64) + 0.5 * (mixed as f64)) / (items.len().max(1) as f64)
+        );
         println!();
         println!("Per-item verdicts:");
         for v in &verdicts {
             let rid = v.get("run_id").and_then(|x| x.as_str()).unwrap_or("?");
             let rid_short = &rid[..8.min(rid.len())];
             let label = v.get("sub_label").and_then(|x| x.as_str()).unwrap_or("");
-            let sub = if label.is_empty() { String::new() } else { format!(" [{}]", label) };
+            let sub = if label.is_empty() {
+                String::new()
+            } else {
+                format!(" [{}]", label)
+            };
             if let Some(err) = v.get("error").and_then(|x| x.as_str()) {
                 println!("  {rid_short}{sub} ERROR: {err}");
                 continue;
             }
             let j = v.get("judgment").and_then(|x| x.as_str()).unwrap_or("?");
             let c = v.get("confidence").and_then(|x| x.as_str()).unwrap_or("?");
-            let reasoning = v.get("reasoning").and_then(|x| x.as_str()).unwrap_or("").chars().take(140).collect::<String>();
+            let reasoning = v
+                .get("reasoning")
+                .and_then(|x| x.as_str())
+                .unwrap_or("")
+                .chars()
+                .take(140)
+                .collect::<String>();
             println!("  {rid_short}{sub}  {} ({}) — {}", j, c, reasoning);
         }
         println!();
-        eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok)",
-            actual_usd, total_in_tokens, total_out_tokens);
+        eprintln!(
+            "[worldcli] actual cost ${:.4} ({} in / {} out tok)",
+            actual_usd, total_in_tokens, total_out_tokens
+        );
     }
     Ok(())
 }
@@ -6471,15 +7642,23 @@ async fn cmd_evaluate(
     repo: Option<&std::path::Path>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     // ─── Resolve rubric source — at most one of the three paths ──────
-    let sources_given = [rubric.is_some(), rubric_file.is_some(), rubric_ref.is_some()]
-        .iter().filter(|b| **b).count();
+    let sources_given = [
+        rubric.is_some(),
+        rubric_file.is_some(),
+        rubric_ref.is_some(),
+    ]
+    .iter()
+    .filter(|b| **b)
+    .count();
     if sources_given > 1 {
         return Err(Box::<dyn std::error::Error>::from(
-            "pass exactly one of --rubric, --rubric-file, or --rubric-ref".to_string()));
+            "pass exactly one of --rubric, --rubric-file, or --rubric-ref".to_string(),
+        ));
     }
     if sources_given == 0 {
         return Err(Box::<dyn std::error::Error>::from(
-            "one of --rubric, --rubric-file, or --rubric-ref is required".to_string()));
+            "one of --rubric, --rubric-file, or --rubric-ref is required".to_string(),
+        ));
     }
     let (rubric_text, rubric_ref_name, rubric_ref_version) = if let Some(name) = rubric_ref {
         let rb = load_rubric(name).map_err(Box::<dyn std::error::Error>::from)?;
@@ -6492,31 +7671,43 @@ async fn cmd_evaluate(
         (rubric.unwrap().to_string(), None, None)
     };
     if rubric_text.trim().is_empty() {
-        return Err(Box::<dyn std::error::Error>::from("rubric is empty".to_string()));
+        return Err(Box::<dyn std::error::Error>::from(
+            "rubric is empty".to_string(),
+        ));
     }
 
     // ─── Resolve scope (solo character vs. group chat) ───────────────
     if character_id.is_some() && group_chat_id.is_some() {
         return Err(Box::<dyn std::error::Error>::from(
-            "pass either --character or --group-chat, not both".to_string()));
+            "pass either --character or --group-chat, not both".to_string(),
+        ));
     }
     if character_id.is_none() && group_chat_id.is_none() {
         return Err(Box::<dyn std::error::Error>::from(
-            "one of --character or --group-chat is required".to_string()));
+            "one of --character or --group-chat is required".to_string(),
+        ));
     }
-    if let Some(cid) = character_id { let _ = r.check_character(cid)?; }
+    if let Some(cid) = character_id {
+        let _ = r.check_character(cid)?;
+    }
 
     let (before_sha, before_ts, before_subject) = git_resolve_ref(repo, git_ref)?;
     let (after_sha, after_ts, after_subject) = match end_ref {
         Some(er) => git_resolve_ref(repo, er)?,
-        None => (before_sha.clone(), before_ts.clone(), before_subject.clone()),
+        None => (
+            before_sha.clone(),
+            before_ts.clone(),
+            before_subject.clone(),
+        ),
     };
 
     // ─── Pull windows + model config + display label ─────────────────
     let (model_config, before_pairs, after_pairs, display_label) = {
         let conn = r.db.conn.lock().unwrap();
         let mut mc = orchestrator::load_model_config(&conn);
-        if let Some(m) = model_override { mc.memory_model = m.to_string(); }
+        if let Some(m) = model_override {
+            mc.memory_model = m.to_string();
+        }
 
         let (scope, display) = if let Some(cid) = character_id {
             let thread = get_thread_for_character(&conn, cid)?;
@@ -6530,27 +7721,52 @@ async fn cmd_evaluate(
             )
         } else {
             let gcid = group_chat_id.unwrap();
-            let gc = get_group_chat(&conn, gcid)
-                .map_err(|e| Box::<dyn std::error::Error>::from(
-                    format!("group_chat {}: {}", gcid, e)))?;
+            let gc = get_group_chat(&conn, gcid).map_err(|e| {
+                Box::<dyn std::error::Error>::from(format!("group_chat {}: {}", gcid, e))
+            })?;
             r.check_world(&gc.world_id)?;
             (
-                EvalScope::Group { thread_id: gc.thread_id },
+                EvalScope::Group {
+                    thread_id: gc.thread_id,
+                },
                 format!("{} (group)", gc.display_name),
             )
         };
 
-        let before_raw = pull_eval_window(&conn, &scope, &before_ts, "before", role, limit, context_turns)?;
-        let after_raw  = pull_eval_window(&conn, &scope, &after_ts,  "after",  role, limit, context_turns)?;
+        let before_raw = pull_eval_window(
+            &conn,
+            &scope,
+            &before_ts,
+            "before",
+            role,
+            limit,
+            context_turns,
+        )?;
+        let after_raw = pull_eval_window(
+            &conn,
+            &scope,
+            &after_ts,
+            "after",
+            role,
+            limit,
+            context_turns,
+        )?;
         // Enrich each target with the chat-settings state active at
         // reply-time, so the evaluator output can surface the confound
         // response_length / leader / narration_tone etc. present when
         // this particular message was generated.
-        let enrich = |triples: Vec<EvalTriple>| -> Vec<(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)> {
-            triples.into_iter().map(|(m, context, is_group)| {
-                let settings = active_settings_at(&conn, &m.thread_id, &m.created_at, is_group);
-                (m, context, settings)
-            }).collect()
+        let enrich = |triples: Vec<EvalTriple>| -> Vec<(
+            app_lib::db::queries::Message,
+            Vec<app_lib::db::queries::Message>,
+            std::collections::HashMap<String, String>,
+        )> {
+            triples
+                .into_iter()
+                .map(|(m, context, is_group)| {
+                    let settings = active_settings_at(&conn, &m.thread_id, &m.created_at, is_group);
+                    (m, context, settings)
+                })
+                .collect()
         };
         (mc, enrich(before_raw), enrich(after_raw), display)
     };
@@ -6559,7 +7775,8 @@ async fn cmd_evaluate(
     let total_msgs = before_pairs.len() + after_pairs.len();
     if total_msgs == 0 {
         return Err(Box::<dyn std::error::Error>::from(
-            "no messages in either window; widen --limit or pick a different ref".to_string()));
+            "no messages in either window; widen --limit or pick a different ref".to_string(),
+        ));
     }
 
     // ─── Cost projection ─────────────────────────────────────────────
@@ -6571,7 +7788,12 @@ async fn cmd_evaluate(
     // adding to the previous ~600 baseline → ~1050 tokens/call.
     let per_call_in = rubric_tokens + 300 /*reply*/ + 200 /*system*/ + (context_turns as i64 * 180) + 150 /*slack*/;
     let per_call_out: i64 = 220;
-    let per_call_usd = project_cost(&model_config.memory_model, per_call_in, per_call_out, &r.cfg.model_pricing);
+    let per_call_usd = project_cost(
+        &model_config.memory_model,
+        per_call_in,
+        per_call_out,
+        &r.cfg.model_pricing,
+    );
     let total_projected = per_call_usd * (total_msgs as f64);
 
     let daily_so_far = rolling_24h_total_usd();
@@ -6600,18 +7822,38 @@ async fn cmd_evaluate(
         eprintln!("[worldcli] evaluating {} msgs ({} before / {} after) via {} — total projected≈${:.4}; 24h spent=${:.4}/${:.2}",
             total_msgs, before_pairs.len(), after_pairs.len(), model_config.memory_model,
             total_projected, daily_so_far, daily_cap);
-        eprintln!("[worldcli] rubric: {}", rubric_text.lines().next().unwrap_or("").chars().take(100).collect::<String>());
+        eprintln!(
+            "[worldcli] rubric: {}",
+            rubric_text
+                .lines()
+                .next()
+                .unwrap_or("")
+                .chars()
+                .take(100)
+                .collect::<String>()
+        );
     }
 
     // ─── Run evaluator over each message ──────────────────────────────
     let base_url = model_config.chat_api_base();
-    let eval_window = |pairs: &[(app_lib::db::queries::Message, Option<app_lib::db::queries::Message>)]| -> Vec<JsonValue> {
-        pairs.iter().map(|(m, prev)| (m.clone(), prev.clone())).collect::<Vec<_>>()
-            .into_iter().map(|(m, _)| json!({
-                "message_id": m.message_id,
-                "created_at": m.created_at,
-                "content": m.content,
-            })).collect::<Vec<_>>()
+    let eval_window = |pairs: &[(
+        app_lib::db::queries::Message,
+        Option<app_lib::db::queries::Message>,
+    )]|
+     -> Vec<JsonValue> {
+        pairs
+            .iter()
+            .map(|(m, prev)| (m.clone(), prev.clone()))
+            .collect::<Vec<_>>()
+            .into_iter()
+            .map(|(m, _)| {
+                json!({
+                    "message_id": m.message_id,
+                    "created_at": m.created_at,
+                    "content": m.content,
+                })
+            })
+            .collect::<Vec<_>>()
     };
     // (The closure above is a no-op shape; we run the actual async calls below.)
     let _ = eval_window;
@@ -6619,9 +7861,19 @@ async fn cmd_evaluate(
     let mut total_in_tokens: i64 = 0;
     let mut total_out_tokens: i64 = 0;
 
-    let run_window = |name: &'static str, pairs: Vec<(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)>|
-      -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(Vec<JsonValue>, i64, i64), Box<dyn std::error::Error>>>>>
-    {
+    let run_window = |name: &'static str,
+                      pairs: Vec<(
+        app_lib::db::queries::Message,
+        Vec<app_lib::db::queries::Message>,
+        std::collections::HashMap<String, String>,
+    )>|
+     -> std::pin::Pin<
+        Box<
+            dyn std::future::Future<
+                Output = Result<(Vec<JsonValue>, i64, i64), Box<dyn std::error::Error>>,
+            >,
+        >,
+    > {
         let base_url = base_url.clone();
         let api_key = api_key.to_string();
         let model = model_config.memory_model.clone();
@@ -6636,24 +7888,38 @@ async fn cmd_evaluate(
                 // speakers; for solo threads the speaker is always the
                 // same character. We use "User" and "Character" as
                 // generic labels to keep the prompt compact.
-                let ctx_labeled: Vec<(String, String)> = context.iter().map(|cm| {
-                    let label = match cm.role.as_str() {
-                        "user" => "User".to_string(),
-                        "assistant" => "Character".to_string(),
-                        "narrative" => "[Narrative]".to_string(),
-                        other => other.to_string(),
-                    };
-                    (label, cm.content.clone())
-                }).collect();
+                let ctx_labeled: Vec<(String, String)> = context
+                    .iter()
+                    .map(|cm| {
+                        let label = match cm.role.as_str() {
+                            "user" => "User".to_string(),
+                            "assistant" => "Character".to_string(),
+                            "narrative" => "[Narrative]".to_string(),
+                            other => other.to_string(),
+                        };
+                        (label, cm.content.clone())
+                    })
+                    .collect();
                 // JSON-able settings: HashMap → sorted Vec<(k,v)> for stable output.
-                let mut settings_sorted: Vec<(String, String)> = settings.iter()
+                let mut settings_sorted: Vec<(String, String)> = settings
+                    .iter()
                     .map(|(k, v)| (k.clone(), v.clone()))
                     .collect();
                 settings_sorted.sort();
-                let settings_json: serde_json::Map<String, JsonValue> = settings_sorted.into_iter()
+                let settings_json: serde_json::Map<String, JsonValue> = settings_sorted
+                    .into_iter()
                     .map(|(k, v)| (k, JsonValue::String(v)))
                     .collect();
-                match evaluate_one(&base_url, &api_key, &model, &rubric, &ctx_labeled, &m.content).await {
+                match evaluate_one(
+                    &base_url,
+                    &api_key,
+                    &model,
+                    &rubric,
+                    &ctx_labeled,
+                    &m.content,
+                )
+                .await
+                {
                     Ok((v, u)) => {
                         in_tok += u.prompt_tokens as i64;
                         out_tok += u.completion_tokens as i64;
@@ -6687,13 +7953,18 @@ async fn cmd_evaluate(
     };
 
     let (before_results, b_in, b_out) = run_window("before", before_pairs).await?;
-    total_in_tokens += b_in; total_out_tokens += b_out;
+    total_in_tokens += b_in;
+    total_out_tokens += b_out;
     let (after_results, a_in, a_out) = run_window("after", after_pairs).await?;
-    total_in_tokens += a_in; total_out_tokens += a_out;
+    total_in_tokens += a_in;
+    total_out_tokens += a_out;
 
     // ─── Aggregate + persist cost ─────────────────────────────────────
     let count_judgments = |rows: &[JsonValue]| -> (i64, i64, i64, i64) {
-        let mut yes = 0; let mut no = 0; let mut mixed = 0; let mut err = 0;
+        let mut yes = 0;
+        let mut no = 0;
+        let mut mixed = 0;
+        let mut err = 0;
         for r in rows {
             match r.get("judgment").and_then(|v| v.as_str()) {
                 Some("yes") => yes += 1,
@@ -6707,7 +7978,12 @@ async fn cmd_evaluate(
     let (b_yes, b_no, b_mixed, b_err) = count_judgments(&before_results);
     let (a_yes, a_no, a_mixed, a_err) = count_judgments(&after_results);
 
-    let actual_usd = actual_cost(&model_config.memory_model, total_in_tokens, total_out_tokens, &r.cfg.model_pricing);
+    let actual_usd = actual_cost(
+        &model_config.memory_model,
+        total_in_tokens,
+        total_out_tokens,
+        &r.cfg.model_pricing,
+    );
     append_cost_log(&CostEntry {
         timestamp: chrono::Utc::now().to_rfc3339(),
         model: model_config.memory_model.clone(),
@@ -6722,7 +7998,11 @@ async fn cmd_evaluate(
         let date = &chrono::Utc::now().to_rfc3339()[..10]; // YYYY-MM-DD
         let scope_label = character_id
             .map(|c| format!("--character {}", c))
-            .unwrap_or_else(|| group_chat_id.map(|g| format!("--group-chat {}", g)).unwrap_or_default());
+            .unwrap_or_else(|| {
+                group_chat_id
+                    .map(|g| format!("--group-chat {}", g))
+                    .unwrap_or_default()
+            });
         let sha_short = &before_sha[..8.min(before_sha.len())];
         let line = format!(
             "- [{date}] commit {sha_short}, {scope_label} (v{version}) — BEFORE: yes={b_yes} no={b_no} mixed={b_mixed} err={b_err} | AFTER: yes={a_yes} no={a_no} mixed={a_mixed} err={a_err}",
@@ -6784,23 +8064,41 @@ async fn cmd_evaluate(
         emit(true, envelope);
     } else {
         println!("=== EVALUATION ===");
-        println!("ref:       {} ({})", git_ref, &before_sha[..8.min(before_sha.len())]);
+        println!(
+            "ref:       {} ({})",
+            git_ref,
+            &before_sha[..8.min(before_sha.len())]
+        );
         println!("subject:   {}", before_subject);
         let scope_id = character_id.or(group_chat_id).unwrap_or("?");
         println!("scope:     {} ({})", character_name, scope_id);
         println!("rubric:    {}", rubric_text.lines().next().unwrap_or(""));
         println!();
         println!("BEFORE window ({} msgs):", before_results.len());
-        println!("  yes: {}   no: {}   mixed: {}   errors: {}", b_yes, b_no, b_mixed, b_err);
+        println!(
+            "  yes: {}   no: {}   mixed: {}   errors: {}",
+            b_yes, b_no, b_mixed, b_err
+        );
         println!("AFTER window  ({} msgs):", after_results.len());
-        println!("  yes: {}   no: {}   mixed: {}   errors: {}", a_yes, a_no, a_mixed, a_err);
+        println!(
+            "  yes: {}   no: {}   mixed: {}   errors: {}",
+            a_yes, a_no, a_mixed, a_err
+        );
         println!();
         let delta = |bv: i64, av: i64| -> String {
             let d = av - bv;
-            if d > 0 { format!("+{d}") } else { d.to_string() }
+            if d > 0 {
+                format!("+{d}")
+            } else {
+                d.to_string()
+            }
         };
-        println!("DELTA:     yes {}   no {}   mixed {}",
-            delta(b_yes, a_yes), delta(b_no, a_no), delta(b_mixed, a_mixed));
+        println!(
+            "DELTA:     yes {}   no {}   mixed {}",
+            delta(b_yes, a_yes),
+            delta(b_no, a_no),
+            delta(b_mixed, a_mixed)
+        );
         println!();
         println!("Per-message details:");
         for r_row in before_results.iter().chain(after_results.iter()) {
@@ -6812,28 +8110,58 @@ async fn cmd_evaluate(
             }
             let j = r_row["judgment"].as_str().unwrap_or("?");
             let c = r_row["confidence"].as_str().unwrap_or("?");
-            let quote = r_row["quote"].as_str().unwrap_or("").chars().take(80).collect::<String>();
-            let reasoning = r_row["reasoning"].as_str().unwrap_or("").chars().take(140).collect::<String>();
+            let quote = r_row["quote"]
+                .as_str()
+                .unwrap_or("")
+                .chars()
+                .take(80)
+                .collect::<String>();
+            let reasoning = r_row["reasoning"]
+                .as_str()
+                .unwrap_or("")
+                .chars()
+                .take(140)
+                .collect::<String>();
             // Chat-settings confound annotation. Print the few
             // behavior-affecting keys inline if present so the
             // analyst can see "was this reply under Short mode?"
             // without leaving the verdict line.
-            let settings_summary: String = r_row.get("active_settings")
+            let settings_summary: String = r_row
+                .get("active_settings")
                 .and_then(|v| v.as_object())
                 .map(|obj| {
-                    let keys_of_interest = ["response_length", "leader", "narration_tone", "send_history"];
-                    let parts: Vec<String> = keys_of_interest.iter()
-                        .filter_map(|k| obj.get(*k).and_then(|v| v.as_str()).map(|v| format!("{}={}", k, v)))
+                    let keys_of_interest = [
+                        "response_length",
+                        "leader",
+                        "narration_tone",
+                        "send_history",
+                    ];
+                    let parts: Vec<String> = keys_of_interest
+                        .iter()
+                        .filter_map(|k| {
+                            obj.get(*k)
+                                .and_then(|v| v.as_str())
+                                .map(|v| format!("{}={}", k, v))
+                        })
                         .collect();
-                    if parts.is_empty() { String::new() } else { format!("  [settings: {}]", parts.join(", ")) }
+                    if parts.is_empty() {
+                        String::new()
+                    } else {
+                        format!("  [settings: {}]", parts.join(", "))
+                    }
                 })
                 .unwrap_or_default();
-            println!("  [{ts} {:6}] {} ({}) — \"{}\"{}", w, j, c, quote, settings_summary);
+            println!(
+                "  [{ts} {:6}] {} ({}) — \"{}\"{}",
+                w, j, c, quote, settings_summary
+            );
             println!("                      → {}", reasoning);
         }
         println!();
-        eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok)",
-            actual_usd, total_in_tokens, total_out_tokens);
+        eprintln!(
+            "[worldcli] actual cost ${:.4} ({} in / {} out tok)",
+            actual_usd, total_in_tokens, total_out_tokens
+        );
     }
     Ok(())
 }
@@ -6855,27 +8183,54 @@ Your output is prose. No JSON, no required headings. Structure so the reader can
 
 fn build_synthesize_user_prompt(
     question: &str,
-    before_pairs: &[(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)],
-    after_pairs: &[(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)],
+    before_pairs: &[(
+        app_lib::db::queries::Message,
+        Vec<app_lib::db::queries::Message>,
+        std::collections::HashMap<String, String>,
+    )],
+    after_pairs: &[(
+        app_lib::db::queries::Message,
+        Vec<app_lib::db::queries::Message>,
+        std::collections::HashMap<String, String>,
+    )],
 ) -> String {
     let mut out = String::new();
     out.push_str("QUESTION:\n");
     out.push_str(question.trim());
     out.push_str("\n\nCORPUS:\n");
 
-    let render_window = |out: &mut String, name: &str, pairs: &[(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)]| {
+    let render_window = |out: &mut String,
+                         name: &str,
+                         pairs: &[(
+        app_lib::db::queries::Message,
+        Vec<app_lib::db::queries::Message>,
+        std::collections::HashMap<String, String>,
+    )]| {
         if pairs.is_empty() {
             out.push_str(&format!("\n─── {} window: (empty) ───\n", name));
             return;
         }
-        out.push_str(&format!("\n─── {} window ({} msgs) ───\n", name, pairs.len()));
+        out.push_str(&format!(
+            "\n─── {} window ({} msgs) ───\n",
+            name,
+            pairs.len()
+        ));
         for (i, (m, context, settings)) in pairs.iter().enumerate() {
             out.push_str(&format!("\n[{} #{}]  {}", name, i + 1, m.created_at));
             if !settings.is_empty() {
                 let mut keys: Vec<&String> = settings.keys().collect();
                 keys.sort();
-                let parts: Vec<String> = keys.iter()
-                    .filter(|k| ["response_length", "leader", "narration_tone", "send_history"].contains(&k.as_str()))
+                let parts: Vec<String> = keys
+                    .iter()
+                    .filter(|k| {
+                        [
+                            "response_length",
+                            "leader",
+                            "narration_tone",
+                            "send_history",
+                        ]
+                        .contains(&k.as_str())
+                    })
                     .filter_map(|k| settings.get(k.as_str()).map(|v| format!("{}={}", k, v)))
                     .collect();
                 if !parts.is_empty() {
@@ -6927,14 +8282,18 @@ async fn cmd_synthesize(
 ) -> Result<(), Box<dyn std::error::Error>> {
     // ─── Resolve question source — one of two mutually exclusive paths ──
     let sources_given = [question.is_some(), question_file.is_some()]
-        .iter().filter(|b| **b).count();
+        .iter()
+        .filter(|b| **b)
+        .count();
     if sources_given > 1 {
         return Err(Box::<dyn std::error::Error>::from(
-            "pass exactly one of --question or --question-file".to_string()));
+            "pass exactly one of --question or --question-file".to_string(),
+        ));
     }
     if sources_given == 0 {
         return Err(Box::<dyn std::error::Error>::from(
-            "one of --question or --question-file is required".to_string()));
+            "one of --question or --question-file is required".to_string(),
+        ));
     }
     let question_text: String = if let Some(p) = question_file {
         std::fs::read_to_string(p)
@@ -6943,24 +8302,34 @@ async fn cmd_synthesize(
         question.unwrap().to_string()
     };
     if question_text.trim().is_empty() {
-        return Err(Box::<dyn std::error::Error>::from("question is empty".to_string()));
+        return Err(Box::<dyn std::error::Error>::from(
+            "question is empty".to_string(),
+        ));
     }
 
     // ─── Resolve scope (solo character vs. group chat) ───────────────
     if character_id.is_some() && group_chat_id.is_some() {
         return Err(Box::<dyn std::error::Error>::from(
-            "pass either --character or --group-chat, not both".to_string()));
+            "pass either --character or --group-chat, not both".to_string(),
+        ));
     }
     if character_id.is_none() && group_chat_id.is_none() {
         return Err(Box::<dyn std::error::Error>::from(
-            "one of --character or --group-chat is required".to_string()));
+            "one of --character or --group-chat is required".to_string(),
+        ));
     }
-    if let Some(cid) = character_id { let _ = r.check_character(cid)?; }
+    if let Some(cid) = character_id {
+        let _ = r.check_character(cid)?;
+    }
 
     let (before_sha, before_ts, before_subject) = git_resolve_ref(repo, git_ref)?;
     let (after_sha, after_ts, after_subject) = match end_ref {
         Some(er) => git_resolve_ref(repo, er)?,
-        None => (before_sha.clone(), before_ts.clone(), before_subject.clone()),
+        None => (
+            before_sha.clone(),
+            before_ts.clone(),
+            before_subject.clone(),
+        ),
     };
 
     // ─── Pull windows + model config + display label ─────────────────
@@ -6970,7 +8339,9 @@ async fn cmd_synthesize(
         // Synthesis defaults to dialogue_model (the user's more
         // capable model) — qualitative prose benefits from the extra
         // capability that memory_model typically doesn't have.
-        if let Some(m) = model_override { mc.dialogue_model = m.to_string(); }
+        if let Some(m) = model_override {
+            mc.dialogue_model = m.to_string();
+        }
 
         let (scope, display) = if let Some(cid) = character_id {
             let thread = get_thread_for_character(&conn, cid)?;
@@ -6984,23 +8355,48 @@ async fn cmd_synthesize(
             )
         } else {
             let gcid = group_chat_id.unwrap();
-            let gc = get_group_chat(&conn, gcid)
-                .map_err(|e| Box::<dyn std::error::Error>::from(
-                    format!("group_chat {}: {}", gcid, e)))?;
+            let gc = get_group_chat(&conn, gcid).map_err(|e| {
+                Box::<dyn std::error::Error>::from(format!("group_chat {}: {}", gcid, e))
+            })?;
             r.check_world(&gc.world_id)?;
             (
-                EvalScope::Group { thread_id: gc.thread_id },
+                EvalScope::Group {
+                    thread_id: gc.thread_id,
+                },
                 format!("{} (group)", gc.display_name),
             )
         };
 
-        let before_raw = pull_eval_window(&conn, &scope, &before_ts, "before", role, limit, context_turns)?;
-        let after_raw  = pull_eval_window(&conn, &scope, &after_ts,  "after",  role, limit, context_turns)?;
-        let enrich = |triples: Vec<EvalTriple>| -> Vec<(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)> {
-            triples.into_iter().map(|(m, context, is_group)| {
-                let settings = active_settings_at(&conn, &m.thread_id, &m.created_at, is_group);
-                (m, context, settings)
-            }).collect()
+        let before_raw = pull_eval_window(
+            &conn,
+            &scope,
+            &before_ts,
+            "before",
+            role,
+            limit,
+            context_turns,
+        )?;
+        let after_raw = pull_eval_window(
+            &conn,
+            &scope,
+            &after_ts,
+            "after",
+            role,
+            limit,
+            context_turns,
+        )?;
+        let enrich = |triples: Vec<EvalTriple>| -> Vec<(
+            app_lib::db::queries::Message,
+            Vec<app_lib::db::queries::Message>,
+            std::collections::HashMap<String, String>,
+        )> {
+            triples
+                .into_iter()
+                .map(|(m, context, is_group)| {
+                    let settings = active_settings_at(&conn, &m.thread_id, &m.created_at, is_group);
+                    (m, context, settings)
+                })
+                .collect()
         };
         (mc, enrich(before_raw), enrich(after_raw), display)
     };
@@ -7009,7 +8405,8 @@ async fn cmd_synthesize(
     let total_msgs = before_pairs.len() + after_pairs.len();
     if total_msgs == 0 {
         return Err(Box::<dyn std::error::Error>::from(
-            "no messages in either window; widen --limit or pick a different ref".to_string()));
+            "no messages in either window; widen --limit or pick a different ref".to_string(),
+        ));
     }
 
     // ─── Build the single-call prompt ─────────────────────────────────
@@ -7019,7 +8416,12 @@ async fn cmd_synthesize(
     // ─── Cost projection for one call ─────────────────────────────────
     let in_tokens = estimate_tokens(&user_prompt) + estimate_tokens(system_prompt);
     let out_budget: i64 = 2000; // Headroom for a substantive synthesis.
-    let projected_usd = project_cost(&model_config.dialogue_model, in_tokens, out_budget, &r.cfg.model_pricing);
+    let projected_usd = project_cost(
+        &model_config.dialogue_model,
+        in_tokens,
+        out_budget,
+        &r.cfg.model_pricing,
+    );
 
     let daily_so_far = rolling_24h_total_usd();
     let daily_after = daily_so_far + projected_usd;
@@ -7047,7 +8449,16 @@ async fn cmd_synthesize(
         eprintln!("[worldcli] synthesizing {} msgs ({} before / {} after) via {} — projected≈${:.4} ({} in tok est); 24h spent=${:.4}/${:.2}",
             total_msgs, before_pairs.len(), after_pairs.len(), model_config.dialogue_model,
             projected_usd, in_tokens, daily_so_far, daily_cap);
-        eprintln!("[worldcli] question: {}", question_text.lines().next().unwrap_or("").chars().take(120).collect::<String>());
+        eprintln!(
+            "[worldcli] question: {}",
+            question_text
+                .lines()
+                .next()
+                .unwrap_or("")
+                .chars()
+                .take(120)
+                .collect::<String>()
+        );
     }
 
     // ─── Make the single synthesis call ───────────────────────────────
@@ -7055,24 +8466,40 @@ async fn cmd_synthesize(
     let req = openai::ChatRequest {
         model: model_config.dialogue_model.clone(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: system_prompt.to_string() },
-            openai::ChatMessage { role: "user".to_string(), content: user_prompt.clone() },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: system_prompt.to_string(),
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user_prompt.clone(),
+            },
         ],
         temperature: Some(0.4),
         max_completion_tokens: Some(out_budget as u32),
         response_format: None,
     };
-    let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await
+    let resp = openai::chat_completion_with_base(&base_url, api_key, &req)
+        .await
         .map_err(|e| format!("synthesize call failed: {}", e))?;
-    let synthesis_text = resp.choices.first()
+    let synthesis_text = resp
+        .choices
+        .first()
         .map(|c| c.message.content.clone())
         .ok_or_else(|| "synthesizer returned no choices".to_string())?;
     let usage = resp.usage.unwrap_or(openai::Usage {
-        prompt_tokens: 0, completion_tokens: 0, total_tokens: 0,
+        prompt_tokens: 0,
+        completion_tokens: 0,
+        total_tokens: 0,
     });
     let actual_in = usage.prompt_tokens as i64;
     let actual_out = usage.completion_tokens as i64;
-    let actual_usd = actual_cost(&model_config.dialogue_model, actual_in, actual_out, &r.cfg.model_pricing);
+    let actual_usd = actual_cost(
+        &model_config.dialogue_model,
+        actual_in,
+        actual_out,
+        &r.cfg.model_pricing,
+    );
     append_cost_log(&CostEntry {
         timestamp: chrono::Utc::now().to_rfc3339(),
         model: model_config.dialogue_model.clone(),
@@ -7082,20 +8509,32 @@ async fn cmd_synthesize(
     });
 
     // ─── Build envelope + persist run log ─────────────────────────────
-    let summarize_window = |pairs: &[(app_lib::db::queries::Message, Vec<app_lib::db::queries::Message>, std::collections::HashMap<String, String>)]| -> Vec<JsonValue> {
-        pairs.iter().map(|(m, _ctx, settings)| {
-            let mut settings_sorted: Vec<(String, String)> = settings.iter()
-                .map(|(k, v)| (k.clone(), v.clone())).collect();
-            settings_sorted.sort();
-            let settings_json: serde_json::Map<String, JsonValue> = settings_sorted.into_iter()
-                .map(|(k, v)| (k, JsonValue::String(v))).collect();
-            json!({
-                "message_id": m.message_id,
-                "created_at": m.created_at,
-                "content_preview": m.content.chars().take(200).collect::<String>(),
-                "active_settings": settings_json,
+    let summarize_window = |pairs: &[(
+        app_lib::db::queries::Message,
+        Vec<app_lib::db::queries::Message>,
+        std::collections::HashMap<String, String>,
+    )]|
+     -> Vec<JsonValue> {
+        pairs
+            .iter()
+            .map(|(m, _ctx, settings)| {
+                let mut settings_sorted: Vec<(String, String)> = settings
+                    .iter()
+                    .map(|(k, v)| (k.clone(), v.clone()))
+                    .collect();
+                settings_sorted.sort();
+                let settings_json: serde_json::Map<String, JsonValue> = settings_sorted
+                    .into_iter()
+                    .map(|(k, v)| (k, JsonValue::String(v)))
+                    .collect();
+                json!({
+                    "message_id": m.message_id,
+                    "created_at": m.created_at,
+                    "content_preview": m.content.chars().take(200).collect::<String>(),
+                    "active_settings": settings_json,
+                })
             })
-        }).collect()
+            .collect()
     };
     let before_summary = summarize_window(&before_pairs);
     let after_summary = summarize_window(&after_pairs);
@@ -7141,11 +8580,20 @@ async fn cmd_synthesize(
         emit(true, envelope);
     } else {
         println!("=== SYNTHESIS ===");
-        println!("ref:       {} ({})", git_ref, &before_sha[..8.min(before_sha.len())]);
+        println!(
+            "ref:       {} ({})",
+            git_ref,
+            &before_sha[..8.min(before_sha.len())]
+        );
         println!("subject:   {}", before_subject);
         let scope_id = character_id.or(group_chat_id).unwrap_or("?");
         println!("scope:     {} ({})", character_name, scope_id);
-        println!("corpus:    {} msgs ({} before / {} after)", total_msgs, before_pairs.len(), after_pairs.len());
+        println!(
+            "corpus:    {} msgs ({} before / {} after)",
+            total_msgs,
+            before_pairs.len(),
+            after_pairs.len()
+        );
         println!("model:     {}", model_config.dialogue_model);
         println!("run_id:    {}", run_id);
         println!();
@@ -7155,8 +8603,10 @@ async fn cmd_synthesize(
         println!("SYNTHESIS:");
         println!("{}", synthesis_text);
         println!();
-        eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok)",
-            actual_usd, actual_in, actual_out);
+        eprintln!(
+            "[worldcli] actual cost ${:.4} ({} in / {} out tok)",
+            actual_usd, actual_in, actual_out
+        );
     }
     Ok(())
 }
@@ -7175,9 +8625,9 @@ fn git_show_file(
         cmd.args(["-C", &p.display().to_string()]);
     }
     cmd.args(["show", &format!("{}:{}", git_ref, rel_path)]);
-    let out = cmd.output().map_err(|e| {
-        CliError::Other(format!("git invocation failed: {} (is git on PATH?)", e))
-    })?;
+    let out = cmd
+        .output()
+        .map_err(|e| CliError::Other(format!("git invocation failed: {} (is git on PATH?)", e)))?;
     if !out.status.success() {
         let err = String::from_utf8_lossy(&out.stderr).trim().to_string();
         return Err(CliError::Other(format!(
@@ -7232,8 +8682,12 @@ fn parse_historical_prompts_overrides(source: &str) -> app_lib::ai::prompts::Pro
     overrides
 }
 
-fn replay_runs_dir() -> PathBuf { worldcli_home().join("replay-runs") }
-fn replay_runs_manifest() -> PathBuf { replay_runs_dir().join("manifest.jsonl") }
+fn replay_runs_dir() -> PathBuf {
+    worldcli_home().join("replay-runs")
+}
+fn replay_runs_manifest() -> PathBuf {
+    replay_runs_dir().join("manifest.jsonl")
+}
 
 fn write_replay_run(run_id: &str, envelope: &JsonValue) {
     let dir = replay_runs_dir();
@@ -7255,7 +8709,9 @@ fn write_replay_run(run_id: &str, envelope: &JsonValue) {
     });
     let line = serde_json::to_string(&manifest_entry).unwrap_or_default();
     if let Ok(mut f) = std::fs::OpenOptions::new()
-        .create(true).append(true).open(replay_runs_manifest())
+        .create(true)
+        .append(true)
+        .open(replay_runs_manifest())
     {
         use std::io::Write;
         let _ = writeln!(f, "{}", line);
@@ -7263,11 +8719,19 @@ fn write_replay_run(run_id: &str, envelope: &JsonValue) {
 }
 
 fn read_replay_runs_manifest() -> Vec<JsonValue> {
-    let Ok(content) = std::fs::read_to_string(replay_runs_manifest()) else { return Vec::new(); };
-    content.lines().filter_map(|l| serde_json::from_str(l).ok()).collect()
+    let Ok(content) = std::fs::read_to_string(replay_runs_manifest()) else {
+        return Vec::new();
+    };
+    content
+        .lines()
+        .filter_map(|l| serde_json::from_str(l).ok())
+        .collect()
 }
 
-fn cmd_replay_runs(r: &Resolved, action: ReplayRunAction) -> Result<(), Box<dyn std::error::Error>> {
+fn cmd_replay_runs(
+    r: &Resolved,
+    action: ReplayRunAction,
+) -> Result<(), Box<dyn std::error::Error>> {
     match action {
         ReplayRunAction::List { limit } => {
             let mut entries = read_replay_runs_manifest();
@@ -7281,17 +8745,31 @@ fn cmd_replay_runs(r: &Resolved, action: ReplayRunAction) -> Result<(), Box<dyn 
                     return Ok(());
                 }
                 for e in &entries {
-                    let ts = e.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("");
+                    let ts = e
+                        .get("run_timestamp")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("");
                     let ts_short = &ts[..19.min(ts.len())];
                     let id = e.get("run_id").and_then(|v| v.as_str()).unwrap_or("");
                     let id_short = &id[..8.min(id.len())];
-                    let name = e.get("character_name").and_then(|v| v.as_str()).unwrap_or("?");
-                    let refs = e.get("refs").and_then(|v| v.as_array())
-                        .map(|a| a.len()).unwrap_or(0);
-                    let prompt_preview = e.get("prompt_preview").and_then(|v| v.as_str()).unwrap_or("");
+                    let name = e
+                        .get("character_name")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("?");
+                    let refs = e
+                        .get("refs")
+                        .and_then(|v| v.as_array())
+                        .map(|a| a.len())
+                        .unwrap_or(0);
+                    let prompt_preview = e
+                        .get("prompt_preview")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("");
                     let cost = e.get("cost_usd").and_then(|v| v.as_f64()).unwrap_or(0.0);
-                    println!("{id_short}  [{ts_short}]  {name}  refs×{refs}  ${:.4}  — {}",
-                        cost, prompt_preview);
+                    println!(
+                        "{id_short}  [{ts_short}]  {name}  refs×{refs}  ${:.4}  — {}",
+                        cost, prompt_preview
+                    );
                 }
             }
         }
@@ -7315,12 +8793,16 @@ fn cmd_replay_runs(r: &Resolved, action: ReplayRunAction) -> Result<(), Box<dyn 
                     }
                 }
             }
-            return Err(Box::new(CliError::NotFound(format!("replay run starting with '{}'", id))));
+            return Err(Box::new(CliError::NotFound(format!(
+                "replay run starting with '{}'",
+                id
+            ))));
         }
         ReplayRunAction::Search { query } => {
             let q = query.to_lowercase();
             let entries = read_replay_runs_manifest();
-            let hits: Vec<JsonValue> = entries.into_iter()
+            let hits: Vec<JsonValue> = entries
+                .into_iter()
                 .filter(|e| e.to_string().to_lowercase().contains(&q))
                 .collect();
             emit(r.json, JsonValue::Array(hits));
@@ -7360,6 +8842,7 @@ fn invariant_piece_name(p: &app_lib::ai::prompts::InvariantPiece) -> &'static st
     use app_lib::ai::prompts::InvariantPiece as IP;
     match p {
         IP::TruthInTheFlesh => "truth_in_the_flesh",
+        IP::KavodPattern => "kavod_pattern",
         IP::FrontLoadEmbodiment => "front_load_embodiment",
         IP::Reverence => "reverence",
         IP::Daylight => "daylight",
@@ -7374,44 +8857,56 @@ fn invariant_piece_name(p: &app_lib::ai::prompts::InvariantPiece) -> &'static st
 
 /// Human-readable form of an InsertionAnchor for header + envelope.
 fn insertion_anchor_name(anchor: &app_lib::ai::prompts::InsertionAnchor) -> String {
-    use app_lib::ai::prompts::InsertionAnchor as IA;
     use app_lib::ai::prompts::DialoguePromptSection as DPS;
     use app_lib::ai::prompts::FixedPromptSection as FPS;
+    use app_lib::ai::prompts::InsertionAnchor as IA;
     match anchor {
         IA::CraftNote(p) => craft_note_piece_name(p).to_string(),
         IA::Invariant(p) => invariant_piece_name(p).to_string(),
-        IA::SectionStart(s) => format!("section-start:{}", match s {
-            DPS::AgencyAndBehavior => "agency-and-behavior",
-            DPS::CraftNotes => "craft-notes",
-            DPS::Invariants => "invariants",
-        }),
-        IA::SectionEnd(s) => format!("section-end:{}", match s {
-            DPS::AgencyAndBehavior => "agency-and-behavior",
-            DPS::CraftNotes => "craft-notes",
-            DPS::Invariants => "invariants",
-        }),
-        IA::FixedSectionStart(s) => format!("section-start:{}", match s {
-            FPS::Format => "format",
-            FPS::Identity => "identity",
-            FPS::World => "world",
-            FPS::User => "user",
-            FPS::Mood => "mood",
-            FPS::WhatHangsBetweenYou => "what-hangs-between-you",
-            FPS::Agency => "agency",
-            FPS::Turn => "turn",
-            FPS::Style => "style",
-        }),
-        IA::FixedSectionEnd(s) => format!("section-end:{}", match s {
-            FPS::Format => "format",
-            FPS::Identity => "identity",
-            FPS::World => "world",
-            FPS::User => "user",
-            FPS::Mood => "mood",
-            FPS::WhatHangsBetweenYou => "what-hangs-between-you",
-            FPS::Agency => "agency",
-            FPS::Turn => "turn",
-            FPS::Style => "style",
-        }),
+        IA::SectionStart(s) => format!(
+            "section-start:{}",
+            match s {
+                DPS::AgencyAndBehavior => "agency-and-behavior",
+                DPS::CraftNotes => "craft-notes",
+                DPS::Invariants => "invariants",
+            }
+        ),
+        IA::SectionEnd(s) => format!(
+            "section-end:{}",
+            match s {
+                DPS::AgencyAndBehavior => "agency-and-behavior",
+                DPS::CraftNotes => "craft-notes",
+                DPS::Invariants => "invariants",
+            }
+        ),
+        IA::FixedSectionStart(s) => format!(
+            "section-start:{}",
+            match s {
+                FPS::Format => "format",
+                FPS::Identity => "identity",
+                FPS::World => "world",
+                FPS::User => "user",
+                FPS::Mood => "mood",
+                FPS::WhatHangsBetweenYou => "what-hangs-between-you",
+                FPS::Agency => "agency",
+                FPS::Turn => "turn",
+                FPS::Style => "style",
+            }
+        ),
+        IA::FixedSectionEnd(s) => format!(
+            "section-end:{}",
+            match s {
+                FPS::Format => "format",
+                FPS::Identity => "identity",
+                FPS::World => "world",
+                FPS::User => "user",
+                FPS::Mood => "mood",
+                FPS::WhatHangsBetweenYou => "what-hangs-between-you",
+                FPS::Agency => "agency",
+                FPS::Turn => "turn",
+                FPS::Style => "style",
+            }
+        ),
     }
 }
 
@@ -7438,13 +8933,18 @@ async fn cmd_replay(
 ) -> Result<(), Box<dyn std::error::Error>> {
     if refs.is_empty() {
         return Err(Box::<dyn std::error::Error>::from(
-            "at least one ref is required (use --refs HEAD,<sha>,...)".to_string()));
+            "at least one ref is required (use --refs HEAD,<sha>,...)".to_string(),
+        ));
     }
     if prompt.trim().is_empty() {
-        return Err(Box::<dyn std::error::Error>::from("prompt is empty".to_string()));
+        return Err(Box::<dyn std::error::Error>::from(
+            "prompt is empty".to_string(),
+        ));
     }
     if n_samples < 1 {
-        return Err(Box::<dyn std::error::Error>::from("--n must be at least 1".to_string()));
+        return Err(Box::<dyn std::error::Error>::from(
+            "--n must be at least 1".to_string(),
+        ));
     }
     let _ = r.check_character(character_id)?;
 
@@ -7533,10 +9033,12 @@ async fn cmd_replay(
         for name in omit_invariants_names {
             match app_lib::ai::prompts::InvariantPiece::from_cli_name(name) {
                 Some(p) => parsed.push(p),
-                None => return Err(Box::<dyn std::error::Error>::from(format!(
+                None => {
+                    return Err(Box::<dyn std::error::Error>::from(format!(
                     "unknown invariant name '{}' in --omit-invariants. See --help for valid names.",
                     name
-                ))),
+                )))
+                }
             }
         }
         parsed
@@ -7558,11 +9060,14 @@ async fn cmd_replay(
                 (None, Some(a)) => (a, app_lib::ai::prompts::InsertPosition::After),
                 (Some(_), Some(_)) => {
                     return Err(Box::<dyn std::error::Error>::from(
-                        "--insert-before and --insert-after are mutually exclusive".to_string()));
+                        "--insert-before and --insert-after are mutually exclusive".to_string(),
+                    ));
                 }
                 (None, None) => {
                     return Err(Box::<dyn std::error::Error>::from(
-                        "--insert-file requires exactly one of --insert-before or --insert-after".to_string()));
+                        "--insert-file requires exactly one of --insert-before or --insert-after"
+                            .to_string(),
+                    ));
                 }
             };
             let anchor = app_lib::ai::prompts::InsertionAnchor::from_cli_name(anchor_str)
@@ -7570,14 +9075,23 @@ async fn cmd_replay(
                     "unknown insertion anchor '{}'. Valid forms: piece name (e.g., 'earned_register', 'reverence') or 'section-start:<section>' / 'section-end:<section>' where section can be ordered (craft-notes, invariants, agency-and-behavior) or fixed (format, identity, world, user, mood, what-hangs-between-you, agency, turn, style).",
                     anchor_str
                 )))?;
-            let text = std::fs::read_to_string(path).map_err(|e| Box::<dyn std::error::Error>::from(format!(
-                "reading --insert-file {}: {}", path.display(), e
-            )))?;
-            Some(app_lib::ai::prompts::Insertion { anchor, position, text })
+            let text = std::fs::read_to_string(path).map_err(|e| {
+                Box::<dyn std::error::Error>::from(format!(
+                    "reading --insert-file {}: {}",
+                    path.display(),
+                    e
+                ))
+            })?;
+            Some(app_lib::ai::prompts::Insertion {
+                anchor,
+                position,
+                text,
+            })
         }
         (None, Some(_), _) | (None, _, Some(_)) => {
             return Err(Box::<dyn std::error::Error>::from(
-                "--insert-before / --insert-after requires --insert-file".to_string()));
+                "--insert-before / --insert-after requires --insert-file".to_string(),
+            ));
         }
     };
 
@@ -7593,11 +9107,15 @@ async fn cmd_replay(
     // section-order override (if any) identically to every ref — the
     // override is the held-constant condition; ref-varying content
     // bodies is the A/B variable.
-    let mut per_ref_overrides: Vec<(String, app_lib::ai::prompts::PromptOverrides, Vec<String>)> = Vec::new();
+    let mut per_ref_overrides: Vec<(String, app_lib::ai::prompts::PromptOverrides, Vec<String>)> =
+        Vec::new();
     for (ref_input, sha, _ts, _subj) in &resolved_refs {
-        let source = git_show_file(repo, sha, "src-tauri/src/ai/prompts.rs")
-            .map_err(|e| Box::<dyn std::error::Error>::from(
-                format!("fetching prompts.rs at {}: {}", ref_input, e)))?;
+        let source = git_show_file(repo, sha, "src-tauri/src/ai/prompts.rs").map_err(|e| {
+            Box::<dyn std::error::Error>::from(format!(
+                "fetching prompts.rs at {}: {}",
+                ref_input, e
+            ))
+        })?;
         let mut overrides = parse_historical_prompts_overrides(&source);
         if let Some(order) = &section_order_override {
             overrides.set_section_order(order.clone());
@@ -7623,7 +9141,18 @@ async fn cmd_replay(
 
     // Load character + world context ONCE — this is the held-constant
     // side of the A/B. Only the overrides vary per ref.
-    let (world, character, user_profile, recent_journals, active_quests, stance_text, anchor_text, mut model_config, recent_for_momentstamp, prior_signature) = {
+    let (
+        world,
+        character,
+        user_profile,
+        recent_journals,
+        active_quests,
+        stance_text,
+        anchor_text,
+        mut model_config,
+        recent_for_momentstamp,
+        prior_signature,
+    ) = {
         let conn = r.db.conn.lock().unwrap();
         let character = get_character(&conn, character_id)?;
         let world = get_world(&conn, &character.world_id)?;
@@ -7634,94 +9163,133 @@ async fn cmd_replay(
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
         let anchor_text: Option<String> = combined_axes_block(&conn, character_id);
         let model_config = orchestrator::load_model_config(&conn);
-        let (recent_for_momentstamp, prior_signature): (Vec<Message>, Option<String>) = if with_momentstamp {
-            let thread = match get_thread_for_character(&conn, character_id) {
-                Ok(t) => t,
-                Err(e) => return Err(Box::<dyn std::error::Error>::from(format!(
-                    "with-momentstamp: no solo-chat thread for character {}: {}", character_id, e
-                ))),
-            };
-            let recent = list_messages(&conn, &thread.thread_id, 30).unwrap_or_default();
-            let prior_sig: Option<String> = conn.query_row(
-                "SELECT formula_signature FROM messages \
+        let (recent_for_momentstamp, prior_signature): (Vec<Message>, Option<String>) =
+            if with_momentstamp {
+                let thread = match get_thread_for_character(&conn, character_id) {
+                    Ok(t) => t,
+                    Err(e) => {
+                        return Err(Box::<dyn std::error::Error>::from(format!(
+                            "with-momentstamp: no solo-chat thread for character {}: {}",
+                            character_id, e
+                        )))
+                    }
+                };
+                let recent = list_messages(&conn, &thread.thread_id, 30).unwrap_or_default();
+                let prior_sig: Option<String> = conn
+                    .query_row(
+                        "SELECT formula_signature FROM messages \
                  WHERE thread_id = ?1 AND role = 'assistant' \
                  AND formula_signature IS NOT NULL AND TRIM(formula_signature) != '' \
                  ORDER BY created_at DESC LIMIT 1",
-                params![thread.thread_id],
-                |row| row.get::<_, Option<String>>(0),
-            ).ok().flatten();
-            (recent, prior_sig)
-        } else {
-            (Vec::new(), None)
-        };
-        (world, character, user_profile, recent_journals, active_quests, stance_text, anchor_text, model_config, recent_for_momentstamp, prior_signature)
+                        params![thread.thread_id],
+                        |row| row.get::<_, Option<String>>(0),
+                    )
+                    .ok()
+                    .flatten();
+                (recent, prior_sig)
+            } else {
+                (Vec::new(), None)
+            };
+        (
+            world,
+            character,
+            user_profile,
+            recent_journals,
+            active_quests,
+            stance_text,
+            anchor_text,
+            model_config,
+            recent_for_momentstamp,
+            prior_signature,
+        )
     };
-    if let Some(m) = model_override { model_config.dialogue_model = m.to_string(); }
+    if let Some(m) = model_override {
+        model_config.dialogue_model = m.to_string();
+    }
 
     // Build one replay-scoped momentstamp block so all refs/samples share
     // identical chat-state conditioning when enabled.
-    let replay_momentstamp: Option<app_lib::ai::momentstamp::MomentstampResult> = if with_momentstamp {
-        if let Some(override_sig) = momentstamp_override {
-            let block = format!(
-                "FORMULA MOMENTSTAMP (chat-state signature derived from 𝓕 := (𝓡, 𝓒) — \
+    let replay_momentstamp: Option<app_lib::ai::momentstamp::MomentstampResult> =
+        if with_momentstamp {
+            if let Some(override_sig) = momentstamp_override {
+                let block = format!(
+                    "FORMULA MOMENTSTAMP (chat-state signature derived from 𝓕 := (𝓡, 𝓒) — \
                  injected because this user has chosen reactions=off, signaling \
                  preference for textual depth over reactive surface; treat the \
                  signature as conditioning on where THIS chat sits in formula-space \
                  right now):\n\n{}\n",
-                override_sig
-            );
-            eprintln!(
+                    override_sig
+                );
+                eprintln!(
                 "[worldcli replay momentstamp-override] using provided signature (no API call): {}",
                 override_sig
             );
-            Some(app_lib::ai::momentstamp::MomentstampResult {
-                block,
-                signature: override_sig.to_string(),
-            })
-        } else if !recent_for_momentstamp.is_empty() {
-            match app_lib::ai::momentstamp::build_formula_momentstamp(
-                &model_config.chat_api_base(),
-                api_key,
-                &model_config.memory_model,
-                &recent_for_momentstamp,
-                prior_signature.as_deref(),
-                None,
-            ).await {
-                Ok(Some(result)) => {
-                    eprintln!(
-                        "[worldcli replay with-momentstamp] computed signature: {}",
-                        result.signature
-                    );
-                    Some(result)
+                Some(app_lib::ai::momentstamp::MomentstampResult {
+                    block,
+                    signature: override_sig.to_string(),
+                })
+            } else if !recent_for_momentstamp.is_empty() {
+                match app_lib::ai::momentstamp::build_formula_momentstamp(
+                    &model_config.chat_api_base(),
+                    api_key,
+                    &model_config.memory_model,
+                    &recent_for_momentstamp,
+                    prior_signature.as_deref(),
+                    None,
+                )
+                .await
+                {
+                    Ok(Some(result)) => {
+                        eprintln!(
+                            "[worldcli replay with-momentstamp] computed signature: {}",
+                            result.signature
+                        );
+                        Some(result)
+                    }
+                    Ok(None) => {
+                        eprintln!("[worldcli replay with-momentstamp] build_formula_momentstamp returned None (silent skip)");
+                        None
+                    }
+                    Err(e) => {
+                        eprintln!("[worldcli replay with-momentstamp] build_formula_momentstamp failed: {}", e);
+                        None
+                    }
                 }
-                Ok(None) => {
-                    eprintln!("[worldcli replay with-momentstamp] build_formula_momentstamp returned None (silent skip)");
-                    None
-                }
-                Err(e) => {
-                    eprintln!("[worldcli replay with-momentstamp] build_formula_momentstamp failed: {}", e);
-                    None
-                }
+            } else {
+                None
             }
         } else {
             None
-        }
-    } else {
-        None
-    };
+        };
     let suppress_momentstamp_lead = std::env::var("WORLDTHREADS_NO_MOMENTSTAMP_LEAD")
-        .map(|v| v == "1").unwrap_or(false);
+        .map(|v| v == "1")
+        .unwrap_or(false);
     if replay_momentstamp.is_some() {
-        eprintln!("[worldcli replay momentstamp] suppress_lead={}", suppress_momentstamp_lead);
+        eprintln!(
+            "[worldcli replay momentstamp] suppress_lead={}",
+            suppress_momentstamp_lead
+        );
     }
 
     // Project cost per ref (each ref is one dialogue-model call against
     // the assembled system prompt). Conservative: use first ref's
     // assembled prompt to estimate — they'll be close in size.
     let mut sample_system = app_lib::ai::prompts::build_dialogue_system_prompt_with_overrides(
-        &world, &character, user_profile.as_ref(),
-        None, Some("Auto"), None, None, false, &[], None,
-        &recent_journals, None, &[], None, &active_quests,
+        &world,
+        &character,
+        user_profile.as_ref(),
+        None,
+        Some("Auto"),
+        None,
+        None,
+        false,
+        &[],
+        None,
+        &recent_journals,
+        None,
+        &[],
+        None,
+        &active_quests,
         stance_text.as_deref(),
         anchor_text.as_deref(),
         Some(&per_ref_overrides[0].1),
@@ -7737,7 +9305,12 @@ async fn cmd_replay(
     }
     let est_in = estimate_tokens(&sample_system) + estimate_tokens(prompt);
     let est_out: i64 = 600;
-    let per_ref_usd = project_cost(&model_config.dialogue_model, est_in, est_out, &r.cfg.model_pricing);
+    let per_ref_usd = project_cost(
+        &model_config.dialogue_model,
+        est_in,
+        est_out,
+        &r.cfg.model_pricing,
+    );
     let per_sample_usd = per_ref_usd; // one call per (ref, sample)
     let total_projected = per_sample_usd * (refs.len() as f64) * (n_samples as f64);
 
@@ -7785,9 +9358,21 @@ async fn cmd_replay(
     for (i, (ref_input, overrides, found_keys)) in per_ref_overrides.iter().enumerate() {
         let (_input, sha, ts, subj) = &resolved_refs[i];
         let mut system_prompt = app_lib::ai::prompts::build_dialogue_system_prompt_with_overrides(
-            &world, &character, user_profile.as_ref(),
-            None, Some("Auto"), None, None, false, &[], None,
-            &recent_journals, None, &[], None, &active_quests,
+            &world,
+            &character,
+            user_profile.as_ref(),
+            None,
+            Some("Auto"),
+            None,
+            None,
+            false,
+            &[],
+            None,
+            &recent_journals,
+            None,
+            &[],
+            None,
+            &active_quests,
             stance_text.as_deref(),
             anchor_text.as_deref(),
             Some(overrides),
@@ -7804,8 +9389,14 @@ async fn cmd_replay(
         for sample_index in 0..n_samples {
             call_idx += 1;
             let messages = vec![
-                openai::ChatMessage { role: "system".to_string(), content: system_prompt.clone() },
-                openai::ChatMessage { role: "user".to_string(), content: prompt.to_string() },
+                openai::ChatMessage {
+                    role: "system".to_string(),
+                    content: system_prompt.clone(),
+                },
+                openai::ChatMessage {
+                    role: "user".to_string(),
+                    content: prompt.to_string(),
+                },
             ];
             let req = openai::ChatRequest {
                 model: model_config.dialogue_model.clone(),
@@ -7815,18 +9406,39 @@ async fn cmd_replay(
                 response_format: None,
             };
             if n_samples > 1 {
-                eprint!("\r[worldcli] replaying {}/{} — ref {} sample {}/{}   ",
-                    call_idx, total_calls, &sha[..8.min(sha.len())], sample_index + 1, n_samples);
+                eprint!(
+                    "\r[worldcli] replaying {}/{} — ref {} sample {}/{}   ",
+                    call_idx,
+                    total_calls,
+                    &sha[..8.min(sha.len())],
+                    sample_index + 1,
+                    n_samples
+                );
             } else {
-                eprint!("\r[worldcli] replaying {}/{} — ref {}", call_idx, total_calls, &sha[..8.min(sha.len())]);
+                eprint!(
+                    "\r[worldcli] replaying {}/{} — ref {}",
+                    call_idx,
+                    total_calls,
+                    &sha[..8.min(sha.len())]
+                );
             }
-            let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await
-                .map_err(|e| format!("replay call for ref {} sample {} failed: {}", ref_input, sample_index, e))?;
-            let reply = resp.choices.first()
+            let resp = openai::chat_completion_with_base(&base_url, api_key, &req)
+                .await
+                .map_err(|e| {
+                    format!(
+                        "replay call for ref {} sample {} failed: {}",
+                        ref_input, sample_index, e
+                    )
+                })?;
+            let reply = resp
+                .choices
+                .first()
                 .map(|c| c.message.content.clone())
                 .ok_or_else(|| "no choices returned".to_string())?;
             let usage = resp.usage.unwrap_or(openai::Usage {
-                prompt_tokens: 0, completion_tokens: 0, total_tokens: 0,
+                prompt_tokens: 0,
+                completion_tokens: 0,
+                total_tokens: 0,
             });
             total_in += usage.prompt_tokens as i64;
             total_out += usage.completion_tokens as i64;
@@ -7848,7 +9460,12 @@ async fn cmd_replay(
     }
     eprintln!();
 
-    let actual_usd = actual_cost(&model_config.dialogue_model, total_in, total_out, &r.cfg.model_pricing);
+    let actual_usd = actual_cost(
+        &model_config.dialogue_model,
+        total_in,
+        total_out,
+        &r.cfg.model_pricing,
+    );
     append_cost_log(&CostEntry {
         timestamp: chrono::Utc::now().to_rfc3339(),
         model: model_config.dialogue_model.clone(),
@@ -7859,30 +9476,46 @@ async fn cmd_replay(
 
     let run_id = uuid::Uuid::new_v4().to_string();
     let section_order_json: serde_json::Value = match &section_order_override {
-        Some(order) => json!(order.iter().map(|s| match s {
-            app_lib::ai::prompts::DialoguePromptSection::AgencyAndBehavior => "agency-and-behavior",
-            app_lib::ai::prompts::DialoguePromptSection::CraftNotes => "craft-notes",
-            app_lib::ai::prompts::DialoguePromptSection::Invariants => "invariants",
-        }).collect::<Vec<_>>()),
+        Some(order) => json!(order
+            .iter()
+            .map(|s| match s {
+                app_lib::ai::prompts::DialoguePromptSection::AgencyAndBehavior =>
+                    "agency-and-behavior",
+                app_lib::ai::prompts::DialoguePromptSection::CraftNotes => "craft-notes",
+                app_lib::ai::prompts::DialoguePromptSection::Invariants => "invariants",
+            })
+            .collect::<Vec<_>>()),
         None => serde_json::Value::Null,
     };
     let craft_notes_order_json: serde_json::Value = match &craft_notes_order_override {
-        Some(order) => json!(order.iter().map(|p| craft_note_piece_name(p)).collect::<Vec<_>>()),
+        Some(order) => json!(order
+            .iter()
+            .map(|p| craft_note_piece_name(p))
+            .collect::<Vec<_>>()),
         None => serde_json::Value::Null,
     };
     let invariants_order_json: serde_json::Value = match &invariants_order_override {
-        Some(order) => json!(order.iter().map(|p| invariant_piece_name(p)).collect::<Vec<_>>()),
+        Some(order) => json!(order
+            .iter()
+            .map(|p| invariant_piece_name(p))
+            .collect::<Vec<_>>()),
         None => serde_json::Value::Null,
     };
     let omit_craft_notes_json: serde_json::Value = if omit_craft_notes.is_empty() {
         serde_json::Value::Null
     } else {
-        json!(omit_craft_notes.iter().map(|p| craft_note_piece_name(p)).collect::<Vec<_>>())
+        json!(omit_craft_notes
+            .iter()
+            .map(|p| craft_note_piece_name(p))
+            .collect::<Vec<_>>())
     };
     let omit_invariants_json: serde_json::Value = if omit_invariants.is_empty() {
         serde_json::Value::Null
     } else {
-        json!(omit_invariants.iter().map(|p| invariant_piece_name(p)).collect::<Vec<_>>())
+        json!(omit_invariants
+            .iter()
+            .map(|p| invariant_piece_name(p))
+            .collect::<Vec<_>>())
     };
     let insertion_json: serde_json::Value = match &insertion {
         Some(ins) => json!({
@@ -7936,25 +9569,41 @@ async fn cmd_replay(
         if let Some(ms) = &replay_momentstamp {
             println!(
                 "momentstamp: enabled (signature='{}', lead_suppressed={})",
-                ms.signature,
-                suppress_momentstamp_lead
+                ms.signature, suppress_momentstamp_lead
             );
         }
         if let Some(order) = &section_order_override {
-            let names: Vec<&str> = order.iter().map(|s| match s {
-                app_lib::ai::prompts::DialoguePromptSection::AgencyAndBehavior => "agency-and-behavior",
-                app_lib::ai::prompts::DialoguePromptSection::CraftNotes => "craft-notes",
-                app_lib::ai::prompts::DialoguePromptSection::Invariants => "invariants",
-            }).collect();
+            let names: Vec<&str> = order
+                .iter()
+                .map(|s| match s {
+                    app_lib::ai::prompts::DialoguePromptSection::AgencyAndBehavior => {
+                        "agency-and-behavior"
+                    }
+                    app_lib::ai::prompts::DialoguePromptSection::CraftNotes => "craft-notes",
+                    app_lib::ai::prompts::DialoguePromptSection::Invariants => "invariants",
+                })
+                .collect();
             println!("section-order: {} (non-default)", names.join(","));
         }
         if let Some(order) = &craft_notes_order_override {
-            let names: Vec<String> = order.iter().map(|p| craft_note_piece_name(p).to_string()).collect();
-            println!("craft-notes-order: {} (prefix; rest default)", names.join(","));
+            let names: Vec<String> = order
+                .iter()
+                .map(|p| craft_note_piece_name(p).to_string())
+                .collect();
+            println!(
+                "craft-notes-order: {} (prefix; rest default)",
+                names.join(",")
+            );
         }
         if let Some(order) = &invariants_order_override {
-            let names: Vec<String> = order.iter().map(|p| invariant_piece_name(p).to_string()).collect();
-            println!("invariants-order: {} (prefix; rest default)", names.join(","));
+            let names: Vec<String> = order
+                .iter()
+                .map(|p| invariant_piece_name(p).to_string())
+                .collect();
+            println!(
+                "invariants-order: {} (prefix; rest default)",
+                names.join(",")
+            );
         }
         if !omit_craft_notes.is_empty() {
             let names: Vec<&str> = omit_craft_notes.iter().map(craft_note_piece_name).collect();
@@ -7969,7 +9618,12 @@ async fn cmd_replay(
                 app_lib::ai::prompts::InsertPosition::Before => "before",
                 app_lib::ai::prompts::InsertPosition::After => "after",
             };
-            println!("insertion: {} {} ({} bytes)", pos, insertion_anchor_name(&ins.anchor), ins.text.len());
+            println!(
+                "insertion: {} {} ({} bytes)",
+                pos,
+                insertion_anchor_name(&ins.anchor),
+                ins.text.len()
+            );
         }
         println!();
         for result in envelope["results"].as_array().unwrap_or(&vec![]) {
@@ -7978,22 +9632,36 @@ async fn cmd_replay(
             let sha_short = &sha[..8.min(sha.len())];
             let subj = result["ref_subject"].as_str().unwrap_or("");
             let reply = result["reply"].as_str().unwrap_or("");
-            let overrides_count = result["overrides_applied"].as_array().map(|a| a.len()).unwrap_or(0);
+            let overrides_count = result["overrides_applied"]
+                .as_array()
+                .map(|a| a.len())
+                .unwrap_or(0);
             let sample_count = result["sample_count"].as_u64().unwrap_or(1);
             if sample_count > 1 {
                 let sample_idx = result["sample_index"].as_u64().unwrap_or(0);
-                println!("─── ref: {} ({}) — sample {}/{} — {} craft-note override(s) applied ───",
-                    r_input, sha_short, sample_idx + 1, sample_count, overrides_count);
+                println!(
+                    "─── ref: {} ({}) — sample {}/{} — {} craft-note override(s) applied ───",
+                    r_input,
+                    sha_short,
+                    sample_idx + 1,
+                    sample_count,
+                    overrides_count
+                );
             } else {
-                println!("─── ref: {} ({}) — {} craft-note override(s) applied ───", r_input, sha_short, overrides_count);
+                println!(
+                    "─── ref: {} ({}) — {} craft-note override(s) applied ───",
+                    r_input, sha_short, overrides_count
+                );
             }
             println!("    commit: {}", subj);
             println!();
             println!("{}", reply);
             println!();
         }
-        eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok)",
-            actual_usd, total_in, total_out);
+        eprintln!(
+            "[worldcli] actual cost ${:.4} ({} in / {} out tok)",
+            actual_usd, total_in, total_out
+        );
     }
     Ok(())
 }
@@ -8013,7 +9681,9 @@ async fn cmd_replay(
 // The markdown body (after the closing `---`) holds free-form
 // interpretation / notes and is preserved verbatim on update.
 
-fn experiments_dir() -> PathBuf { PathBuf::from("experiments") }
+fn experiments_dir() -> PathBuf {
+    PathBuf::from("experiments")
+}
 
 #[derive(Debug, Clone, Default)]
 struct ExperimentFile {
@@ -8070,7 +9740,9 @@ struct ExperimentFile {
 fn split_frontmatter(raw: &str) -> Option<(String, String)> {
     let mut lines = raw.lines();
     let first = lines.next()?;
-    if first.trim() != "---" { return None; }
+    if first.trim() != "---" {
+        return None;
+    }
     let mut fm: Vec<&str> = Vec::new();
     let mut body_start = None;
     let mut idx = first.len() + 1; // past the opening fence
@@ -8113,7 +9785,10 @@ fn parse_experiment_frontmatter(fm_text: &str) -> ExperimentFile {
         // Extract key:value or key: (block / list).
         let (key, rest) = match line.find(':') {
             Some(ci) => (line[..ci].trim().to_string(), line[ci + 1..].to_string()),
-            None => { i += 1; continue; }
+            None => {
+                i += 1;
+                continue;
+            }
         };
         let rest_t = rest.trim();
 
@@ -8123,15 +9798,26 @@ fn parse_experiment_frontmatter(fm_text: &str) -> ExperimentFile {
             i += 1;
             while i < lines.len() {
                 let l = lines[i];
-                if l.is_empty() { buf.push(String::new()); i += 1; continue; }
-                if !(l.starts_with(' ') || l.starts_with('\t')) { break; }
+                if l.is_empty() {
+                    buf.push(String::new());
+                    i += 1;
+                    continue;
+                }
+                if !(l.starts_with(' ') || l.starts_with('\t')) {
+                    break;
+                }
                 // Strip a two-space / tab indent.
-                let stripped = l.strip_prefix("  ").or_else(|| l.strip_prefix('\t')).unwrap_or(l);
+                let stripped = l
+                    .strip_prefix("  ")
+                    .or_else(|| l.strip_prefix('\t'))
+                    .unwrap_or(l);
                 buf.push(stripped.to_string());
                 i += 1;
             }
             // Trim trailing blank lines.
-            while buf.last().map(|s| s.is_empty()).unwrap_or(false) { buf.pop(); }
+            while buf.last().map(|s| s.is_empty()).unwrap_or(false) {
+                buf.pop();
+            }
             let value = buf.join("\n");
             assign_scalar(&mut out, &key, value);
         } else if rest_t.is_empty() {
@@ -8143,7 +9829,9 @@ fn parse_experiment_frontmatter(fm_text: &str) -> ExperimentFile {
                 let lt = l.trim_start();
                 if lt.starts_with("- ") {
                     let item = lt[2..].trim().trim_matches('"').to_string();
-                    if !item.is_empty() { items.push(item); }
+                    if !item.is_empty() {
+                        items.push(item);
+                    }
                     i += 1;
                 } else if l.trim().is_empty() {
                     i += 1;
@@ -8213,9 +9901,20 @@ fn derive_strength_axes_from_legacy(legacy: &str) -> Vec<String> {
         None => legacy,
     };
     let trimmed = value_only.trim();
-    if trimmed.is_empty() { return Vec::new(); }
+    if trimmed.is_empty() {
+        return Vec::new();
+    }
     // Single-token tier label.
-    let tier_singles = ["sketch", "claim", "characterized", "vacuous-test", "ensemble-vacuous", "tested-null", "accumulated", "unverified"];
+    let tier_singles = [
+        "sketch",
+        "claim",
+        "characterized",
+        "vacuous-test",
+        "ensemble-vacuous",
+        "tested-null",
+        "accumulated",
+        "unverified",
+    ];
     if tier_singles.iter().any(|t| trimmed == *t) {
         return vec![format!("primary:{}", trimmed)];
     }
@@ -8223,7 +9922,9 @@ fn derive_strength_axes_from_legacy(legacy: &str) -> Vec<String> {
     let mut out = Vec::new();
     for part in trimmed.split(',') {
         let part = part.trim();
-        if part.is_empty() { continue; }
+        if part.is_empty() {
+            continue;
+        }
         // Match tier prefix: longest prefix that's a known tier.
         let mut matched = None;
         for tier in &tier_singles {
@@ -8244,7 +9945,11 @@ fn derive_strength_axes_from_legacy(legacy: &str) -> Vec<String> {
 fn load_experiment(slug: &str) -> Result<ExperimentFile, String> {
     let path = experiments_dir().join(format!("{}.md", slug));
     if !path.exists() {
-        return Err(format!("experiment '{}' not found at {}. Run `worldcli lab list` to see the registry.", slug, path.display()));
+        return Err(format!(
+            "experiment '{}' not found at {}. Run `worldcli lab list` to see the registry.",
+            slug,
+            path.display()
+        ));
     }
     let raw = std::fs::read_to_string(&path)
         .map_err(|e| format!("failed to read {}: {}", path.display(), e))?;
@@ -8255,7 +9960,9 @@ fn load_experiment(slug: &str) -> Result<ExperimentFile, String> {
     exp.path = path;
     exp.body = body;
     exp.raw = raw;
-    if exp.id.is_empty() { exp.id = slug.to_string(); }
+    if exp.id.is_empty() {
+        exp.id = slug.to_string();
+    }
     // Auto-derive structured strength_axes from the legacy
     // evidence_strength scalar when only the legacy form is present.
     // This means existing experiment files immediately become readable
@@ -8268,19 +9975,36 @@ fn load_experiment(slug: &str) -> Result<ExperimentFile, String> {
 
 fn list_experiments() -> Result<Vec<ExperimentFile>, String> {
     let dir = experiments_dir();
-    if !dir.exists() { return Ok(Vec::new()); }
+    if !dir.exists() {
+        return Ok(Vec::new());
+    }
     let mut out = Vec::new();
-    for entry in std::fs::read_dir(&dir).map_err(|e| e.to_string())?.flatten() {
+    for entry in std::fs::read_dir(&dir)
+        .map_err(|e| e.to_string())?
+        .flatten()
+    {
         let path = entry.path();
-        if path.extension().and_then(|e| e.to_str()) != Some("md") { continue; }
-        let fname = path.file_stem().and_then(|s| s.to_str()).unwrap_or("").to_string();
-        if fname == "README" { continue; }
+        if path.extension().and_then(|e| e.to_str()) != Some("md") {
+            continue;
+        }
+        let fname = path
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .unwrap_or("")
+            .to_string();
+        if fname == "README" {
+            continue;
+        }
         if let Ok(exp) = load_experiment(&fname) {
             out.push(exp);
         }
     }
-    out.sort_by(|a, b| a.created_at.cmp(&b.created_at).reverse()
-        .then_with(|| a.slug.cmp(&b.slug)));
+    out.sort_by(|a, b| {
+        a.created_at
+            .cmp(&b.created_at)
+            .reverse()
+            .then_with(|| a.slug.cmp(&b.slug))
+    });
     Ok(out)
 }
 
@@ -8298,17 +10022,33 @@ fn write_experiment(exp: &ExperimentFile) -> Result<(), String> {
     push_scalar(&mut fm, "status", &exp.status);
     push_scalar(&mut fm, "mode", &exp.mode);
     push_scalar(&mut fm, "created_at", &exp.created_at);
-    if !exp.resolved_at.is_empty() { push_scalar(&mut fm, "resolved_at", &exp.resolved_at); }
-    if !exp.git_ref.is_empty() { push_scalar(&mut fm, "ref", &exp.git_ref); }
-    if !exp.rubric_ref.is_empty() { push_scalar(&mut fm, "rubric_ref", &exp.rubric_ref); }
-    if !exp.evidence_strength.is_empty() { push_scalar(&mut fm, "evidence_strength", &exp.evidence_strength); }
-    if !exp.strength_axes.is_empty() { push_list(&mut fm, "strength_axes", &exp.strength_axes); }
-    if !exp.strength_provenance.is_empty() { push_block(&mut fm, "strength_provenance", &exp.strength_provenance); }
-    if !exp.bet_family.is_empty() { push_scalar(&mut fm, "bet_family", &exp.bet_family); }
+    if !exp.resolved_at.is_empty() {
+        push_scalar(&mut fm, "resolved_at", &exp.resolved_at);
+    }
+    if !exp.git_ref.is_empty() {
+        push_scalar(&mut fm, "ref", &exp.git_ref);
+    }
+    if !exp.rubric_ref.is_empty() {
+        push_scalar(&mut fm, "rubric_ref", &exp.rubric_ref);
+    }
+    if !exp.evidence_strength.is_empty() {
+        push_scalar(&mut fm, "evidence_strength", &exp.evidence_strength);
+    }
+    if !exp.strength_axes.is_empty() {
+        push_list(&mut fm, "strength_axes", &exp.strength_axes);
+    }
+    if !exp.strength_provenance.is_empty() {
+        push_block(&mut fm, "strength_provenance", &exp.strength_provenance);
+    }
+    if !exp.bet_family.is_empty() {
+        push_scalar(&mut fm, "bet_family", &exp.bet_family);
+    }
     fm.push('\n');
     push_block(&mut fm, "hypothesis", &exp.hypothesis);
     push_block(&mut fm, "prediction", &exp.prediction);
-    if !exp.summary.is_empty() { push_block(&mut fm, "summary", &exp.summary); }
+    if !exp.summary.is_empty() {
+        push_block(&mut fm, "summary", &exp.summary);
+    }
     push_list(&mut fm, "scope_characters", &exp.scope_characters);
     push_list(&mut fm, "scope_group_chats", &exp.scope_group_chats);
     push_list(&mut fm, "run_ids", &exp.run_ids);
@@ -8316,20 +10056,28 @@ fn write_experiment(exp: &ExperimentFile) -> Result<(), String> {
     push_list(&mut fm, "reports", &exp.reports);
     fm.push_str("---\n");
 
-    let body = if exp.body.is_empty() { "".to_string() }
-               else if exp.body.starts_with('\n') { exp.body.clone() }
-               else { format!("\n{}", exp.body) };
+    let body = if exp.body.is_empty() {
+        "".to_string()
+    } else if exp.body.starts_with('\n') {
+        exp.body.clone()
+    } else {
+        format!("\n{}", exp.body)
+    };
     let full = format!("{}{}", fm, body);
     std::fs::write(&path, full).map_err(|e| e.to_string())?;
     Ok(())
 }
 
 fn push_scalar(out: &mut String, key: &str, value: &str) {
-    if value.is_empty() { return; }
+    if value.is_empty() {
+        return;
+    }
     out.push_str(&format!("{}: {}\n", key, value));
 }
 fn push_block(out: &mut String, key: &str, value: &str) {
-    if value.is_empty() { return; }
+    if value.is_empty() {
+        return;
+    }
     out.push_str(&format!("{}: |\n", key));
     for line in value.lines() {
         out.push_str(&format!("  {}\n", line));
@@ -8337,7 +10085,9 @@ fn push_block(out: &mut String, key: &str, value: &str) {
     out.push('\n');
 }
 fn push_list(out: &mut String, key: &str, items: &[String]) {
-    if items.is_empty() { return; }
+    if items.is_empty() {
+        return;
+    }
     out.push_str(&format!("{}:\n", key));
     for item in items {
         out.push_str(&format!("  - {}\n", item));
@@ -8404,7 +10154,9 @@ fn classify_bet_family_hint(exp: &ExperimentFile) -> BetFamilyHint {
     match exp.bet_family.as_str() {
         "structural_bite" => return BetFamilyHint::StructuralBite,
         "scope_and_direction" => return BetFamilyHint::ScopeAndDirection,
-        "partial_real_instrument_sensitive" => return BetFamilyHint::PartialRealInstrumentSensitive,
+        "partial_real_instrument_sensitive" => {
+            return BetFamilyHint::PartialRealInstrumentSensitive
+        }
         "other" => return BetFamilyHint::Other,
         _ => {} // empty or unknown: fall through to heuristic
     }
@@ -8457,9 +10209,15 @@ fn classify_bet_family_hint(exp: &ExperimentFile) -> BetFamilyHint {
         "ambigu",
     ];
 
-    let structural_score = structural_markers.iter().filter(|m| hay.contains(**m)).count();
+    let structural_score = structural_markers
+        .iter()
+        .filter(|m| hay.contains(**m))
+        .count();
     let scope_score = scope_markers.iter().filter(|m| hay.contains(**m)).count();
-    let instrument_score = instrument_markers.iter().filter(|m| hay.contains(**m)).count();
+    let instrument_score = instrument_markers
+        .iter()
+        .filter(|m| hay.contains(**m))
+        .count();
 
     if exp.status == "discrepant" || instrument_score >= 2 {
         return BetFamilyHint::PartialRealInstrumentSensitive;
@@ -8486,26 +10244,43 @@ fn classify_bet_family_hint(exp: &ExperimentFile) -> BetFamilyHint {
 
 fn run_summary_from_manifest_entry(kind: &str, entry: &JsonValue) -> Option<JsonValue> {
     let run_id = entry.get("run_id")?.as_str()?.to_string();
-    let run_timestamp = entry.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("").to_string();
+    let run_timestamp = entry
+        .get("run_timestamp")
+        .and_then(|v| v.as_str())
+        .unwrap_or("")
+        .to_string();
     let cost_usd = entry.get("cost_usd").and_then(|v| v.as_f64());
     match kind {
         "evaluate" => {
-            let scope_label = entry.get("scope_label").and_then(|v| v.as_str()).unwrap_or("?").to_string();
-            let rubric = entry.get("rubric_ref")
+            let scope_label = entry
+                .get("scope_label")
+                .and_then(|v| v.as_str())
+                .unwrap_or("?")
+                .to_string();
+            let rubric = entry
+                .get("rubric_ref")
                 .and_then(|v| v.as_str())
                 .filter(|s| !s.is_empty())
                 .map(|s| s.to_string())
-                .or_else(|| entry.get("rubric_preview").and_then(|v| v.as_str()).map(|s| truncate_chars(s, 90)))
+                .or_else(|| {
+                    entry
+                        .get("rubric_preview")
+                        .and_then(|v| v.as_str())
+                        .map(|s| truncate_chars(s, 90))
+                })
                 .unwrap_or_else(|| "<inline>".to_string());
             let before = entry.get("before_totals");
             let after = entry.get("after_totals");
             let fmt_totals = |t: Option<&JsonValue>| -> String {
-                t.map(|t| format!(
-                    "y{}/n{}/m{}",
-                    t.get("yes").and_then(|v| v.as_i64()).unwrap_or(0),
-                    t.get("no").and_then(|v| v.as_i64()).unwrap_or(0),
-                    t.get("mixed").and_then(|v| v.as_i64()).unwrap_or(0),
-                )).unwrap_or_else(|| "?".to_string())
+                t.map(|t| {
+                    format!(
+                        "y{}/n{}/m{}",
+                        t.get("yes").and_then(|v| v.as_i64()).unwrap_or(0),
+                        t.get("no").and_then(|v| v.as_i64()).unwrap_or(0),
+                        t.get("mixed").and_then(|v| v.as_i64()).unwrap_or(0),
+                    )
+                })
+                .unwrap_or_else(|| "?".to_string())
             };
             Some(json!({
                 "run_id": run_id,
@@ -8517,10 +10292,23 @@ fn run_summary_from_manifest_entry(kind: &str, entry: &JsonValue) -> Option<Json
             }))
         }
         "synthesize" => {
-            let scope_label = entry.get("scope_label").and_then(|v| v.as_str()).unwrap_or("?").to_string();
-            let question = entry.get("question_preview").and_then(|v| v.as_str()).unwrap_or("");
-            let before = entry.get("before_count").and_then(|v| v.as_i64()).unwrap_or(0);
-            let after = entry.get("after_count").and_then(|v| v.as_i64()).unwrap_or(0);
+            let scope_label = entry
+                .get("scope_label")
+                .and_then(|v| v.as_str())
+                .unwrap_or("?")
+                .to_string();
+            let question = entry
+                .get("question_preview")
+                .and_then(|v| v.as_str())
+                .unwrap_or("");
+            let before = entry
+                .get("before_count")
+                .and_then(|v| v.as_i64())
+                .unwrap_or(0);
+            let after = entry
+                .get("after_count")
+                .and_then(|v| v.as_i64())
+                .unwrap_or(0);
             Some(json!({
                 "run_id": run_id,
                 "kind": kind,
@@ -8531,9 +10319,20 @@ fn run_summary_from_manifest_entry(kind: &str, entry: &JsonValue) -> Option<Json
             }))
         }
         "replay" => {
-            let scope_label = entry.get("character_name").and_then(|v| v.as_str()).unwrap_or("?").to_string();
-            let refs = entry.get("refs").and_then(|v| v.as_array()).map(|a| a.len()).unwrap_or(0);
-            let prompt = entry.get("prompt_preview").and_then(|v| v.as_str()).unwrap_or("");
+            let scope_label = entry
+                .get("character_name")
+                .and_then(|v| v.as_str())
+                .unwrap_or("?")
+                .to_string();
+            let refs = entry
+                .get("refs")
+                .and_then(|v| v.as_array())
+                .map(|a| a.len())
+                .unwrap_or(0);
+            let prompt = entry
+                .get("prompt_preview")
+                .and_then(|v| v.as_str())
+                .unwrap_or("");
             Some(json!({
                 "run_id": run_id,
                 "kind": kind,
@@ -8549,24 +10348,43 @@ fn run_summary_from_manifest_entry(kind: &str, entry: &JsonValue) -> Option<Json
 
 fn summarize_experiment_run(run_id_or_prefix: &str) -> Option<JsonValue> {
     for entry in read_evaluate_runs_manifest() {
-        if entry.get("run_id").and_then(|v| v.as_str()).map(|id| id.starts_with(run_id_or_prefix)).unwrap_or(false) {
+        if entry
+            .get("run_id")
+            .and_then(|v| v.as_str())
+            .map(|id| id.starts_with(run_id_or_prefix))
+            .unwrap_or(false)
+        {
             return run_summary_from_manifest_entry("evaluate", &entry);
         }
     }
     for entry in read_synthesize_runs_manifest() {
-        if entry.get("run_id").and_then(|v| v.as_str()).map(|id| id.starts_with(run_id_or_prefix)).unwrap_or(false) {
+        if entry
+            .get("run_id")
+            .and_then(|v| v.as_str())
+            .map(|id| id.starts_with(run_id_or_prefix))
+            .unwrap_or(false)
+        {
             return run_summary_from_manifest_entry("synthesize", &entry);
         }
     }
     for entry in read_replay_runs_manifest() {
-        if entry.get("run_id").and_then(|v| v.as_str()).map(|id| id.starts_with(run_id_or_prefix)).unwrap_or(false) {
+        if entry
+            .get("run_id")
+            .and_then(|v| v.as_str())
+            .map(|id| id.starts_with(run_id_or_prefix))
+            .unwrap_or(false)
+        {
             return run_summary_from_manifest_entry("replay", &entry);
         }
     }
     None
 }
 
-async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
+async fn cmd_lab(
+    r: &Resolved,
+    action: LabAction,
+    api_key: Option<&str>,
+) -> Result<(), Box<dyn std::error::Error>> {
     match action {
         LabAction::List { status } => {
             let mut experiments = list_experiments().map_err(Box::<dyn std::error::Error>::from)?;
@@ -8575,27 +10393,35 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
             }
             if experiments.is_empty() {
                 if !r.json {
-                    println!("No experiments in the registry at {}.", experiments_dir().display());
+                    println!(
+                        "No experiments in the registry at {}.",
+                        experiments_dir().display()
+                    );
                     println!("Create one with `worldcli lab propose <slug> --hypothesis \"...\" --mode passive --prediction \"...\"`");
                 }
                 emit(r.json, JsonValue::Array(Vec::new()));
                 return Ok(());
             }
-            let out: Vec<JsonValue> = experiments.iter().map(|e| json!({
-                "slug": e.slug,
-                "status": e.status,
-                "mode": e.mode,
-                "hypothesis": e.hypothesis,
-                "ref": e.git_ref,
-                "rubric_ref": e.rubric_ref,
-                "evidence_strength": e.evidence_strength,
-                "strength_axes": e.strength_axes,
-                "strength_provenance": e.strength_provenance,
-                "bet_family": e.bet_family,
-                "created_at": e.created_at,
-                "run_ids": e.run_ids,
-                "reports": e.reports,
-            })).collect();
+            let out: Vec<JsonValue> = experiments
+                .iter()
+                .map(|e| {
+                    json!({
+                        "slug": e.slug,
+                        "status": e.status,
+                        "mode": e.mode,
+                        "hypothesis": e.hypothesis,
+                        "ref": e.git_ref,
+                        "rubric_ref": e.rubric_ref,
+                        "evidence_strength": e.evidence_strength,
+                        "strength_axes": e.strength_axes,
+                        "strength_provenance": e.strength_provenance,
+                        "bet_family": e.bet_family,
+                        "created_at": e.created_at,
+                        "run_ids": e.run_ids,
+                        "reports": e.reports,
+                    })
+                })
+                .collect();
             if r.json {
                 emit(true, JsonValue::Array(out));
             } else {
@@ -8607,7 +10433,9 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                         let truncated = if first_line.chars().count() > 110 {
                             let s: String = first_line.chars().take(110).collect();
                             format!("{}…", s)
-                        } else { first_line.to_string() };
+                        } else {
+                            first_line.to_string()
+                        };
                         println!("           {}", truncated);
                     }
                 }
@@ -8616,40 +10444,58 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
         LabAction::Summary { resolved_only } => {
             let mut experiments = list_experiments().map_err(Box::<dyn std::error::Error>::from)?;
             if resolved_only {
-                experiments.retain(|e| matches!(e.status.as_str(), "confirmed" | "refuted" | "discrepant"));
+                experiments.retain(|e| {
+                    matches!(e.status.as_str(), "confirmed" | "refuted" | "discrepant")
+                });
             }
 
             let mut status_counts: BTreeMap<String, usize> = BTreeMap::new();
             let mut family_buckets: BTreeMap<BetFamilyHint, Vec<&ExperimentFile>> = BTreeMap::new();
             for exp in &experiments {
                 *status_counts.entry(exp.status.clone()).or_insert(0) += 1;
-                family_buckets.entry(classify_bet_family_hint(exp)).or_default().push(exp);
+                family_buckets
+                    .entry(classify_bet_family_hint(exp))
+                    .or_default()
+                    .push(exp);
             }
 
             if r.json {
-                let family_json: Vec<JsonValue> = family_buckets.iter().map(|(family, exps)| {
-                    json!({
-                        "key": family.key(),
-                        "label": family.label(),
-                        "description": family.description(),
-                        "count": exps.len(),
-                        "experiments": exps.iter().map(|e| json!({
-                            "slug": e.slug,
-                            "status": e.status,
-                            "mode": e.mode,
-                            "hypothesis": e.hypothesis,
-                            "summary": e.summary,
-                        })).collect::<Vec<_>>(),
+                let family_json: Vec<JsonValue> = family_buckets
+                    .iter()
+                    .map(|(family, exps)| {
+                        json!({
+                            "key": family.key(),
+                            "label": family.label(),
+                            "description": family.description(),
+                            "count": exps.len(),
+                            "experiments": exps.iter().map(|e| json!({
+                                "slug": e.slug,
+                                "status": e.status,
+                                "mode": e.mode,
+                                "hypothesis": e.hypothesis,
+                                "summary": e.summary,
+                            })).collect::<Vec<_>>(),
+                        })
                     })
-                }).collect();
-                emit(true, json!({
-                    "resolved_only": resolved_only,
-                    "status_counts": status_counts,
-                    "family_hints": family_json,
-                    "note": "Bet-family hints are heuristic and meant to help read the shelf, not replace the reports.",
-                }));
+                    .collect();
+                emit(
+                    true,
+                    json!({
+                        "resolved_only": resolved_only,
+                        "status_counts": status_counts,
+                        "family_hints": family_json,
+                        "note": "Bet-family hints are heuristic and meant to help read the shelf, not replace the reports.",
+                    }),
+                );
             } else {
-                println!("Lab registry summary{}", if resolved_only { " (resolved only)" } else { "" });
+                println!(
+                    "Lab registry summary{}",
+                    if resolved_only {
+                        " (resolved only)"
+                    } else {
+                        ""
+                    }
+                );
                 println!();
                 println!("Status counts:");
                 for (status, count) in &status_counts {
@@ -8663,7 +10509,10 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                     BetFamilyHint::PartialRealInstrumentSensitive,
                     BetFamilyHint::Other,
                 ] {
-                    let exps = family_buckets.get(&family).map(Vec::as_slice).unwrap_or(&[]);
+                    let exps = family_buckets
+                        .get(&family)
+                        .map(Vec::as_slice)
+                        .unwrap_or(&[]);
                     println!("  {} ({})", family.label(), exps.len());
                     println!("    {}", family.description());
                     for e in exps.iter().take(8) {
@@ -8679,18 +10528,24 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
         }
         LabAction::Open => {
             let experiments = list_experiments().map_err(Box::<dyn std::error::Error>::from)?;
-            let open: Vec<&ExperimentFile> = experiments.iter()
+            let open: Vec<&ExperimentFile> = experiments
+                .iter()
                 .filter(|e| matches!(e.status.as_str(), "proposed" | "running" | "open"))
                 .collect();
             if r.json {
-                let out: Vec<JsonValue> = open.iter().map(|e| json!({
-                    "slug": e.slug, "status": e.status, "mode": e.mode,
-                    "hypothesis": e.hypothesis, "ref": e.git_ref,
-                    "evidence_strength": e.evidence_strength,
-                    "strength_axes": e.strength_axes,
-                    "strength_provenance": e.strength_provenance,
-                    "bet_family": e.bet_family,
-                })).collect();
+                let out: Vec<JsonValue> = open
+                    .iter()
+                    .map(|e| {
+                        json!({
+                            "slug": e.slug, "status": e.status, "mode": e.mode,
+                            "hypothesis": e.hypothesis, "ref": e.git_ref,
+                            "evidence_strength": e.evidence_strength,
+                            "strength_axes": e.strength_axes,
+                            "strength_provenance": e.strength_provenance,
+                            "bet_family": e.bet_family,
+                        })
+                    })
+                    .collect();
                 emit(true, JsonValue::Array(out));
             } else {
                 if open.is_empty() {
@@ -8703,54 +10558,78 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                     println!("  {:<10} {:<10} {}", status_tag, e.mode, e.slug);
                     let first_line = e.hypothesis.lines().next().unwrap_or("").trim();
                     if !first_line.is_empty() {
-                        println!("             {}", first_line.chars().take(110).collect::<String>());
+                        println!(
+                            "             {}",
+                            first_line.chars().take(110).collect::<String>()
+                        );
                     }
                 }
             }
         }
         LabAction::Show { slug } => {
             let exp = load_experiment(&slug).map_err(Box::<dyn std::error::Error>::from)?;
-            let run_summaries: Vec<JsonValue> = exp.run_ids.iter()
-                .map(|rid| summarize_experiment_run(rid).unwrap_or_else(|| json!({
-                    "run_id": rid,
-                    "kind": "unknown",
-                    "headline": "run manifest not found",
-                })))
+            let run_summaries: Vec<JsonValue> = exp
+                .run_ids
+                .iter()
+                .map(|rid| {
+                    summarize_experiment_run(rid).unwrap_or_else(|| {
+                        json!({
+                            "run_id": rid,
+                            "kind": "unknown",
+                            "headline": "run manifest not found",
+                        })
+                    })
+                })
                 .collect();
             if r.json {
-                emit(true, json!({
-                    "slug": exp.slug,
-                    "path": exp.path.display().to_string(),
-                    "id": exp.id, "status": exp.status, "mode": exp.mode,
-                    "ref": exp.git_ref, "rubric_ref": exp.rubric_ref,
-                    "evidence_strength": exp.evidence_strength,
-                    "strength_axes": exp.strength_axes,
-                    "strength_provenance": exp.strength_provenance,
-                    "bet_family": exp.bet_family,
-                    "created_at": exp.created_at, "resolved_at": exp.resolved_at,
-                    "hypothesis": exp.hypothesis,
-                    "prediction": exp.prediction,
-                    "summary": exp.summary,
-                    "scope_characters": exp.scope_characters,
-                    "scope_group_chats": exp.scope_group_chats,
-                    "run_ids": exp.run_ids,
-                    "run_summaries": run_summaries,
-                    "follow_ups": exp.follow_ups,
-                    "reports": exp.reports,
-                    "body": exp.body,
-                }));
+                emit(
+                    true,
+                    json!({
+                        "slug": exp.slug,
+                        "path": exp.path.display().to_string(),
+                        "id": exp.id, "status": exp.status, "mode": exp.mode,
+                        "ref": exp.git_ref, "rubric_ref": exp.rubric_ref,
+                        "evidence_strength": exp.evidence_strength,
+                        "strength_axes": exp.strength_axes,
+                        "strength_provenance": exp.strength_provenance,
+                        "bet_family": exp.bet_family,
+                        "created_at": exp.created_at, "resolved_at": exp.resolved_at,
+                        "hypothesis": exp.hypothesis,
+                        "prediction": exp.prediction,
+                        "summary": exp.summary,
+                        "scope_characters": exp.scope_characters,
+                        "scope_group_chats": exp.scope_group_chats,
+                        "run_ids": exp.run_ids,
+                        "run_summaries": run_summaries,
+                        "follow_ups": exp.follow_ups,
+                        "reports": exp.reports,
+                        "body": exp.body,
+                    }),
+                );
             } else {
                 println!("Experiment: {}  [{} | {}]", exp.slug, exp.status, exp.mode);
                 println!("Path: {}", exp.path.display());
-                if !exp.created_at.is_empty() { println!("Created: {}", exp.created_at); }
-                if !exp.resolved_at.is_empty() { println!("Resolved: {}", exp.resolved_at); }
-                if !exp.git_ref.is_empty() { println!("Ref: {}", exp.git_ref); }
-                if !exp.rubric_ref.is_empty() { println!("Rubric: {}", exp.rubric_ref); }
-                if !exp.evidence_strength.is_empty() { println!("Evidence strength: {}", exp.evidence_strength); }
+                if !exp.created_at.is_empty() {
+                    println!("Created: {}", exp.created_at);
+                }
+                if !exp.resolved_at.is_empty() {
+                    println!("Resolved: {}", exp.resolved_at);
+                }
+                if !exp.git_ref.is_empty() {
+                    println!("Ref: {}", exp.git_ref);
+                }
+                if !exp.rubric_ref.is_empty() {
+                    println!("Rubric: {}", exp.rubric_ref);
+                }
+                if !exp.evidence_strength.is_empty() {
+                    println!("Evidence strength: {}", exp.evidence_strength);
+                }
                 if !exp.strength_axes.is_empty() {
                     println!("Strength axes: [{}]", exp.strength_axes.join(", "));
                 }
-                if !exp.bet_family.is_empty() { println!("Bet family (override): {}", exp.bet_family); }
+                if !exp.bet_family.is_empty() {
+                    println!("Bet family (override): {}", exp.bet_family);
+                }
                 if !exp.strength_provenance.is_empty() {
                     println!("Strength provenance:");
                     println!("  {}", exp.strength_provenance.replace('\n', "\n  "));
@@ -8783,14 +10662,33 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                 } else {
                     for summary in &run_summaries {
                         let run_id = summary.get("run_id").and_then(|v| v.as_str()).unwrap_or("");
-                        let kind = summary.get("kind").and_then(|v| v.as_str()).unwrap_or("unknown");
-                        let ts = summary.get("run_timestamp").and_then(|v| v.as_str()).unwrap_or("");
+                        let kind = summary
+                            .get("kind")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or("unknown");
+                        let ts = summary
+                            .get("run_timestamp")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or("");
                         let ts_short = &ts[..19.min(ts.len())];
-                        let scope = summary.get("scope_label").and_then(|v| v.as_str()).unwrap_or("?");
-                        let headline = summary.get("headline").and_then(|v| v.as_str()).unwrap_or("");
+                        let scope = summary
+                            .get("scope_label")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or("?");
+                        let headline = summary
+                            .get("headline")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or("");
                         let cost = summary.get("cost_usd").and_then(|v| v.as_f64());
                         let cost_str = cost.map(|c| format!("  ${:.4}", c)).unwrap_or_default();
-                        println!("  - {}  {}  [{}]  {}{}", &run_id[..8.min(run_id.len())], ts_short, kind, scope, cost_str);
+                        println!(
+                            "  - {}  {}  [{}]  {}{}",
+                            &run_id[..8.min(run_id.len())],
+                            ts_short,
+                            kind,
+                            scope,
+                            cost_str
+                        );
                         println!("    {}", headline);
                     }
                 }
@@ -8816,14 +10714,20 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
         LabAction::Search { query } => {
             let q = query.to_lowercase();
             let experiments = list_experiments().map_err(Box::<dyn std::error::Error>::from)?;
-            let hits: Vec<&ExperimentFile> = experiments.iter()
+            let hits: Vec<&ExperimentFile> = experiments
+                .iter()
                 .filter(|e| e.raw.to_lowercase().contains(&q))
                 .collect();
             if r.json {
-                let out: Vec<JsonValue> = hits.iter().map(|e| json!({
-                    "slug": e.slug, "status": e.status, "mode": e.mode,
-                    "hypothesis": e.hypothesis,
-                })).collect();
+                let out: Vec<JsonValue> = hits
+                    .iter()
+                    .map(|e| {
+                        json!({
+                            "slug": e.slug, "status": e.status, "mode": e.mode,
+                            "hypothesis": e.hypothesis,
+                        })
+                    })
+                    .collect();
                 emit(true, JsonValue::Array(out));
             } else {
                 if hits.is_empty() {
@@ -8835,12 +10739,22 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
                     println!("{:<10} {}", status_tag, e.slug);
                     let first_line = e.hypothesis.lines().next().unwrap_or("").trim();
                     if !first_line.is_empty() {
-                        println!("           {}", first_line.chars().take(110).collect::<String>());
+                        println!(
+                            "           {}",
+                            first_line.chars().take(110).collect::<String>()
+                        );
                     }
                 }
             }
         }
-        LabAction::Propose { slug, hypothesis, mode, prediction, r#ref, rubric_ref } => {
+        LabAction::Propose {
+            slug,
+            hypothesis,
+            mode,
+            prediction,
+            r#ref,
+            rubric_ref,
+        } => {
             // Refuse to overwrite an existing experiment.
             let path = experiments_dir().join(format!("{}.md", slug));
             if path.exists() {
@@ -8850,8 +10764,10 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
             }
             let valid_modes = ["passive", "qualitative", "active"];
             if !valid_modes.contains(&mode.as_str()) {
-                return Err(Box::<dyn std::error::Error>::from(
-                    format!("invalid --mode '{}'; must be one of {:?}", mode, valid_modes)));
+                return Err(Box::<dyn std::error::Error>::from(format!(
+                    "invalid --mode '{}'; must be one of {:?}",
+                    mode, valid_modes
+                )));
             }
             let exp = ExperimentFile {
                 slug: slug.clone(),
@@ -8880,62 +10796,117 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
             };
             write_experiment(&exp).map_err(Box::<dyn std::error::Error>::from)?;
             if r.json {
-                emit(true, json!({
-                    "slug": exp.slug, "path": exp.path.display().to_string(),
-                    "status": exp.status, "created_at": exp.created_at,
-                }));
+                emit(
+                    true,
+                    json!({
+                        "slug": exp.slug, "path": exp.path.display().to_string(),
+                        "status": exp.status, "created_at": exp.created_at,
+                    }),
+                );
             } else {
                 println!("Proposed experiment: {} (status=proposed)", exp.slug);
                 println!("File: {}", path.display());
                 println!();
                 println!("Next steps:");
-                println!("  1. Review the file; edit scope_characters / scope_group_chats as needed.");
+                println!(
+                    "  1. Review the file; edit scope_characters / scope_group_chats as needed."
+                );
                 println!("  2. When the run starts: edit status → running.");
-                println!("  3. After the run: `worldcli lab link-run {} <run_id>`.", exp.slug);
+                println!(
+                    "  3. After the run: `worldcli lab link-run {} <run_id>`.",
+                    exp.slug
+                );
                 println!("  4. When interpreted: `worldcli lab resolve {} --status confirmed|refuted --summary \"...\"`.", exp.slug);
             }
         }
-        LabAction::Resolve { slug, status, summary, evidence_strength, axes, strength_provenance, bet_family, report } => {
-            let valid_statuses = ["proposed", "running", "open", "discrepant", "confirmed", "refuted"];
+        LabAction::Resolve {
+            slug,
+            status,
+            summary,
+            evidence_strength,
+            axes,
+            strength_provenance,
+            bet_family,
+            report,
+        } => {
+            let valid_statuses = [
+                "proposed",
+                "running",
+                "open",
+                "discrepant",
+                "confirmed",
+                "refuted",
+            ];
             if !valid_statuses.contains(&status.as_str()) {
-                return Err(Box::<dyn std::error::Error>::from(
-                    format!("invalid --status '{}'; must be one of {:?}", status, valid_statuses)));
+                return Err(Box::<dyn std::error::Error>::from(format!(
+                    "invalid --status '{}'; must be one of {:?}",
+                    status, valid_statuses
+                )));
             }
             // Validate --axis tokens (each must be "axis:tier" with a known tier).
-            let valid_tiers = ["sketch", "claim", "characterized", "vacuous-test", "ensemble-vacuous", "tested-null", "accumulated", "unverified"];
+            let valid_tiers = [
+                "sketch",
+                "claim",
+                "characterized",
+                "vacuous-test",
+                "ensemble-vacuous",
+                "tested-null",
+                "accumulated",
+                "unverified",
+            ];
             for a in &axes {
                 let parts: Vec<&str> = a.splitn(2, ':').collect();
                 if parts.len() != 2 || parts[0].trim().is_empty() || parts[1].trim().is_empty() {
-                    return Err(Box::<dyn std::error::Error>::from(
-                        format!("invalid --axis '{}'; expected 'axis_name:tier'", a)));
+                    return Err(Box::<dyn std::error::Error>::from(format!(
+                        "invalid --axis '{}'; expected 'axis_name:tier'",
+                        a
+                    )));
                 }
                 if !valid_tiers.contains(&parts[1].trim()) {
-                    return Err(Box::<dyn std::error::Error>::from(
-                        format!("invalid tier in --axis '{}'; tier must be one of {:?}", a, valid_tiers)));
+                    return Err(Box::<dyn std::error::Error>::from(format!(
+                        "invalid tier in --axis '{}'; tier must be one of {:?}",
+                        a, valid_tiers
+                    )));
                 }
             }
             // Validate --bet-family if provided.
-            let valid_bet_families = ["structural_bite", "scope_and_direction", "partial_real_instrument_sensitive", "other"];
+            let valid_bet_families = [
+                "structural_bite",
+                "scope_and_direction",
+                "partial_real_instrument_sensitive",
+                "other",
+            ];
             if let Some(bf) = &bet_family {
                 if !valid_bet_families.contains(&bf.as_str()) {
-                    return Err(Box::<dyn std::error::Error>::from(
-                        format!("invalid --bet-family '{}'; must be one of {:?}", bf, valid_bet_families)));
+                    return Err(Box::<dyn std::error::Error>::from(format!(
+                        "invalid --bet-family '{}'; must be one of {:?}",
+                        bf, valid_bet_families
+                    )));
                 }
             }
             let mut exp = load_experiment(&slug).map_err(Box::<dyn std::error::Error>::from)?;
             exp.status = status.clone();
-            if let Some(s) = summary { exp.summary = s; }
+            if let Some(s) = summary {
+                exp.summary = s;
+            }
             // Structured fields take precedence; legacy scalar set explicitly
             // also wins when --evidence-strength is passed without --axis.
             let explicit_axes = !axes.is_empty();
             if explicit_axes {
-                exp.strength_axes = axes.into_iter().map(|a| {
-                    let parts: Vec<&str> = a.splitn(2, ':').collect();
-                    format!("{}:{}", parts[0].trim(), parts[1].trim())
-                }).collect();
+                exp.strength_axes = axes
+                    .into_iter()
+                    .map(|a| {
+                        let parts: Vec<&str> = a.splitn(2, ':').collect();
+                        format!("{}:{}", parts[0].trim(), parts[1].trim())
+                    })
+                    .collect();
             }
-            if let Some(sp) = strength_provenance { exp.strength_provenance = sp; }
-            if let Some(bf) = bet_family { exp.bet_family = bf; }
+            if let Some(sp) = strength_provenance {
+                exp.strength_provenance = sp;
+            }
+            if let Some(bf) = bet_family {
+                exp.bet_family = bf;
+            }
             // Legacy scalar: explicit --evidence-strength always wins. Otherwise,
             // if --axis was passed and the legacy scalar is empty, derive a
             // backward-compat compound form (tier-axis,tier-axis) from the
@@ -8943,34 +10914,62 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
             if let Some(es) = evidence_strength {
                 exp.evidence_strength = es;
             } else if explicit_axes && exp.evidence_strength.is_empty() {
-                exp.evidence_strength = exp.strength_axes.iter().filter_map(|s| {
-                    let parts: Vec<&str> = s.splitn(2, ':').collect();
-                    if parts.len() == 2 { Some(format!("{}-{}", parts[1], parts[0])) } else { None }
-                }).collect::<Vec<_>>().join(",");
+                exp.evidence_strength = exp
+                    .strength_axes
+                    .iter()
+                    .filter_map(|s| {
+                        let parts: Vec<&str> = s.splitn(2, ':').collect();
+                        if parts.len() == 2 {
+                            Some(format!("{}-{}", parts[1], parts[0]))
+                        } else {
+                            None
+                        }
+                    })
+                    .collect::<Vec<_>>()
+                    .join(",");
             }
             if let Some(rp) = report {
-                if !exp.reports.contains(&rp) { exp.reports.push(rp); }
+                if !exp.reports.contains(&rp) {
+                    exp.reports.push(rp);
+                }
             }
-            if matches!(status.as_str(), "confirmed" | "refuted" | "open" | "discrepant") {
-                exp.resolved_at = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
+            if matches!(
+                status.as_str(),
+                "confirmed" | "refuted" | "open" | "discrepant"
+            ) {
+                exp.resolved_at =
+                    chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
             }
             write_experiment(&exp).map_err(Box::<dyn std::error::Error>::from)?;
             if r.json {
-                emit(true, json!({
-                    "slug": exp.slug, "status": exp.status,
-                    "resolved_at": exp.resolved_at, "summary": exp.summary,
-                    "evidence_strength": exp.evidence_strength,
-                    "strength_axes": exp.strength_axes,
-                    "strength_provenance": exp.strength_provenance,
-                    "bet_family": exp.bet_family,
-                }));
+                emit(
+                    true,
+                    json!({
+                        "slug": exp.slug, "status": exp.status,
+                        "resolved_at": exp.resolved_at, "summary": exp.summary,
+                        "evidence_strength": exp.evidence_strength,
+                        "strength_axes": exp.strength_axes,
+                        "strength_provenance": exp.strength_provenance,
+                        "bet_family": exp.bet_family,
+                    }),
+                );
             } else {
                 println!("Resolved {}: status={}", exp.slug, exp.status);
-                if !exp.resolved_at.is_empty() { println!("resolved_at: {}", exp.resolved_at); }
-                if !exp.summary.is_empty() { println!("summary: {}", exp.summary.lines().next().unwrap_or("")); }
-                if !exp.evidence_strength.is_empty() { println!("evidence_strength: {}", exp.evidence_strength); }
-                if !exp.strength_axes.is_empty() { println!("strength_axes: [{}]", exp.strength_axes.join(", ")); }
-                if !exp.bet_family.is_empty() { println!("bet_family: {}", exp.bet_family); }
+                if !exp.resolved_at.is_empty() {
+                    println!("resolved_at: {}", exp.resolved_at);
+                }
+                if !exp.summary.is_empty() {
+                    println!("summary: {}", exp.summary.lines().next().unwrap_or(""));
+                }
+                if !exp.evidence_strength.is_empty() {
+                    println!("evidence_strength: {}", exp.evidence_strength);
+                }
+                if !exp.strength_axes.is_empty() {
+                    println!("strength_axes: [{}]", exp.strength_axes.join(", "));
+                }
+                if !exp.bet_family.is_empty() {
+                    println!("bet_family: {}", exp.bet_family);
+                }
             }
         }
         LabAction::LinkRun { slug, run_id } => {
@@ -8986,21 +10985,43 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
             if r.json {
                 emit(true, json!({"slug": exp.slug, "run_ids": exp.run_ids}));
             } else {
-                println!("Linked run {} → {} (now {} total).", run_id, slug, exp.run_ids.len());
+                println!(
+                    "Linked run {} → {} (now {} total).",
+                    run_id,
+                    slug,
+                    exp.run_ids.len()
+                );
             }
         }
-        LabAction::Scenario { action } => {
-            match action {
-                ScenarioAction::List => cmd_lab_scenario_list(r)?,
-                ScenarioAction::Show { name } => cmd_lab_scenario_show(r, &name)?,
-                ScenarioAction::Run { name, character, rubric_ref, skip_evaluate, model, confirm_cost } => {
-                    let key = api_key.ok_or_else(|| Box::<dyn std::error::Error>::from(
-                        "internal: api_key missing for scenario run".to_string()))?;
-                    cmd_lab_scenario_run(r, key, &name, &character, rubric_ref.as_deref(),
-                        skip_evaluate, model.as_deref(), confirm_cost).await?;
-                }
+        LabAction::Scenario { action } => match action {
+            ScenarioAction::List => cmd_lab_scenario_list(r)?,
+            ScenarioAction::Show { name } => cmd_lab_scenario_show(r, &name)?,
+            ScenarioAction::Run {
+                name,
+                character,
+                rubric_ref,
+                skip_evaluate,
+                model,
+                confirm_cost,
+            } => {
+                let key = api_key.ok_or_else(|| {
+                    Box::<dyn std::error::Error>::from(
+                        "internal: api_key missing for scenario run".to_string(),
+                    )
+                })?;
+                cmd_lab_scenario_run(
+                    r,
+                    key,
+                    &name,
+                    &character,
+                    rubric_ref.as_deref(),
+                    skip_evaluate,
+                    model.as_deref(),
+                    confirm_cost,
+                )
+                .await?;
             }
-        }
+        },
     }
     Ok(())
 }
@@ -9015,7 +11036,9 @@ async fn cmd_lab(r: &Resolved, action: LabAction, api_key: Option<&str>) -> Resu
 // condition) and optionally applies the measure_with rubric to every
 // reply.
 
-fn scenarios_dir() -> PathBuf { PathBuf::from("experiments/scenarios") }
+fn scenarios_dir() -> PathBuf {
+    PathBuf::from("experiments/scenarios")
+}
 
 #[derive(Debug, Clone, Default)]
 struct ScenarioFile {
@@ -9045,7 +11068,11 @@ fn extract_scenario_variants(body: &str) -> Vec<(String, String)> {
     };
     for line in body.lines() {
         if let Some(rest) = line.strip_prefix("## Variant:") {
-            flush(current_label.take(), std::mem::take(&mut current_buf), &mut out);
+            flush(
+                current_label.take(),
+                std::mem::take(&mut current_buf),
+                &mut out,
+            );
             current_label = Some(rest.trim().to_string());
         } else if current_label.is_some() {
             current_buf.push(line.to_string());
@@ -9058,7 +11085,11 @@ fn extract_scenario_variants(body: &str) -> Vec<(String, String)> {
 fn load_scenario(name: &str) -> Result<ScenarioFile, String> {
     let path = scenarios_dir().join(format!("{}.md", name));
     if !path.exists() {
-        return Err(format!("scenario '{}' not found at {}. Run `worldcli lab scenario list` to see the templates.", name, path.display()));
+        return Err(format!(
+            "scenario '{}' not found at {}. Run `worldcli lab scenario list` to see the templates.",
+            name,
+            path.display()
+        ));
     }
     let raw = std::fs::read_to_string(&path)
         .map_err(|e| format!("failed to read {}: {}", path.display(), e))?;
@@ -9072,12 +11103,18 @@ fn load_scenario(name: &str) -> Result<ScenarioFile, String> {
     sf.raw = raw;
     for line in fm_text.lines() {
         let trimmed = line.trim_end();
-        if trimmed.starts_with(' ') || trimmed.starts_with('\t') { continue; }
+        if trimmed.starts_with(' ') || trimmed.starts_with('\t') {
+            continue;
+        }
         if let Some(ci) = trimmed.find(':') {
             let key = trimmed[..ci].trim();
             let value = trimmed[ci + 1..].trim().trim_matches('"').to_string();
             match key {
-                "name" => if !value.is_empty() { sf.name = value; },
+                "name" => {
+                    if !value.is_empty() {
+                        sf.name = value;
+                    }
+                }
                 "purpose" => sf.purpose = value,
                 "measure_with" => sf.measure_with = value,
                 _ => {}
@@ -9086,20 +11123,36 @@ fn load_scenario(name: &str) -> Result<ScenarioFile, String> {
     }
     sf.variants = extract_scenario_variants(&body);
     if sf.variants.is_empty() {
-        return Err(format!("scenario '{}' has no `## Variant: <label>` sections", name));
+        return Err(format!(
+            "scenario '{}' has no `## Variant: <label>` sections",
+            name
+        ));
     }
     Ok(sf)
 }
 
 fn list_scenarios() -> Result<Vec<ScenarioFile>, String> {
     let dir = scenarios_dir();
-    if !dir.exists() { return Ok(Vec::new()); }
+    if !dir.exists() {
+        return Ok(Vec::new());
+    }
     let mut out = Vec::new();
-    for entry in std::fs::read_dir(&dir).map_err(|e| e.to_string())?.flatten() {
+    for entry in std::fs::read_dir(&dir)
+        .map_err(|e| e.to_string())?
+        .flatten()
+    {
         let path = entry.path();
-        if path.extension().and_then(|e| e.to_str()) != Some("md") { continue; }
-        let fname = path.file_stem().and_then(|s| s.to_str()).unwrap_or("").to_string();
-        if fname == "README" { continue; }
+        if path.extension().and_then(|e| e.to_str()) != Some("md") {
+            continue;
+        }
+        let fname = path
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .unwrap_or("")
+            .to_string();
+        if fname == "README" {
+            continue;
+        }
         if let Ok(sf) = load_scenario(&fname) {
             out.push(sf);
         }
@@ -9108,8 +11161,12 @@ fn list_scenarios() -> Result<Vec<ScenarioFile>, String> {
     Ok(out)
 }
 
-fn scenario_runs_dir() -> PathBuf { worldcli_home().join("scenario-runs") }
-fn scenario_runs_manifest() -> PathBuf { scenario_runs_dir().join("manifest.jsonl") }
+fn scenario_runs_dir() -> PathBuf {
+    worldcli_home().join("scenario-runs")
+}
+fn scenario_runs_manifest() -> PathBuf {
+    scenario_runs_dir().join("manifest.jsonl")
+}
 
 fn write_scenario_run(run_id: &str, envelope: &JsonValue) {
     let dir = scenario_runs_dir();
@@ -9130,7 +11187,9 @@ fn write_scenario_run(run_id: &str, envelope: &JsonValue) {
     });
     let line = serde_json::to_string(&manifest_entry).unwrap_or_default();
     if let Ok(mut f) = std::fs::OpenOptions::new()
-        .create(true).append(true).open(scenario_runs_manifest())
+        .create(true)
+        .append(true)
+        .open(scenario_runs_manifest())
     {
         use std::io::Write;
         let _ = writeln!(f, "{}", line);
@@ -9147,13 +11206,18 @@ fn cmd_lab_scenario_list(r: &Resolved) -> Result<(), Box<dyn std::error::Error>>
         emit(r.json, JsonValue::Array(Vec::new()));
         return Ok(());
     }
-    let out: Vec<JsonValue> = scenarios.iter().map(|s| json!({
-        "name": s.name,
-        "purpose": s.purpose,
-        "measure_with": s.measure_with,
-        "variant_count": s.variants.len(),
-        "variants": s.variants.iter().map(|(l, _)| l.clone()).collect::<Vec<_>>(),
-    })).collect();
+    let out: Vec<JsonValue> = scenarios
+        .iter()
+        .map(|s| {
+            json!({
+                "name": s.name,
+                "purpose": s.purpose,
+                "measure_with": s.measure_with,
+                "variant_count": s.variants.len(),
+                "variants": s.variants.iter().map(|(l, _)| l.clone()).collect::<Vec<_>>(),
+            })
+        })
+        .collect();
     if r.json {
         emit(true, JsonValue::Array(out));
     } else {
@@ -9175,14 +11239,17 @@ fn cmd_lab_scenario_list(r: &Resolved) -> Result<(), Box<dyn std::error::Error>>
 fn cmd_lab_scenario_show(r: &Resolved, name: &str) -> Result<(), Box<dyn std::error::Error>> {
     let s = load_scenario(name).map_err(Box::<dyn std::error::Error>::from)?;
     if r.json {
-        emit(true, json!({
-            "name": s.name, "path": s.path.display().to_string(),
-            "purpose": s.purpose, "measure_with": s.measure_with,
-            "variants": s.variants.iter().map(|(l, p)| json!({
-                "label": l, "prompt": p,
-            })).collect::<Vec<_>>(),
-            "raw": s.raw,
-        }));
+        emit(
+            true,
+            json!({
+                "name": s.name, "path": s.path.display().to_string(),
+                "purpose": s.purpose, "measure_with": s.measure_with,
+                "variants": s.variants.iter().map(|(l, p)| json!({
+                    "label": l, "prompt": p,
+                })).collect::<Vec<_>>(),
+                "raw": s.raw,
+            }),
+        );
     } else {
         println!("{}", s.raw);
     }
@@ -9205,18 +11272,21 @@ async fn cmd_lab_scenario_run(
 
     // Resolve rubric (for evaluator) — precedence: CLI override, then
     // scenario's measure_with, then nothing.
-    let rubric_name = rubric_ref_override
-        .map(str::to_string)
-        .or_else(|| {
-            if scenario.measure_with.is_empty() { None }
-            else { Some(scenario.measure_with.clone()) }
-        });
+    let rubric_name = rubric_ref_override.map(str::to_string).or_else(|| {
+        if scenario.measure_with.is_empty() {
+            None
+        } else {
+            Some(scenario.measure_with.clone())
+        }
+    });
     let rubric_text: Option<(String, String, String)> = if skip_evaluate {
         None
     } else if let Some(rn) = rubric_name.as_ref() {
         let rb = load_rubric(rn).map_err(Box::<dyn std::error::Error>::from)?;
         Some((rb.name, rb.version, rb.prompt))
-    } else { None };
+    } else {
+        None
+    };
 
     // Build the system prompt ONCE — held constant across variants.
     let (system_prompt, mut model_config, character, _world_id) = {
@@ -9230,9 +11300,21 @@ async fn cmd_lab_scenario_run(
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
         let anchor_text: Option<String> = combined_axes_block(&conn, character_id);
         let system = app_lib::ai::prompts::build_dialogue_system_prompt(
-            &world, &character, user_profile.as_ref(),
-            None, Some("Auto"), None, None, false, &[], None,
-            &recent_journals, None, &[], None, &active_quests,
+            &world,
+            &character,
+            user_profile.as_ref(),
+            None,
+            Some("Auto"),
+            None,
+            None,
+            false,
+            &[],
+            None,
+            &recent_journals,
+            None,
+            &[],
+            None,
+            &active_quests,
             stance_text.as_deref(),
             anchor_text.as_deref(),
         );
@@ -9240,21 +11322,39 @@ async fn cmd_lab_scenario_run(
         let world_id = character.world_id.clone();
         (system, mc, character, world_id)
     };
-    if let Some(m) = model_override { model_config.dialogue_model = m.to_string(); }
+    if let Some(m) = model_override {
+        model_config.dialogue_model = m.to_string();
+    }
 
     // Project cost: N dialogue calls + (optionally) N evaluator calls.
     let dialogue_in_est = estimate_tokens(&system_prompt);
     let per_variant_out: i64 = 600;
-    let dialogue_cost: f64 = scenario.variants.iter().map(|(_, p)| {
-        let in_tok = dialogue_in_est + estimate_tokens(p);
-        project_cost(&model_config.dialogue_model, in_tok, per_variant_out, &r.cfg.model_pricing)
-    }).sum();
+    let dialogue_cost: f64 = scenario
+        .variants
+        .iter()
+        .map(|(_, p)| {
+            let in_tok = dialogue_in_est + estimate_tokens(p);
+            project_cost(
+                &model_config.dialogue_model,
+                in_tok,
+                per_variant_out,
+                &r.cfg.model_pricing,
+            )
+        })
+        .sum();
     let evaluator_cost: f64 = if let Some((_, _, rp)) = &rubric_text {
         let per_eval_in = estimate_tokens(rp) + 300 + 200 + 180 * 3 + 150;
         let per_eval_out: i64 = 220;
-        let per_call = project_cost(&model_config.memory_model, per_eval_in, per_eval_out, &r.cfg.model_pricing);
+        let per_call = project_cost(
+            &model_config.memory_model,
+            per_eval_in,
+            per_eval_out,
+            &r.cfg.model_pricing,
+        );
         per_call * (scenario.variants.len() as f64)
-    } else { 0.0 };
+    } else {
+        0.0
+    };
     let total_projected = dialogue_cost + evaluator_cost;
 
     let daily_so_far = rolling_24h_total_usd();
@@ -9294,12 +11394,23 @@ async fn cmd_lab_scenario_run(
     let mut total_out_eval: i64 = 0;
 
     for (i, (label, prompt_text)) in scenario.variants.iter().enumerate() {
-        eprint!("\r[worldcli] variant {}/{}: {}", i + 1, scenario.variants.len(), label);
+        eprint!(
+            "\r[worldcli] variant {}/{}: {}",
+            i + 1,
+            scenario.variants.len(),
+            label
+        );
         let req = openai::ChatRequest {
             model: model_config.dialogue_model.clone(),
             messages: vec![
-                openai::ChatMessage { role: "system".to_string(), content: system_prompt.clone() },
-                openai::ChatMessage { role: "user".to_string(), content: prompt_text.clone() },
+                openai::ChatMessage {
+                    role: "system".to_string(),
+                    content: system_prompt.clone(),
+                },
+                openai::ChatMessage {
+                    role: "user".to_string(),
+                    content: prompt_text.clone(),
+                },
             ],
             temperature: Some(0.95),
             max_completion_tokens: None,
@@ -9312,7 +11423,10 @@ async fn cmd_lab_scenario_run(
             Ok(r) => r,
             Err(e) => {
                 eprintln!();
-                eprintln!("[worldcli] variant '{}' dialogue call failed: {} — continuing", label, e);
+                eprintln!(
+                    "[worldcli] variant '{}' dialogue call failed: {} — continuing",
+                    label, e
+                );
                 per_variant_results.push(json!({
                     "label": label,
                     "prompt": prompt_text,
@@ -9327,7 +11441,10 @@ async fn cmd_lab_scenario_run(
             Some(s) => s,
             None => {
                 eprintln!();
-                eprintln!("[worldcli] variant '{}' returned no choices — continuing", label);
+                eprintln!(
+                    "[worldcli] variant '{}' returned no choices — continuing",
+                    label
+                );
                 per_variant_results.push(json!({
                     "label": label,
                     "prompt": prompt_text,
@@ -9339,7 +11456,9 @@ async fn cmd_lab_scenario_run(
             }
         };
         let usage = resp.usage.unwrap_or(openai::Usage {
-            prompt_tokens: 0, completion_tokens: 0, total_tokens: 0,
+            prompt_tokens: 0,
+            completion_tokens: 0,
+            total_tokens: 0,
         });
         total_in += usage.prompt_tokens as i64;
         total_out += usage.completion_tokens as i64;
@@ -9347,7 +11466,16 @@ async fn cmd_lab_scenario_run(
         // Optional evaluator pass.
         let verdict: Option<JsonValue> = if let Some((_, _, rp)) = rubric_text.as_ref() {
             let ctx = vec![("User".to_string(), prompt_text.clone())];
-            match evaluate_one(&base_url, api_key, &model_config.memory_model, rp, &ctx, &reply).await {
+            match evaluate_one(
+                &base_url,
+                api_key,
+                &model_config.memory_model,
+                rp,
+                &ctx,
+                &reply,
+            )
+            .await
+            {
                 Ok((v, u)) => {
                     total_in_eval += u.prompt_tokens as i64;
                     total_out_eval += u.completion_tokens as i64;
@@ -9358,7 +11486,9 @@ async fn cmd_lab_scenario_run(
                 }
                 Err(e) => Some(json!({ "error": e })),
             }
-        } else { None };
+        } else {
+            None
+        };
 
         per_variant_results.push(json!({
             "label": label,
@@ -9373,8 +11503,18 @@ async fn cmd_lab_scenario_run(
     }
     eprintln!();
 
-    let actual_dialogue_usd = actual_cost(&model_config.dialogue_model, total_in, total_out, &r.cfg.model_pricing);
-    let actual_eval_usd = actual_cost(&model_config.memory_model, total_in_eval, total_out_eval, &r.cfg.model_pricing);
+    let actual_dialogue_usd = actual_cost(
+        &model_config.dialogue_model,
+        total_in,
+        total_out,
+        &r.cfg.model_pricing,
+    );
+    let actual_eval_usd = actual_cost(
+        &model_config.memory_model,
+        total_in_eval,
+        total_out_eval,
+        &r.cfg.model_pricing,
+    );
     let actual_usd = actual_dialogue_usd + actual_eval_usd;
     // Log both separately so cost.jsonl attributes to the right model.
     append_cost_log(&CostEntry {
@@ -9459,8 +11599,10 @@ async fn cmd_lab_scenario_run(
             }
             println!();
         }
-        eprintln!("[worldcli] actual cost ${:.4} (dialogue=${:.4}, evaluator=${:.4})",
-            actual_usd, actual_dialogue_usd, actual_eval_usd);
+        eprintln!(
+            "[worldcli] actual cost ${:.4} (dialogue=${:.4}, evaluator=${:.4})",
+            actual_usd, actual_dialogue_usd, actual_eval_usd
+        );
     }
     Ok(())
 }
@@ -9483,17 +11625,30 @@ async fn run_simulate_dialogue_once(
         let conn = r.db.conn.lock().unwrap();
         let character = get_character(&conn, character_id)?;
         let world = get_world(&conn, &character.world_id)?;
-        let user_profile = get_user_profile(&conn, &character.world_id)
-            .map_err(|_| CliError::NotFound(format!("user_profile for world {}", character.world_id)))?;
+        let user_profile = get_user_profile(&conn, &character.world_id).map_err(|_| {
+            CliError::NotFound(format!("user_profile for world {}", character.world_id))
+        })?;
         let recent_journals = list_journal_entries(&conn, character_id, 1).unwrap_or_default();
         let active_quests = list_active_quests(&conn, &character.world_id).unwrap_or_default();
         let latest_stance = latest_relational_stance(&conn, character_id).unwrap_or(None);
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
         let anchor_text: Option<String> = combined_axes_block(&conn, character_id);
         let system = app_lib::ai::prompts::build_dialogue_system_prompt(
-            &world, &character, Some(&user_profile),
-            None, Some("Auto"), None, None, false, &[], None,
-            &recent_journals, None, &[], None, &active_quests,
+            &world,
+            &character,
+            Some(&user_profile),
+            None,
+            Some("Auto"),
+            None,
+            None,
+            false,
+            &[],
+            None,
+            &recent_journals,
+            None,
+            &[],
+            None,
+            &active_quests,
             stance_text.as_deref(),
             anchor_text.as_deref(),
         );
@@ -9596,19 +11751,33 @@ Rules: keep it concrete and in-character; no stage directions; no quote marks; n
                 let req = openai::ChatRequest {
                     model: model_config.memory_model.clone(),
                     messages: vec![
-                        openai::ChatMessage { role: "system".to_string(), content: persona_system.clone() },
-                        openai::ChatMessage { role: "user".to_string(), content: user_prompt.to_string() },
+                        openai::ChatMessage {
+                            role: "system".to_string(),
+                            content: persona_system.clone(),
+                        },
+                        openai::ChatMessage {
+                            role: "user".to_string(),
+                            content: user_prompt.to_string(),
+                        },
                     ],
                     temperature: Some(0.95),
                     max_completion_tokens: None,
                     response_format: None,
                 };
                 let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await?;
-                let usage = resp.usage.unwrap_or(openai::Usage { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 });
+                let usage = resp.usage.unwrap_or(openai::Usage {
+                    prompt_tokens: 0,
+                    completion_tokens: 0,
+                    total_tokens: 0,
+                });
                 usage_user_in += usage.prompt_tokens as i64;
                 usage_user_out += usage.completion_tokens as i64;
-                resp.choices.first().map(|c| c.message.content.clone())
-                    .ok_or_else(|| CliError::Other("user-persona model returned no choices".to_string()))?
+                resp.choices
+                    .first()
+                    .map(|c| c.message.content.clone())
+                    .ok_or_else(|| {
+                        CliError::Other("user-persona model returned no choices".to_string())
+                    })?
             }
         } else {
             let mut short_history = String::new();
@@ -9624,22 +11793,39 @@ Rules: keep it concrete and in-character; no stage directions; no quote marks; n
             let req = openai::ChatRequest {
                 model: model_config.memory_model.clone(),
                 messages: vec![
-                    openai::ChatMessage { role: "system".to_string(), content: persona_system.clone() },
-                    openai::ChatMessage { role: "user".to_string(), content: user_prompt },
+                    openai::ChatMessage {
+                        role: "system".to_string(),
+                        content: persona_system.clone(),
+                    },
+                    openai::ChatMessage {
+                        role: "user".to_string(),
+                        content: user_prompt,
+                    },
                 ],
                 temperature: Some(0.95),
                 max_completion_tokens: None,
                 response_format: None,
             };
             let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await?;
-            let usage = resp.usage.unwrap_or(openai::Usage { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 });
+            let usage = resp.usage.unwrap_or(openai::Usage {
+                prompt_tokens: 0,
+                completion_tokens: 0,
+                total_tokens: 0,
+            });
             usage_user_in += usage.prompt_tokens as i64;
             usage_user_out += usage.completion_tokens as i64;
-            resp.choices.first().map(|c| c.message.content.clone())
-                .ok_or_else(|| CliError::Other("user-persona model returned no choices".to_string()))?
+            resp.choices
+                .first()
+                .map(|c| c.message.content.clone())
+                .ok_or_else(|| {
+                    CliError::Other("user-persona model returned no choices".to_string())
+                })?
         };
 
-        dialogue_history.push(openai::ChatMessage { role: "user".to_string(), content: user_line.clone() });
+        dialogue_history.push(openai::ChatMessage {
+            role: "user".to_string(),
+            content: user_line.clone(),
+        });
         transcript.push(json!({
             "turn": turn_idx + 1,
             "speaker": user_profile.display_name,
@@ -9647,7 +11833,10 @@ Rules: keep it concrete and in-character; no stage directions; no quote marks; n
             "content": user_line,
         }));
 
-        let mut assistant_msgs = vec![openai::ChatMessage { role: "system".to_string(), content: system_prompt.clone() }];
+        let mut assistant_msgs = vec![openai::ChatMessage {
+            role: "system".to_string(),
+            content: system_prompt.clone(),
+        }];
         assistant_msgs.extend(dialogue_history.iter().cloned());
         let req = openai::ChatRequest {
             model: model_config.dialogue_model.clone(),
@@ -9657,12 +11846,22 @@ Rules: keep it concrete and in-character; no stage directions; no quote marks; n
             response_format: None,
         };
         let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await?;
-        let usage = resp.usage.unwrap_or(openai::Usage { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 });
+        let usage = resp.usage.unwrap_or(openai::Usage {
+            prompt_tokens: 0,
+            completion_tokens: 0,
+            total_tokens: 0,
+        });
         usage_assistant_in += usage.prompt_tokens as i64;
         usage_assistant_out += usage.completion_tokens as i64;
-        let assistant_line = resp.choices.first().map(|c| c.message.content.clone())
+        let assistant_line = resp
+            .choices
+            .first()
+            .map(|c| c.message.content.clone())
             .ok_or_else(|| CliError::Other("dialogue model returned no choices".to_string()))?;
-        dialogue_history.push(openai::ChatMessage { role: "assistant".to_string(), content: assistant_line.clone() });
+        dialogue_history.push(openai::ChatMessage {
+            role: "assistant".to_string(),
+            content: assistant_line.clone(),
+        });
         transcript.push(json!({
             "turn": turn_idx + 1,
             "speaker": character.display_name,
@@ -9671,8 +11870,18 @@ Rules: keep it concrete and in-character; no stage directions; no quote marks; n
         }));
     }
 
-    let dialogue_usd = actual_cost(&model_config.dialogue_model, usage_assistant_in, usage_assistant_out, &r.cfg.model_pricing);
-    let persona_usd = actual_cost(&model_config.memory_model, usage_user_in, usage_user_out, &r.cfg.model_pricing);
+    let dialogue_usd = actual_cost(
+        &model_config.dialogue_model,
+        usage_assistant_in,
+        usage_assistant_out,
+        &r.cfg.model_pricing,
+    );
+    let persona_usd = actual_cost(
+        &model_config.memory_model,
+        usage_user_in,
+        usage_user_out,
+        &r.cfg.model_pricing,
+    );
     let mut synthesis_usage_in: i64 = 0;
     let mut synthesis_usage_out: i64 = 0;
     let synthesis: Option<JsonValue> = if synthesize {
@@ -9697,8 +11906,13 @@ Return VALID JSON ONLY with this exact top-level shape:\n\
 }\n\
 Constraints: concrete, short, implementation-oriented, no fluff.";
         let synth_overlay = if let Some(p) = synthesis_rubric_file {
-            std::fs::read_to_string(p)
-                .map_err(|e| CliError::Other(format!("failed to read --synthesis-rubric-file {}: {}", p.display(), e)))?
+            std::fs::read_to_string(p).map_err(|e| {
+                CliError::Other(format!(
+                    "failed to read --synthesis-rubric-file {}: {}",
+                    p.display(),
+                    e
+                ))
+            })?
         } else {
             String::new()
         };
@@ -9709,34 +11923,51 @@ Constraints: concrete, short, implementation-oriented, no fluff.";
         let req = openai::ChatRequest {
             model: synthesis_model.to_string(),
             messages: vec![
-                openai::ChatMessage { role: "system".to_string(), content: synth_system.to_string() },
-                openai::ChatMessage { role: "user".to_string(), content: synth_user },
+                openai::ChatMessage {
+                    role: "system".to_string(),
+                    content: synth_system.to_string(),
+                },
+                openai::ChatMessage {
+                    role: "user".to_string(),
+                    content: synth_user,
+                },
             ],
             temperature: Some(0.3),
             max_completion_tokens: None,
-            response_format: Some(openai::ResponseFormat { format_type: "json_object".to_string() }),
+            response_format: Some(openai::ResponseFormat {
+                format_type: "json_object".to_string(),
+            }),
         };
         let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await?;
-        let usage = resp.usage.unwrap_or(openai::Usage { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 });
+        let usage = resp.usage.unwrap_or(openai::Usage {
+            prompt_tokens: 0,
+            completion_tokens: 0,
+            total_tokens: 0,
+        });
         synthesis_usage_in += usage.prompt_tokens as i64;
         synthesis_usage_out += usage.completion_tokens as i64;
-        let raw = resp.choices.first().map(|c| c.message.content.clone())
+        let raw = resp
+            .choices
+            .first()
+            .map(|c| c.message.content.clone())
             .ok_or_else(|| CliError::Other("synthesis model returned no choices".to_string()))?;
-        let mut parsed = serde_json::from_str::<JsonValue>(&raw).unwrap_or_else(|_| json!({
-            "summary": raw,
-            "user_intent": null,
-            "character_response_style": null,
-            "what_worked": [],
-            "risks": [],
-            "opportunities": [],
-            "action_items": [],
-            "next_probe": null,
-            "next_beat": {
-                "goal": null,
-                "run_plan": [],
-                "success_signal": null
-            }
-        }));
+        let mut parsed = serde_json::from_str::<JsonValue>(&raw).unwrap_or_else(|_| {
+            json!({
+                "summary": raw,
+                "user_intent": null,
+                "character_response_style": null,
+                "what_worked": [],
+                "risks": [],
+                "opportunities": [],
+                "action_items": [],
+                "next_probe": null,
+                "next_beat": {
+                    "goal": null,
+                    "run_plan": [],
+                    "success_signal": null
+                }
+            })
+        });
         // Normalize a few common malformed outputs so downstream tooling can rely on fields.
         if parsed.get("action_items").is_none() {
             parsed["action_items"] = json!([]);
@@ -9754,7 +11985,10 @@ Constraints: concrete, short, implementation-oriented, no fluff.";
                 "success_signal": null
             });
         }
-        if let Some(items) = parsed.get_mut("action_items").and_then(|v| v.as_array_mut()) {
+        if let Some(items) = parsed
+            .get_mut("action_items")
+            .and_then(|v| v.as_array_mut())
+        {
             for item in items.iter_mut() {
                 if let Some(obj) = item.as_object_mut() {
                     let owner = obj.get("owner").and_then(|v| v.as_str()).unwrap_or("agent");
@@ -9766,7 +12000,10 @@ Constraints: concrete, short, implementation-oriented, no fluff.";
                         obj.insert("priority".to_string(), json!("P1"));
                     }
                     if obj.get("task").and_then(|v| v.as_str()).is_none() {
-                        obj.insert("task".to_string(), json!("Refine next prompt using latest synthesis."));
+                        obj.insert(
+                            "task".to_string(),
+                            json!("Refine next prompt using latest synthesis."),
+                        );
                     }
                 }
             }
@@ -9779,7 +12016,12 @@ Constraints: concrete, short, implementation-oriented, no fluff.";
     } else {
         None
     };
-    let synthesis_usd = actual_cost(synthesis_model, synthesis_usage_in, synthesis_usage_out, &r.cfg.model_pricing);
+    let synthesis_usd = actual_cost(
+        synthesis_model,
+        synthesis_usage_in,
+        synthesis_usage_out,
+        &r.cfg.model_pricing,
+    );
     let actual_usd = dialogue_usd + persona_usd + synthesis_usd;
     append_cost_log(&CostEntry {
         timestamp: chrono::Utc::now().to_rfc3339(),
@@ -9857,17 +12099,27 @@ async fn cmd_simulate_dialogue(
         synthesize,
         synthesize_model_override,
         synthesis_rubric_file,
-    ).await?;
+    )
+    .await?;
     if r.json {
         emit(true, envelope);
     } else {
         println!("=== SIMULATED DIALOGUE ===");
-        println!("character: {} ({})", envelope["character_name"].as_str().unwrap_or(""), character_id);
-        println!("user:      {}", envelope["user_display_name"].as_str().unwrap_or(""));
+        println!(
+            "character: {} ({})",
+            envelope["character_name"].as_str().unwrap_or(""),
+            character_id
+        );
+        println!(
+            "user:      {}",
+            envelope["user_display_name"].as_str().unwrap_or("")
+        );
         println!("turns:     {}", turns);
-        println!("models:    assistant={} | user={}",
+        println!(
+            "models:    assistant={} | user={}",
             envelope["assistant_model"].as_str().unwrap_or(""),
-            envelope["user_model"].as_str().unwrap_or(""));
+            envelope["user_model"].as_str().unwrap_or("")
+        );
         println!();
         if let Some(lines) = envelope["transcript"].as_array() {
             for line in lines {
@@ -9877,12 +12129,21 @@ async fn cmd_simulate_dialogue(
             }
         }
         println!();
-        println!("cost_usd:  {:.4}", envelope["cost"]["actual_usd"].as_f64().unwrap_or(0.0));
+        println!(
+            "cost_usd:  {:.4}",
+            envelope["cost"]["actual_usd"].as_f64().unwrap_or(0.0)
+        );
         if let Some(synth) = envelope.get("synthesis").and_then(|v| v.as_object()) {
             println!();
-            println!("synthesis_model: {}", synth.get("model").and_then(|v| v.as_str()).unwrap_or(""));
+            println!(
+                "synthesis_model: {}",
+                synth.get("model").and_then(|v| v.as_str()).unwrap_or("")
+            );
             let analysis = synth.get("analysis").cloned().unwrap_or(json!({}));
-            println!("synthesis: {}", serde_json::to_string_pretty(&analysis).unwrap_or_else(|_| "{}".to_string()));
+            println!(
+                "synthesis: {}",
+                serde_json::to_string_pretty(&analysis).unwrap_or_else(|_| "{}".to_string())
+            );
         }
     }
     Ok(())
@@ -9902,10 +12163,15 @@ fn truncate_for_ab_diff(text: &str, max_chars: usize) -> String {
 }
 
 fn normalize_task_key(text: &str) -> String {
-    text
-        .to_ascii_lowercase()
+    text.to_ascii_lowercase()
         .chars()
-        .map(|c| if c.is_alphanumeric() || c.is_whitespace() { c } else { ' ' })
+        .map(|c| {
+            if c.is_alphanumeric() || c.is_whitespace() {
+                c
+            } else {
+                ' '
+            }
+        })
         .collect::<String>()
         .split_whitespace()
         .collect::<Vec<_>>()
@@ -9931,10 +12197,7 @@ fn extract_top3_task_maps(items: &[JsonValue]) -> BTreeMap<String, String> {
     out
 }
 
-fn compute_ab_score_components(
-    overlap_ratio: f64,
-    confidence_delta: f64,
-) -> (f64, f64) {
+fn compute_ab_score_components(overlap_ratio: f64, confidence_delta: f64) -> (f64, f64) {
     let confidence_alignment = (1.0 - confidence_delta.abs().min(1.0)).max(0.0);
     let overlap_clamped = overlap_ratio.clamp(0.0, 1.0);
     let score = (0.7 * overlap_clamped + 0.3 * confidence_alignment).min(1.0);
@@ -9971,8 +12234,8 @@ fn comparable_ab_diff_count_deltas(
         snapshot_ab_diff_count(current_snapshot, "shared") - snapshot_ab_diff_count(p, "shared");
     let d_det = snapshot_ab_diff_count(current_snapshot, "deterministic_only")
         - snapshot_ab_diff_count(p, "deterministic_only");
-    let d_llm =
-        snapshot_ab_diff_count(current_snapshot, "llm_only") - snapshot_ab_diff_count(p, "llm_only");
+    let d_llm = snapshot_ab_diff_count(current_snapshot, "llm_only")
+        - snapshot_ab_diff_count(p, "llm_only");
     Some((d_shared, d_det, d_llm))
 }
 
@@ -9993,7 +12256,9 @@ fn compute_ab_stability_note(
         {
             let prev_overlap = p["ab_top3_overlap_ratio"].as_f64().unwrap_or(0.0);
             let prev_score = p["ab_score"].as_f64().unwrap_or(0.0);
-            let curr_overlap = current_snapshot["ab_top3_overlap_ratio"].as_f64().unwrap_or(0.0);
+            let curr_overlap = current_snapshot["ab_top3_overlap_ratio"]
+                .as_f64()
+                .unwrap_or(0.0);
             let curr_score = current_snapshot["ab_score"].as_f64().unwrap_or(0.0);
             let (d_shared, d_det, d_llm) = comparable_ab_diff_count_deltas(
                 Some(p),
@@ -10013,7 +12278,9 @@ fn compute_ab_stability_note(
                 d_llm
             )
         }
-        Some(_) => "previous run exists but settings differ; stability baseline skipped.".to_string(),
+        Some(_) => {
+            "previous run exists but settings differ; stability baseline skipped.".to_string()
+        }
         None => "no previous run baseline for automatic stability comparison.".to_string(),
     }
 }
@@ -10037,7 +12304,13 @@ async fn cmd_simulate_dialogue_batch(
     fn normalize_key(s: &str) -> String {
         s.to_lowercase()
             .chars()
-            .map(|c| if c.is_alphanumeric() || c.is_whitespace() { c } else { ' ' })
+            .map(|c| {
+                if c.is_alphanumeric() || c.is_whitespace() {
+                    c
+                } else {
+                    ' '
+                }
+            })
             .collect::<String>()
             .split_whitespace()
             .collect::<Vec<_>>()
@@ -10059,7 +12332,8 @@ async fn cmd_simulate_dialogue_batch(
             true,
             synthesize_model_override,
             synthesis_rubric_file,
-        ).await?;
+        )
+        .await?;
         envelopes.push(env);
     }
 
@@ -10074,16 +12348,22 @@ async fn cmd_simulate_dialogue_batch(
         let analysis = env["synthesis"]["analysis"].clone();
         if let Some(arr) = analysis["opportunities"].as_array() {
             for v in arr {
-                if let Some(s) = v.as_str() { opportunities.push(s.to_string()); }
+                if let Some(s) = v.as_str() {
+                    opportunities.push(s.to_string());
+                }
             }
         }
         if let Some(arr) = analysis["risks"].as_array() {
             for v in arr {
-                if let Some(s) = v.as_str() { risks.push(s.to_string()); }
+                if let Some(s) = v.as_str() {
+                    risks.push(s.to_string());
+                }
             }
         }
         if let Some(arr) = analysis["action_items"].as_array() {
-            for v in arr { tasks.push(v.clone()); }
+            for v in arr {
+                tasks.push(v.clone());
+            }
         }
         if let Some(s) = analysis["next_probe"].as_str() {
             next_probes.push(s.to_string());
@@ -10093,28 +12373,37 @@ async fn cmd_simulate_dialogue_batch(
         }
     }
 
-    let mut opp_counts: std::collections::HashMap<String, (usize, String)> = std::collections::HashMap::new();
+    let mut opp_counts: std::collections::HashMap<String, (usize, String)> =
+        std::collections::HashMap::new();
     for v in opportunities {
         let key = normalize_key(&v);
         let e = opp_counts.entry(key).or_insert((0usize, v.clone()));
         e.0 += 1;
     }
-    let mut risk_counts: std::collections::HashMap<String, (usize, String)> = std::collections::HashMap::new();
+    let mut risk_counts: std::collections::HashMap<String, (usize, String)> =
+        std::collections::HashMap::new();
     for v in risks {
         let key = normalize_key(&v);
         let e = risk_counts.entry(key).or_insert((0usize, v.clone()));
         e.0 += 1;
     }
-    let mut task_counts: std::collections::HashMap<String, (usize, JsonValue)> = std::collections::HashMap::new();
+    let mut task_counts: std::collections::HashMap<String, (usize, JsonValue)> =
+        std::collections::HashMap::new();
     for item in tasks {
         let task_text = item["task"].as_str().unwrap_or("").to_string();
-        if task_text.is_empty() { continue; }
+        if task_text.is_empty() {
+            continue;
+        }
         let key = normalize_key(&task_text);
         let e = task_counts.entry(key).or_insert((0usize, item.clone()));
         e.0 += 1;
         let existing_priority = e.1["priority"].as_str().unwrap_or("P2");
         let candidate_priority = item["priority"].as_str().unwrap_or("P2");
-        let rank = |p: &str| match p { "P0" => 0, "P1" => 1, _ => 2 };
+        let rank = |p: &str| match p {
+            "P0" => 0,
+            "P1" => 1,
+            _ => 2,
+        };
         if rank(candidate_priority) < rank(existing_priority) {
             e.1["priority"] = json!(candidate_priority);
         }
@@ -10123,21 +12412,35 @@ async fn cmd_simulate_dialogue_batch(
         }
     }
 
-    let mut opportunities_ranked: Vec<(usize, String)> = opp_counts.into_values().map(|(n, s)| (n, s)).collect();
+    let mut opportunities_ranked: Vec<(usize, String)> =
+        opp_counts.into_values().map(|(n, s)| (n, s)).collect();
     opportunities_ranked.sort_by(|a, b| b.0.cmp(&a.0).then_with(|| a.1.cmp(&b.1)));
-    let mut risks_ranked: Vec<(usize, String)> = risk_counts.into_values().map(|(n, s)| (n, s)).collect();
+    let mut risks_ranked: Vec<(usize, String)> =
+        risk_counts.into_values().map(|(n, s)| (n, s)).collect();
     risks_ranked.sort_by(|a, b| b.0.cmp(&a.0).then_with(|| a.1.cmp(&b.1)));
     let mut tasks_ranked: Vec<(usize, JsonValue)> = task_counts.into_values().collect();
     tasks_ranked.sort_by(|a, b| {
         let apr = a.1["priority"].as_str().unwrap_or("P2");
         let bpr = b.1["priority"].as_str().unwrap_or("P2");
-        let rank = |p: &str| match p { "P0" => 0, "P1" => 1, _ => 2 };
+        let rank = |p: &str| match p {
+            "P0" => 0,
+            "P1" => 1,
+            _ => 2,
+        };
         b.0.cmp(&a.0).then_with(|| rank(apr).cmp(&rank(bpr)))
     });
 
-    let top3_action_items: Vec<JsonValue> = tasks_ranked.iter().take(3).map(|(_, v)| v.clone()).collect();
+    let top3_action_items: Vec<JsonValue> = tasks_ranked
+        .iter()
+        .take(3)
+        .map(|(_, v)| v.clone())
+        .collect();
     let dominant_count = tasks_ranked.first().map(|x| x.0).unwrap_or(0);
-    let confidence = if runs == 0 { 0.0 } else { dominant_count as f64 / runs as f64 };
+    let confidence = if runs == 0 {
+        0.0
+    } else {
+        dominant_count as f64 / runs as f64
+    };
 
     let deterministic_compound = json!({
         "run_count": runs,
@@ -10197,17 +12500,34 @@ Rules: merge semantically overlapping items; choose one canonical phrasing each;
         let req = openai::ChatRequest {
             model: compound_model.clone(),
             messages: vec![
-                openai::ChatMessage { role: "system".to_string(), content: system_prompt.to_string() },
-                openai::ChatMessage { role: "user".to_string(), content: user_prompt },
+                openai::ChatMessage {
+                    role: "system".to_string(),
+                    content: system_prompt.to_string(),
+                },
+                openai::ChatMessage {
+                    role: "user".to_string(),
+                    content: user_prompt,
+                },
             ],
             temperature: Some(0.2),
             max_completion_tokens: None,
-            response_format: Some(openai::ResponseFormat { format_type: "json_object".to_string() }),
+            response_format: Some(openai::ResponseFormat {
+                format_type: "json_object".to_string(),
+            }),
         };
         match openai::chat_completion_with_base(&base_url, api_key, &req).await {
             Ok(resp) => {
-                let usage = resp.usage.unwrap_or(openai::Usage { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 });
-                let compound_usd = actual_cost(&compound_model, usage.prompt_tokens as i64, usage.completion_tokens as i64, &r.cfg.model_pricing);
+                let usage = resp.usage.unwrap_or(openai::Usage {
+                    prompt_tokens: 0,
+                    completion_tokens: 0,
+                    total_tokens: 0,
+                });
+                let compound_usd = actual_cost(
+                    &compound_model,
+                    usage.prompt_tokens as i64,
+                    usage.completion_tokens as i64,
+                    &r.cfg.model_pricing,
+                );
                 compound_call_usd = compound_usd;
                 append_cost_log(&CostEntry {
                     timestamp: chrono::Utc::now().to_rfc3339(),
@@ -10216,10 +12536,20 @@ Rules: merge semantically overlapping items; choose one canonical phrasing each;
                     completion_tokens: usage.completion_tokens as i64,
                     usd: compound_usd,
                 });
-                let raw = resp.choices.first().map(|c| c.message.content.clone()).unwrap_or_default();
+                let raw = resp
+                    .choices
+                    .first()
+                    .map(|c| c.message.content.clone())
+                    .unwrap_or_default();
                 if let Ok(parsed) = serde_json::from_str::<JsonValue>(&raw) {
-                    let has_top3 = parsed.get("top3_action_items").and_then(|v| v.as_array()).is_some();
-                    let has_actions = parsed.get("action_items").and_then(|v| v.as_array()).is_some();
+                    let has_top3 = parsed
+                        .get("top3_action_items")
+                        .and_then(|v| v.as_array())
+                        .is_some();
+                    let has_actions = parsed
+                        .get("action_items")
+                        .and_then(|v| v.as_array())
+                        .is_some();
                     if has_top3 && has_actions {
                         let llm_compound = json!({
                             "run_count": runs,
@@ -10276,95 +12606,104 @@ Rules: merge semantically overlapping items; choose one canonical phrasing each;
         .and_then(|v| v.as_str())
         .unwrap_or("deterministic")
         .to_string();
-    let (ab_delta_summary, ab_top3_diff, ab_top3_overlap_ratio, ab_score, ab_score_components) = if let Some(llm_obj) = llm_compound_candidate.as_ref().and_then(|v| v.as_object()) {
-        let det_top = deterministic_compound
-            .get("top3_action_items")
-            .and_then(|v| v.as_array())
-            .cloned()
-            .unwrap_or_default();
-        let llm_top = llm_obj
-            .get("top3_action_items")
-            .and_then(|v| v.as_array())
-            .cloned()
-            .unwrap_or_default();
-        let det_map = extract_top3_task_maps(&det_top);
-        let llm_map = extract_top3_task_maps(&llm_top);
-        let det_set: BTreeSet<String> = det_map.keys().cloned().collect();
-        let llm_set: BTreeSet<String> = llm_map.keys().cloned().collect();
-        let shared_keys: Vec<String> = det_set.intersection(&llm_set).cloned().collect();
-        let deterministic_only_keys: Vec<String> = det_set.difference(&llm_set).cloned().collect();
-        let llm_only_keys: Vec<String> = llm_set.difference(&det_set).cloned().collect();
-        let shared: Vec<String> = shared_keys
-            .iter()
-            .map(|k| det_map.get(k).or_else(|| llm_map.get(k)).cloned().unwrap_or_else(|| k.clone()))
-            .collect();
-        let deterministic_only: Vec<String> = deterministic_only_keys
-            .iter()
-            .filter_map(|k| det_map.get(k).cloned())
-            .collect();
-        let llm_only: Vec<String> = llm_only_keys
-            .iter()
-            .filter_map(|k| llm_map.get(k).cloned())
-            .collect();
-        let overlap = det_set.intersection(&llm_set).count();
-        let overlap_ratio = if det_set.is_empty() && llm_set.is_empty() {
-            1.0
+    let (ab_delta_summary, ab_top3_diff, ab_top3_overlap_ratio, ab_score, ab_score_components) =
+        if let Some(llm_obj) = llm_compound_candidate.as_ref().and_then(|v| v.as_object()) {
+            let det_top = deterministic_compound
+                .get("top3_action_items")
+                .and_then(|v| v.as_array())
+                .cloned()
+                .unwrap_or_default();
+            let llm_top = llm_obj
+                .get("top3_action_items")
+                .and_then(|v| v.as_array())
+                .cloned()
+                .unwrap_or_default();
+            let det_map = extract_top3_task_maps(&det_top);
+            let llm_map = extract_top3_task_maps(&llm_top);
+            let det_set: BTreeSet<String> = det_map.keys().cloned().collect();
+            let llm_set: BTreeSet<String> = llm_map.keys().cloned().collect();
+            let shared_keys: Vec<String> = det_set.intersection(&llm_set).cloned().collect();
+            let deterministic_only_keys: Vec<String> =
+                det_set.difference(&llm_set).cloned().collect();
+            let llm_only_keys: Vec<String> = llm_set.difference(&det_set).cloned().collect();
+            let shared: Vec<String> = shared_keys
+                .iter()
+                .map(|k| {
+                    det_map
+                        .get(k)
+                        .or_else(|| llm_map.get(k))
+                        .cloned()
+                        .unwrap_or_else(|| k.clone())
+                })
+                .collect();
+            let deterministic_only: Vec<String> = deterministic_only_keys
+                .iter()
+                .filter_map(|k| det_map.get(k).cloned())
+                .collect();
+            let llm_only: Vec<String> = llm_only_keys
+                .iter()
+                .filter_map(|k| llm_map.get(k).cloned())
+                .collect();
+            let overlap = det_set.intersection(&llm_set).count();
+            let overlap_ratio = if det_set.is_empty() && llm_set.is_empty() {
+                1.0
+            } else {
+                overlap as f64 / det_set.len().max(llm_set.len()) as f64
+            };
+            let det_conf = deterministic_compound
+                .get("confidence")
+                .and_then(|v| v.as_f64())
+                .unwrap_or(0.0);
+            let llm_conf = llm_obj
+                .get("confidence")
+                .and_then(|v| v.as_f64())
+                .unwrap_or(det_conf);
+            let delta = llm_conf - det_conf;
+            let (confidence_alignment, ab_score) =
+                compute_ab_score_components(overlap_ratio, delta);
+            (
+                format!(
+                    "top3 overlap: {}/3; confidence Δ: {:+.2} (llm {:.2} vs det {:.2})",
+                    overlap, delta, llm_conf, det_conf
+                ),
+                json!({
+                    "shared": shared,
+                    "deterministic_only": deterministic_only,
+                    "llm_only": llm_only,
+                }),
+                overlap_ratio,
+                ab_score,
+                json!({
+                    "weights": {
+                        "overlap_ratio": 0.7,
+                        "confidence_alignment": 0.3
+                    },
+                    "overlap_ratio": overlap_ratio,
+                    "confidence_alignment": confidence_alignment,
+                    "confidence_delta": delta
+                }),
+            )
         } else {
-            overlap as f64 / det_set.len().max(llm_set.len()) as f64
+            (
+                "llm candidate unavailable; using deterministic compound.".to_string(),
+                json!({
+                    "shared": [],
+                    "deterministic_only": [],
+                    "llm_only": [],
+                }),
+                0.0,
+                0.0,
+                json!({
+                    "weights": {
+                        "overlap_ratio": 0.7,
+                        "confidence_alignment": 0.3
+                    },
+                    "overlap_ratio": 0.0,
+                    "confidence_alignment": 0.0,
+                    "confidence_delta": 0.0
+                }),
+            )
         };
-        let det_conf = deterministic_compound
-            .get("confidence")
-            .and_then(|v| v.as_f64())
-            .unwrap_or(0.0);
-        let llm_conf = llm_obj
-            .get("confidence")
-            .and_then(|v| v.as_f64())
-            .unwrap_or(det_conf);
-        let delta = llm_conf - det_conf;
-        let (confidence_alignment, ab_score) = compute_ab_score_components(overlap_ratio, delta);
-        (
-            format!(
-                "top3 overlap: {}/3; confidence Δ: {:+.2} (llm {:.2} vs det {:.2})",
-                overlap, delta, llm_conf, det_conf
-            ),
-            json!({
-                "shared": shared,
-                "deterministic_only": deterministic_only,
-                "llm_only": llm_only,
-            }),
-            overlap_ratio,
-            ab_score,
-            json!({
-                "weights": {
-                    "overlap_ratio": 0.7,
-                    "confidence_alignment": 0.3
-                },
-                "overlap_ratio": overlap_ratio,
-                "confidence_alignment": confidence_alignment,
-                "confidence_delta": delta
-            }),
-        )
-    } else {
-        (
-            "llm candidate unavailable; using deterministic compound.".to_string(),
-            json!({
-                "shared": [],
-                "deterministic_only": [],
-                "llm_only": [],
-            }),
-            0.0,
-            0.0,
-            json!({
-                "weights": {
-                    "overlap_ratio": 0.7,
-                    "confidence_alignment": 0.3
-                },
-                "overlap_ratio": 0.0,
-                "confidence_alignment": 0.0,
-                "confidence_delta": 0.0
-            }),
-        )
-    };
     let ab_top3_diff_counts = json!({
         "shared": ab_top3_diff["shared"].as_array().map(|a| a.len()).unwrap_or(0),
         "deterministic_only": ab_top3_diff["deterministic_only"]
@@ -10440,7 +12779,9 @@ Rules: merge semantically overlapping items; choose one canonical phrasing each;
         println!("total_cost_usd: {:.4}", total_usd);
         println!(
             "effective_compound_method: {}",
-            out["effective_compound_method"].as_str().unwrap_or("deterministic")
+            out["effective_compound_method"]
+                .as_str()
+                .unwrap_or("deterministic")
         );
         println!(
             "ab_delta_summary: {}",
@@ -10479,7 +12820,10 @@ Rules: merge semantically overlapping items; choose one canonical phrasing each;
                 ds, dd, dl
             );
         }
-        println!("compound: {}", serde_json::to_string_pretty(&out["compound"]).unwrap_or_else(|_| "{}".to_string()));
+        println!(
+            "compound: {}",
+            serde_json::to_string_pretty(&out["compound"]).unwrap_or_else(|_| "{}".to_string())
+        );
     }
     Ok(())
 }
@@ -10508,7 +12852,8 @@ async fn cmd_consult(
 ) -> Result<(), Box<dyn std::error::Error>> {
     if mode != "immersive" && mode != "backstage" {
         return Err(Box::<dyn std::error::Error>::from(format!(
-            "invalid --mode '{}'; must be 'immersive' or 'backstage'", mode
+            "invalid --mode '{}'; must be 'immersive' or 'backstage'",
+            mode
         )));
     }
     let target = resolve_consult_target(character_id, group_chat_id)
@@ -10522,13 +12867,17 @@ async fn cmd_consult(
     // parity (including the action-card instructions; the CLI just
     // surfaces them as fenced `action` blocks in the reply text
     // without a one-click render surface).
-    let (system_prompt, mut model_config) = app_lib::ai::consultant::build_consultant_system_prompt(
-        &r.db,
-        mode,
-        target.character_id,
-        target.group_chat_id,
-    ).map_err(Box::<dyn std::error::Error>::from)?;
-    if let Some(m) = model_override { model_config.dialogue_model = m.to_string(); }
+    let (system_prompt, mut model_config) =
+        app_lib::ai::consultant::build_consultant_system_prompt(
+            &r.db,
+            mode,
+            target.character_id,
+            target.group_chat_id,
+        )
+        .map_err(Box::<dyn std::error::Error>::from)?;
+    if let Some(m) = model_override {
+        model_config.dialogue_model = m.to_string();
+    }
 
     // Character-name + world_id for run-log tagging, plus dev-session
     // history if --session was supplied.
@@ -10536,35 +12885,39 @@ async fn cmd_consult(
         let conn = r.db.conn.lock().unwrap();
         if let Some(cid) = target.character_id {
             let character = get_character(&conn, cid)?;
-            let (session_id, prior_messages): (Option<String>, Vec<(String, String)>) = match session {
-                None => (None, Vec::new()),
-                Some(name) => {
-                    let existing: Option<String> = conn.query_row(
-                        "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
-                        params![name], |r| r.get(0),
-                    ).ok();
-                    let id = match existing {
-                        Some(id) => id,
-                        None => {
-                            let new_id = uuid::Uuid::new_v4().to_string();
-                            conn.execute(
+            let (session_id, prior_messages): (Option<String>, Vec<(String, String)>) =
+                match session {
+                    None => (None, Vec::new()),
+                    Some(name) => {
+                        let existing: Option<String> = conn
+                            .query_row(
+                                "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
+                                params![name],
+                                |r| r.get(0),
+                            )
+                            .ok();
+                        let id = match existing {
+                            Some(id) => id,
+                            None => {
+                                let new_id = uuid::Uuid::new_v4().to_string();
+                                conn.execute(
                                 "INSERT INTO dev_chat_sessions (session_id, name, character_id) VALUES (?1, ?2, ?3)",
                                 params![new_id, name, cid],
                             )?;
-                            new_id
-                        }
-                    };
-                    let mut stmt = conn.prepare(
-                        "SELECT role, content FROM dev_chat_messages \
-                         WHERE session_id = ?1 ORDER BY created_at ASC"
-                    )?;
-                    let rows: Vec<(String, String)> = stmt
-                        .query_map(params![id], |r| Ok((r.get(0)?, r.get(1)?)))?
-                        .filter_map(|r| r.ok())
-                        .collect();
-                    (Some(id), rows)
-                }
-            };
+                                new_id
+                            }
+                        };
+                        let mut stmt = conn.prepare(
+                            "SELECT role, content FROM dev_chat_messages \
+                         WHERE session_id = ?1 ORDER BY created_at ASC",
+                        )?;
+                        let rows: Vec<(String, String)> = stmt
+                            .query_map(params![id], |r| Ok((r.get(0)?, r.get(1)?)))?
+                            .filter_map(|r| r.ok())
+                            .collect();
+                        (Some(id), rows)
+                    }
+                };
             (
                 prior_messages,
                 session_id,
@@ -10575,36 +12928,40 @@ async fn cmd_consult(
         } else {
             let gcid = target.group_chat_id.expect("validated above");
             let gc = get_group_chat(&conn, gcid)?;
-            let (session_id, prior_messages): (Option<String>, Vec<(String, String)>) = match session {
-                None => (None, Vec::new()),
-                Some(name) => {
-                    let existing: Option<String> = conn.query_row(
-                        "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
-                        params![name], |r| r.get(0),
-                    ).ok();
-                    let synthetic_target = group_session_target(gcid);
-                    let id = match existing {
-                        Some(id) => id,
-                        None => {
-                            let new_id = uuid::Uuid::new_v4().to_string();
-                            conn.execute(
+            let (session_id, prior_messages): (Option<String>, Vec<(String, String)>) =
+                match session {
+                    None => (None, Vec::new()),
+                    Some(name) => {
+                        let existing: Option<String> = conn
+                            .query_row(
+                                "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
+                                params![name],
+                                |r| r.get(0),
+                            )
+                            .ok();
+                        let synthetic_target = group_session_target(gcid);
+                        let id = match existing {
+                            Some(id) => id,
+                            None => {
+                                let new_id = uuid::Uuid::new_v4().to_string();
+                                conn.execute(
                                 "INSERT INTO dev_chat_sessions (session_id, name, character_id) VALUES (?1, ?2, ?3)",
                                 params![new_id, name, synthetic_target],
                             )?;
-                            new_id
-                        }
-                    };
-                    let mut stmt = conn.prepare(
-                        "SELECT role, content FROM dev_chat_messages \
-                         WHERE session_id = ?1 ORDER BY created_at ASC"
-                    )?;
-                    let rows: Vec<(String, String)> = stmt
-                        .query_map(params![id], |r| Ok((r.get(0)?, r.get(1)?)))?
-                        .filter_map(|r| r.ok())
-                        .collect();
-                    (Some(id), rows)
-                }
-            };
+                                new_id
+                            }
+                        };
+                        let mut stmt = conn.prepare(
+                            "SELECT role, content FROM dev_chat_messages \
+                         WHERE session_id = ?1 ORDER BY created_at ASC",
+                        )?;
+                        let rows: Vec<(String, String)> = stmt
+                            .query_map(params![id], |r| Ok((r.get(0)?, r.get(1)?)))?
+                            .filter_map(|r| r.ok())
+                            .collect();
+                        (Some(id), rows)
+                    }
+                };
             (
                 prior_messages,
                 session_id,
@@ -10615,17 +12972,35 @@ async fn cmd_consult(
         }
     };
 
-    let mut messages = vec![openai::ChatMessage { role: "system".to_string(), content: system_prompt }];
+    let mut messages = vec![openai::ChatMessage {
+        role: "system".to_string(),
+        content: system_prompt,
+    }];
     for (role, content) in prior_messages.iter() {
-        messages.push(openai::ChatMessage { role: role.clone(), content: content.clone() });
+        messages.push(openai::ChatMessage {
+            role: role.clone(),
+            content: content.clone(),
+        });
     }
-    messages.push(openai::ChatMessage { role: "user".to_string(), content: message.to_string() });
+    messages.push(openai::ChatMessage {
+        role: "user".to_string(),
+        content: message.to_string(),
+    });
 
     // Cost projection — same gate as `ask`.
-    let prompt_text_total: String = messages.iter().map(|m| m.content.as_str()).collect::<Vec<_>>().join("\n");
+    let prompt_text_total: String = messages
+        .iter()
+        .map(|m| m.content.as_str())
+        .collect::<Vec<_>>()
+        .join("\n");
     let projected_in = estimate_tokens(&prompt_text_total);
     let projected_out: i64 = 700;
-    let projected_usd = project_cost(&model_config.dialogue_model, projected_in, projected_out, &r.cfg.model_pricing);
+    let projected_usd = project_cost(
+        &model_config.dialogue_model,
+        projected_in,
+        projected_out,
+        &r.cfg.model_pricing,
+    );
 
     let daily_so_far = rolling_24h_total_usd();
     let daily_after = daily_so_far + projected_usd;
@@ -10663,11 +13038,12 @@ async fn cmd_consult(
         max_completion_tokens: None,
         response_format: None,
     };
-    let response = openai::chat_completion_with_base(
-        &model_config.chat_api_base(), api_key, &request,
-    ).await?;
+    let response =
+        openai::chat_completion_with_base(&model_config.chat_api_base(), api_key, &request).await?;
 
-    let reply = response.choices.first()
+    let reply = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
     let usage = response.usage.unwrap_or(openai::Usage {
@@ -10677,7 +13053,12 @@ async fn cmd_consult(
     });
     let actual_in = usage.prompt_tokens as i64;
     let actual_out = usage.completion_tokens as i64;
-    let actual_usd = actual_cost(&model_config.dialogue_model, actual_in, actual_out, &r.cfg.model_pricing);
+    let actual_usd = actual_cost(
+        &model_config.dialogue_model,
+        actual_in,
+        actual_out,
+        &r.cfg.model_pricing,
+    );
 
     append_cost_log(&CostEntry {
         timestamp: chrono::Utc::now().to_rfc3339(),
@@ -10719,22 +13100,31 @@ async fn cmd_consult(
     }
 
     if r.json {
-        emit(true, json!({
-            "run_id": run_id,
-            "mode": mode,
-            "character_id": consult_target_id,
-            "character_name": consult_target_name,
-            "model": model_config.dialogue_model,
-            "reply": reply,
-            "prompt_tokens": actual_in,
-            "completion_tokens": actual_out,
-            "actual_usd": actual_usd,
-            "rolling_24h_usd": daily_so_far + actual_usd,
-        }));
+        emit(
+            true,
+            json!({
+                "run_id": run_id,
+                "mode": mode,
+                "character_id": consult_target_id,
+                "character_name": consult_target_name,
+                "model": model_config.dialogue_model,
+                "reply": reply,
+                "prompt_tokens": actual_in,
+                "completion_tokens": actual_out,
+                "actual_usd": actual_usd,
+                "rolling_24h_usd": daily_so_far + actual_usd,
+            }),
+        );
     } else {
         println!("{}", reply);
-        eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok); 24h total now ${:.4}; run_id={}",
-            actual_usd, actual_in, actual_out, daily_so_far + actual_usd, run_id);
+        eprintln!(
+            "[worldcli] actual cost ${:.4} ({} in / {} out tok); 24h total now ${:.4}; run_id={}",
+            actual_usd,
+            actual_in,
+            actual_out,
+            daily_so_far + actual_usd,
+            run_id
+        );
     }
     Ok(())
 }
@@ -10750,10 +13140,14 @@ fn resolve_consult_target<'a>(
     group_chat_id: Option<&'a str>,
 ) -> Result<ConsultTarget<'a>, String> {
     if character_id.is_some() && group_chat_id.is_some() {
-        return Err("consult: pass either --character-id <id> or --group-chat <id>, not both".to_string());
+        return Err(
+            "consult: pass either --character-id <id> or --group-chat <id>, not both".to_string(),
+        );
     }
     if character_id.is_none() && group_chat_id.is_none() {
-        return Err("consult: missing target (pass --character-id <id> or --group-chat <id>)".to_string());
+        return Err(
+            "consult: missing target (pass --character-id <id> or --group-chat <id>)".to_string(),
+        );
     }
     Ok(ConsultTarget {
         character_id,
@@ -10767,23 +13161,32 @@ fn group_session_target(group_chat_id: &str) -> String {
 
 // ─── Relational stance inspect + manual refresh ─────────────────────────
 
-fn cmd_show_stance(r: &Resolved, character_id: &str, history: i64) -> Result<(), Box<dyn std::error::Error>> {
+fn cmd_show_stance(
+    r: &Resolved,
+    character_id: &str,
+    history: i64,
+) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
     let conn = r.db.conn.lock().unwrap();
     let stances = list_relational_stances(&conn, character_id, history)?;
-    let out: Vec<JsonValue> = stances.iter().map(|s| json!({
-        "stance_id": s.stance_id,
-        "character_id": s.character_id,
-        "world_id": s.world_id,
-        "stance_text": s.stance_text,
-        "world_day_at_generation": s.world_day_at_generation,
-        "source_kept_record_count": s.source_kept_record_count,
-        "source_journal_count": s.source_journal_count,
-        "source_message_count": s.source_message_count,
-        "refresh_trigger": s.refresh_trigger,
-        "model_used": s.model_used,
-        "created_at": s.created_at,
-    })).collect();
+    let out: Vec<JsonValue> = stances
+        .iter()
+        .map(|s| {
+            json!({
+                "stance_id": s.stance_id,
+                "character_id": s.character_id,
+                "world_id": s.world_id,
+                "stance_text": s.stance_text,
+                "world_day_at_generation": s.world_day_at_generation,
+                "source_kept_record_count": s.source_kept_record_count,
+                "source_journal_count": s.source_journal_count,
+                "source_message_count": s.source_message_count,
+                "refresh_trigger": s.refresh_trigger,
+                "model_used": s.model_used,
+                "created_at": s.created_at,
+            })
+        })
+        .collect();
     emit(r.json, JsonValue::Array(out));
     Ok(())
 }
@@ -10803,7 +13206,9 @@ async fn cmd_refresh_stance(
         let conn = r.db.conn.lock().unwrap();
         orchestrator::load_model_config(&conn)
     };
-    let model = model_override.unwrap_or(&model_config.memory_model).to_string();
+    let model = model_override
+        .unwrap_or(&model_config.memory_model)
+        .to_string();
 
     // Conservative pre-check: assume up to 3000 input tokens (kept_records
     // + journals + recent excerpts) and ~300 output tokens.
@@ -10834,7 +13239,8 @@ async fn cmd_refresh_stance(
         model,
         character_id.to_string(),
         "manual_cli".to_string(),
-    ).await;
+    )
+    .await;
     if let Err(e) = res {
         return Err(Box::<dyn std::error::Error>::from(e));
     }
@@ -10845,37 +13251,58 @@ async fn cmd_refresh_stance(
 
 // ─── Load-test anchor inspect + manual refresh ─────────────────────────
 
-fn cmd_show_anchor(r: &Resolved, character_id: &str, history: i64) -> Result<(), Box<dyn std::error::Error>> {
+fn cmd_show_anchor(
+    r: &Resolved,
+    character_id: &str,
+    history: i64,
+) -> Result<(), Box<dyn std::error::Error>> {
     let _ = r.check_character(character_id)?;
     let conn = r.db.conn.lock().unwrap();
     let anchors = list_load_test_anchors(&conn, character_id, history)?;
-    let out: Vec<JsonValue> = anchors.iter().map(|a| json!({
-        "anchor_id": a.anchor_id,
-        "character_id": a.character_id,
-        "world_id": a.world_id,
-        "anchor_label": a.anchor_label,
-        "anchor_body": a.anchor_body,
-        "derivation_summary": a.derivation_summary,
-        "world_day_at_generation": a.world_day_at_generation,
-        "source_message_count": a.source_message_count,
-        "refresh_trigger": a.refresh_trigger,
-        "model_used": a.model_used,
-        "created_at": a.created_at,
-    })).collect();
+    let out: Vec<JsonValue> = anchors
+        .iter()
+        .map(|a| {
+            json!({
+                "anchor_id": a.anchor_id,
+                "character_id": a.character_id,
+                "world_id": a.world_id,
+                "anchor_label": a.anchor_label,
+                "anchor_body": a.anchor_body,
+                "derivation_summary": a.derivation_summary,
+                "world_day_at_generation": a.world_day_at_generation,
+                "source_message_count": a.source_message_count,
+                "refresh_trigger": a.refresh_trigger,
+                "model_used": a.model_used,
+                "created_at": a.created_at,
+            })
+        })
+        .collect();
     if r.json {
         emit(true, JsonValue::Array(out));
     } else {
         if anchors.is_empty() {
             println!("No load-test anchor has been synthesized for this character yet.");
-            println!("Run `worldcli refresh-anchor {}` to generate the first one.", character_id);
+            println!(
+                "Run `worldcli refresh-anchor {}` to generate the first one.",
+                character_id
+            );
             return Ok(());
         }
         for (i, a) in anchors.iter().enumerate() {
-            if i > 0 { println!(); println!("───"); println!(); }
+            if i > 0 {
+                println!();
+                println!("───");
+                println!();
+            }
             println!("anchor_id:   {}", a.anchor_id);
             println!("label:       {}", a.anchor_label);
             println!("created_at:  {}", a.created_at);
-            println!("world_day:   {}", a.world_day_at_generation.map(|d| d.to_string()).unwrap_or_else(|| "?".to_string()));
+            println!(
+                "world_day:   {}",
+                a.world_day_at_generation
+                    .map(|d| d.to_string())
+                    .unwrap_or_else(|| "?".to_string())
+            );
             println!("source_msgs: {}", a.source_message_count);
             println!("trigger:     {}", a.refresh_trigger);
             println!("model:       {}", a.model_used);
@@ -10910,7 +13337,9 @@ async fn cmd_refresh_anchor(
         let conn = r.db.conn.lock().unwrap();
         orchestrator::load_model_config(&conn)
     };
-    let model = model_override.unwrap_or(&model_config.dialogue_model).to_string();
+    let model = model_override
+        .unwrap_or(&model_config.dialogue_model)
+        .to_string();
 
     // Conservative pre-check: up to 8000 input tokens (30 corpus
     // excerpts trimmed to 600 chars each + system + prior anchor) and
@@ -10942,7 +13371,8 @@ async fn cmd_refresh_anchor(
         model.clone(),
         character_id.to_string(),
         "manual_cli".to_string(),
-    ).await;
+    )
+    .await;
     let (axes_inserted, prompt_tokens, completion_tokens) = match res {
         Ok(t) => t,
         Err(e) => return Err(Box::<dyn std::error::Error>::from(e)),
@@ -10950,7 +13380,12 @@ async fn cmd_refresh_anchor(
 
     // Log actual cost so worldcli status reflects the spend (fixes
     // the cost-tracking-bypass bug noted in the 2026-04-24 reports).
-    let actual_usd = actual_cost(&model, prompt_tokens, completion_tokens, &r.cfg.model_pricing);
+    let actual_usd = actual_cost(
+        &model,
+        prompt_tokens,
+        completion_tokens,
+        &r.cfg.model_pricing,
+    );
     append_cost_log(&CostEntry {
         timestamp: chrono::Utc::now().to_rfc3339(),
         model: model.clone(),
@@ -10959,8 +13394,10 @@ async fn cmd_refresh_anchor(
         usd: actual_usd,
     });
     if !r.json {
-        eprintln!("[worldcli] axis synthesis: {} axes inserted, ${:.4} actual ({} in / {} out tok)",
-            axes_inserted, actual_usd, prompt_tokens, completion_tokens);
+        eprintln!(
+            "[worldcli] axis synthesis: {} axes inserted, ${:.4} actual ({} in / {} out tok)",
+            axes_inserted, actual_usd, prompt_tokens, completion_tokens
+        );
     }
 
     // Echo the latest axes (one per axis_kind).
@@ -10983,9 +13420,9 @@ fn git_resolve_ref(
         cmd.args(["-C", &p.display().to_string()]);
     }
     cmd.args(["log", "-1", "--format=%H%x09%cI%x09%s", git_ref]);
-    let out = cmd.output().map_err(|e| {
-        CliError::Other(format!("git invocation failed: {} (is git on PATH?)", e))
-    })?;
+    let out = cmd
+        .output()
+        .map_err(|e| CliError::Other(format!("git invocation failed: {} (is git on PATH?)", e)))?;
     if !out.status.success() {
         let err = String::from_utf8_lossy(&out.stderr).trim().to_string();
         return Err(CliError::Other(format!(
@@ -11001,12 +13438,18 @@ fn git_resolve_ref(
             git_ref, line
         )));
     }
-    Ok((parts[0].to_string(), parts[1].to_string(), parts[2].to_string()))
+    Ok((
+        parts[0].to_string(),
+        parts[1].to_string(),
+        parts[2].to_string(),
+    ))
 }
 
 /// Quote-strip user-controlled fragments before they hit a SQL string-build.
 /// IDs in this DB are UUIDs; we still strip apostrophes as belt-and-suspenders.
-fn sql_safe_id(s: &str) -> String { s.replace('\'', "") }
+fn sql_safe_id(s: &str) -> String {
+    s.replace('\'', "")
+}
 
 fn cmd_sample_windows(
     r: &Resolved,
@@ -11024,7 +13467,11 @@ fn cmd_sample_windows(
     let (before_sha, before_ts, before_subject) = git_resolve_ref(repo, git_ref)?;
     let (after_sha, after_ts, after_subject) = match end_ref {
         Some(er) => git_resolve_ref(repo, er)?,
-        None => (before_sha.clone(), before_ts.clone(), before_subject.clone()),
+        None => (
+            before_sha.clone(),
+            before_ts.clone(),
+            before_subject.clone(),
+        ),
     };
 
     // Character scope-check first — it acquires its own lock, so we do it
@@ -11037,7 +13484,10 @@ fn cmd_sample_windows(
 
     // World scope
     let world_ids: Vec<String> = match world {
-        Some(w) => { r.check_world(w)?; vec![w.to_string()] }
+        Some(w) => {
+            r.check_world(w)?;
+            vec![w.to_string()]
+        }
         None => list_worlds(&conn)?
             .into_iter()
             .filter(|w| r.world_in_scope(&w.world_id))
@@ -11062,7 +13512,11 @@ fn cmd_sample_windows(
     // character_id passes through sql_safe_id and is also UUID-shaped.
     let world_in_clause = format!(
         "({})",
-        world_ids.iter().map(|w| format!("'{}'", sql_safe_id(w))).collect::<Vec<_>>().join(",")
+        world_ids
+            .iter()
+            .map(|w| format!("'{}'", sql_safe_id(w)))
+            .collect::<Vec<_>>()
+            .join(",")
     );
     let role_clause = if role == "any" {
         String::new()
@@ -11080,131 +13534,170 @@ fn cmd_sample_windows(
     };
 
     // ─── Pull a window: solo + group, merge, sort, truncate to `limit` ───
-    let pull_window = |cutoff_ts: &str, direction: &str| -> Result<Vec<JsonValue>, rusqlite::Error> {
-        // direction: "before" → m.created_at < cutoff, ORDER DESC
-        //            "after"  → m.created_at >= cutoff, ORDER ASC
-        let (op, order) = if direction == "before" { ("<", "DESC") } else { (">=", "ASC") };
-        let mut out: Vec<JsonValue> = Vec::new();
+    let pull_window =
+        |cutoff_ts: &str, direction: &str| -> Result<Vec<JsonValue>, rusqlite::Error> {
+            // direction: "before" → m.created_at < cutoff, ORDER DESC
+            //            "after"  → m.created_at >= cutoff, ORDER ASC
+            let (op, order) = if direction == "before" {
+                ("<", "DESC")
+            } else {
+                (">=", "ASC")
+            };
+            let mut out: Vec<JsonValue> = Vec::new();
 
-        if !groups_only {
-            let q = format!(
-                "SELECT m.message_id, m.thread_id, m.role, m.content, \
+            if !groups_only {
+                let q = format!(
+                    "SELECT m.message_id, m.thread_id, m.role, m.content, \
                         m.sender_character_id, m.created_at, m.world_day, m.world_time, \
                         t.character_id, t.world_id \
                  FROM messages m JOIN threads t ON t.thread_id = m.thread_id \
                  WHERE t.world_id IN {worlds} AND t.character_id IS NOT NULL \
                  AND m.created_at {op} ?1 {role_c} {noise} {char_c} \
                  ORDER BY m.created_at {order} LIMIT ?2",
-                worlds = world_in_clause,
-                op = op,
-                order = order,
-                role_c = role_clause,
-                noise = exclude_noise,
-                char_c = solo_char_clause,
-            );
-            let mut stmt = conn.prepare(&q)?;
-            let rows = stmt.query_map(params![cutoff_ts, limit], |row| {
-                Ok((
-                    row.get::<_, String>(0)?, row.get::<_, String>(1)?, row.get::<_, String>(2)?,
-                    row.get::<_, String>(3)?, row.get::<_, Option<String>>(4)?,
-                    row.get::<_, String>(5)?, row.get::<_, Option<i64>>(6)?,
-                    row.get::<_, Option<String>>(7)?, row.get::<_, Option<String>>(8)?,
-                    row.get::<_, String>(9)?,
-                ))
-            })?;
-            for row in rows.flatten() {
-                let (mid, tid, role_s, content, sender, ts, day, time, thread_char, wid) = row;
-                let sender_name = sender.as_ref().and_then(|id| id_to_name.get(id)).cloned()
-                    .or_else(|| thread_char.as_ref().and_then(|id| id_to_name.get(id)).cloned())
-                    .unwrap_or_else(|| match role_s.as_str() {
-                        "user" => "USER".to_string(),
-                        other => other.to_uppercase(),
-                    });
-                out.push(json!({
-                    "surface": "solo",
-                    "message_id": mid,
-                    "thread_id": tid,
-                    "world_id": wid,
-                    "thread_character_id": thread_char,
-                    "role": role_s,
-                    "sender_character_id": sender,
-                    "sender_name": sender_name,
-                    "created_at": ts,
-                    "world_day": day,
-                    "world_time": time,
-                    "content": content,
-                }));
+                    worlds = world_in_clause,
+                    op = op,
+                    order = order,
+                    role_c = role_clause,
+                    noise = exclude_noise,
+                    char_c = solo_char_clause,
+                );
+                let mut stmt = conn.prepare(&q)?;
+                let rows = stmt.query_map(params![cutoff_ts, limit], |row| {
+                    Ok((
+                        row.get::<_, String>(0)?,
+                        row.get::<_, String>(1)?,
+                        row.get::<_, String>(2)?,
+                        row.get::<_, String>(3)?,
+                        row.get::<_, Option<String>>(4)?,
+                        row.get::<_, String>(5)?,
+                        row.get::<_, Option<i64>>(6)?,
+                        row.get::<_, Option<String>>(7)?,
+                        row.get::<_, Option<String>>(8)?,
+                        row.get::<_, String>(9)?,
+                    ))
+                })?;
+                for row in rows.flatten() {
+                    let (mid, tid, role_s, content, sender, ts, day, time, thread_char, wid) = row;
+                    let sender_name = sender
+                        .as_ref()
+                        .and_then(|id| id_to_name.get(id))
+                        .cloned()
+                        .or_else(|| {
+                            thread_char
+                                .as_ref()
+                                .and_then(|id| id_to_name.get(id))
+                                .cloned()
+                        })
+                        .unwrap_or_else(|| match role_s.as_str() {
+                            "user" => "USER".to_string(),
+                            other => other.to_uppercase(),
+                        });
+                    out.push(json!({
+                        "surface": "solo",
+                        "message_id": mid,
+                        "thread_id": tid,
+                        "world_id": wid,
+                        "thread_character_id": thread_char,
+                        "role": role_s,
+                        "sender_character_id": sender,
+                        "sender_name": sender_name,
+                        "created_at": ts,
+                        "world_day": day,
+                        "world_time": time,
+                        "content": content,
+                    }));
+                }
             }
-        }
 
-        if !solo_only {
-            let q = format!(
-                "SELECT m.message_id, m.thread_id, m.role, m.content, \
+            if !solo_only {
+                let q = format!(
+                    "SELECT m.message_id, m.thread_id, m.role, m.content, \
                         m.sender_character_id, m.created_at, m.world_day, m.world_time, \
                         gc.group_chat_id, gc.world_id, gc.display_name \
                  FROM group_messages m JOIN group_chats gc ON gc.thread_id = m.thread_id \
                  WHERE gc.world_id IN {worlds} \
                  AND m.created_at {op} ?1 {role_c} {noise} {char_c} \
                  ORDER BY m.created_at {order} LIMIT ?2",
-                worlds = world_in_clause,
-                op = op,
-                order = order,
-                role_c = role_clause,
-                noise = exclude_noise,
-                char_c = group_sender_clause,
-            );
-            let mut stmt = conn.prepare(&q)?;
-            let rows = stmt.query_map(params![cutoff_ts, limit], |row| {
-                Ok((
-                    row.get::<_, String>(0)?, row.get::<_, String>(1)?, row.get::<_, String>(2)?,
-                    row.get::<_, String>(3)?, row.get::<_, Option<String>>(4)?,
-                    row.get::<_, String>(5)?, row.get::<_, Option<i64>>(6)?,
-                    row.get::<_, Option<String>>(7)?, row.get::<_, String>(8)?,
-                    row.get::<_, String>(9)?, row.get::<_, String>(10)?,
-                ))
-            })?;
-            for row in rows.flatten() {
-                let (mid, tid, role_s, content, sender, ts, day, time, gcid, wid, gcname) = row;
-                let sender_name = sender.as_ref().and_then(|id| id_to_name.get(id)).cloned()
-                    .unwrap_or_else(|| match role_s.as_str() {
-                        "user" => "USER".to_string(),
-                        other => other.to_uppercase(),
-                    });
-                out.push(json!({
-                    "surface": "group",
-                    "message_id": mid,
-                    "thread_id": tid,
-                    "world_id": wid,
-                    "group_chat_id": gcid,
-                    "group_chat_display_name": gcname,
-                    "role": role_s,
-                    "sender_character_id": sender,
-                    "sender_name": sender_name,
-                    "created_at": ts,
-                    "world_day": day,
-                    "world_time": time,
-                    "content": content,
-                }));
+                    worlds = world_in_clause,
+                    op = op,
+                    order = order,
+                    role_c = role_clause,
+                    noise = exclude_noise,
+                    char_c = group_sender_clause,
+                );
+                let mut stmt = conn.prepare(&q)?;
+                let rows = stmt.query_map(params![cutoff_ts, limit], |row| {
+                    Ok((
+                        row.get::<_, String>(0)?,
+                        row.get::<_, String>(1)?,
+                        row.get::<_, String>(2)?,
+                        row.get::<_, String>(3)?,
+                        row.get::<_, Option<String>>(4)?,
+                        row.get::<_, String>(5)?,
+                        row.get::<_, Option<i64>>(6)?,
+                        row.get::<_, Option<String>>(7)?,
+                        row.get::<_, String>(8)?,
+                        row.get::<_, String>(9)?,
+                        row.get::<_, String>(10)?,
+                    ))
+                })?;
+                for row in rows.flatten() {
+                    let (mid, tid, role_s, content, sender, ts, day, time, gcid, wid, gcname) = row;
+                    let sender_name = sender
+                        .as_ref()
+                        .and_then(|id| id_to_name.get(id))
+                        .cloned()
+                        .unwrap_or_else(|| match role_s.as_str() {
+                            "user" => "USER".to_string(),
+                            other => other.to_uppercase(),
+                        });
+                    out.push(json!({
+                        "surface": "group",
+                        "message_id": mid,
+                        "thread_id": tid,
+                        "world_id": wid,
+                        "group_chat_id": gcid,
+                        "group_chat_display_name": gcname,
+                        "role": role_s,
+                        "sender_character_id": sender,
+                        "sender_name": sender_name,
+                        "created_at": ts,
+                        "world_day": day,
+                        "world_time": time,
+                        "content": content,
+                    }));
+                }
             }
-        }
 
-        // Merge solo+group: re-sort by direction, truncate to limit
-        if direction == "before" {
-            out.sort_by(|a, b| b["created_at"].as_str().unwrap_or("")
-                .cmp(a["created_at"].as_str().unwrap_or("")));
-        } else {
-            out.sort_by(|a, b| a["created_at"].as_str().unwrap_or("")
-                .cmp(b["created_at"].as_str().unwrap_or("")));
-        }
-        out.truncate(limit as usize);
-        // Always emit chronological asc for readability
-        out.sort_by(|a, b| a["created_at"].as_str().unwrap_or("")
-            .cmp(b["created_at"].as_str().unwrap_or("")));
-        Ok(out)
-    };
+            // Merge solo+group: re-sort by direction, truncate to limit
+            if direction == "before" {
+                out.sort_by(|a, b| {
+                    b["created_at"]
+                        .as_str()
+                        .unwrap_or("")
+                        .cmp(a["created_at"].as_str().unwrap_or(""))
+                });
+            } else {
+                out.sort_by(|a, b| {
+                    a["created_at"]
+                        .as_str()
+                        .unwrap_or("")
+                        .cmp(b["created_at"].as_str().unwrap_or(""))
+                });
+            }
+            out.truncate(limit as usize);
+            // Always emit chronological asc for readability
+            out.sort_by(|a, b| {
+                a["created_at"]
+                    .as_str()
+                    .unwrap_or("")
+                    .cmp(b["created_at"].as_str().unwrap_or(""))
+            });
+            Ok(out)
+        };
 
     let before_msgs = pull_window(&before_ts, "before")?;
-    let after_msgs  = pull_window(&after_ts,  "after")?;
+    let after_msgs = pull_window(&after_ts, "after")?;
 
     let envelope = json!({
         "ref": git_ref,
@@ -11257,19 +13750,28 @@ fn lookup_message_anchor(
         "SELECT m.created_at, m.role, m.content, m.sender_character_id, \
                 t.character_id, t.world_id \
          FROM messages m JOIN threads t ON t.thread_id = m.thread_id \
-         WHERE m.message_id = ?1"
+         WHERE m.message_id = ?1",
     )?;
-    let solo: Result<(String, String, String, Option<String>, Option<String>, String), _> =
-        stmt.query_row(params![message_id], |row| {
-            Ok((
-                row.get::<_, String>(0)?,
-                row.get::<_, String>(1)?,
-                row.get::<_, String>(2)?,
-                row.get::<_, Option<String>>(3)?,
-                row.get::<_, Option<String>>(4)?,
-                row.get::<_, String>(5)?,
-            ))
-        });
+    let solo: Result<
+        (
+            String,
+            String,
+            String,
+            Option<String>,
+            Option<String>,
+            String,
+        ),
+        _,
+    > = stmt.query_row(params![message_id], |row| {
+        Ok((
+            row.get::<_, String>(0)?,
+            row.get::<_, String>(1)?,
+            row.get::<_, String>(2)?,
+            row.get::<_, Option<String>>(3)?,
+            row.get::<_, Option<String>>(4)?,
+            row.get::<_, String>(5)?,
+        ))
+    });
     if let Ok((ts, role_s, content, sender, thread_char, wid)) = solo {
         // Scope-check the world.
         r.check_world(&wid)?;
@@ -11290,20 +13792,30 @@ fn lookup_message_anchor(
         "SELECT m.created_at, m.role, m.content, m.sender_character_id, \
                 gc.group_chat_id, gc.world_id, gc.display_name \
          FROM group_messages m JOIN group_chats gc ON gc.thread_id = m.thread_id \
-         WHERE m.message_id = ?1"
+         WHERE m.message_id = ?1",
     )?;
-    let group: Result<(String, String, String, Option<String>, String, String, String), _> =
-        stmt.query_row(params![message_id], |row| {
-            Ok((
-                row.get::<_, String>(0)?,
-                row.get::<_, String>(1)?,
-                row.get::<_, String>(2)?,
-                row.get::<_, Option<String>>(3)?,
-                row.get::<_, String>(4)?,
-                row.get::<_, String>(5)?,
-                row.get::<_, String>(6)?,
-            ))
-        });
+    let group: Result<
+        (
+            String,
+            String,
+            String,
+            Option<String>,
+            String,
+            String,
+            String,
+        ),
+        _,
+    > = stmt.query_row(params![message_id], |row| {
+        Ok((
+            row.get::<_, String>(0)?,
+            row.get::<_, String>(1)?,
+            row.get::<_, String>(2)?,
+            row.get::<_, Option<String>>(3)?,
+            row.get::<_, String>(4)?,
+            row.get::<_, String>(5)?,
+            row.get::<_, String>(6)?,
+        ))
+    });
     if let Ok((ts, role_s, content, sender, gcid, wid, gcname)) = group {
         r.check_world(&wid)?;
         let info = json!({
@@ -11320,23 +13832,21 @@ fn lookup_message_anchor(
     }
 
     Err(Box::new(CliError::NotFound(format!(
-        "message_id {} not found in solo or group tables", message_id
+        "message_id {} not found in solo or group tables",
+        message_id
     ))))
 }
 
 /// Run `git log` with arbitrary args; return raw stdout lines.
-fn git_log_lines(
-    repo: Option<&std::path::Path>,
-    args: &[&str],
-) -> Result<Vec<String>, CliError> {
+fn git_log_lines(repo: Option<&std::path::Path>, args: &[&str]) -> Result<Vec<String>, CliError> {
     let mut cmd = std::process::Command::new("git");
     if let Some(p) = repo {
         cmd.args(["-C", &p.display().to_string()]);
     }
     cmd.arg("log").args(args);
-    let out = cmd.output().map_err(|e| {
-        CliError::Other(format!("git log failed: {} (is git on PATH?)", e))
-    })?;
+    let out = cmd
+        .output()
+        .map_err(|e| CliError::Other(format!("git log failed: {} (is git on PATH?)", e)))?;
     if !out.status.success() {
         // Empty result is normal (e.g. no commits before anchor) — git
         // returns success with empty stdout. Non-success is genuine error.
@@ -11350,7 +13860,9 @@ fn git_log_lines(
 /// Parse a tab-separated commit line: "sha\tcommitter_iso\tsubject".
 fn parse_commit_line(line: &str) -> Option<JsonValue> {
     let parts: Vec<&str> = line.splitn(3, '\t').collect();
-    if parts.len() < 3 { return None; }
+    if parts.len() < 3 {
+        return None;
+    }
     Some(json!({
         "sha": parts[0],
         "sha_short": parts[0].chars().take(7).collect::<String>(),
@@ -11398,15 +13910,23 @@ fn enrich_commit_with_diff(
     repo: Option<&std::path::Path>,
     commit: &mut JsonValue,
 ) -> Result<(), CliError> {
-    let sha: String = commit.get("sha").and_then(|v| v.as_str()).unwrap_or("").to_string();
-    if sha.is_empty() { return Ok(()); }
+    let sha: String = commit
+        .get("sha")
+        .and_then(|v| v.as_str())
+        .unwrap_or("")
+        .to_string();
+    if sha.is_empty() {
+        return Ok(());
+    }
     // Full body
     let body_lines = git_log_lines(repo, &["-1", "--format=%B", sha.as_str()])?;
     let body = body_lines.join("\n");
     commit["body"] = JsonValue::String(body);
     // --stat diffsummary
     let mut cmd = std::process::Command::new("git");
-    if let Some(p) = repo { cmd.args(["-C", &p.display().to_string()]); }
+    if let Some(p) = repo {
+        cmd.args(["-C", &p.display().to_string()]);
+    }
     cmd.args(["show", "--stat", "--format=", sha.as_str()]);
     if let Ok(out) = cmd.output() {
         if out.status.success() {
@@ -11429,7 +13949,7 @@ fn cmd_commit_context(
     // ── Resolve anchor (mutex enforced by clap) ──
     if message_id.is_none() && at_iso.is_none() {
         return Err(Box::new(CliError::Other(
-            "Provide one of --message <id> or --at <iso-timestamp>".to_string()
+            "Provide one of --message <id> or --at <iso-timestamp>".to_string(),
         )));
     }
     let (anchor_ts, anchor_kind, message_info) = match message_id {
@@ -11443,7 +13963,8 @@ fn cmd_commit_context(
             if chrono::DateTime::parse_from_rfc3339(&ts).is_err() {
                 return Err(Box::new(CliError::Other(format!(
                     "--at value '{}' is not a valid RFC3339 timestamp \
-                     (e.g. 2026-04-25T19:42:00Z)", ts
+                     (e.g. 2026-04-25T19:42:00Z)",
+                    ts
                 ))));
             }
             (ts, format!("at:{}", at_iso.unwrap()), None)
@@ -11453,16 +13974,20 @@ fn cmd_commit_context(
     // ── Find active commit (most-recent <= anchor_ts) ──
     let active_lines = git_log_lines(
         repo,
-        &["-1", &format!("--before={}", anchor_ts), "--format=%H%x09%cI%x09%s"],
+        &[
+            "-1",
+            &format!("--before={}", anchor_ts),
+            "--format=%H%x09%cI%x09%s",
+        ],
     )?;
-    let active_commit = active_lines.first()
-        .and_then(|l| parse_commit_line(l));
+    let active_commit = active_lines.first().and_then(|l| parse_commit_line(l));
 
     // ── Walk N commits before active (excluding active itself) ──
     let before_commits: Vec<JsonValue> = if before == 0 || active_commit.is_none() {
         Vec::new()
     } else {
-        let active_sha = active_commit.as_ref()
+        let active_sha = active_commit
+            .as_ref()
             .and_then(|v| v.get("sha"))
             .and_then(|v| v.as_str())
             .unwrap_or("HEAD");
@@ -11470,8 +13995,13 @@ fn cmd_commit_context(
         let parent_ref = format!("{}^", active_sha);
         let lines = git_log_lines(
             repo,
-            &[n_arg.as_str(), "--format=%H%x09%cI%x09%s", parent_ref.as_str()],
-        ).unwrap_or_default();
+            &[
+                n_arg.as_str(),
+                "--format=%H%x09%cI%x09%s",
+                parent_ref.as_str(),
+            ],
+        )
+        .unwrap_or_default();
         lines.iter().filter_map(|l| parse_commit_line(l)).collect()
     };
 
@@ -11488,7 +14018,8 @@ fn cmd_commit_context(
                 &format!("--after={}", anchor_ts),
                 "--format=%H%x09%cI%x09%s",
             ],
-        ).unwrap_or_default();
+        )
+        .unwrap_or_default();
         lines.iter().filter_map(|l| parse_commit_line(l)).collect()
     };
 
@@ -11502,20 +14033,30 @@ fn cmd_commit_context(
             let _ = enrich_commit_with_diff(repo, a);
         }
     }
-    let mut before_enriched: Vec<JsonValue> = before_commits.into_iter().map(|mut c| {
-        if let Some(ts) = c.get("committer_date").and_then(|v| v.as_str()) {
-            c["relative_to_anchor"] = JsonValue::String(relative_time_label(&anchor_ts, ts));
-        }
-        if diffs { let _ = enrich_commit_with_diff(repo, &mut c); }
-        c
-    }).collect();
-    let mut after_enriched: Vec<JsonValue> = after_commits.into_iter().map(|mut c| {
-        if let Some(ts) = c.get("committer_date").and_then(|v| v.as_str()) {
-            c["relative_to_anchor"] = JsonValue::String(relative_time_label(&anchor_ts, ts));
-        }
-        if diffs { let _ = enrich_commit_with_diff(repo, &mut c); }
-        c
-    }).collect();
+    let mut before_enriched: Vec<JsonValue> = before_commits
+        .into_iter()
+        .map(|mut c| {
+            if let Some(ts) = c.get("committer_date").and_then(|v| v.as_str()) {
+                c["relative_to_anchor"] = JsonValue::String(relative_time_label(&anchor_ts, ts));
+            }
+            if diffs {
+                let _ = enrich_commit_with_diff(repo, &mut c);
+            }
+            c
+        })
+        .collect();
+    let mut after_enriched: Vec<JsonValue> = after_commits
+        .into_iter()
+        .map(|mut c| {
+            if let Some(ts) = c.get("committer_date").and_then(|v| v.as_str()) {
+                c["relative_to_anchor"] = JsonValue::String(relative_time_label(&anchor_ts, ts));
+            }
+            if diffs {
+                let _ = enrich_commit_with_diff(repo, &mut c);
+            }
+            c
+        })
+        .collect();
 
     // ── Build envelope ──
     let envelope = json!({
@@ -11589,9 +14130,17 @@ fn parse_cli_insertions(
     }
 
     let (anchors, position, flag_name) = if !inject_before_anchors.is_empty() {
-        (inject_before_anchors, app_lib::ai::prompts::InsertPosition::Before, "--inject-before")
+        (
+            inject_before_anchors,
+            app_lib::ai::prompts::InsertPosition::Before,
+            "--inject-before",
+        )
     } else {
-        (inject_after_anchors, app_lib::ai::prompts::InsertPosition::After, "--inject-after")
+        (
+            inject_after_anchors,
+            app_lib::ai::prompts::InsertPosition::After,
+            "--inject-after",
+        )
     };
     if inject_file_paths.len() != anchors.len() {
         return Err(Box::<dyn std::error::Error>::from(format!(
@@ -11609,10 +14158,18 @@ fn parse_cli_insertions(
                 "unknown injection anchor '{}'. Valid forms: piece name (e.g., 'earned_register', 'reverence') or 'section-start:<section>' / 'section-end:<section>' where section can be ordered (craft-notes, invariants, agency-and-behavior) or fixed (format, identity, world, user, mood, what-hangs-between-you, agency, turn, style).",
                 anchor_str
             )))?;
-        let text = std::fs::read_to_string(path).map_err(|e| Box::<dyn std::error::Error>::from(format!(
-            "reading --inject-file {}: {}", path.display(), e
-        )))?;
-        out.push(app_lib::ai::prompts::Insertion { anchor, position, text });
+        let text = std::fs::read_to_string(path).map_err(|e| {
+            Box::<dyn std::error::Error>::from(format!(
+                "reading --inject-file {}: {}",
+                path.display(),
+                e
+            ))
+        })?;
+        out.push(app_lib::ai::prompts::Insertion {
+            anchor,
+            position,
+            text,
+        });
     }
     Ok(out)
 }
@@ -11668,7 +14225,16 @@ async fn cmd_ask(
     let _ = r.check_character(character_id)?;
 
     // Build prompt context inside one lock-acquire.
-    let (mut system_prompt, model_config, prior_messages, session_id, character, world_id, recent_for_momentstamp, prior_signature) = {
+    let (
+        mut system_prompt,
+        model_config,
+        prior_messages,
+        session_id,
+        character,
+        world_id,
+        recent_for_momentstamp,
+        prior_signature,
+    ) = {
         let conn = r.db.conn.lock().unwrap();
         let character = get_character(&conn, character_id)?;
         let mut world = get_world(&conn, &character.world_id)?;
@@ -11698,9 +14264,18 @@ async fn cmd_ask(
             combined_axes_block(&conn, character_id)
         };
 
-        let insertions = parse_cli_insertions(inject_file_paths, inject_before_anchors, inject_after_anchors)?;
+        let insertions = parse_cli_insertions(
+            inject_file_paths,
+            inject_before_anchors,
+            inject_after_anchors,
+        )?;
         let section_order_override = parse_section_order_override(section_order_names)?;
-        let overrides_for_prompt = if !omit_craft_rules.is_empty() || include_documentary_rules || !insertions.is_empty() || section_order_override.is_some() || end_seal {
+        let overrides_for_prompt = if !omit_craft_rules.is_empty()
+            || include_documentary_rules
+            || !insertions.is_empty()
+            || section_order_override.is_some()
+            || end_seal
+        {
             let mut ov = prompts::PromptOverrides::new();
             if !omit_craft_rules.is_empty() {
                 ov.set_omit_craft_rules(omit_craft_rules.clone());
@@ -11722,17 +14297,35 @@ async fn cmd_ask(
             None
         };
         let system_prompt = prompts::build_dialogue_system_prompt_with_overrides(
-            &world, &character, user_profile.as_ref(),
-            None, Some("Auto"), None, None, false, &[], None,
-            &recent_journals, None, &[], None, &active_quests,
+            &world,
+            &character,
+            user_profile.as_ref(),
+            None,
+            Some("Auto"),
+            None,
+            None,
+            false,
+            &[],
+            None,
+            &recent_journals,
+            None,
+            &[],
+            None,
+            &active_quests,
             stance_text.as_deref(),
             anchor_text.as_deref(),
             overrides_for_prompt.as_ref(),
         );
         let mut model_config = orchestrator::load_model_config(&conn);
-        if let Some(m) = model_override { model_config.dialogue_model = m.to_string(); }
+        if let Some(m) = model_override {
+            model_config.dialogue_model = m.to_string();
+        }
 
-        let (session_id, prior_messages): (Option<String>, Vec<(String, String)>) = if let Some(synth_path) = synthetic_history {
+        let (session_id, prior_messages): (Option<String>, Vec<(String, String)>) = if let Some(
+            synth_path,
+        ) =
+            synthetic_history
+        {
             // Load synthetic prior history from a JSON file. Format:
             // [{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}, ...]
             // No DB write — these turns are NOT persisted to dev_chat_messages.
@@ -11741,14 +14334,18 @@ async fn cmd_ask(
             // failure mode is manifest in baseline.
             let synth_text = std::fs::read_to_string(synth_path)
                 .map_err(|e| format!("synthetic-history: failed to read {synth_path:?}: {e}"))?;
-            let parsed: Vec<serde_json::Value> = serde_json::from_str(&synth_text)
-                .map_err(|e| format!("synthetic-history: failed to parse {synth_path:?} as JSON array: {e}"))?;
+            let parsed: Vec<serde_json::Value> =
+                serde_json::from_str(&synth_text).map_err(|e| {
+                    format!("synthetic-history: failed to parse {synth_path:?} as JSON array: {e}")
+                })?;
             let mut rows: Vec<(String, String)> = Vec::with_capacity(parsed.len());
             for (i, msg) in parsed.iter().enumerate() {
-                let role = msg.get("role")
+                let role = msg
+                    .get("role")
                     .and_then(|v| v.as_str())
                     .ok_or_else(|| format!("synthetic-history[{i}]: missing 'role' string"))?;
-                let content = msg.get("content")
+                let content = msg
+                    .get("content")
                     .and_then(|v| v.as_str())
                     .ok_or_else(|| format!("synthetic-history[{i}]: missing 'content' string"))?;
                 rows.push((role.to_string(), content.to_string()));
@@ -11759,10 +14356,13 @@ async fn cmd_ask(
             match session {
                 None => (None, Vec::new()),
                 Some(name) => {
-                    let existing: Option<String> = conn.query_row(
-                        "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
-                        params![name], |r| r.get(0),
-                    ).ok();
+                    let existing: Option<String> = conn
+                        .query_row(
+                            "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
+                            params![name],
+                            |r| r.get(0),
+                        )
+                        .ok();
                     let id = match existing {
                         Some(id) => id,
                         None => {
@@ -11776,7 +14376,7 @@ async fn cmd_ask(
                     };
                     let mut stmt = conn.prepare(
                         "SELECT role, content FROM dev_chat_messages \
-                         WHERE session_id = ?1 ORDER BY created_at ASC"
+                         WHERE session_id = ?1 ORDER BY created_at ASC",
                     )?;
                     let rows: Vec<(String, String)> = stmt
                         .query_map(params![id], |r| Ok((r.get(0)?, r.get(1)?)))?
@@ -11791,28 +14391,44 @@ async fn cmd_ask(
         // Pull recent thread messages + most-recent formula_signature
         // for the momentstamp wire-up. Both are None when --with-momentstamp
         // is off, avoiding any extra db work for the default path.
-        let (recent_for_momentstamp, prior_signature): (Vec<Message>, Option<String>) = if with_momentstamp {
-            let thread = match get_thread_for_character(&conn, character_id) {
-                Ok(t) => t,
-                Err(e) => return Err(Box::<dyn std::error::Error>::from(format!(
-                    "with-momentstamp: no solo-chat thread for character {}: {}", character_id, e
-                ))),
-            };
-            let recent = list_messages(&conn, &thread.thread_id, 30).unwrap_or_default();
-            let prior_sig: Option<String> = conn.query_row(
-                "SELECT formula_signature FROM messages \
+        let (recent_for_momentstamp, prior_signature): (Vec<Message>, Option<String>) =
+            if with_momentstamp {
+                let thread = match get_thread_for_character(&conn, character_id) {
+                    Ok(t) => t,
+                    Err(e) => {
+                        return Err(Box::<dyn std::error::Error>::from(format!(
+                            "with-momentstamp: no solo-chat thread for character {}: {}",
+                            character_id, e
+                        )))
+                    }
+                };
+                let recent = list_messages(&conn, &thread.thread_id, 30).unwrap_or_default();
+                let prior_sig: Option<String> = conn
+                    .query_row(
+                        "SELECT formula_signature FROM messages \
                  WHERE thread_id = ?1 AND role = 'assistant' \
                  AND formula_signature IS NOT NULL AND TRIM(formula_signature) != '' \
                  ORDER BY created_at DESC LIMIT 1",
-                params![thread.thread_id],
-                |row| row.get::<_, Option<String>>(0),
-            ).ok().flatten();
-            (recent, prior_sig)
-        } else {
-            (Vec::new(), None)
-        };
+                        params![thread.thread_id],
+                        |row| row.get::<_, Option<String>>(0),
+                    )
+                    .ok()
+                    .flatten();
+                (recent, prior_sig)
+            } else {
+                (Vec::new(), None)
+            };
 
-        (system_prompt, model_config, prior_messages, session_id, character, world_id, recent_for_momentstamp, prior_signature)
+        (
+            system_prompt,
+            model_config,
+            prior_messages,
+            session_id,
+            character,
+            world_id,
+            recent_for_momentstamp,
+            prior_signature,
+        )
     };
 
     // Formula-momentstamp wire-up: mirrors the orchestrator path's
@@ -11828,7 +14444,11 @@ async fn cmd_ask(
     // system_prompt unless WORLDTHREADS_NO_MOMENTSTAMP_LEAD=1 is set
     // (the same toggle the orchestrator path uses, orchestrator.rs:277-292).
     if with_momentstamp {
-        let result_opt: Option<app_lib::ai::momentstamp::MomentstampResult> = if let Some(override_sig) = momentstamp_override {
+        let result_opt: Option<app_lib::ai::momentstamp::MomentstampResult> = if let Some(
+            override_sig,
+        ) =
+            momentstamp_override
+        {
             // Build a synthetic block in the same shape build_formula_momentstamp emits.
             // See momentstamp.rs:197-204 for the canonical block format.
             let block = format!(
@@ -11855,7 +14475,9 @@ async fn cmd_ask(
                 &recent_for_momentstamp,
                 prior_signature.as_deref(),
                 None,
-            ).await {
+            )
+            .await
+            {
                 Ok(Some(result)) => {
                     eprintln!(
                         "[worldcli with-momentstamp] computed signature: {}",
@@ -11868,7 +14490,10 @@ async fn cmd_ask(
                     None
                 }
                 Err(e) => {
-                    eprintln!("[worldcli with-momentstamp] build_formula_momentstamp failed: {}", e);
+                    eprintln!(
+                        "[worldcli with-momentstamp] build_formula_momentstamp failed: {}",
+                        e
+                    );
                     None
                 }
             }
@@ -11878,10 +14503,12 @@ async fn cmd_ask(
 
         if let Some(result) = result_opt {
             let suppress_lead = std::env::var("WORLDTHREADS_NO_MOMENTSTAMP_LEAD")
-                .map(|v| v == "1").unwrap_or(false);
+                .map(|v| v == "1")
+                .unwrap_or(false);
             eprintln!("[worldcli momentstamp] suppress_lead={}", suppress_lead);
             if !suppress_lead {
-                let mut prefixed = String::with_capacity(result.block.len() + system_prompt.len() + 4);
+                let mut prefixed =
+                    String::with_capacity(result.block.len() + system_prompt.len() + 4);
                 prefixed.push_str(&result.block);
                 prefixed.push_str("\n\n");
                 prefixed.push_str(&system_prompt);
@@ -11890,17 +14517,35 @@ async fn cmd_ask(
         }
     }
 
-    let mut messages = vec![openai::ChatMessage { role: "system".to_string(), content: system_prompt }];
+    let mut messages = vec![openai::ChatMessage {
+        role: "system".to_string(),
+        content: system_prompt,
+    }];
     for (role, content) in prior_messages.iter() {
-        messages.push(openai::ChatMessage { role: role.clone(), content: content.clone() });
+        messages.push(openai::ChatMessage {
+            role: role.clone(),
+            content: content.clone(),
+        });
     }
-    messages.push(openai::ChatMessage { role: "user".to_string(), content: message.to_string() });
+    messages.push(openai::ChatMessage {
+        role: "user".to_string(),
+        content: message.to_string(),
+    });
 
     // Project cost
-    let prompt_text_total: String = messages.iter().map(|m| m.content.as_str()).collect::<Vec<_>>().join("\n");
+    let prompt_text_total: String = messages
+        .iter()
+        .map(|m| m.content.as_str())
+        .collect::<Vec<_>>()
+        .join("\n");
     let projected_in = estimate_tokens(&prompt_text_total);
     let projected_out: i64 = 600; // safety margin for typical character reply
-    let projected_usd = project_cost(&model_config.dialogue_model, projected_in, projected_out, &r.cfg.model_pricing);
+    let projected_usd = project_cost(
+        &model_config.dialogue_model,
+        projected_in,
+        projected_out,
+        &r.cfg.model_pricing,
+    );
 
     let daily_so_far = rolling_24h_total_usd();
     let daily_after = daily_so_far + projected_usd;
@@ -11938,18 +14583,20 @@ async fn cmd_ask(
         max_completion_tokens: None,
         response_format: None,
     };
-    let response = openai::chat_completion_with_base(
-        &model_config.chat_api_base(), api_key, &request,
-    ).await?;
+    let response =
+        openai::chat_completion_with_base(&model_config.chat_api_base(), api_key, &request).await?;
 
-    let finish_reason = response.choices.first().and_then(|c| c.finish_reason.clone());
-    let reply = response.choices.first()
+    let finish_reason = response
+        .choices
+        .first()
+        .and_then(|c| c.finish_reason.clone());
+    let reply = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
-    let reply_post_orchestrator = orchestrator::post_process_dialogue_reply_for_persist(
-        &reply,
-        finish_reason.as_deref(),
-    );
+    let reply_post_orchestrator =
+        orchestrator::post_process_dialogue_reply_for_persist(&reply, finish_reason.as_deref());
     let usage = response.usage.unwrap_or(openai::Usage {
         prompt_tokens: projected_in as u32,
         completion_tokens: 0,
@@ -11957,7 +14604,12 @@ async fn cmd_ask(
     });
     let actual_in = usage.prompt_tokens as i64;
     let actual_out = usage.completion_tokens as i64;
-    let actual_usd = actual_cost(&model_config.dialogue_model, actual_in, actual_out, &r.cfg.model_pricing);
+    let actual_usd = actual_cost(
+        &model_config.dialogue_model,
+        actual_in,
+        actual_out,
+        &r.cfg.model_pricing,
+    );
 
     // Persist cost
     append_cost_log(&CostEntry {
@@ -12005,7 +14657,10 @@ async fn cmd_ask(
             "[worldcli] --fence-pipeline: finish_reason={:?}",
             finish_reason.as_deref()
         );
-        eprintln!("[worldcli] reply (API trimmed, same as runs/ / session):\n{}", reply);
+        eprintln!(
+            "[worldcli] reply (API trimmed, same as runs/ / session):\n{}",
+            reply
+        );
         eprintln!(
             "[worldcli] reply_post_orchestrator (in-app persist path):\n{}",
             reply_post_orchestrator
@@ -12045,8 +14700,14 @@ async fn cmd_ask(
         emit(true, payload);
     } else {
         println!("{}", reply);
-        eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok); 24h total now ${:.4}; run_id={}",
-            actual_usd, actual_in, actual_out, daily_so_far + actual_usd, run_id);
+        eprintln!(
+            "[worldcli] actual cost ${:.4} ({} in / {} out tok); 24h total now ${:.4}; run_id={}",
+            actual_usd,
+            actual_in,
+            actual_out,
+            daily_so_far + actual_usd,
+            run_id
+        );
     }
     Ok(())
 }
@@ -12095,25 +14756,37 @@ async fn cmd_group_ask(
             .map_err(|e| format!("group_chat '{}' not found: {}", group_chat_id, e))?;
 
         // Parse member ids from the group's character_ids JSON array.
-        let member_ids: Vec<String> = gc.character_ids.as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+        let member_ids: Vec<String> = gc
+            .character_ids
+            .as_array()
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect()
+            })
             .unwrap_or_default();
         if !member_ids.iter().any(|id| id == speaker_id) {
             return Err(Box::<dyn std::error::Error>::from(format!(
                 "speaker '{}' is not a member of group_chat '{}'. Members: [{}]",
-                speaker_id, group_chat_id, member_ids.join(", ")
+                speaker_id,
+                group_chat_id,
+                member_ids.join(", ")
             )));
         }
-        let members: Vec<Character> = member_ids.iter()
+        let members: Vec<Character> = member_ids
+            .iter()
             .filter_map(|id| get_character(&conn, id).ok())
             .collect();
-        let speaker = members.iter().find(|c| c.character_id == speaker_id)
+        let speaker = members
+            .iter()
+            .find(|c| c.character_id == speaker_id)
             .cloned()
             .ok_or_else(|| format!("speaker character '{}' could not be loaded", speaker_id))?;
         let world = get_world(&conn, &gc.world_id)?;
         let user_profile = get_user_profile(&conn, &gc.world_id).ok();
 
-        let other_chars: Vec<OtherCharacter> = members.iter()
+        let other_chars: Vec<OtherCharacter> = members
+            .iter()
             .filter(|c| c.character_id != speaker_id)
             .map(|c| OtherCharacter {
                 character_id: c.character_id.clone(),
@@ -12126,16 +14799,22 @@ async fn cmd_group_ask(
                 derived_formula: c.derived_formula.clone(),
             })
             .collect();
-        let group_context = GroupContext { other_characters: other_chars };
+        let group_context = GroupContext {
+            other_characters: other_chars,
+        };
 
         // Group-scoped settings (mirror in-app defaults).
         let response_length = get_setting(&conn, &format!("response_length.{}", gc.group_chat_id))
-            .ok().flatten()
+            .ok()
+            .flatten()
             .or_else(|| Some("Short".to_string()));
         let narration_tone = get_setting(&conn, &format!("narration_tone.{}", gc.group_chat_id))
-            .ok().flatten()
+            .ok()
+            .flatten()
             .or_else(|| Some("Auto".to_string()));
-        let leader = get_setting(&conn, &format!("leader.{}", gc.group_chat_id)).ok().flatten();
+        let leader = get_setting(&conn, &format!("leader.{}", gc.group_chat_id))
+            .ok()
+            .flatten();
 
         let recent_journals = list_journal_entries(&conn, speaker_id, 1).unwrap_or_default();
         let active_quests = list_active_quests(&conn, &gc.world_id).unwrap_or_default();
@@ -12143,9 +14822,18 @@ async fn cmd_group_ask(
         let stance_text: Option<String> = latest_stance.as_ref().map(|s| s.stance_text.clone());
         let anchor_text: Option<String> = combined_axes_block(&conn, speaker_id);
 
-        let insertions = parse_cli_insertions(inject_file_paths, inject_before_anchors, inject_after_anchors)?;
+        let insertions = parse_cli_insertions(
+            inject_file_paths,
+            inject_before_anchors,
+            inject_after_anchors,
+        )?;
         let section_order_override = parse_section_order_override(section_order_names)?;
-        let overrides_for_prompt = if !omit_craft_rules.is_empty() || include_documentary_rules || !insertions.is_empty() || section_order_override.is_some() || end_seal {
+        let overrides_for_prompt = if !omit_craft_rules.is_empty()
+            || include_documentary_rules
+            || !insertions.is_empty()
+            || section_order_override.is_some()
+            || end_seal
+        {
             let mut ov = prompts::PromptOverrides::new();
             if !omit_craft_rules.is_empty() {
                 ov.set_omit_craft_rules(omit_craft_rules.clone());
@@ -12168,28 +14856,44 @@ async fn cmd_group_ask(
         };
 
         let system_prompt = prompts::build_dialogue_system_prompt_with_overrides(
-            &world, &speaker, user_profile.as_ref(),
+            &world,
+            &speaker,
+            user_profile.as_ref(),
             None,
             response_length.as_deref(),
             Some(&group_context),
             narration_tone.as_deref(),
-            false, &[],
+            false,
+            &[],
             leader.as_deref(),
-            &recent_journals, None, &[], None, &active_quests,
+            &recent_journals,
+            None,
+            &[],
+            None,
+            &active_quests,
             stance_text.as_deref(),
             anchor_text.as_deref(),
             overrides_for_prompt.as_ref(),
         );
         let mut model_config = orchestrator::load_model_config(&conn);
-        if let Some(m) = model_override { model_config.dialogue_model = m.to_string(); }
+        if let Some(m) = model_override {
+            model_config.dialogue_model = m.to_string();
+        }
 
         // Pull recent group-thread messages as conversation history.
         let recent = list_group_messages(&conn, &gc.thread_id, 30).unwrap_or_default();
-        let prior_messages: Vec<(String, String)> = recent.iter()
+        let prior_messages: Vec<(String, String)> = recent
+            .iter()
             .map(|m| {
-                let role = if m.role == "user" { "user".to_string() } else { "assistant".to_string() };
+                let role = if m.role == "user" {
+                    "user".to_string()
+                } else {
+                    "assistant".to_string()
+                };
                 let content = if m.role == "assistant" {
-                    let speaker_name = m.sender_character_id.as_deref()
+                    let speaker_name = m
+                        .sender_character_id
+                        .as_deref()
                         .and_then(|sid| members.iter().find(|c| c.character_id == sid))
                         .map(|c| c.display_name.as_str())
                         .unwrap_or("?");
@@ -12203,19 +14907,44 @@ async fn cmd_group_ask(
 
         let world_id = gc.world_id.clone();
         let gc_thread_id = gc.thread_id.clone();
-        (system_prompt, model_config, prior_messages, speaker, world_id, gc_thread_id)
+        (
+            system_prompt,
+            model_config,
+            prior_messages,
+            speaker,
+            world_id,
+            gc_thread_id,
+        )
     };
 
-    let mut messages = vec![openai::ChatMessage { role: "system".to_string(), content: system_prompt }];
+    let mut messages = vec![openai::ChatMessage {
+        role: "system".to_string(),
+        content: system_prompt,
+    }];
     for (role, content) in prior_messages.iter() {
-        messages.push(openai::ChatMessage { role: role.clone(), content: content.clone() });
+        messages.push(openai::ChatMessage {
+            role: role.clone(),
+            content: content.clone(),
+        });
     }
-    messages.push(openai::ChatMessage { role: "user".to_string(), content: message.to_string() });
+    messages.push(openai::ChatMessage {
+        role: "user".to_string(),
+        content: message.to_string(),
+    });
 
-    let prompt_text_total: String = messages.iter().map(|m| m.content.as_str()).collect::<Vec<_>>().join("\n");
+    let prompt_text_total: String = messages
+        .iter()
+        .map(|m| m.content.as_str())
+        .collect::<Vec<_>>()
+        .join("\n");
     let projected_in = estimate_tokens(&prompt_text_total);
     let projected_out: i64 = 600;
-    let projected_usd = project_cost(&model_config.dialogue_model, projected_in, projected_out, &r.cfg.model_pricing);
+    let projected_usd = project_cost(
+        &model_config.dialogue_model,
+        projected_in,
+        projected_out,
+        &r.cfg.model_pricing,
+    );
 
     let daily_so_far = rolling_24h_total_usd();
     let daily_after = daily_so_far + projected_usd;
@@ -12253,18 +14982,20 @@ async fn cmd_group_ask(
         max_completion_tokens: None,
         response_format: None,
     };
-    let response = openai::chat_completion_with_base(
-        &model_config.chat_api_base(), api_key, &request,
-    ).await?;
+    let response =
+        openai::chat_completion_with_base(&model_config.chat_api_base(), api_key, &request).await?;
 
-    let finish_reason = response.choices.first().and_then(|c| c.finish_reason.clone());
-    let reply = response.choices.first()
+    let finish_reason = response
+        .choices
+        .first()
+        .and_then(|c| c.finish_reason.clone());
+    let reply = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
-    let reply_post_orchestrator = orchestrator::post_process_dialogue_reply_for_persist(
-        &reply,
-        finish_reason.as_deref(),
-    );
+    let reply_post_orchestrator =
+        orchestrator::post_process_dialogue_reply_for_persist(&reply, finish_reason.as_deref());
     let usage = response.usage.unwrap_or(openai::Usage {
         prompt_tokens: projected_in as u32,
         completion_tokens: 0,
@@ -12272,7 +15003,12 @@ async fn cmd_group_ask(
     });
     let actual_in = usage.prompt_tokens as i64;
     let actual_out = usage.completion_tokens as i64;
-    let actual_usd = actual_cost(&model_config.dialogue_model, actual_in, actual_out, &r.cfg.model_pricing);
+    let actual_usd = actual_cost(
+        &model_config.dialogue_model,
+        actual_in,
+        actual_out,
+        &r.cfg.model_pricing,
+    );
 
     append_cost_log(&CostEntry {
         timestamp: chrono::Utc::now().to_rfc3339(),
@@ -12290,7 +15026,10 @@ async fn cmd_group_ask(
         character_name: speaker.display_name.clone(),
         world_id: world_id.clone(),
         model: model_config.dialogue_model.clone(),
-        session: Some(format!("group:{}", &gc_thread_id[..8.min(gc_thread_id.len())])),
+        session: Some(format!(
+            "group:{}",
+            &gc_thread_id[..8.min(gc_thread_id.len())]
+        )),
         question_summary: question_summary.map(|s| s.to_string()),
         prompt: format!("[group_chat={}] {}", group_chat_id, message),
         reply: reply.clone(),
@@ -12346,8 +15085,14 @@ async fn cmd_group_ask(
         emit(true, payload);
     } else {
         println!("{}", reply);
-        eprintln!("[worldcli] actual cost ${:.4} ({} in / {} out tok); 24h total now ${:.4}; run_id={}",
-            actual_usd, actual_in, actual_out, daily_so_far + actual_usd, run_id);
+        eprintln!(
+            "[worldcli] actual cost ${:.4} ({} in / {} out tok); 24h total now ${:.4}; run_id={}",
+            actual_usd,
+            actual_in,
+            actual_out,
+            daily_so_far + actual_usd,
+            run_id
+        );
     }
     Ok(())
 }
@@ -12382,16 +15127,22 @@ fn cmd_runs_show(r: &Resolved, id_or_prefix: &str) -> Result<(), Box<dyn std::er
             return Ok(());
         }
     }
-    Err(Box::new(CliError::NotFound(format!("run id starting with '{}'", id_or_prefix))))
+    Err(Box::new(CliError::NotFound(format!(
+        "run id starting with '{}'",
+        id_or_prefix
+    ))))
 }
 
 fn cmd_runs_search(r: &Resolved, query: &str) -> Result<(), Box<dyn std::error::Error>> {
     let q = query.to_lowercase();
     let entries = read_manifest();
-    let hits: Vec<JsonValue> = entries.into_iter().filter(|e| {
-        let blob = e.to_string().to_lowercase();
-        blob.contains(&q)
-    }).collect();
+    let hits: Vec<JsonValue> = entries
+        .into_iter()
+        .filter(|e| {
+            let blob = e.to_string().to_lowercase();
+            blob.contains(&q)
+        })
+        .collect();
     emit(r.json, JsonValue::Array(hits));
     Ok(())
 }
@@ -12400,36 +15151,54 @@ fn cmd_runs_search(r: &Resolved, query: &str) -> Result<(), Box<dyn std::error::
 
 fn cmd_session_show(r: &Resolved, name: &str) -> Result<(), Box<dyn std::error::Error>> {
     let conn = r.db.conn.lock().unwrap();
-    let session_id: Option<String> = conn.query_row(
-        "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
-        params![name], |r| r.get(0),
-    ).ok();
+    let session_id: Option<String> = conn
+        .query_row(
+            "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
+            params![name],
+            |r| r.get(0),
+        )
+        .ok();
     let Some(session_id) = session_id else {
         emit(r.json, json!({"error": "not_found", "name": name}));
         return Ok(());
     };
     let mut stmt = conn.prepare(
         "SELECT role, content, created_at FROM dev_chat_messages \
-         WHERE session_id = ?1 ORDER BY created_at ASC"
+         WHERE session_id = ?1 ORDER BY created_at ASC",
     )?;
     let rows = stmt.query_map(params![session_id], |row| {
-        Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?, row.get::<_, String>(2)?))
+        Ok((
+            row.get::<_, String>(0)?,
+            row.get::<_, String>(1)?,
+            row.get::<_, String>(2)?,
+        ))
     })?;
-    let out: Vec<JsonValue> = rows.flatten().map(|(role, content, ts)| json!({
-        "role": role, "content": content, "created_at": ts,
-    })).collect();
+    let out: Vec<JsonValue> = rows
+        .flatten()
+        .map(|(role, content, ts)| {
+            json!({
+                "role": role, "content": content, "created_at": ts,
+            })
+        })
+        .collect();
     emit(r.json, JsonValue::Array(out));
     Ok(())
 }
 
 fn cmd_session_clear(r: &Resolved, name: &str) -> Result<(), Box<dyn std::error::Error>> {
     let conn = r.db.conn.lock().unwrap();
-    let session_id: Option<String> = conn.query_row(
-        "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
-        params![name], |r| r.get(0),
-    ).ok();
+    let session_id: Option<String> = conn
+        .query_row(
+            "SELECT session_id FROM dev_chat_sessions WHERE name = ?1",
+            params![name],
+            |r| r.get(0),
+        )
+        .ok();
     if let Some(id) = session_id {
-        let n = conn.execute("DELETE FROM dev_chat_messages WHERE session_id = ?1", params![id])?;
+        let n = conn.execute(
+            "DELETE FROM dev_chat_messages WHERE session_id = ?1",
+            params![id],
+        )?;
         emit(r.json, json!({"cleared_messages": n, "session_name": name}));
     } else {
         emit(r.json, json!({"error": "not_found", "name": name}));
@@ -12443,7 +15212,7 @@ fn cmd_session_list(r: &Resolved) -> Result<(), Box<dyn std::error::Error>> {
         "SELECT s.name, s.character_id, s.created_at, COUNT(m.message_id) as msg_count \
          FROM dev_chat_sessions s \
          LEFT JOIN dev_chat_messages m ON m.session_id = s.session_id \
-         GROUP BY s.session_id ORDER BY s.created_at DESC"
+         GROUP BY s.session_id ORDER BY s.created_at DESC",
     )?;
     let rows = stmt.query_map([], |r| {
         Ok((
@@ -12453,9 +15222,14 @@ fn cmd_session_list(r: &Resolved) -> Result<(), Box<dyn std::error::Error>> {
             r.get::<_, i64>(3)?,
         ))
     })?;
-    let out: Vec<JsonValue> = rows.flatten().map(|(name, cid, ts, count)| json!({
-        "name": name, "character_id": cid, "created_at": ts, "message_count": count,
-    })).collect();
+    let out: Vec<JsonValue> = rows
+        .flatten()
+        .map(|(name, cid, ts, count)| {
+            json!({
+                "name": name, "character_id": cid, "created_at": ts, "message_count": count,
+            })
+        })
+        .collect();
     emit(r.json, JsonValue::Array(out));
     Ok(())
 }
@@ -12473,33 +15247,29 @@ mod tests {
 
     #[test]
     fn resolve_consult_target_rejects_missing_targets() {
-        let err = resolve_consult_target(None, None)
-            .expect_err("should reject missing consult target");
+        let err =
+            resolve_consult_target(None, None).expect_err("should reject missing consult target");
         assert!(err.contains("missing target"));
     }
 
     #[test]
     fn resolve_consult_target_accepts_character_target() {
-        let t = resolve_consult_target(Some("char-1"), None)
-            .expect("should accept character target");
+        let t =
+            resolve_consult_target(Some("char-1"), None).expect("should accept character target");
         assert_eq!(t.character_id, Some("char-1"));
         assert_eq!(t.group_chat_id, None);
     }
 
     #[test]
     fn resolve_consult_target_accepts_group_target() {
-        let t = resolve_consult_target(None, Some("group-1"))
-            .expect("should accept group target");
+        let t = resolve_consult_target(None, Some("group-1")).expect("should accept group target");
         assert_eq!(t.character_id, None);
         assert_eq!(t.group_chat_id, Some("group-1"));
     }
 
     #[test]
     fn group_session_target_uses_group_prefix() {
-        assert_eq!(
-            group_session_target("abc-123"),
-            "group:abc-123".to_string()
-        );
+        assert_eq!(group_session_target("abc-123"), "group:abc-123".to_string());
     }
 
     #[test]
@@ -12522,9 +15292,18 @@ mod tests {
         .into_iter()
         .collect();
 
-        assert!(signature_token_matches_curiosity("bearing_cross_", &lexicon));
-        assert!(signature_token_matches_curiosity("embracing_honesty_", &lexicon));
-        assert!(!signature_token_matches_curiosity("ordinary_small", &lexicon));
+        assert!(signature_token_matches_curiosity(
+            "bearing_cross_",
+            &lexicon
+        ));
+        assert!(signature_token_matches_curiosity(
+            "embracing_honesty_",
+            &lexicon
+        ));
+        assert!(!signature_token_matches_curiosity(
+            "ordinary_small",
+            &lexicon
+        ));
     }
 
     #[test]

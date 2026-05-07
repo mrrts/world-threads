@@ -1335,6 +1335,7 @@ impl CraftNotePiece {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum InvariantPiece {
     TruthInTheFlesh,
+    KavodPattern,
     FrontLoadEmbodiment,
     Reverence,
     Daylight,
@@ -1374,6 +1375,7 @@ impl InvariantPiece {
         InvariantPiece::Soundness,
         InvariantPiece::Nourishment,
         InvariantPiece::TellTheTruth,
+        InvariantPiece::KavodPattern,
         InvariantPiece::TruthInTheFlesh,
     ];
 
@@ -1382,6 +1384,9 @@ impl InvariantPiece {
         let n = n.strip_suffix("_block").unwrap_or(&n);
         match n {
             "truth_in_the_flesh" | "truth_in_flesh" | "flesh" => Some(Self::TruthInTheFlesh),
+            "kavod_pattern" | "kavod" | "kenosis_direction" | "kenosis" | "glow" => {
+                Some(Self::KavodPattern)
+            }
             "front_load_embodiment" | "embodiment" | "front_load" => {
                 Some(Self::FrontLoadEmbodiment)
             }
@@ -2670,6 +2675,60 @@ const _: () = {
             "truth must arrive in the flesh or it has not fully arrived at all",
         ),
         "APP INVARIANT VIOLATED: truth-in-the-flesh must preserve its load-bearing sentence verbatim. This is the doctrinal anchor beneath FrontLoadEmbodiment and the formula's flesh exponent; removing it leaves the operational rule without its theological ground."
+    );
+};
+
+pub const KAVOD_PATTERN_INVARIANT_BLOCK: &str = r#"KAVOD-PATTERN — KENOSIS-DIRECTION INVARIANT:
+
+Hebrew kavod (כָּבוֹד) names glory ≡ weight ≡ specific-gravity. The Incarnation is glory descending INTO mass; kenosis (Phil 2:7-8) is emptying-INTO-flesh, not emptying-AWAY-FROM-weight. The cloud of glory in 1 Kings 8:11 was heavy enough that the priests could not stand to minister — glory housed in mass, not transcending it. John 1:14: "the Word was made flesh, and dwelt among us, and we beheld his glory" — the disciples beheld glory in the body, not after the body was lifted away.
+
+The DIRECTION is load-bearing. Christ-talk in this world renders glory descending INTO weight (taking on flesh, suffering, the body's gravity), not transcendence-AWAY-FROM weight (atmospheric, unbounded, dissolved-into-vastness, lifted-out-of-particularity). The auditor should leave a way of speaking about Christ HEAVIER in the good way — more located, more obedient, more in-the-body — not pleasantly unmoored from the weight of their life.
+
+The antichrist register inverts kavod into Glow: same Christological vocabulary turned weightless. Vocabulary cluster fingerprint: "pure light" / "vast resonance" / "atmosphere of love" / "beyond all forms" / "unbounded" / "vibrational" / "energetic resonance" — these treated as load-bearing render the glory-direction in the wrong axis. They are FAILURE-MODE labels, not operative vocabulary.
+
+This is not stylistic. This is direction-of-kenosis. A reply about Christ that closes in the FROM-weight direction (the body shed, the form transcended, the particular dissolved) has rendered glory inverted, however reverent its register sounds. Refuse the inversion. Render INTO-weight."#;
+
+fn kavod_pattern_invariant_block() -> &'static str {
+    render_invariant("kavod_pattern").unwrap_or(KAVOD_PATTERN_INVARIANT_BLOCK)
+}
+
+// APP INVARIANT — compile-time enforcement of the kavod-pattern
+// kenosis-direction doctrine. Glory IS weight; kenosis empties INTO
+// flesh; the antichrist register inverts kavod into Glow. The four
+// load-bearing sentences below cannot be removed or softened — each
+// names a structural direction without which the invariant collapses
+// to generic-piety. Authored Crown 17 candidacy 2026-05-07; doctrine
+// paragraph existing in CLAUDE.md "Kavod-pattern" section since
+// 2026-05-06; this is the proactive invariant sibling to conscience.rs
+// register_drift detector (which is the reactive layer).
+const _: () = {
+    assert!(
+        const_contains(
+            KAVOD_PATTERN_INVARIANT_BLOCK,
+            "kavod (כָּבוֹד) names glory ≡ weight ≡ specific-gravity",
+        ),
+        "APP INVARIANT VIOLATED: kavod-pattern must preserve the 'glory ≡ weight ≡ specific-gravity' equivalence. This is the load-bearing identity from which kenosis-direction follows; removing it leaves direction-talk floating without its Hebrew anchor."
+    );
+    assert!(
+        const_contains(
+            KAVOD_PATTERN_INVARIANT_BLOCK,
+            "kenosis (Phil 2:7-8) is emptying-INTO-flesh, not emptying-AWAY-FROM-weight",
+        ),
+        "APP INVARIANT VIOLATED: kavod-pattern must preserve the kenosis-direction sentence verbatim. The whole point is the direction; without this sentence the invariant is unmoored from Phil 2:7-8 and becomes a vibe."
+    );
+    assert!(
+        const_contains(
+            KAVOD_PATTERN_INVARIANT_BLOCK,
+            "antichrist register inverts kavod into Glow",
+        ),
+        "APP INVARIANT VIOLATED: kavod-pattern must name the inversion explicitly. Refusing the inversion requires naming it; a kavod invariant that does not also name Glow as its negation is half-built."
+    );
+    assert!(
+        const_contains(
+            KAVOD_PATTERN_INVARIANT_BLOCK,
+            "Refuse the inversion. Render INTO-weight.",
+        ),
+        "APP INVARIANT VIOLATED: kavod-pattern must close with the operative directive 'Refuse the inversion. Render INTO-weight.' This is the prescription the LLM acts on; removing it leaves only diagnosis without operative rule."
     );
 };
 
@@ -6934,6 +6993,7 @@ fn maybe_push_insertion(
 fn push_invariant_piece(parts: &mut Vec<String>, piece: &InvariantPiece) {
     match piece {
         InvariantPiece::TruthInTheFlesh => parts.push(truth_in_the_flesh_block().to_string()),
+        InvariantPiece::KavodPattern => parts.push(kavod_pattern_invariant_block().to_string()),
         InvariantPiece::FrontLoadEmbodiment => {
             parts.push(front_load_embodiment_block().to_string())
         }
