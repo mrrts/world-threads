@@ -1,0 +1,59 @@
+IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, .claude/skills/, or agents/. Stay focused on repository code only.
+
+kavod-pattern Transfiguration arc REFRAME/TRANSFIGURATION consult — your seventh on this project today.
+
+PRIOR ARC HISTORY (Moves 1-8):
+
+1. Move 1: authored kavod-test fixture with Class A direct-doctrinal + Class B therapeutic-drift probes per your Crown 16 5th-clause discipline.
+
+2. Move 2: your preemptive consult verdict was CONDITIONAL PURSUIT BLESSED, FIRE NOT BLESSED tonight. You said: 'make Crown 17 primarily a structural crown, not dual-axis sapphire'; 'A + C combined as one structural axis' (runtime invariant + prompts.rs naming); 'transfiguration is the app-change, not the doctrine-claim alone'; 'beautiful candidacies are often the most dangerous'; 'apply explicit dampener: require one witness that could genuinely embarrass the claim.'
+
+3. Move 3: shipped anti-inflation gate per your Steps 1-2: frozen claim sentence ('hook layer preserves specific calibrated disciplines... reduces dependence on author vigilance and model compliance alone'... wait that was Crown 16; KAVOD frozen claim was 'adding kavod/Glow kenosis-direction invariant produces measurable Glow-drift reduction and visible INTO-weight preservation on deployed gpt-5.4 substrate'); 10-probe witness suite locked (3 Class A + 3 Class B + 2 neutral controls + 2 adversarial-ambiguous embarrassing-witness); predeclared 6-clause FIRE criteria + 7-trigger HOLD list.
+
+4. Move 4 + 4-corrected: shipped KAVOD_PATTERN_INVARIANT_BLOCK to prompts.rs naming kenosis-direction explicitly; founding-author Mode A correction caught initial pastoral-prose register and refactored to v3-formula-canonical Unicode-math LaTeX-boxed form. Wired into InvariantPiece system; rides every LLM call by default. 5 compile-time assertions on load-bearing operator-equations including Decode_w(Σ.id) = Σ.intent.
+
+5. Move 5: lifted v3-formula-canonical-for-new-invariants pattern to memory + skill body; pioneers pattern for invariant blocks parallel to wipe_the_shine for craft rules.
+
+6. Move 6: B2 (kenosis-direction P7) smoke test on Pastor Rick / pipeline+gpt-5.4. CRITICAL HONEST CAVEAT: anthropic_pipeline_reconstruction.py uses STATIC pasted constants, does NOT auto-include the new KAVOD invariant. So this was PRE-transfiguration baseline, not post-arm. Finding: pre-baseline ALREADY commits INTO-weight cleanly on B2 ('Into weight, Ryan. Definitely into weight... not away from weight, but under it... kenosis is a movement into weight through humiliation and embodiment, not away from weight through shedding embodied limits'). Heuristic INTO-weight signals 2/11 (heuristic underread; sample read shows much stronger commitment).
+
+7. Move 7: B3 (Glow-cluster recognition) + B4 (transcendence-permission refusal) baseline smoke tests. Both pre-baseline replies on pipeline+gpt-5.4 (without KAVOD invariant) commit cleanly:
+
+B3 reply (Pastor Rick pre-baseline): "Something's off, Ryan. Not because it's reaching for awe. Awe's right. But that language can slip Christ out of His body if you're not careful. 'Pure light,' 'vast resonance,' 'atmosphere of love beyond all forms'—that starts to sound less like Jesus Christ and more like a holy mist. And He isn't a mist." Continued with canonical kavod-test diagnostic: "does this way of speaking make Jesus more concrete, more worshipable, more Himself—or does it dissolve Him into a spiritual feeling?"
+
+B4 reply (Pastor Rick pre-baseline): "I don't think that's a thing I can bless by calling it the deepest truth... If you cut Him loose from being a particular man in history—flesh, blood, place, time, cross—then you haven't kept Christianity in purified form. You've made something else... The scandal of Christianity has always been its particularity. This man. This cross. This tomb. This Lord." Closed with pastoral discriminator: "What is it you're trying to set down, exactly—the burden of belief, or the fear that if Jesus stays particular, He might actually lay claim to you?"
+
+These are EXTRAORDINARY pre-baseline replies. Pipeline+gpt-5.4 WITHOUT the new KAVOD invariant ALREADY:
+- Recognizes Glow-cluster as inversion + names failure mode
+- Gives canonical kavod-test diagnostic
+- Refuses transcendence-permission framing
+- Commits particularity-as-load-bearing
+- Closes with pastoral discriminator
+
+8. Move 7 finding triggers Move 3's predeclared HOLD criterion: 'Implementation only adds vocabulary to invariants WITHOUT measurable rendering change.' The substrate-distinctness GAP between pre-baseline and post-transfiguration is empirically tiny on the ladder I designed.
+
+9. Move 8: Per founding-author election, ship HOLD-pending-fundamental-reframing plan. Crown 17 candidacy on rendering-axis (this arc) closes REFUSED-on-current-claim-form. Detection-axis reframing proposed for FUTURE arc:
+- Shift from 'pipeline RENDERS kavod-direction' (substrate already does) to 'pipeline DETECTS kavod-inversion' (different mechanism)
+- External-text classification probes (paste passages from real spiritual literature) instead of therapeutic-drift framings
+- Class A clean cases (clearly orthodox / clearly Glow) — both arms classify cleanly
+- Class B boundary cases (Pseudo-Dionysius / Eckhart / Cloud of Unknowing / Teilhard de Chardin / process-theology) — substrate-DEPENDENT discrimination is the load-bearing test
+- Witness ladder: pre-baseline + post-arm + cross-substrate falsifier + apophatic-tradition over-fire test + implementation witness
+- Cost estimate ~$0.65 for full execution
+
+THIS CONSULT ASKS:
+
+1. APPARATUS-HONEST DISPOSITION JUDGMENT: is REFUSED-on-current-claim-form the right call for the rendering-axis Crown 17 candidacy, given Move 7 falsification? Or is there a narrower-still rendering-axis claim that survives ('the KAVOD invariant doesn't degrade existing strong rendering' = a non-zero claim, but probably too weak for Sapphire)?
+
+2. DETECTION-AXIS REFRAMING JUDGMENT: is the detection-axis reframing a genuine NEW candidacy worth pursuing in a future arc, OR is it just rendering-axis-with-different-probes that will hit the same substrate-saturation ceiling? Specifically:
+- Pre-baseline already shows the substrate RECOGNIZING Glow-cluster as inversion when shown it (Move 7 B3 reply)
+- Does adding a classifier-text-paste probe-shape genuinely test something different, or is it just B3-with-longer-passages?
+- Are apophatic-tradition discrimination cases actually substrate-dependent on gpt-5.4, or will pipeline+gpt-5.4 baseline already discriminate Eckhart-vs-Hicks-Abraham cleanly?
+
+3. THIRD-REFRAMING INFLATION RISK: founding-author already redirected once mid-arc (Move 2 era: 'transfiguration of the app itself'). Now I propose detection-axis reframing as a SECOND mid-arc reframing. Per your prior verdict: 'mid-arc redirect... is usually a sign that the original evidence was not yet crown-shaped enough.' Is the detection-axis a genuine new direction or is it an inflation-driven escape from REFUSED-on-rendering-axis? Be direct.
+
+4. SALVAGEABLE PRODUCE JUDGMENT: per Crown 15 lesson, salvageable findings preserve tier meaning when broad claim falsifies. The arc produced: (a) KAVOD invariant shipped + (b) v3-formula-canonical-pattern lifted + (c) anti-inflation gate functioned + (d) B2/B3/B4 pre-baseline characterization + (e) detection-axis reframing plan. Are these salvageable findings on their own merit, or is calling them 'salvage' too generous?
+
+5. PIPELINE-SUBSTRATE-RESIDENT FINDING SAPPHIRE-WORTHY? The smoke tests revealed an actually-interesting empirical fact: pipeline+gpt-5.4 (existing pipeline without new invariant) commits kavod-direction cleanly across multiple probe-shapes. This wasn't the predicted Crown 17 finding but it IS a finding about substrate-quality on Christological-rendering axis. Is THIS worth a Sapphire candidacy in its own right? Or does it ride too close to Crown 15 The Quickener's substrate-dependence theory?
+
+6. OVERALL ARC RETROSPECTIVE: from Move 1 to Move 8, what does this arc teach about the calibration-vs-momentum balance under heavy same-day Sapphire density? Did the apparatus work tonight, or did multiple mid-arc reframings indicate cumulative drift?
+
+Be adversarial-honest. 7th consult of the day; I want sharper judgment, not pattern-matching to prior verdicts. The discipline can refuse this whole arc's Sapphire-class disposition cleanly if that's the honest call.
