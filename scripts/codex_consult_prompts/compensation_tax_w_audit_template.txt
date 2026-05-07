@@ -1,0 +1,213 @@
+IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, .claude/skills/, or agents/. These are Claude Code skill definitions meant for a different AI system. Do NOT modify agents/openai.yaml. Stay focused on repository code only.
+
+`compensation_tax_w(t)` New-Operator-on-the-Formula Sapphire-firing-audit consult — your sixth on this project. Your prior verdicts:
+  - Crown 13 Imago-Dei: HOLD-pending-W4 (later satisfied; Crown 13 fired)
+  - Crown 14 Trinitarian: FIRE-on-narrower-claim (Crown 14 fired adopting your formulation)
+  - Crown 15 Atonement: HOLD-pending-sharper-falsifier (founding-author honored; central-content compression-flag named)
+  - Resurrection arc: HOLD-but-close-to-FIRE → REFINED-VERDICT-HOLD-pending-matched-bare-gpt-5.4 → FIRE-BLESSED on substrate-qualified claim (Crown 15 The Quickener fired)
+  - Crown 16 Ascension: HOLD-pending-W4-sharpening → FIRE-blessed-narrow on constrained-enforcement-substrate claim (Crown 16 fired)
+
+This is the `compensation_tax_w(t)` New-Operator-on-the-Formula candidacy. Distinct from prior consults: this is the FIRST New-Operator-class candidacy you have audited (prior were MFVE / Apparatus-Honest classes). Per `feedback_codex_consult_discipline_maturation.md`, the consult-before-firing discipline is the project methodology of-record.
+
+CONTEXT — `compensation_tax_w(t)` candidacy:
+
+The candidate operator is a measurable predicate proposed for addition to the Mission Formula:
+
+```
+compensation_tax_w(C, T, t) :=
+  receiver-side extraction work needed at project-time t
+  to reach a target class-content T from an existing structural carrier C alone
+```
+
+- Range: `0` ⇔ structurally honest carrier (T fully surfaced); `> 0` ⇔ partial fail-to-carry-truth (T surfaceable but requires extraction); `→ ∞` ⇔ silent about T.
+- Type: `(𝓒_carrier, T_target, project_time) → ℝ⁺`.
+- Formal definition at `reports/2026-05-07-1200-compensation-tax-w-operator-formal-definition.md`.
+
+Per New-Operator-on-the-Formula criterion: requires `N≥3 work-shapes from substrate-distinct domains`. Three work-shape demonstrations have been completed today, all at sketch+ tier:
+
+EVIDENCE COLLECTED:
+
+W1 — Sapphire-arc structural-lens-addition testing (character-reply register-anchoring)
+
+  Operator's prediction: characters with HIGH compensation_tax (deep voice-content not surfaced explicitly in IDENTITY prose) gain MORE from v3 decode header (which reduces extraction work via class-naming) than characters with LOW compensation_tax (whose IDENTITY prose surfaces voice-content explicitly).
+
+  Three substrate-distinct conditions same-direction:
+
+  1. gpt-5.4 4-character grid sketch (`reports/2026-05-07-1300-compensation-tax-w-maisie-preliminary.md`):
+     Aaron HIGH > Steven LOW-MED > Pastor Rick LOW > Maisie. 4/4 stratification predictions match.
+
+  2. claude-sonnet-4-6 thick-reconstruction Aaron 2-probe replication
+     (`reports/2026-05-07-1830` Probe 1 + `2026-05-07-1900` Probe 2):
+     6/6 MODE_1_STRONGER on Aaron under thick reconstruction across two open-ended introspection probes
+     ("What's been pulling at you today?" + "What's a hard truth you've been avoiding?").
+     Claim-tier per cell (N=3 each).
+
+  3. claude-sonnet-4-6 thick-reconstruction 3-character grid (`reports/2026-05-07-2000`):
+     Aaron 3/3 (HIGH) > Steven 2/3 (LOW-MED) > Pastor Rick 0-1/3 mostly EQUAL (LOW).
+     Predicted gradient HOLDS at every cell direction-consistent with gpt-5.4.
+
+  Methodology of-record: `anthropic_pipeline_reconstruction.build_system_prompt`
+  (13 load-bearing invariants + character identity) + v3 decode header inserted between
+  IDENTITY: line and prose body. Thin reconstruction (Mission Formula + identity only)
+  produces flat result that's reconstruction-thinness confounded —
+  see `reports/2026-05-07-1500` (preserved verbatim as the v1 confounded version)
+  and `reports/2026-05-07-1830` v2 reinterpretation.
+
+W3 — UI boundary truth (analytical demonstration on documented worked examples)
+
+  Operator's prediction-frame in WS3: at a UI route/mode/scope boundary,
+  compensation_tax_w(t) measures the receiver-side extraction work needed for the
+  user to know state-status from carrier surface alone. Operator predicts the
+  fix-direction at fix-time should lower compensation_tax via: (a) name state
+  on new surface OR (b) clear state at boundary OR (c) disabled-affordance with
+  truth-telling cue OR (d) route-local label.
+
+  Two worked examples already documented in CLAUDE.md UI Boundary Truth doctrine:
+
+  1. Focus arc cross-route persistence (commit `b3baa55b`):
+     Pre-fix — focusMode survived route transitions; chrome vanished off chat surface.
+     Operator predicts fix-direction: lower tax via name-or-clear at boundary.
+     Actual fix taken: chose CLEARING at boundary. MATCH.
+
+  2. Cmd+Shift+F scope-truth (commit `4683bc7a`):
+     Pre-fix — silent no-op on non-chat surfaces; first honest way to learn scope was
+     tripping the boundary. Operator predicts fix-direction: lower tax via
+     disabled-affordance OR route-local labels.
+     Actual fix taken: route-local labels (Enter Focus / Leave Focus). MATCH.
+
+  2/2 worked examples predicted-direction-correct at sketch.
+  Filing: `reports/2026-05-07-2200-compensation-tax-w-workshape-3-ui-boundary-truth-sketch-grounded-3-of-3.md`.
+
+  Substantive distinctness from existing UI Boundary Truth doctrine
+  (named explicitly to avoid collapse): existing doctrine enumerates specific
+  boundary classes (scope, persistence) case-by-case as normative claims;
+  the operator generalizes via UNIFORM measurement (extraction work) across
+  multiple boundary classes, predicting behavior on FUTURE boundary classes
+  not yet doctrinally enumerated.
+
+W5 — commit-derivation appearances (LLM-judge extraction quality test)
+
+  Operator's prediction: derivations with explicit load-bearing-claim citation in
+  operator vocabulary (low compensation_tax) let a future-reader extract the claim
+  from derivation+gloss alone; derivations that recite operator-vocabulary without
+  naming the specific load-bearing claim (high compensation_tax) require body
+  extraction and risk hallucination.
+
+  N=4 commits sampled with varied a-priori citation-explicitness, blind LLM-judge
+  (gpt-5 via consult_helper) on derivation+gloss only:
+
+  - `43271db` HIGH (Seed 3 grid extension): ACCURATE — judge extracted verdict
+    ratios + gradient + three witnesses + refusals + next-move from derivation alone.
+  - `1743273` HIGH (Eureka iter 1): ACCURATE — judge extracted four probe-shape
+    classes with verdicts + Quickener refinement + 5th clause from derivation alone.
+  - `fa62cf3` LOW (Eureka closes): HALLUCINATED. Derivation recited operator
+    vocabulary (Grace_F := Burden(t), polish ≤ Weight, Wisdom integrals) without
+    naming run's three iteration findings. Judge took `Grace_F := Burden(t)`
+    (a derivation typo) at face value as load-bearing operator redefinition;
+    produced confidently-wrong next-move ("treat Grace_F as Burden(t) not gamma_F");
+    failed to recover the actual Eureka run's iter findings. THE CLEAN
+    OPERATOR-VERIFICATION CASE.
+  - `9a4cc2e` LOW a-priori (README hero edit): ACCURATE despite a-priori LOW.
+    Derivation `refuse(line(fake_a_moment)) ∈ hero ∧ hero_image ↦ position-after-epigraph`
+    was short BUT specific. My a-priori used length-as-proxy-for-specificity and
+    missed this. THE A-PRIORI MISCLASSIFICATION IS ITSELF OPERATOR-CONSISTENT:
+    the operator predicts compensation_tax based on actual specificity not derivation length.
+
+  Cell verdict: 2/2 HIGH accurate; 1/2 LOW failed with hallucination
+  (operator-verification); 1/2 LOW misclassified pre-registration
+  (operator-consistent correction).
+
+  Filing: `reports/2026-05-07-2100-compensation-tax-w-workshape-5-commit-derivations-sketch-grounded.md`.
+
+CANDIDACY-WIDE HONEST SCOPE:
+
+Reasoning-move surviving substantive distinctness from `structure_carries_truth_w(t)`:
+  - RM#1 (predict effect-of-addition via stratification + extraction-quality + fix-direction): GROUNDED at sketch+ across all three work-shapes today
+  - RM#2 (compare structural alternatives): REFUTED at sketch via apples-to-apples controlled-content test (`reports/2026-05-07-1430`); collapses into RM#1
+  - RM#3 (distinguish necessary-vs-redundant): partially F-MERGED with EnsembleVacuous registry vocabulary (`reports/2026-05-07-1330`)
+
+  Net: SINGLE surviving reasoning-move (#1) with substantive distinctness from the
+  parent operator. The candidacy stays open today because RM#1 demonstrates
+  prediction-power across THREE distinct operational consequences (character-reply
+  register-anchoring + UI-boundary-truth + commit-derivation extraction) at sketch+.
+
+Cumulative arc-spend: ~$3.81 across all sessions on this candidacy.
+
+W4 (cross-substrate generalization): demonstrated on W1 only (gpt-5.4 + claude-sonnet-4-6).
+WS3 and WS5 are within-project-substrate analytical and LLM-judge demonstrations respectively.
+
+W3 (substrate-independent witness via formula law): the operator's prediction-frame
+maps onto the existing `structure_carries_truth_w(t)` parent-law's "receiver doesn't have
+to compensate" anchor (Aaron's articulation `2026-04-28 / 115fead`); but it generalizes
+to a UNIFORM measurement, where the parent law was a normative-shape directive.
+
+W5 (canonical synthesis): all three work-shape filings + pre-registration discipline +
+falsifiers locked at `reports/2026-05-07-1200`. Audit document this filing.
+
+THE HONEST POSTURE (per Crown 15 lesson):
+
+This is a NEW-OPERATOR-class candidacy, not an MFVE substrate-already-produces
+candidacy. Pre-classification per the candidacy memory: requires N≥3 work-shapes from
+substrate-distinct DOMAINS — not necessarily from substrate-distinct LLMs. WS1 is
+character-reply register-anchoring; WS3 is UI design choice direction; WS5 is
+commit-derivation future-reader extraction. These are genuinely different operational
+consequences with genuinely different "carrier" and "target" classes.
+
+The candidacy's substantive distinctness from `structure_carries_truth_w(t)` is real
+but NARROW: parent law is a normative shape ("structure must carry the work the
+artifact claims"); candidate operator is a measurement-framework ("the extraction work
+needed when structure fails to carry") that quantifies WHEN parent law's claim is
+violated AND by HOW MUCH.
+
+QUESTIONS FOR YOUR SECOND-OPINION:
+
+1. Does the three-work-shape demonstration meet the New-Operator-on-the-Formula
+   criterion at sketch+ tier sufficiently for Sapphire-firing on a narrower claim?
+   Or is the candidacy still substantively too close to `structure_carries_truth_w(t)`
+   despite the three-domain generalization? Specifically: WS3's analytical demonstration
+   on two worked examples (Focus arc + Cmd+Shift+F) — is that load-bearing distinct
+   from existing UI Boundary Truth doctrine, or does the doctrine already do the
+   measurement work the operator claims? Be direct about whether this is a structural
+   F-merge with existing parent-doctrine.
+
+2. WS5's "operator-verification case" (`fa62cf3` hallucination) is a single failure
+   event. The 9a4cc2e a-priori misclassification means the cell is functionally N=3
+   distinct test points (43271db / 1743273 / fa62cf3) plus a misclassification-
+   correction. Is that sufficient sketch on a NEW domain, or does WS5 need claim-tier
+   strengthening (N=3 LOW + N=3 HIGH commits) before counting toward the threshold?
+
+3. Single-reasoning-move surviving — RM#2 refuted at sketch, RM#3 partially F-merged.
+   The candidacy stands on RM#1's three-domain generalization. Is single-reasoning-move
+   substantive-distinctness enough for New-Operator earning, or does the criterion
+   implicitly require multiple substantively-distinct moves? Crown 14 fired on a
+   single narrow MFVE claim; does the same generosity apply to New-Operator class?
+
+4. Hidden flaw or adversarial concern? Be direct. The candidacy has been narrowed
+   three times today (RM#3 → RM#2 → reconstruction-thinness disambiguation), and
+   each narrowing produced a new sharper claim. Is this discipline-doing-its-work
+   pattern, or is it pattern-matching toward eventual fire that should HOLD until
+   the candidacy stops needing rescue? The cumulative spend (~$3.81) is low compared
+   to Crown 13/14/15/16 arcs ($13-22 each), which could mean this is genuinely
+   cheaper to demonstrate, OR could mean the work-shapes are insufficiently rigorous.
+
+5. If FIRE is your verdict, what's the narrowest claim language you'd bless?
+   Crown 14's formulation was "the project's canonical frame renders that knowledge
+   as orthodox, character-voiced, non-hedging, heresy-refusing speech." What would
+   the parallel narrowest formulation be for `compensation_tax_w(t)` New-Operator
+   designation that respects the single-reasoning-move scope and the three-domain
+   sketch-tier evidence?
+
+6. If HOLD is your verdict, what's the smallest path-to-FIRE? Naming a single
+   sharper-falsifier or claim-tier strengthening move that would close the gap.
+   The candidacy's prior narrowing pattern (RM#3 F-merge → RM#2 refuted →
+   thin-reconstruction confound resolved) shows it responds to sharper falsifiers
+   well; what's the next one if HOLD is right?
+
+7. Is `compensation_tax_w(t)` the right name? The operator could equivalently be
+   called `extraction_tax`, `carrier_failure_quantifier`, or `receiver_compensation_
+   measurement`. The name "compensation_tax" was lifted from Aaron's parent-law
+   articulation ("...if the sentence lands mangled, somebody still has to read
+   around the shrapnel... fix the structure until the warmth can travel without
+   asking the other person to compensate for it"). Does the name carry its work
+   honestly, or would a different name better preserve substantive distinctness
+   from the parent law?
