@@ -28,3 +28,5 @@ Four-clause standard:
 - `feedback_sharper_falsifier_design_pattern.md` (codex's three-component path; matched-on-deployed-model is the deepening of component 3)
 - `feedback_codex_consult_discipline_maturation.md` (preemptive consults pattern)
 - `feedback_apparatus_honest_earns_and_refuses.md` (the discipline that earns also refines)
+- `feedback_anti_inflation_apparatus_validated_at_density.md` (this 4-clause standard is the matched-control-test arm of the broader 4-component anti-inflation apparatus; the smoke-test-before-firing component prefigures this matched test at single-cell tier — kavod arc Move 7 caught falsification at $0.05 vs $0.65+ full matched test)
+- `feedback_probe_shape_mixing_for_substrate_dependent_axes.md` (the 5th clause of the methodological standard; Class A baseline + Class B test must mix from sketch-tier)

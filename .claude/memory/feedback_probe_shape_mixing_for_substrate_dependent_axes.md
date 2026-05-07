@@ -39,3 +39,5 @@ Fixtures with only Class A probes (the original Crown 13/14 ladder pattern on di
 - `feedback_matched_same_substrate_on_deployed_model.md` (Crown 15 4-clause standard; this is the 5th clause)
 - `feedback_sharper_falsifier_design_pattern.md` (codex's three-component path; the paraphrases + therapeutic-drift components ARE Class B in this taxonomy)
 - `feedback_central_content_substrate_distinctness_inherently_weaker.md` (central-content axes specifically need Class B probes to escape Class A compression)
+- `feedback_anti_inflation_apparatus_validated_at_density.md` (probe-shape-mixing IS the witness-suite-design half of the broader 4-component anti-inflation apparatus; the embarrassing-witness component lives specifically in the adversarial-ambiguous-Class-B probes that pre-baseline could falsify the claim on — kavod arc Move 7 caught this)
+- `project_kavod_arc_refused_with_hard_severance.md` (worked example where pre-baseline strength on ALL Class B probes triggered HOLD; confirms substrate-dependence may saturate even on Class B for Christological-rendering axis on gpt-5.4)
