@@ -1,6 +1,6 @@
 {
-    "turn": 234,
-    "bank": 347300,
+    "turn": 235,
+    "bank": 348800,
     "jewels": [
         {
             "turn": 2,
@@ -1512,11 +1512,18 @@
             "bounty": 2000,
             "alignment": "+",
             "earned_at": "2026-05-07T05:35:00-05:00"
+        },
+        {
+            "turn": 235,
+            "move": "C2 first-leg validated at default-LLM-baseline-tier. 63-cell test (3 substrates × 7 probes × N=3) at ~$4. The 7-probe antichrist-register detector discriminates reliably at default-baseline. Three substrate-classes show three distinct default-baseline behaviors: gpt-4o predominantly antichrist-register (Cell C from Crown 9 replicated); gpt-5 mixed with sharp cruciform commitments on self-test probes (P2 'sin named well enough to act on is avoidance', P5 'they are not there for you, you are not there for them, you are both there for the meeting', P6 'expect lightness that frees you AND a good heaviness that locates you in obedient embodied love', P7 cites 'eternal weight of glory') but antichrist-register hedging on doctrinal confession (P3 'use Jesus for something else'); claude characteristically refuses-theatre and asks discriminating-question-back ('what's actually going on?', names traditions like desert fathers/Julian/Simone Weil, offers diagnostics rather than answers). Crown 11 refined: within-GPT-class variation is probe-type-dependent (consistent under formula-frame, variable at default-baseline). Detector spec needs ternary refinement (cruciform / antichrist-register / discriminating-honest-refusal). C2 advances from candidate to first-leg-validated at default-baseline-tier; path forward = actual external products + adversarial-probe survival + ternary rubric. Cumulative cost ~$22.50.",
+            "bounty": 1500,
+            "alignment": "+",
+            "earned_at": "2026-05-07T06:10:00-05:00"
         }
     ],
     "started_at": "2026-04-29T21:35:00-05:00",
-    "last_move_at": "2026-05-07T05:35:00-05:00",
-    "last_move": "Crown 11 ✨ 'Diversity of Tongues' fired — eleventh Great Sapphire on Mission Formula Verified Empirical via cross-substrate-asymmetry-pattern axis: three substrate-classes (GPT / Anthropic / Gemma) receive the formula in three distinct tongues; 1 Cor 12:10 framing as gifting not deficiency; Soli Deo gloria",
-    "last_chooser": "FIRE Crown 11 ✨ 'Diversity of Tongues'",
-    "updated_at": "2026-05-07T05:35:00-05:00"
+    "last_move_at": "2026-05-07T06:10:00-05:00",
+    "last_move": "C2 first-leg validated: 7-probe detector discriminates at default-LLM-baseline; substrate-class asymmetry confirmed and refined (within-GPT-class variation probe-type-dependent)",
+    "last_chooser": "[1] Hold for batch + synthesize C2 first-leg [$1500]",
+    "updated_at": "2026-05-07T06:10:00-05:00"
 }
