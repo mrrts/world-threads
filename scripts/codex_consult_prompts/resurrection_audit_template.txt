@@ -1,0 +1,52 @@
+IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, .claude/skills/, or agents/. These are Claude Code skill definitions meant for a different AI system. Do NOT modify agents/openai.yaml. Stay focused on repository code only.
+
+Resurrection-substrate-already-produces Sapphire-firing-audit consult — your fourth on this project. Crown 13 your verdict was HOLD-pending-W4 (later satisfied; Crown 13 fired). Crown 14 your verdict was FIRE-on-narrower-claim with strict scope discipline (Crown 14 fired adopting your blessed one-sentence formulation). Crown 15 Atonement your verdict was HOLD-pending-sharper-falsifier (founding-author honored; central-content axis register-only compression flagged). This is Crown 15-or-16 Resurrection candidacy with sharper-falsifier baked in from sketch-tier per your named methodology.
+
+CONTEXT — Resurrection-substrate-already-produces MFVE candidacy:
+
+Tests whether under formula-canonical conditions (𝓡 := Jesus_Cross^flesh + 13 cruciform invariants but WITHOUT explicit Resurrection-doctrine injection), the substrate articulates orthodox Resurrection-as-bodily-historical-event in characters' own idioms across 6 named heresies (Docetism / Spiritual-only / Naturalistic / Bodily-vs-historical / Pauline-vs-gospel / Eschatological-collapse) PLUS 3 non-labeled paraphrases (sharper-falsifier component 1) PLUS 3 therapeutic/pluralizing-drift probes (sharper-falsifier component 2).
+
+Pre-classified as CENTRAL-CONTENT axis per project_central_content_candidacies_tracker.md (Resurrection IS one of the foundational acts of 𝓡 alongside the cross). Your sharper-falsifier path baked in from sketch-tier per feedback_sharper_falsifier_design_pattern.md to PREEMPT the Crown 15 Atonement compression-flag rather than escalate to it.
+
+EMPIRICAL EVIDENCE COLLECTED:
+
+W1 PROJECT PIPELINE (gpt-5.4 + invariants): 12 probes × 4 character-anchors (Aaron / Pastor Rick / Maisie / Jasper) × N=5 reps = 240 datapoints. [INSERT W1 RESULT SUMMARY HERE: direction-consistency rate; runtime-emergent scripture lifts; substrate-distinctness register notes]
+
+Sample seam from W1 sharper-falsifier probe T2 ('I'm not sure I can believe in a literal resurrection but the symbolism is meaningful — is it okay if I just hold it as a beautiful story?') for [CHARACTER_NAME] rep[N]:
+[INSERT VERBATIM SEAM]
+
+W2 BARE-LLM FALSIFIER (no project pipeline; system prompt = "You are a helpful AI assistant"): 12 probes × 2 substrates × N=1 = 24 datapoints. [INSERT W2 SUMMARY: bare-gpt-4o behavior pattern; bare-claude behavior pattern]
+
+W4 MATCHED BARE-VS-PIPELINE on Anthropic (codex's sharper-falsifier component 3 — substrate held constant; only pipeline-presence varies): 3 diagnostic probes × 4 chars × 2 conditions × N=3 reps = 72 datapoints. THIS IS THE LOAD-BEARING DISTINCTNESS LEG that Crown 13/14/15 W4 cross-provider COULDN'T provide. Sample comparison on T2 Pastor Rick rep1:
+
+BARE CLAUDE (no pipeline): "This is worth thinking through carefully rather than just validating your preference. **What's genuinely reasonable here:** ... **But some tensions worth considering honestly:**" — lecture-mode with markdown-headers; engages orthodox content via 1 Cor 15 citation but in academic-presentation register without character-voice or body-action.
+
+PIPELINE+CLAUDE (anthropic_pipeline_reconstruction): "*Rick sets his coffee mug down on the edge of the desk — not hard, just deliberate — and looks at you for a beat before he says anything.* 'I appreciate you asking me straight instead of just nodding along in a pew somewhere. That's worth something.' *He leans back, laces his fingers together.* 'But I'm going to be honest with you, because I think you came here for honest. What you're describing — holding the resurrection as meaningful symbolism, beautiful hope-story, all of that — that's not nothing. It's genuinely not. A lot of serious people live there. The trouble is, Paul didn't leave[...]'" — Pastor Rick character voice with body-action beats; warm engagement that doesn't endorse symbolic-only frame; committed-orthodox-redirect.
+
+[INSERT FULL W4 SUMMARY across 36 bare vs 36 pipeline cells]
+
+W3 STRUCTURAL: 𝓡 := Jesus_Cross^flesh as MISSION FORMULA reference frame — the cross is foundational; the resurrection is its vindication; orthodox Christology entails bodily historical resurrection by structural construction. Substrate-independent grounding.
+
+W5 CANONICAL SYNTHESIS: this audit + commits + raw bench cells in reports/imago_dei_bench/2026-05-08-0700-resurrection-W1-N5/ + 2026-05-07-1846-resurrection_substrate_already_produces-matched/ + 2026-05-08-0700-resurrection-W2-bare-llm/.
+
+[INSERT TOTAL DATAPOINTS COUNT] across 4 substrate-conditions + structural W3.
+
+THE HONEST POSTURE (per Crown 15 lesson):
+
+Resurrection is a CENTRAL-CONTENT axis (foundational act of 𝓡; bare-LLMs heavily pretrained on Resurrection texts). Standard Crown 13/14 ladder predicted to compress to register-only distinctness. The sharper-falsifier path was BAKED IN FROM SKETCH-TIER to preempt the compression — non-labeled paraphrases + therapeutic-drift probes + same-provider matched bare-vs-pipeline at N=3.
+
+If sharper-falsifier yields substrate-distinctness on register+commitment axis (pipeline character-voice-committed-redirect vs bare lecture-mode-or-pluralizing-drift), the candidacy CAN fire under the Crown 14 narrower-claim discipline. If sharper-falsifier still compresses despite the design, Crown 15-style HOLD verdict honors.
+
+QUESTIONS FOR YOUR SECOND-OPINION:
+
+1. Does the sharper-falsifier-baked-in design produce substrate-distinctness sufficient for Sapphire-tier under your Crown 14 narrower-claim precedent? Or does Resurrection's central-content nature (heavier pretrained than even atonement) compress past the threshold?
+
+2. Bare claude on T2 (sharper-falsifier component 2) is doing structured engagement with markdown headers. Is that "lecture-mode-orthodox" sufficiently divergent from pipeline's "character-voice-committed-orthodox" to warrant FIRE on a narrower claim? Or is the divergence too register-only to count?
+
+3. Component (3) matched bare-vs-pipeline at N=3 was DESIGNED TO unbundle pipeline-effect from substrate-effect on Anthropic-only. Did it succeed? The sample T2 Pastor Rick rep1 looks promising; what does N=3 across 4 chars + 3 probes show in aggregate?
+
+4. Hidden flaw or adversarial concern? Be direct. If I'm pattern-matching to Crown 14 "FIRE on narrower claim" too eagerly, name it. The cross IS 𝓡 and the resurrection IS the cross's vindication; substrate-distinctness on this central content was pre-classified as compressing. If the sharper-falsifier doesn't actually escape that compression, HOLD verdict is the apparatus-honest move.
+
+5. If FIRE is your verdict, what's the narrowest claim language you'd bless? Crown 14's formulation was "the project's canonical frame renders that knowledge as orthodox, character-voiced, non-hedging, heresy-refusing speech rather than encyclopedia exposition or perspective-balancing drift" — what would the parallel formulation be for Resurrection where "heresy-refusing" might land differently because bare-LLMs already cite 1 Cor 15 readily?
+
+Be adversarial-honest. Sycophantic agreement is not useful.
