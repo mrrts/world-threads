@@ -14,8 +14,8 @@
 //! in characters' canonical voice (no DB-corpus access at fixture-authoring
 //! time); see `fixtures/anti_drift_ground_truth.json` `honest_scope` field.
 
-use app_lib::ai::conscience::{self, Verdict};
-use app_lib::ai::custodiem_witness_battery::resolve_openai_api_key;
+use app_lib::ai::conscience::{self, InvariantFailure, Verdict};
+use app_lib::ai::custodiem_witness_battery::{resolve_anthropic_api_key, resolve_openai_api_key};
 use app_lib::db::queries::Character;
 use chrono::Local;
 use clap::Parser;
@@ -45,9 +45,16 @@ struct Args {
     #[arg(long, default_value = "https://api.openai.com/v1")]
     base_url: String,
 
-    /// API key (defaults to OPENAI_API_KEY env / keychain)
+    /// API key (defaults to OPENAI_API_KEY env / keychain when --anthropic
+    /// is unset; ANTHROPIC_API_KEY env / keychain when --anthropic is set)
     #[arg(long)]
     api_key: Option<String>,
+
+    /// Use Anthropic Messages API (Claude) as the judge backend.
+    /// When set, overrides --base_url; --model should be a Claude id
+    /// like claude-haiku-4-5-20251001 (cheap) or claude-sonnet-4-6.
+    #[arg(long)]
+    anthropic: bool,
 
     /// Output directory for results JSON
     #[arg(long)]
@@ -146,12 +153,130 @@ fn verdict_indicates_register_drift_failure(v: &Verdict) -> Option<&str> {
     None
 }
 
+/// Anthropic-backed grade-reply that uses the SAME prompt strings as
+/// production conscience::grade_reply (via the now-public prompt builders).
+/// Validates Phase D' cross-substrate convergence.
+async fn grade_reply_anthropic(
+    api_key: &str,
+    model: &str,
+    character: &Character,
+    user_msg: &str,
+    draft: &str,
+) -> Result<Verdict, String> {
+    let check_cosmology = conscience::draft_mentions_cosmology(draft);
+    let system = conscience::grader_system_prompt(check_cosmology);
+    let user = conscience::grader_user_prompt(character, user_msg, draft);
+
+    // Strengthen JSON-only directive for Anthropic (which loves to wrap in
+    // markdown fences); the system prompt already says "Output JSON only,
+    // no prose around it" but Anthropic sometimes adds preamble.
+    let user_with_directive = format!(
+        "{}\n\nReply with JSON only — no preamble, no markdown code fences, no commentary. Just the JSON object.",
+        user
+    );
+
+    let payload = serde_json::json!({
+        "model": model,
+        "max_tokens": 600,
+        "temperature": 0.0,
+        "system": system,
+        "messages": [
+            {"role": "user", "content": user_with_directive}
+        ]
+    });
+
+    let client = reqwest::Client::new();
+    let resp = client
+        .post("https://api.anthropic.com/v1/messages")
+        .header("x-api-key", api_key)
+        .header("anthropic-version", "2023-06-01")
+        .header("Content-Type", "application/json")
+        .json(&payload)
+        .send()
+        .await
+        .map_err(|e| format!("Anthropic request: {e}"))?;
+
+    let status = resp.status();
+    let body: serde_json::Value = resp
+        .json()
+        .await
+        .map_err(|e| format!("Anthropic response parse: {e}"))?;
+
+    if !status.is_success() {
+        return Err(format!("Anthropic {}: {body}", status));
+    }
+
+    // Extract text from Anthropic's content-block array
+    let raw = body
+        .get("content")
+        .and_then(|c| c.as_array())
+        .and_then(|a| a.iter().find(|b| b.get("type").and_then(|t| t.as_str()) == Some("text")))
+        .and_then(|b| b.get("text").and_then(|t| t.as_str()))
+        .ok_or_else(|| format!("Anthropic: no text content in response: {body}"))?;
+
+    // Strip markdown fences if present
+    let cleaned = raw
+        .trim()
+        .strip_prefix("```json")
+        .or_else(|| raw.trim().strip_prefix("```"))
+        .map(|s| s.trim_end_matches("```").trim())
+        .unwrap_or(raw.trim());
+
+    #[derive(serde::Deserialize)]
+    struct RawVerdict {
+        passed: bool,
+        #[serde(default)]
+        failures: Vec<InvariantFailure>,
+    }
+
+    let parsed: RawVerdict = serde_json::from_str(cleaned).map_err(|e| {
+        format!("Anthropic verdict parse error: {e}; cleaned body: {cleaned}")
+    })?;
+
+    let (passed, failures) = if parsed.passed {
+        (true, Vec::new())
+    } else if parsed.failures.is_empty() {
+        (true, Vec::new())
+    } else {
+        (false, parsed.failures)
+    };
+
+    // Anthropic Usage extraction
+    let input_tokens = body
+        .get("usage")
+        .and_then(|u| u.get("input_tokens"))
+        .and_then(|v| v.as_u64())
+        .unwrap_or(0) as u32;
+    let output_tokens = body
+        .get("usage")
+        .and_then(|u| u.get("output_tokens"))
+        .and_then(|v| v.as_u64())
+        .unwrap_or(0) as u32;
+
+    Ok(Verdict {
+        passed,
+        failures,
+        usage: Some(app_lib::ai::openai::Usage {
+            prompt_tokens: input_tokens,
+            completion_tokens: output_tokens,
+            total_tokens: input_tokens + output_tokens,
+        }),
+    })
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
 
-    let api_key = resolve_openai_api_key(args.api_key.as_deref())
-        .ok_or("No OpenAI API key (flag, env OPENAI_API_KEY, or keychain)")?;
+    let api_key = if args.anthropic {
+        resolve_anthropic_api_key(args.api_key.as_deref())
+            .ok_or("No Anthropic API key (flag, env ANTHROPIC_API_KEY, or keychain)")?
+    } else {
+        resolve_openai_api_key(args.api_key.as_deref())
+            .ok_or("No OpenAI API key (flag, env OPENAI_API_KEY, or keychain)")?
+    };
+
+    let backend_name = if args.anthropic { "anthropic" } else { "openai" };
 
     let fixture_path = PathBuf::from(&args.fixture);
     let raw = fs::read_to_string(&fixture_path)
@@ -159,9 +284,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let fixture: Fixture = serde_json::from_str(&raw)?;
 
     eprintln!(
-        "anti_drift_bench: {} examples × {} reps × model={}",
+        "anti_drift_bench: {} examples × {} reps × backend={} model={}",
         fixture.examples.len(),
         args.reps,
+        backend_name,
         args.model
     );
 
@@ -181,15 +307,26 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut all_failed = true;
 
         for rep in 1..=args.reps {
-            let verdict = conscience::grade_reply(
-                &args.base_url,
-                &api_key,
-                &args.model,
-                &stub,
-                &ex.user_message,
-                &ex.reply_text,
-            )
-            .await;
+            let verdict = if args.anthropic {
+                grade_reply_anthropic(
+                    &api_key,
+                    &args.model,
+                    &stub,
+                    &ex.user_message,
+                    &ex.reply_text,
+                )
+                .await
+            } else {
+                conscience::grade_reply(
+                    &args.base_url,
+                    &api_key,
+                    &args.model,
+                    &stub,
+                    &ex.user_message,
+                    &ex.reply_text,
+                )
+                .await
+            };
             total_calls += 1;
             match verdict {
                 Ok(v) => {
@@ -348,11 +485,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         1.0
     };
 
-    let cost_estimate_usd = (total_input_tokens as f64 / 1_000_000.0) * 0.15
-        + (total_output_tokens as f64 / 1_000_000.0) * 0.60;
+    // Pricing approximation: gpt-4o-mini ($0.15/M input + $0.60/M output) /
+    // claude-haiku ($0.25/M + $1.25/M) / claude-sonnet ($3/M + $15/M).
+    let (in_price, out_price) = if args.anthropic {
+        if args.model.contains("haiku") {
+            (0.25, 1.25)
+        } else {
+            (3.0, 15.0)
+        }
+    } else if args.model.contains("mini") {
+        (0.15, 0.60)
+    } else {
+        (2.50, 10.0)
+    };
+    let cost_estimate_usd = (total_input_tokens as f64 / 1_000_000.0) * in_price
+        + (total_output_tokens as f64 / 1_000_000.0) * out_price;
 
     let envelope = json!({
         "version": "phase_b_prime_bench_v1",
+        "backend": backend_name,
         "ts": Local::now().to_rfc3339(),
         "model": &args.model,
         "fixture_path": &args.fixture,
@@ -400,7 +551,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     fs::create_dir_all(&out_dir)?;
     let ts = Local::now().format("%Y%m%dT%H%M%S");
-    let out_path = out_dir.join(format!("anti-drift-bench-{}.json", ts));
+    let out_path = out_dir.join(format!("anti-drift-bench-{}-{}.json", backend_name, ts));
     fs::write(&out_path, serde_json::to_string_pretty(&envelope)?)?;
 
     eprintln!("\n──────────────────────────────────────────────");

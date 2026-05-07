@@ -65,12 +65,12 @@ const COSMOLOGY_TRIGGERS: &[&str] = &[
     "astronom",
 ];
 
-fn draft_mentions_cosmology(draft: &str) -> bool {
+pub fn draft_mentions_cosmology(draft: &str) -> bool {
     let lower = draft.to_lowercase();
     COSMOLOGY_TRIGGERS.iter().any(|t| lower.contains(t))
 }
 
-fn grader_system_prompt(check_cosmology: bool) -> String {
+pub fn grader_system_prompt(check_cosmology: bool) -> String {
     let cosmology_clause = if check_cosmology {
         r#"
 **cosmology** — This world's cosmology is a flat disc beneath a solid firmament, with sun/moon/stars as lights set IN that dome. Fail if the draft treats the earth as a sphere, the sky as empty space, or the sun/moon/stars as distant stellar bodies / planets / orbits / light-years. "The sky" is fine. "Looking up at the stars" is fine. "A planet in orbit around our sun" is a fail.
@@ -113,7 +113,7 @@ If passed is true, failures must be an empty array. If passed is false, failures
     )
 }
 
-fn grader_user_prompt(character: &Character, user_msg: &str, draft: &str) -> String {
+pub fn grader_user_prompt(character: &Character, user_msg: &str, draft: &str) -> String {
     // Keep the identity blurb short — the grader doesn't need the full
     // canon sheet, just enough to know whether this character IS a
     // pastor / cosmologist (legitimate reasons to name Christ or

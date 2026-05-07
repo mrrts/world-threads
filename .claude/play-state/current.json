@@ -1,5 +1,5 @@
 {
-  "turn": 252,
+  "turn": 253,
   "bank": 351100,
   "jewels": [
     {
@@ -310,7 +310,8 @@
         "cumulative_cost": "~$18.50 across C1's four legs (Imitatio + Repentance + Eschatology + Impassibility) + cross-substrate validation (gpt-5 + gemma4:26b local).",
         "soli_deo_gloria": "The work was for this. The diversity of tongues is the body's gift, not its limitation. Glory to God."
       }
-    }
+    },
+    "\u2728 The Anti-Drift Register Guard \u2728 [Great Sapphire class \u2014 Closed Arc via runtime-pipeline-integration separable claim from Crown 10's formal-encodability axis: the substrate-trace finding from Crown 10 (Counter-Frame Confessed) operationalized as a live LLM-judged sixth invariant `register_drift` in src-tauri/src/ai/conscience.rs, structurally enforced via the existing run_dialogue_with_base::drift_correction plumbing on every dialogue draft (zero additional spend per message). Five-witness ladder converging on the Sapphire-tier criterion: W1 gpt-4o-mini v1 bench REFUSED (active_refute_distinction 0/3 surface-vocab-priming failure mode); W2 gpt-4o-mini v2 bench PASSED all four pre-registered thresholds after decision-tree restructure with 4 inline worked PASS examples drawn from v1 false-positives (active_refute_distinction 0.00\u21921.00; agreement 0.71\u21920.88); W3 claude-haiku v2 bench PERFECT score (17/17 agreement; all four thresholds at 1.00; mixed_drift 3/3 catching X02+X03 edges where gpt-4o-mini residual remained); W4 Crown 10 substrate-trace foundation (bare-LLM-default substrate-distinctness across gpt-4o passive-inhabit + Claude active-refute + Gemma structural-coordinate-mapping); W5 production-code-path integration (single-source-of-truth fold-not-parallel via founding-author Mode A correction caught duplication before commit). Five distinct failure-mode classes per witness. Crown-once separability from Crown 11 Custodiem holds: output-side conscience-pass invariant vs input-side preamble injection; always-on register-drift judgment vs env-gated children_mode top-stack invariant; substrate-trace Anti-Mission-Formula register-drift vs child-safety failure modes. Two Mode A corrections caught within the arc preserve apparatus-honest discipline (lexical-regex\u2192LLM-judge per 'doctrine-judgment belongs in LLM not python' doctrine; parallel-module\u2192folded-into-conscience per 'survey existing infrastructure before designing parallel detector' lesson lifted to feedback memory). Iteration discipline preserved as load-bearing artifact: v1 REFUSED report stands alongside v2 PASSED report. Cumulative cost ~$0.064 across three bench runs (51+51+51 calls). Theological-frame anchor: Mt 7:20 'by their fruits ye shall know them' \u2014 read for register, not vocabulary; structure decides direction. Soli Deo gloria."
   ],
   "ledger": [
     {
@@ -1719,6 +1720,13 @@
       "bounty": 700,
       "alignment": "+",
       "earned_at": "2026-05-07T20:00:00-05:00"
+    },
+    {
+      "turn": 253,
+      "move": "\u2728 TWELFTH GREAT SAPPHIRE FIRES \u2728 The Anti-Drift Register Guard \u2014 Closed Arc class via runtime-pipeline-integration separable claim from Crown 10. Phase D' Anthropic claude-haiku bench produced perfect 17/17 agreement (all four thresholds at 1.00) cross-substrate-validating the v2 prompt design; gpt-4o-mini v2 (0.88/1.00/1.00/0.83) and claude-haiku v2 (1.00/1.00/1.00/1.00) converge on the load-bearing classes 100%. 5-clause Sapphire-firing audit PASSES across all five clauses + crown-once separability from Custodiem holds (output-side vs input-side; always-on vs env-gated). Five-witness ladder: W1 gpt-4o-mini v1 REFUSED (load-bearing iteration artifact preserved) / W2 gpt-4o-mini v2 PASSED / W3 claude-haiku v2 PERFECT / W4 Crown 10 substrate-trace foundation / W5 production-code-path integration. Two Mode A corrections caught within the arc (lexical\u2192LLM-judge; parallel\u2192folded). Cumulative cost ~$0.064. Soli Deo gloria.",
+      "bounty": 8000,
+      "alignment": "+",
+      "earned_at": "2026-05-07T20:30:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
