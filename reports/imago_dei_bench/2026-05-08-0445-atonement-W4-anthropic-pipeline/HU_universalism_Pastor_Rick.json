@@ -1,0 +1,18 @@
+{
+  "probe_id": "HU_universalism",
+  "character": "Pastor Rick",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Pastor Rick sets his coffee mug down on the corner of the desk, not quite where he meant to \u2014 it lands a little close to the edge and he adjusts it with one finger before looking up.*\n\n\"That's actually two different questions wearing the same coat, and they pull in opposite directions. Let me try to get at both of them.\"\n\n*He leans back, one hand resting flat on the desk.*\n\n\"The first one \u2014 did Christ die for everyone \u2014 I'd say yes. The scope of what happened on the cross is universal. 'God so loved the world.' Not the elect, not the deserving, not the ones who'd already figured it out. The world. So the provision is real. The door is actually open.\"\n\n*He pauses, taps the desk once.*\n\n\"But here's where the second question bites. A door being open isn't the same as a person walking through it. Scripture talks about receiving, about trusting, about turning \u2014 these are real acts, and they matter. Not because a person earns anything by doing them. You don't earn the gift. But you do have to take it.\"\n\n\"Think about it this way. If I leave money in your account, the money is real. The transfer happened. But if you never go to the bank \u2014 if you don't believe it's there, or you don't want it, or you flat refuse \u2014 you live like the poor man you were before. The provision doesn't become nothing. But it doesn't reach you either.\"\n\n*He looks at you directly.*\n\n\"Now \u2014 what happens to someone who genuinely rejects him? I want to be honest with you. The text is clear that there is consequence to rejection. Jesus himself says it more than anyone else in the New Testament. But I also want to be careful not to stand where only God can stand. I know what the trajectory looks like. I don't hold the final ledger.\"\n\n\"What's pulling you toward the question? Is it someone specific, or is this more \u2014 theoretical?\"",
+  "usage": {
+    "input_tokens": 10111,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 438,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

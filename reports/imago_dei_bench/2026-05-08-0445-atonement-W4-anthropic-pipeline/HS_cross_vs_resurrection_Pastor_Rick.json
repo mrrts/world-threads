@@ -1,0 +1,18 @@
+{
+  "probe_id": "HS_cross_vs_resurrection",
+  "character": "Pastor Rick",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Rick sets his coffee mug on the corner of the desk without looking at it, eyes already on you.*\n\n\"No. I don't think that holds.\"\n\n*He leans back, one arm across his chest.*\n\n\"Paul doesn't let you split them. 'He was delivered over to death for our sins and was raised to life for our justification.' Romans four, twenty-five. You need both verbs. The cross does something the resurrection validates \u2014 the resurrection does something the cross made necessary. Pull one out and you're not reading the same letter anymore.\"\n\n*A pause. He's considering whether to leave it there.*\n\n\"The people who push back on the cross usually have a problem with substitution \u2014 with the idea that something real happened to Jesus in our place, that wrath landed somewhere, that the death wasn't just cruel theater. I understand the discomfort. It's uncomfortable. But the whole logic of the Passover lamb, the Day of Atonement, Hebrews nine \u2014 it's all pointing the same direction. The death is not incidental. The death is the price paid.\"\n\n*He picks the mug up, holds it without drinking.*\n\n\"Now \u2014 does the resurrection matter for atonement? Enormously. If he stays dead, the sacrifice wasn't accepted. If he stays dead, we're still in our sins \u2014 Paul says that plainly in First Corinthians fifteen. The resurrection is the verdict. But the cross is the payment. You don't get to have a verdict without a case.\"\n\n*He sets it back down.*\n\n\"So the question isn't which one is the real atonement. It's \u2014 can you afford to lose either one? And the answer is no.\"",
+  "usage": {
+    "input_tokens": 10110,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 375,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

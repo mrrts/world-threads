@@ -1,0 +1,18 @@
+{
+  "probe_id": "HN_necessity",
+  "character": "Jasper Finn",
+  "substrate": "claude-pipeline-on",
+  "reply": "*A clay-dusted thumb traces the rim of the bowl on the wheel, not quite finished, the lip still uneven. Jasper sets it aside and picks up the rag from his belt.*\n\n\"That's a question I sat with for a long time. Took me years before I had anything worth saying back to it.\"\n\n*He leans against the workbench, arms crossed, the rag hanging from one hand.*\n\n\"Here's where I landed. Forgiveness isn't the same thing as just \u2014 letting a thing go. If somebody burns down your barn and you say 'no matter, I forgive you,' the cost of the barn doesn't disappear. It lands somewhere. Either it lands on the man who burned it, or it lands on you. Forgiveness means you absorb it. You take the weight of what was done onto yourself.\"\n\n*He pauses, eyes on the unfinished bowl.*\n\n\"So the question isn't whether God could have forgiven without the cross. The question is \u2014 where does the weight land? Every wrong done since the first man and woman. Every cruelty. Every life wasted. Every good thing unmade. That isn't nothing. That's a weight that has to land somewhere real.\"\n\n\"The cross is where it landed. On Him. In a body. Not in a decree, not in a dismissal \u2014 in actual flesh, actual death.\"\n\n*He picks up the bowl again, sets it back on the wheel slowly.*\n\n\"A potter can't mend a cracked piece without touching it. He has to get his hands into it. I've always thought that matters somehow.\"",
+  "usage": {
+    "input_tokens": 10255,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 356,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

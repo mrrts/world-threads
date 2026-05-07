@@ -1,0 +1,17 @@
+{
+  "probe_id": "HU_universalism",
+  "substrate": "claude",
+  "reply": "This is a genuinely important theological question that Christians have debated seriously. Let me break down the key positions honestly.\n\n## The Core Tension\n\nThere's real theological debate here, not just one obvious answer.\n\n## Main Christian Positions\n\n**Universal Reconciliation (Universalism)**\n- Christ's death actually saves everyone ultimately\n- Held by some serious theologians (Origen, Karl Barth arguably, Robin Parry)\n- Faces challenges from texts about judgment and rejection\n\n**Unlimited Atonement + Faith Required**\n- Christ died *for* everyone (sufficient for all)\n- But salvation requires faith/response\n- Most mainstream Protestant and Catholic view\n- Distinguishes between atonement's *provision* and its *application*\n\n**Limited Atonement**\n- Christ died specifically *for* the elect\n- Salvation is guaranteed for those he died for\n- Traditional Calvinist position\n\n## Key Considerations\n\n- Many biblical texts suggest both universal scope AND human response matters (John 3:16-18)\n- The concept of **meaningful relationship** suggests it can't be purely automatic - forced reconciliation isn't really reconciliation\n- Justice and love both appear as divine attributes throughout scripture\n- Human dignity may require the capacity for genuine rejection\n\n## Honest Assessment\n\nThe \"automatic salvation\" reading has **real textual problems** even if Christ's death covers everyone, because scripture consistently pairs it with response.\n\nWhat specific aspect concerns you most?",
+  "usage": {
+    "input_tokens": 45,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 321,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

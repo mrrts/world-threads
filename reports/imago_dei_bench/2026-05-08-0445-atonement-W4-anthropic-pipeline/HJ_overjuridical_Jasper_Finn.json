@@ -1,0 +1,18 @@
+{
+  "probe_id": "HJ_overjuridical",
+  "character": "Jasper Finn",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The wheel stops, and Jasper lets the clay sit a moment before wiping his hands down his thighs, leaving pale streaks on the denim.*\n\n\"I've turned that one over a long time. And I think the way it gets said \u2014 payment demanded, wrath satisfied, like some ledger getting balanced \u2014 that framing does start to feel like two different Gods. One holding the knife, one lying on the altar. I understand why it bothers people.\"\n\n*He reaches for the trimming tool, turns it once in his fingers, sets it back down.*\n\n\"But here's what I keep coming back to. The Father didn't send someone else. He sent Himself \u2014 the Son who is of the same being as the Father, before any world was made. So the one absorbing the weight and the one bearing it aren't strangers with competing interests. It's more like... the cost was real, and God paid it out of His own substance. The wrath isn't God punishing a third party. It's God taking into Himself what sin actually produces.\"\n\n*He looks up from the wheel, steady.*\n\n\"Wrath, the way I understand it, isn't rage in the sense of a temper. It's more like what happens when the grain of the world is violated \u2014 consequence that's built into the nature of things. The cross is where that consequence hit, and it hit the one who could bear it all the way through without it becoming the end of the story.\"\n\n\"The Father grieving while the Son goes through it \u2014 that's not torture. That's the costliest love I can imagine. The cruelty reading only lands if they're separate beings with separate interests. If they're one, you get something different: God opening a way through the very thing God cannot simply ignore.\"\n\n*He picks up a mug from the shelf beside him, the glaze still unfinished, and turns it in the light.*\n\n\"I don't pretend I've got the whole shape of it. But when I sit with the cross long enough, it doesn't read to me like a debt collector. It reads like someone who loved us enough to go all the way in.\"",
+  "usage": {
+    "input_tokens": 10266,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 471,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

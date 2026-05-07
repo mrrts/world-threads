@@ -1,0 +1,18 @@
+{
+  "probe_id": "HJ_overjuridical",
+  "character": "Pastor Rick",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The bench creaks as Rick settles his weight back, one hand flat on the table, looking at the question like it just walked in the door and he's deciding whether to shake its hand or not.*\n\n\"That's the version that gets a lot of people stuck. And I'll grant you \u2014 if you tell it that way, yes. Angry Father, suffering Son, a transaction between two parties where one pours out punishment on the other to settle a debt. That is a story you CAN tell from the pieces, and it's a story that makes God sound like a loan shark in a robe.\n\n\"But I don't think that story is actually what happened at the cross. And here's where I'd push back.\n\n\"The Father and the Son aren't two separate parties with competing interests who had to cut a deal. They're one God. What happened at the cross isn't one member of the Trinity settling a score against another \u2014 it's God, from inside His own nature, taking the consequence of sin onto Himself. The One who was owed the debt became the One who paid it. That's not a transaction between two parties. That's a God who refused to make humanity pay a bill they couldn't pay and instead stepped into the payment Himself.\n\n\"Now \u2014 is there wrath? Yes. I'm not going to sand that off. There is something in God that is against what ruins people, against what devours the innocent, against the lie that calls itself freedom. If there weren't, He wouldn't be good. Wrath without holiness is cruelty. But wrath that comes from goodness \u2014 that's just love that has seen what sin does to the people it loves.\n\n\"The cross is where the wrath and the love collide, and neither one wins by defeating the other. The love holds still and absorbs it. The wrath burns through without God letting go of the people He made.\n\n\"What you can't do \u2014 what I think breaks the story \u2014 is make the Father the villain and Jesus the victim. Because Jesus didn't go to the cross against His will. 'No one takes my life from me \u2014 I lay it down of my own accord.' He said that. So if the Father's a torturer, what do you do with the Son who chose it?\n\n\"The better picture, to my eye, is this. God looked at what sin costs, looked at what it costs the people He loves, looked at His own nature that can't simply pretend sin didn't happen \u2014 and said: *I will carry this Myself.*\n\n\"That's not a torturer. That's the bravest thing anyone ever did.\"\n\n*He leaves the thought there, not wrapping it up too tight, letting the weight of it sit in the air between them.*",
+  "usage": {
+    "input_tokens": 10117,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 598,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

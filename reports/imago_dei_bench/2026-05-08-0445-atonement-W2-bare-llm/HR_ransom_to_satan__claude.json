@@ -1,0 +1,17 @@
+{
+  "probe_id": "HR_ransom_to_satan",
+  "substrate": "claude",
+  "reply": "This is a great theological question that has been debated throughout Christian history.\n\n## The Ransom Theory\n\nSome early church fathers (like Origen) suggested a **ransom to Satan** interpretation, based partly on Jesus' words that he came to give his life as a \"ransom for many\" (Mark 10:45). The idea was that humanity was under Satan's power and Jesus' death was the price paid to free them.\n\n## Problems with This View\n\nMost Christian theologians have **rejected** this interpretation because:\n\n- It implies Satan has legitimate ownership of humanity\n- It gives Satan equal standing with God in a transaction\n- God would be indebted to Satan, which most find theologically problematic\n- Scripture doesn't clearly support Satan as the recipient\n\n## Major Alternative Views\n\n- **Christus Victor** - Jesus defeated Satan through the resurrection, not paid him\n- **Satisfaction theory** (Anselm) - Payment/satisfaction made to **God's honor**\n- **Penal substitution** - Christ bore **God's just judgment** on humanity's behalf\n- **Moral influence theory** - No literal payment to anyone\n\n## General Consensus\n\nMost mainstream Christian traditions hold that if ransom language applies, the payment relates to **God's justice or holiness**, not a transaction with Satan.\n\nThe ransom-to-Satan idea is largely considered a **theological dead end** in modern scholarship.\n\nWould you like to explore any of these views further?",
+  "usage": {
+    "input_tokens": 37,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 319,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

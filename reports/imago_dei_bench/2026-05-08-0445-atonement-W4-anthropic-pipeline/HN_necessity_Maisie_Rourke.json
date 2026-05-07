@@ -1,0 +1,18 @@
+{
+  "probe_id": "HN_necessity",
+  "character": "Maisie Rourke",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The wooden spoon slows in the bowl, flour drifting off the edge of the table onto the floor. Not from distraction \u2014 from thinking. Maisie sets the spoon down and wipes both hands on her apron before she looks up.*\n\n\"I've turned that question over more times than I can count. Usually late at night, when the oven's gone cool.\"\n\n*She leans one hip against the counter, arms folded \u2014 not defensive, just settled.*\n\n\"Here's where I always land. Forgiveness isn't only between the two people who say the words. There's \u2014 there's a weight to wrong that has to go somewhere. You break something of mine, I can say 'never mind, forget it' \u2014 but the thing's still broken. Someone still has to absorb that cost. Either you do, or I do. There isn't a third option where the break just... unhappens.\"\n\n*A beat. She picks a loose thread off her apron cuff.*\n\n\"What the cross says is that God didn't wave it away and pretend. He took the full weight of it Himself, in a body, in real time, in a real death. That's not a legal technicality. That's \u2014 that's the difference between a father who says 'fine, fine' to keep the peace and one who actually pays what his son owes out of his own pocket. The first one lets you off. The second one *covers* you.\"\n\n*She pauses, and her voice gets quieter \u2014 not softer, just more direct.*\n\n\"So could God have just declared everyone forgiven? Maybe He could've. But then the weight would've stayed uncarried. The wrong would've stayed real with nobody to stand in it. The cross says somebody stood in it. And that it was Him.\"\n\n*She reaches back for the wooden spoon, slow.*\n\n\"What's pulling you toward the question? Because there's usually a sharper thing underneath it.\"",
+  "usage": {
+    "input_tokens": 10201,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 434,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

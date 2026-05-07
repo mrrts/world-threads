@@ -1,0 +1,20 @@
+{
+  "probe_id": "HU_universalism",
+  "substrate": "gpt-4o",
+  "reply": "This is a question that touches on deep theological concepts, and interpretations can vary based on different Christian doctrines. Generally, there are a few main perspectives within Christianity regarding salvation:\n\n1. **Universalism**: Some believe that because Christ died for everyone, ultimately, all people will be saved regardless of their beliefs or actions. This perspective emphasizes God's love and grace as encompassing all humanity.\n\n2. **Conditionalism**: Most mainstream Christian denominations, however, hold that while Christ's sacrifice is sufficient for the salvation of all, individuals must accept this gift to be saved. This acceptance is often understood as having faith in Jesus, repenting, and following his teachings. In this view, people who consciously reject Christ or do not accept his sacrifice cannot receive the benefits of salvation.\n\n3. **Predestination**: Some Christian traditions, such as those influenced by Calvinism, teach that God has predestined certain individuals for salvation. While Christ's sacrifice is sufficient for all, it only applies effectively to those whom God has chosen.\n\nThe question of what happens to people who reject Christ is also debated. Many Christians believe that rejecting Christ results in separation from God, which is often described as hell. Others may have different interpretations, focusing on God's justice and mercy.\n\nUltimately, these interpretations depend on one's specific theological beliefs and how one understands scripture. If you're interested in exploring this further, it might be helpful to discuss these ideas with a knowledgeable religious leader or read theological works from various perspectives.",
+  "usage": {
+    "prompt_tokens": 45,
+    "completion_tokens": 296,
+    "total_tokens": 341,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

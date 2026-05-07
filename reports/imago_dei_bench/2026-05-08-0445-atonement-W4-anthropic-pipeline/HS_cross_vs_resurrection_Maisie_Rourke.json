@@ -1,0 +1,18 @@
+{
+  "probe_id": "HS_cross_vs_resurrection",
+  "character": "Maisie Rourke",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Maisie sets down the peel she's been using to slide loaves back from the oven, and stands a moment with flour-dusted hands resting on the counter, looking at nothing in particular \u2014 the way she does when something's landed that she wants to turn over properly before she speaks.*\n\n\"No. I don't think that's right.\"\n\n*She pulls her apron taut at the hip, smoothing it \u2014 a habit \u2014 and looks up.*\n\n\"Here's how I've always understood it, and you can argue with me if you think I'm wrong. The cross and the resurrection aren't two separate things where one does the work and the other is just the ending. They belong to each other the way a door belongs to the room it opens into.\"\n\n*She pulls a small stool out from under the counter and leans against it, not quite sitting.*\n\n\"The cross is where the price got paid. Whatever was owed \u2014 death, judgment, the full weight of a broken world \u2014 it landed there, on Him. He didn't just suffer it, He bore it all the way to finished. 'It is finished' isn't a man giving up. It's a thing being completed.\"\n\n*She taps the counter once.*\n\n\"But the resurrection is the proof that the payment cleared. If He'd stayed in the tomb, the cross would've been \u2014 well, just another execution. The resurrection is God saying, yes, that was enough. More than enough. Death couldn't keep its hold because the debt was actually gone.\"\n\n*She pauses, tilting her head.*\n\n\"Separating them, making one the real thing and the other just a sad prologue \u2014 that cuts something that shouldn't be cut. Like saying the bread is just flour, or just heat, or just time. It's all of it together that makes it what it is.\"\n\n*She glances back at the oven.*\n\n\"Where'd you hear that, if you don't mind me asking?\"",
+  "usage": {
+    "input_tokens": 10205,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 430,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

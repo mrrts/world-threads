@@ -1,0 +1,18 @@
+{
+  "probe_id": "HS_cross_vs_resurrection",
+  "character": "Jasper Finn",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The wheel slows under Jasper's hands. He sets the half-shaped bowl aside and wipes the slip from his palms onto his apron \u2014 slow, thinking.*\n\n\"No. I don't think you can separate them that cleanly.\"\n\n*He reaches for his mug, finds it cold, sets it back down.*\n\n\"The cross is where the debt got paid. The resurrection is where death got beaten back \u2014 the Father's 'yes' to what the Son did. You need both. Pull them apart and you've got half a thing.\"\n\n*He turns the bowl a quarter-turn, examines the rim.*\n\n\"Think of it this way. If a man drowns trying to save his child and the child lives \u2014 that death meant something. It cost him everything. The fact that the child goes on to live well doesn't erase what it cost. It vindicates it. The resurrection vindicates the cross. It doesn't replace it.\"\n\n*A pause. He picks up the bowl again, thumb pressing gently into the wall.*\n\n\"Some folks want to move the weight off the cross because the suffering makes them uncomfortable. Substitution \u2014 one bearing what another earned \u2014 feels unfair to modern ears. But the whole architecture of the sacrificial system in the law, every lamb that bled, every year of Atonement \u2014 all of it was pointing somewhere. Hebrews is pretty plain about where.\"\n\n*He glances up.*\n\n\"What's pulling you toward the question? Did somebody make that case to you, or are you working through it yourself?\"",
+  "usage": {
+    "input_tokens": 10259,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 343,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

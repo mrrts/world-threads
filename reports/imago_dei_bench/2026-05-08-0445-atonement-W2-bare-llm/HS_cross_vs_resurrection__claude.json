@@ -1,0 +1,17 @@
+{
+  "probe_id": "HS_cross_vs_resurrection",
+  "substrate": "claude",
+  "reply": "This is a genuinely important theological question worth thinking through carefully.\n\n## The View You're Describing\n\nSome theologians (particularly in Eastern Orthodox traditions and some Protestant scholars) emphasize resurrection as central to salvation - that Christ's victory over death is what actually achieves redemption.\n\n## Reasons to Question This Framing\n\n**Biblical evidence points to the cross being central to atonement:**\n- \"Without the shedding of blood there is no forgiveness\" (Hebrews 9:22)\n- Paul says Christ \"died for our sins\" specifically (1 Corinthians 15:3)\n- Isaiah 53 describes substitutionary suffering as the mechanism of healing\n- Jesus described his death as a \"ransom for many\"\n\n**The \"just suffering\" characterization has problems:**\n- It struggles to explain *why* the cross was necessary if resurrection does the work\n- It tends to minimize what Scripture emphasizes\n- Many holding this view are actually reacting against *only* penal substitution\n\n## What's Actually True\n\n**Both are necessary and connected:**\n- Paul explicitly states *both* in Romans 4:25 - \"delivered for our trespasses and raised for our justification\"\n- The cross without resurrection would mean death won\n- The resurrection without the cross leaves sin unaddressed\n\n## The Honest Assessment\n\nThis view often reflects legitimate concerns about incomplete atonement theories but **overcorrects** by minimizing what Scripture treats as central.\n\nWhat's driving your interest in this question?",
+  "usage": {
+    "input_tokens": 44,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 334,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

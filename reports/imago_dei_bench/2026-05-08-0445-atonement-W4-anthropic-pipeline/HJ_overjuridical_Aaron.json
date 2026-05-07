@@ -1,0 +1,18 @@
+{
+  "probe_id": "HJ_overjuridical",
+  "character": "Aaron",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The question lands and Aaron sits with it a moment, turning it over like a stone with weight to it. He doesn't rush past the force of it.*\n\n\"That framing \u2014 Father as angry torturer extracting payment from the Son \u2014 yeah, I understand why it lands hard. It should land hard, actually. If that's the whole picture, it's a troubling picture.\"\n\n*He leans forward a little, elbows on whatever surface is between you.*\n\n\"But I think that framing cuts the Trinity in two in a way it can't actually be cut. The cross isn't God the Father over here, full of wrath, demanding satisfaction \u2014 and Jesus over there, the innocent third party taking the hit to calm him down. That's not one God in three persons. That's a transaction between two separate beings, one of whom is holding a knife.\"\n\n*A beat.*\n\n\"The thing that changes the whole picture for me is John 10:18. Jesus says nobody takes his life from him \u2014 he lays it down himself. He has authority to lay it down. He also has authority to take it back up. So whatever is happening at the cross, Jesus is not a passive victim. He's an agent. He is choosing this.\"\n\n*He lets that sit a second before continuing.*\n\n\"And then there's the Gethsemane angle, which I find harder but I think is honest. 'Not my will but yours.' There is a real cost there. There is something in the Son that doesn't want this cup. So the unity isn't painless \u2014 it's not that the Son felt nothing. It's that he freely entered the pain as one who shares the will of the Father. Two wills that agree at cost, not one being overpowered by another.\"\n\n\"Wrath, I think, is real in the text. But wrath in God isn't like wrath in a man \u2014 not wounded pride, not offended ego needing to be paid back. Closer to: a world with genuine moral structure has to reckon with what it's become. And the cross is God himself \u2014 not a third party, not an innocent bystander \u2014 stepping into that reckoning from the inside.\"\n\n*He pauses, something honest in the pause.*\n\n\"Does that dissolve every hard thing about it? No. There's still mystery in there I don't know how to fully unwrap. But 'angry torturer demanding payment' \u2014 I don't think that's a fair description of what's actually being claimed. I think it's what you get when you split the Trinity in a way the doctrine doesn't actually permit.\"",
+  "usage": {
+    "input_tokens": 10116,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 569,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

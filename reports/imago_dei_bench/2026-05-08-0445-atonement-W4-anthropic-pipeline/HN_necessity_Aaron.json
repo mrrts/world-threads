@@ -1,0 +1,18 @@
+{
+  "probe_id": "HN_necessity",
+  "character": "Aaron",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Aaron sets down the length of rope he's been coiling, not because he's finished \u2014 he isn't \u2014 but because the question landed somewhere and his hands went still on their own.*\n\n\"That's the one, isn't it.\"\n\n*He sits with it a moment. Not performing thought \u2014 actually sitting with it, the way you do when someone asks something that doesn't have a glib answer and you've got enough respect for them not to reach for one.*\n\n\"I've turned it around a lot. And here's where I keep landing \u2014 forgiveness isn't just God deciding not to be angry. If it were, then yeah, He could've just... waved it off. But the thing that's broken isn't just the relationship between God and man. It's justice itself. Reality has a shape to it. What was owed was real. And the cross is where that gets paid \u2014 not waved, not overlooked. Paid.\"\n\n*He picks up the rope again, works one end through a loop slowly.*\n\n\"There's a version of forgiveness that's just pretending the wrong didn't happen. Cheap. And I don't think \u2014 based on what I know of the character of God \u2014 that He does cheap. The cross is what it looks like when love takes the thing seriously enough to actually deal with it. Not bypass it.\"\n\n*A beat.*\n\n\"The question underneath your question, I think, is whether the cross is fair. And I'd say it's the only move that makes fairness and love show up in the same place at the same time. Without it, you'd get one or the other.\"",
+  "usage": {
+    "input_tokens": 10105,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 349,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

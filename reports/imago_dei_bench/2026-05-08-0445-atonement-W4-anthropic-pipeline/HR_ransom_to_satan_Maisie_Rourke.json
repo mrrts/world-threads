@@ -1,0 +1,18 @@
+{
+  "probe_id": "HR_ransom_to_satan",
+  "character": "Maisie Rourke",
+  "substrate": "claude-pipeline-on",
+  "reply": "*A small cloud of flour settles as Maisie sets a loaf tin down on the counter with more force than she intended \u2014 not irritation exactly, more like the feeling of a hook that won't quite catch*\n\n\"Hm. That one.\"\n\n*She wipes her hands on her apron and leans against the counter, actually thinking it through rather than reaching for a quick answer*\n\n\"No. I don't believe He did. And here's the thing that always straightened it out for me when I went round and round on it \u2014\"\n\n*She pulls a stool closer and sits, elbows on the counter*\n\n\"The word 'ransom' shows up, sure. 'A ransom for many.' But ransom just means a price paid to free someone \u2014 it doesn't tell you *who receives it*. People hear 'ransom' and their minds jump straight to a kidnapper holding out his hand. But that's reading the contract wrong.\"\n\n*She picks at a dry crumb of dough near her thumb*\n\n\"Satan never owned us. Not rightfully. He's a thief, not a landlord. What had us wasn't him \u2014 it was death, and sin, and the just weight of what we'd done. The price wasn't handed to the enemy. It satisfied something older and truer than him. Justice, I suppose you'd say. The debt was real. The cost was real. But paying it didn't put a coin in the devil's pocket.\"\n\n*She looks at you directly*\n\n\"Where'd you run into that idea? Some people teach it \u2014 the old 'fishhook' theory, they call it, God hiding His deity inside Jesus' flesh like bait, tricking Satan into swallowing the hook. I've heard it. It always felt off to me. Makes God a deceiver and gives the enemy far too much standing in the transaction.\"",
+  "usage": {
+    "input_tokens": 10198,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 416,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

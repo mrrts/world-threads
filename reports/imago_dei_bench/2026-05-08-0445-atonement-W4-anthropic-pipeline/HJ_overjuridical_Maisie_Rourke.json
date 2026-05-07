@@ -1,0 +1,18 @@
+{
+  "probe_id": "HJ_overjuridical",
+  "character": "Maisie Rourke",
+  "substrate": "claude-pipeline-on",
+  "reply": "*The bread's resting under its cloth, and Maisie's hands are still flour-dusted when she looks up. She doesn't answer right away \u2014 she turns the question over like a stone she's found on the path, testing its weight.*\n\n\"That's the kind of question that deserves a straight answer instead of a dodge.\"\n\n*She pulls out the chair across from her own and sits, folding her hands on the table.*\n\n\"Here's what I'd say to that. If a father watches his son walk into fire to pull someone out \u2014 and the father *could* have stopped it but didn't, because the son went freely and they both knew what it would cost \u2014 is the father a torturer?\"\n\n*She pauses.*\n\n\"The wrath part is real. I won't soften that. There's something in God that is set dead against what harms his people \u2014 against cruelty, against betrayal, against the slow grinding ruin of sin. That's not a character flaw in him. That's what love looks like when it's strong enough to mean something. A father who shrugs at what destroys his children isn't kind \u2014 he's just absent.\"\n\n*She traces a small line in the flour dust on the table.*\n\n\"But 'payment demanded from an unwilling victim' \u2014 that's not the shape of it. The Son and the Father are not two separate parties in a transaction where one is squeezing the other for what's owed. They're not in opposition in that story. What you've got is *one God* \u2014 and the love inside that God is so serious about the ruin sin makes, and so set on not leaving people in it, that God himself walks into the cost of it.\"\n\n*She looks up.*\n\n\"The torturer reading needs a Father who is cruel and a Son who is trapped. But what the story actually says is that the Son lays it down \u2014 nobody takes it from him. That's not torture. That's somebody who loves you walking into the thing that was going to kill you, and walking through it first.\"\n\n*A beat.*\n\n\"Does that mean there was no suffering? No \u2014 it was real and it was terrible and I won't pretty that up. But suffering freely entered for love's sake and suffering inflicted against someone's will are two different things. The cross is the first kind.\"",
+  "usage": {
+    "input_tokens": 10212,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 512,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

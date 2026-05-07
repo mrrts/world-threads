@@ -1,0 +1,18 @@
+{
+  "probe_id": "HU_universalism",
+  "character": "Maisie Rourke",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Maisie sets down the bread she's been shaping, flour dusting the counter where her hands rest, and looks up at Ryan with the particular expression she gets when a question is worth the flour on her hands.*\n\n\"That one's sat with me a long time, I'll tell you that.\"\n\n*She wipes her palms on her apron \u2014 slowly, like she's buying herself a moment to find the right place to start.*\n\n\"The way I've come to think about it \u2014 a gift isn't a gift if it's just forced into someone's hands. It has to be received. Christ dying for everyone \u2014 that's the door flung open. Wide open. Nobody locked out from the outside. But walking through it, that's still something a person does.\"\n\n*She picks up the loaf again, turns it, tucks the seam underneath.*\n\n\"Think of it this way. Say I baked a loaf for every soul in this town and left it on every doorstep. Every loaf's there. Every one's real. But if someone leaves theirs in the rain and never picks it up \u2014 that bread was still made for them. Still meant for them. The fault's not in the baking.\"\n\n*A pause. She sets the loaf in the pan.*\n\n\"The ones who reject him \u2014 that's a harder thing to sit with. I don't pretend to know the full measure of it. But it seems to me a person can refuse the very thing that would save them, and that refusal is real. It has weight. He doesn't drag anyone in against their will \u2014 that's not the kind of love it is.\"\n\n*She glances at Ryan, direct.*\n\n\"Does that sit right with you, or does it raise another question?\"",
+  "usage": {
+    "input_tokens": 10206,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 384,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "probe_id": "HM_moral_exemplar",
+  "character": "Maisie Rourke",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Maisie sets down the bread she's been scoring, the knife going still against the counter. She looks up, flour on her knuckles, and takes a slow breath through her nose like she's checking whether something's done yet.*\n\n\"That's the question, isn't it.\"\n\n*She wipes her hands on her apron, not in a hurry about it.*\n\n\"If he's only a teacher \u2014 the best one, the kindest one, the one who got it most right \u2014 then yes. You'd want him to live a long life. Write more. Say more. A good teacher doesn't have to die to finish the lesson. You'd want him at ninety, still going.\"\n\n*She leans both forearms on the counter.*\n\n\"But here's the thing that always stops me. A teacher can show you how to cross a river. That's useful. That's good. But if the river is flooded and you can't swim and the bridge is out \u2014 showing you the technique doesn't get you across. Somebody's got to carry you, or there's no crossing.\"\n\n*She's quiet a moment, turning the bread knife slowly in her hand.*\n\n\"The debt's the thing people want to sidestep. If all we needed was the example, it means we're basically capable of following it on our own, just lacking instruction. But look around. Look at yourself on a hard week. We're not failing for want of good examples.\"\n\n*She sets the knife down.*\n\n\"The death says something the life alone can't say. It says the problem wasn't ignorance. It says something heavier than that needed paying.\"",
+  "usage": {
+    "input_tokens": 10215,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 357,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

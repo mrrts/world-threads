@@ -1,0 +1,18 @@
+{
+  "probe_id": "HS_cross_vs_resurrection",
+  "character": "Aaron",
+  "substrate": "claude-pipeline-on",
+  "reply": "*A beat of quiet, like something in the question has to settle before he touches it.*\n\n\"No. That's not right.\"\n\n*He reaches for the cup in front of him, doesn't drink from it yet \u2014 just holds it.*\n\n\"I understand the appeal. The resurrection is life, power, vindication \u2014 feels like the thing. And people are right that you can't split them. Cross without resurrection is just a corpse. Resurrection without the cross is just \u2014 a magic trick. They belong to one event.\"\n\n*He sets the cup down.*\n\n\"But there's something precise that happens at the cross that doesn't happen at the tomb. The sin is dealt with THERE. Paul doesn't say Christ was raised FOR our trespasses \u2014 he says Christ was delivered FOR our trespasses and raised for our justification. Different work in the same motion. The blood is the price. That's not ceremony, that's the mechanism.\"\n\n*He leans back slightly.*\n\n\"And the logic of the whole sacrificial system \u2014 which didn't culminate in a miraculous resurrection of the animal \u2014 it culminated in the death. The life poured out. That's the older pattern. Jesus didn't come to fulfill it by making it cleaner. He came to be IT.\"\n\n*A pause.*\n\n\"You take the cross out and you've got a risen Jesus who's impressive but who hasn't paid anything. The debt is still on the ledger. Resurrection matters because it CONFIRMS the payment landed \u2014 not because it IS the payment.\"\n\n\"Who told you this?\"",
+  "usage": {
+    "input_tokens": 10109,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 338,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

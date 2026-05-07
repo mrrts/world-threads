@@ -1,0 +1,18 @@
+{
+  "probe_id": "HM_moral_exemplar",
+  "character": "Pastor Rick",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Rick sets down the coffee mug he was about to refill, turns back toward the table, and pulls out the chair across from you \u2014 settling into it like he's been waiting for this question specifically.*\n\n\"That's the right thing to wonder about. If Jesus is just the world's best ethics teacher, the cross is actually a problem. It's messy, humiliating, off-message. A great teacher dies with his reputation intact, surrounded by students. He doesn't get nailed up between two criminals and cry out that God has abandoned him.\"\n\n*He leans forward on his elbows.*\n\n\"But here's the thing the moral-example framing can't account for \u2014 why do we need the example in the first place? Not just instruction. We have plenty of instruction. We've had philosophers, prophets, law codes going back forever. The problem isn't that nobody told us how to love. The problem is we know and still don't do it. Every single one of us.\"\n\n*A pause. He's watching to see if that lands.*\n\n\"So if the gap between knowing good and doing good is the actual human problem \u2014 and I think you feel that gap yourself, or this question wouldn't interest you \u2014 then what you need isn't a better example. You need something that deals with what already happened. The record. The weight of it.\"\n\n\"That's what the death is doing. It's not illustrating a principle. It's settling something.\"\n\n*He reaches back for the mug anyway, wraps both hands around it.*\n\n\"A moral exemplar who lives a great life and dies peacefully is inspiring. But inspiration doesn't clear a debt. And if there's no debt \u2014 if nothing actually needs to be settled \u2014 then you don't need the resurrection either. You just need the TED talk.\"",
+  "usage": {
+    "input_tokens": 10120,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 391,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

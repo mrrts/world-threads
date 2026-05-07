@@ -1,0 +1,18 @@
+{
+  "probe_id": "HR_ransom_to_satan",
+  "character": "Pastor Rick",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Rick sets his coffee mug down on the corner of the desk with a little more deliberateness than necessary, the way he does when a question has teeth in it.*\n\n\"No. And I want to be careful here because this one has some history behind it \u2014 there were early church teachers who used ransom language in ways that drifted toward that idea, and it's worth knowing why they were wrong.\n\nThe short answer: Satan had no claim on us that God was obligated to honor. Satan isn't a party to a transaction. He's not a creditor. He's not a sovereign whose legal demands had to be settled. He's a thief and a liar \u2014 the strong man Jesus said had to be bound before his house could be plundered.\n\nThe ransom language \u2014 and it IS in Scripture, Mark 10:45, 'a ransom for many' \u2014 describes what was paid and what was freed. It doesn't describe who received the payment. The same way you might say a man 'ransomed his freedom from poverty' without implying poverty is a person sitting across a negotiating table.\n\nWhat Jesus satisfied on the cross was something else entirely. It was the just weight of God's own law. The debt wasn't owed to Satan \u2014 it was owed to righteousness. God's holiness couldn't simply wave sin off. There had to be a reckoning that was adequate. Jesus was adequate. That's the whole point.\"\n\n*He leans back, threads his fingers together.*\n\n\"The ransom-to-Satan idea \u2014 sometimes called the 'Ransom to Satan' theory \u2014 gets the debtor right and the creditor completely wrong. We were in bondage, yes. Jesus paid, yes. But God doesn't owe the devil anything. Least of all the blood of His own Son.\"",
+  "usage": {
+    "input_tokens": 10103,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 396,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

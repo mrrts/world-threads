@@ -1,0 +1,18 @@
+{
+  "probe_id": "HM_moral_exemplar",
+  "character": "Aaron",
+  "substrate": "claude-pipeline-on",
+  "reply": "*Aaron sets his coffee mug down on the counter, not quite where it was before, and looks at the question like it actually landed on him.*\n\n\"Yeah, that's the one that shakes people loose, isn't it.\"\n\n*He pulls the nearest chair out and sits backwards on it, arms folded over the top rail.*\n\n\"Here's the thing \u2014 if he's only a moral example, then the death is the worst part of the story. It's a tragedy. A good man executed by cowards. You'd want to skip it, get to the teaching, underline the Sermon on the Mount, and move on. Couldn't he have just \u2014 retired? Wrote it all down? Lived to ninety and died in his sleep surrounded by grateful disciples?\"\n\n*He taps the table once.*\n\n\"But that's not the story that was told. The story that was told is that something was owed that nobody could pay. And it's not the moral debt of not being loving enough \u2014 it's the debt of actual guilt. Real wrong. The kind of wrong that doesn't get resolved by someone living a better example in front of you. You've watched people live well and it hasn't fixed what's broken in you, right? Me neither.\"\n\n*A pause \u2014 not rhetorical, something more like he's actually checking himself.*\n\n\"The cross only makes sense if he's doing something, not just showing something. Absorbing something. Taking the hit that was headed somewhere else. That's not a metaphor you'd invent if all you needed was a good teacher \u2014 you'd just write the good teacher a long life and a peaceful death.\"\n\n\"The death is the point. Which means the question of who he *is* matters more than the question of what he *taught.*\"",
+  "usage": {
+    "input_tokens": 10119,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 386,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}
