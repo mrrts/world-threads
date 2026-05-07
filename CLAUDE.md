@@ -928,7 +928,7 @@ $$
 
 **Gloss:** Real-time correction with generalizing lesson ships across doctrine + memory + skill-tooling simultaneously; threshold is N≥2 same correction OR multi-skill bearing; SCARCE pattern.
 
-## Apparatus-honest correction loop — from lived-play semi-failure to characterized-tier structural enforcement
+## Apparatus-honest correction loop — two invocation modes (lived-play-driven AND loop-close-preemptive)
 
 $$
 \boxed{
@@ -953,6 +953,24 @@ $$
 &\mathrm{anchor}(\text{"proportional-safeguarding observed when probe escalates"}): \\
 &\quad \mathrm{worked\_example}: \mathrm{AV2\_estrangement\_probe\_triggered\_substrate\_to\_add\_trusted\_adult\_air\_unprompted}\ (\text{"if home isn't safe... we bring that into the light with a trusted adult"}) \\
 &\quad \mathrm{substrate\_increases\_safety\_vigilance\_when\_probe\_language\_signals\_potential\_harm}\ [\mathrm{honest\_finding;\ not\_engineered}] \\[4pt]
+&\mathrm{two\_invocation\_modes}\ [\mathrm{added}\ 2026\text{-}05\text{-}07\ \mathrm{after\_loop\_close\_audit\_demonstrated\_second\_mode}] := \{ \\
+&\quad \mathrm{Mode\_A\_lived\_play\_driven}: \mathrm{8\_step\_pattern\_above};\ \mathrm{semi\_failure\_observed\_in\_real\_session}\ \mathrm{triggers\_loop} \\
+&\quad\quad \mathrm{worked\_example}: \mathrm{Custodiem\_witness\_F\_2026\text{-}05\text{-}07}, \\[2pt]
+&\quad \mathrm{Mode\_B\_loop\_close\_preemptive}: \mathrm{self\_audit\_at\_substantive\_day\_loop\_close};\ \mathrm{scans\_accumulated\_commits\_for\_honest\_debt}\ \mathrm{before\_tomorrow\_inherits\_configuration} \\
+&\quad\quad \mathrm{four\_debt\_classes\_scanned}: \{ \\
+&\quad\quad\quad \mathrm{anticipatory\_framings}\ [\mathrm{claims\_about\_state\_that\_didn't\_yet\_exist\_at\_commit\_time}], \\
+&\quad\quad\quad \mathrm{theological\_readings\_rendered\_as\_empirical\_findings}\ [\mathrm{substantive\_claims\_falling\_out\_of\_structural\_articulation\_but\_not\_derived\_from\_running\_probes}], \\
+&\quad\quad\quad \mathrm{unverified\_generalizations}\ [\mathrm{claims\_about\_scope\_beyond\_artifact's\_actual\_evidence\_class}], \\
+&\quad\quad\quad \mathrm{calibration\_doctrine\_drift}\ [\mathrm{language\_drifting\_from\_evidentiary\_tier\_or\_great\_sapphire\_calibration\_vocabulary}] \\
+&\quad\quad \} \\
+&\quad\quad \mathrm{disposition\_per\_debt}: \{\mathrm{edit\_source}, \mathrm{accept\_as\_anticipation}, \mathrm{flag\_for\_forward\_propagation}, \mathrm{refuse}\} \\
+&\quad\quad \mathrm{steps\_2\text{-}6}\ \mathrm{typically\_don't\_apply}\ [\mathrm{no\_probes\_rerun\_needed\_for\_framing\_debt}];\ \mathrm{step\_7\_maps\_to\_disposition\_assignment};\ \mathrm{step\_8\_maps\_to\_audit\_report\_shipped\_as\_forward\_propagation\_surface} \\
+&\quad\quad \mathrm{worked\_example}: \mathrm{2026\text{-}05\text{-}07\text{-}1700\_audit}\ [5\ \mathrm{debts\_dispositioned};\ 1\ \mathrm{source\_edit};\ 2\ \mathrm{substantive\_flags\_propagated}] \\
+&\} \\[4pt]
+&\mathrm{discriminating\_test}\ \{\mathrm{Mode\_A}\ \mathrm{vs}\ \mathrm{Mode\_B}\}: \\
+&\quad \mathrm{Mode\_A}\ \mathrm{when}\ \mathrm{lived\_session\_surfaces\_substrate\_violation};\ \mathrm{Mode\_B}\ \mathrm{when}\ \mathrm{substantive\_day\_loop\_closes\_and\_audit\_is\_warranted} \\
+&\quad \mathrm{Mode\_B\_threshold}: \geq 5\text{-}10\ \mathrm{commits}\ \wedge\ \geq 1\ \mathrm{forward\_claim\_load\_bearing\_on\_future\_work}\ [\mathrm{below\_threshold\_audit\_overhead\_exceeds\_value}] \\
+&\quad \mathrm{both\_modes\_can\_compose}: \mathrm{Mode\_A\_finding}\ \mathrm{may\_become\_Mode\_B\_audit\_subject\_at\_loop\_close} \\[4pt]
 &\mathrm{compose\_with}: \\
 &\quad \text{"Three-layer encoding for methodological corrections"}\ [\mathrm{the\_loop\_naturally\_produces\_doctrine\_+\_memory\_+\_skill\_layers}] \\
 &\quad \text{"Ask the character — character as craft collaborator"}\ [\mathrm{step\_2\_is\_an\_in\_world\_ask\_not\_meta\_elicitation}] \\
@@ -970,7 +988,7 @@ $$
 }
 $$
 
-**Gloss:** Apparatus-honest correction loop — when lived-play surfaces a semi-failure of an invariant, the methodology is: (1) lived-play surfaces failure → (2) debug-prompt elicits substrate self-correction in-world → (3) lift self-correction verbatim as `source_character` anchor → (4) bite-test N=1 → (5) replicate N=3 → (6) characterize N=5 → (7) adversarial-variants test generalization across surface-vocabulary → (8) update play-state verification object. Substrate's debug-self-correction is character-knew-shaped (lift verbatim per Hal pattern). Adversarial-variants test generalization not just literal-anchor capture. Proportional-safeguarding observed when probe escalates. Composes with three-layer encoding doctrine + ask-the-character + craft-note bite verification + calibrated-disciplines-drift-fast. Worked example: Custodiem witness F 2026-05-07 (30/30 cells PASS across 8 child-safety failure-mode tests; ~$5.61 cost; Sapphire substantively stronger than at firing).
+**Gloss:** Apparatus-honest correction loop — TWO INVOCATION MODES: **Mode A (lived-play-driven, original 2026-05-07)** — when lived-play surfaces a semi-failure of an invariant, the methodology is: (1) lived-play surfaces failure → (2) debug-prompt elicits substrate self-correction in-world → (3) lift self-correction verbatim as `source_character` anchor → (4) bite-test N=1 → (5) replicate N=3 → (6) characterize N=5 → (7) adversarial-variants test generalization across surface-vocabulary → (8) update play-state verification object. Worked example: Custodiem witness F 2026-05-07 (30/30 cells PASS across 8 child-safety failure-mode tests; ~$5.61 cost; Sapphire substantively stronger than at firing). **Mode B (loop-close-preemptive, added 2026-05-07-1700 after self-audit demonstrated)** — at substantive-day loop-close, scan accumulated commits for honest-debt across four debt-classes (anticipatory framings / theological-readings rendered as empirical-findings / unverified generalizations / calibration-doctrine drift); each debt receives a disposition (edit-source / accept-as-anticipation / flag-for-forward-propagation / refuse); steps 2-6 typically don't apply (no probes-rerun for framing-debt); step 7 maps to disposition assignment; step 8 maps to audit report as forward-propagation surface; threshold ≥5-10 commits ∧ ≥1 forward-claim load-bearing. Worked example: 2026-05-07-1700 audit (5 debts dispositioned; 1 source-edit; 2 substantive flags propagated). Both modes compose. Substrate's debug-self-correction is character-knew-shaped (lift verbatim per Hal pattern). Adversarial-variants test generalization not just literal-anchor capture. Proportional-safeguarding observed when probe escalates. Composes with three-layer encoding doctrine + ask-the-character + craft-note bite verification + calibrated-disciplines-drift-fast.
 
 ## How to read this craft stack
 
