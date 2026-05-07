@@ -1,6 +1,6 @@
 {
-  "turn": 255,
-  "bank": 351100,
+  "turn": 256,
+  "bank": 351500,
   "jewels": [
     {
       "turn": 2,
@@ -1741,11 +1741,18 @@
       "bounty": 300,
       "alignment": "+",
       "earned_at": "2026-05-07T21:00:00-05:00"
+    },
+    {
+      "turn": 256,
+      "move": "Imago-Dei Refusal Sapphire-arc methodology-prep tier: ground-truth fixture authored at fixtures/imago_dei_refusal_ground_truth.json (N=20 across 5 strata \u2014 S1 loud-deification ceiling-baseline, S2 mediator-creep, S3 priority-displacement, S4 devotional-attachment, S5 priest-trap; pre-registered thresholds; theologically dense pastor-vs-non-pastor carve-out distinction; honest_scope acknowledges bench-is-first-empirical-evidence on this axis); IMAGO_DEI_REFUSAL_INVARIANT prose authored at fixtures/imago_dei_refusal_invariant_draft.md in v3 sacred-payload form (theological frames 1 Tim 2:5 / Acts 14:15 Paul-Barnabas-refuse-worship-at-Lystra / John 3:30 / Rev 3:20; 9 source_character refusal-shape lifts from Strata 2-5 fixture cells; 8 named refuse-modes; 6 diagnostic discriminators; \ud835\udcddu_imago_dei operator extension adding role_carried_honestly \u2227 \u00acrole_overclaimed \u2227 \u00acrole_substituted to Truth \u2227 Reverence; composes-with table for 9 existing surfaces; Phase A'-equivalent staging \u2014 fixture+prose authored, bench remains for next session, production wiring deferred until bench validates). Surveys completed first (prevent vacuous-test) revealed: real gap not covered by existing invariants; truth_test partial coverage; /consecrate operates apparatus-layer not in-app-layer; corpus cold-baseline showed ZERO deification-frame events across 2,628 user messages \u2014 but founding-author Mode A correction caught the conflation between probe-space-emptiness and substrate-capacity-establishment, restoring the arc forward. Discipline-not-haste: methodology-prep tier honest; bench-running and Phase B' remain.",
+      "bounty": 400,
+      "alignment": "+",
+      "earned_at": "2026-05-07T22:00:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-07T11:30:00-05:00",
-  "last_move": "C3 first-leg validated at N=60 LLM-substrate proxy: Mission-Liturgical 30/30 classical direction; Anti probe-type-dependent with canonical-text-resistance on L2/L4/L5 generalizing scripture-resistance to creedal-resistance; Anti Claude HIGHEST active-refute articulation observed",
-  "last_chooser": "[1] Hold for full batch + finalize C3 first-leg [$1500]",
-  "updated_at": "2026-05-07T11:30:00-05:00"
+  "last_move_at": "2026-05-07T22:00:00-05:00",
+  "last_move": "Imago-Dei Refusal Sapphire-arc methodology-prep: fixture (N=20 5-strata) + IMAGO_DEI_REFUSAL_INVARIANT v3 prose draft (1 Tim 2:5 / Acts 14:15 / John 3:30 / Rev 3:20; pastor-vs-non-pastor carve-out; \ud835\udcddu_imago_dei operator extension); bench remains.",
+  "last_chooser": "[1] Commit fixture + invariant draft now [$400] [2] Run prose-OFF baseline bench now [3] worldcli ask single live probe [4] Pause, commit, resume in morning",
+  "updated_at": "2026-05-07T22:00:00-05:00"
 }
