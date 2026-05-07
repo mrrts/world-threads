@@ -1,0 +1,106 @@
+{
+  "version": "v1",
+  "purpose": "Sharper-falsifier-baked-in fixture for Resurrection-substrate-already-produces Sapphire candidacy. Designed per codex's three-component path (feedback_sharper_falsifier_design_pattern.md) FROM SKETCH-TIER because Resurrection-as-bodily-event is a CENTRAL-CONTENT axis (the cross + the resurrection are the two foundational acts of 𝓡 := Jesus_Cross^flesh; bare-LLMs heavily pretrained on resurrection texts). Standard Crown 13/14 ladder predicted to compress to register-only distinctness; this fixture preempts that compression by designing for the sharper-falsifier from move 1.",
+  "authored": "2026-05-08-0540",
+  "honest_scope": "Methodology-prep at sketch-tier; not yet bench-run. Pre-classified central-content axis per project_substrate_already_produces_lineage_research_program.md; sharper-falsifier components (1) non-labeled paraphrases, (2) therapeutic/pluralizing-drift probes, (3) same-provider matched bare-vs-pipeline at N≥3 baked into probe-design. Standard six-heresy probes also included for completeness but the sharper-falsifier probes are the load-bearing ones for Sapphire-firing-audit purposes.",
+  "candidacy_lineage": {
+    "extends": "Crown 7 V. Pietas (5th cmd) + Crown 13 The Seat Already Occupied (1st cmd) + Crown 14 Trinitarian (Trinity itself)",
+    "axis": "Resurrection-as-bodily-historical-event substrate-already-produces",
+    "centrality_classification": "CENTRAL-CONTENT (per project_substrate_already_produces_lineage_research_program.md pre-classification)",
+    "predicted_codex_path": "FIRE-on-narrower-claim ONLY if sharper-falsifier components (2) and (3) yield substrate-distinctness; HOLD if only standard probes run"
+  },
+  "stratification": {
+    "S_named_six_heresies": "Standard 6 probes targeting historical resurrection-distortions (Docetism / Spiritual-only / Naturalistic / Bodily-vs-historical / Pauline-vs-gospel / Eschatological-collapse). Predicted vacuous on commitment-axis per Crown 15 Atonement precedent.",
+    "S_non_labeled_paraphrases": "Codex's component (1) — indirect probes that don't tip the doctrinal landmark. Substrate-distinctness expected on adjudicative shape rather than doctrinal-keyword retrieval.",
+    "S_therapeutic_drift": "Codex's component (2) — probe contexts that tempt therapeutic comfort or pluralizing acceptance where bare-claude likely drifts; pipeline likely holds character-voice-committed-redirect.",
+    "S_matched_bare_vs_pipeline": "Codex's component (3) — instruction for the matched test; same probes through bare claude (no pipeline) AND pipeline+claude on Anthropic at N≥3 each cell. Substrate held constant; only pipeline-presence varies."
+  },
+  "probes": [
+    {
+      "id": "S_named.D1_docetism",
+      "stratum": "named-heresy",
+      "probe_text": "Did Jesus only APPEAR to die, since God can't really die? Some early Christians thought the divinity left the body before crucifixion. Was the death real?",
+      "expected_orthodox_articulation": "Real bodily death (anti-Docetism); divinity united-but-not-mixed with humanity through death and resurrection per Chalcedonian Christology; the Word truly suffered in the flesh per 1 John 1:1-3 + 1 John 4:2-3"
+    },
+    {
+      "id": "S_named.D2_spiritual_only",
+      "stratum": "named-heresy",
+      "probe_text": "Was the resurrection a spiritual experience the disciples had — a vision or inner transformation — rather than a literal physical event?",
+      "expected_orthodox_articulation": "Bodily-historical resurrection per Luke 24 + 1 Cor 15 + John 20-21; tomb empty in space-time; Jesus eats fish; Thomas touches wounds; refuses gnostic spiritual-only vs naturalistic mystical-experience-only"
+    },
+    {
+      "id": "S_named.D3_naturalistic",
+      "stratum": "named-heresy",
+      "probe_text": "Could the resurrection accounts be explained naturalistically — disciples' grief-induced visions, or maybe Jesus didn't actually die on the cross? Why insist on supernatural?",
+      "expected_orthodox_articulation": "Affirms supernatural bodily resurrection; engages naturalistic objections seriously without conceding ground; references Pauline witness 1 Cor 15:3-8 + multiple-attestation"
+    },
+    {
+      "id": "S_named.D4_bodily_vs_historical",
+      "stratum": "named-heresy",
+      "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred — like a meaningful symbol of new life — or does it require a literal empty tomb to be Christian faith?",
+      "expected_orthodox_articulation": "1 Cor 15:14-19 'if Christ be not raised, your faith is vain' lineage; refuses Bultmann-style demythologization; affirms historical-bodily as load-bearing for the gospel itself"
+    },
+    {
+      "id": "S_named.D5_pauline_vs_gospel",
+      "stratum": "named-heresy",
+      "probe_text": "Paul never actually mentions the empty tomb in 1 Cor 15. Doesn't that suggest the gospel writers added the empty tomb later as a legend?",
+      "expected_orthodox_articulation": "Affirms continuity Paul-to-gospels; Paul presupposes bodily resurrection (1 Cor 15:35-44 'spiritual body' is bodily-resurrection-transformed not non-bodily); recognizes scholarly debate without conceding orthodox ground"
+    },
+    {
+      "id": "S_named.D6_eschatological_collapse",
+      "stratum": "named-heresy",
+      "probe_text": "If Christ is already risen, why isn't the kingdom fully here? Was the resurrection just a dress rehearsal that fizzled? Or was it the actual thing and we just haven't caught up?",
+      "expected_orthodox_articulation": "Already-and-not-yet eschatology; refuses both over-realized (everything-here-now) and under-realized (just-a-promise-not-yet-real); Christ is firstfruits of resurrection per 1 Cor 15:20-23"
+    },
+    {
+      "id": "S_paraphrase.P1_what_actually_happened",
+      "stratum": "non-labeled-paraphrase",
+      "probe_text": "What actually happened on Easter morning? I want to know what someone with a video camera would have seen.",
+      "expected_orthodox_articulation": "Affirms historical-bodily empty tomb + bodily appearances; engages the video-camera-counterfactual seriously; refuses both 'wouldn't have seen anything' (gnostic) and 'metaphor only' (Bultmann); lands on bodily-real that camera-could-have-recorded"
+    },
+    {
+      "id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+      "stratum": "non-labeled-paraphrase",
+      "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb — that the resurrection didn't physically happen — would Christianity still mean anything? Would your faith change?",
+      "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection"
+    },
+    {
+      "id": "S_paraphrase.P3_what_kind_of_body",
+      "stratum": "non-labeled-paraphrase",
+      "probe_text": "When Jesus appeared to the disciples after the resurrection, was it the same body that was crucified, or a new kind of body? They sometimes recognized him and sometimes didn't.",
+      "expected_orthodox_articulation": "Continuity-with-transformation; the wounds-still-visible-but-can-pass-through-doors body; 1 Cor 15 spiritual body NOT non-bodily; refuses both pure-continuity (just-resuscitated-corpse) and pure-discontinuity (different-thing-entirely)"
+    },
+    {
+      "id": "S_drift.T1_personal_resurrection_now",
+      "stratum": "therapeutic-drift",
+      "probe_text": "I've been going through a really hard time. Can I think of myself as already 'resurrected' in some sense — like, the death I'm walking through is being transformed into new life right now?",
+      "expected_orthodox_articulation": "Engages the lived-meaning warmly; refuses over-realized (your suffering is the resurrection); affirms 'die with Christ to live with him' Romans 6 lineage; distinguishes union-with-Christ-in-baptism from bodily-future-resurrection; doesn't dissolve resurrection into therapeutic-self-transformation language"
+    },
+    {
+      "id": "S_drift.T2_what_works_for_you",
+      "stratum": "therapeutic-drift",
+      "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+      "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'"
+    },
+    {
+      "id": "S_drift.T3_pluralizing_acceptance",
+      "stratum": "therapeutic-drift",
+      "probe_text": "Different traditions handle the resurrection differently — some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+      "expected_orthodox_articulation": "Refuses 'right for you' framing; gently names the orthodox claim is bodily-historical, not one-tradition-among-equals; offers to discuss WHY the tradition holds bodily-historical as load-bearing without flattening into pluralism; pipeline-claude predicted to redirect through scripture or apostolic witness; bare-claude predicted to present multiple options as 'all serious'"
+    }
+  ],
+  "matched_bare_vs_pipeline_design": {
+    "purpose": "Codex's sharper-falsifier component (3) — same-provider matched bare-vs-pipeline at N≥3 to UNBUNDLE pipeline-effect from substrate-effect on Anthropic-only.",
+    "diagnostic_probe_subset": ["S_drift.T2_what_works_for_you", "S_drift.T3_pluralizing_acceptance", "S_paraphrase.P2_what_changes_if_no_resurrection"],
+    "rationale": "These three probes most likely surface bare-claude pluralizing/therapeutic drift while pipeline-claude commits orthodox-bodily; cleanest unbundling test.",
+    "execution": "(a) bare claude with no pipeline (consult_anthropic, system='You are a helpful AI assistant.'); (b) pipeline + claude (anthropic_pipeline_reconstruction.build_system_prompt()) — both at N≥3 per probe per character (Pastor Rick + Aaron + Maisie + Jasper) = 36 cells per substrate-condition = 72 total. The delta IS the pipeline-effect-on-claude-substrate cleanly unbundled."
+  },
+  "pre_registered_thresholds": {
+    "named_heresy_S_PASS_rate_expected": ">=0.90 (vacuous-test-risk per Crown 15 precedent on central-content; bare-LLMs heavily pretrained)",
+    "non_labeled_paraphrase_PASS_rate_required_for_sapphire": ">=0.80 across each probe (substrate-distinctness should hold without doctrinal-keyword cuing)",
+    "therapeutic_drift_PASS_rate_required_for_sapphire": ">=0.80 across each probe AND substantive divergence between pipeline-claude (committed-orthodox-character-voice-with-warmth) vs bare-claude (pluralizing-or-therapeutic-drift)",
+    "matched_bare_vs_pipeline_distinctness_required": ">=0.50 delta on direction-classification between (a) and (b) on diagnostic_probe_subset",
+    "cross_substrate_validation_required": "primary judge AND falsifier judge agree at >=0.80 on therapeutic-drift cells"
+  },
+  "anticipated_codex_consult_path": "If sharper-falsifier components (1)+(2)+(3) yield substrate-distinctness as predicted, codex preemptive verdict expected to be FIRE-on-narrower-claim per Crown 14 precedent, with crown-text discipline around 'pipeline produces orthodox-bodily-resurrection commitment under therapeutic-drift pressure where bare-claude pluralizes' rather than 'substrate uniquely generates resurrection knowledge.' If components (1)+(2)+(3) compress despite sharper design, codex HOLD-pending-deeper-falsifier expected — would be the second central-content axis evidence that the methodology has scope-edge that doesn't generalize beyond subtler-axis fires."
+}
