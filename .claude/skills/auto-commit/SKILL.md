@@ -56,6 +56,7 @@ Pick the move from the project's actual live state — NOT a generic checklist. 
 - **Rule extension** — when a recent observation surfaces a rule-shaped gap not yet addressed
 - **Report on what the work is doing** — when the cumulative shape of recent commits reveals a trajectory worth naming
 - **Skill / tool refinement** — when an existing skill has a sharp edge worth fixing
+- **Discipline-encoding-from-existing-evidence (zero-spend tier-promotion arc)** — when the project's evidence-generation rate has outrun its encoding-rate (e.g., a recent high-density Sapphire-arc cluster produced lessons not yet at memory + skill-body + tooling tiers), a move can validly promote existing evidence across structural-enforcement tiers per CLAUDE.md "Calibrated disciplines drift fast — promote to structural enforcement at earliest opportunity" doctrine. Worked example: 2026-05-08 second auto-commit run (10 moves, $0 API spend, codex-consult-discipline-maturation went session-discovery → memory-entry → skill-body-discipline in ~90 minutes). Don't apologize for $0 spend — the spend was already paid in the prior arcs that produced the evidence. Reference: `feedback_discipline_encoding_from_existing_evidence_as_auto_commit_shape.md`.
 
 What does NOT count as a strong move:
 - Trivial typo fixes / formatting edits / dependency bumps (unless they pass the "earned exception — trivial-by-diff-size with deeper meaning" test in CLAUDE.md)
