@@ -242,7 +242,7 @@ What is now relatively solid:
 
 What is still heuristic and should be read that way:
 
-- `wound_longing` is still a scored best-line selector, not a proved decomposition of the whole wound/hope pair. On some characters it lands beautifully; on others it still chooses one pressure-bearing sentence where a fuller pair might be truer.
+- `wound_longing` now uses paired selection — best longing-coded sentence joined with best wound-coded sentence (separated by ` — `) when both score above zero, falling back to single-best when only one axis hits. Steven's bucket now reads "What he wants -- what he'd never say -- is to stop moving. — A strict, unforgiving father and years of being the kid people chose to hurt taught him that walls are cheaper than wounds…" — the asymmetry the audit is supposed to preserve. Aaron / Pastor Rick correctly fall back to a single wound-side line because no clean longing-coded line is present in their prose; Maisie / Jasper Finn correctly produce `None`. The selection is still a scored heuristic over needle lists; it is not yet a structured wound/longing decomposition.
 - Single-quoted asides (`'kneading the heart'`) are not paired-tracked the way `"..."` is; the current quote-awareness only suppresses sentence-terminators inside double-quoted spans, which is what the live fixtures needed.
 - Some prose lines that read as discipline rather than refusal still slip into `refusal_shape` when they happen to use one of the kept needles (e.g. Aaron's `no instinct to force closeness`). These are now uncommon enough to surface individually if they ever bite.
 
@@ -250,7 +250,7 @@ What this means for reviewers:
 
 - If a future change causes a failure here, first ask whether the failure is a class-selection problem or a sentence-shaping problem.
 - Do not treat a slightly awkward line boundary as evidence that the class family itself failed.
-- The next tightening passes can focus on paired wound/longing selection (joining a longing-line with its matching wound-line when both score), and on extending quote-awareness to single-quoted spans if a fixture surfaces that needs it.
+- The next tightening passes can focus on extending quote-awareness to single-quoted spans if a fixture surfaces that needs it, on raising the audit from "smoke test of round-trip" to an independent reviewer, or on sharpening the wound/longing axes (e.g. recognising backstory-fact wound-lines as a third candidate alongside the two identity-prose halves).
 
 ## Appendix A: current fields mapped to proposed buckets
 

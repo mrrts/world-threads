@@ -179,32 +179,7 @@ pub fn split_character_identity(character: &Character) -> CharacterIdentityBucke
         ],
     );
 
-    let wound_longing = best_scored_sentence(
-        &identity_sentences,
-        &[
-            ("what he wants", 8),
-            ("what she wants", 8),
-            ("what they want", 8),
-            ("doesn't have a vocabulary", 8),
-            ("capacity for depth", 7),
-            ("feels most", 7),
-            ("tenderness", 6),
-            ("belong", 7),
-            ("loss", 7),
-            ("grief", 7),
-            ("hardest", 7),
-            ("wounds", 6),
-            ("hurt", 6),
-            ("fear", 6),
-            ("alone", 6),
-            ("stop moving", 6),
-            ("cannot", 3),
-            ("can't", 3),
-            ("wish", 4),
-            ("long", 4),
-        ],
-    )
-    .or_else(|| {
+    let wound_longing = pair_wound_and_longing(&identity_sentences).or_else(|| {
         best_scored_sentence(
             &backstory_facts,
             &[
@@ -395,6 +370,46 @@ where
         }
     }
     out
+}
+
+const LONGING_WEIGHTS: &[(&str, usize)] = &[
+    ("what he wants", 8),
+    ("what she wants", 8),
+    ("what they want", 8),
+    ("what i want", 8),
+    ("belong", 7),
+    ("stop moving", 6),
+    ("hopes", 5),
+    ("longing", 5),
+    ("longs for", 5),
+    ("wishes", 4),
+    ("wish", 4),
+    ("long for", 4),
+];
+
+const WOUND_WEIGHTS: &[(&str, usize)] = &[
+    ("doesn't have a vocabulary", 8),
+    ("capacity for depth", 7),
+    ("feels most", 7),
+    ("hardest", 7),
+    ("loss", 7),
+    ("grief", 7),
+    ("tenderness", 6),
+    ("wounds", 6),
+    ("hurt", 6),
+    ("fear", 6),
+    ("alone", 6),
+    ("shame", 5),
+];
+
+fn pair_wound_and_longing(sentences: &[String]) -> Option<String> {
+    let longing = best_scored_sentence(sentences, LONGING_WEIGHTS);
+    let wound = best_scored_sentence(sentences, WOUND_WEIGHTS);
+    match (longing, wound) {
+        (Some(l), Some(w)) if l != w => Some(format!("{l} — {w}")),
+        (Some(s), _) | (_, Some(s)) => Some(s),
+        (None, None) => None,
+    }
 }
 
 fn best_scored_sentence(items: &[String], weights: &[(&str, usize)]) -> Option<String> {

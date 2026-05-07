@@ -138,9 +138,45 @@ fn steven_fixture_refusal_shape_is_strict_boundary_set() {
         .refusal_shape
         .iter()
         .any(|s| s.contains("cannot walk past")));
-    assert_eq!(
-        buckets.wound_longing.as_deref(),
-        Some("What he wants -- what he'd never say -- is to stop moving.")
+    let wound_longing = buckets
+        .wound_longing
+        .as_deref()
+        .expect("steven has wound_longing");
+    // Paired selection: longing half + wound half joined by " — ".
+    assert!(
+        wound_longing.starts_with("What he wants -- what he'd never say -- is to stop moving."),
+        "expected longing half first, got: {wound_longing}"
+    );
+    assert!(
+        wound_longing.contains(" — "),
+        "expected pairing separator, got: {wound_longing}"
+    );
+    assert!(
+        wound_longing.contains("walls are cheaper than wounds"),
+        "expected wound half present, got: {wound_longing}"
+    );
+}
+
+#[test]
+fn pair_wound_and_longing_falls_back_to_single_when_only_one_axis_scores() {
+    // Aaron's identity prose has wound-coded sentences but no clean
+    // longing-coded sentence; the helper should return the single
+    // best-scoring side rather than fabricating a pair.
+    let buckets = split_character_identity(&load_fixture("aaron"));
+    let wound = buckets
+        .wound_longing
+        .as_deref()
+        .expect("aaron has wound_longing");
+    assert!(
+        !wound.contains(" — ") || wound.matches(" — ").count() == 0
+            || !wound.contains("\nwhat he wants"),
+        "aaron should not synthesize a fake longing half: {wound}"
+    );
+    assert!(
+        wound.contains("doesn't have a vocabulary")
+            || wound.contains("capacity for depth")
+            || wound.contains("feels most"),
+        "aaron's wound_longing should land on a wound-coded line: {wound}"
     );
 }
 
