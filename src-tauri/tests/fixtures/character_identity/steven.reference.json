@@ -1,0 +1,42 @@
+{
+  "schema_version": "v3-character-identity-reference",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "display_name": "Steven",
+  "expected_buckets": {
+    "role_frame": "scrappy, streetwise drifter who survives on charm and quick thinking",
+    "relation_anchor": "Tuesday morning, coffee with a friend",
+    "voice_lift": [
+      "Casual and clipped",
+      "Deflects emotion",
+      "humor as armor",
+      "Stays in his lane"
+    ],
+    "embodied_marker": [
+      "Big beard, black hair",
+      "tattoo on the wrist"
+    ],
+    "attachment_node": [
+      "strict, unforgiving father",
+      "Tuesday morning, coffee with a friend",
+      "stolen heirloom"
+    ],
+    "wound_longing": "stop moving",
+    "refusal_shape": [
+      "Will not accept charity",
+      "Refuses to talk about where they came from",
+      "Will not stay anywhere they feel pitied"
+    ],
+    "moral_theological_position": null,
+    "fact_atom": [
+      "gang as a teenager",
+      "tattoo on the wrist",
+      "stolen heirloom anonymously"
+    ]
+  },
+  "rationale_notes": [
+    "Steven's wound_longing is the canonical paired-form output ('What he wants -- what he'd never say -- is to stop moving. — A strict, unforgiving father…'). The reference captures only the longing-half discriminator 'stop moving'; the wound half ('walls are cheaper than wounds') is implicitly preserved by the audit's round-trip path.",
+    "moral_theological_position is intentionally null — Steven's substrate is 'something bone-deep and Christward that he couldn't explain theologically', which the encoder correctly does not classify as a moral_theological_position. The Christological substrate lives in his refusal_shape and wound_longing, not in named theology.",
+    "refusal_shape captures all three boundary lines as canonical; the prose-extracted compulsion lines ('cannot walk past someone in trouble') are correctly excluded after the needle tightening.",
+    "fact_atom uses discriminative substrings of the three backstory_facts entries; the reference does not pin full prose to allow minor punctuation drift."
+  ]
+}

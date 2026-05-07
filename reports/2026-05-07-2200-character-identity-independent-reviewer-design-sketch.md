@@ -2,7 +2,7 @@
 
 Date: 2026-05-07 22:00
 Tier: design-sketch
-Status: offline-only; Tier 1 worked-example impl landed for Aaron (single fixture, single helper, single test pair); Tiers 2 and 3 remain doc-only. In dialogue with reports/2026-05-07-0525-character-identity-harness-outline.md.
+Status: offline-only; Tier 1 impl landed across all five grounded fixtures (Aaron / Steven / Maisie Rourke / Pastor Rick / Jasper Finn) with parametrized regression test; Tiers 2 and 3 remain doc-only. In dialogue with reports/2026-05-07-0525-character-identity-harness-outline.md.
 
 ## Why this exists
 

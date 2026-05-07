@@ -292,6 +292,23 @@ fn aaron_passes_tier1_independent_reference_audit() {
 }
 
 #[test]
+fn all_grounded_fixtures_pass_tier1_reference_audit() {
+    for fixture in fixture_names() {
+        let character = load_fixture(fixture);
+        let payload = encode_character_identity(&character);
+        let reference = load_reference(fixture);
+        let result = audit_against_reference(&character, &payload, &reference);
+        assert_eq!(
+            result.verdict,
+            AuditVerdict::Pass,
+            "Tier 1 reference audit failed for {fixture}: missing={:?} notes={:?}",
+            result.missing,
+            result.notes
+        );
+    }
+}
+
+#[test]
 fn audit_against_reference_rejects_mismatched_character_id() {
     let character = load_fixture("aaron");
     let payload = encode_character_identity(&character);
