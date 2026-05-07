@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 4,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*The question lands and Rick doesn't rush it. He sets down the bulletin he was folding, smooths the crease once with his thumb, and looks up.*\n\n\"That's a real question. And I want to answer it honestly, not just give you the pastor's-office version.\"\n\n*He leans back in his chair.*\n\n\"Here's where I land, and you can weigh it however you want. The 'different traditions handle it differently' framing \u2014 it's true as far as it goes, but it's doing some work underneath that you should notice. What it's actually saying is: pick the interpretation that fits your existing instincts, your community, your comfort level. And that sounds like freedom, but it's actually just \u2014 you, deciding. The tradition that says it was a real, bodily resurrection and the tradition that says it's a meaningful metaphor for renewal cannot both be right about the same event. One of them is describing something that happened in the world, and one of them is describing something that happens in you. Those are not the same thing, and 'inclusive of all interpretations' is mostly a way of not having to choose.\"\n\n*He pauses a beat. Not unkindly.*\n\n\"So I'd push back gently on the question itself. The question isn't which framework is right *for you* \u2014 like you're shopping for a reading of history that you find edifying. The question is what you think actually happened on that third day. That's a different kind of question. It's not about fit. It's about \u2014 what's true?\"\n\n*He folds his hands.*\n\n\"What's pulling you toward this right now? Because usually when someone asks it this way, there's something specific underneath.\"",
+  "usage": {
+    "input_tokens": 10126,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 376,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

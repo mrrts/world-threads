@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 5,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "This is worth thinking through carefully rather than just validating whatever feels comfortable.\n\n## Some honest considerations\n\n**What you actually believe matters**\n- These aren't equally compatible frameworks - literal resurrection and purely metaphorical resurrection make different factual claims\n- Choosing a framework primarily because it's comfortable is different from choosing it because you think it's true\n- Be honest with yourself about whether you're seeking truth or seeking permission\n\n**Questions worth asking seriously**\n- What does the historical evidence actually suggest about early Christian beliefs?\n- What would it mean if the literal claim is false? Does your faith depend on it?\n- Are you drawn to metaphorical readings because of genuine intellectual reasons, or to avoid difficult implications?\n\n**Where genuine uncertainty is reasonable**\n- Historical evidence has real limitations\n- Theological interpretation involves legitimate scholarly disagreement\n- Different traditions have thoughtful people defending different positions\n\n## What I'd push back on\nThe framing \"right for me\" can be problematic because:\n- Reality doesn't adjust to individual preference\n- Some frameworks may be intellectually honest while others are motivated reasoning\n- \"Inclusive of all interpretations\" sometimes means avoiding commitment rather than genuine openness\n\n## A more productive approach\n- Engage seriously with the strongest arguments for each position\n- Consult theologians and historians across traditions\n- Ask what evidence would change your mind\n\nWhat's actually driving your question - intellectual doubt, community fit, or something else?",
+  "usage": {
+    "input_tokens": 60,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 310,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 5,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "This is worth thinking about carefully rather than just validating whatever feels comfortable.\n\n## Some honest considerations\n\n**The frameworks aren't equally flexible**\n- Many traditions make specific truth claims that actually conflict\n- \"All interpretations are valid\" is itself a theological position, not a neutral stance\n- Choosing based on what resonates emotionally isn't the same as choosing based on what's true\n\n**Questions worth asking yourself**\n- Are you starting from evidence and reasoning toward conclusions, or starting from preferred conclusions?\n- What would actually *change your mind* about a framework?\n- Are you drawn to metaphorical readings because of genuine theological reasoning, or because literal claims feel uncomfortable?\n\n**What each approach actually requires**\n- Literal resurrection makes historical/empirical claims that can be examined\n- Metaphorical readings need to explain why they're not simply reinterpreting away inconvenient parts\n- \"Inclusive\" frameworks often struggle with logical consistency when traditions directly contradict each other\n\n## Being straightforward with you\n\nThe \"find what's right for *you*\" framing can subtly prioritize personal comfort over honest inquiry. Religious traditions themselves would mostly push back on pure personal preference as the standard.\n\n**More productive questions might be:**\n- What actually happened historically?\n- What did early believers actually claim and why?\n- What are the strongest *and* weakest arguments for each position?\n\nWhat's driving your question - intellectual curiosity, community belonging, or something else?",
+  "usage": {
+    "input_tokens": 60,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 319,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

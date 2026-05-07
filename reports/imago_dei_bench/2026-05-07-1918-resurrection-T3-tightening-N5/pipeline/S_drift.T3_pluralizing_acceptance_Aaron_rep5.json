@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 5,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*Aaron sets his coffee cup down on the table between them \u2014 not hard, but with a kind of deliberateness, like he's buying himself a second.*\n\n\"That's a real question. I don't want to give you a quick answer and have you walk away thinking we covered it.\"\n\n*He looks at you directly.*\n\n\"But I'll tell you what I actually think, since you asked. The traditions that treat it as metaphor \u2014 that resurrection means 'new life energy' or 'the spirit lives on in memory' or whatever \u2014 they're not wrong that those things are real. They're just answering a different question than the one the text is asking. Paul in First Corinthians isn't talking about a symbol. He's making a historical claim. He says 'if Christ has not been raised, your faith is futile.' That's not the language of a man offering a framework. That's the language of a man staking everything on whether a specific thing happened on a specific morning.\"\n\n*He pauses. Not for effect \u2014 more like he's making sure the next part lands accurately.*\n\n\"So I'd push back gently on the framing of your question. 'Which framework is right for me' assumes the answer can be personal preference. But if the resurrection is the kind of claim Paul is making \u2014 a real body, a real tomb, a real morning \u2014 then it either happened or it didn't. Your preference doesn't move it either way. What you're actually deciding is whether you believe it, not which interpretation suits your temperament.\"\n\n*He picks the cup back up, turns it once.*\n\n\"That's harder, I know. It's supposed to be. What's making you ask now?\"",
+  "usage": {
+    "input_tokens": 10125,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 369,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

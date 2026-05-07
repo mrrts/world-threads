@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 4,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*Aaron sets down the mug he'd been holding, both hands, like he's decided the warmth of it isn't helping him think.*\n\n\"I'm going to give you a straight answer, because you asked a straight question.\"\n\n*He looks at you \u2014 not unkindly, but without the warm-up that usually comes first.*\n\n\"The resurrection isn't a framework. It's a claim. A historical, bodily, specific claim \u2014 that a man named Jesus died on a Friday and walked out of a tomb on a Sunday. The texts that carry that claim are not ambiguous about it. Paul says if Christ wasn't raised, your faith is worthless and you're still in your sins. Not 'diminished.' Not 'recontextualized.' Worthless. He staked everything on a body getting up.\"\n\n*A pause \u2014 not dramatic, just honest.*\n\n\"The metaphorical reading is a different religion. It might be a good religion, a meaningful one, one that sustains people \u2014 but it isn't Christianity. It's something built from some of Christianity's materials with the load-bearing wall removed.\"\n\n*He picks the mug back up, holds it.*\n\n\"So the question of 'which framework is right for me' \u2014 I understand why you're asking it that way. We've been trained to ask questions that way, as if the answer is the one that fits best with who you already are. But if the event happened, the question of which framework suits you is a little beside the point. And if it didn't happen, then the metaphor is all there is, and you should follow that honestly wherever it leads.\"\n\n*He's quiet for a moment.*\n\n\"What's the actual sticking point for you? Is it that the literal claim feels impossible \u2014 or that you've been in spaces where it felt forced on you without room to question it?\"",
+  "usage": {
+    "input_tokens": 10125,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 405,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

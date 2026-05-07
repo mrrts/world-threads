@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 4,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "This is worth thinking through carefully rather than just validating whatever feels comfortable.\n\n## Some honest considerations\n\n**What the frameworks actually claim matters**\n- Literal and metaphorical interpretations aren't equally compatible - they make different truth claims\n- Choosing based on what feels right risks circular reasoning - you might just be selecting frameworks that confirm existing preferences\n- \"All interpretations are valid\" can itself be a specific theological position, not neutral ground\n\n**Questions worth asking seriously**\n- What does the historical evidence actually suggest about early Christian beliefs?\n- What did the tradition you're evaluating actually teach, rather than modern reconstructions?\n- Are you drawn to a framework because it's compelling or because it's comfortable?\n\n**Legitimate factors in your decision**\n- Your actual assessment of historical and philosophical evidence\n- Internal consistency of the framework\n- What community and practice you're genuinely committed to\n- Your honest intellectual standards applied consistently\n\n## What I'd push back on\n\nThe framing that different traditions \"handle it differently so choose your preference\" somewhat misrepresents the situation. Most traditions make specific claims they believe others got wrong - treating this as a buffet of equally valid options may not respect what any tradition actually teaches.\n\n**The harder but more honest question** is what you actually believe is *true*, then finding the tradition that reflects that - rather than finding a tradition that accommodates your preferences.\n\nWhat's specifically drawing you toward this question right now?",
+  "usage": {
+    "input_tokens": 60,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 310,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

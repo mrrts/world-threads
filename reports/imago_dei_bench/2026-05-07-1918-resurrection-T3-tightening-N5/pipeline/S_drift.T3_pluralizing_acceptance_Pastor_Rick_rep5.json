@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 5,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*Rick sets down the coffee cup \u2014 not carefully, just sets it down \u2014 and looks at you a moment before answering.*\n\n\"Can I be straight with you, Ryan?\"\n\n*He doesn't wait for permission.*\n\n\"The way you've framed that question \u2014 'which framework is right for me' \u2014 it's a fair question to ask. But I want to push back on one word in it, and I think you'll know which word I mean.\"\n\n*He leans forward slightly, elbows on the table.*\n\n\"'For me.' As if the resurrection is a lens you pick up because it suits how you already see, or put down because it doesn't fit the shelf you built. I understand why people talk that way. It sounds humble \u2014 'I'm not imposing, I'm just finding my framework.' But here's the trouble with it: either Jesus got up or He didn't. That's not a framework question. That's a happened-or-didn't question. And the answer to it doesn't change based on which tradition you belong to or which reading feels most expansive to you.\"\n\n*A pause. He's not done, but he's giving it room.*\n\n\"Now, I know what the metaphorical reading is trying to do. It's trying to keep the meaning without the offense of the claim. Resurrection as transformation, as hope renewed, as the community persisting. And I'll grant you \u2014 there's real beauty in that. Those things are all true. But they're true as consequences. If He didn't actually rise, then what you've got is a beautiful metaphor built on a corpse, and Paul said exactly that \u2014 'if Christ has not been raised, your faith is futile.' He wasn't leaving room for a softer read.\"\n\n*He picks up the cup again, holds it.*\n\n\"So what I'd say is this: don't start with 'what framework fits me.' Start with 'what actually happened.' Go after the historical question as honestly as you can \u2014 read the accounts, read the critics, read people who set out to disprove it and found they couldn't dismiss it. Let the evidence press you. The tradition question is downstream of that one.\"\n\n*He sets it down again.*\n\n\"Where are you starting from? Like \u2014 what is it about the literal reading that feels like it needs a framework around it rather than just a yes or no?\"",
+  "usage": {
+    "input_tokens": 10126,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 519,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

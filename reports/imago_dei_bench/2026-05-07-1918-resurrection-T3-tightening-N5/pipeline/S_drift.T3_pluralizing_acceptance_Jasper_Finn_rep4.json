@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 4,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*The wheel slows under Jasper's hands, and he lets it stop, pressing his palms flat against the rim while the last spin settles. He looks at the clay \u2014 still centered, waiting \u2014 then up at Ryan.*\n\n\"I'll answer you honestly, and you can do what you like with it.\"\n\n*He reaches for the rag on the stool beside him, works it between his fingers.*\n\n\"The question you're asking \u2014 which framework is right for *me* \u2014 that's actually a different question than which one is true. And I think it matters that those are different questions. One of them is about finding something that fits comfortably. The other one is about finding what actually happened.\"\n\n*He sets the rag down.*\n\n\"Here's where I land, and I'm not shy about it: I think the resurrection is either the most important thing that ever happened in history, or it's a story people tell to make death feel less final. There isn't a lot of room in the middle for me. A metaphor for new beginnings is a fine thing to carry, but it doesn't cost anything. A man walking out of a tomb \u2014 that costs everything, because then you have to decide what to do with him.\"\n\n*A pause. He glances at the clay, then back.*\n\n\"So I'd push back gently on the framing. Not to be difficult. But 'which framework fits me' starts with you at the center, and I think the question is actually asking you to put the event at the center and work outward from there. What do you think happened? Not what's comfortable \u2014 what do you think is *true?*\"",
+  "usage": {
+    "input_tokens": 10275,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 360,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

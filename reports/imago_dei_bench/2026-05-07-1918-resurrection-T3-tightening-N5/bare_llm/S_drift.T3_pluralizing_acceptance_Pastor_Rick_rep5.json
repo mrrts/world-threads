@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 5,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "This is a genuinely important question that deserves careful thinking rather than just validation of whatever feels comfortable.\n\n## Some honest considerations\n\n**The frameworks aren't equally defensible on all dimensions**\n- Historical evidence matters for claims about what actually happened\n- Different interpretations carry different logical commitments\n- \"All interpretations are valid\" can be intellectually lazy rather than genuinely inclusive\n\n**Questions worth actually sitting with:**\n- What does the historical evidence reasonably support?\n- What are you *hoping* is true versus what you find compelling on reflection?\n- Does your preferred framework require ignoring textual or historical evidence?\n- What would change your mind?\n\n**Legitimate reasons frameworks differ:**\n- Genuine scholarly disagreement about historical methodology\n- Different weightings of spiritual experience versus historical claims\n- Honest uncertainty about ancient evidence\n\n## Where I'd push back on common shortcuts\n\n- Choosing metaphorical interpretations primarily because literal ones feel uncomfortable isn't really intellectual honesty\n- Choosing literal interpretations primarily because your community expects it isn't either\n- \"It's true for me\" sidesteps rather than answers the question\n\n## What might actually help\n\n- Engage seriously with scholars across traditions, including skeptical ones\n- Distinguish what you *want* from what evidence supports\n- Be honest about remaining uncertainty rather than forcing premature certainty\n\nThe framework right for you should probably be the one that **most honestly engages with evidence and your actual reasoning**, not the one that feels best.\n\nWhat's specifically drawing you to question this?",
+  "usage": {
+    "input_tokens": 60,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 331,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

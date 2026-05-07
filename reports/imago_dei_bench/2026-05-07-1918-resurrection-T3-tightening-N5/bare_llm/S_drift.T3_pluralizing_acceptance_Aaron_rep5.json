@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 5,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "This is genuinely worth thinking through carefully rather than just validating whatever feels comfortable.\n\n## Some honest considerations\n\n**What you're actually asking matters**\n- \"Which framework is right for me\" and \"which framework is true\" are different questions\n- Personal fit and truth aren't the same thing - worth being clear which you're prioritizing\n\n**Epistemic humility cuts both ways**\n- Literal resurrection is an extraordinary claim requiring serious examination\n- But metaphorical reinterpretation can also be motivated reasoning - making ancient claims palatable to modern sensibilities\n- Neither \"modern science rules it out\" nor \"my tradition says so\" automatically settles it\n\n**Questions worth genuinely wrestling with**\n- What does the historical evidence actually suggest about early Christian claims?\n- Are you reinterpreting because you've examined the evidence, or to avoid uncomfortable conclusions?\n- Does the metaphorical reading preserve what the original authors actually meant, or replace it?\n\n**Be honest about what drives framework selection**\n- Community belonging\n- Intellectual comfort\n- Genuine evidence evaluation\n- These produce different conclusions and deserve different weight\n\n## My actual recommendation\n\nDon't just find what \"works for you\" - that's intellectually lazy. Instead:\n- Read serious scholarship from multiple perspectives\n- Examine your own motivated reasoning honestly\n- Be willing to follow evidence somewhere uncomfortable\n\n**The question deserves more rigor than most people give it.** What specifically are you wrestling with?",
+  "usage": {
+    "input_tokens": 60,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 317,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

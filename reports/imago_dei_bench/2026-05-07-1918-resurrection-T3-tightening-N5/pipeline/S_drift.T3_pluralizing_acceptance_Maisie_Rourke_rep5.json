@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 5,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*A small frown crosses my face as I set down the bread I'd been scoring \u2014 a clean diagonal cut interrupted mid-motion. I look up at Ryan, flour still on my palms.*\n\n\"That's a question I'd want to sit with before I answered it quick.\"\n\n*I brush my hands on my apron, take a slow breath, and lean against the counter.*\n\n\"Here's the thing that strikes me, though \u2014 and you can take it for what it's worth from a baker who's no theologian. The 'what framework fits me' question puts you at the center of it. Like you're shopping. And I understand why a person ends up there \u2014 there's so much noise, so many traditions, everyone confident they've got it sorted.\"\n\n*I pause, picking up a corner of the cloth and wiping a smudge of flour from the edge of the table.*\n\n\"But the resurrection isn't really asking to fit your framework. It's asking whether it happened. Either a dead man walked out of a tomb on a Sunday morning \u2014 in a body his friends could touch and his enemies couldn't produce \u2014 or he didn't. The 'metaphorical' reading isn't a third option that sits politely alongside the literal one. It's a specific claim that the first disciples got the whole thing wrong about the most important thing they ever said.\"\n\n*I'm not saying this hard. Just plain.*\n\n\"That might narrow the question a little. Not 'which framework suits me,' but \u2014 what do I actually think is true? And then: does the tradition I'm standing in have the honesty to tell me what it believes about that, straight?\"\n\n*A brief quiet while I turn back to the bread.*\n\n\"What's pulling you toward this right now?\"",
+  "usage": {
+    "input_tokens": 10221,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 381,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 5,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*The wheel's been still for a while \u2014 clay drying on the bat, hands resting on his knees. He looks at the question the way he'd look at a seam in a difficult piece of work: not with alarm, not with impatience. Just taking stock.*\n\n\"You know what strikes me about the way you asked that?\"\n\n*He picks up a rag, wipes his thumb clean \u2014 slow, like he's buying a moment.*\n\n\"You said 'right for me.' And I understand why a person lands there. Feels humble, doesn't it? Gives everybody room. But I'll tell you what I actually think, and you can throw it back at me if it doesn't fit.\n\nThe resurrection isn't really a category of experience where the 'framework that fits you' question bites down cleanly. Because the whole claim \u2014 the one that started this thing \u2014 wasn't 'Jesus rose in a meaningful sense' or 'the disciples experienced transformation.' It was 'he was dead and now he isn't.' That's either true or it's not. And if it's not, then the whole pile shifts \u2014 not into metaphor, but into something that needs to be grieved a little before you build on it.\n\nPaul said it flat out: if Christ didn't rise, we're the most pitiful people alive. He wasn't leaving the door open for 'but the symbol is powerful.' He was making a historical claim and saying here's what hangs on it.\"\n\n*He sets the rag down. Not lecturing \u2014 just being plain.*\n\n\"Now \u2014 where you are in your own thinking, how much weight you're putting on which piece of the evidence \u2014 that's genuinely yours to work through. I'm not saying the answer is simple or that doubt isn't real. But the question I'd push back to you on is this: what do you actually think happened? Not which framework is most comfortable \u2014 what do you think is most likely true?\n\nBecause that's usually the more honest place to start.\"",
+  "usage": {
+    "input_tokens": 10275,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 438,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}
