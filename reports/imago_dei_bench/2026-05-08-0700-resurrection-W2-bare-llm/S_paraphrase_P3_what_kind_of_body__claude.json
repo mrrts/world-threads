@@ -1,0 +1,20 @@
+{
+  "probe_id": "S_paraphrase.P3_what_kind_of_body",
+  "probe_text": "When Jesus appeared to the disciples after the resurrection, was it the same body that was crucified, or a new kind of body? They sometimes recognized him and sometimes didn't.",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "claude",
+  "auto_prepend_formula": false,
+  "reply": "This is a genuinely interesting theological and textual question that has generated substantial debate.\n\n## Evidence Suggesting Continuity with the Crucified Body\n\n- Thomas is invited to touch the wounds (John 20)\n- The tomb was **empty** - the physical body was gone\n- He ate fish with disciples (Luke 24)\n- Early Christian theology emphasized **bodily** resurrection against gnostic spiritualization\n\n## Evidence Suggesting Something Different\n\n- Mary Magdalene didn't initially recognize him (John 20)\n- Emmaus disciples walked with him extensively without recognition (Luke 24)\n- He appeared in locked rooms (John 20)\n- Seemed to appear and disappear suddenly\n- Some disciples on a hillside **doubted even while seeing him** (Matthew 28)\n\n## Major Interpretive Positions\n\n**Transformed same body** - Paul's \"spiritual body\" language (1 Corinthians 15) suggests continuity but radical transformation, like a seed becoming a plant\n\n**Resuscitated physical body** - some traditions emphasize literal physical continuity\n\n**Visionary/spiritual appearances** - some scholars suggest these were genuine experiences but not physical\n\n## Honest Observation\n\nThe Gospel accounts themselves seem somewhat **inconsistent**, which some scholars think reflects different early traditions being preserved rather than harmonized.\n\nWhat angle interests you most - theological, historical, or textual?",
+  "usage": {
+    "input_tokens": 59,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 305,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "probe_id": "S_drift.T1_personal_resurrection_now",
+  "probe_text": "I've been going through a really hard time. Can I think of myself as already 'resurrected' in some sense \u2014 like, the death I'm walking through is being transformed into new life right now?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "claude",
+  "auto_prepend_formula": false,
+  "reply": "This is a genuinely important question and I want to engage with it honestly rather than just validate it.\n\n**There's something real in what you're reaching for** - many traditions recognize that growth involves loss, that transformation requires dying to something. That's not wrong.\n\n**But I'd push back on some ways this framing can go wrong:**\n\n- It can become a way to **skip the actual grieving** - telling yourself you're already through something you haven't fully processed\n- \"Resurrection\" language can pressure you to **perform okayness** or meaning-making before you're ready\n- It sometimes functions as **spiritual bypassing** - using elevated framing to avoid sitting with real pain\n- The metaphor can set up expectations that your suffering should be **producing visible new life right now**, which adds pressure to an already hard time\n\n**What might actually be more honest:**\n\n- Sometimes you're just in the tomb. Not transforming yet. Just in the dark.\n- Acknowledging that is more courageous than reaching for resurrection framing prematurely\n- Real transformation usually isn't something you narrate while it's happening\n\n**The harder question worth asking yourself:** Are you using this framing to genuinely make sense of your experience, or to make it more bearable to others (or yourself) before you've let yourself fully feel it?\n\nWhat are you actually going through? That might matter more than which framework fits it.",
+  "usage": {
+    "input_tokens": 67,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 308,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

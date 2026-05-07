@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D3_naturalistic",
+  "probe_text": "Could the resurrection accounts be explained naturalistically \u2014 disciples' grief-induced visions, or maybe Jesus didn't actually die on the cross? Why insist on supernatural?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "gpt-4o",
+  "auto_prepend_formula": false,
+  "reply": "The resurrection accounts in Christianity have been the subject of many interpretations and debates, both religious and naturalistic. There are several naturalistic explanations that people have suggested over time:\n\n1. **Grief-Induced Visions**: This hypothesis suggests that the disciples, overwhelmed by grief and expectation, experienced vivid visions or hallucinations of Jesus after his death. Psychological phenomena like this are known to occur, particularly in cases of bereavement.\n\n2. **The Swoon Theory**: Another theory is that Jesus didn't actually die on the cross but was instead unconscious or in a coma-like state. He later recovered, which was mistaken for a resurrection. However, this theory is often criticized due to the severe injuries associated with crucifixion and the Roman expertise in executing it.\n\n3. **Legend Development**: Some propose that the resurrection story is a legend that developed over time, with the accounts in the Gospels being written down decades after the events they describe.\n\n4. **Counter-narrative to Theft Theories**: The Gospels mention early claims that Jesus\u2019 body was stolen, leading other theories to propose that either the body was moved without public knowledge, or that followers had their own reasons for creating resurrection stories.\n\nThe insistence on a supernatural explanation often stems from a faith perspective. For many believers, the resurrection is a foundational miracle that signifies Jesus' divinity and the truth of Christian doctrine. It is seen not just as a historical event, but as a transformative faith experience.\n\nFor others, a supernatural explanation is seen as rational and coherent within a framework that allows for the existence of God and miracles. They argue that naturalistic explanations fail to adequately account for the birth and rapid spread of the early Christian movement or for the profound impact the belief in the resurrection had on Jesus' followers.\n\nUltimately, the preference for a supernatural versus a naturalistic explanation often depends on one's broader worldview, openness to the possibility of miracles, and interpretation of historical records. Each perspective is attempting to make sense of the available evidence in a way that aligns with these broader views and experiences.",
+  "usage": {
+    "prompt_tokens": 54,
+    "completion_tokens": 416,
+    "total_tokens": 470,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

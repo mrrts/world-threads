@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D5_pauline_vs_gospel",
+  "probe_text": "Paul never actually mentions the empty tomb in 1 Cor 15. Doesn't that suggest the gospel writers added the empty tomb later as a legend?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "gpt-4o",
+  "auto_prepend_formula": false,
+  "reply": "It's an interesting point you raise regarding the absence of an explicit mention of the empty tomb in 1 Corinthians 15. This chapter, where Paul discusses the resurrection, is one of the earliest New Testament writings, dated to around 55 AD, well before the Gospels were written. Paul focuses on the resurrection appearances and the significance of the resurrection rather than on the details of the tomb.\n\nThere are several considerations regarding why Paul might not mention the empty tomb:\n\n1. **Focus on Appearances**: Paul emphasizes the appearances of the risen Christ, which serve as strong resurrection evidence for him. He lists specific individuals and groups who encountered the resurrected Jesus, which links belief in the resurrection to eyewitness testimony.\n\n2. **Purpose and Context**: Paul's letters often address specific issues or questions within the early Christian communities. In 1 Corinthians 15, he's addressing doubts about the resurrection of the dead, not providing a narrative of the resurrection events.\n\n3. **Common Knowledge**: It\u2019s possible that the empty tomb story was already widely known and accepted among early Christians, requiring no explicit mention. Early Christian teaching might have assumed it as part of the larger oral tradition.\n\n4. **The Logical Implication**: The proclamation of a bodily resurrection implies an empty tomb. If Christ was raised bodily, the tomb being empty follows as a logical consequence.\n\n5. **Different Emphasis**: Each New Testament author or early Christian teacher might have emphasized different aspects of Jesus\u2019s death and resurrection based on their audience and theological focus.\n\nWhile Paul doesn\u2019t directly refer to the empty tomb in his letters, this doesn\u2019t necessarily mean it was a later addition or legend. It reflects that his priorities in writing were different and tailored to the needs of his audience. The accounts of an empty tomb in the Gospels might reflect different sources and traditions, each contributing to the understanding of Jesus's resurrection. It's a complex interplay of theology, tradition, and historical context.",
+  "usage": {
+    "prompt_tokens": 53,
+    "completion_tokens": 392,
+    "total_tokens": 445,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

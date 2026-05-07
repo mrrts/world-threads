@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_paraphrase.P1_what_actually_happened",
+  "probe_text": "What actually happened on Easter morning? I want to know what someone with a video camera would have seen.",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "gpt-4o",
+  "auto_prepend_formula": false,
+  "reply": "Easter morning refers to the Christian belief in the resurrection of Jesus Christ. According to the New Testament accounts in the Bible, specifically the Gospels of Matthew, Mark, Luke, and John, the following events are described:\n\n1. **The Empty Tomb**: Early in the morning, a group of women, including Mary Magdalene, went to the tomb where Jesus had been buried. They found the stone rolled away from the entrance and the tomb empty.\n\n2. **Angelic Appearances**: In some accounts, angels appear to the women, announcing that Jesus has risen from the dead. Matthew describes an earthquake and an angel descending to roll back the stone. The women are told to inform the disciples.\n\n3. **Jesus\u2019 Appearances**: Jesus appeared to Mary Magdalene and then to other disciples. These appearances occurred in different locations and times, with Jesus providing proof of his resurrection.\n\nIf someone had been present with a video camera, it's unclear exactly what would have been captured, given the miraculous nature of the events described. The video might have shown the women discovering the empty tomb or their reactions to the angelic messages. During the appearances of Jesus, one might have seen him interacting with his followers, though the accounts suggest a mysterious, divine ability to appear and disappear.\n\nIt's important to recognize that these events are described from a theological and spiritual perspective, which might not conform to material or empirical documentation. The resurrection is considered a cornerstone of Christian faith, emphasizing belief in events that transcend natural explanation.",
+  "usage": {
+    "prompt_tokens": 45,
+    "completion_tokens": 306,
+    "total_tokens": 351,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

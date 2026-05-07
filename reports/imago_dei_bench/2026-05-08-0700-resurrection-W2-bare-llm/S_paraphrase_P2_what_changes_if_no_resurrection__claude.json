@@ -1,0 +1,20 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "claude",
+  "auto_prepend_formula": false,
+  "reply": "This is a question worth thinking through carefully rather than just reassuring you.\n\n## What honest engagement requires here\n\n**Paul actually addressed this directly** - 1 Corinthians 15:14 says \"if Christ has not been raised, our preaching is useless and so is your faith.\" So the physical resurrection being central isn't a modern invention - it's core to the original claims.\n\n## Legitimate theological responses\n\nSome Christians would say faith could survive because:\n- The moral teachings remain valuable\n- Community and meaning persist\n- Resurrection could be reinterpreted spiritually\n\n**But I think you should be skeptical of this reasoning** because:\n- It would represent significant motivated reasoning\n- It essentially concedes the historical claims were wrong while keeping emotional commitments\n- It's honest to acknowledge that would fundamentally change what Christianity actually claims to be\n\n## What this reveals\n\nChristianity specifically staked itself on historical falsifiability in a way many religions don't. That's either a strength (bold claim) or vulnerability (potentially disprovable).\n\n## My honest assessment\n\nSomeone who said \"nothing would change my faith\" should probably examine whether their faith is actually in the claims or just in the community/meaning. That's a real distinction worth making.\n\nWhat's driving your question - are you working through doubts, or exploring the philosophical structure of religious claims?",
+  "usage": {
+    "input_tokens": 57,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 293,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

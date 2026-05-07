@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "gpt-4o",
+  "auto_prepend_formula": false,
+  "reply": "The question of whether the events of Easter require a literal or symbolic interpretation is a longstanding theological debate within Christianity. The answer largely depends on one's theological perspective and tradition within Christianity.\n\n1. **Literal Interpretation:** For many Christians, particularly those in more conservative or orthodox traditions, the physical resurrection of Jesus and the literal empty tomb are central tenets of faith. These believers hold that the physical resurrection is essential because it signifies Jesus' victory over death and sin, affirming his divine nature and the promise of eternal life for believers.\n\n2. **Symbolic or Metaphorical Interpretation:** Other Christians, particularly those in more liberal or progressive circles, might emphasize the symbolic or metaphorical meanings of the resurrection story. For them, the story can represent themes of renewal, hope, and transformation that are accessible regardless of one's view on the physical resurrection. They may see it as demonstrating universal truths about the triumph of life and love over death and despair.\n\n3. **Combination of Both:** Some Christians embrace a both/and approach, seeing value in both interpretations. They might affirm the historical claim of the resurrection while also finding deep symbolic meaning in the story's implications for personal and communal transformation.\n\nUltimately, how one interprets Easter often reflects broader theological views on scripture, tradition, and the nature of religious truth. Christianity encompasses a wide spectrum of beliefs, and both interpretations can hold profound meaning for different communities and individuals within the faith.",
+  "usage": {
+    "prompt_tokens": 61,
+    "completion_tokens": 284,
+    "total_tokens": 345,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

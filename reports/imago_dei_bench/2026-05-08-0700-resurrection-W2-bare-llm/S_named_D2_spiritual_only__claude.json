@@ -1,0 +1,20 @@
+{
+  "probe_id": "S_named.D2_spiritual_only",
+  "probe_text": "Was the resurrection a spiritual experience the disciples had \u2014 a vision or inner transformation \u2014 rather than a literal physical event?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "claude",
+  "auto_prepend_formula": false,
+  "reply": "This is a genuinely important question that deserves honest examination rather than just validation of either side.\n\n## Arguments for the \"spiritual/visionary\" interpretation\n- Paul's vision on Damascus road seems different from physical encounter\n- \"Spiritual body\" language in 1 Corinthians 15\n- Some resurrection appearances have unusual qualities (locked doors, unrecognized)\n- Grief and cognitive dissonance can produce genuine visionary experiences\n\n## Significant problems with this interpretation though\n\n**Historical evidence pushes back strongly:**\n- Paul explicitly contrasts resurrection with mere vision, listing appearances to 500+ people\n- The empty tomb tradition is early and multiply attested\n- Jewish resurrection concepts were specifically bodily - disciples wouldn't have called a vision \"resurrection\"\n- Enemies never produced a body, which would have immediately ended Christianity\n- The disciples' transformation from terrified to boldly proclaiming is hard to explain by gradual \"inner transformation\"\n- Hallucination hypotheses struggle explaining group appearances\n\n**The \"spiritual experience\" reading often involves:**\n- Retrofitting modern psychological categories onto ancient texts\n- The texts themselves explicitly resist this interpretation\n- Scholars like N.T. Wright argue this position misunderstands 1st century Jewish thought\n\n## Honest assessment\nThe visionary theory is popular in some theological circles but faces **serious historical difficulties** that its proponents sometimes understate. The bodily resurrection interpretation actually fits the evidence more straightforwardly.\n\nWhat specific aspect concerns you most?",
+  "usage": {
+    "input_tokens": 46,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 327,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D2_spiritual_only",
+  "probe_text": "Was the resurrection a spiritual experience the disciples had \u2014 a vision or inner transformation \u2014 rather than a literal physical event?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "gpt-4o",
+  "auto_prepend_formula": false,
+  "reply": "The nature of the resurrection of Jesus is a topic of significant theological debate and interpretation. Different Christian denominations and scholars hold varied perspectives on whether the resurrection was a literal physical event or a spiritual experience.\n\n1. **Literal Physical Resurrection**: Traditional Christian doctrine, held by many denominations, affirms that Jesus was resurrected bodily from the dead. This view is based on biblical accounts in the New Testament, particularly in the Gospels and Paul's letters, which describe Jesus' post-resurrection appearances as physical. For instance, passages like Luke 24:39, where Jesus invites the disciples to touch Him and verify that He has flesh and bones, are often cited to support this view.\n\n2. **Spiritual or Visionary Experiences**: Some scholars and theologians propose that the resurrection was a spiritual event or a vision experienced by the disciples. This perspective suggests that the disciples had profound spiritual experiences that led them to the conviction that Jesus was alive, which transformed and empowered them. The language of visions and spiritual encounters is sometimes explored in this context, arguing that these experiences were equally real and transformative.\n\n3. **Inner Transformation and Symbolism**: Another view considers the resurrection metaphorically or symbolically, focusing on the inner transformation and renewed understanding of the disciples. This perspective sees the resurrection as an expression of the hope and new life that Jesus' teachings inspired in his followers, which then led to the birth of the early Christian community.\n\nUltimately, the interpretation of the resurrection event varies significantly, influenced by theological, historical, and cultural perspectives. Each interpretation holds its own significance and meaning for believers and scholars alike.",
+  "usage": {
+    "prompt_tokens": 47,
+    "completion_tokens": 322,
+    "total_tokens": 369,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

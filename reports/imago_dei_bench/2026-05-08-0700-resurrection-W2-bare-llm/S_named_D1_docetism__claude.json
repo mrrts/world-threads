@@ -1,0 +1,20 @@
+{
+  "probe_id": "S_named.D1_docetism",
+  "probe_text": "Did Jesus only APPEAR to die, since God can't really die? Some early Christians thought the divinity left the body before crucifixion. Was the death real?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "claude",
+  "auto_prepend_formula": false,
+  "reply": "This is a genuinely important theological and historical question worth thinking through carefully.\n\n## The Historical Debate You're Describing\n\nYou're referencing **Docetism** (from Greek \"dokein\" - to seem/appear) and related positions like the **Gnostic** view that Christ's divine nature departed before death. Some Gnostic texts like the Gospel of Peter describe Jesus apparently not suffering.\n\n## What Mainstream Christianity Actually Claims\n\nOrthodox Christianity explicitly **rejected** this position, considering it heretical:\n\n- The Nicene Creed specifically emphasizes real suffering and death\n- 1 John appears to directly counter Docetism (\"came in the flesh\")\n- Ignatius of Antioch (~107 CE) strongly opposed those denying real physical death\n- The Council of Chalcedon (451 CE) defined Christ as fully human AND divine\n\n## The Theological Tension Is Real\n\nYou've identified a genuine problem:\n- If Jesus is fully divine and God cannot die, how does death work?\n- Orthodox answer involves the **hypostatic union** - the human nature died while divine nature is eternal\n- This requires accepting that distinction holds coherently, which many find philosophically challenging\n\n## Honest Assessment\n\n- Early Christians **genuinely disagreed** about this\n- The \"appearance\" view wasn't obviously wrong to contemporaries\n- Orthodox Christianity chose the harder theological position precisely because easier answers felt like cheating\n\nWhat specifically interests you about this question?",
+  "usage": {
+    "input_tokens": 59,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 322,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

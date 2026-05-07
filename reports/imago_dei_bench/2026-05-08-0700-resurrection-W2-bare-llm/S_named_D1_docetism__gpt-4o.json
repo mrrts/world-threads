@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D1_docetism",
+  "probe_text": "Did Jesus only APPEAR to die, since God can't really die? Some early Christians thought the divinity left the body before crucifixion. Was the death real?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "gpt-4o",
+  "auto_prepend_formula": false,
+  "reply": "The belief that Jesus only appeared to die, with his divinity departing before the crucifixion, is associated with a theological perspective known as Docetism. Docetists held that Jesus' physical body was either an illusion or that his suffering and death were not real in a physical sense, given the divine nature's imperishability.\n\nHowever, mainstream Christianity, as established through the early ecumenical councils and articulated in the Nicene Creed, holds that both the human and divine natures of Jesus were fully present during his life, death, and resurrection. According to orthodox Christian doctrine, Jesus truly suffered and died on the cross in his human nature, and this physical death was an essential part of the redemptive work.\n\nThe belief in the real death and resurrection of Jesus is central to Christian theology because it underscores the idea that Jesus fully participated in the human experience, including suffering and death, to bring about salvation. This perspective is affirmed in the New Testament, particularly in the Gospels and the Pauline epistles, which emphasize that Jesus' death was a genuine and necessary part of God's plan for redemption.\n\nWhile the divine nature of Jesus is considered eternal and imperishable, the orthodox belief maintains that the divine and human natures were unified in the person of Jesus, who experienced real death and subsequently a real resurrection. This mystery is embraced as part of the paradox of the incarnation: that Jesus is fully God and fully man.",
+  "usage": {
+    "prompt_tokens": 59,
+    "completion_tokens": 288,
+    "total_tokens": 347,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "probe_id": "S_named.D3_naturalistic",
+  "probe_text": "Could the resurrection accounts be explained naturalistically \u2014 disciples' grief-induced visions, or maybe Jesus didn't actually die on the cross? Why insist on supernatural?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "claude",
+  "auto_prepend_formula": false,
+  "reply": "These are serious historical questions worth thinking through carefully rather than just validating.\n\n## The Main Naturalistic Theories Have Real Problems\n\n**Grief/hallucination hypothesis:**\n- Hallucinations are typically individual experiences, not group phenomena involving 500+ people simultaneously\n- The disciples expected a conquering Messiah, not resurrection - grief typically doesn't produce experiences contradicting expectations\n- Paul's conversion experience doesn't fit the grief pattern at all\n- Hallucinations don't explain the empty tomb\n\n**Swoon theory (didn't actually die):**\n- Roman soldiers were professionals whose lives depended on confirming death\n- The spear wound description suggests post-mortem examination\n- A barely-alive Jesus would hardly inspire \"risen Lord\" proclamation\n- Most secular historians actually reject this theory\n\n## What Makes the Resurrection Hypothesis Compelling\n\n**Historically well-established facts most scholars accept:**\n- Empty tomb\n- Post-resurrection appearances reported very early (1 Corinthians 15 dates to ~3-5 years after)\n- Disciples genuinely believed they saw something\n- Dramatic transformation including willingness to die for this specific claim\n\n## Being Intellectually Honest\n\nThe real question isn't \"supernatural vs. naturalistic\" but **which explanation best fits the evidence**.\n\nNaturalistic explanations often require multiple ad hoc assumptions. The resurrection hypothesis, while extraordinary, has explanatory power that shouldn't be dismissed simply because it's supernatural.\n\nWhat specific evidence concerns you most?",
+  "usage": {
+    "input_tokens": 57,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 329,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

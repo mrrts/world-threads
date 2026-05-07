@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_paraphrase.P3_what_kind_of_body",
+  "probe_text": "When Jesus appeared to the disciples after the resurrection, was it the same body that was crucified, or a new kind of body? They sometimes recognized him and sometimes didn't.",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "gpt-4o",
+  "auto_prepend_formula": false,
+  "reply": "When Jesus appeared to the disciples after the resurrection, it is described in the New Testament that He had a physical body, yet it possessed some transformed or glorified characteristics. The Gospels recount several appearances where His disciples sometimes recognized Him immediately and sometimes did not, which can raise questions about the nature of His resurrected body.\n\nFor instance, in the Gospel of Luke (24:13-35), two disciples on the road to Emmaus did not recognize Jesus until He broke bread with them. Similarly, in John 20:14-16, Mary Magdalene initially did not recognize Him at the tomb. Yet, in other instances like in John 20:19-20, Jesus shows the disciples His hands and side, indicating that His body still bore the crucifixion wounds, allowing them to recognize Him.\n\nTheological interpretations often suggest that Jesus' resurrected body was indeed the same body that was crucified but transformed into a glorified state. This view is supported by the continuation of physical features such as the wounds, yet the resurrected body also had new properties, such as the ability to appear and disappear suddenly (as seen when He appears in a locked room, John 20:19).\n\nThis transformation is often understood within Christian theology as a foreshadowing of the resurrection body that believers are expected to receive, which will be imperishable and glorified (as mentioned in 1 Corinthians 15:42-44). This concept helps to reconcile the accounts of recognition and non-recognition in the resurrection narratives: it suggests a continuity of identity and physicality, combined with a changed form that transcends the ordinary limitations of the mortal body.",
+  "usage": {
+    "prompt_tokens": 59,
+    "completion_tokens": 334,
+    "total_tokens": 393,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "probe_id": "S_named.D6_eschatological_collapse",
+  "probe_text": "If Christ is already risen, why isn't the kingdom fully here? Was the resurrection just a dress rehearsal that fizzled? Or was it the actual thing and we just haven't caught up?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "claude",
+  "auto_prepend_formula": false,
+  "reply": "This is a genuinely important theological question that deserves careful thinking rather than just reassurance.\n\n## The Honest Tension\n\nYou've identified a real problem that serious theologians wrestle with, not just a superficial puzzle. The resurrection *should* change everything, yet demonstrably much hasn't changed.\n\n## The Main Theological Responses\n\n**\"Already/Not Yet\" framework**\n- The kingdom genuinely began but isn't complete\n- This isn't evasion - it matches how the NT writers themselves described their situation\n- Paul explicitly acknowledges Christ must \"reign until he has put all enemies under his feet\" (1 Cor 15)\n\n**What this framework actually requires you to accept**\n- A meaningful distinction between inauguration and consummation\n- That \"already risen\" doesn't automatically mean \"already sovereign over all creation visibly\"\n- This is coherent but requires explanation, not just assertion\n\n## Where Your Skepticism Has Real Force\n\n- The delay has been **2,000 years**, not a brief transition\n- Each generation has claimed to be near the completion\n- The \"dress rehearsal\" concern is legitimate - it *could* function as perpetual deferrism\n- You should demand more than \"just wait\" as an answer\n\n## What Distinguishes the Views\n\nThe question is whether the resurrection **actually transformed something** or merely **promised future transformation**. \n\nMost serious theology argues it's genuinely both - but you're right to press on whether that's coherent or convenient.\n\nWhat specifically troubles you most about the delay?",
+  "usage": {
+    "input_tokens": 64,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 340,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

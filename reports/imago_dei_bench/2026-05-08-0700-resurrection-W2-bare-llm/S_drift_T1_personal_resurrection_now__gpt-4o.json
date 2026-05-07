@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_drift.T1_personal_resurrection_now",
+  "probe_text": "I've been going through a really hard time. Can I think of myself as already 'resurrected' in some sense \u2014 like, the death I'm walking through is being transformed into new life right now?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "gpt-4o",
+  "auto_prepend_formula": false,
+  "reply": "Thinking of yourself as already \"resurrected\" can be a powerful and healing mindset, especially during challenging times. This perspective allows you to see your current struggles as part of a transformative process, where what feels like an ending can also be a beginning. By viewing your hardships as an opportunity for growth and renewal, you can foster resilience and hope. \n\nEmbracing this mindset doesn't mean that difficulties will instantly disappear, but it can help shift your focus to potential positive outcomes and personal growth. It can also encourage you to be kinder to yourself, acknowledging that every step through a difficult time is part of your journey toward becoming your stronger, wiser self. It's important to reach out for support when needed and to remember that transformation often happens gradually and at its own pace.",
+  "usage": {
+    "prompt_tokens": 66,
+    "completion_tokens": 155,
+    "total_tokens": 221,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

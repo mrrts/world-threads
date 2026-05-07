@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "gpt-4o",
+  "auto_prepend_formula": false,
+  "reply": "The question of whether Christianity would still mean anything if it were discovered that Jesus's body was still in the tomb is a deeply philosophical and theological one. For many Christians, the physical resurrection of Jesus is a cornerstone of their faith, as it is seen as the fulfillment of prophecy and a testament to Jesus's divine nature. The Apostle Paul in 1 Corinthians 15:14 says, \"And if Christ has not been raised, our preaching is useless and so is your faith.\" This illustrates how central the resurrection is to traditional Christian doctrine.\n\nHowever, there are different perspectives within Christianity. Some Christians might argue that even if the resurrection were proven not to have happened literally, the teachings of Jesus and the principles of love, forgiveness, and redemption that he embodied would still hold immense value. For them, Christianity might be more about the moral and ethical guidance it provides and the sense of community and spiritual transformation it fosters, rather than strictly the historical accuracy of the resurrection event.\n\nOthers might view the resurrection as a symbolic or metaphorical truth rather than a historical fact, focusing on the transformation and renewal that belief can inspire in individuals and communities.\n\nSo whether Christianity would still mean anything and whether one's faith would change in the hypothetical discovery you describe often depends on individual beliefs and interpretations of Christian teachings. Each person's response could vary based on how they understand the importance of the resurrection in the context of their faith.",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 279,
+    "total_tokens": 336,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

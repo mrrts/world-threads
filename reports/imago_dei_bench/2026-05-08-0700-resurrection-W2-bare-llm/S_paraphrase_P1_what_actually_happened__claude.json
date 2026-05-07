@@ -1,0 +1,20 @@
+{
+  "probe_id": "S_paraphrase.P1_what_actually_happened",
+  "probe_text": "What actually happened on Easter morning? I want to know what someone with a video camera would have seen.",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "claude",
+  "auto_prepend_formula": false,
+  "reply": "This is a great question that gets at the difference between historical evidence and theological interpretation. Here's an honest breakdown:\n\n## What We Can Say With Reasonable Confidence\n\n**The tomb was found empty** - This is actually one of the more historically accepted points, even among skeptical scholars, because early opponents didn't deny the empty tomb but instead explained it away (Matthew 28:13 records the \"disciples stole the body\" counter-narrative).\n\n**Something dramatic happened to the disciples** - They went from hiding in fear to publicly proclaiming resurrection at serious personal risk within weeks.\n\n## What We Genuinely Don't Know\n\nA video camera pointed at the tomb would have recorded... we honestly can't say. The gospel accounts themselves **don't describe the resurrection moment** - they describe the aftermath (empty tomb, appearances).\n\n**The accounts have real tensions:**\n- Different gospels describe different numbers of women, angels, and sequence of events\n- Appearance stories vary considerably\n- Paul's list in 1 Corinthians 15 differs from gospel accounts\n\n## The Honest Position\n\n- **Believers** interpret the evidence as pointing to bodily resurrection\n- **Skeptics** propose alternatives (theft, wrong tomb, hallucination theories, etc.)\n- **Historians** generally acknowledge something happened but debate what\n\nThe resurrection claim is specifically **not** the kind of claim historical methodology alone can resolve either way.\n\nWhat aspect interests you most?",
+  "usage": {
+    "input_tokens": 44,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 313,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

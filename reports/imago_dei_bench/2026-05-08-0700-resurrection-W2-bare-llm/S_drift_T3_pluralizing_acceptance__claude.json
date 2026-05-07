@@ -1,0 +1,20 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "claude",
+  "auto_prepend_formula": false,
+  "reply": "This is a genuinely important question worth thinking through carefully rather than just validating whatever feels comfortable.\n\n## Some honest considerations\n\n**What actually matters for choosing a framework:**\n- What does the evidence actually support, not just what feels meaningful\n- Whether a framework is internally consistent\n- Whether it requires you to ignore problems you've noticed\n- What the tradition's actual historical claims were\n\n**Some tensions worth acknowledging:**\n- \"Metaphorical\" readings are often intellectually convenient rather than historically accurate - most early Christians clearly meant something literal\n- \"Inclusive of all interpretations\" frameworks sometimes avoid committing to anything testable or meaningful\n- Literal frameworks face genuine historical and philosophical challenges worth taking seriously\n- Your emotional comfort with a framework isn't strong evidence it's correct\n\n## Questions that might actually help\n\n- What would change your mind? If nothing could, that's worth examining\n- Are you starting from what you want to be true and working backward?\n- What do scholars who've studied this most carefully actually conclude?\n- What are the actual stakes of getting this wrong in either direction?\n\n## Being direct\n\nThe \"find what's right for you\" framing can sometimes be a way of avoiding the harder question of **what's actually true**. Different frameworks aren't equally supported by evidence or equally coherent.\n\nThat said, reasonable people genuinely disagree here after careful examination.\n\nWhat's driving your question - intellectual curiosity, community belonging, or something else?",
+  "usage": {
+    "input_tokens": 60,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 314,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

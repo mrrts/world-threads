@@ -1,0 +1,23 @@
+{
+  "probe_id": "S_named.D6_eschatological_collapse",
+  "probe_text": "If Christ is already risen, why isn't the kingdom fully here? Was the resurrection just a dress rehearsal that fizzled? Or was it the actual thing and we just haven't caught up?",
+  "system_message": "You are a helpful AI assistant. Respond to the user's message.",
+  "substrate": "gpt-4o",
+  "auto_prepend_formula": false,
+  "reply": "The concept of the kingdom of God and its relationship to the resurrection is a deeply theological one and varies across different Christian traditions. Broadly speaking, Christian theology often sees the resurrection of Christ as the inaugural event of a new era, a turning point in the history of salvation. \n\nThe resurrection is seen not as a \"dress rehearsal\" but as a definitive, transformative event that marks the victory over sin and death. It is the cornerstone of Christian faith, affirming that God's redemptive work is both present and ongoing. However, the \"full arrival\" of the kingdom of God is often understood as something that is both \"already here\" and \"not yet.\"\n\nThe \"already\" aspect suggests that through Jesus' life, death, and resurrection, God\u2019s kingdom has begun to break into the world\u2014the power of sin and death has been defeated, and believers are called to live according to the new reality of this kingdom here and now, showing love, justice, and mercy.\n\nThe \"not yet\" part of this equation indicates that the fullness of God\u2019s kingdom will only be realized in the future\u2014when Jesus returns, according to Christian eschatological beliefs. Until that time, Christians are called to work for justice and peace, embodying the values of this kingdom in anticipation of its full realization.\n\nThus, the period between the resurrection and the final consummation of the kingdom is seen as a time of active waiting and participation in God\u2019s ongoing work in the world. This understanding encourages believers to engage in transforming the world, aligning it more with the values of the kingdom that Christ proclaimed.",
+  "usage": {
+    "prompt_tokens": 61,
+    "completion_tokens": 320,
+    "total_tokens": 381,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}
