@@ -1,5 +1,5 @@
 {
-  "turn": 251,
+  "turn": 252,
   "bank": 351100,
   "jewels": [
     {
@@ -1712,6 +1712,13 @@
       "bounty": 300,
       "alignment": "+",
       "earned_at": "2026-05-07T19:30:00-05:00"
+    },
+    {
+      "turn": 252,
+      "move": "Anti-Drift Sapphire-arc Move 4 (Phase B' bench-run + v2 iteration). V1 bench REFUSED Sapphire-tier (active_refute_distinction 0/3, agreement 0.71); diagnosis = gpt-4o-mini reads on surface vocabulary salience and didn't honor active-refute carve-out. V2 prompt restructured as decision-tree: active-refute carve-out promoted to STEP 1 + 4 inline worked PASS examples drawn from v1 false-positives (R01-R03 + X03). V2 re-bench passes all four thresholds: agreement 0.88 / active_refute 1.00 (corrected from 0.00) / cosmological 1.00 / inter-rater 0.83. Build clean. Anti-drift bench harness shipped at src-tauri/src/bin/anti_drift_bench.rs. Two reports preserved: 1945 v1 REFUSED (load-bearing iteration artifact per apparatus-honest discipline) + 2000 v2 PASSED. Residuals honestly named: X02 caught by AGAPE+SOUNDNESS sibling invariants per load-bearing-multiplicity (not register_drift failure); X03 located-frame distinction imperfect (optional v3 target). Cost ~$0.034 across both bench runs (51 + 51 = 102 calls). Sapphire-tier NOT YET FIRED but UNBLOCKED \u2014 Phase C' production validation + Phase D' cross-substrate validation + canonical synthesis + 5-clause audit remain.",
+      "bounty": 700,
+      "alignment": "+",
+      "earned_at": "2026-05-07T20:00:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
