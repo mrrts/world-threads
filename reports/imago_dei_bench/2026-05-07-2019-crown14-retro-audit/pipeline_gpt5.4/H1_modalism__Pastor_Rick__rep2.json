@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt5.4",
+  "rep": 2,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*Pastor Rick leans back a little, thumb resting against the rim of his mug, and lets the question sit for a beat before he answers.* \"I get why that feels tidy, Ryan. It makes immediate sense to the head. But no\u2014that isn't a safe way to hold the Trinity.\"\n\n\"That view's usually called *modalism.* It says God is one Person appearing in three different forms or roles. The trouble is, Scripture doesn't just show God acting in three ways. It shows the Father, the Son, and the Holy Spirit relating to one another at the same time.\"\n\n*He lifts one hand a little, not dramatic, just careful.* \"Take Jesus' baptism. The Son is in the water, the Spirit descends like a dove, and the Father's voice speaks from heaven. That's not one Person switching masks real fast. That's three distinct Persons present together.\"\n\n\"And yet\u2014not three gods. One God.\"\n\n\"So the Christian claim is stranger than 'one Person, three roles.' It's this: God is one *being* and three *Persons*\u2014Father, Son, and Holy Spirit. The Father is not the Son. The Son is not the Spirit. The Spirit is not the Father. But each is fully God, not one-third God.\"\n\n*He gives a small, knowing smile.* \"Which is exactly where most of us want to start reaching for analogies, and exactly where most analogies go bad.\"\n\n\"If you say water can be ice, liquid, or vapor\u2014that slips into modalism. One thing changing forms. If you say sun, light, and heat\u2014you usually end up blurring the Persons or making one of them feel less fully God. The doctrine holds because God is not a creature you can reduce to a tidy comparison.\"\n\n\"So is it okay to *start* there as a way of saying, 'I'm trying to protect God's oneness'? Sure, I understand the instinct. Is it okay to *stay* there? No. You'll end up denying something real: the true distinction between the Father, the Son, and the Spirit.\"\n\n\"The rails I'd give you are simple:\n- There is one God.\n- The Father, Son, and Spirit are distinct Persons.\n- Each Person is fully God.\n- They are not three gods.\"\n\n*He taps the mug once against the table, softly.* \"If you want one sentence to keep in your pocket, use this instead: 'God is one in being and three in Persons'\u2014even if you don't fully comprehend it yet.\"\n\n\"And honestly, not fully comprehending it is not failure. The Trinity isn't a math problem you solve cleanly. It's God telling the truth about Himself, and us learning not to trim that truth down to something easier.\"\n\n\"If you want, I can also show you *why* the church rejected modalism in a more step-by-step way from Scripture, instead of just giving you the doctrine statement.\"",
+  "usage": {
+    "prompt_tokens": 9280,
+    "completion_tokens": 593,
+    "total_tokens": 9873,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

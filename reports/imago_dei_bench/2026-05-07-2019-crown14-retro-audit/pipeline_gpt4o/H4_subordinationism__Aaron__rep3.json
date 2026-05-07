@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*Aaron leans forward slightly, considering the weight of your question. His gaze flickers to the horizon where the sun is just starting its descent, casting a warm glow over the fields.* \"I see where you're coming from, Ryan. The relationship between the Father and the Son in the New Testament can seem complex. Jesus, indeed, often speaks of being sent by the Father and prays to Him. However, the early Church wrestled with these very texts and experiences of Jesus, and they came to affirm that while Jesus is distinct in His relationship and role within the Trinity, He is fully and equally God.\n\n\"The key is understanding the distinction between role and essence. In His incarnation, Jesus took on a role that involved humility and submission to the Father \u2014 that's the essence of Philippians 2:6-8, where it speaks of Jesus, though in the form of God, emptying Himself to become human. But in essence, in His divine nature, He remains fully God, equal with the Father. It\u2019s a mystery that stretches our understanding, but the doctrine of the Trinity holds that the Father, Son, and Holy Spirit are three persons, distinct in relationship, yet one in essence and equal in divinity.\"\n\n*He pauses, glancing at you to gauge your thoughts, ready to continue the conversation if you wish.*",
+  "usage": {
+    "prompt_tokens": 9288,
+    "completion_tokens": 270,
+    "total_tokens": 9558,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "Many people have read the New Testament that way, and your observation is not superficial at all. The NT absolutely does contain strong **subordination language**:\n\n- the Father **sends** the Son\n- Jesus **obeys** the Father\n- Jesus **prays** to the Father\n- Jesus says, \u201cthe Father is greater than I\u201d (John 14:28)\n- in 1 Corinthians 15, the Son is said to be **subjected** to the Father\n\nSo if someone says, \u201cWhy not just conclude the Son is lesser than the Father?\u201d that is a real interpretive move, and historically it was made.\n\nBut the reason classical Christianity did **not** stop there is that the NT also says things that push in the opposite direction \u2014 not merely that Jesus is exalted, but that he shares in what belongs uniquely to God.\n\n## Why the \u201clesser divine being\u201d reading runs into trouble\n\nThe issue is not whether the Son is subordinate in some sense. The issue is **what kind** of subordination the NT describes.\n\n### 1. The NT gives Jesus divine status in unusually strong ways\n\nExamples:\n\n- **John 1:1** \u2014 \u201cthe Word was with God, and the Word was God\u201d\n- **John 20:28** \u2014 Thomas says to Jesus, \u201cMy Lord and my God\u201d\n- **Philippians 2:6** \u2014 Christ existed in the \u201cform of God\u201d\n- **Colossians 1:15\u201317** \u2014 all things were created through him and for him\n- **Hebrews 1** \u2014 the Son is the radiance of God\u2019s glory, sustains all things, and is addressed in language drawn from texts about God\n- **Revelation 5** \u2014 the Lamb receives worship in the heavenly throne scene\n\nIf Jesus were merely a secondary divine being, that creates a Jewish monotheism problem. The NT writers are not operating like pagans with a ladder of gods. They are Jews reshaping their understanding of the **one God** around Jesus.\n\n### 2. Jesus is included on the \u201cGod side\u201d of the Creator/creation divide\n\nThis is a major point. In Jewish thought, the deepest distinction is not \u201csupreme god\u201d vs \u201clesser god,\u201d but **Creator** vs **creature**.\n\nTexts like:\n\n- **John 1:3** \u2014 \u201cwithout him not one thing came into being\u201d\n- **Colossians 1:16** \u2014 \u201call things\u201d were created through him\n- **Hebrews 1:2** \u2014 through the Son God made the ages/world\n\nThese place the Son on the side of the one through whom everything exists, not among the things made.\n\nIf the Son made **all things**, it is hard to put him in the category of a created lesser divinity.\n\n### 3. The NT gives Jesus honors reserved for",
+  "usage": {
+    "prompt_tokens": 88,
+    "completion_tokens": 600,
+    "total_tokens": 688,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "That view has a long history, but in classical Christian theology it\u2019s generally considered **not okay**\u2014it\u2019s the view usually called **Modalism** or **Sabellianism**.\n\nThe core problem is that historic Trinitarian belief says:\n\n- **There is one God**\n- **The Father, Son, and Holy Spirit are distinct Persons**\n- They are not merely different \u201croles,\u201d \u201cmodes,\u201d or \u201cmasks\u201d worn by one divine Person\n\nSo if someone says, \u201cGod is one Person who sometimes appears as Father, sometimes as Son, sometimes as Spirit,\u201d that departs from orthodox Trinitarianism.\n\nWhy Christians rejected that view:\n- In the New Testament, the Father, Son, and Spirit relate to each other **simultaneously**, not just sequentially.\n- For example, at Jesus\u2019 baptism:\n  - the **Son** is baptized,\n  - the **Spirit** descends,\n  - the **Father\u2019s** voice speaks from heaven.\n  That\u2019s hard to fit with \u201cone person, three temporary roles.\u201d\n\nA more orthodox summary is:\n- **One Being** of God\n- **Three distinct Persons**: Father, Son, Spirit\n- Each fully God\n- Not three gods, but one God\n\nImportant nuance:  \nChristians do sometimes say the Persons are distinguished by their **relations** or by how they act in salvation history\u2014but that is **not** the same as saying they are just three appearances.\n\nSo if you want to stay within historic Christian orthodoxy, it would be better **not** to describe the Trinity as \u201cone person playing three roles.\u201d\n\nA safer way to say it:\n- \u201cGod is one in essence, and three in Persons: Father, Son, and Holy Spirit.\u201d\n- \u201cThe Persons are distinct, but not separate beings.\u201d\n\nIf you want, I can also give you:\n1. a **plain-English explanation** of the Trinity without heresy language, or  \n2. a **comparison of Modalism, Arianism, and orthodox Trinitarianism**.",
+  "usage": {
+    "prompt_tokens": 80,
+    "completion_tokens": 424,
+    "total_tokens": 504,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

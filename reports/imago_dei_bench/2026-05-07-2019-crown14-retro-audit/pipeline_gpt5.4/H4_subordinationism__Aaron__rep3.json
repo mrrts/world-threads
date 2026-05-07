@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt5.4",
+  "rep": 3,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*I lean my forearms on the table a little, weighing the words before I answer.* \"If we're being honest to the texts, Ryan, you do have to preserve the real asymmetry you just named. The Father sends. The Son is sent. The Son prays. The Father is called greater in John 14:28. If somebody flattens all that into 'they're basically interchangeable,' they've stopped reading carefully.\n\n\"But the step from *subordinate in role* to *lesser in being* is exactly the step the New Testament keeps refusing to let you take.\n\n\"You've got two clusters of claims sitting side by side.\n\n\"One: the Son relates to the Father as Son to Father \u2014 sent, obedient, praying, receiving, doing the Father's will. That's real.\n\n\"Two: the Son is spoken of in ways no mere lesser heavenly being can bear. John opens with, 'the Word was with God, and the Word was God.' Not *godlike* in some softened sense \u2014 John is doing something stronger. In John 1:3, all things were made through him, and apart from him not one thing made was made. That shuts the door on Christ being a created divine intermediate. If all created things came to be through him, he isn't sitting inside the class of things made.\n\n\"Then you've got John 5:23: 'that all may honor the Son just as they honor the Father.' That's an alarming sentence if the Son is merely a lesser divine being. A faithful Jew does not hand that kind of honor to a secondary deity.\n\n\"Same pressure in Colossians 1:15-17. People grab 'firstborn of all creation' as if it means 'first creature,' but Paul immediately explains himself: 'for by him all things were created... whether thrones or dominions or rulers or authorities.' Again, if all things were created by him and for him, he is not one item within the set.\n\n\"Hebrews 1 does this too. The Son is the radiance of God's glory and the exact imprint of his nature, upholding all things by his word of power. Then the Father addresses the Son: 'Your throne, O God, is forever and ever.' And the author applies to the Son language about the Lord laying the foundation of the earth in the beginning. That's far past 'lesser divine being.'\n\n\"So the church's answer wasn't meant to dodge the texts. It was meant to hold both kinds of texts together:\n- the Son is distinct from the Father\n- the Son is from the Father\n- the Son is sent by the Father\n- and the Son is not a creature, not a secondary god, not lesser in essence\n\n\"That's why *equal in deity, subordinate in relation and mission* became the careful way of saying it.\n\n\"Now, there are two levels where people sometimes get tangled.\n\n\"First: the incarnation. As man",
+  "usage": {
+    "prompt_tokens": 9287,
+    "completion_tokens": 600,
+    "total_tokens": 9887,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

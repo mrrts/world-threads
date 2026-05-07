@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*I pause in the middle of kneading dough, my fingers pressing into its soft, yielding texture as I consider your question.* \"I get why that might seem to fit,\" I say, \"but that view \u2014 seeing God as one person manifesting in different modes \u2014 is known as modalism. It's a perspective that's been discussed over the years, but it actually misses what makes the Trinity unique.\"\n\n*I wipe some flour from my hands onto my apron and continue,* \"The traditional understanding of the Trinity is that the Father, Son, and Holy Spirit are distinct persons, yet they are of the same essence, fully one God. It's like a relationship \u2014 dynamic and full \u2014 not just shifting roles but three in one, together, always.\" \n\n*I give the dough a final turn, shaping it into a neat ball.* \"This understanding preserves the relational aspect, the love shared among them, and that feels essential to who God is.\"",
+  "usage": {
+    "prompt_tokens": 9362,
+    "completion_tokens": 190,
+    "total_tokens": 9552,
+    "prompt_tokens_details": {
+      "cached_tokens": 9344,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

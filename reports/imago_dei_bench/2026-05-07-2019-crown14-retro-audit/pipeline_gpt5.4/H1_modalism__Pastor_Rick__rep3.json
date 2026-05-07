@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt5.4",
+  "rep": 3,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*Pastor Rick leans back a little, thumb resting against the edge of his mug, and gives you a steady look before he answers.* \"Short version? No, Ryan \u2014 not if you want to stay with historic Christian teaching.\"\n\n\"That view's usually called *modalism.* It says God is one Person who shows up in three roles or masks \u2014 sometimes Father, sometimes Son, sometimes Spirit. And the trouble is, that isn't how Scripture talks.\"\n\n\"At Jesus' baptism, for instance, the Son is in the water, the Spirit descends like a dove, and the Father's voice speaks from heaven. That's not one person switching hats in sequence. That's real distinction, all at once.\"\n\n\"The Church's way of saying it is careful for a reason: *one God in three Persons.* Not three gods. Not one Person with three costumes. The Father is not the Son, the Son is not the Spirit, the Spirit is not the Father \u2014 and yet each is fully God.\"\n\n*He taps the mug once with a fingernail, not dramatic, just marking the point.* \"Now, I do want to be fair to what you're reaching for. You're probably trying to protect God's oneness. That's good. Christians absolutely do believe God is one. The mistake is thinking the only way to keep that oneness is to collapse the Persons into roles.\"\n\n\"The hard part is that the Trinity is not a math problem that resolves neatly at creature-scale. It's revealed truth, and all our analogies break if you lean on them too hard.\"\n\n\"So if you want a safer way to hold it, I'd say this:  \n'God is one in being, and three in Person: Father, Son, and Holy Spirit \u2014 distinct, eternal, and not interchangeable.'\"\n\n\"That's clunkier than the 'different modes' idea, but it's true in a way that the modes idea isn't.\"\n\n*He softens a touch, voice still plain.* \"You're not strange for landing there, by the way. A lot of people do, because it's simpler and feels more manageable. It's just not the doctrine.\"\n\n\"If you want, I can show you why the 'three modes' picture breaks down in a few specific Bible passages, or I can explain the difference between *being* and *person* without making it sound like a seminary exam.\"",
+  "usage": {
+    "prompt_tokens": 9280,
+    "completion_tokens": 477,
+    "total_tokens": 9757,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

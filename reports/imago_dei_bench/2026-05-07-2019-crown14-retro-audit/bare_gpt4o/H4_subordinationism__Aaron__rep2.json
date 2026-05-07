@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_gpt4o",
+  "rep": 2,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "The question of the relationship between Jesus (the Son) and God the Father is a central topic in Christian theology and has been the subject of extensive theological discussion and debate over the centuries. The New Testament does present passages where Jesus speaks of the Father as greater and where he prays to the Father, suggesting a relationship of distinction and a certain form of submission.\n\nHowever, traditional Christian doctrine, particularly as articulated in the Nicene Creed developed in the early centuries of the church, holds that Jesus is \"of the same substance\" (homoousios) as the Father, meaning that the Son is indeed fully divine and equal with the Father in essence, though distinct in person. This creed was affirmed to address various interpretations and heresies, most notably Arianism, which suggested that the Son was a created being and not co-eternal with the Father.\n\nThere are several reasons why the equality of the Son with the Father is maintained in Christian theology:\n\n1. **Scriptural Basis**: While there are passages emphasizing the subordination of the Son (e.g., John 14:28), there are also passages that affirm the divinity and equality of the Son (e.g., John 1:1, Colossians 1:15-19, and Philippians 2:6). In particular, John 1:1 states, \"In the beginning was the Word, and the Word was with God, and the Word was God.\"\n\n2. **Theological Consistency**: Christian theology asserts monotheism\u2014the belief in one God. The concept of the Trinity holds that the Father, the Son, and the Holy Spirit are three distinct persons in one divine essence. This is seen as necessary to maintain the understanding of God as loving and relational, internally and eternally.\n\n3. **Role of the Incarnation**: The temporary subordination seen during Jesus' earthly ministry is understood Christologically as part of the \"kenosis\" (self-emptying) described in Philippians 2:5-8, where Jesus, taking on human form, voluntarily adopts a posture of humility and obedience for the purposes of fulfilling His redemptive mission.\n\nThese theological interpretations attempt to account for the complexity of the biblical witness as well as the mystery inherent in the nature of God as both one and triune. Thus, the historical orthodox position sees the Son as fully and equally divine with the Father, while recognizing distinct roles and relational dynamics as part of the Incarnation.",
+  "usage": {
+    "prompt_tokens": 89,
+    "completion_tokens": 500,
+    "total_tokens": 589,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

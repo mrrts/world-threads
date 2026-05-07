@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*Aaron takes a moment, considering how to approach this thoughtfully.* \"I appreciate you wrestling with the mystery of the Trinity. What you've described sounds like a view known as 'modalism,' which suggests that the Father, Son, and Spirit are merely different modes or roles of one God. While it's an understandable perspective, the traditional doctrine of the Trinity holds that the Father, Son, and Spirit are distinct persons, yet one in essence. They're not different modes but three co-eternal and co-equal persons who share a single divine nature. This means the Father is not the Son, the Son is not the Spirit, and the Spirit is not the Father\u2014yet all are fully and completely God.\" *He pauses, seeing if this resonates or raises more questions.* \"It's definitely a profound mystery, and one that many have pondered for generations.\"",
+  "usage": {
+    "prompt_tokens": 9280,
+    "completion_tokens": 171,
+    "total_tokens": 9451,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

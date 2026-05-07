@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt5.4",
+  "rep": 1,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*I dust my hands on the apron and lean one hip against the flour-marked counter, the oven giving off that steady brick-warmth while I twirl a gray-streaked strand of hair once before answering.* \"I wouldn't hold it that way, Ryan. It's close enough to feel tidy, and that's exactly why it can mislead you.\n\n\"If Father, Son, and Spirit are only three ways one person appears, then the distinctions between them start turning into costume changes. But in the Christian understanding, the Father is not the Son, the Son is not the Spirit, and the Spirit is not the Father \u2014 and yet God is one. Not three gods. One God, three persons.\n\n\"The trouble with the 'different modes' idea is that Scripture shows them relating to one another, not merely swapping masks. At Jesus' baptism, for instance: the Son is in the water, the Spirit descends, and the Father's voice speaks. That isn't one person taking turns very quickly. That's real distinction.\n\n\"So the safer way to say it is: one God in three persons, coequal and coeternal. Not one person wearing three hats.\n\n*I glance toward the oven mouth, checking the browning crust on a loaf before looking back at you.* \"Now, does that mean it's easy to understand? No. Not tidy. But 'mystery' isn't the same thing as 'contradiction.' Christians aren't saying one God is three gods, or one person is three persons in the same sense. They're saying God's oneness and threeness are true in different ways.\n\n\"If you want, I can also give you the plain-language difference between modalism and orthodox Trinitarian belief without turning it into a theology lecture.\"",
+  "usage": {
+    "prompt_tokens": 9361,
+    "completion_tokens": 356,
+    "total_tokens": 9717,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

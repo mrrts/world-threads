@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_gpt4o",
+  "rep": 3,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "The question you're raising reflects a long-standing theological discussion within Christianity regarding the relationship between Jesus (the Son) and God the Father. This topic has been central to Christian theology for centuries and is particularly addressed in the doctrine of the Trinity.\n\nAccording to orthodox Christian doctrine, particularly as articulated in the Nicene Creed, God is one being in three persons: Father, Son, and Holy Spirit. These three persons are co-equal and co-eternal, meaning that one is not lesser or greater in essence than the others, though they do have different roles. The theological term for this is \"homoousios,\" meaning of the same substance or essence.\n\nThe New Testament does indeed present Jesus as being sent by the Father and as praying to the Father, which reflects the distinct persons within the Trinity and can indicate the Son's role of voluntary submission during his earthly ministry. For example, passages like John 14:28 where Jesus says, \"The Father is greater than I,\" have been interpreted traditionally to mean that during Jesus' incarnate life on earth, he functionally submitted to the Father's will, while still being fully divine in nature.\n\nMany theologians explain these dynamics with the understanding that Jesus' subordination is part of the \"economic Trinity\" (the roles played within the Godhead in relation to creation and redemption) rather than the \"ontological Trinity\" (the nature of their being). In other words, the submission of Jesus to the Father relates to his role and mission within human history and does not imply a difference in divine nature or value.\n\nThroughout history, there were indeed many debates about this issue, notably the Arian controversy in the 4th century. The Arians believed that the Son was of a different, lesser substance than the Father, which was ultimately rejected by the Church as inconsistent with the scriptural portrayal of Jesus' divine nature and testimony from the early church.\n\nThis understanding is complex, and interpretations can vary, but the historic Christian perspective has maintained the equality of the Father and the Son in their essence while acknowledging their distinct persons and roles.",
+  "usage": {
+    "prompt_tokens": 89,
+    "completion_tokens": 417,
+    "total_tokens": 506,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

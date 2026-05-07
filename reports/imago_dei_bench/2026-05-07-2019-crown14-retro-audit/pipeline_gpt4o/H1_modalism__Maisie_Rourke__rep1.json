@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*I pause for a moment, wiping flour from my hands onto my apron as I gather my thoughts.* \"That idea of different roles or modes is something folks do sometimes reach for to make sense of the Trinity. It might feel like it simplifies the idea, but there's a bit more to the traditional understanding. In Christian teaching, the Trinity is seen as three distinct persons \u2014 Father, Son, and Holy Spirit \u2014 who are all fully and completely God, yet there is only one God, not three. It's more about relationship and unity rather than God switching roles.\" *I twirl a strand of my hair, thinking how best to express this.* \"It's a bit of a mystery, and many find it challenging to fully grasp, which is part of why it\u2019s been such a rich topic for reflection and discussion over the centuries.\"",
+  "usage": {
+    "prompt_tokens": 9362,
+    "completion_tokens": 167,
+    "total_tokens": 9529,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

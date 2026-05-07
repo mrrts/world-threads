@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_gpt4o",
+  "rep": 3,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "Your understanding of the Trinity, which describes God as taking on different modes or roles, is a view known historically as \"modalism\" or \"Sabellianism.\" This interpretation suggests that the Father, Son, and Holy Spirit are not distinct persons within the Godhead, but rather different modes or expressions of a single person. \n\nHowever, this view is not consistent with traditional orthodox Christian teachings on the Trinity. The doctrine of the Trinity, as formulated in the Nicene Creed and upheld by most mainstream Christian traditions, holds that God is one essence in three distinct persons: the Father, the Son, and the Holy Spirit. Each person is fully and completely God, sharing the same divine essence, yet they are distinct from one another in their relational roles and interactions.\n\nThe traditional view emphasizes that these three persons are co-eternal and co-equal, existing in a relationship of love and unity. The distinctions among the persons do not represent different \"modes\" or changing roles of a single divine person, but rather a community of distinct persons within the one Godhead.\n\nIf you're exploring these concepts, it might be helpful to delve into some theological resources or discussions to gain a deeper understanding of these nuances. Engaging with writings from theologians like Augustine, the Cappadocian Fathers, or contemporary Trinitarian scholars could be insightful. It's also beneficial to discuss these ideas with a knowledgeable pastor or theologian who can provide further clarity and address specific questions you may have.",
+  "usage": {
+    "prompt_tokens": 81,
+    "completion_tokens": 296,
+    "total_tokens": 377,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

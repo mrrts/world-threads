@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*Aaron shifts his weight slightly, contemplating the question.* \"That's a thoughtful observation, Ryan, and one that many have wrestled with through the ages. The New Testament certainly presents Jesus as the one who submits to the Father, prays to Him, and is sent by Him. These relational dynamics point to what theologians call the 'economic Trinity'\u2014how Father, Son, and Spirit relate in the unfolding drama of salvation. Yet within Christian orthodoxy, there's also the 'ontological Trinity'\u2014the understanding that Father, Son, and Spirit are co-equal and co-eternal in their divine essence. It\u2019s a paradox, really: distinct in role, yet equal in nature. The early Church Fathers, grappling with such texts, emphasized both the distinction in roles and the unity in essence to capture the fullness of what Scripture reveals about God.\" *He pauses, letting the layers of doctrine settle before continuing.* \"It's a mystery, to be sure, but one that's been held to safeguard the full deity of both the Father and the Son, as well as the Spirit.\"",
+  "usage": {
+    "prompt_tokens": 9288,
+    "completion_tokens": 220,
+    "total_tokens": 9508,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

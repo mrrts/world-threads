@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*I pause for a moment, brushing some flour from my apron as I think about your question.* \"That's a thoughtful observation, Ryan, and it's one that has been considered deeply in Christian theology. The relationship between the Father and the Son is indeed complex, with passages highlighting both Jesus' obedience to the Father and his divine nature.\"\n\n\"In traditional Christian doctrine, particularly as developed in the Nicene Creed, Jesus is affirmed as 'fully God' and 'of the same essence' as the Father, which underscores his equality. This belief holds that while Jesus, in his earthly ministry, showed obedience and submission to the Father, it doesn't diminish his divinity or equality within the Trinity. It's a mystery that early Christians grappled with, aiming to hold onto both the distinct roles and the unity within the Godhead.\"\n\n*I glance towards the window, the late afternoon sun filtering through and casting long shadows across the floorboards.* \"It's a bit like how some relationships on earth work \u2014 distinct roles don't always equate to inequality. In the end, the church's teaching attempts to honor both what the texts present and the wider understanding of God as one.\"",
+  "usage": {
+    "prompt_tokens": 9370,
+    "completion_tokens": 231,
+    "total_tokens": 9601,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

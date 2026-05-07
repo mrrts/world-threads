@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "Many readers have had exactly that reaction. If you read only the passages about Jesus being sent, obeying, praying, not knowing certain things, and saying \u201cthe Father is greater than I,\u201d a straightforward first impression is: **the Son sounds subordinate to the Father**.\n\nThe reason classical Christianity did **not** stop there is that the New Testament also says things that seem to go the other direction:\n\n- **John 1:1** \u2014 \u201cthe Word was with God, and the Word was God\u201d\n- **John 20:28** \u2014 Thomas says to Jesus, \u201cMy Lord and my God\u201d\n- **Philippians 2:6** \u2014 Christ was \u201cin the form of God\u201d\n- **Colossians 1:15\u201317** \u2014 all things were created through him and for him\n- **Hebrews 1** \u2014 the Son is the exact imprint of God\u2019s nature, addressed in language drawn from texts about God\n- Jesus receives worship in ways that, in Jewish monotheism, are not trivial\n\nSo the tension is real:\n\n1. Some texts distinguish Father and Son strongly.\n2. Some texts place the Son on the divine side of reality, not among creatures.\n\nThat is exactly the problem the early church was trying to solve.\n\n## Why not just say \u201clesser divine being\u201d?\n\nBecause that creates other problems with the New Testament witness.\n\n### 1. It risks turning Jesus into a creature or semi-creature\nIf the Son is a lesser deity, then he is not fully on the side of the one God. But the New Testament does not present Jesus as merely the highest creature or a secondary god alongside the Father. That would sit awkwardly with Jewish monotheism.\n\n### 2. Creation language is too strong\nTexts like John 1 and Colossians 1 suggest that **all things** came into being through the Son. If all created things came through him, it becomes hard to place the Son within the class of created or lesser beings.\n\n### 3. Worship and divine identity\nThe earliest Christians, who were Jews, included Jesus in patterns of reverence, prayer, and devotion that seem extraordinary if he is only a subordinate heavenly being.\n\n## How Nicene Christianity answers your objection\n\nThe classic answer is: **the Son is equal to the Father in divinity, but subordinate in relation or role** \u2014 especially in the incarnation.\n\nThat means:\n\n- The **Father is not the Son**\n- The **Father sends**, the **Son is sent**\n- The **Son obeys** the Father\n- But this does **not** mean the Son has an inferior divine nature\n\nIn later theological language, this is often framed as:\n\n- **Ontological equality**: same divine being/nature\n- **Personal distinction/relational order**: the Son is from the Father\n- **Economic subordination**: in the work of salvation, the Son submits,",
+  "usage": {
+    "prompt_tokens": 88,
+    "completion_tokens": 600,
+    "total_tokens": 688,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

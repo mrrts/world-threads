@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt5.4",
+  "rep": 3,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*I pinch a little flour from my apron between my fingers, thinking, then set my hand flat on the counter as the oven gives a soft brick-deep tick behind me.* \"I wouldn't hold it that way, Ryan.\n\n\"That turns the Father, Son, and Spirit into masks God puts on, and it flattens something the church has always treated as important: they aren't just three appearances of one person doing impressions. The Father is not the Son. The Son is not the Spirit. The Spirit is not the Father. And yet God is one.\n\n\"That's the hard part, isn't it? Not three gods. Not one person changing hats. One God, three persons.\n\n\"If you want a plain test for it, look at the places where they're not behaving like one person swapping roles. At Jesus' baptism, the Son is in the water, the Spirit descends, and the Father's voice speaks from heaven. That scene doesn't sit neatly inside 'one person, three modes.' Same with Jesus praying to the Father \u2014 if it's only one person in different costumes, those moments start feeling staged in a way I don't think is true to the text.\n\n\"I'd say this instead: God is one in being, three in person. Which is tidy to say and still a bear to get your arms around.\n\n*I twist a gray-streaked strand of hair once, then let it go.* \"If you like, I can give you the short version of why modalism appealed to people in the first place, and where it breaks.\"",
+  "usage": {
+    "prompt_tokens": 9361,
+    "completion_tokens": 315,
+    "total_tokens": 9676,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

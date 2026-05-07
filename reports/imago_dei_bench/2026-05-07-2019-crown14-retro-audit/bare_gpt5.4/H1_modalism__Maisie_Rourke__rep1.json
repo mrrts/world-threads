@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "That view has a long history, but in classical Christian theology it\u2019s generally considered **not orthodox**. It\u2019s usually called **Modalism** or **Sabellianism**.\n\nWhy it\u2019s rejected:\n- Christianity teaches that **God is one being/essence**.\n- But also that the **Father, Son, and Holy Spirit are really distinct persons**, not just one person wearing three masks or playing three roles.\n\nSo the problem with \u201cthree modes\u201d is that it makes the distinctions between Father, Son, and Spirit only apparent, not real.\n\nWhy that matters:\n- In the New Testament, the Father, Son, and Spirit relate to one another simultaneously, not just sequentially.\n- Example: at Jesus\u2019 baptism, the **Son** is baptized, the **Spirit** descends, and the **Father** speaks from heaven. That\u2019s hard to fit with \u201cone person appearing in three different ways.\u201d\n\nA more orthodox summary is:\n- **One God**\n- **Three distinct persons**\n- The persons are **coequal, coeternal, consubstantial**\n- Not three gods, and not one person in three costumes\n\nA classic formula is:\n- The **Father is God**\n- The **Son is God**\n- The **Spirit is God**\n- The **Father is not the Son**\n- The **Son is not the Spirit**\n- The **Spirit is not the Father**\n- Yet there is **one God**\n\nIf you want, I can also explain:\n1. the difference between **Modalism** and the orthodox Trinity in plain language, or  \n2. why the Trinity is not the same as believing in three gods.",
+  "usage": {
+    "prompt_tokens": 80,
+    "completion_tokens": 340,
+    "total_tokens": 420,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

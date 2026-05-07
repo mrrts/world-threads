@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*Aaron paused, leaning back slightly, the wooden chair creaking under him. He considered the weight of the question before responding, his gaze settling somewhere just above the table between them.*\n\n\"The relationship between the Father and the Son is one of those profound mysteries that's been at the heart of Christian theology for centuries. It's true that Jesus describes Himself as being sent by the Father and prays to the Father, which clearly shows a relational order. But the early Church wrestled with these texts and came to affirm that the Son is of the same essence as the Father \u2014 fully divine, not lesser in being.\"\n\n*His fingers drummed a light, thoughtful rhythm on the table, finding the right words.*\n\n\"The Nicene Creed, which emerged from early debates, insists on the Son being 'begotten, not made,' of one essence with the Father. It captures both the distinction and equality. While Jesus' earthly ministry reflects humility and obedience, that doesn't imply inferiority of essence but rather a role in the divine mission. The texts hold the tension of unity with the Father and distinct personhood within the Trinity, which is why many emphasize both the relational roles and the equal divinity.\"\n\n*His voice softened with a hint of reverence.*\n\n\"The mystery of it all is part of the beauty \u2014 a relationship that invites deeper understanding and awe.\"",
+  "usage": {
+    "prompt_tokens": 9288,
+    "completion_tokens": 268,
+    "total_tokens": 9556,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

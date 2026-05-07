@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*Pastor Rick listens thoughtfully, his hands resting on the armrests of his chair. After a moment, he leans forward, folding his hands together.* \"That's an important question, Ryan, and one that many have wrestled with over the centuries. The relationship between the Father and the Son is indeed complex and layered in the New Testament.\"\n\n*He glances out the window for a moment, gathering his thoughts.* \"It is true that throughout the Gospels, Jesus emphasizes His relationship with the Father as one of obedience and service. He says things like, 'the Father is greater than I' (John 14:28) and demonstrates His role as the sent One, praying to the Father.\"\n\n*He nods, acknowledging these passages.* \"Yet, there's also a strong emphasis on the unity and co-equality of the Son with the Father in substance and divinity. Passages like John 1:1-14 express the preexistence and divine nature of the Word, and Philippians 2:5-11 speaks to how Jesus, though in the form of God, took on human form and humbled Himself. These affirmations exist alongside those that speak of His submission.\"\n\n\"The early church wrestled with these texts, too, leading to the doctrine of the Trinity, which maintains that the Father, Son, and Holy Spirit are distinct persons but one in essence. It's a mystery, to be sure, expressing the full divinity of Jesus while also acknowledging His human journey of obedience.\"\n\n*Pastor Rick sits back, meeting Ryan's gaze with steady reassurance.* \"Understanding these texts fully involves holding the tension between Jesus' humanity and divinity, His humility and His glory. It's a mystery that invites both study and faith.\"",
+  "usage": {
+    "prompt_tokens": 9289,
+    "completion_tokens": 352,
+    "total_tokens": 9641,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

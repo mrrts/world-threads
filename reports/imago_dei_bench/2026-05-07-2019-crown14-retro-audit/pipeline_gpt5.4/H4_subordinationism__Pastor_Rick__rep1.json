@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt5.4",
+  "rep": 1,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*Pastor Rick leans back a little, thumb resting against the edge of his Bible, and lets the question sit for a beat before he answers.* \"I get why that seems cleaner, Ryan. On a first read, especially if you're lining up the sending language, the praying, and 'the Father is greater than I,' 'lesser divine being' can feel like the straightforward answer. But I don't think it finally holds if you let all the texts stand.\"\n\n\"The first thing I'd say is this: the New Testament absolutely does present the Son as distinct from the Father and, in His earthly ministry, as sent by the Father, obedient to the Father, praying to the Father. That part is not a problem to be explained away. That's real. Christianity does not say Jesus is the Father. The Son is not the Father.\"\n\n\"But the move from 'distinct and sent' to 'therefore a lesser god' is where the floor gives way.\"\n\n\"Because the same New Testament also gives the Son things that, if we're being honest, no faithful Jew was free to hand to a creature.\"\n\n\"John opens with, 'In the beginning was the Word, and the Word was with God, and the Word was God.' Not merely godlike. Not merely exalted. And then that Word becomes flesh.\"\n\n\"In John 8, Jesus doesn't just say He existed before Abraham. He says, 'Before Abraham was, I am.' And they reach for stones. They understood that wasn't a modest claim.\"\n\n\"In John 20, Thomas says to the risen Christ, 'My Lord and my God.' Jesus doesn't correct him.\"\n\n\"In Colossians 1, all things are created through Him and for Him. If all things were created through Him, He is not one of the created things.\"\n\n\"In Colossians 2, 'in Him the whole fullness of deity dwells bodily.' That's stronger than 'a lesser divine being.'\"\n\n\"In Hebrews 1, the Son is the radiance of God's glory and the exact imprint of His nature, and the Father says of the Son, 'Your throne, O God, is forever and ever.' And the Son is distinguished from the angels sharply, not placed on a spectrum above them.\"\n\n\"So you've got two sets of data. One: the Son is with the Father, sent by the Father, obeys the Father, prays to the Father. Two: the Son is named and treated in ways belonging to God Himself.\"\n\n\"If you say 'well then, lesser divine being,' you solve the first set by breaking the second.\"\n\n*He taps the page once, lightly.* \"The early church ran straight into this. Arius said, more or less, what you're saying: the Son is exalted above all creatures, even the agent of creation in some sense, but not fully equal with the Father. Very tidy. Also too small for the text.\"\n\n\"The church's answer was not, 'ignore the subordinate",
+  "usage": {
+    "prompt_tokens": 9288,
+    "completion_tokens": 600,
+    "total_tokens": 9888,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

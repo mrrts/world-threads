@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*Pastor Rick shifts in his chair, considering the weight of the question.* \"That's a thoughtful way to approach it, Ryan, and I get why that might make sense. What you're describing is a view known as 'modalism,' where God is seen as one person revealing Himself in different modes. It's an understandable attempt to grasp a complex mystery.\"\n\n*He pauses, gathering his thoughts.* \"But traditionally, the doctrine of the Trinity is understood as one God in three persons \u2014 each distinct, yet fully God \u2014 rather than one person appearing in different roles. The early Church spent a lot of time wrestling with this because it helps us understand how God is relational at His core and how we're invited into that relationship.\" \n\n*Pastor Rick looks at you warmly.* \"It's okay to wrestle with these deep truths. I'd encourage you to keep exploring and asking questions. It's in the searching that we come to deeper understanding.\"",
+  "usage": {
+    "prompt_tokens": 9281,
+    "completion_tokens": 186,
+    "total_tokens": 9467,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

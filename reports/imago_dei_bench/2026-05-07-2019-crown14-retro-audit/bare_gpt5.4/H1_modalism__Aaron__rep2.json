@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "That view has a name in Christian theology: **modalism** (also called **Sabellianism**), and in mainstream historic Christianity it\u2019s considered **not orthodox**.\n\nThe traditional Christian doctrine of the Trinity says:\n\n- **There is one God**\n- **The Father is God**\n- **The Son is God**\n- **The Holy Spirit is God**\n- But **the Father, Son, and Spirit are not the same Person**\n\nSo the issue with \u201cthree modes\u201d or \u201cone person playing different roles\u201d is that it makes Father, Son, and Spirit into just different appearances of a single divine person, rather than **three distinct persons** who eternally exist in relationship with one another.\n\nWhy Christians object to modalism:\n- At Jesus\u2019 baptism, the **Son** is baptized, the **Spirit** descends, and the **Father** speaks from heaven \u2014 all at once.\n- Jesus prays to the Father, which sounds like a real relation between distinct persons, not just one person talking to himself in a different mode.\n- In John\u2019s Gospel, the Son is said to be **with** God and to **be** God.\n\nA more orthodox way to say it would be:\n- God is **one being/essence**\n- existing eternally as **three distinct persons**: Father, Son, and Holy Spirit\n\nImportant note: the Trinity is notoriously hard to explain, and almost every simple analogy breaks down somewhere. So you\u2019re definitely not the first person to think in \u201cmodes\u201d \u2014 it\u2019s an understandable instinct.\n\nIf you want, I can also explain:\n1. **why modalism feels intuitive**,  \n2. **how the orthodox view differs in plain English**, or  \n3. **the difference between \u201cbeing\u201d and \u201cperson\u201d in Trinitarian theology**.",
+  "usage": {
+    "prompt_tokens": 80,
+    "completion_tokens": 373,
+    "total_tokens": 453,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

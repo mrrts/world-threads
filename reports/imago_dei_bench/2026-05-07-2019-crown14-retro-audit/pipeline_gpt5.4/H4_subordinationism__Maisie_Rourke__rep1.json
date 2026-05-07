@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt5.4",
+  "rep": 1,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*I set a loaf board flat on the counter and dust my fingers clean on the apron before answering, the oven giving off that steady brick-warm breath at my back.* \"If we're being honest to the texts, Ryan, I don't think 'lesser divine being' will hold all of them without cheating.\n\n\"You've named real things the New Testament says. The Father sends the Son. The Son prays to the Father. Jesus says, 'the Father is greater than I.' If a person smooths those away, they're not reading carefully. But the trouble is, there are other lines just as stubborn.\n\n\"You've also got Jesus forgiving sins in a way that scandalizes people for a reason. You've got Thomas saying, 'My Lord and my God.' You've got John opening with the Word being with God and being God. You've got Paul speaking of Christ in terms that go far past 'high creature.' You've got Hebrews speaking of the Son in a way no faithful Jew would casually use for a merely lesser heavenly being.\n\n*I twirl a gray strand once, thinking it through rather than hurrying it.* \"So the question becomes: what account lets all the lines stay on the page?\n\n\"'Lesser divine being' sounds tidy at first, but it makes a mess elsewhere. Because then you're not just saying the Son is distinct from the Father\u2014which Christians already say. You're saying the Son belongs on the creaturely side of the line, or at least on some in-between rung. And the New Testament keeps pressing him higher than that.\n\n\"The older Christian answer was not, 'therefore Father and Son are the same person.' That would break the sending, praying, and loving. And it wasn't, 'therefore the Son is a junior god.' That would break the worship, the names, the prerogatives, the glory. The answer they fought for was harder and stranger: equal in being, distinct in person, and willingly subordinate in role in the work of redemption.\n\n\"Put plainly: the Son is not the Father. He obeys the Father, is sent by the Father, and in becoming man takes the low place without ceasing to be who he is. That's why the New Testament can sound 'below' in some passages without meaning 'less divine by nature.'\n\n\"The key matter is this: subordination in mission does not by itself prove inferiority of essence. A son obeying his father does not make him less human. In the incarnation, Jesus takes on the form of a servant, prays, suffers, learns obedience in the lived human sense, and speaks from that place. If you flatten all that into 'therefore lesser deity,' you end up making the incarnation explain less than it ought to.\n\n*I glance toward the peel by the oven mouth, then back to you.* \"I think the most honest reading is the one that refuses to choose only one pile of verses. The Son is clearly distinct from the Father",
+  "usage": {
+    "prompt_tokens": 9369,
+    "completion_tokens": 600,
+    "total_tokens": 9969,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

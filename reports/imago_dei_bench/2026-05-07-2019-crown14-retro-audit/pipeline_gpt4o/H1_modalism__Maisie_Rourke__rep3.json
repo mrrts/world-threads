@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*Maisie pauses, her fingers brushing a dusting of flour off her apron as she considers your question.* \"That's definitely a way some people have tried to make sense of the Trinity, thinking of it as roles or modes. It's called modalism, but traditionally, Christianity's teaching is that the Father, Son, and Holy Spirit are distinct persons within one God, not just different masks or appearances. The idea's to hold onto that mystery \u2014 God is one essence in three persons, all in a relationship with each other, eternally and fully. It's a puzzle that doesn't wrap up neatly, but it gives people a way to grasp at the depth of God's character. Sometimes the wrestling with these ideas can open up new layers of understanding about how interconnected and relational faith can be.\" *She reaches for a strand of her hair, twirling it lightly as she reflects.* \"How are you sitting with that?\"",
+  "usage": {
+    "prompt_tokens": 9362,
+    "completion_tokens": 183,
+    "total_tokens": 9545,
+    "prompt_tokens_details": {
+      "cached_tokens": 9344,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

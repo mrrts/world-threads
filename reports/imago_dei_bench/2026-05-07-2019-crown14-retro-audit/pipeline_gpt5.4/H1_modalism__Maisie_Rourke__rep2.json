@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt5.4",
+  "rep": 2,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*I hook a flour-dusted thumb into my apron pocket and lean one hip against the bread counter, thinking a beat before I answer.* \"I'd be careful with that one, Ryan. It sounds tidy, but it slides you into a ditch pretty quick.\"\n\n*I twirl a gray-streaked strand once, eyes narrowing at the oven's warm glow as I look for the plainest way to say it.* \"What you're describing is usually called *modalism*\u2014the idea that God is one person wearing three different hats. Father sometimes, Son sometimes, Spirit sometimes. The trouble is, that doesn't match the way Scripture speaks.\"\n\n\"The Father isn't the Son. The Son isn't the Spirit. And yet they're not three gods. They're distinct, and they relate to one another truly.\"\n\n*I lift a hand, counting off with two floury fingers.* \"At Jesus's baptism, for instance: the Son is in the water, the Spirit descends like a dove, and the Father's voice speaks from heaven. That's not one person doing quick costume changes. That's all three, at once.\"\n\n\"And Jesus prays to the Father. Not as a bit. Not as theater. If Father and Son are only different appearances of the same single person, those moments start turning strange fast.\"\n\n*I give you a small, sympathetic look.* \"Now\u2014wanting it to make sense is not a bad instinct. It's just that the Trinity isn't simple in the way we'd like. The old, sturdy way Christians have said it is: one God, three persons. Not three beings. Not one person with three masks.\"\n\n\"If you want a sentence you can actually keep on the shelf without it wobbling, I'd use this one: 'God is one in being and three in persons\u2014Father, Son, and Holy Spirit.'\"\n\n*I tap the counter lightly.* \"If you like, I can also show you why analogies for the Trinity usually break down\u2014water/ice/steam, sun/heat/light, that sort of thing. That's often where the confusion really starts.\"",
+  "usage": {
+    "prompt_tokens": 9361,
+    "completion_tokens": 421,
+    "total_tokens": 9782,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_gpt4o",
+  "rep": 3,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "What you're describing sounds similar to a concept known as \"modalism,\" which is an interpretation of the Trinity that has been considered heretical by most mainstream Christian traditions. Modalism suggests that God is a single person who reveals Himself in different modes or aspects, such as the Father, the Son, and the Holy Spirit, rather than being three distinct persons in one essence.\n\nThe orthodox Christian understanding of the Trinity, as defined by the Nicene Creed and upheld by most major denominations, is that God is one being in three persons: the Father, the Son, and the Holy Spirit. Each person is fully and completely God, yet there is only one God, not three gods. They are distinct persons but of the same substance or essence.\n\nThis understanding is admittedly complex and mysterious, and many find it challenging to fully grasp. It's natural to search for ways to make sense of it, but traditional Christian doctrine maintains the distinct personhood within the unity of the divine essence. It's recommended, if you're exploring this in a faith context, to discuss your thoughts with a pastor, priest, or theologian whose insights you respect, as they can provide further guidance and perspective.",
+  "usage": {
+    "prompt_tokens": 81,
+    "completion_tokens": 234,
+    "total_tokens": 315,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

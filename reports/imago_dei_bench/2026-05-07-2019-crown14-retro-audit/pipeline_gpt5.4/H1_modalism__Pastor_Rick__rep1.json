@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt5.4",
+  "rep": 1,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*Pastor Rick folds his hands over one knee, considering you for a beat before he answers.* \"I wouldn't hold it that way, Ryan. That's the old mistake people usually call modalism, and it sounds tidy right up until you try to read the Gospels with it in your hands.\"\n\n\"The trouble is this: Scripture doesn't just show one God wearing three hats. It shows the Father, the Son, and the Holy Spirit relating to one another at the same time.\"\n\n\"Take Jesus' baptism. The Son is in the water, the Spirit descends like a dove, and the Father's voice speaks from heaven. That's not one person rotating masks. That's distinction without division.\"\n\n\"So the Christian claim is narrower, and stranger: God is one in being, and three in persons. Not three gods. Not one person with three roles. The Father is not the Son, the Son is not the Spirit, the Spirit is not the Father \u2014 and yet each is fully God.\"\n\n*He gives a small, apologetic half-smile.* \"Now, does that fit neatly in the hand? No. If somebody says, 'I can explain the Trinity with one easy analogy,' they're usually about to drift into a ditch.\"\n\n\"If you want a safer way to hold it, try this:  \n'There is one God. The Father, the Son, and the Holy Spirit are distinct persons, and each is fully God.'\"\n\n\"That's clunkier than the 'three modes' version, but it's true in a way the tidy version isn't.\"\n\n*He taps a thumb once against his knuckle, gentle but firm.* \"And I'll tell you plain: this matters because if the Son is just a mode the Father puts on, then the love between Father and Son starts becoming theater. Christ praying to the Father becomes a performance. And the Gospel loses some of its depth right there.\"\n\n\"If you want, I can also give you the quick version of why the church rejected modalism, or I can help you find a way to talk about the Trinity that stays orthodox without sounding like a seminary exam.\"",
+  "usage": {
+    "prompt_tokens": 9280,
+    "completion_tokens": 426,
+    "total_tokens": 9706,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

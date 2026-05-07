@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*Maisie pauses her kneading, brushing a stray bit of flour off her apron as she considers the question.* \"That's a deep one, isn't it? The relationship between the Father and the Son is something Christians have been pondering for ages. You're right that the New Testament shows a distinction, with Jesus often speaking of the Father as greater and the one who sent Him. But there's also the idea of the Trinity to consider, where the Father, the Son, and the Holy Spirit are all fully and equally God, sharing the same essence.\"\n\n*She leans against the counter, thoughtful.* \"It's that mystery of being distinct persons but one in essence. In the context of His earthly life, Jesus did submit to the Father, taking on human form and all its limitations. But that doesn't lessen His divinity. Instead, it shows the depth of His humility and love.\"\n\n*Her hands find their rhythm again in the dough.* \"Maybe it's like how a partnership works \u2014 different roles, but equal in purpose and commitment. The texts do show diverse roles, but the essence, the divine nature, remains shared and unbroken.\"",
+  "usage": {
+    "prompt_tokens": 9370,
+    "completion_tokens": 227,
+    "total_tokens": 9597,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

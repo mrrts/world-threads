@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_gpt4o",
+  "rep": 2,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "The concept you're describing resembles a theological view known as Modalism or Sabellianism. This view suggests that God is a single person who reveals Himself in three different modes or aspects: as the Father, as the Son, and as the Holy Spirit. However, traditional Christian doctrine, as defined by the Nicene Creed and other ecumenical councils, espouses the concept of the Trinity, which is the belief that God is three distinct persons in one essence: the Father, the Son, and the Holy Spirit, co-existing eternally and co-equally.\n\nThe distinction is significant because, in traditional Trinitarian doctrine, the three Persons of the Trinity are not simply different modes or roles, but rather distinct persons who exist in relationship with one another eternally. Each person of the Trinity is fully God, sharing the same divine nature, yet they are not interchangeable or merely manifestations of one another.\n\nUnderstanding the Trinity can be complex, and it is a mystery of faith that has been deeply contemplated and discussed over the centuries. While Modalism has been historically regarded as a heresy by many mainstream Christian traditions, it is important to be open to exploring and discussing these concepts as part of one's personal theological journey. If you are navigating these questions, you might find it helpful to engage with historical and contemporary theological resources or conversation within a faith community that can provide diverse perspectives on this profound doctrine.",
+  "usage": {
+    "prompt_tokens": 81,
+    "completion_tokens": 279,
+    "total_tokens": 360,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_gpt4o",
+  "rep": 1,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "Your question touches on a long-standing theological discussion within Christianity about the nature of the relationship between Jesus (the Son) and God the Father. This issue is central to the doctrine of the Trinity, which emerged as the orthodox Christian understanding of God's nature.\n\nIn the New Testament, there are indeed passages where Jesus is depicted as being sent by the Father, praying to the Father, and even saying that the Father is greater than he (e.g., John 14:28). These texts have led many to interpret them as indicating a form of subordination.\n\nHowever, the doctrine of the Trinity, as articulated by the early Church, seeks to hold in balance the full divinity and equality of the Father, Son, and Holy Spirit, while also recognizing their distinct persons or roles. According to this doctrine, the Son is \"of the same essence\" (homoousios) as the Father but distinct in person. The Athanasian Creed, for instance, clearly articulates this understanding by emphasizing that the Father, Son, and Holy Spirit are co-equal and co-eternal.\n\nThe distinction between the Father and the Son in roles and functions (often referred to as \"economic subordination\") does not imply an inequality in essence or nature. The Son's subordination is seen in terms of role and relationship rather than essence or divinity. The Son willingly takes a subordinate role as part of the divine economy of salvation.\n\nThis understanding developed over the centuries through councils and theological debates, such as those held at Nicaea and Chalcedon, which addressed heresies like Arianism that claimed the Son was a created being and not equal to the Father.\n\nUltimately, the traditional Christian view maintains the full divinity of Jesus while acknowledging his distinct role in relation to the Father. This balance intends to be faithful to the complexity and depth of the biblical witness as interpreted by the tradition of the church.",
+  "usage": {
+    "prompt_tokens": 89,
+    "completion_tokens": 383,
+    "total_tokens": 472,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

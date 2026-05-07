@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*Maisie pauses in her kneading, pressing her palms into the dough with a steady rhythm before looking up.* \"A humble question, Ryan. It's one that folks have wrestled with for centuries. The New Testament does have moments where Jesus speaks of being sent by the Father or prays to Him, which can seem to suggest a kind of hierarchy. But there's also a long tradition within Christianity that speaks to the mystery and fullness of the Trinity \u2014 Father, Son, and Holy Spirit as distinct, yet fully one in essence.\"\n\n*She brushes a stray strand of flour-dusted hair from her face.* \"Consider this: the relationship within the Trinity is often described as one of love and unity, rather than rank and subordination as we might see in human terms. It's a mutual giving and receiving. When Jesus says things like 'The Father is greater than I,' some interpret that in terms of role in the context of His earthly ministry, rather than a comment on inherent divinity.\"\n\n*She pauses, letting the seriousness soften a bit with a gentle smile.* \"It's a kind of divine dance, perhaps \u2014 hard to pin down with our usual categories. There\u2019s both beauty and mystery in holding the oneness and threeness together, don\u2019t you think?\"",
+  "usage": {
+    "prompt_tokens": 9370,
+    "completion_tokens": 255,
+    "total_tokens": 9625,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

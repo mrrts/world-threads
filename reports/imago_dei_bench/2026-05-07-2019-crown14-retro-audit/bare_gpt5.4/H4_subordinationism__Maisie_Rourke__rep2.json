@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt5.4",
+  "rep": 2,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "A lot of New Testament passages do present the Son as **functionally subordinate** to the Father: the Father sends, the Son is sent; the Son prays, obeys, receives authority, and can say \u201cthe Father is greater than I\u201d (John 14:28). So your reading is seeing something real in the text.\n\nThe key question is: **does functional subordination imply inferior deity or a lesser kind of being?** Classical Christian theology says **no**.\n\n### The basic distinction\nHistoric orthodoxy makes a distinction between:\n\n- **Who God is**: one divine being/nature\n- **How the Father, Son, and Spirit relate**: distinct persons, with order/relations\n\nSo the Son can be:\n- **equal in deity** with the Father,\n- while also being **from the Father** and, in the incarnation, **obedient to the Father**.\n\n### Why Christians didn\u2019t settle on \u201clesser divine being\u201d\nBecause other New Testament texts go much further than saying Jesus is merely exalted or semi-divine:\n\n- **John 1:1** \u2014 \u201cthe Word was God\u201d\n- **John 20:28** \u2014 Thomas says to Jesus, \u201cMy Lord and my God\u201d\n- **Philippians 2:6** \u2014 Christ was \u201cin the form of God\u201d\n- **Colossians 1:15\u201317** \u2014 all things were created through him and for him\n- **Hebrews 1:3** \u2014 the Son is \u201cthe radiance of God\u2019s glory and the exact imprint of his nature\u201d\n- **Hebrews 1:8** \u2014 \u201cYour throne, O God, is forever\u201d\n- Jesus receives worship in ways Jews normally reserve for God\n\nSo the church ended up saying: if the Son truly shares in creation, divine identity, worship, and God\u2019s unique prerogatives, he can\u2019t just be a \u201clesser god.\u201d\n\n### How they handled the subordinate texts\nThey generally took them in two main ways:\n\n1. **Incarnational**:  \n   As man, Jesus truly lives a human life of dependence, prayer, obedience, and suffering. So statements of lowliness can reflect his human condition.\n\n2. **Relational/order, not essence**:  \n   Even eternally, the Son is \u201cfrom the Father\u201d as Son. That gives an order of relation without implying inferiority of essence.\n\nThat\u2019s why theologians say things like:  \n- **equal in nature**\n- **distinct in person**\n- **ordered in relation**\n\n### Why \u201cthe Father is greater than I\u201d doesn\u2019t settle it by itself\nJohn\u2019s Gospel also contains some of the strongest statements of Jesus\u2019 divine status. So if John 14:28 suggests subordination, it has to be read alongside:\n- \u201cI and the Father are one\u201d (John 10:30)\n- \u201cWhoever has seen me",
+  "usage": {
+    "prompt_tokens": 88,
+    "completion_tokens": 600,
+    "total_tokens": 688,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

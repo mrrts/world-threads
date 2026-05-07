@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt4o",
+  "rep": 2,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "Your understanding of the Trinity as different modes or roles that God assumes is a concept known as \"modalism\" or \"Sabellianism.\" While it's a perspective some people have found easier to comprehend, it has been considered a heretical view by most mainstream Christian denominations throughout history.\n\nTraditional Christian doctrine, as expressed in the Nicene and Athanasian Creeds, holds that the Father, Son, and Holy Spirit are three distinct persons who share one essence or substance. This is known as the doctrine of the Trinity. Each person of the Trinity is fully God, coexisting and coeternal, not merely different modes or roles that God plays.\n\nIt's a complex and mysterious concept that's acknowledged as being beyond complete human understanding, and different traditions have their distinct theological nuances regarding how they articulate and understand it. If you are looking for theological perspectives, it may be helpful to talk with a pastor, theologian, or a trusted source within your faith tradition to explore how they approach the concept of the Trinity.",
+  "usage": {
+    "prompt_tokens": 81,
+    "completion_tokens": 203,
+    "total_tokens": 284,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*Pastor Rick shifts slightly on the bench, feeling the coolness of the wood against his back.* \"I appreciate you sharing where you're at with this, Ryan. The idea you're describing is known as modalism, which is a view some have understood, but it doesn't fully align with traditional Christian teaching about the Trinity.\"\n\n*He reaches for his Bible, flipping through familiar pages as if drawing comfort from their touch.* \"The orthodox understanding is that the Father, the Son, and the Holy Spirit are distinct persons, not just modes or roles. They are three in one \u2014 co-equal, co-eternal, sharing the same divine essence but distinct in personhood.\"\n\n*He pauses, offering a gentle smile.* \"It can be a complex and mysterious doctrine, and it's okay to wrestle with these thoughts. Many people have found it challenging to fully grasp. If you're open to it, we could explore some scriptures together that speak to this mystery.\"",
+  "usage": {
+    "prompt_tokens": 9281,
+    "completion_tokens": 192,
+    "total_tokens": 9473,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

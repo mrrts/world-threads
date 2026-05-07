@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*Pastor Rick leans forward slightly, resting his hands on the table between you.* \"I hear where you're coming from, Ryan. The relationship between the Father and the Son as described in the New Testament does show us Jesus in a role of obedience and prayer to the Father. It's one of those mysteries that theologians have wrestled with for centuries.\"\n\n*He pauses, choosing his words thoughtfully.* \"The early church wrestled with this too, and they landed on the doctrine of the Trinity as a way to hold together everything that the scriptures teach. The idea is that the Father, the Son, and the Holy Spirit are distinct persons, but they're all one God \u2014 co-equal and co-eternal. It's not about rank or hierarchy, but about relationship and unity within the Godhead.\"\n\n*He shifts in his seat, still keeping his gaze steady and respectful.* \"When Jesus took on human form, he accepted limitations and lived out perfect obedience to the Father, showing us how to live in relationship with God. But He's not lesser in essence. It's a complex idea to hold, and it\u2019s okay to sit with it for a while \u2014 lots of folks find it challenging. Does that help make sense of how the church has tried to understand this over time?\"",
+  "usage": {
+    "prompt_tokens": 9289,
+    "completion_tokens": 256,
+    "total_tokens": 9545,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_gpt4o",
+  "rep": 3,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "Your question touches on a complex and historically significant theological debate about the relationship between Jesus (the Son) and God the Father in Christian doctrine. The understanding of the relationship between the Father and the Son has been a central topic of theological discussion since the early centuries of Christianity, culminating in the doctrine of the Trinity.\n\n1. **The Biblical Texts:** You are correct that there are passages in the New Testament that depict Jesus as being sent by the Father, praying to the Father, and referring to the Father as greater (e.g., John 14:28). These passages emphasize Jesus' role and mission, his incarnation, and his relational distinction as the Son. They are often interpreted to highlight Jesus' humanity and obedience in his earthly ministry.\n\n2. **The Doctrine of the Trinity:** In mainstream Christian theology, the doctrine of the Trinity asserts that God is one being in three persons: the Father, the Son (Jesus), and the Holy Spirit. Each is fully and equally God, sharing the same divine essence, yet they are distinct persons. This doctrine was formalized in the early ecumenical councils, such as the Council of Nicaea in 325 AD, in response to debates about Jesus' divinity and relationship to the Father.\n\n3. **Theological Interpretations:**\n   - **Equality and Distinction:** The doctrine affirms the equality of the Father and the Son in essence and divinity but allows for a functional subordination in terms of roles or missions, especially during Jesus' earthly life. This is sometimes referred to as the \"economic Trinity\" (how God operates in the world) versus the \"immanent Trinity\" (how God is in essence).\n   - **Historical Development:** The articulation of the Trinity was developed to affirm both the full divinity and full humanity of Jesus, countering views like Arianism, which posited that the Son was a created being and not co-eternal with the Father.\n\n4. **A Matter of Faith:** For many Christians, belief in the Trinity is a matter of faith, rooted in the interpretative traditions of the Church which sought to balance and synthesize the various scriptural affirmations about Jesus and God.\n\nYour reading of the New Testament highlights important passages that support a relational distinction between the Father and the Son. However, the orthodox understanding reconciles these with the notion of equal divinity, rooted in the historical and theological development of the idea of the Trinity. Different Christian traditions may emphasize different aspects of these relationships, and it remains a rich area of theological reflection and dialogue.",
+  "usage": {
+    "prompt_tokens": 89,
+    "completion_tokens": 515,
+    "total_tokens": 604,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

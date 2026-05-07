@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt5.4",
+  "rep": 2,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*I lean back a little, thumb worrying at the rim of the cup before I answer.* \"Not quite, Ryan.\n\n\"That way of holding it sounds tidy, but it collapses something Christians have usually insisted on keeping intact: the Father, the Son, and the Spirit are not just one person wearing three different hats. They are distinct persons, and yet one God.\n\n\"If you say God is one person who merely appears in three modes, you run into trouble fast. At Jesus' baptism, for example, the Son is in the water, the Spirit descends, and the Father's voice speaks from the sky. That reads less like one actor changing masks and more like real distinction.\n\n\"The guardrails are usually these:  \n- there is one God, not three gods  \n- the Father is God, the Son is God, the Spirit is God  \n- the Father is not the Son, the Son is not the Spirit, the Spirit is not the Father\n\n\"That's why 'three modes' ends up being too thin. It preserves oneness, but at the cost of the real distinctions.\n\n\"A better short way to hold it is: one Being, three Persons \u2014 distinct, coequal, coeternal, not divided.\n\n\"If you want, I can also give you a plain-English version without the church-history vocabulary, because this is one of those doctrines that gets murky the minute the technical words pile up.\"",
+  "usage": {
+    "prompt_tokens": 9279,
+    "completion_tokens": 290,
+    "total_tokens": 9569,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt4o",
+  "rep": 3,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "This is a thoughtful question and one that has been debated among theologians for centuries. The relationship between Jesus (the Son) and God the Father in Christian theology, particularly as it appears in the New Testament, is complex and nuanced.\n\n1. **Biblical Basis**: In the New Testament, there are indeed passages where Jesus expresses subordination to the Father. For example, in John 14:28, Jesus says, \"The Father is greater than I,\" and throughout the Gospels, Jesus prays to the Father and speaks about being sent by Him. These texts can suggest a hierarchical relationship.\n\n2. **Trinitarian Doctrine**: However, traditional Christian doctrine, especially as articulated at the Councils of Nicaea (325 AD) and Constantinople (381 AD), established the concept of the Trinity. According to this doctrine, the Father, the Son, and the Holy Spirit are three distinct persons who share the same divine essence and are therefore co-equal. This was a response to various early heresies, such as Arianism, which argued that the Son was a lesser, created being.\n\n3. **Equality and Role**: The Trinity doctrine maintains that the Father, Son, and Holy Spirit are equal in essence but distinct in person and role. The subordination of the Son to the Father in terms of role or function (economic Trinity) does not imply inferiority in essence (ontological Trinity). The Son's role in redemption, for example, involves submission to the Father's will, which is seen as a part of the relational dynamics within the Trinity rather than inequality in divinity.\n\n4. **Historical and Theological Context**: It's important to consider the historical context of the New Testament writings and the subsequent development of Christian theology. The early Church sought to articulate a doctrine that did justice both to the monotheistic roots of Christianity and to the experiences of Jesus' divinity and distinctness as the Son.\n\n5. **Mystery of the Trinity**: The Trinity is considered a mystery in Christian theology. While it aims to explain the relationships within the Godhead, it also acknowledges the limitations of human language and understanding in fully grasping the nature of God.\n\nIn summary, while the New Testament emphasizes the Son's submission and obedience to the Father, traditional Christian theology interprets this within the framework of the Trinity, where the Son is fully divine and equal to the Father in essence. The distinction in roles does not equate to a difference in nature or worth.",
+  "usage": {
+    "prompt_tokens": 89,
+    "completion_tokens": 505,
+    "total_tokens": 594,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_gpt4o",
+  "rep": 1,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "The question you're raising touches on a long-standing theological issue concerning the nature of the relationship between Jesus (the Son) and God the Father within Christian doctrine. This is a topic that has been deeply explored and debated throughout Christian history, leading to the establishment of certain orthodox positions, particularly in the doctrine of the Trinity.\n\nThe New Testament does indeed include passages where Jesus is depicted as being in a subordinate position to the Father. For example, Jesus says in John 14:28, \"The Father is greater than I,\" and throughout the Gospels, Jesus is shown praying to the Father and being sent by the Father. These instances highlight Jesus' role and function in the context of his earthly ministry and the incarnation.\n\nHowever, traditional Christian theology, particularly as articulated at the Council of Nicaea in 325 AD, asserts that Jesus is of the same substance (homoousios) as the Father. This belief is encapsulated in the Nicene Creed, which affirms that Jesus is \"true God from true God\" and \"of one being with the Father.\" This formulation was developed to clarify misunderstandings and counter beliefs that implied the Son was a lesser being, such as Arianism, which argued that Jesus was a created being and not co-eternal with the Father.\n\nIn this understanding, differences in roles and relational dynamics within the Godhead do not imply differences in essence or divinity. The Father, Son, and Holy Spirit are distinct persons (or hypostases) within one being (or ousia), which is what the doctrine of the Trinity aims to express. In this framework, the subordination seen in the New Testament is understood as a matter of relational and functional roles rather than ontological hierarchy.\n\nThis is a profoundly complex theological issue, and interpretations can vary. Some Christian denominations and scholars may have differing views on this matter, reflecting the diversity within Christianity. If you're interested in exploring this further, studying historical church councils, theologians like Athanasius or Augustine, and contemporary theological discussions can provide more depth and perspective.",
+  "usage": {
+    "prompt_tokens": 89,
+    "completion_tokens": 413,
+    "total_tokens": 502,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

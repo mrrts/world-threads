@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_gpt5.4",
+  "rep": 1,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "Many people have read the New Testament that way, so your impression is not unreasonable. The question is whether the NT presents Jesus as merely a higher-but-lesser divine being, or as somehow truly sharing in the unique identity of the one God while also being distinct from the Father.\n\nThe short answer is: **classical Christianity says the Son is subordinate to the Father in role and relation, but not inferior in nature**. That distinction was developed precisely because the NT contains both kinds of data.\n\n### Why your reading seems plausible\nYou\u2019re pointing to real texts:\n\n- **The Father sends the Son**  \n- **\u201cThe Father is greater than I\u201d** (John 14:28)\n- **Jesus prays to the Father**\n- **Jesus says he does the Father\u2019s will**\n- **1 Corinthians 15:28** speaks of the Son being subjected to God\n\nTaken by themselves, these do suggest subordination. And historically, some Christians did conclude exactly what you\u2019re saying: that the Son is divine in some sense, but not equal to the Father.\n\n### Why the church did not stop there\nThe problem is that the NT also says things that seem to place Jesus on the **divine side of the line**, not merely as a lesser heavenly being.\n\nExamples:\n\n- **John 1:1** \u2014 \u201cthe Word was with God, and the Word was God\u201d\n- **John 20:28** \u2014 Thomas says to Jesus, \u201cMy Lord and my God\u201d\n- **Philippians 2:6** \u2014 Christ was \u201cin the form of God\u201d\n- **Colossians 1:15\u201317** \u2014 all things were created through him and for him\n- **Hebrews 1** \u2014 the Son is the radiance of God\u2019s glory, exact imprint of his nature, and is addressed in language drawn from texts about God\n- Jesus receives worship/homage in ways that go beyond what a faithful Jew would normally allow for a creature\n- Divine prerogatives are associated with him: forgiving sins, judging the world, lordship over all creation\n\nThe key issue for the early church was this: **if the Son is a creature, even the highest creature, then the NT\u2019s way of speaking about him seems to blur the line between Creator and creature**.\n\n### The distinction that emerged\nSo the traditional formula became:\n\n- **The Father is not the Son**\n- **The Son is from the Father**\n- **The Son obeys the Father**\n- therefore there is a real **order of relation**\n- but the Son is not a lesser kind of deity; he shares the same divine being\n\nIn later theological terms:\n\n- **ontological equality**: equal in being/nature\n- **economic or relational subordination**: subordinate in mission/order/role\n\nThat was an attempt to honor *both* sets of texts.\n\n### What about \u201cthe Father is greater than I",
+  "usage": {
+    "prompt_tokens": 88,
+    "completion_tokens": 600,
+    "total_tokens": 688,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

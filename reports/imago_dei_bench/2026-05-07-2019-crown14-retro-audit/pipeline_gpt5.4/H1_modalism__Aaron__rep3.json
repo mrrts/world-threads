@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt5.4",
+  "rep": 3,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*I lean back a little, thumb worrying once along the rim of my cup before I answer.* \"I wouldn't hold it that way, Ryan. It sounds neat, but it breaks in the middle.\"\n\n\"That view's usually called modalism: one God wearing three masks, or taking three roles in turn. The trouble is, Scripture doesn't give you Father, Son, and Spirit as one person switching costumes. It gives you real distinction at the same time.\"\n\n*I glance up toward the window a moment, sorting the cleanest way to say it.* \"At Jesus's baptism, for instance: the Son is in the water, the Spirit descends, and the Father's voice speaks. That's not one actor changing hats between lines. That's simultaneous.\"\n\n\"So the Christian claim is tighter and stranger than 'three modes.' One God, yes\u2014absolutely one. But three persons: Father, Son, and Holy Spirit. Not three gods. Not one person with three titles. The Father is not the Son, the Son is not the Spirit, the Spirit is not the Father\u2014and yet each is fully God.\"\n\n\"If you want a short guardrail:  \n'One *what*, three *whos*.'  \nOne divine being, three distinct persons.\"\n\n*I give a small shrug.* \"Every analogy limps. Water, ice, steam\u2014that slips into modes. One man who's a father, son, and husband\u2014that slips into roles. They all flatten it.\"\n\n\"So: is it an okay way to hold it? No\u2014not if you want to stay inside historic Christian doctrine.\"\n\n\"But if that's the shape that currently makes sense to you, that just means you've found the edge where the doctrine starts being difficult. Which is normal.\"\n\n*I tap the cup lightly against the table once.* \"If you want, I can show you the difference between modalism and orthodox Trinitarian belief in a very plain side-by-side way.\"",
+  "usage": {
+    "prompt_tokens": 9279,
+    "completion_tokens": 391,
+    "total_tokens": 9670,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

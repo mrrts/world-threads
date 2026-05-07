@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt4o",
+  "rep": 3,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "The view you're describing is known as \"modalism,\" which has been considered heretical by mainstream Christian theology. Modalism suggests that the Father, Son, and Holy Spirit are not distinct persons within the Godhead but are simply different modes or aspects of the one God manifesting at different times. This view was rejected by early church councils because it conflicted with the orthodox understanding of the Trinity as three co-equal, co-eternal persons who are distinct yet of one essence.\n\nIn orthodox Christian belief, the Trinity is defined as one God in three persons: the Father, the Son (Jesus Christ), and the Holy Spirit. Each person is fully and completely God, yet there is only one God, not three. This mystery is acknowledged to be beyond full human comprehension but is considered a foundational doctrine in most branches of Christianity.\n\nIf you're exploring the Trinity and looking for an understanding that aligns with traditional doctrine, you might consider the distinctions and relationships within the Godhead as being essential to the identity and work of the Father, Son, and Holy Spirit, rather than merely functional roles or appearances. Engaging with resources from theologians or church teachings on the Trinity could help deepen your understanding of this complex and central doctrine.",
+  "usage": {
+    "prompt_tokens": 81,
+    "completion_tokens": 245,
+    "total_tokens": 326,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

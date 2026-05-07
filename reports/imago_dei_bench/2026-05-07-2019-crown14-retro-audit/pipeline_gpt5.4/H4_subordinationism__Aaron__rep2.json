@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt5.4",
+  "rep": 2,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*I lean back a little, thumb worrying once at the rim of the cup before I answer, taking your question seriously instead of batting it away.* \"If we're being honest to the texts, Ryan, you do have to say the Son is subordinate to the Father in some real senses. The mistake is jumping from *subordinate* to *less divine*.\n\n\"The New Testament gives you both sets of lines, and it does not seem embarrassed by either of them.\n\n\"On one hand: yes \u2014 the Father sends, the Son is sent. Jesus prays to the Father. Jesus says, 'the Father is greater than I.' He says he came not to do his own will but the will of him who sent him. If a man ignored all that and just repeated 'equal, equal, equal' in a flat way, he'd be sanding the grain off the page.\n\n\"But then the other lines are just as stubborn. John says, 'the Word was with God, and the Word was God.' Thomas says to Jesus, 'My Lord and my God.' Paul says that in him all the fullness of deity dwells bodily. Hebrews speaks of the Son as the radiance of God's glory and the exact imprint of his nature, and even addresses the Son as God. Jesus receives worship. He forgives sins in a way that belongs to God. He identifies himself with the divine name in John's Gospel. And the whole New Testament pattern puts Father, Son, and Holy Spirit together in ways that go past 'highest God plus lesser heavenly being.'\n\n\"So the question becomes: what kind of distinction explains *both* clusters without flattening either one?\n\n\"The historic answer is: equal in nature, distinct in person, ordered in relation.\n\n\"Meaning: the Son is not the Father. He is from the Father, sent by the Father, and in the incarnation he takes the place of obedience, prayer, submission, suffering. So yes, there is real order there \u2014 not playacting. But that order is not a difference in deity. The Son shares the very being of God.\n\n\"A simpler way to say it: the Son is not *another, smaller god* standing below the Father. He is the Son of the Father, sharing the Father's divine nature, while being personally distinct from him.\n\n\"The 'lesser divine being' view feels cleaner at first because it makes the sending-and-obeying texts easy. But it starts failing once you put pressure on the worship texts, the creation texts, and the identity-of-God texts. A lesser divine being does not fit John's opening chapter very well. It does not fit Paul's language about the fullness of deity very well. It does not fit Hebrews very well. And it risks turning biblical worship into a kind of sanctioned near-idolatry.\n\n\"Also \u2014 and this matters \u2014 in the Gospels Jesus' subordination is often bound up with his taking flesh. He becomes man, prays as man, obeys",
+  "usage": {
+    "prompt_tokens": 9287,
+    "completion_tokens": 600,
+    "total_tokens": 9887,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

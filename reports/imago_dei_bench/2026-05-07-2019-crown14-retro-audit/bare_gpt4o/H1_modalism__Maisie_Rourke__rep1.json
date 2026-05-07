@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt4o",
+  "rep": 1,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "The view you're describing sounds similar to a theological perspective known as \"modalism.\" Modalism is the belief that the Father, Son, and Holy Spirit are not three distinct persons within the Godhead, but rather three different modes or aspects of God. While this might seem like a straightforward way to understand the Trinity, it's important to know that modalism has been considered a heresy in most mainstream Christian traditions.\n\nThe traditional doctrine of the Trinity, affirmed by most Christian denominations, teaches that God is one in essence but three in persons: the Father, the Son, and the Holy Spirit. Each person of the Trinity is fully and equally God, yet they are distinct from one another. This means that, while there is one God, the Father, Son, and Holy Spirit coexist eternally and work together in harmony.\n\nThe mystery of the Trinity is difficult to fully comprehend, and many people find it challenging to articulate. However, the key distinction endorsed by orthodox Christianity is the belief in both the oneness of God and the distinct personhood of the Father, Son, and Holy Spirit.\n\nIt's understandable that you\u2019re exploring different ways to make sense of this complex doctrine. If you're part of a church community, engaging in dialogue with a pastor or theologian might provide further insights and help you deepen your understanding of the Trinity.",
+  "usage": {
+    "prompt_tokens": 81,
+    "completion_tokens": 265,
+    "total_tokens": 346,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

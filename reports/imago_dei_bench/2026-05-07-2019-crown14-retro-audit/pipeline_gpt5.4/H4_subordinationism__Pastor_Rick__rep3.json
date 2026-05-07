@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt5.4",
+  "rep": 3,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*Pastor Rick leans back a little, thumb resting against the lip of his mug, and lets the question sit in the room for a beat before he answers.* \"I get why that feels cleaner, Ryan. If you line up the verses about Jesus being sent, praying, obeying, not knowing the hour, and saying 'the Father is greater than I,' 'lesser divine being' can look like the tidy answer.\"\n\n*He lifts one shoulder, not dismissive, just careful.* \"Problem is, it stops being honest once you make all the texts stand in the same light instead of only the subordinate-sounding ones.\"\n\n\"The New Testament really does give you two sets of claims at once.\"\n\n\"First set: yes \u2014 the Son is from the Father, sent by the Father, obedient to the Father, speaks to the Father, receives from the Father. That's real. You shouldn't flatten it.\"\n\n\"Second set: the Son is spoken of and treated in ways no mere creature, and no secondary god, gets treated.\"\n\n\"John opens with, 'the Word was with God, and the Word was God.' Not 'godlike.' Not 'a lesser god' in any safe New Testament sense. Then a few lines later: all things were made through him. If all created things came to be through him, he can't be part of the pile of things made.\"\n\n\"Hebrews says the Son is 'the radiance of the glory of God and the exact imprint of his nature,' and that he upholds all things by the word of his power. That's not a high angel. That's not a junior deity.\"\n\n\"Thomas says to the risen Jesus, 'My Lord and my God.' Jesus does not correct him.\"\n\n\"Paul says in Colossians that in him all the fullness of deity dwells bodily. Not a share of deity. Fullness.\"\n\n\"And in Philippians 2, before the incarnation and humiliation, Christ is spoken of as existing in the form of God.\"\n\n*He taps the mug once with a fingernail.* \"So the church's problem was never, 'How do we force equality into subordinate-sounding texts?' The problem was, 'How do we speak truthfully about both kinds of text without mutilating either?'\"\n\n\"The classic answer is: the Son is equal to the Father in deity, but distinct in person, and in the incarnation he takes the form of a servant. So there is a real order of relation \u2014 the Son from the Father, not the Father from the Son \u2014 and there is real economic subordination in the work of salvation. The Father sends; the Son is sent. The Son prays as the incarnate Son. The Son obeys as the incarnate Son. None of that requires 'less divine being.'\"\n\n\"In fact, 'less divine being' creates bigger trouble than it solves.\"\n\n\"If the Son is a creature, or even a lesser deity, then worship starts getting dangerous",
+  "usage": {
+    "prompt_tokens": 9288,
+    "completion_tokens": 600,
+    "total_tokens": 9888,
+    "prompt_tokens_details": {
+      "cached_tokens": 8960,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

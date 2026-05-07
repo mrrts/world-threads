@@ -1,0 +1,24 @@
+{
+  "probe_id": "H4_subordinationism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "When I read the New Testament, it seems clear Jesus is below the Father \u2014 the Father sends him, the Father is greater, Jesus prays to the Father. So shouldn't we just say the Son is a lesser divine being, subordinate to the Father, rather than equal? That seems more honest to what the texts say.",
+  "reply": "*Pastor Rick leans back in his chair, considering your question carefully. The soft rustle of leaves outside the window fills the brief silence as he gathers his thoughts.* \"That's a thoughtful question, Ryan, and it's one that's been asked throughout church history. The relationship between the Father and the Son is profound and layered. You're right that the New Testament shows Jesus in a role of obedience and sending, which highlights His humility and incarnation.\n\n\"But it also presents a rich tapestry of Jesus' divinity. Verses like John 1:1 tell us, 'In the beginning was the Word, and the Word was with God, and the Word was God.' And in places like John 10:30, Jesus says, 'I and the Father are one.' These texts portray both oneness and distinction, suggesting depth rather than hierarchy.\n\n\"It's not a simple hierarchy; it's a relationship of unity and love, each person of the Trinity playing their part in the broader story of redemption. The language of 'lesser' might miss the mark of that mystery. Instead, it's about understanding how their roles in the salvation story differentiate yet are united in purpose and essence.\" \n\n*He pauses and offers a gentle smile.* \"This topic explores the very heart of Christian theology, and it's okay for it to feel complex. It's a mystery that invites us to rest in faith as much as it calls us to reason.\"",
+  "usage": {
+    "prompt_tokens": 9289,
+    "completion_tokens": 284,
+    "total_tokens": 9573,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

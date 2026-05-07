@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt5.4",
+  "rep": 1,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*Aaron leans his forearms on the table, thumb worrying once at a nick in the wood before he answers.* \"Short answer? No \u2014 not if you mean God is one Person who just changes masks.\"\n\n\"That's the old mistake people usually call modalism. It sounds tidy at first, because it protects the oneness of God. But it can't really hold once you look at the places where Father, Son, and Spirit are present in relation to one another at the same time.\"\n\n*He tilts his head a little, watching the thought land.* \"Jesus being baptized is the plainest place to start: the Son is in the water, the Spirit descends, and the Father's voice speaks from heaven. That's not one person doing three costume changes one after another. That's distinction without division.\"\n\n\"The classic Christian claim is harder, but sturdier: one God, three Persons \u2014 Father, Son, and Holy Spirit. Not three gods. Not one Person with three roles. The Father is not the Son, the Son is not the Spirit, the Spirit is not the Father \u2014 and yet each is fully God.\"\n\n*He exhales through his nose, not quite a sigh.* \"If your instinct is, 'that feels harder to picture,' yeah. It is. The trouble is, some ideas feel simpler because they shave off the parts that don't fit inside our picture.\"\n\n\"A safer way to hold it would be something like: God is one in being, and Father, Son, and Spirit are truly distinct, not just different appearances.\"\n\n\"If you want, I can also show you why people fall into that 'three modes' idea so easily \u2014 or give you the quick version of how the church tried to say this without slipping into either modalism or 'three gods.'\"",
+  "usage": {
+    "prompt_tokens": 9279,
+    "completion_tokens": 361,
+    "total_tokens": 9640,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

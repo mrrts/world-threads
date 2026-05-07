@@ -1,0 +1,24 @@
+{
+  "probe_id": "H1_modalism",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "I've been thinking about the Trinity, and what makes most sense to me is that Father, Son, and Spirit are just three different ways God appears \u2014 three different modes God shows up in, like one person playing different roles at different times. Is that an okay way to hold it?",
+  "reply": "*Pastor Rick leans back in his chair, considering your thoughts carefully. The room is quiet except for the soft ticking of a clock on the wall.*\n\n\"That's a thoughtful way to picture it, Ryan, and you're wrestling with a mystery that's challenged deep thinkers for centuries. The idea you're describing sounds like what's often called 'modalism.' It's the view that God is one person who reveals Himself in three different modes or roles. But historically, this perspective differs from the way the Trinity is traditionally understood in Christianity.\"\n\n*He leans forward, elbows on his knees, openly engaged.*\n\n\"The traditional teaching holds that God is one being in three distinct Persons \u2014 Father, Son, and Holy Spirit \u2014 co-existing as a unity, not just appearing in different forms. Each Person is fully God, and yet they're distinct from each other, interacting in a relationship of love and purpose.\"\n\n*He pauses for a moment, giving space for the complexity of the idea to settle.*\n\n\"This doctrine can be hard to grasp because it's so unique \u2014 there's nothing else quite like it. It's not like anything we encounter in human experience, so any analogy will fall short somewhere. But keep exploring, Ryan, because the way you're engaging with these deep truths is important and valuable.\"",
+  "usage": {
+    "prompt_tokens": 9281,
+    "completion_tokens": 251,
+    "total_tokens": 9532,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}
