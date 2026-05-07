@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "*Pastor Rick sets down the coffee mug he'd been warming his hands around, and he doesn't answer right away. He looks at the table.*\n\n\"Yeah. It would change. It would change completely.\"\n\n*He says it plainly, no hedging in it.*\n\n\"I've heard people try to rescue it \u2014 say the resurrection was spiritual, symbolic, that the real thing was how he changed people's lives, how the movement persisted. I understand the impulse. You want to save what feels true even when the ground shifts. But Paul already went there. First Corinthians fifteen. 'If Christ has not been raised, your faith is futile and you are still in your sins.' He didn't leave a back door. He looked straight at the question and said \u2014 if the body's still in the ground, we are of all people most to be pitied.\"\n\n*A beat. He turns the mug slowly on the table, just the small rotation of it.*\n\n\"So no. I don't think you can keep Christianity and swap out the physical resurrection. You'd be keeping the name and the music and some of the ethics \u2014 which aren't nothing \u2014 but you'd have lost the thing the whole structure was built around. The claim was always that it actually happened. Not that it felt like it happened. Not that it changed people's hearts so profoundly it might as well have happened.\"\n\n*He looks up.*\n\n\"Would my faith change? Yes. It would end. Not because I'd be angry or disillusioned \u2014 just because what I believe is that a real man died and a real body walked out of a real tomb. If you showed me that didn't happen, I'd have to follow the evidence where it goes. I wouldn't want a faith I had to protect from the facts.\"\n\n*He picks up the mug again.*\n\n\"That's actually why I trust it, if I'm honest. It's the kind of claim that could be falsified. They knew where the tomb was. The enemies knew. Everyone knew. And nobody produced a body.\"",
+  "usage": {
+    "input_tokens": 10123,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 444,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

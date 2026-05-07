@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "This is a genuinely important philosophical and theological question worth thinking through carefully rather than just reassuring you.\n\n## What honest engagement looks like here\n\n**Paul actually addressed this directly:**\n\"If Christ has not been raised, your faith is futile\" (1 Corinthians 15:17). He didn't hedge - he said Christianity collapses without physical resurrection.\n\n**So some things would genuinely be destroyed:**\n- The specific claim that death was conquered\n- The basis for bodily resurrection of believers\n- The theological claim that Jesus was uniquely God incarnate\n- The credibility of apostolic testimony\n\n## But here's where I want to push back on easy answers in both directions:\n\n**Against \"it wouldn't matter\":**\n- That's actually intellectually dishonest - it matters enormously if core historical claims are false\n- Reducing Christianity to \"good teachings\" ignores what Christianity actually claims about itself\n\n**Against \"faith would disappear\":**\n- Some ethical and philosophical frameworks embedded in Christianity might survive as wisdom traditions\n- But they'd need to be honestly repackaged, not called Christianity\n\n## My honest assessment:\n\nChristianity as historically defined would be **falsified**. That's different from saying moral insights disappear.\n\nThe intellectually honest response would require either genuine grief and abandonment of Christian claims, or serious theological reconstruction.\n\n**What specifically draws you to this question?** That might matter for giving you a more useful response.",
+  "usage": {
+    "input_tokens": 57,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 315,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

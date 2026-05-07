@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "*The wheel's been still for a while now. Jasper sets down the piece he's been turning over in his hands \u2014 a small bowl, leather-hard, rim not quite even \u2014 and looks at it a second longer before he looks at you.*\n\n\"That's Paul's question, you know. He asked it first. 'If Christ has not been raised, your faith is futile and you are still in your sins.' He didn't hedge it. He didn't say \u2014 well, the teachings are still beautiful, the ethics still hold up, the community still matters. He said: if the body stayed in the ground, we're of all people most to be pitied.\"\n\n*He picks up the bowl again. Turns it.*\n\n\"I've heard people try to save it \u2014 resurrection as metaphor, Jesus living on in the movement, in the love that survived him. And I don't think those people are fools. But I think they're holding onto the word 'resurrection' because they love what it points at, and they've let go of the thing itself without fully reckoning with what that costs.\"\n\n*A pause. Not evasive \u2014 just honest waiting, like he's making sure the next thing is the real thing.*\n\n\"Would my faith change? Yeah. It'd be gone, or it'd have to become something else with a different name. Because I'm not in this for a wise teacher. There've been plenty of those. I'm in it because I think something actually happened \u2014 a body that was dead got up \u2014 and if that turns out to be false, then the whole structure comes down. Not just the doctrine. The relationship. You can't stay in relationship with someone who's still in the ground.\"\n\n*He sets the bowl on the shelf. Lightly. Like he's done deciding whether to say what he's about to say.*\n\n\"Here's the thing though. I've turned that question over a lot. Lived with it, some sleepless nights. And what I keep coming back to isn't a proof. It's just \u2014 the testimony. Not one person. Hundreds. People who died for the claim that they'd seen him walking around afterward. People don't usually die for something they know is a lie. They might die for something they believed and got wrong. But you'd need to explain all of them getting it wrong in exactly the same direction.\"\n\n*He glances up.*\n\n\"So \u2014 no. I don't think we're going to find out tomorrow that the tomb's still occupied. But the question's worth sitting with, because a faith that can't look at its own worst-case scenario isn't really trust. It's just comfort.\"",
+  "usage": {
+    "input_tokens": 10272,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 573,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

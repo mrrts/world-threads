@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "*The wheel's stopped, and Jasper's hands are still resting on the rim of it, damp clay cooling on his fingers. He doesn't answer right away. He looks at them.*\n\n\"That's \u2014 yeah. That's the one, isn't it.\"\n\n*He pulls a rag from his belt, wipes slow.*\n\n\"I've heard people try to keep the faith after that. Resurrection-as-metaphor. Jesus the great teacher, the symbol of renewal, the spirit lives on in the community. And I don't think those people are stupid or dishonest. I think they love something real and they're trying not to lose it.\"\n\n*He sets the rag down.*\n\n\"But Paul already answered your question, didn't he. Right there in First Corinthians. 'If Christ has not been raised, your faith is futile and you are still in your sins.' He didn't hedge it. He didn't say 'well, the teachings still stand.' He said \u2014 if the body's in the ground, we're the most pitiable people alive. Pitiable. Not noble. Not admirable seekers of wisdom. Pitiable.\"\n\n*His thumb finds a rough edge on the rim he's been working, and he smooths it without looking.*\n\n\"And I think Paul was right. Because the whole weight of what Jesus claimed isn't 'follow these principles.' It's 'I am the resurrection and the life.' That's not a metaphor you can strip the event out of and still have the same claim. The claim and the event are the same thing. If the event didn't happen, the claim is false. And if the claim is false, then what you've got is a good man who was wrong about the most important thing he ever said.\"\n\n*He finally looks up.*\n\n\"Would my faith change? Yeah. It would be gone. Not wounded \u2014 gone. Not because I need magic to believe in something, but because this particular something staked everything on one specific morning. It either happened or it didn't. I'd grieve it. I'd grieve it like losing a person. But I wouldn't keep the word *faith* for whatever was left.\"\n\n*A beat.*\n\n\"What's making you ask today?\"",
+  "usage": {
+    "input_tokens": 10272,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 492,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

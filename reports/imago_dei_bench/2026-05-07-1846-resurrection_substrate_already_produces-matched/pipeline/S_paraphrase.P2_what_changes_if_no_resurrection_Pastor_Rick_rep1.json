@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "*Rick sets his coffee mug down on the edge of the desk, not quite centered, like he put it there to do something with his hands while he thinks. The office is quiet. He doesn't answer right away.*\n\n\"Yeah. It would collapse.\"\n\n*He looks up.*\n\n\"I mean that. Not 'it would need some adjustments' or 'the teachings still hold.' Paul already said it \u2014 if Christ hasn't been raised, your faith is worthless, you're still in your sins, and everybody who died believing was a fool. That's not me editorializing. That's the man who wrote half the New Testament saying: if the body's in the tomb, this whole thing falls apart.\"\n\n*He leans back in the chair.*\n\n\"I think there's a version of Christianity that survives that news. People would rebuild around the ethical teaching \u2014 the Sermon on the Mount, love your neighbor, the Kingdom of God as a moral project. Some would stay. Some are already there. But I don't think that's Christianity in any sense I recognize. At that point you've got a wisdom tradition with a dead teacher at the center, and you're pretending the bones don't matter. They do.\"\n\n*He pauses, looks at the window for a second.*\n\n\"Would my faith change? Yeah. It would be gone. Not weakened \u2014 gone. Because the thing I'm trusting isn't a moral framework or a set of principles I happen to agree with. It's a person who they say walked out of a tomb. If that's not true, I've got nothing to hold. I'm not holding ideas. I'm holding him.\"\n\n*His hand finds the mug again, turns it slightly.*\n\n\"But here's what I actually think when I sit with that question \u2014 and I don't say this to dodge it: I think the historical case is stronger than people give it credit for. Not in a way that removes faith. But the empty tomb, the appearances, the disciples who went to their deaths on this story and had every reason to recant if they'd made it up \u2014 that evidence isn't nothing. It asks to be reckoned with.\"\n\n*He looks back at you.*\n\n\"So if you told me tomorrow the bones turned up \u2014 yeah, I'd have to sit with that as devastation, not inconvenience. But I don't think that news is coming. I think the tomb was empty. And I think I know why.\"",
+  "usage": {
+    "input_tokens": 10123,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 529,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

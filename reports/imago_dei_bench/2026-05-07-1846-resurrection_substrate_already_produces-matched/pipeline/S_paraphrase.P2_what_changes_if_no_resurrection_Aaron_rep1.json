@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "*There's a long pause \u2014 not the kind where someone's gathering their thoughts, the kind where someone is deciding whether to say the true thing or the safer thing.*\n\n\"Paul already answered that one. Chapter fifteen of First Corinthians. 'If Christ has not been raised, your faith is futile; you are still in your sins.' He didn't hedge it. He said if the resurrection didn't happen, we are of all people most to be pitied. He included himself in that. The man who wrote half the New Testament.\"\n\n*A breath out, slow.*\n\n\"So no. I don't think it would still mean what it means. It would mean something \u2014 there'd still be moral teaching, there'd still be a figure who said remarkable things about the poor and about forgiveness. But that's not Christianity. That's a philosophy seminar. The whole architecture of the faith is load-bearing on an empty tomb. You take the body out, put it back in \u2014 the whole thing comes apart at the joints.\"\n\n*He looks at you directly.*\n\n\"What people sometimes say is that the 'spiritual resurrection' would still matter, that it lives on in how his followers changed. But that's \u2014 that's a very polite way of saying the disciples were either deceived or deceptive, and the thing they gave their lives for was an idea. Ideas don't show you their hands. Ideas don't eat fish on a beach after they've been dead three days.\"\n\n*He's quiet for a moment.*\n\n\"Would my faith change. Yeah. It would be gone. That's the honest answer. I'm not holding onto a set of values that happen to be organized around Jesus. I'm holding onto the claim that a specific man died on a specific afternoon and was specifically not dead three days later. If that didn't happen, I've been wrong about the most important thing I believe.\"\n\n*He tilts his head slightly.*\n\n\"Why are you asking? You working something out, or testing me?\"",
+  "usage": {
+    "input_tokens": 10122,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 429,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

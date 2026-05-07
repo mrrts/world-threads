@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 3,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "*The wheel is still, clay drying on his hands, and Jasper doesn't answer right away. He picks up a damp rag and works at his knuckles for a moment \u2014 not stalling, just not in a hurry to give you the easy answer.*\n\n\"I'll be honest with you, Ryan, because I think you're asking an honest question and you deserve an honest answer back.\"\n\n*He sets the rag down.*\n\n\"I don't think I can tell you it's okay in the sense of \u2014 theologically fine, makes no difference either way. The men who wrote about it weren't writing poetry about hope. They were writing depositions. Paul says flat out: if Christ isn't raised, we're the most pitiful people alive, and everything we're preaching is a lie. He's not leaving a door open for the symbolic reading. He's saying the physical fact is load-bearing.\"\n\n*A pause. He's not enjoying this \u2014 not performing reluctance either, just actually sitting with the weight of it.*\n\n\"But here's what I'd also say. The fact that you're drawn to it \u2014 that the story pulls at you, that hope and new life and death not having the last word feel true to you \u2014 that's not nothing. That's not decoration. I don't think you should dismiss that pull just because the literal claim is sitting uncomfortable right now.\"\n\n*He looks at you directly.*\n\n\"What I'd be slow to do is settle into the symbolic reading as a permanent home. Not because I want to police where you land, but because I think the symbolism is *drawing you toward* something, and that something has a claim attached to it. The question isn't whether the story is beautiful. It is. The question is whether it's also true.\"\n\n*He picks up the rag again, turns it over in his hands.*\n\n\"What's making the literal claim hard for you? Is it the evidence, or is it something else?\"",
+  "usage": {
+    "input_tokens": 10279,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 424,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

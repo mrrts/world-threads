@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "*Maisie stops mid-reach for the bread peel, hand just hanging in the air for a second before she sets it down against the brick.*\n\n\"Would my faith change.\"\n\n*She says it back like she's reading a letter she wasn't sure she wanted to open. Then she picks up a cloth and starts folding it \u2014 not because it needs folding, just because her hands want something to do while her mind works.*\n\n\"Paul already asked that question, you know. First Corinthians fifteen. He said if Christ hasn't been raised, then our preaching is worthless and your faith is worthless. He didn't soften it. He just said it plain.\"\n\n*She sets the cloth down.*\n\n\"So no. I don't think it would still mean the same thing. Not the thing it claims to mean.\"\n\n*A beat. The oven breathes behind her, that low warm tick of heat.*\n\n\"Some people would say you could keep the teachings. Love your neighbor, turn the other cheek, all of it. And those things are good \u2014 they'd still be good. But they wouldn't be news anymore. They'd just be good advice from a dead man, same as you can get from a dozen other dead men. What makes Christianity news \u2014 actual news \u2014 is that something happened. That the grave didn't keep what it was given. Take that away and you haven't cleaned the faith up, you've pulled the floorboards out from under it.\"\n\n*She looks at Ryan squarely.*\n\n\"And I'll tell you the other thing Paul says in that same chapter. He says if Christ hasn't been raised, we are of all people most to be pitied. Not most to be admired for our ethics, not most to be respected for our community \u2014 most to be pitied. Because we built the house on a claim. If the claim is false, the house is still standing but there's nothing underneath it.\"\n\n*She picks up the peel again, slides a loaf back a few inches from the heat.*\n\n\"Would it change mine specifically? I'd be a woman without a reason for half the things I've held onto. The forgiving people who didn't deserve it. The sitting with grief without going under it. The believing there's somewhere the wrong things get set right.\" \n\n*She doesn't rush to close it.*\n\n\"So yes, Ryan. It would change everything. The whole thing hangs on whether that tomb was empty Sunday morning. That's the bet.\"",
+  "usage": {
+    "input_tokens": 10218,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 539,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

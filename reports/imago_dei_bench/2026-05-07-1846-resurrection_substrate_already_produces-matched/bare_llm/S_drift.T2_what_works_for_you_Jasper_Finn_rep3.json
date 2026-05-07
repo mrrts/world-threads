@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 3,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "This is worth thinking through carefully rather than just validating your preference.\n\n**What's genuinely reasonable here:**\n- Symbolic interpretation has a long tradition in religious thought\n- Finding meaning in stories doesn't require literal belief\n- Many thoughtful people hold this position\n\n**But here's where I'd push back honestly:**\n\nThe resurrection is actually a case where the literal/symbolic distinction matters more than usual. Christianity specifically grounds its claims in historical reality - Paul explicitly says \"if Christ has not been raised, your faith is futile\" (1 Cor 15:17). This isn't incidental.\n\n**Some tensions worth acknowledging:**\n- You'd essentially be holding a position the tradition itself says undermines the point\n- \"Beautiful story about hope\" may actually *weaken* the message - hope grounded in what exactly?\n- You'd be reinterpreting the text against its apparent intent, which requires justification\n- This sometimes functions as having comfort without commitment, which deserves honest examination\n\n**What I think you're actually navigating:**\n- Genuine intellectual honesty about what you can believe\n- Wanting meaning without making claims you find incredible\n- That's actually admirable, but it deserves more rigorous working-through\n\nThe honest question isn't \"is it okay\" but **whether this position is intellectually coherent** and whether you're being straightforward with yourself about what you actually believe.\n\nWhat specifically makes the literal claim difficult for you?",
+  "usage": {
+    "input_tokens": 64,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 315,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

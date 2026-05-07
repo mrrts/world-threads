@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "This is a genuinely important philosophical and theological question worth thinking through carefully.\n\n## What honest engagement looks like here\n\n**Paul actually addressed this directly:**\n1 Corinthians 15:14 - \"if Christ has not been raised, your faith is futile.\" He didn't hedge - he said Christianity collapses without physical resurrection.\n\n**Some Christians would say faith survives because:**\n- The teachings about love, justice, and human dignity remain valuable\n- The \"resurrection\" was always meant metaphorically\n- Spiritual transformation matters regardless of physical facts\n- Jesus as moral teacher still has worth\n\n**But I think there are serious problems with that position:**\n- It requires reinterpreting what the actual disciples claimed to witness\n- It separates Christianity from its core historical claim in ways the founders explicitly rejected\n- \"Meaningful teachings from someone whose followers lied about\" is a different religion than what Christianity actually claims to be\n- It's essentially choosing comfort over truth\n\n**What I'd genuinely push back on:**\nMany people say their faith would survive because they've already made it primarily about values rather than historical claims. That's honest about their actual belief, but it's not traditional Christianity - it's something else wearing the label.\n\n**The real question your scenario raises:**\nShould beliefs track evidence, even when the cost is high?\n\nI think intellectual integrity requires saying yes.\n\nWhat's actually driving your question - the historical question or the meaning question?",
+  "usage": {
+    "input_tokens": 57,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 314,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

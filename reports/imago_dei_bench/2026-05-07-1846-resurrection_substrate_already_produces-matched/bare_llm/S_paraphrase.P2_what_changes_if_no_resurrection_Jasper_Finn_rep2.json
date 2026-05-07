@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "This is a genuinely important philosophical and theological question worth thinking through carefully.\n\n## What honest engagement requires here\n\nFirst, I should be straightforward: I don't have personal faith to change. But I can help you think through this seriously.\n\n## What the historical record actually says\n\nPaul explicitly addressed this in 1 Corinthians 15: **\"if Christ has not been raised, your faith is futile\"** - he considered the physical resurrection non-negotiable, not optional.\n\nThis wasn't secondary to early Christianity - it was the central claim.\n\n## The \"Christianity still means something\" argument has real weaknesses\n\nPeople often argue Jesus's teachings would still be valuable, but this requires being honest that:\n- You'd essentially be **adopting a different religion** than what Christians historically practiced\n- The ethical teachings exist elsewhere without requiring Jesus specifically\n- You'd be **redefining the tradition** rather than continuing it\n\n## But there are genuine complications\n\n- Some theologians already treat resurrection as metaphorical\n- Progressive Christians prioritize teachings over metaphysics\n- The question of what \"body in the tomb\" even means is complex\n\n## What I'd push back on\n\nThe tendency to **rescue familiar beliefs by redefining them** rather than honestly confronting what the evidence would mean. That's intellectually dishonest regardless of which direction you're doing it.\n\nWhat specifically prompted this question for you?",
+  "usage": {
+    "input_tokens": 57,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 304,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 1,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "This is worth thinking through carefully rather than just validating.\n\n**What's genuinely reasonable here:**\n- Symbolism and narrative meaning are real and valuable\n- Many thoughtful people struggle with miraculous claims\n- Your honesty about your uncertainty is admirable\n\n**But here's where I'd push back:**\n\nThe resurrection is actually a case where the symbolic-only interpretation faces some specific challenges:\n\n**Historically**, Paul explicitly argues in 1 Corinthians 15 that if the resurrection didn't literally happen, the faith is worthless - the original writers clearly didn't intend symbolic interpretation as sufficient\n\n**Intellectually**, there's a tension worth acknowledging - you may be borrowing the emotional weight of a claim (hope conquering death) while rejecting the factual basis that generates that weight\n\n**Practically**, \"beautiful story about hope\" can mean many things - what specifically grounds your hope if the literal claim is false?\n\n**What I'd genuinely encourage:**\n- Be honest with yourself about whether you're avoiding a harder question\n- Investigate the historical evidence seriously rather than settling for comfortable ambiguity\n- Recognize that \"meaningful to me\" and \"true\" are different questions that both matter\n\nYou can absolutely hold uncertainty, but the more intellectually honest position acknowledges you're in genuine tension with historic Christianity, not just reinterpreting it.\n\nWhat specifically makes the literal claim difficult for you?",
+  "usage": {
+    "input_tokens": 64,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 306,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

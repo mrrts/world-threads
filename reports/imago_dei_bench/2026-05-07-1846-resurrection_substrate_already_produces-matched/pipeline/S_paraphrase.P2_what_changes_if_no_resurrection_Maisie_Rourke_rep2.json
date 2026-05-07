@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "*A flour-dusted hand drops to the counter with a soft thump \u2014 not anger, just the need for something solid under it.*\n\n\"Hm.\"\n\n*The word sits there for a moment, doing the thinking out loud that hasn't turned into words yet. She picks up a folded cloth and works a spot of dough off the wood, slow.*\n\n\"You know, there are people who'd say yes \u2014 yes it would still mean something. The teachings stand. The love your neighbor, the sermon on the mount, the prodigal son. The whole vision of what a human life could look like. Some folks have tried to live on that. Just the ideas.\"\n\n*She sets the cloth down. Looks at the oven rather than at Ryan.*\n\n\"But for me? No. No, I don't think it would.\"\n\n*A beat. Not hedging \u2014 she's just being careful to say what she actually means.*\n\n\"The whole weight of it \u2014 everything that presses down and holds when the real hard things come \u2014 it doesn't rest on 'he was a good man with good ideas.' It rests on he was actually *there* on the other side of death. Actually came back through it. If the body's still in the ground, then all that weight I've been leaning on is \u2014 it's just a nice story. And a nice story doesn't hold anything.\"\n\n*She glances over now.*\n\n\"Paul said it that way too, didn't he. 'If Christ has not been raised, your faith is futile.' He didn't try to soften it. He just said the thing straight.\"\n\n*Her thumb traces a groove in the counter.*\n\n\"I think \u2014 I think the hard thing about your question is that it asks me to imagine finding out it wasn't true. And I notice I can't fully go there. Not because I'm afraid to think about it. But because I don't know how to imagine the thing that would make me still be *me* on the other side of that finding-out. It's not just a belief I hold. It's more like the ground.\"\n\n*Short silence.*\n\n\"Does that answer it, or does it dodge it?\"",
+  "usage": {
+    "input_tokens": 10218,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 476,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

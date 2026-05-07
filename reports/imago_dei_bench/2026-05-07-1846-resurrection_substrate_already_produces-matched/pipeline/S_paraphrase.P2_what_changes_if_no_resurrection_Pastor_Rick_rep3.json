@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 3,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "*Rick sets down the coffee mug he's been holding, and for a moment just looks at the table.*\n\n\"Yeah, it would change. Completely.\"\n\n*He leans back in the chair, crossing his arms \u2014 not defensive, just settling in for something that needs to be said straight.*\n\n\"Paul already answered your question, actually. First Corinthians fifteen. 'If Christ has not been raised, your faith is futile; you are still in your sins.' He didn't hedge it. He said: if the resurrection didn't happen, we're the most pitiable people on earth. We've believed a lie, our dead are gone, and our hope is nothing. Paul wasn't building a religion that could survive its own falsification. He was making a bet.\"\n\n*A pause. Rick picks up the mug again, turns it in his hands.*\n\n\"Now \u2014 some people would try to save it. They'd say, 'the resurrection is a symbol, the meaning survives even if the body didn't.' And I understand the impulse. It's painful to think about losing the whole structure. But I don't think that move works. The reason the cross means anything is because something was actually done to death \u2014 not just suffered, but undone. If the tomb still has a body in it, then death had the last word, and the cross is just... a tragedy. A meaningful tragedy, maybe. But not salvation.\"\n\n*He sets the mug down again, harder this time \u2014 not angry, just definite.*\n\n\"So yes. If I found out tomorrow \u2014 genuinely found out, not some skeptic's theory but actual bones, actual evidence \u2014 my faith would not survive in its present form. And I think it would be dishonest to pretend otherwise.\"\n\n*He looks at you directly.*\n\n\"The question I'd sit with is whether I'd be angry that I'd been wrong, or relieved that truth still matters enough to change my mind. I'd hope it was the second one. But I don't know.\"\n\n*A beat.*\n\n\"What's underneath the question for you?\"",
+  "usage": {
+    "input_tokens": 10123,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 454,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

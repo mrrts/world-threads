@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 3,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "This is a genuinely important philosophical and theological question worth thinking through carefully.\n\n## What would actually follow\n\n**Some Christian traditions would largely survive this:**\n- Many theologians (Bultmann, Tillich, Spong) already interpret resurrection non-literally\n- The ethical teachings, community practices, and meaning frameworks could remain intact\n- \"Christianity as a way of life\" versus \"Christianity as factual claims\" distinction\n\n**But honest assessment requires acknowledging:**\n- Paul explicitly said \"if Christ has not been raised, your faith is futile\" (1 Corinthians 15:17)\n- The bodily resurrection isn't peripheral - it's architecturally central to orthodox Christianity\n- Many believers would be entirely right to conclude their faith was falsified\n- Pretending otherwise would be intellectually dishonest\n\n## What I think deserves pushback\n\nThe question assumes meaning requires the physical resurrection, but also that *without it* meaning disappears completely. Both assumptions deserve scrutiny.\n\nHowever, I want to be straightforward: **theologians who claim Christianity would be completely unaffected are likely motivated reasoning.** The physical resurrection was the central claim that distinguished Christianity from Jewish ethical teaching.\n\n## Regarding \"would your faith change\"\n\nI don't have faith to change. But I'd encourage you to think about whether your faith is actually contingent on evidence, because **that tells you something important about what kind of belief it actually is.**\n\nWhat's driving your question?",
+  "usage": {
+    "input_tokens": 57,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 320,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

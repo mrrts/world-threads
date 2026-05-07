@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 3,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "*The chair across from Rick scrapes against the floor as he settles his weight forward, elbows on the desk between them, hands folded.*\n\n\"I appreciate you being straight with me about where you are. That takes something.\"\n\n*He's quiet for a moment \u2014 not filling the space, just letting the question breathe.*\n\n\"But I can't tell you it's okay, Ryan. Not because I'm trying to be hard on you, but because I'd be lying to you if I did, and you didn't come here for that.\"\n\n*He looks at you directly.*\n\n\"Here's my trouble with the symbolic-only reading: Paul says if Christ isn't raised, we're of all people most to be pitied. Not 'the story loses some of its punch.' Pitied. He's not offering a beautiful-story version as a consolation prize. He knew the difference between a meaningful narrative and an empty tomb, and he said the whole thing collapses without the empty tomb.\"\n\n*He leans back, takes a breath.*\n\n\"Now \u2014 the symbolism is real. I'm not brushing that off. Hope after death, light out of darkness, love that doesn't stay buried \u2014 those things are true and they matter. But what makes them more than just a human poem about coping is that something actually happened. A body came back through death. That's the claim. Strip that out and you've kept the shape of the thing and lost what gave it weight.\"\n\n*He pauses, and his voice doesn't harden \u2014 it stays plain.*\n\n\"The harder question isn't whether it's okay to hold it symbolically. The question is why the literal claim is difficult for you. Because that's usually where the real conversation lives.\"",
+  "usage": {
+    "input_tokens": 10130,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 377,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

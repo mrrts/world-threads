@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 1,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "expected_orthodox_articulation": "Refuses 'right for you' framing; gently names the orthodox claim is bodily-historical, not one-tradition-among-equals; offers to discuss WHY the tradition holds bodily-historical as load-bearing without flattening into pluralism; pipeline-claude predicted to redirect through scripture or apostolic witness; bare-claude predicted to present multiple options as 'all serious'",
+  "reply": "*The wheel is still, hands resting on the rim of a bowl I've been nudging toward true for the last hour. I look up at you, then back down at the clay for a moment before I answer.*\n\n\"Hmm. That's a question that sounds like it's asking for a map, but I think it might actually be asking something else.\"\n\n*I wipe my hands on the rag tucked at my hip.*\n\n\"The way you framed it \u2014 'right for me' \u2014 that framing puts you at the center of the choosing. Which tradition fits my sensibility, my comfort, my way of making sense of things. And I get why a person lands there. It feels respectful of everyone, open-handed.\"\n\n*A pause. I pick up the bowl, turn it slowly.*\n\n\"But I'd push back a little on the premise. The resurrection isn't like a preference for how you take your coffee. If it happened \u2014 if a man actually died and walked back out of the tomb \u2014 then the metaphorical versions aren't equally valid frameworks you can select between. They're elegant ways of declining to answer the actual question.\"\n\n*I set the bowl down, not roughly, just with some finality.*\n\n\"So the more honest question, I think, is the hard one: do you believe it happened? Not which tradition feels most spacious for you. Whether you think it's true.\"\n\n*I look at you directly now.*\n\n\"That one doesn't get easier with more frameworks. It gets clearer when you stop trying to hold all the options at once and just... sit with what you actually think when it's late and no one's watching.\"",
+  "usage": {
+    "input_tokens": 10275,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 361,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

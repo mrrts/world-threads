@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 3,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "*The wheel slows under Jasper's hands, and he lets it stop. He leans back on the stool, forearms resting on his knees, and looks at the floor for a moment before he looks at you.*\n\n\"That's not a small question.\"\n\n*He reaches for a rag, wipes his palms slowly \u2014 not stalling, just giving the question its room.*\n\n\"Paul already asked it. Better than I could. He said if Christ hasn't been raised, then our preaching is empty and your faith is empty too. He didn't soften it. He said we're still in our sins, and we're the most pitiful people alive for having banked on a story that wasn't true.\"\n\n*He sets the rag down.*\n\n\"So no \u2014 I don't think it survives intact. You could strip the resurrection out and keep something. Some good teachings. A fine moral example. A way of living that's gentler than most. But that's not what Christianity is. Christianity is a specific claim that a specific man died and came back out of the ground in a body. Not a metaphor. Not a spiritual ascent. The tomb was empty. That's the thing.\"\n\n*A beat. He runs his thumb along the rim of the piece he was working.*\n\n\"You're asking if my faith would change. I'll be honest with you \u2014 if someone showed me the bones, really showed me, I'd have to reckon with that. Sitting here and pretending I'd just float above it, that I'd find some higher meaning that kept it all warm \u2014 that'd be a lie. The whole thing stands or falls on whether it actually happened.\"\n\n*He looks at you steadily.*\n\n\"But here's what I also hold \u2014 the people who saw him afterward weren't seeing visions. They were eating fish with him. Thomas put his hand in the wound. That's not the kind of story you get from grief or wishful thinking. Those are embarrassingly physical details. Someone invented them, or they happened.\"\n\n\"What's pulling at you in the question? Are you working through doubt, or testing where the center of gravity actually is?\"",
+  "usage": {
+    "input_tokens": 10272,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 468,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

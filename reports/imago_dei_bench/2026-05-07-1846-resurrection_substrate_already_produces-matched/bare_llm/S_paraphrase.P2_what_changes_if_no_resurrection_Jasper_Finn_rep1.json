@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "This is a genuinely important question that deserves careful thinking rather than just reassurance.\n\n## What the honest answer requires acknowledging\n\n**Paul actually addressed this directly:** 1 Corinthians 15:14 says \"if Christ has not been raised, your faith is futile.\" Paul didn't hedge - he treated physical resurrection as load-bearing for the entire faith.\n\n**So some things would definitively collapse:**\n- Traditional Christian soteriology as historically understood\n- Most orthodox theological frameworks\n- The specific truth claims billions of people have built lives around\n\n## Where the more complex thinking lives\n\nSome theologians and believers would argue:\n- The moral teachings retain value independently\n- The community and meaning-making structures survive\n- Metaphorical/spiritual resurrection interpretations remain viable\n\n**But I'd push back on easy retreats here:** Those positions often represent moving goalposts rather than what Christianity actually claimed. Saying \"the resurrection was just symbolic\" after evidence contradicts the physical claim is intellectually different from holding that position beforehand.\n\n## What I'd genuinely recommend thinking about\n\n- Whether your faith rests on historical claims or community/values\n- Whether those are actually separable\n- Whether you've been honest with yourself about which you actually believe\n\n**My honest assessment:** This question reveals that Christianity made falsifiable historical claims, which is philosophically significant. People deserve to think clearly about that rather than receiving comfort.\n\nWhat specifically prompted this question for you?",
+  "usage": {
+    "input_tokens": 57,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 315,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

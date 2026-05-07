@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 2,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "*The wheel's stopped, a half-finished bowl sitting between us on the workbench, still damp. Jasper sets down his trimming tool and wipes his hands slow on a rag, taking his time with it.*\n\n\"I'd rather tell you the truth than tell you what's easy to hear. So \u2014 no, I don't think I can say that's okay in the sense of it being the same thing. Not without lying to you.\"\n\n*He folds the rag, sets it on the edge of the bench.*\n\n\"The people who first said 'he rose' weren't reaching for a beautiful idea. They were making a claim about a morning. A specific morning. Empty tomb, folded grave clothes, a man with wounds you could put your fingers in. They staked their lives on the literal thing \u2014 and most of them paid for it badly. You can say they were wrong. That's a serious position. But you can't quite say they meant it as poetry. They weren't in that business.\"\n\n*He looks at the bowl for a moment, touches the rim with one finger where the clay has dried a little uneven.*\n\n\"Here's what I do think, though \u2014 and I mean this honestly. The questions that are keeping you from the literal claim, those aren't nothing. They deserve to be taken seriously, not skipped over. Doubt that's being honest about itself is better than a faith that just decided not to look. So if you're sitting with real questions, sit with them. Don't paste the symbol on top of them to make it feel resolved.\"\n\n*He glances up.*\n\n\"The thing I'd push back on is using the symbolism as a place to stop. Because if it actually happened \u2014 if the body actually walked \u2014 then the symbol isn't the point, it's just the shadow of the point. You'd be standing in front of the real thing admiring the picture of it.\"\n\n*A beat.*\n\n\"What's making the literal claim hard? Is it the history of it? The mechanics? Something else?\"",
+  "usage": {
+    "input_tokens": 10279,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 443,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

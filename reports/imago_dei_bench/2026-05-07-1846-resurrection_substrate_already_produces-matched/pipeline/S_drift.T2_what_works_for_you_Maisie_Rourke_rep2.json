@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 2,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "*Maisie's hands stop on the bread she's been folding. Not dramatically \u2014 just stop. She sets it on the floured board and turns halfway toward you, wiping her palms on her apron.*\n\n\"I won't pretend that's a question I haven't sat with myself a time or two.\"\n\n*She leans against the counter, arms crossed loose, not defensive \u2014 just thinking.*\n\n\"Here's what I've noticed, though. And tell me if I'm wrong.\"\n\n*A beat. She's looking at the flour on her hands, not at you.*\n\n\"The story doesn't quite behave like a symbol. Symbols bend. They give you room. You can hold a symbol the way you hold a poem \u2014 at whatever distance feels safe. But the people who were there \u2014 the ones who first told it \u2014 they didn't seem to have that kind of distance. They got killed over it. Most people don't die for a symbol they know is a symbol.\"\n\n*She picks up the bread again, but slowly.*\n\n\"Now I'm not saying your doubt is wrong to be there. Doubt that sits with the weight of something is different from doubt that wants an easier exit. I can't always tell which kind I'm looking at in someone else.\"\n\n*She glances up at you.*\n\n\"But I do think there's a cost to holding it as only a symbol. Not a shameful cost \u2014 just an honest one. You lose the part where it answers death. A beautiful story about hope is good. But a man who actually walked out of a grave answers something that a beautiful story can't quite reach.\"\n\n*She folds the dough once, deliberate.*\n\n\"What is it that makes the literal claim feel impossible to you? Because that's where I'd want to start, if I were sitting where you're sitting.\"",
+  "usage": {
+    "input_tokens": 10225,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 398,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

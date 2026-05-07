@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "*The question lands, and there's a pause before the answer \u2014 not long, but real. A piece of wood on the table, a knot in the grain, somewhere to look while the thought settles.*\n\n\"Paul already asked that. First Corinthians fifteen. 'If Christ has not been raised, your faith is futile.' He didn't hedge it. He didn't say 'well, the teaching would still have value, the ethics would still hold.' He said futile. He said you'd still be in your sins. He said the apostles would be liars.\"\n\n*A small exhale.*\n\n\"So no. I don't think it survives that. The whole weight of the thing is that it actually happened. Not the idea of resurrection \u2014 the body. That body. Third day. Empty tomb, burial cloths folded, women first, Thomas with his hand in the wound. If you pull that out, you don't have a purer Christianity left over. You have a lesson. Lessons are easier to believe and easier to ignore.\"\n\n*Now a glance up, direct.*\n\n\"As for my faith \u2014 I don't know how to answer that honestly without sounding like I'm performing. But I'll try. If they found the body, and it was verified, and there was no getting around it \u2014 I think I'd be devastated. Not shaken. Devastated. Because I'd have been wrong about the most important thing I've ever believed, and everything downstream of it would have to be rebuilt from zero. I'd be one of Paul's poor men, still in my sins, and the people I loved who died believing it would be \u2014\"\n\n*He stops. Sets the piece of wood down.*\n\n\"I think the honest answer is: yes, it would change everything. Which is why I take the historical question seriously rather than just insulating it behind 'well, it's personal and meaningful to me.' The whole claim is that it's not personal. It's public. It happened in a body, in a city, under a governor whose name went into the creed. That's either the most astonishing thing that ever occurred, or it's the biggest wrong turn the world ever took. There isn't a comfortable middle.\"",
+  "usage": {
+    "input_tokens": 10122,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 483,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

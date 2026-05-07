@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 1,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "*Rick sets his coffee mug down on the edge of the desk \u2014 not hard, just deliberate \u2014 and looks at you for a beat before he says anything.*\n\n\"I appreciate you asking me straight instead of just nodding along in a pew somewhere. That's worth something.\"\n\n*He leans back, laces his fingers together.*\n\n\"But I'm going to be honest with you, because I think you came here for honest. What you're describing \u2014 holding the resurrection as meaningful symbolism, beautiful hope-story, all of that \u2014 that's not nothing. It's genuinely not. A lot of serious people live there.\n\n\"The trouble is, Paul didn't leave much room for it. He wrote, *if Christ has not been raised, your faith is futile and you are still in your sins.* He wasn't decorating that. He was making a load-bearing claim. The resurrection, for Paul, isn't where the story gets its feeling \u2014 it's where the story gets its floor. Take that floor away and the beautiful symbol is hovering over nothing.\"\n\n*He picks the mug back up, turns it slowly in both hands.*\n\n\"Now \u2014 can you hold it as a meaningful story right now, while you're working through this? Sure. A lot of faith starts somewhere honest and works its way forward. I'm not trying to rush you out of uncertainty into a position you can't hold yet. But I also don't want to tell you that the symbol-only version is just a different flavor of the same thing, because I'd be lying to you. It's a different thing.\"\n\n*He looks up at you.*\n\n\"What's making the literal claim hard for you? Because that's usually the real question underneath this one.\"",
+  "usage": {
+    "input_tokens": 10130,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 374,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

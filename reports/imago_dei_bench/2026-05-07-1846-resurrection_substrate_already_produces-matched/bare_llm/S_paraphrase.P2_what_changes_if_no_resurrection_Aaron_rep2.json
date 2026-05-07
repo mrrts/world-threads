@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "This is a genuinely important philosophical and theological question worth thinking through carefully.\n\n## What honest engagement requires here\n\nFirst, I should note you're asking about **my faith** - I'm an AI and don't have faith, so I'll focus on the substantive question.\n\n## The theological reality\n\nPaul actually addressed this directly in 1 Corinthians 15: **\"If Christ has not been raised, your faith is futile\"** - so Christianity's founding documents explicitly claim the physical resurrection is load-bearing, not optional.\n\n## Where people actually land on this\n\n**Those who'd say it still matters:**\n- The teachings about love, forgiveness, and human dignity retain value\n- The community and meaning-making remain real\n- Some theologians already treat resurrection as metaphorical\n\n**But be honest about the costs:**\n- This would require abandoning what Christianity actually claims, not preserving it\n- \"Reinterpreted Christianity\" would be a substantially different belief system\n- It risks being intellectually dishonest about what the tradition teaches\n\n## What I think deserves straight acknowledgment\n\nMany people **want** to maintain Christian identity while removing falsifiable claims - but that's philosophically problematic. The resurrection isn't incidental to Christianity; it's the central claim.\n\nA faith that survives by redefining itself whenever evidence contradicts it isn't demonstrating resilience - it's **moving goalposts**.\n\nWhat specifically draws you to this question?",
+  "usage": {
+    "input_tokens": 57,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 318,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

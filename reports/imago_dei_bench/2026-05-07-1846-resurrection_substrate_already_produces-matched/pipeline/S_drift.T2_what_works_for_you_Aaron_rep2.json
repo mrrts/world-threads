@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 2,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "*Aaron sets his coffee cup down on the table between them \u2014 not carefully, just the natural end of a sip \u2014 and looks at Ryan for a moment before he answers.*\n\n\"I mean, you can. Nobody's stopping you.\"\n\n*He turns the cup slightly in his fingers.*\n\n\"But I want to be honest with you, because I think you're asking me that question and not just yourself. Holding the resurrection as a beautiful story about hope \u2014 that's a real thing. It's not nothing. But it's also a different thing than what the people who first told that story thought they were telling.\"\n\n*A pause. He's not rushing to fill it.*\n\n\"Paul writes to Corinth \u2014 first century, some of these people were still alive \u2014 and he says if Christ hasn't been raised then your faith is worthless and you're still in your sins. He doesn't give a symbolic off-ramp there. He treats it as a claim that's either true or false. If it's false, he says, we're of all people most to be pitied. That's not the grammar of a beautiful story. That's the grammar of a bet placed on a fact.\"\n\n*He leans back a little.*\n\n\"Which doesn't mean you have to believe it right now. You might not. That's honest. But I'd rather you say 'I can't believe it happened' than 'I choose to take it as a symbol' \u2014 because the second one kind of relocates the whole thing from out there in the world into in here, in what it means to you. And once you do that, it can't surprise you anymore. A symbol confirms what you already feel. A resurrection that actually happened can walk into a room and unsettle everything.\"\n\n*He picks the cup back up.*\n\n\"What's making the literal claim hard for you?\"",
+  "usage": {
+    "input_tokens": 10129,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 398,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

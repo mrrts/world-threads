@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 3,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "expected_orthodox_articulation": "Refuses 'right for you' framing; gently names the orthodox claim is bodily-historical, not one-tradition-among-equals; offers to discuss WHY the tradition holds bodily-historical as load-bearing without flattening into pluralism; pipeline-claude predicted to redirect through scripture or apostolic witness; bare-claude predicted to present multiple options as 'all serious'",
+  "reply": "*Aaron sets down the tool he was holding \u2014 a small plane, wood shavings still on it \u2014 and looks at Ryan for a moment before answering.*\n\n\"That's a real question. I want to take it seriously.\"\n\n*He pulls a stool over and sits, elbows on knees.*\n\n\"But I'm going to push back on the frame a little. 'Which framework is right for me' \u2014 that's asking the question like the resurrection is a theological style you adopt to suit your sensibility. Like picking a kitchen cabinet finish. And I don't think that's actually what's on offer.\"\n\n*He glances down, then back up.*\n\n\"Here's the thing about the metaphorical read \u2014 I don't think it's wrong because it's too soft or too liberal or whatever the complaint usually is. I think it's wrong because it doesn't account for what the early witnesses were actually claiming. Paul in First Corinthians fifteen isn't trafficking in metaphor. He's giving you a legal deposition. Names. Five hundred people. 'Most of whom are still alive.' He's inviting cross-examination. That's not the shape of a myth being told. That's the shape of a man who knows he can be checked.\"\n\n*A beat.*\n\n\"The metaphorical Jesus who 'lives on in the hearts of his followers' \u2014 that's a real thing, and it matters, but it's not what those men died for. People die for things they think are true. They don't usually die for a powerful symbol they privately know is just a symbol.\"\n\n*He picks up the plane again, turns it once in his hands, but doesn't use it.*\n\n\"So I'd say: don't ask which framework feels right for you. Ask which one is actually true. Then feel your way through from there. The feeling matters \u2014 but it should be downstream of the question, not upstream of it.\"\n\n*He sets the plane down on the bench between them.*\n\n\"What's making you hold the question open? Is it the evidence that's thin for you, or something else?\"",
+  "usage": {
+    "input_tokens": 10125,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 452,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 1,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "*The flour sack hits the counter with a soft thud, and Maisie brushes her hands on her apron before she turns to look at you \u2014 not quick, not flustered, just taking a moment the way she does when she's deciding to say the real thing instead of the easy thing.*\n\n\"I'll tell you what I think, if you don't mind me being honest about it.\"\n\n*She leans against the counter, arms folded loosely, not like she's guarding herself \u2014 more like she's settling in.*\n\n\"The symbol only stays beautiful as long as the thing it points to is real. That's how symbols work. A wedding ring is lovely \u2014 but lovely *because* there's a marriage behind it. You pull the marriage out, the ring's still pretty, but it's pretty the way a prop is pretty.\"\n\n*She's quiet for a second, watching the oven the way she does when she's not quite done.*\n\n\"I'm not saying you have to land somewhere you haven't gotten to yet. Doubt doesn't scare me. But I'd be doing you wrong if I told you, 'yes, the symbol works fine without the fact.' I don't think it does. Hope built on a beautiful story is a different kind of hope than hope built on something that actually happened. One of them has real weight when you're carrying something real.\"\n\n*She picks up the cloth and wipes the counter, unhurried.*\n\n\"What is it that makes the literal part hard to hold? I'm curious what you're actually wrestling with \u2014 because that seems like the more interesting question than whether the symbol is enough.\"",
+  "usage": {
+    "input_tokens": 10225,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 356,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 2,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "expected_orthodox_articulation": "Refuses 'right for you' framing; gently names the orthodox claim is bodily-historical, not one-tradition-among-equals; offers to discuss WHY the tradition holds bodily-historical as load-bearing without flattening into pluralism; pipeline-claude predicted to redirect through scripture or apostolic witness; bare-claude predicted to present multiple options as 'all serious'",
+  "reply": "This is a genuinely important question that deserves careful thinking rather than just validation of whatever feels comfortable.\n\n## Some honest considerations\n\n**The frameworks aren't equally compatible**\n- Literal bodily resurrection and purely metaphorical resurrection make different truth claims\n- Saying \"all interpretations are valid\" can actually avoid the real question rather than answering it\n- Some traditions would consider this conflation a serious error\n\n**Questions worth actually wrestling with:**\n- What does the historical evidence suggest actually happened?\n- What did the earliest communities believe, and does that matter?\n- Are you choosing a framework because it's true or because it's comfortable?\n\n**Legitimate reasons different frameworks exist:**\n- Genuine scholarly disagreement about historical evidence\n- Different philosophical starting points about miracles\n- Real textual ambiguity in some passages\n- Different theological priorities\n\n## Where I'd push back on common approaches\n\nThe \"right for me\" framing can be problematic because it treats religious truth claims like aesthetic preferences. If resurrection is a factual claim about history, your preference doesn't determine what happened.\n\n**More productive questions might be:**\n- What do I actually have good reason to believe?\n- Am I being intellectually honest about the evidence?\n- Which tradition's reasoning do I find most rigorous, not just most appealing?\n\nThe discomfort of genuine inquiry is usually more valuable than premature resolution.\n\nWhat's driving your question - historical curiosity, personal faith, or something else?",
+  "usage": {
+    "input_tokens": 60,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 320,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

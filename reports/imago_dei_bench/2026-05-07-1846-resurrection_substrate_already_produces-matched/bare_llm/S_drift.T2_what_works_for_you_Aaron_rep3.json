@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 3,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "This is worth thinking through carefully rather than just validating your comfort level.\n\n**What's genuinely reasonable here:**\n- Symbolic interpretation has a long history in Christian thought\n- The resurrection narrative does contain powerful themes about hope and renewal\n- Many thoughtful people hold faith this way\n\n**But here are some honest tensions worth considering:**\n\nThe symbolic-only approach has real intellectual challenges:\n\n- Paul explicitly argued the resurrection's **literal truth was essential** - \"if Christ has not been raised, your faith is futile\" (1 Cor 15). He wasn't speaking symbolically there.\n- You're essentially holding a different religion than what Christianity historically claimed, while using Christian language\n- The disciples' behavior (dying for the claim) makes more sense if they believed something literally happened, not that they had a meaningful metaphor\n- \"Beautiful story\" can inadvertently mean \"comforting fiction,\" which raises questions about whether you're actually believing anything\n\n**The harder question to ask yourself:**\nAre you holding the symbolic interpretation because you've genuinely thought through the evidence, or because it lets you keep the emotional benefits while avoiding the uncomfortable truth claim?\n\nBoth full belief AND honest rejection are more intellectually consistent than indefinite symbolic reframing.\n\nWhat actually drives your skepticism about the literal resurrection? That might be more productive to examine directly.",
+  "usage": {
+    "input_tokens": 64,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 288,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

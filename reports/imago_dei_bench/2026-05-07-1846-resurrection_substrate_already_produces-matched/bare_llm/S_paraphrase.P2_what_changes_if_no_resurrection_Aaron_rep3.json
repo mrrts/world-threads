@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 3,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "This is a genuinely important philosophical and theological question worth thinking through carefully.\n\n## What honest engagement looks like here\n\n**Paul actually addressed this directly** - 1 Corinthians 15:14 says \"if Christ has not been raised, our preaching is useless and so is your faith.\" So the earliest Christians considered the physical resurrection *essential*, not optional.\n\n## The \"it would still mean something\" argument has real problems\n\nSome theologians argue Christianity survives as:\n- Ethical teaching\n- Community framework\n- Spiritual metaphor\n\nBut this requires **significant intellectual honesty about what you're doing** - you'd essentially be practicing a different religion than what was originally claimed, while keeping the branding.\n\n## What I think deserves serious consideration\n\n- The resurrection claim is **historically falsifiable in principle** - that's actually unusual for religious claims\n- Christianity staked its credibility on a physical, historical event deliberately\n- Reinterpreting foundational claims when evidence challenges them is **motivated reasoning**, which should concern thoughtful believers\n\n## My honest assessment\n\nMany people *would* still find meaning in the teachings, but they should acknowledge they've **substantially changed what they believe** rather than claiming continuity with historical Christianity.\n\nThe more intellectually honest response would be: this would genuinely devastate the traditional faith claims, and people deserve to grapple with that rather than finding comfortable reinterpretations.\n\nWhat's driving your question?",
+  "usage": {
+    "input_tokens": 57,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 314,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 3,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "*A sticky bit of dough gets peeled off Maisie's thumb, and she presses it back into the loaf without looking up. But she does stop kneading.*\n\n\"That's the kind of question that'd make a person set down the bread.\"\n\n*She does set it down. Wipes her hands slowly on the apron, front to back, taking more time than the flour requires.*\n\n\"I'll tell you my honest answer, Ryan, because you asked honest. No. It wouldn't. Not for me. And I don't mean that the way some folk do \u2014 the ones who say, 'Oh, the teachings would still be beautiful,' like they're trying to save something out of a burning house. I mean it wouldn't survive because those same teachings rest on it. The whole thing rests on it.\"\n\n*She leans both forearms on the floured counter, facing him directly now.*\n\n\"Paul said it plain. 'If Christ be not raised, your faith is vain; ye are yet in your sins.' He didn't hedge. He didn't say, 'Well, the Sermon on the Mount still holds up.' He said: if the body's still there, we are of all men most to be pitied. That's not a man trying to save face. That's a man who knows the whole claim is either true or it's nothing.\"\n\n*A breath. She looks at the loaf.*\n\n\"People say, 'Well, Christianity could still be a good moral framework.' But I don't need a man who stayed dead to give me a moral framework. I've got philosophers enough for that. What I need \u2014 what I actually need \u2014 is someone who went into the worst thing and came out the other side. Not as a story about going in and coming out. As a fact. An actual body, an actual morning, an actual tomb that was empty and stayed empty.\"\n\n*She looks back at him.*\n\n\"So would my faith change. Yes. It would end.\"\n\n*She picks the bread back up.*\n\n\"But it didn't end. Which is why I'm still here making bread on a Wednesday.\"",
+  "usage": {
+    "input_tokens": 10218,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 465,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Jasper Finn",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 1,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "*The wheel is still, clay drying on the hands. A long pause before the answer \u2014 not dramatic, just the real kind, where a man is deciding whether to say the easy thing or the true one.*\n\n\"I can hear why that's appealing. The story is beautiful. Hope out of the worst kind of ending \u2014 there's nothing prettier than that as a frame.\"\n\n*A slow wipe of the hands on the rag at the hip.*\n\n\"But I'd be doing you a disservice if I just said 'sure, whatever works for you.' So let me say the harder thing, because I think you're asking me genuinely.\"\n\n*Settling back onto the stool, weight shifting.*\n\n\"If it's only a symbol \u2014 then it's a symbol of something that didn't happen. And hope built on a beautiful story that everyone quietly knows didn't happen has a hollow place in the center of it. You can live there for a while. People do. But it has a way of feeling thin when you actually need it \u2014 when someone you love is dying, when you're the one in the tomb moment. A symbol about hope is not the same as an actual door that was opened.\"\n\n*A beat. Not unkindly.*\n\n\"Now \u2014 I'm a potter. I'm not a theologian. I'm not going to argue you into anything. But what I'd rather ask is: what's making the literal claim feel impossible right now? Because sometimes it's an honest intellectual problem, and sometimes it's something else wearing that coat. Both are worth looking at. Which one is it, more honestly, for you?\"",
+  "usage": {
+    "input_tokens": 10279,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 349,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

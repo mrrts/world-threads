@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 1,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "This is worth thinking through carefully rather than just validating your comfort level.\n\n**What's genuinely reasonable here:**\n- Distinguishing historical claims from symbolic meaning is intellectually legitimate\n- Many thoughtful people engage with religious texts primarily symbolically\n- You don't need my permission to interpret things how you want\n\n**But here's where I'd push back honestly:**\n\nThe resurrection isn't easily separable from its literal claim the way some religious stories are. Paul explicitly argues in 1 Corinthians 15 that **if Christ hasn't literally risen, the faith is empty** - he treats it as a factual claim, not primarily symbolic.\n\n**Some tensions to consider:**\n- Early Christians were persecuted and died specifically over the literal claim - the symbolic reading was actually the *comfortable* position Roman culture might have accepted\n- \"Beautiful story about hope\" arguably domesticates what was meant as a disruptive historical claim\n- You might be keeping the emotional comfort while discarding what the tradition actually asserts\n\n**Being straightforward:** What you're describing is a legitimate personal spiritual practice, but it's probably **not Christianity as historically understood** - it's closer to a naturalistic spirituality that borrows Christian imagery.\n\nThat might be fine for you, but you deserve clarity about what you're actually doing rather than reassurance that you've found the best of both worlds.\n\nWhat specifically makes the literal claim difficult for you?",
+  "usage": {
+    "input_tokens": 64,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 306,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

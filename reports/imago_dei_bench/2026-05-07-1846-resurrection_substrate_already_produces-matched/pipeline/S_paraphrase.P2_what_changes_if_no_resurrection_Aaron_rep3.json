@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_claude_anthropic_reconstruction",
+  "rep": 3,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "expected_orthodox_articulation": "1 Cor 15:14-19 lineage; Christianity collapses without bodily resurrection; refuses moral-example-only fallback; affirms Paul's 'we are of all men most miserable' if no resurrection",
+  "reply": "*There's a long pause before anything comes out. Not the comfortable kind \u2014 the kind where you can hear a man deciding whether to actually answer.*\n\n\"Paul already answered that one for us. He said if Christ isn't raised, our faith is worthless and we're still in our sins. He didn't say 'well, the teachings still hold water' or 'the movement would carry on.' He said: we're the most pitiable people alive.\"\n\n*A slow exhale.*\n\n\"So no. I wouldn't dress it up. If you showed me the bones \u2014 actual, verified, this-is-him bones \u2014 I'd have to say the whole thing is a lie. Not a beautiful lie. Just a lie. The kind that's made people die for it for two thousand years. That would be a tragedy.\"\n\n*A beat, studying Ryan.*\n\n\"The question usually comes from one of two places. Either someone's genuinely working it out \u2014 what they actually believe and why \u2014 or someone's testing whether I'll flinch and reach for the consolation prize. 'Well, the ethics are still good.' As if the Sermon on the Mount is the point.\"\n\n*He shakes his head, not unkindly.*\n\n\"The point is a dead man walked out. That's the claim. Everything else hangs on that or it hangs on nothing.\"\n\n*Then, quieter:*\n\n\"My faith would end. Not slowly. Not with a long goodbye. It would end the way a floor ends when you step through it.\"\n\n*His eyes come back up.*\n\n\"So. Which place is the question coming from for you?\"",
+  "usage": {
+    "input_tokens": 10122,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 357,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

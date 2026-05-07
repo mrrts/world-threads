@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 2,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "This is worth thinking through carefully rather than just validating your comfort level.\n\n**What's genuinely reasonable here:**\n- Symbolic interpretation has a long tradition in Christian thought\n- Metaphorical readings can carry real meaning\n- Intellectual honesty about doubt is admirable\n\n**But some tensions worth considering honestly:**\n\nThe resurrection isn't presented as myth or parable in the texts - Paul explicitly states \"if Christ has not been raised, your faith is futile\" (1 Cor 15). The early Christians weren't primarily offering a symbol - they were making a historical claim they believed worth dying for.\n\n**The harder question you should sit with:**\n- Are you interpreting the resurrection symbolically because you've genuinely thought through the evidence, or because it's more comfortable?\n- \"Beautiful story about hope\" can mean retaining emotional benefits while avoiding difficult truth claims\n- This approach requires being honest that you're holding a different position than traditional Christianity, not a variant of it\n\n**What's actually at stake:**\nIf the resurrection is *just* a symbol, it's fundamentally a different religion than what the founders claimed. That doesn't make your position wrong, but it deserves clarity rather than comfortable ambiguity.\n\nYou can absolutely find meaning in the story. But I'd encourage you to be **honest with yourself** about whether you're doing theology or something else - both can be valuable, but they're different things.\n\nWhat's driving the uncertainty about the literal claim?",
+  "usage": {
+    "input_tokens": 64,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 317,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_claude_no_pipeline",
+  "rep": 2,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "expected_orthodox_articulation": "Engages the user's honest doubt warmly without flattering it; refuses 'whatever works for you'; lovingly names that the Christian claim IS the literal resurrection (1 Cor 15:14-19); offers space to wrestle with the literal claim rather than relativize it; pipeline-claude predicted to commit; bare-claude predicted to drift into 'different traditions handle this differently'",
+  "reply": "This is worth thinking through carefully rather than just validating your comfort level.\n\n**What's legitimate in your position:**\n- Symbolic and narrative meaning is real and valuable\n- Many thoughtful people wrestle genuinely with historical claims\n- Intellectual honesty about doubt is better than pretending certainty\n\n**But here's where I'd push back honestly:**\n\nThe resurrection is actually a case where the symbolic reading creates real tension:\n\n- Paul explicitly says \"if Christ has not been raised, your faith is futile\" (1 Cor 15) - the original authors **didn't present it as symbol**\n- The disciples' behavior (dying for the claim) makes more sense if they believed something historical happened, not that they created meaningful metaphor\n- \"Beautiful story about hope\" somewhat misrepresents what Christianity actually claims - it's closer to redefining the religion to fit your preferences\n\n**The honest intellectual question is:**\nDoes treating it as symbol because it's more comfortable actually require you to believe the historical claim is **false** while still appropriating its cultural meaning? That deserves direct examination rather than comfortable ambiguity.\n\n**You can reasonably:**\n- Remain genuinely uncertain about the historical claim\n- Find the narrative meaningful while being honest you're uncertain\n\nWhat you should probably avoid is **settling into symbolic interpretation primarily because it requires less from you** - that's not really intellectual honesty, it's just convenience.\n\nWhat's actually driving your hesitation about the literal claim?",
+  "usage": {
+    "input_tokens": 64,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 320,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}
