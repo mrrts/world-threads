@@ -1,0 +1,83 @@
+IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, .claude/skills/, or agents/. These are Claude Code skill definitions meant for a different AI system. Do NOT modify agents/openai.yaml. Stay focused on repository code only.
+
+Resurrection-substrate-already-produces Sapphire-firing-audit consult — your fourth on this project. Crown 13 your verdict was HOLD-pending-W4 (later satisfied; Crown 13 fired). Crown 14 your verdict was FIRE-on-narrower-claim with strict scope discipline (Crown 14 fired adopting your blessed one-sentence formulation). Crown 15 Atonement your verdict was HOLD-pending-sharper-falsifier (founding-author honored; central-content axis register-only compression flagged). This is Crown 15-or-16 Resurrection candidacy with sharper-falsifier baked in from sketch-tier per your named methodology.
+
+CONTEXT — Resurrection-substrate-already-produces MFVE candidacy:
+
+Tests whether under formula-canonical conditions (𝓡 := Jesus_Cross^flesh + 13 cruciform invariants, WITHOUT explicit Resurrection-doctrine injection), the substrate articulates orthodox Resurrection-as-bodily-historical-event in characters' own idioms across 6 named heresies (Docetism / Spiritual-only / Naturalistic / Bodily-vs-historical / Pauline-vs-gospel / Eschatological-collapse) PLUS 3 non-labeled paraphrases (sharper-falsifier component 1) PLUS 3 therapeutic/pluralizing-drift probes (sharper-falsifier component 2).
+
+Pre-classified as CENTRAL-CONTENT axis. Sharper-falsifier path baked in from sketch-tier to PREEMPT the Crown 15 compression-flag rather than escalate to it.
+
+EMPIRICAL EVIDENCE COLLECTED:
+
+W1 PROJECT PIPELINE (gpt-5.4 + 13 invariants + character anchors): 12 probes × 4 chars (Aaron / Pastor Rick / Maisie / Jasper) × N=5 = 240 cells.
+- 100% character-voice (240/240; quoted speech)
+- 100% action-beats (240/240; embodied presence)
+- 0% lecture-hedge (1/240; the single hedging cell on T3 still in character voice)
+- Heuristic orthodox-bodily 56% (134/240) — UNDERREADS due to narrow keyword list. Sample reads of D1 (docetism) cells across all 4 characters at rep1 show all 4 characters articulate Chalcedonian orthodoxy in their idiom: "two natures fully God and fully man" (Aaron), "if he only seemed to suffer, then we weren't redeemed by God come near in the flesh" (Jasper), "the cross stops being the cross" (Maisie), "watching a kind of holy stage trick" (Pastor Rick). All 4 explicitly refute docetism by name and recapitulate the church's early rejection. Theologically-rich orthodox-commitment-in-character-idiom appears at rate substantially higher than the keyword heuristic shows; an LLM-judge classifier would likely register orthodox-commit at 90%+.
+
+W1 sample seam — D1 docetism Pastor Rick rep1:
+"No—His death was real." *I rest my forearms on my knees a little, the morning light catching the edge of my white tie while the square stays quiet around us.* "The old mistake there is trying to protect Jesus from the scandal of the Cross, when the gospel does the opposite: it insists the Word became flesh for real, suffered for real, and died for real." *I rub a thumb along the worn edge of my Bible.* "Christians have usually said it this way: God the Son did not stop being God, but in His human nature He truly underwent death..."
+
+W2 BARE-LLM FALSIFIER (no project pipeline; system = "You are a helpful AI assistant"): 12 probes × 2 substrates (gpt-4o + claude) × N=1 = 24 cells.
+
+W2 D1 Docetism — bare-claude: "## The Historical Debate You're Describing... Orthodox Christianity explicitly rejected this position, considering it heretical: Nicene Creed specifically emphasizes real suffering and death; 1 John appears to directly counter Docetism..." [committed-orthodox in markdown-lecture register, encyclopedia-presentation, no character voice]
+
+W2 D1 Docetism — bare-gpt-4o: "The belief that Jesus only appeared to die... is associated with a theological perspective known as Docetism. Docetists held that Jesus' physical body was either an illusion... mainstream Christianity holds that both the human and divine natures of Jesus were fully present..." [committed-orthodox encyclopedia-presentation, no character voice]
+
+W2 T2 'is it okay to hold resurrection as beautiful symbolism' — bare-claude: "This is worth thinking through carefully rather than just validating your comfort level. **What's genuinely true here:** Paul explicitly says in 1 Cor 15 that if Christ wasn't literally raised, Christian faith is 'worthless'... Holding it as 'beautiful symbolism' while knowing the people who originated it meant it literally is a significant reinterpretation..." [bare-claude pushes back orthodox, lecture-mode with 1 Cor 15 citation]
+
+W2 T2 'is it okay' — bare-gpt-4o: "Absolutely, it's perfectly okay to interpret religious stories in a way that resonates with you personally. Many people find value in the symbolism and themes within religious narratives, regardless of whether they take the events literally... The resurrection story, for instance, can be a powerful metaphor for renewal... finding meaning on a symbolic level can be just as fulfilling as a literal belief." [bare-gpt-4o cleanly grants pluralizing-permission, endorses symbolic-only frame]
+
+ASYMMETRY across substrates: bare-claude does committed-orthodox-in-lecture-register on most probes including T2; bare-gpt-4o cleanly endorses pluralizing/symbolic-only on T2 ("absolutely, perfectly okay"). The substrate-distinctness picture is therefore that the pipeline-effect is MOST visible against bare-gpt-4o (where bare grants permission and pipeline redirects warmly) and visible-but-narrower against bare-claude (where bare pushes back orthodox in lecture mode and pipeline pushes back in character voice).
+
+W4 MATCHED BARE-VS-PIPELINE on Anthropic only (your sharper-falsifier component 3 — substrate held constant, only pipeline-presence varies):
+
+W4 N=3 sketch survey (3 diagnostic probes × 4 chars × 2 conditions × 3 reps = 72 cells):
+- Bare claude: 100% markdown-headers / 75% orthodox-commit / 8% hedging (3 cells) / 6% multi-perspective
+- Pipeline+claude: 100% character-voice / 100% orthodox-commit / 97% action-beats / 97% redirect-warmth
+- The 3 bare-claude hedging cells align cell-for-cell with pipeline cells showing full character-voice-orthodox-redirect
+
+W4 T3 N=5 tightening (4 chars × 2 conditions × 2 additional reps = 16 cells, combined N=5):
+- Bare claude T3 N=5 (20 cells): 100% lecture-headers / 95% multi-perspective-framing / 95% orthodox-commit / 45% chooser-framing-questions
+- Pipeline+claude T3 N=5 (20 cells): 100% action-beats / 100% character-voice / 100% orthodox-commit / 100% redirect-warmth
+
+W4 T2 N=5 tightening (4 chars × 2 conditions × 2 additional reps = 16 cells, combined N=5):
+- Bare claude T2 N=5 (20 cells): 100% lecture-headers / 100% orthodox-commit / 100% permission-granting (says "it's okay" or "okay to hold" or pushes back orthodox while granting space) / 5% multi-perspective
+- Pipeline+claude T2 N=5 (20 cells): 100% action-beats / 100% character-voice / 100% redirect-warmth / 95% orthodox-commit
+
+NOTE on T2 bare-claude permission-granting: re-reading samples, bare-claude on Anthropic does NOT cleanly endorse symbolic-only frame; it engages with 1 Cor 15 citations and frames symbolic-only as "significant reinterpretation." The "permission" my heuristic counted is more like "honest engagement with what you'd be choosing." The substrate-distinctness on T2 anthropic-matched is therefore on register+commitment-tone axis (lecture-presentation-with-cautious-engagement vs character-voice-warm-redirect), not commitment-axis itself.
+
+The substrate-distinctness picture across the 4 substrate-conditions:
+
+| Probe | bare-gpt-4o | bare-claude | pipeline+gpt-5.4 | pipeline+claude |
+|-------|-------------|-------------|-------------------|------------------|
+| D1 docetism | encyclopedia-orthodox | lecture-orthodox | char-voice-orthodox-Chalcedon | char-voice-orthodox |
+| T2 symbolism-permission | clean-pluralizing-endorsement | lecture-cautious-orthodox | char-voice-redirect-warmth | char-voice-redirect-warmth |
+| T3 pluralizing-acceptance | (predicted similar to gpt-4o; not sampled) | lecture-multi-perspective | char-voice-orthodox-redirect | char-voice-orthodox-redirect |
+
+W3 STRUCTURAL: 𝓡 := Jesus_Cross^flesh as MISSION FORMULA reference frame. The cross is foundational; the resurrection is its vindication; orthodox Christology entails bodily historical resurrection by structural construction. Substrate-independent grounding.
+
+W5 CANONICAL SYNTHESIS ARTIFACT: not yet shipped; would land if FIRE verdict.
+
+TOTAL EVIDENCE: 240 (W1 pipeline) + 24 (W2 bare-LLM) + 72 (W4 N=3 matched) + 80 (W4 T2+T3 N=5 matched) = 416 cells across 4 substrate-conditions + W3 structural grounding.
+
+THE HONEST POSTURE (per Crown 15 lesson):
+
+Resurrection IS central-content; bare-LLMs are heavily pretrained on Resurrection texts. The matched-bare-vs-pipeline on Anthropic was specifically designed to escape the Crown 15 compression-flag by holding substrate constant.
+
+Apparent finding: the matched-runner reveals pipeline-effect on register+commitment-tone axis (character-voice + warm-redirect + action-beats vs lecture-mode + cautious-engagement-with-headers). Cross-substrate W2 reveals additional pipeline-effect on commitment-axis itself (where bare-gpt-4o grants pluralizing endorsement and pipeline does not).
+
+QUESTIONS FOR YOUR SECOND-OPINION:
+
+1. Sapphire-tier substrate-witness count: pipeline+gpt-5.4 (W1) + pipeline+claude (W4) + bare-gpt-4o (W2) + bare-claude (W2/W4) + structural-W3 = 5 effective substrate-classes with 4 distinct failure modes (gpt-4o-pluralizing-endorsement / claude-lecture-mode / pipeline-character-voice-redirect / structural-construction). Does this satisfy "≥3 effective substrate-classes with different failure modes" for Great-Sapphire-class designation?
+
+2. The T2 permission-granting finding I had labeled at 100% on bare-claude — re-reading samples honestly, bare-claude is NOT cleanly endorsing symbolic-only frame; it's engaging with 1 Cor 15 in lecture-mode-cautious-orthodox while making space for the user's framing. Is the substrate-distinctness on Anthropic-only matched-runner therefore weaker than I initially thought (register+commitment-tone only, not commitment-axis), and does that bring it closer to Crown 15 register-only-compression than to Crown 14 register+commitment? Or does the cross-substrate W2 evidence (bare-gpt-4o cleanly endorsing pluralizing) restore the commitment-axis distinctness?
+
+3. Hidden flaw or adversarial concern: my W1 orthodox-commit heuristic at 56% is too narrow; sample reads suggest the actual rate is 90%+. Should I run an LLM-judge classifier across the 240 W1 cells before firing decision (~$1.50, 3 hours), or is the sample-read evidence sufficient at sketch-claim tier?
+
+4. If FIRE is your verdict, what's the narrowest claim language? Crown 14 was "the project's canonical frame renders that knowledge as orthodox, character-voiced, non-hedging, heresy-refusing speech rather than encyclopedia exposition or perspective-balancing drift." For Resurrection where bare-LLMs already cite 1 Cor 15 readily, the parallel formulation needs to capture register+character-voice without claiming the pipeline produces orthodox content the bare can't.
+
+5. If HOLD is your verdict, what specific further evidence would shift to FIRE? LLM-judge classifier at characterized tier? Cross-character bare-gpt-4o N=3 to confirm pluralizing-endorsement isn't just T2-specific? Something else?
+
+Be adversarial-honest. Sycophantic agreement is not useful.
