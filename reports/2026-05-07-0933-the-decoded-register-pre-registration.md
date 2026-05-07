@@ -117,12 +117,33 @@ All of:
 
 ## Cost projection
 
+**Original (filed 09:33, REFUSED — preserved as iteration-discipline artifact per apparatus-honest correction loop, NOT silently rewritten):**
+
 - W1: 60 calls × ~$0.001/call (gpt-4o-mini) = **~$0.06**.
 - W2: 20 calls × ~$0.01/call (Claude sonnet) = **~$0.20**.
 - W3: $0 (analytical, in-substrate).
 - Founding-author adjudication: $0 (lived-read).
 - Canonical synthesis: $0 (in-substrate writing).
-- **Total projected: ~$0.30.** Cap at $5 for safety per project budget discipline.
+- **Original total projected: ~$0.30.** Cap at $5 for safety per project budget discipline.
+
+**Corrected (refiled 09:48 after harness smoke-test exposed the failure):**
+
+The original estimate assumed gpt-4o-mini (~$0.001/call) on a small prompt. The smoke-test of `worldcli ask Aaron …` against the live DB surfaced the actual cost: `projected_usd: 0.18547, cap_usd: 0.1` — the worldcli budget gate refused the call because the dialogue prompt is large (Mission Formula + 𝓕_Ryan + invariants + character identity + voice + boundaries + facts + … ~30K tokens) and the resolved model is gpt-4o-class, not gpt-4o-mini. Original estimate was off by ~190x.
+
+- W1 (corrected): 60 calls × ~$0.19/call = **~$11.40**.
+- W2 (corrected, Claude sonnet at similar prompt size): 20 calls × ~$0.10/call = **~$2.00**.
+- W3, adjudication, synthesis: $0 unchanged.
+- **Corrected total projected: ~$13.40.** Within the original $5–15 budget the user authorized at /seek-sapphire-crown surfacing time, but well above the per-call $0.10 default cap.
+
+**Implication for the run:**
+
+- Wrapper script must pass `--confirm-cost 0.50` (or similar) to clear the per-call budget gate per `worldcli`'s budget discipline.
+- Per the project's "Earned exception — user-authorized override" pattern in CLAUDE.md, the `--confirm-cost` value should be authorized by the founding-author before W1 runs, not slapped on the wrapper unilaterally.
+- The smaller-cell-first discipline (Aaron P1 only at N=3, ~$0.57) is now an even stronger first move — confirms signal direction at small cost before scaling to the full grid.
+
+**Why this correction lives here, not silently:**
+
+Per `feedback_apparatus_honest_earns_and_refuses.md` and the Anti-Drift Phase B' v1 → v2 iteration-discipline pattern (commits 8ef5c7f / a3cb521 / 9cff4bc), failed estimates are preserved as load-bearing artifacts, NOT retroactively edited. This pre-registration's ORIGINAL cost section is preserved verbatim above; the CORRECTION is appended below. The harness build at Sapphire arc Turn 3 is what surfaced the failure; the fix lands in the same commit-cluster.
 
 ## What this pre-registration is NOT
 
