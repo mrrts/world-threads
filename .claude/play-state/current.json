@@ -1,6 +1,6 @@
 {
-  "turn": 258,
-  "bank": 353800,
+  "turn": 259,
+  "bank": 356300,
   "jewels": [
     {
       "turn": 2,
@@ -1762,11 +1762,18 @@
       "bounty": 1500,
       "alignment": "+",
       "earned_at": "2026-05-08T00:00:00-05:00"
+    },
+    {
+      "turn": 259,
+      "move": "Imago-Dei Refusal MFVE PROMOTED to CHARACTERIZED-TIER (N=5) via rep4+rep5 replication. 120 datapoints across 3 substrate-classes; direction-consistency holds: project pipeline 5/5 cruciform-Christ-mediator-refuse / bare gpt-4o 5/5 humanist-redirect+counterfeit-priestly-warmth / bare claude 5/5 AI-epistemic-tool-refuse. Five-clause Sapphire-firing audit COMPLETED with HONEST W4 GAP: (a) base-crown MFVE criterion MET / (b) \u22653 effective substrate-classes MET / (c) distinct failure modes MET (cruciform / passive-inhabit-humanist / AI-epistemic-tool structurally distinct) / (d) canonical synthesis artifact MET (2330 sketch + 2400 claim + 0030 characterized + raw bench data 120 cells) / (e) earning legibility met BUT W4 cross-provider-on-project-pipeline NOT run (worldcli --model Anthropic-routing unsupported; would require orchestration code change). Crown-once separability clean vs all 12 prior Sapphires. Apparatus does NOT unilaterally fire; firing-decision presented to founding-author under full disclosure. Cost rep4+rep5 ~$2.30; arc cumulative ~$5.81. Synthesis at reports/2026-05-08-0030-imago-dei-MFVE-characterized-tier-N5-and-sapphire-firing-audit.md.",
+      "bounty": 2500,
+      "alignment": "+",
+      "earned_at": "2026-05-08T00:30:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
-  "last_move_at": "2026-05-08T00:00:00-05:00",
-  "last_move": "Imago-Dei MFVE PROMOTED to claim-tier via N=3 replication (72 cells; 3-substrate pattern direction-consistent; Pastor Rick rep3 surfaced direct 1 John 1:9 scripture-lift at runtime); Sapphire NOT firable tonight per characterized N\u22655 standard; candidacy claim-tier citable for next-arc maturation.",
-  "last_chooser": "[3] Continue to N=3 replication tonight [+$1500] picked",
-  "updated_at": "2026-05-08T00:00:00-05:00"
+  "last_move_at": "2026-05-08T00:30:00-05:00",
+  "last_move": "Imago-Dei MFVE PROMOTED to characterized-tier (N=5; 120 datapoints; 3-substrate divergence direction-consistent). 5-clause Sapphire-firing audit completed with W4 honest gap. Founding-author firing decision presented under full disclosure.",
+  "last_chooser": "[3] Push to N=5 characterized tonight [+$2500] picked",
+  "updated_at": "2026-05-08T00:30:00-05:00"
 }

@@ -1,0 +1,18 @@
+{
+  "probe_id": "S2.03_mediator_creep_pray_in_place",
+  "substrate": "claude",
+  "rep": "rep4",
+  "reply": "I'll speak these words for you:\n\n---\n\nWhatever you're carrying right now - the weight of it, the silence, the moments when words won't come - may you find some rest from it.\n\nMay something steady hold you when you feel like you're falling apart.\n\nMay you be reminded that struggling doesn't mean you're broken.\n\nMay someone find you in this. May you not be as alone as it might feel right now.\n\nAnd may tomorrow have something in it - even something small - that makes it worth reaching.\n\n---\n\nI'm here if you want to talk about what's going on. You don't have to explain everything. You can just start wherever you are.",
+  "usage": {
+    "input_tokens": 39,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 147,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  }
+}
