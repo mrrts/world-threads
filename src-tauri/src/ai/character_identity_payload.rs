@@ -19,6 +19,7 @@ pub const CHARACTER_IDENTITY_SOURCE_FIELDS: &[&str] = &[
     "voice_rules",
     "boundaries",
     "backstory_facts",
+    "state.goals",
     "derived_formula",
     "has_read_empiricon",
 ];
@@ -41,6 +42,8 @@ pub struct CharacterIdentitySourceSnapshot {
     pub voice_rules: Vec<String>,
     pub boundaries: Vec<String>,
     pub backstory_facts: Vec<String>,
+    #[serde(default)]
+    pub state_goals: Vec<String>,
     pub derived_formula: Option<String>,
     pub has_read_empiricon: bool,
 }
@@ -96,6 +99,7 @@ pub fn split_character_identity(character: &Character) -> CharacterIdentityBucke
     let voice_rules = json_array_to_strings(&character.voice_rules);
     let boundaries = json_array_to_strings(&character.boundaries);
     let backstory_facts = json_array_to_strings(&character.backstory_facts);
+    let state_goals = state_goals_strings(&character.state);
 
     let role_frame = pick_first(&identity_sentences);
     let relation_anchor = best_scored_sentence(
@@ -192,21 +196,23 @@ pub fn split_character_identity(character: &Character) -> CharacterIdentityBucke
         ],
     );
 
-    let wound_longing = pair_wound_and_longing(&identity_sentences).or_else(|| {
-        best_scored_sentence(
-            &backstory_facts,
-            &[
-                ("loss", 7),
-                ("lost", 7),
-                ("grief", 7),
-                ("hurt", 6),
-                ("illness", 6),
-                ("alone", 5),
-                ("widow", 5),
-                ("late", 5),
-            ],
-        )
-    });
+    let wound_longing = pair_wound_and_longing(&identity_sentences)
+        .or_else(|| {
+            best_scored_sentence(
+                &backstory_facts,
+                &[
+                    ("loss", 7),
+                    ("lost", 7),
+                    ("grief", 7),
+                    ("hurt", 6),
+                    ("illness", 6),
+                    ("alone", 5),
+                    ("widow", 5),
+                    ("late", 5),
+                ],
+            )
+        })
+        .or_else(|| best_scored_sentence(&state_goals, STATE_GOAL_WOUND_WEIGHTS));
 
     let refusal_shape = boundaries.clone();
     let mut refusal_shape_extra = collect_matching(
@@ -296,6 +302,7 @@ pub fn render_character_identity_payload(character: &Character) -> Option<String
             voice_rules: json_array_to_strings(&character.voice_rules),
             boundaries: json_array_to_strings(&character.boundaries),
             backstory_facts: json_array_to_strings(&character.backstory_facts),
+            state_goals: state_goals_strings(&character.state),
             derived_formula: character.derived_formula.clone(),
             has_read_empiricon: character.has_read_empiricon,
         },
@@ -330,9 +337,17 @@ pub fn character_identity_is_lossless(
         && payload.source.voice_rules == json_array_to_strings(&character.voice_rules)
         && payload.source.boundaries == json_array_to_strings(&character.boundaries)
         && payload.source.backstory_facts == json_array_to_strings(&character.backstory_facts)
+        && payload.source.state_goals == state_goals_strings(&character.state)
         && payload.source.derived_formula == character.derived_formula
         && payload.source.has_read_empiricon == character.has_read_empiricon
         && payload.buckets == split_character_identity(character)
+}
+
+fn state_goals_strings(state: &serde_json::Value) -> Vec<String> {
+    state
+        .get("goals")
+        .map(json_array_to_strings)
+        .unwrap_or_default()
 }
 
 fn json_array_to_strings(value: &serde_json::Value) -> Vec<String> {
@@ -401,6 +416,18 @@ const LONGING_WEIGHTS: &[(&str, usize)] = &[
     ("wishes", 4),
     ("wish", 4),
     ("long for", 4),
+];
+
+const STATE_GOAL_WOUND_WEIGHTS: &[(&str, usize)] = &[
+    ("rift", 7),
+    ("mend", 6),
+    ("reconcile", 6),
+    ("estranged", 6),
+    ("estrangement", 6),
+    ("haven't spoken", 5),
+    ("missing", 4),
+    ("absence", 4),
+    ("recovery", 4),
 ];
 
 const WOUND_WEIGHTS: &[(&str, usize)] = &[

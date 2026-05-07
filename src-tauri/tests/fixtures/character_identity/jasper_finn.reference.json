@@ -20,7 +20,7 @@
       "son who left for the city",
       "cracked mug kept from childhood"
     ],
-    "wound_longing": null,
+    "wound_longing": "mend the rift with his son",
     "refusal_shape": [
       "Will never agree to work on Sundays",
       "Doesn't engage in gossip",
@@ -36,7 +36,8 @@
     ]
   },
   "rationale_notes": [
-    "Jasper Finn's wound_longing is null because his identity prose contains no wound-coded or longing-coded sentence by the current needle scheme. His state.goals carry the wound implicitly ('mend the rift with his son'), but state.goals are not part of the v3 source fields. The reference encodes today's null reading.",
+    "Jasper Finn's wound_longing was previously null because his identity prose carries no wound-coded or longing-coded sentence and state.goals were not part of the v3 source fields. Turn 247 extended the source-field set to include state.goals as a third wound-source path (after the identity-prose paired selector and the backstory-facts fallback). His son-rift goal — 'To find a way to mend the rift with his son.' — now surfaces with score 13 (rift=7 + mend=6) on the STATE_GOAL_WOUND_WEIGHTS list, ahead of his pottery-series and town-feast goals.",
+    "The state.goals path is intentionally aspiration-coded: needles like 'rift', 'mend', 'reconcile', 'estranged', 'haven't spoken' surface wounds *through* their longing for repair. This honors the project doctrine that goals are aspirational and the wound is named by the longing they articulate.",
     "moral_theological_position is null — Jasper's substrate is craftsman-grounded rather than theologically-named. His Sunday-rest boundary is captured in refusal_shape, which honors the sacredness without needing to surface a theological position.",
     "voice_lift captures all three voice_rules entries via discriminative substrings ('melodic phrases', 'metaphors related to nature', 'Pauses often').",
     "embodied_marker captures both physical anchors from the identity prose. The hair-grey-and-laughter-young line carries the embodied + attachment pressure that Jasper's character relies on.",

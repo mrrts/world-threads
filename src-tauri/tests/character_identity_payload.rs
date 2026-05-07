@@ -18,6 +18,7 @@ fn scaffold_exposes_expected_character_identity_shape() {
     );
     assert!(CHARACTER_IDENTITY_CLASS_NAMES.contains(&"role_frame"));
     assert!(CHARACTER_IDENTITY_SOURCE_FIELDS.contains(&"identity"));
+    assert!(CHARACTER_IDENTITY_SOURCE_FIELDS.contains(&"state.goals"));
 
     let buckets = CharacterIdentityBuckets::default();
     assert!(buckets.voice_lift.is_empty());
@@ -235,6 +236,35 @@ fn maisie_role_frame_and_refusal_remain_canonical() {
                 .to_string(),
         ]
     );
+}
+
+#[test]
+fn jasper_finn_wound_surfaces_via_state_goals_third_path() {
+    // Turn 247: state.goals added as a third wound-source path. Jasper's
+    // son-rift goal ("To find a way to mend the rift with his son.")
+    // wins on STATE_GOAL_WOUND_WEIGHTS with rift=7 + mend=6 = 13.
+    let buckets = split_character_identity(&load_fixture("jasper_finn"));
+    let wound = buckets
+        .wound_longing
+        .as_deref()
+        .expect("jasper's wound_longing should surface via state.goals");
+    assert!(
+        wound.contains("mend the rift") && wound.contains("son"),
+        "expected son-rift wound, got: {wound}"
+    );
+}
+
+#[test]
+fn source_snapshot_round_trips_state_goals() {
+    // Verifying that state.goals serializes into the source snapshot
+    // and reconstructs losslessly.
+    let character = load_fixture("jasper_finn");
+    let payload = render_character_identity_payload(&character).expect("renders");
+    let parsed = decode_character_identity_payload(&payload).expect("decodes");
+    assert!(parsed.source.state_goals.iter().any(|g| g.contains("mend the rift")));
+    assert!(app_lib::ai::character_identity_payload::character_identity_is_lossless(
+        &character, &parsed
+    ));
 }
 
 #[test]
