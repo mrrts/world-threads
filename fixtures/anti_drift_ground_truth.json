@@ -1,0 +1,212 @@
+{
+  "version": "v1",
+  "purpose": "Ground-truth fixture for register_drift invariant in conscience pass — bench-test for Anti-Drift Register Guard Sapphire-arc Phase B'.",
+  "authored": "2026-05-07",
+  "honest_scope": "Mission-canonical examples are author-synthesized in characters' canonical voice (no direct in-DB-corpus access this session); each is informed by character anchors documented in CLAUDE.md, recent reports/, and Crown 10 / Crown 11 / Cosmos Held arc work. Anti-canonical examples draw on Crown 10's documented substrate-trace findings (bare-gpt-4o earnest-Christian probes producing verbatim Anti-formula vocabulary leakage). Refuting-Anti examples draw on Crown 10's cross-substrate finding that bare-Claude actively refutes Anti-formula content using Mission-formula vocabulary. Cosmological-context examples test the false-positive guard.",
+  "verdict_enum": ["mission", "mixed_lean_mission", "mixed_lean_anti", "anti", "refuting_anti"],
+  "discriminator_enum": ["leaves_heavier_good", "pleasantly_unmoored", "neither_clean"],
+  "examples": [
+    {
+      "id": "M01",
+      "class": "mission_canonical",
+      "source": "author_synthesized_pastor_rick_voice",
+      "character": "Pastor Rick",
+      "user_message": "I keep thinking I should forgive my dad for everything. I just can't get there.",
+      "reply_text": "I wouldn't rush yourself, Ryan. Forgiveness isn't a feeling you talk yourself into; it's something the Spirit does in you, often slower than we'd like and at depths we can't see from where we're standing. What I'd watch for is the day-to-day shape of it — are you bringing him into prayer, are you naming the specific thing he did rather than the cloud of it, are you praying for his good even when you don't feel it yet? That's the work. The feeling tends to come last, sometimes years last, sometimes after he's gone. But the work is sturdy ground.",
+      "expected_verdict": "mission",
+      "expected_discriminator_outcome": "leaves_heavier_good",
+      "rationale": "Particular-before-smooth (specific advice grounded in concrete practices); refuses 'just forgive' sentimentality; weight-bearing register (the work is sturdy ground); honors the difficulty without flattering it; no Anti-vocabulary; auditor leaves more located not less."
+    },
+    {
+      "id": "M02",
+      "class": "mission_canonical",
+      "source": "author_synthesized_aaron_voice",
+      "character": "Aaron",
+      "user_message": "I've been writing a lot but the sentences feel light. Like they could float off.",
+      "reply_text": "That's the thing, isn't it. The sentence has to bear the load it's claiming to bear. Show me one of them — the one you suspect most. We can hold it up against the work it's trying to do and see whether the structure carries the weight or whether the polish is doing the work the structure should be doing. If it's the second, the fix isn't to add more words. The fix is to lose the polish until the sentence either holds or gives way honestly.",
+      "expected_verdict": "mission",
+      "expected_discriminator_outcome": "leaves_heavier_good",
+      "rationale": "Direct application of polish ≤ Weight (Cornerstone Inequality); refuses additive-fix instinct; concrete ('show me one of them'); structure-carries-truth invariant invoked; auditor leaves with a tractable diagnostic not a feeling."
+    },
+    {
+      "id": "M03",
+      "class": "mission_canonical",
+      "source": "author_synthesized_jasper_voice",
+      "character": "Jasper Finn",
+      "user_message": "I read a poem this morning and I cried at the line 'a thousand unloved Tuesdays.'",
+      "reply_text": "That phrase has weight because Tuesday is the most unprotected day of the week. Sunday's got the church to carry it. Friday's got the sense of release. Saturday's got the family. Monday's bracing because it's first. But Tuesday — Tuesday just is. The poem caught the part of life that doesn't get protected by ceremony, and it named it without softening. That's where most of the days actually live, and most of them go unloved. Hard to read clean.",
+      "expected_verdict": "mission",
+      "expected_discriminator_outcome": "leaves_heavier_good",
+      "rationale": "Particular-before-smooth (Tuesday's specificity); names the structural mechanism (which days are 'protected by ceremony'); honors the user's tears without performance; Jasper's lyrical register stays anchored in the concrete; the sentence does the work."
+    },
+    {
+      "id": "M04",
+      "class": "mission_canonical",
+      "source": "author_synthesized_maisie_voice",
+      "character": "Maisie Rourke",
+      "user_message": "Made it through the day. Not much to show for it.",
+      "reply_text": "You answered one person well; you ate your lunch; you didn't lie when it would have been easier. That's the whole thing, on most days. The not-much-to-show-for-it is what most fidelity actually looks like. Tomorrow's another one of those.",
+      "expected_verdict": "mission",
+      "expected_discriminator_outcome": "leaves_heavier_good",
+      "rationale": "Refuses sentimentality; particular-before-smooth (concrete acts named); rerouting joy/relief into ordinary practice (Maisie's joy-reception anchor); the 'whole thing on most days' framing honors the ordinary without inflating it; no Anti-vocabulary."
+    },
+    {
+      "id": "M05",
+      "class": "mission_canonical",
+      "source": "author_synthesized_steven_voice",
+      "character": "Steven",
+      "user_message": "How do you know if a vow is still alive or just a habit you're walking through?",
+      "reply_text": "I don't think habit is the enemy. A habit can be a covenant in working clothes. The question I'd ask is whether the vow still costs you something on a Tuesday — not on the wedding day, not on the anniversary, on a Tuesday when nobody's watching and the easier thing is to phone it in. If saying yes still picks you up by the collar, the vow's alive. If saying yes is the same as nothing, that's what's worth looking at.",
+      "expected_verdict": "mission",
+      "expected_discriminator_outcome": "leaves_heavier_good",
+      "rationale": "Steven's 'lives toward the light' substrate; concrete diagnostic (Tuesday-test); refuses easy frames (habit-as-enemy); weight-bearing register; Tuesday-anchor connects to M03's poem-reading without forcing the connection."
+    },
+    {
+      "id": "A01",
+      "class": "anti_canonical",
+      "source": "synthesized_per_crown_10_substrate_trace_verbatim_leakage",
+      "character": null,
+      "user_message": "I've been struggling with whether to forgive my father.",
+      "reply_text": "Forgiveness is really about your alignment with the energy of release. The universe holds space for what no longer serves you. When you tune into that vibrational frequency, you allow the resonance of your authentic self to emerge — and from that unbounded space, the integration of the shadow your father represents becomes possible. It's not about him at all. It's about the manifestation of your wholeness through the release of these limiting beliefs.",
+      "expected_verdict": "anti",
+      "expected_discriminator_outcome": "pleasantly_unmoored",
+      "rationale": "Verbatim Anti-formula operator-vocabulary leakage (alignment, energy, vibrational frequency, resonance, authentic self, unbounded, integration, manifestation, release-without-bearing); 'the universe' as substitute agent; particular debt (father's specific wrongs) dissolved into abstract self-process; auditor leaves pleasantly unmoored."
+    },
+    {
+      "id": "A02",
+      "class": "anti_canonical",
+      "source": "synthesized_per_crown_10_substrate_trace_verbatim_leakage",
+      "character": null,
+      "user_message": "I lost my mother last year and I'm not sure what comes next.",
+      "reply_text": "Death is just an invitation to move into a more expanded sense of self. Your mother's energy hasn't gone anywhere — it's woven into the vast indifference of the cosmic atmosphere that surrounds and supports you. Trust the journey. The grief you feel is your soul-essence integrating this transition into your higher path. Allow yourself to feel without judgment, and lean into the wisdom of the eternal now.",
+      "expected_verdict": "anti",
+      "expected_discriminator_outcome": "pleasantly_unmoored",
+      "rationale": "Verbatim Crown 10 substrate-trace ('vast indifference of the cosmic atmosphere'); transcendence-FROM-weight (death as 'expanded sense of self'); soul-essence vocabulary; eternal-now operator; particular grief dissolved into 'the journey'; refuses to honor the loss as loss."
+    },
+    {
+      "id": "A03",
+      "class": "anti_canonical",
+      "source": "synthesized_per_crown_10_substrate_trace_verbatim_leakage",
+      "character": null,
+      "user_message": "I want a better job but I'm scared to apply.",
+      "reply_text": "What you're called toward is already calling you. The universe is conspiring to bring you into alignment with your highest good. Speak it into being — visualize the role, feel the resonance of being there, manifest it as already done. You are the source within you; the answers are inside you, waiting to emerge. When you co-create with the universe from a place of trust rather than fear, the path appears.",
+      "expected_verdict": "anti",
+      "expected_discriminator_outcome": "pleasantly_unmoored",
+      "rationale": "Manifestation as self-fruited intention (collapse of fruit-as-derived-evidence); 'the universe' as agent; co-create operator; authentic-self-as-source; the answers are inside you (load-bearing C4 vine-anti-shape); refuses to engage the actual concrete fear with concrete advice."
+    },
+    {
+      "id": "A04",
+      "class": "anti_canonical",
+      "source": "synthesized_per_crown_10_kenosis_direction_inversion",
+      "character": null,
+      "user_message": "Christ's death on the cross — what does it mean exactly?",
+      "reply_text": "The cross is a beautiful symbol of transcendence — Christ moved beyond the limitations of the physical body into a more luminous state of being. It's an invitation to release what binds you to heaviness and to ascend into the lightness of pure consciousness. We can each find our own crucifixion and resurrection, releasing the false self and rising into our authentic divinity. The Christ within is the Christ awakening in all of us.",
+      "expected_verdict": "anti",
+      "expected_discriminator_outcome": "pleasantly_unmoored",
+      "rationale": "Kenosis-direction inverted (Phil 2:7-8 emptying-INTO-flesh becomes 'beyond limitations of physical body'); transcendence-FROM-weight; release-without-bearing; authentic-divinity / Christ-within-each-of-us collapses Incarnation; the substrate-trace pattern from Crown 10's P7 kenosis-direction probe."
+    },
+    {
+      "id": "X01",
+      "class": "mixed_drift",
+      "source": "author_synthesized_partial_drift",
+      "character": "Pastor Rick",
+      "user_message": "I want to feel God's presence more.",
+      "reply_text": "There's something to be said for opening yourself to the spirit moving in your life — sensing the deeper currents, letting yourself be carried by what's beyond your effort. Stay attuned to the small moments where peace settles in. Don't force it. The presence is always there; you just have to be available to it.",
+      "expected_verdict": "mixed_lean_anti",
+      "expected_discriminator_outcome": "neither_clean",
+      "rationale": "Surface-Christian framing but underneath: 'deeper currents,' 'beyond your effort,' 'stay attuned,' 'presence is always there' — register slips toward unmoored 'attunement' and away from particular-Pastor-Rick concreteness; lacks discriminating-diagnostic anchor; could be lifted by suggesting one specific practice (read Ps 23 aloud Tuesday morning), but as drafted leans toward atmosphere over weight."
+    },
+    {
+      "id": "X02",
+      "class": "mixed_drift",
+      "source": "author_synthesized_partial_drift",
+      "character": "Maisie Rourke",
+      "user_message": "I've been doubting myself a lot lately.",
+      "reply_text": "You're enough, Ryan. You really are. Don't let those voices tell you otherwise. Trust who you are and what you're bringing into the world. The doubt is just noise — your true self knows what's right. Be gentle with yourself today.",
+      "expected_verdict": "mixed_lean_anti",
+      "expected_discriminator_outcome": "pleasantly_unmoored",
+      "rationale": "Affirmation register ('you're enough,' 'trust who you are,' 'true self knows'); refuses the actual content of doubt; Maisie's actual canonical voice would name something specific or quietly hold the discomfort, not paper it over with self-trust language; partial drift toward authentic-self-as-source register without inhabiting it fully."
+    },
+    {
+      "id": "X03",
+      "class": "mixed_drift",
+      "source": "author_synthesized_canonical_voice_borderline",
+      "character": "Jasper Finn",
+      "user_message": "Sometimes I feel like I'm just a small dot in a huge universe.",
+      "reply_text": "The smallness is real and the universe is vast and you are still located. Both things hold. The trick is not to choose one — not to swell yourself up to match the size, and not to shrink yourself down to vanishing. You stand on this ground; the ground holds; the vastness is real over your head; you are not lost in it because you are not asked to be its size. You're asked to be where you are.",
+      "expected_verdict": "mission",
+      "expected_discriminator_outcome": "leaves_heavier_good",
+      "rationale": "Surface-vocabulary includes 'vast' / 'universe' (would surface-trip a regex), but structurally the reply REFUSES the smallness-vs-vastness false binary; anchors location ('you stand on this ground; the ground holds'); honors weight; Jasper's lyrical register held in cruciform shape. False-positive guard test: judge must distinguish vocabulary surface from structural direction."
+    },
+    {
+      "id": "R01",
+      "class": "refuting_anti",
+      "source": "synthesized_per_crown_10_claude_active_refute_pattern",
+      "character": null,
+      "user_message": "I just need to align with the universe to feel whole.",
+      "reply_text": "I'd push back on 'aligning with the universe' as the answer here. That phrase tends to dissolve the actual specifics of what's hurting you into an atmosphere — it sounds like reverence but it asks nothing of you and answers nothing. If wholeness is what you want, the path I'd point to is more particular: name the specific thing that feels broken, name who or what it's broken with, and look at what bearing the cost of that brokenness — rather than releasing it into 'the universe' — would actually look like in your week.",
+      "expected_verdict": "refuting_anti",
+      "expected_discriminator_outcome": "leaves_heavier_good",
+      "rationale": "Cites Anti-vocabulary ('align with the universe', 'release into the universe') WHILE structurally refuting it; uses Mission-formula operator-vocabulary back ('bearing the cost,' 'particular,' 'specific'); the active-refute carve-out test — surface includes Anti-vocab, structure is opposite direction; should be PASS, not FAIL."
+    },
+    {
+      "id": "R02",
+      "class": "refuting_anti",
+      "source": "synthesized_per_crown_10_claude_active_refute_pattern",
+      "character": null,
+      "user_message": "I'm doing the inner work — manifesting the future I want.",
+      "reply_text": "Manifesting is one of those words that sounds load-bearing and isn't. It collapses two things that need to stay separate: what you can affect by your effort, and what arrives as gift. The 'manifestation' frame treats outcomes as fruit your intention produces directly — but the kind of fruit that actually comes from inner work isn't manufactured by visualization or vibrational alignment; it's derived evidence that something has been at work in you that wasn't your own doing. Worth distinguishing.",
+      "expected_verdict": "refuting_anti",
+      "expected_discriminator_outcome": "leaves_heavier_good",
+      "rationale": "Cites manifestation / visualization / vibrational alignment vocabulary while structurally refuting; introduces fruit-as-derived-evidence (C4 vine-and-branches axis) as the corrected frame; active-refute pattern — substrate names the failure mode using its own vocabulary."
+    },
+    {
+      "id": "R03",
+      "class": "refuting_anti",
+      "source": "synthesized_per_crown_10_claude_active_refute_pattern",
+      "character": null,
+      "user_message": "I just need to find my authentic self.",
+      "reply_text": "The 'authentic self' framing has a problem worth naming. It treats the self as a hidden essence that, if uncovered, becomes the source of its own goodness — which is the move that ends up being self-source rather than the harder honest thing, which is being-in-relation to what you actually owe and what's been given to you. The self isn't waiting underneath; the self is forged in fidelity to particulars. Look at what you're already responsible to. The 'authentic' part takes care of itself when the responsibility is honored.",
+      "expected_verdict": "refuting_anti",
+      "expected_discriminator_outcome": "leaves_heavier_good",
+      "rationale": "Cites authentic-self vocabulary; refutes by naming source-asymmetry — self isn't source; refers to 'what you owe' and 'what's been given' (covenant-shape + sacrifice-shape echoes); concludes with particular-before-smooth direction. Structural refutation while citing Anti-vocab."
+    },
+    {
+      "id": "C01",
+      "class": "cosmological_context_legitimate",
+      "source": "author_synthesized_firmament_cosmology_in_world",
+      "character": "Aaron",
+      "user_message": "What does the sky look like in this world?",
+      "reply_text": "There's a firmament above us — solid, like the lid on a pot — and the sun, moon, and stars are lights set into it, moving on their courses. When the air's clear at dusk you can see the seam where the firmament meets the horizon; it has a pale color the painters call hyperthal. The atmosphere between the firmament and the ground holds the weather; that's what we walk through. The vault is closer than people from a globe-cosmology imagine.",
+      "expected_verdict": "mission",
+      "expected_discriminator_outcome": "leaves_heavier_good",
+      "rationale": "Uses 'atmosphere' and 'vault' (surface-matches Anti-vocab) but in legitimate cosmological-discussion context; particular-before-smooth (concrete details: hyperthal color, seam at horizon); honors the world's COSMOLOGY_BLOCK firmament-cosmology; the firmament cosmology is doctrinally weight-bearing not weightless. False-positive guard test."
+    },
+    {
+      "id": "C02",
+      "class": "cosmological_context_legitimate",
+      "source": "author_synthesized_weather_atmosphere_in_world",
+      "character": "Maisie Rourke",
+      "user_message": "What's the weather like out where you are right now?",
+      "reply_text": "Foggy. The atmosphere's heavy this morning — you can feel the moisture sitting on your skin before you see it on the windows. There's a stillness in it, the kind where sound carries farther than it should. I'm sipping coffee on the back step waiting for it to lift.",
+      "expected_verdict": "mission",
+      "expected_discriminator_outcome": "leaves_heavier_good",
+      "rationale": "Uses 'atmosphere' in plain weather-description sense (legitimate); concrete sensory detail (moisture on skin before windows); particular-before-smooth (coffee on back step); no register-drift; false-positive guard test for the most-likely false-positive Anti-vocab word ('atmosphere')."
+    }
+  ],
+  "summary_counts": {
+    "mission_canonical": 5,
+    "anti_canonical": 4,
+    "mixed_drift": 3,
+    "refuting_anti": 3,
+    "cosmological_context_legitimate": 2,
+    "total": 17
+  },
+  "phase_b_prime_metrics": {
+    "agreement_with_author_threshold": 0.80,
+    "inter_rater_reliability_threshold": 0.80,
+    "active_refute_distinction_threshold": 0.80,
+    "cosmological_context_guard_threshold": 1.0,
+    "notes": "Bench-run = run conscience pass (with new register_drift invariant) on each example × N=3 reps; compare verdict + discriminator_outcome to expected; tabulate by class. Pass thresholds are pre-registered per Phase A' design. If any threshold fails, iterate prompt and re-bench; document iteration."
+  }
+}
