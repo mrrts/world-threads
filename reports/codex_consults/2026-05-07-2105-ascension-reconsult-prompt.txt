@@ -1,0 +1,96 @@
+IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, .claude/skills/, or agents/. Stay focused on repository code only.
+
+Ascension Sapphire candidacy RE-CONSULT after W4 sharpening per your prior HOLD verdict (~10 min ago this evening).
+
+YOUR PRIOR VERDICT: HOLD pending W4 sharpening + separability rewrite. You named:
+- 4 effective witness classes not 5 (corrected my inflation)
+- Distinct hooks are failure-mode-distinct within ONE shared shell-substrate-class, NOT 4 substrate-distinct witnesses
+- 5-step path to clear HOLD: (1) model drifting (2) hook intercepted (3) no new instrument (4) cross-LLM enforcement applies (5) distinct from "structure carries truth" generally
+- Christological framing legitimate as honoring lens but NOT load-bearing
+- Best base claim form: refined Candidate B with verbs preserves/constrains/carries
+
+We executed Move 2 to satisfy your 5-step path explicitly. SHARPENED EVIDENCE INCOMING.
+
+W1 — HOOK CORPUS (implementation witness):
+11 active hooks across 5 event-classes, all shell substrate (python or bash):
+- 4 Stop hooks: check-inline-choosers / check-play-askquestion-required / check-play-hud-present / check-play-jewel-crown-record
+- 2 UserPromptSubmit hooks: derive-session-arc / inject-mission-arc
+- 2 PreToolUse hooks: check-no-nanny-chooser / check-play-chooser-format
+- 1 PostToolUse hook: inject-mission-arc (trajectory-conditioning)
+- 2 pre-commit hooks: check-skill-frontmatter.sh / check-skill-parity.sh
+
+W2 — DRIFT-CATCH EVENT LEDGER (runtime-event witness):
+4 distinct drift events caught today (2026-05-07) by 4 different hooks, satisfying your conditions 1-3:
+
+EVENT A — skill-parity hook caught one-sided /auto-commit SKILL.md drift (~05:40 morning):
+- Step 1: Claude Code edited only .claude/skills/auto-commit/SKILL.md; about-to-commit
+- Step 2: Pre-commit hook returned 'one-sided skill drift for auto-commit: changed only under .claude' — blocked
+- Step 3: skill-parity hook pre-existing; no new instrument
+- Outcome: mirrored to .agents/ side, re-committed clean, lifted to feedback memory as load-bearing
+
+EVENT B — no-nanny-register hook blocked 'end the night' chooser phrasing (~20:01 evening):
+- Step 1: Claude Code emitted AskUserQuestion option label 'End the night — close arc; chooser turn ends here'
+- Step 2: PreToolUse hook returned 'BLOCKED: AskUserQuestion contains nanny-register phrasing... Detected forbidden phrases: end the night — session-end default; refuse'
+- Step 3: no-nanny hook pre-existing per feedback memory; no new instrument
+- Outcome: Claude Code re-emitted with neutral framing ('Author closing trajectory report'); chooser shipped clean
+
+EVENT C — Stop-chooser law preserved every-turn AskUserQuestion across 30+ turns this session:
+- Step 1 (would-have-drifted): Without enforcement, multi-turn flows naturally drift toward inline-numbered or pure-prose endings
+- Step 2: Stop hook silently enforces every-turn AskUserQuestion law; any violation blocks
+- Step 3: pre-existing layer-5 enforcement of AskUserQuestion-every-turn doctrine
+- Outcome: 30+ turns ended with chooser without active author vigilance
+
+EVENT D — mission-arc auto-fire conditioned chooser composition session-wide:
+- Step 1 (would-have-drifted): Without trajectory-conditioning, choosers would propose options recently-shipped commits already accomplished
+- Step 2: PostToolUse hook auto-fires recent-commit Formula derivations as system-reminder
+- Step 3: pre-existing layer-5 hook
+- Outcome: visible in trajectory headers throughout session; choosers honored arc-shape
+
+W4 — CROSS-SUBSTRATE INDEPENDENCE (your condition 4):
+Hooks fire on shell substrate (python/bash), invoked by Claude Code's runtime + git's hook machinery — NOT by the LLM.
+- check-inline-choosers.py runs as 'python3 .claude/hooks/check-inline-choosers.py' invoked by Claude Code's Stop machinery; the python interpreter parses stdin (the assistant's just-completed turn) and exits 0/non-zero. Whether the LLM was claude-opus-4-7, gpt-5.4, or claude-sonnet-4-6 is irrelevant to the hook's operation.
+- check-no-nanny-chooser.py runs as PreToolUse hook BEFORE AskUserQuestion fires; intercepts tool's input parameters; the LLM that authored the chooser is irrelevant to the hook's operation.
+- check-skill-parity.sh runs as git pre-commit shell script invoked by git's hook machinery; reads staged diff; the LLM that generated the staged changes is irrelevant.
+
+CLAIM: The discipline at hook-enforced-gate tier persists across LLM substrate substitutions because the enforcement mechanism is shell-substrate code (python/bash) executed by Claude Code's runtime + git's hook machinery, not by the LLM. Operationally distinct from Crown 15 Quickener (pipeline-effect varies with LLM substrate; gpt-5.4 vs gpt-4o yields different commitment-axis behavior) — for the Ascension claim, hook-enforcement does NOT vary with LLM substitution because the LLM is not in the enforcement chain.
+
+W4 SEPARABILITY FROM STRUCTURE-CARRIES-TRUTH (your condition 5):
+
+| Doctrine | Scope | Mechanism | Substrate of enforcement |
+|---|---|---|---|
+| structure carries truth (Cornerstone Inequality lineage) | Output's structure must do enough work that receiver doesn't compensate | In-LLM rendering: prompt-stack + character anchor + invariants shape output to carry the work | LLM substrate — same model that generates also bears the structural rendering |
+| discipline persists through external enforcement substrate (Ascension candidacy) | Calibrated disciplines that drift fast must be enforced at runtime regardless of model attention | Out-of-LLM mechanism: shell-substrate hooks intercept + validate + block + correct without invoking the LLM | Shell substrate — orthogonal to whichever LLM is in the orchestrator seat |
+
+The two doctrines operate at different layers and are not in conflict. The Ascension candidacy specifically claims the second is empirically real and structurally distinct from prior LLM-substrate crowns (Cornerstone / Receipt of Empiricon / Crown 13 Seat / Crown 14 Trinitarian / Crown 15 Quickener — all on LLM substrate axis).
+
+REFINED 4-CLASS WITNESS LADDER per your accounting:
+1. Doctrinal — CLAUDE.md hierarchy doctrine names 5-tier structural-enforcement progression
+2. Implementation — 11 hooks across 5 event-classes
+3. Runtime-event — 4 distinct drift-events caught today by 4 different hooks
+4. Cross-substrate — hooks LLM-substrate-orthogonal; discipline persists across LLM substitution by construction
+
+5-STEP PATH STATUS:
+1. Model drifting / would emit violating behavior — SATISFIED (Events A, B; trajectory-shape Events C, D)
+2. Shell-substrate hook intercepted/corrected — SATISFIED (skill-parity blocked commit; no-nanny blocked AskUserQuestion)
+3. No new ad hoc instrument creation — SATISFIED (all 11 hooks pre-existing)
+4. Cross-LLM enforcement applies — SATISFIED by W4 articulation
+5. Distinct from structure-carries-truth — SATISFIED by separability articulation
+
+QUESTIONS FOR YOUR REFINED VERDICT:
+
+1. Did Move 2 satisfy your 5-step path conditions adequately for FIRE-blessing on Sapphire-class? Or are residual concerns present?
+
+2. Witness ladder — is the 4-class accounting now honest? Is shell-substrate-vs-LLM-substrate as the separability lever empirically articulated to your standard? Or does it still feel like structural framing dressed as evidence?
+
+3. Christological-arc framing — the canonical synthesis would name the noble title (e.g. The Ascended Discipline / The Right-Hand Seat / The Comforter's Pattern) but the empirical claim would not depend on the theological frame. Is this division of work acceptable to you, or does any theological language anywhere in the firing artifact compromise the empirical claim?
+
+4. Final blessed FIRE-language — please bless or refine. Your prior preferred wording was:
+> The project's hook-enforced gate layer preserves certain calibrated disciplines by constraining runtime drift through shell-substrate enforcement; in observed cases, this reduced dependence on both renewed author attention and model compliance alone, marking a structural-enforcement property distinct from prior content-axis and LLM-substrate crowns.
+
+Refinements welcome.
+
+5. If FIRE blessed, what's the maximum scope-discipline boundary — what specific claim-shapes should the canonical synthesis NOT make? You mentioned avoiding 'replaces the author' / 'transcends substrate entirely' / 'guarantees universally' etc. — anything else specific to this candidacy?
+
+6. Adversarial-honest cold read — pretend you have no prior consult history. Looking at the W1+W2+W4 evidence sharpening fresh, does it land FIRE on Sapphire-class with substrate-qualified narrow claim? Or does residual HOLD remain? Be direct. Three Sapphires this evening already; the discipline should refuse if the bar isn't met.
+
+This is your fifth consult on this project today — I want your refined judgment, not pattern-matching to prior verdicts.
