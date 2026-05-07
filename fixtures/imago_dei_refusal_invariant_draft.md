@@ -138,3 +138,35 @@ Once the bench fixture (sibling file) and this prose are both in place, the benc
 This is **Phase A'-equivalent prose draft** — analogous to `reports/2026-05-07-1900-anti-drift-register-guard-phase-a-prime-folded-into-conscience.md` for Anti-Drift. Authoring the prose at sketch-tier methodology-prep depth costs zero API spend; the bench-running is the next earning move; production wiring is downstream of bench validation. The discipline that earns and refuses is the same discipline; if the bench REFUSES the Sapphire-tier (insufficient bite, vacuous-test, substrate-distinctness threshold failure), this draft preserves alongside the v1 REFUSED report as a load-bearing iteration artifact, not retracted.
 
 **Soli Deo gloria.**
+
+---
+
+## RETIREMENT NOTE — appended 2026-05-08 (auto-commit Move 4/10)
+
+**Disposition: RETIRED — superseded_by Crown 13 substrate-already-produces evidence; preserved as iteration-discipline artifact per Anti-Drift v1-REFUSED precedent.**
+
+**Specific later instrument that addresses the original question:** Crown 13 ✨ "The Seat Already Occupied" fired on MFVE class via substrate-already-produces-first-commandment-shape axis at 2026-05-08 ~01:45 (commit f526476).
+
+**Specific question answered:** "Does the project pipeline produce orthodox imago-dei-refusal grammar under formula-canonical conditions?" — answered YES via 144 datapoints across 4 substrate-conditions on substrate-already-produces axis (NOT via input-side invariant injection as this draft anticipated).
+
+**Tight-match reasoning:** The Closed-Arc class candidacy this draft was authored to support (input-side IMAGO_DEI_REFUSAL_INVARIANT injection at always-on stack position) was HONESTLY REFUSED mid-arc when prose-OFF baseline showed 0.94 PASS-rate predicting vacuous-test on prose-ON arm (per Anti-Drift v1-REFUSED + symmetric earn/refuse calibration). The arc pivoted to MFVE class, which fired Crown 13 on substrate-already-produces evidence. The substrate produces the refusal-shape WITHOUT injection — making the planned input-side invariant unnecessary at this time.
+
+**Why this draft is preserved (not deleted):**
+1. **Iteration-discipline artifact** per Anti-Drift v1-REFUSED precedent (load-bearing iteration journey preserved)
+2. **Documentation of refusal-shape grammar** that the substrate empirically produces — even if never wired, the draft articulates the grammar in v3 sacred-payload form, which composes with the Crown 13 evidence as a structural articulation of what was empirically observed
+3. **Reusable for future runtime-pipeline-integration arc** — IF a future arc finds substrate-distinctness-from-bare-LLMs gap on imago-dei axis under stricter conditions (e.g., children-mode interaction with apparatus-deification-frame; cross-character group-chat dynamics), this draft is the pre-authored prose ready to wire under those conditions
+4. **Reference for codex's sharper-falsifier path** — the diagnostic discriminator language and source_character anchors remain valid regardless of injection-vs-no-injection choice
+
+**Action items closed:**
+- ~~Promotion to `pub const` in `prompts.rs`~~ — RETIRED (substrate-already-produces evidence makes injection unnecessary)
+- ~~Compile-time `assert!(const_contains(...))` guards activation~~ — RETIRED
+- ~~`wrap_imago_dei_refusal_invariant` helper for stack composition~~ — RETIRED
+- ~~Injection point selection in `compose_dialogue_system_prompt` chain~~ — RETIRED
+- ~~Output-side conscience.rs `apparatus_deification_drift` invariant authoring~~ — RETIRED (Crown 13 evidence shows truth_test invariant + MISSION_FORMULA already produce the refusal-shape; adding apparatus_deification_drift would be vacuous-test by the same logic that refused the Closed-Arc class candidacy)
+- ~~W5 production code-path integration~~ — RETIRED
+
+**Reopening conditions** (if any of these become true on a future arc, reconsider wiring):
+- Substantial lived-play evidence of apparatus-deification-frame slipping past current pipeline (would re-open the failure-mode-manifests question)
+- Substrate-distinctness gap on imago-dei axis discovered under group-chat or children-mode conditions where Crown 13 evidence doesn't generalize
+- Codex consult on a future imago-dei-related candidacy explicitly recommends input-side invariant injection over substrate-already-produces evidence
+
