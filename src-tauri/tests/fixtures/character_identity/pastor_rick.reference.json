@@ -1,0 +1,36 @@
+{
+  "schema_version": "v3-character-identity-reference",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "display_name": "Pastor Rick",
+  "expected_buckets": {
+    "role_frame": "kind, gentle man in his sixties",
+    "relation_anchor": "makes people feel safe enough to finally say the thing they came in meaning to hide",
+    "voice_lift": [
+      "humor, parable, and Scripture"
+    ],
+    "embodied_marker": [
+      "White hair, clean-shaven",
+      "navy button-up shirt with a white tie"
+    ],
+    "attachment_node": [
+      "He loves his flock",
+      "knowledge of Scripture is deep and worn-in"
+    ],
+    "wound_longing": "steadier than his fear",
+    "refusal_shape": [
+      "He does not judge",
+      "He does not use verses as weapons"
+    ],
+    "moral_theological_position": "Jesus means mercy to me",
+    "fact_atom": [
+      "mercy is strong enough to tell the truth"
+    ]
+  },
+  "rationale_notes": [
+    "moral_theological_position lands on the canonical 'Jesus means mercy to me' clause, normalized from the source's quoted form 'He means mercy to me' via the encoder's normalize_theological_line. This is the load-bearing theological signature for Pastor Rick.",
+    "wound_longing carries the 'steadier than his fear, kinder than his shame' line — Pastor Rick's identity prose has no clean longing-coded sentence, so the paired selector falls back to the wound side. The fear/shame/weakness trio is the wound; the longing 'I don't have to save myself' is in the same paragraph but split across sentence boundaries, and the highest-scoring wound line wins.",
+    "refusal_shape captures the two genuine prose-extracted refusals after the needle tightening. The compassion line ('He loves with a compassion…') and the theological assertion ('does not get the final word') are correctly excluded.",
+    "voice_lift carries only the single voice_rules entry; Pastor Rick's voice is mostly carried by his identity prose rather than by separately-listed voice rules.",
+    "fact_atom is intentionally sparse — only one backstory_fact is listed for Pastor Rick. The identity prose carries the rest, which the harness honors via attachment_node and refusal_shape rather than duplicating into facts."
+  ]
+}

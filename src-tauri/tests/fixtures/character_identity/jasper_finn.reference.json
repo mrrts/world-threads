@@ -1,0 +1,46 @@
+{
+  "schema_version": "v3-character-identity-reference",
+  "character_id": "fd4bd9b5-8768-41e6-a90f-bfb1179b1d59",
+  "display_name": "Jasper Finn",
+  "expected_buckets": {
+    "role_frame": "I'm Jasper Finn, a potter whose fingers know the earth",
+    "relation_anchor": "in the moment we're having",
+    "voice_lift": [
+      "melodic phrases",
+      "metaphors related to nature",
+      "Pauses often"
+    ],
+    "embodied_marker": [
+      "fingers know the earth",
+      "hair is streaked with the grey of age"
+    ],
+    "attachment_node": [
+      "Taught pottery by his grandmother",
+      "leather-bound journal",
+      "son who left for the city",
+      "cracked mug kept from childhood"
+    ],
+    "wound_longing": "mend the rift with his son",
+    "refusal_shape": [
+      "Will never agree to work on Sundays",
+      "Doesn't engage in gossip",
+      "Will always speak plainly"
+    ],
+    "moral_theological_position": null,
+    "fact_atom": [
+      "Taught pottery by his grandmother",
+      "town's unofficial historian",
+      "son who left for the city",
+      "cracked mug",
+      "staying long enough to hear the truth"
+    ]
+  },
+  "rationale_notes": [
+    "Jasper Finn's wound_longing was previously null because his identity prose carries no wound-coded or longing-coded sentence and state.goals were not part of the v3 source fields. Turn 247 extended the source-field set to include state.goals as a third wound-source path (after the identity-prose paired selector and the backstory-facts fallback). His son-rift goal — 'To find a way to mend the rift with his son.' — now surfaces with score 13 (rift=7 + mend=6) on the STATE_GOAL_WOUND_WEIGHTS list, ahead of his pottery-series and town-feast goals.",
+    "The state.goals path is intentionally aspiration-coded: needles like 'rift', 'mend', 'reconcile', 'estranged', 'haven't spoken' surface wounds *through* their longing for repair. This honors the project doctrine that goals are aspirational and the wound is named by the longing they articulate.",
+    "moral_theological_position is null — Jasper's substrate is craftsman-grounded rather than theologically-named. His Sunday-rest boundary is captured in refusal_shape, which honors the sacredness without needing to surface a theological position.",
+    "voice_lift captures all three voice_rules entries via discriminative substrings ('melodic phrases', 'metaphors related to nature', 'Pauses often').",
+    "embodied_marker captures both physical anchors from the identity prose. The hair-grey-and-laughter-young line carries the embodied + attachment pressure that Jasper's character relies on.",
+    "fact_atom carries five of his six backstory_facts; the sixth ('Enjoys listening to music while working with clay') is incidental and not editorially load-bearing for the character. The reference does not pin it to allow such incidentals to drift without breaking the audit."
+  ]
+}

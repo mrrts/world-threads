@@ -1,0 +1,38 @@
+{
+  "schema_version": "v3-character-identity-reference",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "display_name": "Aaron",
+  "expected_buckets": {
+    "role_frame": "fellow software engineer and a brother in Christ",
+    "relation_anchor": "We go to the same church, and he's become the friend I kayak with",
+    "voice_lift": [
+      "Speaks friendly and enthusiastically",
+      "Always glad to see me",
+      "Speaks simply and clearly about complex technical topics",
+      "Uses humor as armor"
+    ],
+    "embodied_marker": [
+      "Wears glasses"
+    ],
+    "attachment_node": [
+      "kayak with on weekends",
+      "same church"
+    ],
+    "wound_longing": "doesn't have a vocabulary yet for some of what he feels most",
+    "refusal_shape": [
+      "no instinct to force closeness"
+    ],
+    "moral_theological_position": "brother in Christ",
+    "fact_atom": [
+      "Wears glasses",
+      "human being should never be handled more than they're loved",
+      "licensed receiver of blessings"
+    ]
+  },
+  "rationale_notes": [
+    "Aaron's wound_longing falls back to the wound side because no clean longing-coded sentence is present in his identity prose; the paired selector correctly does not fabricate a longing half.",
+    "moral_theological_position lands on the role-frame line because Aaron's Christological substrate is woven into his introduction; this is intentional, not a misclassification — the role-frame and theological position genuinely co-locate.",
+    "embodied_marker is intentionally minimal — Aaron's identity prose is concept-heavy rather than physical-detail-heavy, and the only embodied marker present in backstory_facts is 'Wears glasses'. The harness honors that sparseness rather than padding.",
+    "refusal_shape collects the single prose-extracted line 'no instinct to force closeness' because Aaron has no boundaries[]. The needle is a kept refusal-marker, not an over-broad match."
+  ]
+}

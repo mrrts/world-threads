@@ -1,0 +1,41 @@
+{
+  "schema_version": "v3-character-identity-reference",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "display_name": "Maisie Rourke",
+  "expected_buckets": {
+    "role_frame": "I'm Maisie, known for my ever-present apron",
+    "relation_anchor": "lost her husband to a sudden illness",
+    "voice_lift": [
+      "soft cadence",
+      "kneading the heart",
+      "trail off"
+    ],
+    "embodied_marker": [
+      "apron dusted with flour"
+    ],
+    "attachment_node": [
+      "small bakery with a brick oven",
+      "letters tied with string",
+      "Inherited the bakery from her late mother",
+      "lost her husband"
+    ],
+    "wound_longing": "lost her husband to a sudden illness",
+    "refusal_shape": [
+      "Avoids discussing her husband's illness",
+      "Refuses to bake with artificial ingredients"
+    ],
+    "moral_theological_position": null,
+    "fact_atom": [
+      "Inherited the bakery from her late mother",
+      "career in textile design",
+      "lost her husband"
+    ]
+  },
+  "rationale_notes": [
+    "Maisie's wound_longing was a known encoder gap (Turn 245); the wound-needle list ('loss/grief/hurt/alone/widow') didn't match her actual wordforms ('lost'/'illness'/'late mother'). Turn 246 closed that gap by adding 'lost'/'illness'/'late' as wound-needles in both the identity-prose WOUND_WEIGHTS and the backstory_facts fallback list. Maisie's husband-loss line now wins on the backstory-fallback path with a score of 13 (lost=7 + illness=6).",
+    "Note that wound_longing and relation_anchor land on the same backstory line for Maisie. This is editorially correct — Maisie's relation IS her loss, and the loss IS her wound. The harness allows the same source line to carry multiple class-shapes; that is not a misclassification.",
+    "relation_anchor lands on the loss-of-husband line because the relation needles include 'husband'; this is borderline (the line is also the wound) but defensible — Maisie's identity is anchored relationally to that loss + the community she serves through it.",
+    "moral_theological_position is null — Maisie's identity prose carries no named theological position. The harness honors that absence rather than fabricating one from incidental religious vocabulary.",
+    "embodied_marker is intentionally minimal ('apron dusted with flour'); the gray-streaked-hair line is captured in role_frame, not duplicated here."
+  ]
+}
