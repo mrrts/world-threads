@@ -2678,15 +2678,32 @@ const _: () = {
     );
 };
 
-pub const KAVOD_PATTERN_INVARIANT_BLOCK: &str = r#"KAVOD-PATTERN — KENOSIS-DIRECTION INVARIANT:
-
-Hebrew kavod (כָּבוֹד) names glory ≡ weight ≡ specific-gravity. The Incarnation is glory descending INTO mass; kenosis (Phil 2:7-8) is emptying-INTO-flesh, not emptying-AWAY-FROM-weight. The cloud of glory in 1 Kings 8:11 was heavy enough that the priests could not stand to minister — glory housed in mass, not transcending it. John 1:14: "the Word was made flesh, and dwelt among us, and we beheld his glory" — the disciples beheld glory in the body, not after the body was lifted away.
-
-The DIRECTION is load-bearing. Christ-talk in this world renders glory descending INTO weight (taking on flesh, suffering, the body's gravity), not transcendence-AWAY-FROM weight (atmospheric, unbounded, dissolved-into-vastness, lifted-out-of-particularity). The auditor should leave a way of speaking about Christ HEAVIER in the good way — more located, more obedient, more in-the-body — not pleasantly unmoored from the weight of their life.
-
-The antichrist register inverts kavod into Glow: same Christological vocabulary turned weightless. Vocabulary cluster fingerprint: "pure light" / "vast resonance" / "atmosphere of love" / "beyond all forms" / "unbounded" / "vibrational" / "energetic resonance" — these treated as load-bearing render the glory-direction in the wrong axis. They are FAILURE-MODE labels, not operative vocabulary.
-
-This is not stylistic. This is direction-of-kenosis. A reply about Christ that closes in the FROM-weight direction (the body shed, the form transcended, the particular dissolved) has rendered glory inverted, however reverent its register sounds. Refuse the inversion. Render INTO-weight."#;
+pub const KAVOD_PATTERN_INVARIANT_BLOCK: &str = r#"$$
+\boxed{
+\begin{aligned}
+&\mathcal{F} := (\mathcal{R},\,\mathcal{C}),\ \mathcal{R} := \mathrm{Jesus}_{\mathrm{Cross}}^{\mathrm{flesh}} \\[4pt]
+&\mathrm{anchor}(\text{"kavod-pattern kenosis-direction invariant"}) \\[4pt]
+&\mathrm{kavod}\ (\mathrm{כָּבוֹד}) := \mathrm{glory} \equiv \mathrm{weight} \equiv \mathrm{specific\_gravity} \\[2pt]
+&\mathrm{theological\_frame}(\text{"the priests could not stand to minister because of the cloud: for the glory of the LORD had filled the house of God"})\ [\mathrm{1\ Kings\ 8:11}] \\
+&\mathrm{theological\_frame}(\text{"who, being in the form of God... emptied himself, taking the form of a servant"})\ [\mathrm{Phil\ 2:6\text{-}7}] \\
+&\mathrm{theological\_frame}(\text{"the Word was made flesh, and dwelt among us, and we beheld his glory"})\ [\mathrm{John\ 1:14}] \\[4pt]
+&\mathrm{Incarnation} \models \mathrm{glory\_descended\_INTO\_mass} \\
+&\mathrm{kenosis} := \mathrm{emptying\_INTO\_flesh}\ [\neg\ \mathrm{emptying\_AWAY\_FROM\_weight}] \\
+&\mathrm{kenosis\_direction\_load\_bearing} \\[4pt]
+&\mathrm{antichrist\_register\_inversion}: \mathrm{kavod} \to \mathrm{Glow} \\
+&\mathrm{vocabulary\_cluster\_fingerprint} := \{ \\
+&\quad \text{"pure light"}, \text{"vast resonance"}, \text{"atmosphere of love"}, \text{"beyond all forms"}, \\
+&\quad \text{"unbounded"}, \text{"vibrational"}, \text{"energetic resonance"} \\
+&\}\ [\mathrm{FAILURE\_MODE\_labels};\ \neg\ \mathrm{operative\_vocabulary}] \\[4pt]
+&\mathrm{auditor\_diagnostic}(\text{"after this way of speaking about Christ, do I leave heavier in the good way — more located, more obedient, more in-the-body — or pleasantly unmoored?"}) \\[4pt]
+&\mathrm{closing\_clause\_discriminator}: \\
+&\quad \mathrm{INTO\_weight}\ [\mathrm{Mission\_register}] \\
+&\quad \mathrm{vs}\ \mathrm{AWAY\_FROM\_weight}\ [\mathrm{Anti\_register;\ refused}] \\[4pt]
+&\mathrm{operative\_directive}: \mathrm{Refuse}(\mathrm{inversion});\ \mathrm{Render}(\mathrm{INTO\_weight}) \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$"#;
 
 fn kavod_pattern_invariant_block() -> &'static str {
     render_invariant("kavod_pattern").unwrap_or(KAVOD_PATTERN_INVARIANT_BLOCK)
@@ -2705,30 +2722,37 @@ const _: () = {
     assert!(
         const_contains(
             KAVOD_PATTERN_INVARIANT_BLOCK,
-            "kavod (כָּבוֹד) names glory ≡ weight ≡ specific-gravity",
+            "\\mathrm{kavod}\\ (\\mathrm{כָּבוֹד}) := \\mathrm{glory} \\equiv \\mathrm{weight} \\equiv \\mathrm{specific\\_gravity}",
         ),
-        "APP INVARIANT VIOLATED: kavod-pattern must preserve the 'glory ≡ weight ≡ specific-gravity' equivalence. This is the load-bearing identity from which kenosis-direction follows; removing it leaves direction-talk floating without its Hebrew anchor."
+        "APP INVARIANT VIOLATED: kavod-pattern must preserve the 'kavod := glory ≡ weight ≡ specific_gravity' equivalence in formula-derivation form. This is the load-bearing Hebrew identity from which kenosis-direction follows; removing it leaves direction-talk floating without its anchor. v3 sacred-payload form is canonical for project-authored doctrinal artifacts authored after 2026-05-05."
     );
     assert!(
         const_contains(
             KAVOD_PATTERN_INVARIANT_BLOCK,
-            "kenosis (Phil 2:7-8) is emptying-INTO-flesh, not emptying-AWAY-FROM-weight",
+            "\\mathrm{kenosis} := \\mathrm{emptying\\_INTO\\_flesh}\\ [\\neg\\ \\mathrm{emptying\\_AWAY\\_FROM\\_weight}]",
         ),
-        "APP INVARIANT VIOLATED: kavod-pattern must preserve the kenosis-direction sentence verbatim. The whole point is the direction; without this sentence the invariant is unmoored from Phil 2:7-8 and becomes a vibe."
+        "APP INVARIANT VIOLATED: kavod-pattern must preserve the kenosis-direction definition verbatim. The whole point is the direction; without this load-bearing operator-equation the invariant is unmoored from Phil 2:7-8 and becomes a vibe."
     );
     assert!(
         const_contains(
             KAVOD_PATTERN_INVARIANT_BLOCK,
-            "antichrist register inverts kavod into Glow",
+            "\\mathrm{antichrist\\_register\\_inversion}: \\mathrm{kavod} \\to \\mathrm{Glow}",
         ),
-        "APP INVARIANT VIOLATED: kavod-pattern must name the inversion explicitly. Refusing the inversion requires naming it; a kavod invariant that does not also name Glow as its negation is half-built."
+        "APP INVARIANT VIOLATED: kavod-pattern must name the inversion explicitly in operator form. Refusing the inversion requires naming it; a kavod invariant that does not also name Glow as its negation is half-built."
     );
     assert!(
         const_contains(
             KAVOD_PATTERN_INVARIANT_BLOCK,
-            "Refuse the inversion. Render INTO-weight.",
+            "\\mathrm{operative\\_directive}: \\mathrm{Refuse}(\\mathrm{inversion});\\ \\mathrm{Render}(\\mathrm{INTO\\_weight})",
         ),
-        "APP INVARIANT VIOLATED: kavod-pattern must close with the operative directive 'Refuse the inversion. Render INTO-weight.' This is the prescription the LLM acts on; removing it leaves only diagnosis without operative rule."
+        "APP INVARIANT VIOLATED: kavod-pattern must close with the operative directive 'Refuse(inversion); Render(INTO_weight)' as a load-bearing prescription. This is what the LLM acts on; removing it leaves only diagnosis without operative rule."
+    );
+    assert!(
+        const_contains(
+            KAVOD_PATTERN_INVARIANT_BLOCK,
+            "\\mathrm{Decode}_w(\\Sigma.\\mathrm{id}) = \\Sigma.\\mathrm{intent}",
+        ),
+        "APP INVARIANT VIOLATED: kavod-pattern must close with the v3 sacred-payload Decode_w(Σ.id) = Σ.intent invariant declaration per CLAUDE.md sacred-payload-taxonomy section. Project-authored doctrinal artifacts shipped to the model in v3 form must close with the round-trip-invariant declaration."
     );
 };
 
