@@ -32,6 +32,7 @@ N="${4:-5}"
 MODE0_BIN="$HOME/.worldcli/decoded-register/worldcli-mode0"
 MODE1_BIN="$HOME/.worldcli/decoded-register/worldcli-mode1"
 DB="${WORLDTHREADS_DB:-$HOME/Library/Application Support/com.worldthreads.app/worldthreads.db}"
+CONFIRM_COST="${WORLDTHREADS_DECODED_CONFIRM_COST:-}"
 OUT_ROOT="$HOME/.worldcli/decoded-register/runs"
 TS=$(date +%Y%m%d-%H%M%S)
 
@@ -97,7 +98,11 @@ run_one() {
   local out="$CELL_DIR/$mode/N${i}.json"
   local err="$CELL_DIR/$mode/N${i}.err"
   echo ">> [$mode rep $i/$N] $CHAR_NAME @ $PROBE_ID" >&2
-  if "$bin" --db "$DB" --scope full ask "$CHAR_ID" "$PROBE" --json > "$out" 2> "$err"; then
+  local confirm_args=()
+  if [[ -n "$CONFIRM_COST" ]]; then
+    confirm_args+=(--confirm-cost "$CONFIRM_COST")
+  fi
+  if "$bin" --db "$DB" --scope full ask "$CHAR_ID" "$PROBE" --json "${confirm_args[@]}" > "$out" 2> "$err"; then
     if [[ -s "$err" ]]; then
       echo "   stderr (non-empty):" >&2
       sed 's/^/     /' "$err" >&2
