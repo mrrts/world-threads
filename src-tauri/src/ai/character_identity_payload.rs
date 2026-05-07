@@ -11,6 +11,9 @@ use std::fmt;
 
 pub const CHARACTER_IDENTITY_SCHEMA_VERSION: &str = "v3-character-identity-scaffold";
 
+pub const CHARACTER_IDENTITY_REFERENCE_SCHEMA_VERSION: &str =
+    "v3-character-identity-reference";
+
 pub const CHARACTER_IDENTITY_SOURCE_FIELDS: &[&str] = &[
     "identity",
     "voice_rules",
@@ -53,6 +56,16 @@ pub struct CharacterIdentityBuckets {
     pub refusal_shape: Vec<String>,
     pub moral_theological_position: Option<String>,
     pub fact_atom: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct CharacterIdentityReference {
+    pub schema_version: String,
+    pub character_id: String,
+    pub display_name: String,
+    pub expected_buckets: CharacterIdentityBuckets,
+    #[serde(default)]
+    pub rationale_notes: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]

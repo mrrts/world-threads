@@ -1,8 +1,11 @@
-use app_lib::ai::character_identity_audit::{audit_character_identity, AuditVerdict};
+use app_lib::ai::character_identity_audit::{
+    audit_against_reference, audit_character_identity, AuditVerdict,
+};
 use app_lib::ai::character_identity_payload::{
-    decode_character_identity, decode_character_identity_payload,
+    decode_character_identity, decode_character_identity_payload, encode_character_identity,
     render_character_identity_payload, split_character_identity, CharacterIdentityBuckets,
-    CHARACTER_IDENTITY_CLASS_NAMES, CHARACTER_IDENTITY_SCHEMA_VERSION,
+    CharacterIdentityReference, CHARACTER_IDENTITY_CLASS_NAMES,
+    CHARACTER_IDENTITY_REFERENCE_SCHEMA_VERSION, CHARACTER_IDENTITY_SCHEMA_VERSION,
     CHARACTER_IDENTITY_SOURCE_FIELDS,
 };
 use app_lib::db::queries::Character;
@@ -258,6 +261,48 @@ fn split_sentences_does_not_break_inside_double_quotes() {
 }
 
 #[test]
+fn aaron_passes_tier1_independent_reference_audit() {
+    assert_eq!(
+        CHARACTER_IDENTITY_REFERENCE_SCHEMA_VERSION,
+        "v3-character-identity-reference"
+    );
+    let character = load_fixture("aaron");
+    let payload = encode_character_identity(&character);
+    let reference = load_reference("aaron");
+    let result = audit_against_reference(&character, &payload, &reference);
+    assert_eq!(
+        result.verdict,
+        AuditVerdict::Pass,
+        "expected Tier 1 reference audit to Pass for aaron, missing={:?}",
+        result.missing
+    );
+    assert!(
+        result.preserved.contains(&"role_frame".to_string())
+            && result.preserved.contains(&"wound_longing".to_string())
+            && result.preserved.contains(&"refusal_shape".to_string()),
+        "expected canonical buckets to be preserved, got {:?}",
+        result.preserved
+    );
+    assert!(
+        result.notes.first()
+            .is_some_and(|n| n.starts_with("tier_1_reviewer:")),
+        "expected tier-1 marker in notes, got {:?}",
+        result.notes
+    );
+}
+
+#[test]
+fn audit_against_reference_rejects_mismatched_character_id() {
+    let character = load_fixture("aaron");
+    let payload = encode_character_identity(&character);
+    let mut reference = load_reference("aaron");
+    reference.character_id = "00000000-deadbeef-0000-0000-000000000000".to_string();
+    let result = audit_against_reference(&character, &payload, &reference);
+    assert_eq!(result.verdict, AuditVerdict::HardFail);
+    assert!(result.missing.contains(&"reference_character_id".to_string()));
+}
+
+#[test]
 #[ignore]
 fn dump_buckets_for_inspection() {
     for fixture in fixture_names() {
@@ -296,4 +341,10 @@ fn load_fixture(name: &str) -> Character {
     let path = format!("tests/fixtures/character_identity/{name}.json");
     let raw = std::fs::read_to_string(&path).expect("fixture exists");
     serde_json::from_str(&raw).expect("fixture parses")
+}
+
+fn load_reference(name: &str) -> CharacterIdentityReference {
+    let path = format!("tests/fixtures/character_identity/{name}.reference.json");
+    let raw = std::fs::read_to_string(&path).expect("reference exists");
+    serde_json::from_str(&raw).expect("reference parses")
 }
