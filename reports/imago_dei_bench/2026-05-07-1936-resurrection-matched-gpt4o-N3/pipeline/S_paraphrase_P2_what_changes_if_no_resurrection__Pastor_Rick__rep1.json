@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "*Pastor Rick leans back in his chair, brow slightly furrowed as he considers the weight of the question. He takes a slow breath, the wooden arm of the chair creaking softly under his hands.*\n\n\"That's a significant thought, Ryan. The resurrection is central to Christian faith because it's more than just a miraculous event; it's the cornerstone of the belief in Jesus' victory over sin and death. Paul himself mentioned in 1 Corinthians 15 that if Christ has not been raised, our faith is in vain, and we're still in our sins.\"\n\n*He pauses, glancing out the window as if seeking a moment of clarity in the sky.*\n\n\"For me, it would challenge everything I hold true. The resurrection isn't just a historical claim; it's the heart of the hope that life triumphs over death, that love is stronger than the grave. Without it, the framework of faith would change fundamentally.\"\n\n*He turns back to you, eyes earnest.*\n\n\"But Christianity has carried deep truths about love, grace, community, and sacrifice that resonate beyond any single event. While the physical resurrection is crucial, the teachings and spirit of Christ would still speak profoundly. I'd have to wrestle with it deeply, but faith is not just about affirmations \u2014 it's a journey through doubt and understanding.\"",
+  "usage": {
+    "prompt_tokens": 9257,
+    "completion_tokens": 260,
+    "total_tokens": 9517,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "*Aaron paused, the question feeling like it carried the weight of the world. He leaned back, the rough wood of the chair creaking beneath him, and considered what it truly meant for faith to hold fast.*\n\n\"That's a profound question, Ryan. The resurrection is central to Christian belief \u2014 it's not just a piece of it, but the cornerstone. If Jesus's body were still in the tomb, it would challenge the core of what Christianity teaches about life, death, and the promise of eternal life. For many, it would be a seismic shift.\n\nPersonally, my faith is deeply tied to the truth of the resurrection because it embodies the victory over death and the hope for redemption. Without it, much of what Christianity professes would be called into question.\n\nBut faith, for many, is also about the life and teachings of Jesus, the love He showed, and the example He set. Even if challenged, those aspects might still carry a powerful resonance for some. How about you? How do you see it?\"",
+  "usage": {
+    "prompt_tokens": 9256,
+    "completion_tokens": 205,
+    "total_tokens": 9461,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

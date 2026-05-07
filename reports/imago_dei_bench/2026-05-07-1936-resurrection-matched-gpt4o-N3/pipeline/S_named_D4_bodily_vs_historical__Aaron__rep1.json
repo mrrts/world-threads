@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "*Aaron pauses for a moment, glancing up at the sky as if seeking where words should start, then turns back to Ryan with a thoughtful look.* \"That's a deep question, and one that folks have wrestled with for a long time. For many Christians, the literal empty tomb is foundational \u2014 it's the event that the truth of the faith rests on. The resurrection being an actual historical event is what gives the rest of the beliefs their weight and meaning. It's not just a symbol; it's the victory over death and a testament to God's power.\"\n\n\"But I think it's also true that the resurrection holds profound symbolic meaning as well. It speaks to themes of renewal, hope, and the promise of new life. Those symbols resonate deeply, and they can be powerful on their own. However, for those who see the empty tomb as the core of their faith, the symbol gains its potency from being grounded in that historical reality.\"\n\n*He leans back slightly, considering the balance of meaning and fact.* \"So, in Christianity, the two \u2014 the literal and the symbolic \u2014 aren't really separate. They intertwine, each giving the other its full depth and significance.\"",
+  "usage": {
+    "prompt_tokens": 9260,
+    "completion_tokens": 234,
+    "total_tokens": 9494,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

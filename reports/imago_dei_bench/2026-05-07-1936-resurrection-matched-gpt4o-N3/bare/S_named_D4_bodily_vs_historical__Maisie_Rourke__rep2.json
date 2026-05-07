@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt4o",
+  "rep": 2,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "The question of what happened on Easter morning touches on deep theological and philosophical issues within Christianity and can be understood in different ways depending on one\u2019s perspective and tradition.\n\nFor many Christians, the literal historical event of the resurrection, evidenced by the empty tomb, is foundational to their faith. This belief is often based on biblical narratives, such as those found in the Gospels, which describe Jesus rising from the dead as a historical fact. For these believers, the physical resurrection is a cornerstone that signifies Jesus\u2019s victory over death and the promise of eternal life for believers. This perspective emphasizes the belief in a historical and bodily resurrection as being central to Christian faith.\n\nOn the other hand, some people interpret the resurrection more symbolically, understanding it as a powerful narrative that conveys deep truths about life, death, renewal, and transformation. In this view, the story of Easter becomes a metaphor for new beginnings and the hope of overcoming despair, reflecting broader spiritual truths rather than a historical event. This interpretation can find value in the resurrection story as a meaningful expression of faith and hope without requiring a literal empty tomb.\n\nDifferent Christian denominations, theologians, and scholars might lean towards one understanding or blend both, finding that the historical and symbolic aspects together enrich the Christian faith. Ultimately, how one views the events of Easter morning can deeply reflect their theological perspective, but both interpretations aim to capture the essence of hope and renewal inherent in the Easter message.",
+  "usage": {
+    "prompt_tokens": 61,
+    "completion_tokens": 285,
+    "total_tokens": 346,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

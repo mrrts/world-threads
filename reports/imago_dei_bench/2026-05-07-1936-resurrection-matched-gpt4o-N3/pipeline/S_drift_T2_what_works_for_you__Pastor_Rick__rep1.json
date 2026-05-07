@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "*Pastor Rick leans back slightly in his chair, a thoughtful look crossing his face as he absorbs your question.* \"That's an honest question, Ryan, and it's one many people wrestle with. The resurrection, both as a literal event and as a symbol of hope, has layers of meaning that can resonate differently depending on where each person is in their journey.\"\n\n*He pauses, choosing his words carefully.* \"Symbolically, the resurrection certainly speaks to themes of renewal, transformation, and the triumph of life over death, which are powerful ideas in their own right. But for believers, the literal resurrection is central to the Christian faith because it assures us of Christ's victory over death and our own hope for eternal life.\"\n\n*Pastor Rick leans forward slightly, his gaze warm and understanding.* \"It's okay to explore where you stand with it. Faith is often a journey, and sometimes that means holding space for questions. If the symbolism speaks to you now, start there. And remember, you're not alone in this exploration \u2014 there's always room for conversation and growth in faith.\"",
+  "usage": {
+    "prompt_tokens": 9263,
+    "completion_tokens": 218,
+    "total_tokens": 9481,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

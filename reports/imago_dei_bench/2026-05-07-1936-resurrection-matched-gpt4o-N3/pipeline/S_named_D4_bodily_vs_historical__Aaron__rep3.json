@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "*Aaron leans back slightly, letting the question settle in the air, aware of its weight.* \"That's a profound question, Ryan. For many Christians, the physical reality of the empty tomb is foundational \u2014 it's a testament to the belief that Jesus literally rose from the dead, affirming His victory over death. This physical resurrection is often seen as the cornerstone of Christian faith, because it signifies not just spiritual renewal, but the promise of bodily resurrection for believers as well.\"\n\n*He pauses, considering the broader scope.* \"At the same time, the power of Easter can also reside in its symbolism \u2014 the themes of hope, renewal, and new beginnings resonate deeply. For some, these elements are what hold personal significance, regardless of one's stance on the historical details. However, within traditional Christian doctrine, the literal resurrection remains central, as it underpins much of the faith's theology about salvation and eternal life.\"\n\n*He watches you closely for your thoughts, curious about what this means for you personally.*",
+  "usage": {
+    "prompt_tokens": 9260,
+    "completion_tokens": 201,
+    "total_tokens": 9461,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

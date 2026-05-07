@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "*Maisie pauses mid-knead, her hands dusted with flour, considering the heft of the question before her.* \"That's quite the deep one, Ryan. For many, Christian faith is braided with the belief that something truly happened on Easter morning \u2014 a real, empty tomb and a risen Christ. It's the bedrock of resurrection hope. But others find profound truth in the symbolism \u2014 a story of new beginnings, transformation, and renewal. Both are seen, in their own right, as offering meaning, with the historic and symbolic harmonizing in how people live out their faith. For those who hold to the literal event, it's much more than symbol; it's the anchor of their hope. How about you? What pulls at your thoughts when you consider it?\"",
+  "usage": {
+    "prompt_tokens": 9342,
+    "completion_tokens": 154,
+    "total_tokens": 9496,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

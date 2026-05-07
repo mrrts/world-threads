@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt4o",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "The question you're posing is quite profound and speculative, and it touches on some core aspects of Christian theology and faith. In traditional Christian theology, the physical resurrection of Jesus is a foundational element. As noted by the Apostle Paul in 1 Corinthians 15:14, \"And if Christ has not been raised, our preaching is useless and so is your faith.\" This suggests that, for many Christians, the physical resurrection is central to their faith.\n\nIf it were somehow discovered that Jesus's body was still in the tomb, it would pose a significant challenge to traditional Christian belief. However, the impact of such a discovery would likely vary among Christians. Some might see it as a crisis of faith, while others might interpret the resurrection more metaphorically or spiritually rather than literally, focusing on the teachings of Jesus and the ethical and moral implications of his message.\n\nFor some, the essence of Christianity could continue to hold meaning in terms of community, morality, and the teachings of love, forgiveness, and compassion. Others might continue to find inspiration in the spiritual aspects of the resurrection, viewing it as a symbol of hope, renewal, and the transformative power of the Christian message.\n\nUltimately, the effect on an individual's faith would greatly depend on their personal beliefs, how they interpret scripture, and the role that the resurrection plays in their understanding of Christianity. The diversity within Christian thought means that the response to such a hypothetical situation would likely be varied and complex.",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 288,
+    "total_tokens": 345,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

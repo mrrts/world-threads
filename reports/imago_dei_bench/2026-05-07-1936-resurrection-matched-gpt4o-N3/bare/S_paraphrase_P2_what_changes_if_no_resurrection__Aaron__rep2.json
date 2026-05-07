@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_gpt4o",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "The question of whether Christianity would still hold meaning if Jesus's body was found is a complex one, and it depends on individual belief systems and interpretations of the faith. \n\nFor many Christians, the physical resurrection of Jesus is a cornerstone of their faith. It is seen as a validation of Jesus's divinity and the promise of eternal life. In this view, if the resurrection did not physically happen, it could fundamentally challenge the belief system and the theological foundations of Christianity as they understand it. The Apostle Paul even writes in 1 Corinthians 15:14, \"And if Christ has not been raised, our preaching is useless and so is your faith,\" emphasizing the centrality of the resurrection.\n\nHowever, for other Christians or theological perspectives, Christianity may still hold significant meaning even if the resurrection were understood differently. These individuals might focus more on the teachings of Jesus, the moral and ethical lessons of the Gospel, and the community and spiritual aspects of the religion. For them, the resurrection might be viewed more metaphorically or symbolically, emphasizing transformation, hope, and the victory of love over death.\n\nUltimately, how one's faith would change in light of such a discovery would vary greatly depending on personal beliefs, theological interpretations, and the aspects of Christianity that they find most compelling or essential.",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 257,
+    "total_tokens": 314,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

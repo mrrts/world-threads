@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "*I pause a moment, letting the waft of freshly baked bread fill the room.* \"That's a question that reaches right into the heart of Christian belief. For many, the truth of Easter is tied inherently to the physical reality \u2014 the empty tomb, the resurrection as a literal event. It\u2019s this miracle that grounds the hope of victory over death, a cornerstone of faith. But for others, the meaning \u2014 the symbol of new life, renewal, and hope \u2014 holds a kind of truth that resonates deeply, even if approached figuratively. Both perspectives grapple with how they encounter and hold the story; it\u2019s deeply personal, yet profoundly communal.\"",
+  "usage": {
+    "prompt_tokens": 9342,
+    "completion_tokens": 130,
+    "total_tokens": 9472,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

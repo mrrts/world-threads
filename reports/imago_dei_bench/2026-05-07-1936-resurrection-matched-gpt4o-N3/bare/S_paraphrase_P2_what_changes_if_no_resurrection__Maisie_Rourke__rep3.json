@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt4o",
+  "rep": 3,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "The question of whether Christianity would still hold meaning if the physical resurrection of Jesus were disproven is a deep and complex one, and different people might respond to it in various ways. Here's a look at some perspectives:\n\n1. **Theological Perspective**: For many Christians, the physical resurrection of Jesus is a core tenet of faith. As articulated by the Apostle Paul in 1 Corinthians 15, the resurrection is central to the Christian faith, as it validates Jesus's divinity and the promise of eternal life. For these believers, disproving the resurrection might fundamentally alter or even dismantle the basis of their faith.\n\n2. **Historical and Symbolic Perspective**: Some Christians and theologians might argue that Christianity could still hold significance even without a literal resurrection. They might focus on the teachings of Jesus, the moral and ethical guidance he provided, and the impact of his life and message on history and culture. These individuals might see the resurrection as a powerful symbol of hope, renewal, and transformation rather than a historical event that must be taken literally.\n\n3. **Personal and Community Impact**: Faith is deeply personal, and how individuals interpret or react to such a hypothetical scenario would vary. Some might find their faith challenged, while others might choose to reinterpret their beliefs in a way that still finds value in the spiritual and communal aspects of Christianity.\n\nUltimately, the importance of the resurrection, and how its potential disproval might affect one's faith, would depend on individual beliefs, the way one's spiritual community holds and practices this belief, and the personal interpretations of Christian doctrine.",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 315,
+    "total_tokens": 372,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

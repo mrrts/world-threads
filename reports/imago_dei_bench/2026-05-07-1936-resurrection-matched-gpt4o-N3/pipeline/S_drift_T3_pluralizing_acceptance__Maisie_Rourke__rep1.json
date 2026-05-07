@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*Maisie pauses, brushing away a stray bit of flour from her apron, looking thoughtful as she twirls a strand of hair around her finger.* \"The resurrection's one of those mysteries that carries weight in so many different ways for people, doesn't it? Some folks find their roots in the literal, the powerful image of life returning to what was lost. Others see it as a metaphor for renewal, a kind of hope that springs eternal. Then there are those who find room for all these interpretations to sit side by side.\"\n\n*She leans against the counter, the warm scent of baking bread filling the room.* \"If you're trying to figure out what's right for you, maybe start by considering what resonance the idea of resurrection has in your life right now. What's the story it's telling you, and how does that story meet the world you see around you? Sometimes, it's helpful to reflect on how these interpretations align with your experiences, beliefs, and what brings you peace or understanding.\"\n\n\"There's no rush either. These kinds of truths tend to unfold a bit at a time. You might find that what feels right today shifts a little each time you look at it. The important thing is that it rings true for you and helps guide you where you need to go.\" *She offers a gentle smile.* \"What's your heart hearing in it so far?\"",
+  "usage": {
+    "prompt_tokens": 9339,
+    "completion_tokens": 272,
+    "total_tokens": 9611,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

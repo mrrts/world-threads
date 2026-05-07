@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "*Aaron leans back, an intent expression crossing his face as if weighing the question carefully. He exhales through his nose, then looks directly at Ryan, his voice steady and thoughtful.*\n\n\"If Jesus's body were found, that would shake the very foundation of Christianity, wouldn't it? The physical resurrection is core to the faith \u2014 it's not just a piece of the story, it's the crux of the gospel. Without it, the promise of eternal life and the triumph over death come into question. \n\nFaith might become more about the moral teachings and the love Jesus showed, but the assurance of hope and redemption would be deeply challenged. My faith, centered as it is on resurrection as truth, would face profound questions in such a scenario.\"",
+  "usage": {
+    "prompt_tokens": 9256,
+    "completion_tokens": 148,
+    "total_tokens": 9404,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

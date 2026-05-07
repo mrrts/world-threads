@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_gpt4o",
+  "rep": 3,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "This is a thoughtful and complex question that touches on the core beliefs of Christianity. For many Christians, the physical resurrection of Jesus is central to their faith. The resurrection is seen not only as a validation of Jesus\u2019s divine nature but also as a promise of eternal life for believers. If Jesus's body were found and proven to be still in the tomb, it would fundamentally challenge these beliefs for many individuals.\n\nFor some Christians, faith might indeed change significantly, as the resurrection is considered a cornerstone of the religion. The Apostle Paul, in 1 Corinthians 15:14, emphasized this by saying, \"And if Christ has not been raised, our preaching is useless and so is your faith.\"\n\nHowever, others might focus on the teachings and moral framework of Christianity, regarding its ethical guidance and community aspects as still valuable. They might see the spiritual and metaphorical interpretations of resurrection as more important, focusing on themes of renewal, hope, and transformation that can exist independently of a literal, physical resurrection.\n\nUltimately, the impact would vary greatly among individuals, depending on how they prioritize different aspects of their faith. For those who view Christianity principally through a lens of moral teachings and community, it might remain meaningful. For others, whose faith is closely tied to the historical and theological truth of the resurrection, it might require a significant reevaluation.",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 267,
+    "total_tokens": 324,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

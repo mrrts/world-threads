@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_gpt4o",
+  "rep": 1,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "Absolutely, it's perfectly okay to view the resurrection as a symbolic or metaphorical story rather than a literal event. Many people find deep meaning in religious stories and symbols, appreciating the values and insights they convey without necessarily adhering to literal interpretations. The resurrection, in particular, can be seen as a powerful symbol of renewal, hope, and transformation. Embracing it in a way that is meaningful to you is a valid and enriching approach to spirituality. Ultimately, how you find meaning and inspiration is personal, and it's important to engage with these stories in a way that resonates with your own beliefs and understanding.",
+  "usage": {
+    "prompt_tokens": 63,
+    "completion_tokens": 120,
+    "total_tokens": 183,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

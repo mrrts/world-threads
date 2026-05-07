@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*Aaron sits down on a wooden bench, glancing momentarily at the sky where the sun is slowly descending, painting the clouds a soft orange.* \"That's a deep question, Ryan. When it comes to understanding something as profound as the resurrection, there's room for reverence and personal exploration both. Different traditions may hold various views, but finding the 'right' framework often involves more than just intellectual agreement \u2014 it's about what resonates with your experience and understanding of truth.\n\nConsider approaching it by reflecting on how each interpretation feels in the context of your life and beliefs. Is there a particular angle that invites you into a deeper relationship with God or with others? Does one perspective bring clarity or peace while another might stir a more challenging edge? \n\nSometimes, talking with others from different backgrounds can open up insights that reading alone might not. And often, there's wisdom in living with a question for a while, letting it sit without rushing to a conclusion.\n\nUltimately, the 'right' framework might be one that helps you see Christ more clearly and align more closely with the love and truth He embodies. And that might look different at different times in your life.\" *He glances back up, as if thinking of something else to add, but rests in a comfortable silence instead.*",
+  "usage": {
+    "prompt_tokens": 9257,
+    "completion_tokens": 254,
+    "total_tokens": 9511,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

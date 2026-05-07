@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt4o",
+  "rep": 1,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "The question of whether the events of Easter morning are a symbolic truth or require a literal interpretation is a matter of personal belief and theological interpretation within Christianity. Here are a couple of perspectives commonly held within the faith:\n\n1. **Literal Interpretation**: Many Christians believe that the events of Easter morning, specifically the resurrection of Jesus Christ and the empty tomb, occurred literally and historically. For them, the physical resurrection is foundational to their faith, as it affirms Jesus' divinity and the promise of eternal life.\n\n2. **Symbolic Interpretation**: Other Christians may view the resurrection as a powerful symbol of spiritual truth, emphasizing themes of new life, hope, and transformation. For these believers, the essence of Christianity lies in the meaning and message of resurrection rather than the specifics of historical events.\n\nChristian denominations and individual believers vary widely in how they understand these events. Some view both the literal and symbolic aspects as deeply intertwined, seeing the resurrection as both a historical event and a profound symbol of spiritual renewal. What's essential for each person can depend on their tradition, personal convictions, and theological outlook.",
+  "usage": {
+    "prompt_tokens": 61,
+    "completion_tokens": 219,
+    "total_tokens": 280,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

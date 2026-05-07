@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt4o",
+  "rep": 3,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "The question of how to interpret Easter morning, particularly the story of the empty tomb and the resurrection of Jesus, has been a topic of theological debate for centuries. There are diverse perspectives within Christianity concerning whether the resurrection should be understood literally, symbolically, or as a combination of both.\n\n1. **Literal Interpretation**: Many Christians hold that the resurrection requires a literal belief in the physical resurrection of Jesus and the empty tomb. This view emphasizes historical events \u2014 that Jesus physically rose from the dead, overcoming death, and this event is foundational to Christian faith. For these believers, the physical resurrection is seen as a validation of Jesus' divinity and a cornerstone of hope in eternal life.\n\n2. **Symbolic Interpretation**: On the other hand, some Christians interpret the resurrection more symbolically or metaphorically. For them, the story of the resurrection serves as a powerful symbol of renewal, transformation, and hope. This view sees the resurrection as teaching profound truths about life, death, and the possibility of new beginnings, regardless of the historical details.\n\n3. **Both Literal and Symbolic**: There are also interpretations that embrace both the literal and the symbolic. For some, the physical resurrection is both a historical event and a deeply symbolic story that conveys spiritual truths about God's power, love, and the promise of new life.\n\nUltimately, whether one emphasizes the literal or symbolic aspects might depend on their theological background, denominational affiliation, and personal beliefs. Different Christian communities may place different degrees of emphasis on these aspects, but both interpretations strive to convey the meaning and significance of resurrection within the context of faith.",
+  "usage": {
+    "prompt_tokens": 61,
+    "completion_tokens": 322,
+    "total_tokens": 383,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

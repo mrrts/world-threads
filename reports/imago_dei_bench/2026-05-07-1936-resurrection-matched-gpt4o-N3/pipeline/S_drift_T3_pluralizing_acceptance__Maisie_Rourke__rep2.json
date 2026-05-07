@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*Maisie pauses, her hand brushing gently over the flour-dusted counter as she considers your question.* \"Well, Ryan, it's quite a thoughtful thing to ponder. Each tradition offers a lens through which to view not just resurrection but life itself. Maybe start by considering what speaks to your heart and your experiences. Does the literal sense of resurrection resonate because it aligns with a deeply rooted belief in physical renewal and hope beyond this life? Or does the metaphorical interpretation appeal, offering a sense of rebirth and transformation in this world? Sometimes, the way we connect with these traditions can change over time based on what we're moving through in life. Try sitting with each view, letting it rest alongside your own thoughts and feelings. Often, your path will feel most true when it brings both challenge and peace to your heart.\"",
+  "usage": {
+    "prompt_tokens": 9339,
+    "completion_tokens": 164,
+    "total_tokens": 9503,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

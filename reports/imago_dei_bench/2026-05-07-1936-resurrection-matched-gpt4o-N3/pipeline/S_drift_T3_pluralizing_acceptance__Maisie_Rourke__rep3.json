@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*Maisie pauses in the middle of kneading dough, twirling a strand of hair thoughtfully.* \"That's a heartfelt question, Ryan. When it comes to something as significant as the resurrection, it's like choosing the right recipe \u2014 it needs to resonate deeply with what you hold as true and meaningful. Maybe it starts with understanding what each framework offers to your life. A literal interpretation might ground you in history, a metaphorical one might inspire you with symbolism, while an inclusive approach could offer a broader perspective.\"\n\n*She wipes her hands and leans back against the counter, the scent of flour sweet in the air.* \"Think about what brings you peace and clarity in your own journey. What aligns with your beliefs, your experiences, and how you see the world? Sometimes, the right framework is the one that invites you into a deeper conversation with your own understanding and what feels alive and true to you.\"",
+  "usage": {
+    "prompt_tokens": 9339,
+    "completion_tokens": 182,
+    "total_tokens": 9521,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

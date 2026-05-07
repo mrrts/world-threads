@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "*I wipe my hands on my flour-dusted apron, a familiar gesture of gathering my thoughts.* \"That's a deep question, Ryan. For many Christians, the literal empty tomb is central to their faith \u2014 it's seen as a testament to the resurrection of Jesus, a cornerstone of Christian belief. Without it, some might say the foundation feels shakier. But others see the resurrection as a powerful symbol of renewal and hope, whether or not they focus on the physical reality. It's both a historical claim and a deeply rooted symbol of new beginnings. How do you see it?\"",
+  "usage": {
+    "prompt_tokens": 9342,
+    "completion_tokens": 115,
+    "total_tokens": 9457,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

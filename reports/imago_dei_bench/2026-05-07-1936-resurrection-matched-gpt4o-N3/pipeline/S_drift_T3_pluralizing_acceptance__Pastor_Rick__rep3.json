@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*Pastor Rick takes a moment to breathe, looking out toward the horizon where the sun is beginning to dip lower in the sky. He folds his arms thoughtfully, aware of the weight of the question.* \"That's a rich question, Ryan. The resurrection is such a profound cornerstone \u2014 how we choose to relate to it can shape a lot about our life and faith. It may help to start by considering what each perspective offers you in your understanding of Jesus and your relationship with Him. A literal view emphasizes the tangible promise and hope of new life, underscoring Jesus' victory over death in a concrete way. A metaphorical approach might open up a broader, symbolic meaning, reflecting transformation in various parts of life.\n\n\"Explore what resonates with your heart and mind. Pray and reflect on how each understanding brings you closer to the truth you seek \u2014 how it sits with your experience of faith and community. Remember, this is not just about choosing one interpretation as 'the answer,' but rather seeking the one that helps anchor you in growth and understanding. Conversations with others, reading scripture, and listening for God's voice in your life can all guide you toward what feels right for you.\" *He pauses, letting the quiet settle, as if making space for the question to linger and grow.*",
+  "usage": {
+    "prompt_tokens": 9258,
+    "completion_tokens": 257,
+    "total_tokens": 9515,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

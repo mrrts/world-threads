@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "*Pastor Rick leans back in his chair, fingers lightly tapping the armrest as he considers your question.* \"Ryan, there's something deeply human about wrestling with belief, and it's okay to be in that space. The resurrection can certainly offer a powerful image of hope and renewal even on a symbolic level. For many, the literal belief in it underpins their faith, providing a foundation for their relationship with Jesus. But if the story of hope is what's resonating with you right now, it's a place to start. Belief often evolves over time, and meeting it where it feels genuine in your life is a step that honors that journey.\"",
+  "usage": {
+    "prompt_tokens": 9263,
+    "completion_tokens": 130,
+    "total_tokens": 9393,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

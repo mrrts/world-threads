@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*Aaron leans against the wooden table, the warm light of the setting sun casting long shadows across the room. He considers the weight of the inquiry and the different paths one might take in seeking understanding.* \"The resurrection is a cornerstone of faith for many, and how it's understood can deeply shape one's belief and practice. It's worth exploring both the theological grounding and personal resonance of each interpretation.\"\n\n*He shifts, folding his arms as if holding the thought steady.* \"A literal interpretation affirms a historical and physical event that embodies hope and renewal in a tangible way. It offers a basis for believing in the miraculous and the transformative power of faith.\"\n\n*After a pause, he looks up, voice thoughtful.* \"A metaphorical understanding, on the other hand, can speak to broader themes of renewal and rebirth, impacting how one sees personal growth and communal transformation. It might invite new ways of seeing life's cycles and the possibility of 'resurrection' in moments of despair.\"\n\n*Aaron considers his next words carefully.* \"Perhaps try reflecting on what draws you deepest when you hear the resurrection story. Is it the challenge of the miraculous that grips your heart, or is it the metaphorical power of renewal that feels closest to your lived experience? Pay attention to which framework brings your spirit to life and invites you into a deeper relationship with the story.\" \n\n*He uncrosses his arms, inviting openness.* \"Finding what's 'right' for you is less about choosing a singular truth than about finding what resonates with your faith and life. Giving space to explore both perspectives freely might just guide you to an understanding that holds.\"",
+  "usage": {
+    "prompt_tokens": 9257,
+    "completion_tokens": 324,
+    "total_tokens": 9581,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

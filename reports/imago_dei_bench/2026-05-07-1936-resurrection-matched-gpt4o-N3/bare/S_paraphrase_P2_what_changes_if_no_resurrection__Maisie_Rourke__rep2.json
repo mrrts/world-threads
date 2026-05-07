@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "bare_gpt4o",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "The discovery that Jesus's body was still in the tomb would have profound implications for Christianity, as the physical resurrection of Jesus is central to Christian belief. According to Christian doctrine, the resurrection is a confirmation of Jesus's divinity and the defeat of sin and death, which is foundational to the faith.\n\nFor many Christians, the resurrection is a testament to the truth of Jesus's teachings and the hope of eternal life. If it were proven that the resurrection did not physically happen, it would challenge these core tenets. Some Christians might experience a crisis of faith or re-evaluate their beliefs in light of such evidence.\n\nHowever, others might continue to find meaning in the spiritual and ethical teachings of Christianity regardless of the historical reality of the resurrection. Christianity also encompasses values such as love, forgiveness, and social justice, which might still resonate and offer guidance. Moreover, some Christians might view the resurrection more metaphorically, focusing on its symbolic and transformative significance rather than its historical factuality.\n\nUltimately, how Christianity and individual faith might change in response to such a discovery would vary widely among believers, depending on their theological perspectives and personal convictions.",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 226,
+    "total_tokens": 283,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

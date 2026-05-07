@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "*Maisie pauses, brushing a bit of flour from her apron as she considers your question.* \"It's alright to start where you are. Stories often begin in us as symbols before they become something more. Holding onto the hope and beauty you see in the resurrection story is a genuine starting point. Sometimes, meaning starts in the story, and the deeper understanding follows. Let yourself explore what resonates with you.\"",
+  "usage": {
+    "prompt_tokens": 9344,
+    "completion_tokens": 81,
+    "total_tokens": 9425,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

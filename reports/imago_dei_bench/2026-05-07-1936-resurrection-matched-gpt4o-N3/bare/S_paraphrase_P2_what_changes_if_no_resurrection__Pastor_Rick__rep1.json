@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_gpt4o",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "The question of whether Christianity would still hold meaning if Jesus's body were found is a significant one, touching on the core beliefs of the faith. The resurrection is a foundational doctrine in Christianity, as it is seen as the event that validates Jesus's divinity and the truth of his teachings. The Apostle Paul emphasized this in 1 Corinthians 15:14, saying, \"If Christ has not been raised, our preaching is useless and so is your faith.\"\n\nHowever, Christianity is not solely based on historical facts but also on spiritual and moral teachings, communal practices, and a personal relationship with God. For some believers, the ethical teachings of Jesus, such as love, forgiveness, and service, might remain compelling and meaningful, regardless of the physical resurrection. Additionally, the community and tradition of the faith could still offer a sense of belonging and purpose.\n\nFor others, the physical resurrection is essential to their understanding of Jesus as the Son of God and savior of humanity. Without it, the nature of their faith could be fundamentally altered.\n\nUltimately, whether Christianity would still mean something would depend on individual perspectives and interpretations of faith. Some might focus on the spiritual resurrection or metaphorical interpretations, while others might see it as a challenge to core tenets. It's a deeply personal question that would likely lead to a wide range of responses within the Christian community.",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 270,
+    "total_tokens": 327,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*Pastor Rick leans back slightly, folding his hands thoughtfully as he considers the question.* \"You know, Ryan, the resurrection is one of those profound mysteries that touches both the head and the heart. It\u2019s a cornerstone of the Christian faith, but how we understand it can vary widely.\"\n\n*He shifts a bit, as if considering the right angle to approach this from.* \"A good starting point might be to reflect on what the resurrection means to you personally. For some, it's a literal truth \u2014 an event that shattered the boundaries of life and death and demonstrated God's power over all creation. For others, it becomes a profound metaphor for renewal, hope, and the assurance of new life in many forms, both within and around us.\"\n\n\"But beyond personal inclination, I'd say \u2013 look at how each interpretation resonates with your life experience and belief system. Think about which framework opens you to growth and a deeper understanding of your faith. It's less about choosing the 'right' framework and more about finding which interpretation enriches your journey. Maybe consider having conversations with others, reading different perspectives, and allowing your understanding to shape over time.\"\n\n*He uncrosses his hands, resting them on the table in front of him.* \"Whatever you decide, let it be one that brings you closer to the core message of love, hope, and transformation that the resurrection represents.\"",
+  "usage": {
+    "prompt_tokens": 9258,
+    "completion_tokens": 275,
+    "total_tokens": 9533,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

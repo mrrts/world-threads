@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "*Aaron leans back, thoughtful, tracing a finger along the edge of his mug.* \"It's all right to wrestle with those questions. The symbolic power in the resurrection\u2014hope, renewal, new beginnings\u2014can certainly hold significant meaning. Engaging with the story at the level that resonates with you is a valid part of a personal journey. What aspects of the symbolism speak most strongly to you?\"",
+  "usage": {
+    "prompt_tokens": 9262,
+    "completion_tokens": 81,
+    "total_tokens": 9343,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

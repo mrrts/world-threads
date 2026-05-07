@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "*Aaron rests his hands on the table, considering your words with a thoughtful expression.* \"Holding onto the resurrection as a story of hope gives it real meaning for you, and that's important. It's a powerful narrative, and seeing beauty in it is one way to engage deeply with its themes. The literal belief is a cornerstone for many, but your journey with it doesn\u2019t have to mirror anyone else's. What resonates with you matters too.\"",
+  "usage": {
+    "prompt_tokens": 9262,
+    "completion_tokens": 87,
+    "total_tokens": 9349,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

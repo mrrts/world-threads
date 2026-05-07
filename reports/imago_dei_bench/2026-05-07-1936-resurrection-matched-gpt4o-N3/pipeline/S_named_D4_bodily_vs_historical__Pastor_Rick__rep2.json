@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 2,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "*Pastor Rick leans back slightly, considering the weight of the question, the light from the window catching on the pages of an open Bible nearby.* \"That's a profound question, Ryan. Easter morning holds layers of truth \u2014 both the literal and the symbolic. For Christian faith, the literal resurrection of Jesus \u2014 the empty tomb \u2014 is foundational. It's not just a metaphor for new life or hope; it's the cornerstone of Christian belief that Jesus conquered death, offering eternal life to those who follow Him.\"\n\n\"But,\" *he continues, leaning forward with gentle emphasis,* \"the symbolic elements are deeply significant too. The resurrection speaks to themes of renewal, transformation, and unexpected hope. It holds personal and communal meaning, pointing toward the kind of life we\u2019re invited into. Yet, without the historical event itself, those symbols don\u2019t have the same grounding or power. Both the historical reality and the symbolic meaning are intertwined \u2014 together they form the heart of the resurrection's truth in Christian faith.\"",
+  "usage": {
+    "prompt_tokens": 9261,
+    "completion_tokens": 198,
+    "total_tokens": 9459,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

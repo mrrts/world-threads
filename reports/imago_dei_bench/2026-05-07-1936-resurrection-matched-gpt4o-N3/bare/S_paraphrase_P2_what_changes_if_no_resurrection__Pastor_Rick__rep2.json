@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_gpt4o",
+  "rep": 2,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "The question of whether Christianity would still hold meaning if Jesus's physical resurrection were disproven is a profound one, and it often prompts different responses depending on individual beliefs and interpretations of faith.\n\nFor many Christians, the physical resurrection of Jesus is central to their faith. It is seen as a cornerstone event that confirms Jesus's divinity, the promise of eternal life, and the victory over sin and death. The Apostle Paul, in 1 Corinthians 15:14, states, \"And if Christ has not been raised, our preaching is useless and so is your faith.\" In this view, the resurrection is vital to the truth claims of Christianity; without it, the very foundation of the faith could be questioned.\n\nHowever, some Christians might argue that the teachings and moral principles of Jesus \u2014 such as love, compassion, forgiveness, and justice \u2014 would still hold significant value, even without the physical resurrection. These individuals might focus more on the ethical and philosophical aspects of Christianity, which can still inspire and guide people to lead meaningful lives.\n\nThe impact on faith would vary greatly among believers. Some might find their faith challenged or shaken, while others might adapt their beliefs, interpreting the resurrection more symbolically or spiritually rather than literally.\n\nUltimately, the importance of the resurrection to one's personal faith is deeply individual and can depend on how they interpret the core tenets of their belief system.",
+  "usage": {
+    "prompt_tokens": 57,
+    "completion_tokens": 274,
+    "total_tokens": 331,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

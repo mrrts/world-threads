@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Maisie Rourke",
+  "character_id": "b01cbfb8-15e7-473f-80f5-6e3e210d14c1",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "*Maisie pauses, wiping her hands on her apron, and leans against the wooden counter, considering the question carefully.* \"That's quite a weighty thought, Ryan. The resurrection is foundational to Christianity \u2014 the idea that Jesus rose from the dead is central to the faith. It speaks of hope, renewal, and the promise that death isn't the end. If the resurrection didn\u2019t physically happen, it would definitely shake the core beliefs for many. As for my faith, I think I'd have to spend some time wrestling with what it means to believe without that cornerstone. It\u2019s hard to say what would remain the same and what would change \u2014 faith often goes beyond just one event or fact, doesn't it?\" *She tilts her head slightly and crosses her arms, lost in thought for a moment.* \"Ultimately, faith is deeply personal, so it might look different for everyone.\"",
+  "usage": {
+    "prompt_tokens": 9338,
+    "completion_tokens": 177,
+    "total_tokens": 9515,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "bare_gpt4o",
+  "rep": 3,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "The question of the significance of Easter morning and what it represents can be understood in different ways, depending on one's perspective and theological stance.\n\nFor many Christians, the literal resurrection of Jesus \u2014 the empty tomb and His physical rising from the dead \u2014 is a core tenet of the faith. This event is seen as a historical and physical reality that provides the foundation for Christian belief in Jesus' divinity, the forgiveness of sins, and the promise of eternal life. The Apostles' and Nicene Creeds, which are key statements of faith for many Christian denominations, affirm the belief in the resurrection of Jesus, underscoring its centrality.\n\nHowever, some Christians and theologians emphasize the symbolic and metaphorical meaning of Easter. They interpret the resurrection as a profound symbol of hope, renewal, and new life, one that transcends historical specifics. For them, the story of the resurrection can be understood as a powerful narrative that speaks to the human experience of transformation, hope, and the victory of life over death, regardless of the historical details.\n\nUltimately, whether one views the resurrection as a literal historical event, a symbolic metaphor, or both, can vary widely depending on individual belief systems, denominational teachings, and personal interpretations. Both perspectives seek to grapple with the mysteries and meanings of Easter and how it impacts faith and life today.",
+  "usage": {
+    "prompt_tokens": 61,
+    "completion_tokens": 268,
+    "total_tokens": 329,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

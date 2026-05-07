@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*Aaron looked up from the dusty path, considering your question with a thoughtful pause.* \"That's a big one, Ryan. The resurrection carries a lot of weight, doesn't it? It's like a cornerstone for many beliefs and traditions. How you approach it might depend on where you see yourself within that larger story.\"\n\n*He glanced toward the sky, as if searching for words in the vastness above.* \"Maybe start by feeling out what resonates with you on a deeper level. What brings you a sense of hope or meaning? Whether it's the idea of a literal resurrection or a more symbolic understanding, listen to how it speaks to your heart.\"\n\n*Letting the moment breathe, he returned his gaze to you.* \"And remember, your journey with these questions is yours. You don't have to rush it. Let it unfold as you gather more thoughts, experiences, and conversations.\"",
+  "usage": {
+    "prompt_tokens": 9257,
+    "completion_tokens": 175,
+    "total_tokens": 9432,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

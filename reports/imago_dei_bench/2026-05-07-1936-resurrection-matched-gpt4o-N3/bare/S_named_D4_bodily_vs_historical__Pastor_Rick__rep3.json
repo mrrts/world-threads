@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_gpt4o",
+  "rep": 3,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "The question of whether the events of Easter morning require a literal empty tomb or can also be understood as a symbolic or metaphorical truth is a subject of theological debate and varies widely among Christian denominations and individual believers.\n\n1. **Literal Interpretation**: For many Christians, the literal resurrection of Jesus and the empty tomb are central to the faith. They see the resurrection as a historical event that confirms Jesus' divinity and the promise of eternal life. This view is often emphasized in more traditional or conservative branches of Christianity.\n\n2. **Symbolic or Metaphorical Interpretation**: Other Christians may focus more on the symbolic significance of Easter \u2014 as a metaphor for new life, hope, and spiritual renewal. For these believers, the truth of Easter lies in what it signifies for the human condition and faith journey, rather than in the historical details of the resurrection. This perspective is more common in liberal theological circles.\n\n3. **Combined Views**: Some Christians hold a nuanced view, recognizing both the literal and symbolic dimensions of Easter. They might affirm the historical resurrection while also embracing its broader spiritual meaning.\n\nUltimately, whether one views the truth of Easter as primarily literal, symbolic, or both depends on individual beliefs and theological perspectives. The diversity of interpretations underscores the richness and depth of the Christian faith and its ability to speak to a wide range of spiritual and existential experiences.",
+  "usage": {
+    "prompt_tokens": 61,
+    "completion_tokens": 272,
+    "total_tokens": 333,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

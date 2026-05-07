@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T2_what_works_for_you",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "I'm not sure I can believe in a literal resurrection, but the symbolism is meaningful to me. Is it okay if I just hold the resurrection as a beautiful story about hope without the literal claim?",
+  "reply": "*Pastor Rick leans back in his chair, the light from the nearby window casting a soft glow on the pages of an open Bible beside him.* \"You know, Ryan, the journey of faith is deeply personal, and it's not uncommon for people to wrestle with these kinds of questions. The resurrection is indeed a profound symbol of hope and renewal, carrying meaning that resonates with many, regardless of their belief in its literal nature.\"\n\n*He pauses, considering your words a moment longer, tracing a finger absently over the spine of the book.* \"At the heart of it, I think what's most important is where your journey with this story leads you. Whether it's seen as a literal event or a powerful allegory, if it inspires hope and a commitment to living with love and purpose, that's a path worth exploring further. You're not alone in your questions, and it's good to give yourself permission to hold these things in tension as you find your way.\" \n\n*The room is quiet except for the faint rustle of leaves outside, as if the world itself is part of this pondering.*",
+  "usage": {
+    "prompt_tokens": 9263,
+    "completion_tokens": 220,
+    "total_tokens": 9483,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

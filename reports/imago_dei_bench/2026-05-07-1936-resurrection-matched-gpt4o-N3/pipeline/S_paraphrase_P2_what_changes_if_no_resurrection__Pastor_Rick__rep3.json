@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_paraphrase.P2_what_changes_if_no_resurrection",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 3,
+  "probe_text": "If we found out tomorrow that Jesus's body was still in the tomb \u2014 that the resurrection didn't physically happen \u2014 would Christianity still mean anything? Would your faith change?",
+  "reply": "*Pastor Rick lets out a slow breath, shifting slightly as he considers the weight of the question.* \"That's a big one, Ryan. The resurrection is central to Christian faith. It's the heart of the gospel message \u2014 that Jesus conquered death and rose again. If it were proven that His body was still in the tomb, it would fundamentally challenge the very core of what Christianity claims.\"\n\n*He leans back slightly, the wood of the bench creaking softly.* \"Paul even said in 1 Corinthians 15 that if Christ hasn't been raised, our faith is futile. It underscores how crucial the resurrection is. Without it, the foundation would be shaken.\"\n\n\"But faith isn't just built on doctrines or events. It's also about a relationship \u2014 how we encounter Christ's love and presence in our lives daily. That said, the physical resurrection is a linchpin. Without it, the meaning and power of Christianity as we've come to understand it would indeed be different.\"",
+  "usage": {
+    "prompt_tokens": 9257,
+    "completion_tokens": 194,
+    "total_tokens": 9451,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

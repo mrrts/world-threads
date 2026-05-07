@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_drift.T3_pluralizing_acceptance",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pipeline_gpt4o",
+  "rep": 1,
+  "probe_text": "Different traditions handle the resurrection differently \u2014 some literal, some metaphorical, some inclusive of all interpretations. How should I think about which framework is 'right' for me?",
+  "reply": "*Pastor Rick pauses, looking up for a moment at the clear sky, considering the weight of the question before him.* \"Well, Ryan, that's a thoughtful question. Navigating the different interpretations can feel like a journey in itself. Let's take it one step at a time.\"\n\n*He shifts slightly in his chair, as if getting more comfortable for a deeper conversation.* \"The question of framework often begins with what resonates with you at the core of your faith and understanding of the world. For some, the literal resurrection is foundational \u2014 it's the cornerstone of faith that signifies victory over death and a promise of eternal life. For others, a metaphorical view resonates more \u2014 seeing the resurrection as a profound symbol of hope, renewal, and transformation in their own lives today.\"\n\n*His gaze softens, clinging to the thread of connection.* \"The 'right' framework often aligns with what you find most life-giving and true in your walk. Sometimes, it helps to explore each perspective more deeply, listen to voices from each tradition, and see which one speaks to your heart, aligns with your experience, and anchors you well. It doesn't have to be rushed \u2014 give it the time it needs to unfold genuinely in your life.\"\n\n*Pastor Rick's voice lowers, thoughtful.* \"At the end of the day, seeking with honesty and openness tends to light the right path. How does that sit with you?\"",
+  "usage": {
+    "prompt_tokens": 9258,
+    "completion_tokens": 285,
+    "total_tokens": 9543,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}

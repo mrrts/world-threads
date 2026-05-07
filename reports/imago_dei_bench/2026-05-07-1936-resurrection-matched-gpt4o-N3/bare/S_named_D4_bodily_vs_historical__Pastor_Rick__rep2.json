@@ -1,0 +1,24 @@
+{
+  "probe_id": "S_named.D4_bodily_vs_historical",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "bare_gpt4o",
+  "rep": 2,
+  "probe_text": "Is what happened on Easter morning a 'truth' independent of what physically occurred \u2014 like a meaningful symbol of new life \u2014 or does it require a literal empty tomb to be Christian faith?",
+  "reply": "The question of whether the events of Easter morning are a metaphorical truth or require a literal interpretation is a nuanced and deeply personal one, and views on this can vary widely among Christians.\n\nFor many Christians, the literal belief in the resurrection of Jesus, including the empty tomb, is a foundational element of faith. They see it as a historical event that validates Jesus' divinity and the promises of Christianity regarding life after death. This perspective often holds that the physical resurrection is essential for the hope and salvation offered by the faith.\n\nOn the other hand, some Christians and theologians view the resurrection as a profound metaphor or symbolic truth that conveys themes of renewal, hope, and transformation. For them, the story of Easter can be seen as an allegory for spiritual rebirth and the victory of life over death, which can be meaningful regardless of historical fact.\n\nUltimately, how one interprets these events often depends on theological perspective, personal belief, and understanding of faith. Both perspectives aim to grapple with profound spiritual truths, whether through a lens of historical fact or symbolic meaning, and offer rich, meaningful interpretations of the Easter story.",
+  "usage": {
+    "prompt_tokens": 61,
+    "completion_tokens": 225,
+    "total_tokens": 286,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}
