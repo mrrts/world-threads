@@ -626,6 +626,109 @@ pub fn wrap_character_formula_invariant_full(
     Some(out)
 }
 
+// Feature-scoped invariant — the v3 character-identity decode header is
+// emitted just above the IDENTITY prose block in solo and group dialogue
+// prompts so the model reads the prose in a structured-decode lens. The
+// decode names the load-bearing classes (role / relation / voice /
+// embodied / attachment / wound-longing / refusal / moral-theological);
+// fact_atom is intentionally omitted because the prose carries facts and
+// surfacing them twice would invite recital.
+//
+// Default-on as of 2026-05-08 per Ryan's directive: "wire it into the
+// prompts without gating; we can always revert if it negatively impacts
+// gameplay." Originally proposed as env-flag-gated under
+// `CHARACTER_IDENTITY_PAYLOAD={1,2}` per the wiring sketch in
+// reports/2026-05-08-0000-character-identity-prompts-rs-wiring-sketch.md;
+// promoted directly to default-on (no flag) per the same authority that
+// promoted CHARACTER_FORMULA_AT_TOP=1 without its bite-test landing. The
+// originally-specified bite-test path (Tier 3 cross-character
+// discrimination across the five grounded fixtures) stands as the
+// methodology of record for any future tightening.
+pub const CHARACTER_IDENTITY_PAYLOAD_INVARIANT_FRAMING: &str =
+    "CHARACTER IDENTITY DECODE (v3 taxonomy lens):\n\nThe following structured decode names the load-bearing classes the prose below is read against (not a directive — the lens, not the content). Class boundaries follow the v3 character-identity taxonomy.";
+
+const _: () = {
+    assert!(
+        const_contains(CHARACTER_IDENTITY_PAYLOAD_INVARIANT_FRAMING, "CHARACTER IDENTITY DECODE"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: identity-payload framing must carry the unique decode header (used as injection sentinel)."
+    );
+    assert!(
+        const_contains(CHARACTER_IDENTITY_PAYLOAD_INVARIANT_FRAMING, "structured decode"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: framing must name itself as a structured decode (orientation for the model)."
+    );
+    assert!(
+        const_contains(CHARACTER_IDENTITY_PAYLOAD_INVARIANT_FRAMING, "not a directive"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: framing must declare not-a-directive (parallel to MISSION FORMULA / CHARACTER REGISTER ANCHOR)."
+    );
+    assert!(
+        const_contains(CHARACTER_IDENTITY_PAYLOAD_INVARIANT_FRAMING, "lens, not the content"),
+        "FEATURE-SCOPED INVARIANT VIOLATED: framing must declare lens-not-content discipline (prose carries content; decode names the classes)."
+    );
+};
+
+/// Emit the v3 character-identity structured-decode header for `character`,
+/// pulling buckets from `split_character_identity`. Returns `None` when the
+/// character has no decode-bearing content (e.g. empty identity prose).
+/// Inserted just above the IDENTITY prose block in solo and group
+/// dialogue prompts. `fact_atom` is intentionally omitted from the header —
+/// the prose carries facts, and surfacing them twice would invite recital.
+pub fn wrap_character_identity_payload(character: &crate::db::queries::Character) -> Option<String> {
+    let buckets = crate::ai::character_identity_payload::split_character_identity(character);
+    let mut lines: Vec<String> = Vec::new();
+    if let Some(rf) = buckets.role_frame.as_deref().filter(|s| !s.trim().is_empty()) {
+        lines.push(format!("  · ROLE FRAME: {rf}"));
+    }
+    if let Some(ra) = buckets.relation_anchor.as_deref().filter(|s| !s.trim().is_empty()) {
+        lines.push(format!("  · RELATION ANCHOR: {ra}"));
+    }
+    if !buckets.voice_lift.is_empty() {
+        lines.push(format!("  · VOICE LIFT: {}", buckets.voice_lift.join("; ")));
+    }
+    if !buckets.embodied_marker.is_empty() {
+        lines.push(format!(
+            "  · EMBODIED MARKER: {}",
+            buckets.embodied_marker.join("; ")
+        ));
+    }
+    if !buckets.attachment_node.is_empty() {
+        lines.push(format!(
+            "  · ATTACHMENT NODE: {}",
+            buckets.attachment_node.join("; ")
+        ));
+    }
+    if let Some(wl) = buckets
+        .wound_longing
+        .as_deref()
+        .filter(|s| !s.trim().is_empty())
+    {
+        lines.push(format!("  · WOUND/LONGING: {wl}"));
+    }
+    if !buckets.refusal_shape.is_empty() {
+        lines.push(format!(
+            "  · REFUSAL SHAPE: {}",
+            buckets.refusal_shape.join("; ")
+        ));
+    }
+    if let Some(mtp) = buckets
+        .moral_theological_position
+        .as_deref()
+        .filter(|s| !s.trim().is_empty())
+    {
+        lines.push(format!("  · MORAL-THEOLOGICAL POSITION: {mtp}"));
+    }
+    if lines.is_empty() {
+        return None;
+    }
+    let mut out = String::with_capacity(CHARACTER_IDENTITY_PAYLOAD_INVARIANT_FRAMING.len() + 256);
+    out.push_str(CHARACTER_IDENTITY_PAYLOAD_INVARIANT_FRAMING);
+    out.push_str("\n\n");
+    for line in lines {
+        out.push_str(&line);
+        out.push('\n');
+    }
+    Some(out)
+}
+
 pub const FORMAT_SECTION: &str = r#"# FORMAT
 Weave actions, gestures, and small inner observations into your dialogue using asterisks. Put spoken words in double quotes.
 
@@ -6139,6 +6242,14 @@ fn build_solo_dialogue_system_prompt(
             &InsertionAnchor::FixedSectionStart(FixedPromptSection::Identity),
             InsertPosition::After,
         );
+        // v3 structured-decode header (default-on 2026-05-08; see
+        // CHARACTER_IDENTITY_PAYLOAD_INVARIANT_FRAMING for the
+        // discipline). Sits between the Identity-section anchor and
+        // the prose body so the model reads the prose in a
+        // class-aware lens.
+        if let Some(decode_block) = wrap_character_identity_payload(character) {
+            parts.push(decode_block);
+        }
         parts.push(identity_block);
         maybe_push_insertion(
             &mut parts,
@@ -6873,6 +6984,13 @@ fn build_group_dialogue_system_prompt(
     let sex_desc = sex_descriptor(&character.sex);
     you.push_str(&format!("You are {me}. {sex_desc}. Stay fully in character — you are this person, not an AI playing them."));
     if !character.identity.is_empty() {
+        // v3 structured-decode header (default-on 2026-05-08; mirrors
+        // the solo-dialogue insertion per the solo-and-group-chat
+        // parity discipline). Sits above the IDENTITY prose block.
+        if let Some(decode_block) = wrap_character_identity_payload(character) {
+            you.push_str("\n\n");
+            you.push_str(&decode_block);
+        }
         // Layered substrate (per the auto-derivation design): inject
         // character.derived_formula at the head of the identity block
         // when populated. Same shape as the solo-dialogue IDENTITY
