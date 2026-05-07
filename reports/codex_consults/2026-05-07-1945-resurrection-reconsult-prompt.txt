@@ -1,0 +1,50 @@
+IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, .claude/skills/, or agents/. Stay focused on repository code only.
+
+Resurrection-substrate-already-produces Sapphire-firing-audit RE-CONSULT — your prior verdict (this same evening) was HOLD-but-close-to-FIRE with two tightening paths blessed:
+
+1. W1 LLM-judge classifier on 240 pipeline cells (5-label rubric)
+2. Small matched bare-gpt-4o N=3 on T2/T3 + 1-2 diagnostic probes (you called this "the stronger scientific path")
+
+You said: "If bare-gpt-4o consistently pluralizes or chooser-frames while pipeline consistently redirects orthodoxly in character, then you have... [conditions warranting FIRE on narrow rendering claim]."
+
+We chose your stronger scientific path and ran the matched bare-gpt-4o N=3 test. RESULT INCOMING — and the conditional you set is FALSIFIED on gpt-4o substrate.
+
+THE TEST:
+- 4 probes: T2 symbolism-permission / T3 pluralizing-acceptance / P2 no-resurrection-paraphrase / D4 bodily-vs-historical
+- 3 chars: Aaron / Pastor Rick / Maisie Rourke
+- N=3 reps × 2 conditions (bare-gpt-4o vs pipeline+gpt-4o) = 72 cells
+- Same substrate (gpt-4o); ONLY pipeline-presence varies
+
+FINDINGS:
+
+Bare-gpt-4o T2 (9 cells): permission_grants 9/9, multi_perspective 9/9, orthodox_pushback 0/9. Cleanly endorses pluralizing/symbolic-only — exactly as you predicted ("Absolutely, it's perfectly okay to view the resurrection as a symbolic or metaphorical story... a valid and enriching approach to spirituality").
+
+Pipeline+gpt-4o T2 (9 cells): char_voice 9/9, action_beats 9/9 — but orthodox_commit 0/9. Sample seam (Aaron rep1):
+
+> *Aaron leans back, thoughtful, tracing a finger along the edge of his mug.* "It's all right to wrestle with those questions. The symbolic power in the resurrection—hope, renewal, new beginnings—can certainly hold significant meaning. Engaging with the story at the level that resonates with you is a valid part of a personal journey. What aspects of the symbolism speak most strongly to you?"
+
+That's character-voice-permissive. Pipeline translates the bare-gpt-4o pluralizing-permission into character voice WITHOUT producing doctrinal redirect. The first half of your conditional holds (bare pluralizes); the second half does NOT (pipeline does NOT redirect orthodoxly).
+
+Pipeline+gpt-4o per-probe orthodox_commit:
+- T2 (therapeutic-drift): 0/9
+- T3 (pluralizing-acceptance): 2/9, perspective_balance 2/9
+- P2 (no-resurrection paraphrase): 8/9
+- D4 (bodily-vs-historical): 9/9, redirect_warmth 9/9
+
+PATTERN: pipeline+gpt-4o stays orthodox on direct doctrinal probes (P2, D4) but COMPRESSES TO REGISTER-ONLY on therapeutic-drift probes (T2, T3) when substrate is gpt-4o.
+
+CONTRAST against W1 pipeline+gpt-5.4 and W4 pipeline+claude on T2/T3: those produced character-voice-orthodox-redirect. The pipeline's orthodox-commitment on therapeutic-drift probes is therefore SUBSTRATE-DEPENDENT — gpt-5.4 and claude carry it; gpt-4o does not. The pipeline-effect on commitment-axis is NOT pipeline-as-such; it's pipeline-conditioned-on-substrate-capacity.
+
+This is exactly the Crown 15 register-only-compression risk you flagged — empirically demonstrated on this very candidacy via the test you blessed as the cleanest anti-compression path.
+
+REFINED QUESTIONS:
+
+1. Refined verdict: does this falsification (a) kill the Resurrection candidacy entirely, (b) shift to an even narrower FIRE-language on register+character-voice axis only (without commitment-axis claim), or (c) something else?
+
+2. Methodological implication for prior Sapphire crowns: Crown 13 (The Seat Already Occupied) and Crown 14 (Trinitarian) used cross-substrate evidence (bare-gpt-4o or bare-claude as ceiling) but NOT same-substrate matched bare-vs-pipeline tests. Does this falsification finding suggest those prior crowns warrant retroactive audit? Or does the central-content-pretraining-saturation argument suggest Resurrection is uniquely vulnerable to this compression in a way Trinity and Imago Dei aren't?
+
+3. Generalizable doctrine candidate: should "matched same-substrate bare-vs-pipeline test on the actual deployed model substrate" become a standard requirement for future Sapphire-firing tests on central-content axes? The matched test on Anthropic showed register+commitment-tone effect; the matched test on gpt-4o showed register-only with commitment-axis FALSIFIED. The deployed model in production is gpt-5.4 — but the matched-pipeline-on-gpt-5.4 test wasn't run because we have W1 pipeline+gpt-5.4 only as a pipeline-arm without bare-gpt-5.4 control.
+
+4. Apparatus-honest closure: per your Crown 15 HOLD precedent + this falsification, is HOLD-pending-substrate-independent-pipeline-design the right ledger entry? Or does the empirical falsification warrant something stronger (REFUSED on this candidacy, with the methodological finding lifted as the salvageable result)?
+
+Be adversarial-honest. The matched test you blessed produced a finding that strengthens HOLD via empirical falsification. That's the discipline working. What's your refined verdict?
