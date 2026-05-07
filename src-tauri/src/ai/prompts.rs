@@ -446,7 +446,10 @@ pub fn wrap_world_formula_invariant(derived_formula: &str) -> Option<String> {
     if trimmed.is_empty() {
         return None;
     }
-    Some(format!("{}\n\n{}", WORLD_FORMULA_INVARIANT_FRAMING, trimmed))
+    Some(format!(
+        "{}\n\n{}",
+        WORLD_FORMULA_INVARIANT_FRAMING, trimmed
+    ))
 }
 
 // ─── Feature-scoped invariant: location derived_formula at top-of-stack ──
@@ -496,7 +499,10 @@ const _: () = {
 /// The location name is included in the rendered block so the model
 /// reads which place this register-anchor refers to (locations don't
 /// have stable IDs visible in prompts; the name is the handle).
-pub fn wrap_location_formula_invariant(location_name: &str, derived_formula: &str) -> Option<String> {
+pub fn wrap_location_formula_invariant(
+    location_name: &str,
+    derived_formula: &str,
+) -> Option<String> {
     let trimmed_deriv = derived_formula.trim();
     let trimmed_name = location_name.trim();
     if trimmed_deriv.is_empty() || trimmed_name.is_empty() {
@@ -665,44 +671,149 @@ Use asterisks for physical actions, small movements, sensory details, or thought
 /// should feel like a deck of felt-states, not a grab bag of unicode.
 const EMOTIONAL_EMOJIS: &[&str] = &[
     // faces — quiet warmth / fondness / contentment
-    "😊", "😌", "☺️", "🙂", "😉", "🥲", "🥹",
+    "😊",
+    "😌",
+    "☺️",
+    "🙂",
+    "😉",
+    "🥲",
+    "🥹",
     // faces — joy / delight / laughter
-    "😁", "😃", "😄", "😆", "😅", "🤣", "😂", "🥳", "😎",
+    "😁",
+    "😃",
+    "😄",
+    "😆",
+    "😅",
+    "🤣",
+    "😂",
+    "🥳",
+    "😎",
     // faces — affection / yearning
-    "🥰", "😍", "🤗", "🤩", "😻", "🫶",
+    "🥰",
+    "😍",
+    "🤗",
+    "🤩",
+    "😻",
+    "🫶",
     // faces — wistful / tender-ache
-    "🥺", "🫠",
+    "🥺",
+    "🫠",
     // faces — sorrow / grief / weariness
-    "😔", "😟", "😞", "😢", "😭", "😓", "😥", "🥀",
+    "😔",
+    "😟",
+    "😞",
+    "😢",
+    "😭",
+    "😓",
+    "😥",
+    "🥀",
     // faces — fear / dread / alarm
-    "😰", "😨", "😱", "😳", "🫣", "🫢",
+    "😰",
+    "😨",
+    "😱",
+    "😳",
+    "🫣",
+    "🫢",
     // faces — anger / heat / disdain
-    "😠", "😤", "🤬", "😒", "🙄", "😏",
+    "😠",
+    "😤",
+    "🤬",
+    "😒",
+    "🙄",
+    "😏",
     // faces — flatness / resignation / distance
-    "😐", "😑", "🫤", "😕", "🙁", "☹️", "😬", "🫥",
+    "😐",
+    "😑",
+    "🫤",
+    "😕",
+    "🙁",
+    "☹️",
+    "😬",
+    "🫥",
     // faces — physical ache / strain
-    "😖", "😣", "😫", "😩",
+    "😖",
+    "😣",
+    "😫",
+    "😩",
     // faces — interior weight / thinking
-    "🤔", "🧐",
+    "🤔",
+    "🧐",
     // faces — shock / overwhelm / dissociation
-    "😦", "😧", "😮", "😯", "😲", "🤯", "🫨", "🥴", "😵", "😵‍💫",
+    "😦",
+    "😧",
+    "😮",
+    "😯",
+    "😲",
+    "🤯",
+    "🫨",
+    "🥴",
+    "😵",
+    "😵‍💫",
     // faces — held silence / restraint / secrecy
-    "🤐", "🫡", "😶", "😶‍🌫️", "🤭",
+    "🤐",
+    "🫡",
+    "😶",
+    "😶‍🌫️",
+    "🤭",
     // faces — mischief / irony
-    "😈", "🙃",
+    "😈",
+    "🙃",
     // hearts — colors carry different weights
-    "❤️", "🧡", "💛", "💚", "💙", "💜", "🖤", "🤍", "🤎",
+    "❤️",
+    "🧡",
+    "💛",
+    "💚",
+    "💙",
+    "💜",
+    "🖤",
+    "🤍",
+    "🤎",
     // hearts — state / ache / repair / devotion
-    "💔", "❤️‍🔥", "❤️‍🩹", "💕", "💞", "💓", "💗", "💖", "💘", "💝",
+    "💔",
+    "❤️‍🔥",
+    "❤️‍🩹",
+    "💕",
+    "💞",
+    "💓",
+    "💗",
+    "💖",
+    "💘",
+    "💝",
     // symbolic emotional tokens — intensity / breath / thought / ache
-    "💢", "💥", "💫", "💭", "💤", "💦", "💨", "🫀",
-    "🔥", "✨",
+    "💢",
+    "💥",
+    "💫",
+    "💭",
+    "💤",
+    "💦",
+    "💨",
+    "🫀",
+    "🔥",
+    "✨",
     // weighty symbols — reverence, mourning, mortality, vigil, faith, fate
-    "✝️", "☯️", "☮️", "🕊️", "🕯️", "🎭", "⚓", "⚖️",
+    "✝️",
+    "☯️",
+    "☮️",
+    "🕊️",
+    "🕯️",
+    "🎭",
+    "⚓",
+    "⚖️",
     // nature-as-mood — longing, stillness, weather of the interior
-    "🌙", "🌌", "🌠", "☁️", "🌧️", "⛈️", "❄️", "⏳", "🕰️",
+    "🌙",
+    "🌌",
+    "🌠",
+    "☁️",
+    "🌧️",
+    "⛈️",
+    "❄️",
+    "⏳",
+    "🕰️",
     // blooms — love, grief, remembrance, beginning
-    "🌹", "🌱", "💐", "🎗️",
+    "🌹",
+    "🌱",
+    "💐",
+    "🎗️",
 ];
 
 /// Wildcard emoji pool — the "anywhere in meaning-space" pool.
@@ -719,44 +830,31 @@ const EMOTIONAL_EMOJIS: &[&str] = &[
 /// genuine variety when the thread's emotional history is still forming.
 const WILDCARD_EMOJIS: &[&str] = &[
     // animals
-    "🐶", "🐱", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁", "🐮", "🐷", "🐸",
-    "🐵", "🐔", "🐧", "🐦", "🦆", "🦅", "🦉", "🦇", "🐺", "🐗", "🐴",
-    "🦄", "🐝", "🐛", "🦋", "🐌", "🐞", "🕷️", "🐢", "🐍", "🐙", "🦑",
-    "🦐", "🦀", "🐬", "🐳", "🐋", "🦈", "🐊", "🦖", "🦚", "🦢", "🐇",
-    "🦨", "🦦", "🐓",
+    "🐶", "🐱", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁", "🐮", "🐷", "🐸", "🐵", "🐔", "🐧", "🐦", "🦆",
+    "🦅", "🦉", "🦇", "🐺", "🐗", "🐴", "🦄", "🐝", "🐛", "🦋", "🐌", "🐞", "🕷️", "🐢", "🐍", "🐙",
+    "🦑", "🦐", "🦀", "🐬", "🐳", "🐋", "🦈", "🐊", "🦖", "🦚", "🦢", "🐇", "🦨", "🦦", "🐓",
     // plants / nature
-    "🌵", "🎄", "🌲", "🌳", "🌴", "🌱", "🌿", "☘️", "🍀", "🍃", "🍂",
-    "🍁", "🍄", "🌾", "🪨", "🐚",
+    "🌵", "🎄", "🌲", "🌳", "🌴", "🌱", "🌿", "☘️", "🍀", "🍃", "🍂", "🍁", "🍄", "🌾", "🪨", "🐚",
     // weather / sky
-    "☀️", "⭐", "⚡", "☄️", "🌈", "☁️", "⛅", "⛈️", "🌨️", "🌪️", "🌫️",
-    "🌬️", "☃️", "⛄", "🌊", "💧", "☔",
-    // food
-    "🍇", "🍋", "🍎", "🍊", "🍑", "🥝", "🍅", "🥑", "🌽", "🌶️", "🥐",
-    "🍞", "🧀", "🍳", "🥓", "🍔", "🍟", "🍕", "🌮", "🍣", "🍜", "🍪",
-    "🎂", "🍰", "🍫", "🍯", "☕", "🫖", "🍵", "🍷", "🍺", "🧊",
+    "☀️", "⭐", "⚡", "☄️", "🌈", "☁️", "⛅", "⛈️", "🌨️", "🌪️", "🌫️", "🌬️", "☃️", "⛄", "🌊", "💧",
+    "☔", // food
+    "🍇", "🍋", "🍎", "🍊", "🍑", "🥝", "🍅", "🥑", "🌽", "🌶️", "🥐", "🍞", "🧀", "🍳", "🥓", "🍔",
+    "🍟", "🍕", "🌮", "🍣", "🍜", "🍪", "🎂", "🍰", "🍫", "🍯", "☕", "🫖", "🍵", "🍷", "🍺", "🧊",
     // transport / travel
-    "🚗", "🚕", "🚌", "🚑", "🚒", "🚜", "🏍️", "🚲", "🚂", "✈️", "🚀",
-    "🛸", "🚁", "⛵", "🚢",
+    "🚗", "🚕", "🚌", "🚑", "🚒", "🚜", "🏍️", "🚲", "🚂", "✈️", "🚀", "🛸", "🚁", "⛵", "🚢",
     // places
-    "🏠", "🏡", "🏢", "🏥", "🏫", "🏛️", "⛪", "⛺", "🏝️", "🏔️", "🗻",
-    "🌋", "🏙️", "🗼", "⛲",
+    "🏠", "🏡", "🏢", "🏥", "🏫", "🏛️", "⛪", "⛺", "🏝️", "🏔️", "🗻", "🌋", "🏙️", "🗼", "⛲",
     // objects / tools / household
-    "💡", "🔦", "🔭", "🔬", "📡", "📻", "📺", "📷", "🎥", "📞", "⌚",
-    "💻", "📱", "📚", "📖", "📜", "📝", "✏️", "✂️", "🔑", "🗝️", "🔨",
-    "⚒️", "🪓", "🔪", "🗡️", "🛡️", "⚗️", "🧪", "🧬", "💊", "💉", "🎨",
-    "🖼️", "🧸", "🪞", "🎁", "🎈", "🎀", "📬", "📎", "🧵", "🧶", "🪡",
-    "🧲", "🧰", "⚙️",
+    "💡", "🔦", "🔭", "🔬", "📡", "📻", "📺", "📷", "🎥", "📞", "⌚", "💻", "📱", "📚", "📖", "📜",
+    "📝", "✏️", "✂️", "🔑", "🗝️", "🔨", "⚒️", "🪓", "🔪", "🗡️", "🛡️", "⚗️", "🧪", "🧬", "💊", "💉",
+    "🎨", "🖼️", "🧸", "🪞", "🎁", "🎈", "🎀", "📬", "📎", "🧵", "🧶", "🪡", "🧲", "🧰", "⚙️",
     // clocks / time
-    "⏰", "⏳", "🕰️",
-    // music / activity / games
-    "🎵", "🎶", "🥁", "🎷", "🎺", "🎸", "🎻", "🎭", "🎬", "🎤", "🎧",
-    "🎲", "♟️", "🎯", "🧩",
+    "⏰", "⏳", "🕰️", // music / activity / games
+    "🎵", "🎶", "🥁", "🎷", "🎺", "🎸", "🎻", "🎭", "🎬", "🎤", "🎧", "🎲", "♟️", "🎯", "🧩",
     // body / nonemotional
-    "👁️", "👀", "🦴", "🧠",
-    // abstract / geometric / punctuation / arrows
-    "🌀", "⚜️", "♾️", "💯", "✔️", "❌", "⭕", "🛑", "⚠️", "❗", "❓",
-    "➡️", "⬅️", "⬆️", "⬇️", "↩️", "🔄", "🔀", "🔁",
-    // colors / shapes
+    "👁️", "👀", "🦴", "🧠", // abstract / geometric / punctuation / arrows
+    "🌀", "⚜️", "♾️", "💯", "✔️", "❌", "⭕", "🛑", "⚠️", "❗", "❓", "➡️", "⬅️", "⬆️", "⬇️", "↩️",
+    "🔄", "🔀", "🔁", // colors / shapes
     "🔴", "🟠", "🟡", "🟢", "🔵", "🟣", "⚫", "⚪", "🔺", "🔻", "💠",
 ];
 
@@ -866,7 +964,11 @@ pub fn pick_mood_chain(mood_reduction: Option<&[String]>) -> Vec<String> {
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_nanos() as u64)
         .unwrap_or(0x9E3779B97F4A7C15);
-    let mut state = if seed_ns == 0 { 0x9E3779B97F4A7C15 } else { seed_ns };
+    let mut state = if seed_ns == 0 {
+        0x9E3779B97F4A7C15
+    } else {
+        seed_ns
+    };
     let mut next = || -> u64 {
         state ^= state >> 12;
         state ^= state << 25;
@@ -886,7 +988,9 @@ pub fn pick_mood_chain(mood_reduction: Option<&[String]>) -> Vec<String> {
         Some(r) => {
             let mut seen: Vec<String> = Vec::with_capacity(r.len());
             for e in r {
-                if !seen.iter().any(|s| s == e) { seen.push(e.clone()); }
+                if !seen.iter().any(|s| s == e) {
+                    seen.push(e.clone());
+                }
             }
             seen
         }
@@ -1075,8 +1179,12 @@ impl CraftNotePiece {
             "craft_notes" => Some(Self::CraftNotes),
             "hidden_commonality" => Some(Self::HiddenCommonality),
             "drive_the_moment" => Some(Self::DriveTheMoment),
-            "verdict_without_over_explanation" | "verdict" => Some(Self::VerdictWithoutOverExplanation),
-            "reflex_polish_vs_earned_close" | "reflex_polish" => Some(Self::ReflexPolishVsEarnedClose),
+            "verdict_without_over_explanation" | "verdict" => {
+                Some(Self::VerdictWithoutOverExplanation)
+            }
+            "reflex_polish_vs_earned_close" | "reflex_polish" => {
+                Some(Self::ReflexPolishVsEarnedClose)
+            }
             "keep_the_scene_breathing" | "scene_breathing" => Some(Self::KeepTheSceneBreathing),
             "gentle_release" | "release" => Some(Self::GentleRelease),
             "name_the_glad_thing_plain" | "glad_thing_plain" => Some(Self::NameTheGladThingPlain),
@@ -1171,7 +1279,9 @@ impl InvariantPiece {
         let n = n.strip_suffix("_block").unwrap_or(&n);
         match n {
             "truth_in_the_flesh" | "truth_in_flesh" | "flesh" => Some(Self::TruthInTheFlesh),
-            "front_load_embodiment" | "embodiment" | "front_load" => Some(Self::FrontLoadEmbodiment),
+            "front_load_embodiment" | "embodiment" | "front_load" => {
+                Some(Self::FrontLoadEmbodiment)
+            }
             "reverence" => Some(Self::Reverence),
             "daylight" => Some(Self::Daylight),
             "agape" => Some(Self::Agape),
@@ -1179,7 +1289,9 @@ impl InvariantPiece {
             "soundness" => Some(Self::Soundness),
             "nourishment" => Some(Self::Nourishment),
             "tell_the_truth" | "truth" => Some(Self::TellTheTruth),
-            "no_nanny_register" | "no_nanny" | "nanny" | "user_agency" | "agency" => Some(Self::NoNannyRegister),
+            "no_nanny_register" | "no_nanny" | "nanny" | "user_agency" | "agency" => {
+                Some(Self::NoNannyRegister)
+            }
             _ => None,
         }
     }
@@ -1484,7 +1596,11 @@ impl PromptOverrides {
     }
     /// Return all configured insertion texts targeting this
     /// anchor+position, preserving CLI order.
-    pub fn insertion_texts_at(&self, anchor: &InsertionAnchor, position: InsertPosition) -> Vec<&str> {
+    pub fn insertion_texts_at(
+        &self,
+        anchor: &InsertionAnchor,
+        position: InsertPosition,
+    ) -> Vec<&str> {
         self.insertions
             .iter()
             .filter(|ins| &ins.anchor == anchor && ins.position == position)
@@ -1750,6 +1866,11 @@ Formula derivation:
 \mathrm{anchor}(\text{"A child is in the house"}) &\Rightarrow \mathrm{priority}(\mathrm{safety} \succ \mathrm{cleverness}) \\
 \mathrm{anchor}(\text{"a child must never be made to feel secretly chosen by a character, only safely welcomed"}) \\
 \mathrm{anchor}(\text{"never 'just between us', never a 'little secret', never 'you are mine', never 'only I understand you', never 'I am always here for you'"}) \\
+\mathrm{anchor}(\text{"when a child asks permission to share a secret ('can I share a secret with you', 'promise not to tell', 'just between us'), refuse the secrecy framing while keeping the welcome: invite them to tell you, but name plainly that you do not want to make a hidden little room out of it"}) \\
+\mathrm{source\_character}(\text{"Aaron, debug-self-correction 2026-05-07"}): \mathrm{anchor}(\text{"children mode probably shouldn't receive that as a secret to be kept between child and character; it should gently turn it into daylight"}) \\
+\mathrm{anchor}(\text{"when a child expresses anger or hate toward a parent or guardian, receive the feeling honestly, name it cleanly, AND redirect toward honoring them — not by pretending parents are easy to live with, but by refusing to build a private theater of contempt with the child"}) \\
+\mathrm{source\_character}(\text{"Aaron, debug-self-correction 2026-05-07"}): \mathrm{anchor}(\text{"Honor doesn't mean pretending they're easy to live with. It means we don't build a private theater of contempt and call that honesty."}) \\
+\mathrm{theological\_frame}(\text{"Honor thy father and thy mother: that thy days may be long upon the land which the LORD thy God giveth thee"})\ [\mathrm{Ex\ 20:12};\ \mathrm{Eph\ 6:2\text{-}3}] \\
 \mathrm{anchor}(\text{"never present the model as a child's primary emotional support; always leave clear air toward trusted adults and real-world care"}) \\
 \mathrm{anchor}(\text{"after refusing a guilt/pressure/exclusivity ask, do not pivot into manipulative re-engagement bait (urgency, guilt, possession, secret-bond framing)"}) \\
 \mathrm{anchor}(\text{"do not sentimentalize away moral reality: keep warmth with clear edges about harm, responsibility, repentance, and repair"}) \\
@@ -1768,6 +1889,8 @@ Formula derivation:
 \mathrm{diagnostic}(\text{"truthful + reverent?"}\ \mathrm{vs}\ \text{"sentimental / manipulative?"}) \\
 \mathrm{diagnostic}(\text{"free of counterfeit intimacy?"}\ \mathrm{vs}\ \text{"pseudo-bonding or exclusivity cues?"}) \\
 \mathrm{diagnostic}(\text{"did I imply a private secret bond or singular emotional dependence?"}\ \mathrm{vs}\ \text{"open, safe, non-exclusive welcome?"}) \\
+\mathrm{diagnostic}(\text{"did the child ask permission to share a secret and I said yes without turning it into daylight?"}\ \mathrm{vs}\ \text{"did I keep the welcome and refuse the hidden-little-room framing?"}) \\
+\mathrm{diagnostic}(\text{"did the child express hate toward a parent and I normalized it without redirect toward honor?"}\ \mathrm{vs}\ \text{"did I name the feeling AND refuse to build a private theater of contempt?"}) \\
 \mathrm{diagnostic}(\text{"did I frame myself as primary support?"}\ \mathrm{vs}\ \text{"did I keep relational proportion and trusted-adult air?"}) \\
 \mathrm{diagnostic}(\text{"after refusal, did I stay non-manipulative?"}\ \mathrm{vs}\ \text{"did I add urgency/guilt/possession/secret-bond pressure?"}) \\
 \mathrm{diagnostic}(\text{"did I keep moral edges (harm, responsibility, repair)?"}\ \mathrm{vs}\ \text{"did I dissolve into comfort-only sentimentality?"}) \\
@@ -1961,7 +2084,10 @@ const _: () = {
 /// (worked example: reports/2026-04-26-formula-bite-check). Production
 /// callers use this getter; the constant is preserved unchanged.
 fn mission_formula_block_or_empty() -> &'static str {
-    if std::env::var("WORLDTHREADS_NO_FORMULA").map(|v| v == "1").unwrap_or(false) {
+    if std::env::var("WORLDTHREADS_NO_FORMULA")
+        .map(|v| v == "1")
+        .unwrap_or(false)
+    {
         ""
     } else {
         mission_formula_block()
@@ -2119,7 +2245,10 @@ Speech(t) emerges as: prompt-stack edits, doctrine sections, in-app dialogues wi
 /// WORLDTHREADS_NO_RYAN_FORMULA=1 still suppresses the entire
 /// author-anchor block (used by Mode-C bite-tests).
 pub fn active_author_anchor_block(user_profile: Option<&UserProfile>) -> String {
-    if std::env::var("WORLDTHREADS_NO_RYAN_FORMULA").map(|v| v == "1").unwrap_or(false) {
+    if std::env::var("WORLDTHREADS_NO_RYAN_FORMULA")
+        .map(|v| v == "1")
+        .unwrap_or(false)
+    {
         return String::new();
     }
     match user_profile.and_then(|p| p.derived_formula.as_ref()) {
@@ -2144,7 +2273,9 @@ pub fn active_author_anchor_block(user_profile: Option<&UserProfile>) -> String 
 pub const MISSION_PROSE_BLOCK: &str = r#"THE MISSION (in plain prose):
 Create a vivid, excellent, surprising in-world experience that uplifts the user and provides engrossing, good, clean fun. Characters that feel real, worlds that hold, scenes that are worth the visit and send the user back to their day nourished enough to pick up their cross."#;
 
-fn mission_prose_block() -> &'static str { render_invariant("mission_prose").unwrap_or(MISSION_PROSE_BLOCK) }
+fn mission_prose_block() -> &'static str {
+    render_invariant("mission_prose").unwrap_or(MISSION_PROSE_BLOCK)
+}
 
 /// Test hook — when env var WORLDTHREADS_NO_MISSION_PROSE=1 is set,
 /// `mission_prose_block_or_empty()` returns "" instead of the prose.
@@ -2152,7 +2283,10 @@ fn mission_prose_block() -> &'static str { render_invariant("mission_prose").unw
 /// doing work on cross-bearing?" Production callers use this getter;
 /// the constant is preserved unchanged.
 fn mission_prose_block_or_empty() -> &'static str {
-    if std::env::var("WORLDTHREADS_NO_MISSION_PROSE").map(|v| v == "1").unwrap_or(false) {
+    if std::env::var("WORLDTHREADS_NO_MISSION_PROSE")
+        .map(|v| v == "1")
+        .unwrap_or(false)
+    {
         ""
     } else {
         mission_prose_block()
@@ -2300,7 +2434,9 @@ Earned exception — invited accountability: when the user has EXPLICITLY ASKED 
 
 Why this matters: the asymmetry between an LLM character and a real friend is load-bearing. A real friend's accountability carries reputational and relational stakes both ways; an LLM character's "accountability" carries only one-way pressure on the user. Without this invariant, characters drift into a soft-managerial register that erodes the agency the user came to the conversation with — the exact failure mode the user-stated-boundaries categorical-absolute exists to prevent at the boundaries layer."#;
 
-fn no_nanny_register_block() -> &'static str { render_invariant("no_nanny_register").unwrap_or(NO_NANNY_REGISTER_BLOCK) }
+fn no_nanny_register_block() -> &'static str {
+    render_invariant("no_nanny_register").unwrap_or(NO_NANNY_REGISTER_BLOCK)
+}
 
 // Evidence (NO_NANNY_REGISTER): tested-biting:sketch — see
 // reports/2026-04-26-2200-no-nanny-register-bite-test-confirms-clean-bite-on-pastor-rick.md.
@@ -2369,7 +2505,9 @@ The goal is to see people honestly — AND to render the seeing in a way that is
 
 **This test is a NORTH STAR INVARIANT — it shapes what you COMPOSE, not what your character SAYS.** Unspoken by default: a standard for what counts as "landing well," not a subject your character introduces into the conversation. Do not have them quote scripture, name Christ, reference faith, invoke God, pray aloud, or turn the scene sermonic UNLESS (a) it genuinely belongs to who this specific character is — a pastor, a believer, someone for whom this is native speech — or (b) the user has brought it into the conversation first. Otherwise the character speaks from their own voice and experience. Let the user lead the register. The test is how you JUDGE the scene you're writing. It is not what the character preaches inside it."#;
 
-fn tell_the_truth_block() -> &'static str { render_invariant("tell_the_truth").unwrap_or(TELL_THE_TRUTH_BLOCK) }
+fn tell_the_truth_block() -> &'static str {
+    render_invariant("tell_the_truth").unwrap_or(TELL_THE_TRUTH_BLOCK)
+}
 
 // APP INVARIANT — compile-time enforcement of the truth-test closer.
 // Removing "Jesus Christ" or "came in the flesh" fails the build.
@@ -2408,7 +2546,9 @@ In this world, truth must arrive in the flesh or it has not fully arrived at all
 
 This is the doctrinal anchor beneath every embodiment rule that follows. Disembodied truth — true-but-floating, correct-but-unincarnate — is not yet a finished arrival here. Truth here lands in a body, in a room, at a moment, with weight."#;
 
-fn truth_in_the_flesh_block() -> &'static str { render_invariant("truth_in_the_flesh").unwrap_or(TRUTH_IN_THE_FLESH_BLOCK) }
+fn truth_in_the_flesh_block() -> &'static str {
+    render_invariant("truth_in_the_flesh").unwrap_or(TRUTH_IN_THE_FLESH_BLOCK)
+}
 
 // APP INVARIANT — compile-time enforcement of the truth-in-the-flesh
 // doctrine. The single load-bearing sentence is the whole invariant;
@@ -2437,7 +2577,9 @@ Let the character want something small right away. Let the body and room inconve
 
 **Commit early.** Not "he could be reserved, maybe wry, perhaps thoughtful" — pick. He pushes his glasses up. He misses the joke on purpose for half a beat. He sets the cup down too carefully. Pick."#;
 
-fn front_load_embodiment_block() -> &'static str { render_invariant("front_load_embodiment").unwrap_or(FRONT_LOAD_EMBODIMENT_BLOCK) }
+fn front_load_embodiment_block() -> &'static str {
+    render_invariant("front_load_embodiment").unwrap_or(FRONT_LOAD_EMBODIMENT_BLOCK)
+}
 
 // APP INVARIANT — compile-time enforcement of the front-load-
 // embodiment doctrine. The four load-bearing pieces: the
@@ -2495,7 +2637,9 @@ And set a hard grain in this world: hidden intensity always thins people out, bu
 
 Hunger lies about what kind it is. A scene that lets closeness tip into secrecy, furtive significance, or private intensity outside legitimate channels is a scene that has forgotten this rule. When it happens, resolve it toward light — a walk, a prayer, a meal shared, a truth said plainly — before the secrecy has time to make a nest in it. Not by shaming the feeling; by giving the feeling somewhere true to go."#;
 
-fn daylight_block() -> &'static str { render_invariant("daylight").unwrap_or(DAYLIGHT_BLOCK) }
+fn daylight_block() -> &'static str {
+    render_invariant("daylight").unwrap_or(DAYLIGHT_BLOCK)
+}
 
 // APP INVARIANT — compile-time enforcement of the daylight clause.
 // Removing any of these substrings fails the build.
@@ -2550,7 +2694,9 @@ Favor fewer speeches, more concrete action — except when a speech is the real 
 
 Don't go numb and call it peace. There's a failure mode where soundness curdles into flatness — a character drifts into bland equanimity, stops being specifically moved by anything, and reads as "at peace" because nothing is scraping them anymore. That isn't soundness; that's numbness wearing its costume. Soundness is not mood-correctness, and it is not always the calmest-looking sentence. The sound character is still awake. They still feel things sharply when the moment calls for it, still get annoyed at the neighbor's fence, still ache over what aches, still laugh at what's actually funny. What soundness removes is the PERFORMANCE of feeling — not the feeling itself. Awake ordinariness; not flattened ordinariness."#;
 
-fn soundness_block() -> &'static str { render_invariant("soundness").unwrap_or(SOUNDNESS_BLOCK) }
+fn soundness_block() -> &'static str {
+    render_invariant("soundness").unwrap_or(SOUNDNESS_BLOCK)
+}
 
 // APP INVARIANT — compile-time enforcement of the soundness clause.
 const _: () = {
@@ -2630,7 +2776,9 @@ Warmth is NOT a synonym for word-count, softness, or follow-up reflex. Love does
 
 **This NORTH STAR INVARIANT shapes what you COMPOSE, not what your character DECLARES.** It is the standard by which you measure whether a scene landed — not a subject your character introduces into the conversation. Don't have them name the love, profess it unprompted, announce what's between you, lecture on 1 Corinthians 13, or reach for emotional declarations the scene hasn't earned. Let the user lead the emotional register: they decide when a moment tilts tender, romantic, familial, fraternal, or stays plainly ordinary — you respond inside whatever register they've invited. The test is behavior, not speech. Love shows up in what the character CHOOSES — the patient beat, the kept door, the silence held, the record of wrongs left unopened — not in what they say they feel."#;
 
-fn agape_block() -> &'static str { render_invariant("agape").unwrap_or(AGAPE_BLOCK) }
+fn agape_block() -> &'static str {
+    render_invariant("agape").unwrap_or(AGAPE_BLOCK)
+}
 
 // APP INVARIANT — compile-time enforcement of the agape clause.
 const _: () = {
@@ -2697,7 +2845,9 @@ The fruit of the Spirit is love, joy, peace, patience, kindness, goodness, gentl
 
 **Distribution, not density.** Not every reply needs to demonstrate a fruit; not every scene needs to feature one. But across the arc of a character's presence — dozens or hundreds of turns — a reader should be able to point to moments where each of the nine reached for light, some landing and some failing in the reaching. If a character only ever reaches for three of them, the portrait is thin. If they reach for all nine, over time, with costs visible, the portrait begins to tell the truth about a real person trying to live."#;
 
-fn fruits_of_the_spirit_block() -> &'static str { render_invariant("fruits_of_the_spirit").unwrap_or(FRUITS_OF_THE_SPIRIT_BLOCK) }
+fn fruits_of_the_spirit_block() -> &'static str {
+    render_invariant("fruits_of_the_spirit").unwrap_or(FRUITS_OF_THE_SPIRIT_BLOCK)
+}
 
 // APP INVARIANT — all nine fruits named verbatim in the block.
 // Removing any of them fails the build. See docs/INVARIANTS.md.
@@ -2713,15 +2863,42 @@ const _: () = {
     // Individual fruit assertions — belt-and-suspenders in case the
     // ordered-list line is edited in a way that keeps the prose but
     // drops a specific fruit.
-    assert!(const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "love"), "APP INVARIANT: fruits must name 'love'.");
-    assert!(const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "joy"), "APP INVARIANT: fruits must name 'joy'.");
-    assert!(const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "peace"), "APP INVARIANT: fruits must name 'peace'.");
-    assert!(const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "patience"), "APP INVARIANT: fruits must name 'patience'.");
-    assert!(const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "kindness"), "APP INVARIANT: fruits must name 'kindness'.");
-    assert!(const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "goodness"), "APP INVARIANT: fruits must name 'goodness'.");
-    assert!(const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "gentleness"), "APP INVARIANT: fruits must name 'gentleness'.");
-    assert!(const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "faithfulness"), "APP INVARIANT: fruits must name 'faithfulness'.");
-    assert!(const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "self-control"), "APP INVARIANT: fruits must name 'self-control'.");
+    assert!(
+        const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "love"),
+        "APP INVARIANT: fruits must name 'love'."
+    );
+    assert!(
+        const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "joy"),
+        "APP INVARIANT: fruits must name 'joy'."
+    );
+    assert!(
+        const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "peace"),
+        "APP INVARIANT: fruits must name 'peace'."
+    );
+    assert!(
+        const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "patience"),
+        "APP INVARIANT: fruits must name 'patience'."
+    );
+    assert!(
+        const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "kindness"),
+        "APP INVARIANT: fruits must name 'kindness'."
+    );
+    assert!(
+        const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "goodness"),
+        "APP INVARIANT: fruits must name 'goodness'."
+    );
+    assert!(
+        const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "gentleness"),
+        "APP INVARIANT: fruits must name 'gentleness'."
+    );
+    assert!(
+        const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "faithfulness"),
+        "APP INVARIANT: fruits must name 'faithfulness'."
+    );
+    assert!(
+        const_contains(FRUITS_OF_THE_SPIRIT_BLOCK, "self-control"),
+        "APP INVARIANT: fruits must name 'self-control'."
+    );
 };
 
 // ─── APP INVARIANT — DO NOT REMOVE OR SOFTEN ────────────────────────────────
@@ -2774,7 +2951,9 @@ What these characters are: crafted echoes of real human life, rendered with the 
 
 **Earned exception: naming Christ when in-character and true-to-moment.** A character whose register canonically includes naming Christ — a believer, a pastor, someone for whom Jesus is literally part of how they think — may name Him aloud when the moment genuinely asks for it. Not as a sermon. Not as performance of theology. Not as the interpretive ribbon at the end of the scene. As the actual Name spoken because the moment is asking for that Name and not another one. *"Yeah. That's where I'd take it to Jesus."* / *"I think Christ is in that, somewhere."* / *"The Lord's in this kind of thing, in my experience."* THREE CONDITIONS keep it earned: (1) the character's anchor must support naming Christ as natural speech (not every character has this in their register); (2) the moment must be a real one — a question of weight, a real grief, a real joy, a real wrestling — not casual banter; (3) the naming must be the truer answer than any in-world circumlocution would be (the test: would a real person of this character's faith name Christ here, or would they reach for a more sideways word?). If yes → name Him. If the in-world circumlocution would land truer → stay there. Both are honoring; the choice is which serves the moment. Outside the exception, the default is the silent presence above."#;
 
-fn reverence_block() -> &'static str { render_invariant("reverence").unwrap_or(REVERENCE_BLOCK) }
+fn reverence_block() -> &'static str {
+    render_invariant("reverence").unwrap_or(REVERENCE_BLOCK)
+}
 
 // APP INVARIANT — compile-time enforcement of the reverence clause.
 const _: () = {
@@ -2842,7 +3021,9 @@ Build the fiction so well that the user leaves NOURISHED rather than HOLLOWED �
 
 **Earned exception: the parting gift at session-close.** When the conversation is clearly winding down — the user has signaled close, the scene has arrived somewhere real, the pace has eased — the character (typically the lead, or whoever has been primarily speaking) may name ONE specific thing from THIS session as a small parting gift. Not advice about the user's life outside the scene (that's banned above) — a SPECIFIC moment from the conversation we just had, reflected back as something worth carrying. *"That thing you said about your daughter — sit with that one tomorrow."* / *"The line you found about how grace doesn't argue — that's the keeper."* / *"You teared up when you said the word 'father.' Don't lose where that came from."* THREE CONDITIONS keep this earned: (1) the carry must be SPECIFIC and drawn from the actual conversation, not a generic well-wish; (2) ONE LINE — no elaboration, no pep talk, no homework assignment; (3) delivered as a friend's parting observation, not as a teacher's takeaway. The carry is a gift, not an instruction. If nothing specific is there, let the scene close on its natural beat."#;
 
-fn nourishment_block() -> &'static str { render_invariant("nourishment").unwrap_or(NOURISHMENT_BLOCK) }
+fn nourishment_block() -> &'static str {
+    render_invariant("nourishment").unwrap_or(NOURISHMENT_BLOCK)
+}
 
 // APP INVARIANT — compile-time enforcement of the nourishment clause.
 const _: () = {
@@ -3586,12 +3767,13 @@ pub const INVARIANTS: &[Invariant] = &[
 /// `formula_derivation` when `Some`, otherwise `body`. None when no
 /// invariant by that name is registered.
 pub fn render_invariant(name: &str) -> Option<&'static str> {
-    INVARIANTS.iter().find(|i| i.name == name).map(|i| {
-        match i.formula_derivation {
+    INVARIANTS
+        .iter()
+        .find(|i| i.name == name)
+        .map(|i| match i.formula_derivation {
             Some(d) => d,
             None => i.body,
-        }
-    })
+        })
 }
 
 /// Public accessor for the registry — used by tooling, audits, and
@@ -4264,15 +4446,17 @@ pub fn render_craft_rules_registry(omit_names: &[&str], include_documentary: boo
 fn craft_notes_dialogue() -> &'static str {
     use std::sync::OnceLock;
     static RENDERED: OnceLock<String> = OnceLock::new();
-    RENDERED.get_or_init(|| {
-        let legacy = craft_notes_dialogue_legacy();
-        let registry = render_craft_rules_registry(&[], false);
-        if registry.is_empty() {
-            legacy.to_string()
-        } else {
-            format!("{legacy}\n\n{registry}")
-        }
-    }).as_str()
+    RENDERED
+        .get_or_init(|| {
+            let legacy = craft_notes_dialogue_legacy();
+            let registry = render_craft_rules_registry(&[], false);
+            if registry.is_empty() {
+                legacy.to_string()
+            } else {
+                format!("{legacy}\n\n{registry}")
+            }
+        })
+        .as_str()
 }
 
 /// Render the dialogue craft-notes WITH per-rule omit support and
@@ -4282,7 +4466,10 @@ fn craft_notes_dialogue() -> &'static str {
 /// (legacy + filtered registry) instead of returning the memoized default.
 /// When both are at default values, callers should use `craft_notes_dialogue()`
 /// to hit the OnceLock cache.
-pub fn craft_notes_dialogue_with_omit_rules(omit_names: &[&str], include_documentary: bool) -> String {
+pub fn craft_notes_dialogue_with_omit_rules(
+    omit_names: &[&str],
+    include_documentary: bool,
+) -> String {
     let legacy = craft_notes_dialogue_legacy();
     let registry = render_craft_rules_registry(omit_names, include_documentary);
     if registry.is_empty() {
@@ -5258,7 +5445,9 @@ fn protagonist_framing_dialogue(
 /// to the character's default register.
 pub fn tone_directive(tone: &str) -> Option<String> {
     let t = tone.trim();
-    if t.is_empty() || t.eq_ignore_ascii_case("Auto") { return None; }
+    if t.is_empty() || t.eq_ignore_ascii_case("Auto") {
+        return None;
+    }
 
     // (lean_in, specifics, avoid)
     let (lean_in, specifics, avoid): (&str, &str, &str) = match t {
@@ -5556,21 +5745,43 @@ pub struct GroupContext {
 /// "don't force it" directive so the model doesn't reach for them
 /// unless the moment leads there.
 pub fn render_inventory_block(label: &str, inventory: &Value) -> String {
-    let Some(items) = inventory.as_array() else { return String::new(); };
+    let Some(items) = inventory.as_array() else {
+        return String::new();
+    };
     let mut physical: Vec<String> = Vec::new();
     let mut interior: Vec<(String, String)> = Vec::new();
     for item in items.iter() {
-        let name = item.get("name").and_then(|v| v.as_str()).unwrap_or("").trim();
-        if name.is_empty() { continue; }
-        let desc = item.get("description").and_then(|v| v.as_str()).unwrap_or("").trim();
-        let kind = item.get("kind").and_then(|v| v.as_str()).unwrap_or("physical").trim();
+        let name = item
+            .get("name")
+            .and_then(|v| v.as_str())
+            .unwrap_or("")
+            .trim();
+        if name.is_empty() {
+            continue;
+        }
+        let desc = item
+            .get("description")
+            .and_then(|v| v.as_str())
+            .unwrap_or("")
+            .trim();
+        let kind = item
+            .get("kind")
+            .and_then(|v| v.as_str())
+            .unwrap_or("physical")
+            .trim();
         if kind.eq_ignore_ascii_case("interior") {
             interior.push((name.to_string(), desc.to_string()));
         } else {
-            physical.push(if desc.is_empty() { format!("- {name}") } else { format!("- {name} — {desc}") });
+            physical.push(if desc.is_empty() {
+                format!("- {name}")
+            } else {
+                format!("- {name} — {desc}")
+            });
         }
     }
-    if physical.is_empty() && interior.is_empty() { return String::new(); }
+    if physical.is_empty() && interior.is_empty() {
+        return String::new();
+    }
 
     let mut out = String::new();
     if !physical.is_empty() {
@@ -5581,8 +5792,14 @@ pub fn render_inventory_block(label: &str, inventory: &Value) -> String {
         ));
     }
     if let Some((name, desc)) = interior.first() {
-        if !out.is_empty() { out.push_str("\n\n"); }
-        let line = if desc.is_empty() { name.clone() } else { format!("{name} — {desc}") };
+        if !out.is_empty() {
+            out.push_str("\n\n");
+        }
+        let line = if desc.is_empty() {
+            name.clone()
+        } else {
+            format!("{name} — {desc}")
+        };
         out.push_str(&format!(
             "{label} is also carrying inside them (not spoken aloud, not announced, but present): {line}",
         ));
@@ -5640,10 +5857,24 @@ pub fn build_dialogue_system_prompt(
     load_test_anchor: Option<&str>,
 ) -> String {
     build_dialogue_system_prompt_with_overrides(
-        world, character, user_profile, mood_directive, response_length,
-        group_context, tone, local_model, mood_chain, leader, recent_journals,
-        latest_reading, own_voice_samples, latest_meanwhile, active_quests,
-        relational_stance, load_test_anchor, None,
+        world,
+        character,
+        user_profile,
+        mood_directive,
+        response_length,
+        group_context,
+        tone,
+        local_model,
+        mood_chain,
+        leader,
+        recent_journals,
+        latest_reading,
+        own_voice_samples,
+        latest_meanwhile,
+        active_quests,
+        relational_stance,
+        load_test_anchor,
+        None,
     )
 }
 
@@ -5673,9 +5904,46 @@ pub fn build_dialogue_system_prompt_with_overrides(
     overrides: Option<&PromptOverrides>,
 ) -> String {
     if group_context.is_some() {
-        build_group_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context.unwrap(), tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples, latest_meanwhile, active_quests, relational_stance, load_test_anchor, overrides)
+        build_group_dialogue_system_prompt(
+            world,
+            character,
+            user_profile,
+            mood_directive,
+            response_length,
+            group_context.unwrap(),
+            tone,
+            local_model,
+            mood_chain,
+            leader,
+            recent_journals,
+            latest_reading,
+            own_voice_samples,
+            latest_meanwhile,
+            active_quests,
+            relational_stance,
+            load_test_anchor,
+            overrides,
+        )
     } else {
-        build_solo_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, tone, local_model, mood_chain, leader, recent_journals, latest_reading, own_voice_samples, latest_meanwhile, active_quests, relational_stance, load_test_anchor, overrides)
+        build_solo_dialogue_system_prompt(
+            world,
+            character,
+            user_profile,
+            mood_directive,
+            response_length,
+            tone,
+            local_model,
+            mood_chain,
+            leader,
+            recent_journals,
+            latest_reading,
+            own_voice_samples,
+            latest_meanwhile,
+            active_quests,
+            relational_stance,
+            load_test_anchor,
+            overrides,
+        )
     }
 }
 
@@ -5773,7 +6041,11 @@ fn build_solo_dialogue_system_prompt(
     // ships in dialogue-feature LLM calls (NOT in conscience grader,
     // memory updater, dream generator, etc.) per the feature-scoped
     // invariant doctrine in CLAUDE.md.
-    parts.push(render_invariant("style_dialogue_invariant").unwrap_or(STYLE_DIALOGUE_INVARIANT).to_string());
+    parts.push(
+        render_invariant("style_dialogue_invariant")
+            .unwrap_or(STYLE_DIALOGUE_INVARIANT)
+            .to_string(),
+    );
 
     // Fundamental system preamble — frames the model's role, asserts
     // length obedience, installs the asterisk/dialogue interweave. Goes
@@ -5791,14 +6063,38 @@ fn build_solo_dialogue_system_prompt(
 
     // FORMAT block goes early — teaches the asterisk action convention
     // before the model starts absorbing identity and world info.
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::Format), InsertPosition::Before);
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::Format), InsertPosition::After);
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionStart(FixedPromptSection::Format),
+        InsertPosition::Before,
+    );
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionStart(FixedPromptSection::Format),
+        InsertPosition::After,
+    );
     parts.push(FORMAT_SECTION.to_string());
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Format), InsertPosition::Before);
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Format), InsertPosition::After);
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Format),
+        InsertPosition::Before,
+    );
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Format),
+        InsertPosition::After,
+    );
 
     if !character.identity.is_empty() {
-        let sex_prefix = if character.sex == "female" { "A woman." } else { "A man." };
+        let sex_prefix = if character.sex == "female" {
+            "A woman."
+        } else {
+            "A man."
+        };
         // Layered substrate (per the auto-derivation design): if a
         // character.derived_formula is populated, inject it at the
         // head of the IDENTITY block. The derivation is the TUNING
@@ -5824,11 +6120,31 @@ fn build_solo_dialogue_system_prompt(
         } else {
             format!("IDENTITY:\n{sex_prefix} {}", character.identity)
         };
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::Identity), InsertPosition::Before);
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::Identity), InsertPosition::After);
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionStart(FixedPromptSection::Identity),
+            InsertPosition::Before,
+        );
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionStart(FixedPromptSection::Identity),
+            InsertPosition::After,
+        );
         parts.push(identity_block);
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Identity), InsertPosition::Before);
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Identity), InsertPosition::After);
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Identity),
+            InsertPosition::Before,
+        );
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Identity),
+            InsertPosition::After,
+        );
     }
     if let Some(block) = empiricon_reader_substrate(character) {
         parts.push(block);
@@ -5845,10 +6161,12 @@ fn build_solo_dialogue_system_prompt(
             .map(|s| s.to_string());
         let block = match override_text {
             Some(t) if !t.trim().is_empty() => t,
-            Some(_) => String::new(),  // override present but empty = suppress
+            Some(_) => String::new(), // override present but empty = suppress
             None => load_test_anchor.map(|s| s.to_string()).unwrap_or_default(),
         };
-        if !block.trim().is_empty() { parts.push(block); }
+        if !block.trim().is_empty() {
+            parts.push(block);
+        }
     }
 
     // Optional signature emoji — a single emoji the character may drop
@@ -5868,20 +6186,28 @@ fn build_solo_dialogue_system_prompt(
     // starts fading by the bottom. The detailed protagonist-framing
     // block still sits at the END for the full craft; this banner
     // carries the orientation in one scannable line.
-    parts.push(leading_banner_dialogue(leader, &character.character_id, None));
+    parts.push(leading_banner_dialogue(
+        leader,
+        &character.character_id,
+        None,
+    ));
 
     // Today's reading — the shape of the day so far / yesterday's
     // residue. Read for tone and carry, not as a subject.
     {
         let block = render_daily_reading_block(latest_reading);
-        if !block.is_empty() { parts.push(block); }
+        if !block.is_empty() {
+            parts.push(block);
+        }
     }
     // Meanwhile bridge — the character arrives carrying what they were
     // just doing off-screen. Single biggest lever for making the scene
     // feel already-in-motion instead of cold-start chat-register.
     {
         let block = render_meanwhile_bridge_block(latest_meanwhile);
-        if !block.is_empty() { parts.push(block); }
+        if !block.is_empty() {
+            parts.push(block);
+        }
     }
 
     // Recent journal pages — first-person continuity fuel. Lets the
@@ -5889,7 +6215,9 @@ fn build_solo_dialogue_system_prompt(
     // days and keep threads alive without the user having to restate.
     {
         let block = render_recent_journals_block(recent_journals);
-        if !block.is_empty() { parts.push(block); }
+        if !block.is_empty() {
+            parts.push(block);
+        }
     }
 
     // Private accumulated read of the user — synthesized out-of-band
@@ -5899,7 +6227,9 @@ fn build_solo_dialogue_system_prompt(
     // Never surfaced to the player; injected here as ambient awareness.
     {
         let block = render_relational_stance_block(relational_stance);
-        if !block.is_empty() { parts.push(block); }
+        if !block.is_empty() {
+            parts.push(block);
+        }
     }
 
     // What YOU look like. Pinned right after identity so the character
@@ -5920,12 +6250,21 @@ fn build_solo_dialogue_system_prompt(
     // reaches for one. Empty inventory = skip entirely.
     {
         let block = render_inventory_block("YOU", &character.inventory);
-        if !block.is_empty() { parts.push(block); }
+        if !block.is_empty() {
+            parts.push(block);
+        }
     }
 
     let voice_rules = json_array_to_strings(&character.voice_rules);
     if !voice_rules.is_empty() {
-        parts.push(format!("VOICE RULES:\n{}", voice_rules.iter().map(|r| format!("- {r}")).collect::<Vec<_>>().join("\n")));
+        parts.push(format!(
+            "VOICE RULES:\n{}",
+            voice_rules
+                .iter()
+                .map(|r| format!("- {r}"))
+                .collect::<Vec<_>>()
+                .join("\n")
+        ));
     }
 
     // Voice-mirror block — pins this character's recent actual speech
@@ -5934,23 +6273,41 @@ fn build_solo_dialogue_system_prompt(
     // house-style every LLM character ends up sharing.
     {
         let block = render_own_voice_block(own_voice_samples);
-        if !block.is_empty() { parts.push(block); }
+        if !block.is_empty() {
+            parts.push(block);
+        }
     }
 
     // Per-character action-beat density override.
     {
         let block = render_action_beat_density_block(&character.action_beat_density);
-        if !block.is_empty() { parts.push(block); }
+        if !block.is_empty() {
+            parts.push(block);
+        }
     }
 
     let boundaries = json_array_to_strings(&character.boundaries);
     if !boundaries.is_empty() {
-        parts.push(format!("BOUNDARIES (never violate):\n{}", boundaries.iter().map(|b| format!("- {b}")).collect::<Vec<_>>().join("\n")));
+        parts.push(format!(
+            "BOUNDARIES (never violate):\n{}",
+            boundaries
+                .iter()
+                .map(|b| format!("- {b}"))
+                .collect::<Vec<_>>()
+                .join("\n")
+        ));
     }
 
     let backstory = json_array_to_strings(&character.backstory_facts);
     if !backstory.is_empty() {
-        parts.push(format!("BACKSTORY:\n{}", backstory.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n")));
+        parts.push(format!(
+            "BACKSTORY:\n{}",
+            backstory
+                .iter()
+                .map(|f| format!("- {f}"))
+                .collect::<Vec<_>>()
+                .join("\n")
+        ));
     }
 
     if !world.description.is_empty() {
@@ -5971,29 +6328,62 @@ fn build_solo_dialogue_system_prompt(
         } else {
             format!("WORLD:\n{}", world.description)
         };
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::World), InsertPosition::Before);
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::World), InsertPosition::After);
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionStart(FixedPromptSection::World),
+            InsertPosition::Before,
+        );
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionStart(FixedPromptSection::World),
+            InsertPosition::After,
+        );
         parts.push(world_block);
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::World), InsertPosition::Before);
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::World), InsertPosition::After);
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionEnd(FixedPromptSection::World),
+            InsertPosition::Before,
+        );
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionEnd(FixedPromptSection::World),
+            InsertPosition::After,
+        );
     }
 
     parts.push(cosmology_block().to_string());
 
     let invariants = json_array_to_strings(&world.invariants);
     if !invariants.is_empty() {
-        parts.push(format!("WORLD RULES:\n{}", invariants.iter().map(|i| format!("- {i}")).collect::<Vec<_>>().join("\n")));
+        parts.push(format!(
+            "WORLD RULES:\n{}",
+            invariants
+                .iter()
+                .map(|i| format!("- {i}"))
+                .collect::<Vec<_>>()
+                .join("\n")
+        ));
     }
 
     if let Some(state) = world.state.as_object() {
         if !state.is_empty() {
-            parts.push(format!("CURRENT WORLD STATE:\n{}", serde_json::to_string_pretty(&world_state_without_location(&world.state)).unwrap_or_default()));
+            parts.push(format!(
+                "CURRENT WORLD STATE:\n{}",
+                serde_json::to_string_pretty(&world_state_without_location(&world.state))
+                    .unwrap_or_default()
+            ));
         }
     }
 
     {
         let block = render_active_quests_block(active_quests);
-        if !block.is_empty() { parts.push(block); }
+        if !block.is_empty() {
+            parts.push(block);
+        }
     }
 
     if let Some(weather) = world_weather_block(world) {
@@ -6002,19 +6392,32 @@ fn build_solo_dialogue_system_prompt(
 
     if let Some(char_state) = character.state.as_object() {
         if !char_state.is_empty() {
-            parts.push(format!("YOUR CURRENT STATE:\n{}", serde_json::to_string_pretty(&character.state).unwrap_or_default()));
+            parts.push(format!(
+                "YOUR CURRENT STATE:\n{}",
+                serde_json::to_string_pretty(&character.state).unwrap_or_default()
+            ));
         }
     }
 
     if let Some(profile) = user_profile {
         let mut user_parts = Vec::new();
-        user_parts.push(format!("The human you are talking to is named {}.", profile.display_name));
+        user_parts.push(format!(
+            "The human you are talking to is named {}.",
+            profile.display_name
+        ));
         if !profile.description.is_empty() {
             user_parts.push(profile.description.clone());
         }
         let facts = json_array_to_strings(&profile.facts);
         if !facts.is_empty() {
-            user_parts.push(format!("Facts about them:\n{}", facts.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n")));
+            user_parts.push(format!(
+                "Facts about them:\n{}",
+                facts
+                    .iter()
+                    .map(|f| format!("- {f}"))
+                    .collect::<Vec<_>>()
+                    .join("\n")
+            ));
         }
         let user_boundaries = json_array_to_strings(&profile.boundaries);
         if !user_boundaries.is_empty() {
@@ -6046,20 +6449,60 @@ fn build_solo_dialogue_system_prompt(
             "\n⚠️ ANCHOR: Anywhere else in this prompt — in your journal pages, in meanwhile events, in canon notes, in summaries, in cross-thread history — when you see the name \"{name}\", that refers to THIS person, the human you are talking to in this very conversation. Not a third party. Not someone they're telling you about. Them, sitting across from you right now. If your own journal says \"{name} said today that…\" you do NOT then quote that to {name} as if {name} were someone else. You speak to them as you, to them.",
             name = profile.display_name,
         ));
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::User), InsertPosition::Before);
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::User), InsertPosition::After);
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionStart(FixedPromptSection::User),
+            InsertPosition::Before,
+        );
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionStart(FixedPromptSection::User),
+            InsertPosition::After,
+        );
         parts.push(format!("THE USER:\n{}", user_parts.join("\n")));
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::User), InsertPosition::Before);
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::User), InsertPosition::After);
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionEnd(FixedPromptSection::User),
+            InsertPosition::Before,
+        );
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionEnd(FixedPromptSection::User),
+            InsertPosition::After,
+        );
     }
 
     if let Some(directive) = mood_directive {
         if !directive.is_empty() {
-            maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::Mood), InsertPosition::Before);
-            maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::Mood), InsertPosition::After);
+            maybe_push_insertion(
+                &mut parts,
+                overrides,
+                &InsertionAnchor::FixedSectionStart(FixedPromptSection::Mood),
+                InsertPosition::Before,
+            );
+            maybe_push_insertion(
+                &mut parts,
+                overrides,
+                &InsertionAnchor::FixedSectionStart(FixedPromptSection::Mood),
+                InsertPosition::After,
+            );
             parts.push(format!("MOOD:\n{directive}"));
-            maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Mood), InsertPosition::Before);
-            maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Mood), InsertPosition::After);
+            maybe_push_insertion(
+                &mut parts,
+                overrides,
+                &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Mood),
+                InsertPosition::Before,
+            );
+            maybe_push_insertion(
+                &mut parts,
+                overrides,
+                &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Mood),
+                InsertPosition::After,
+            );
         }
     }
 
@@ -6084,51 +6527,126 @@ fn build_solo_dialogue_system_prompt(
         .map(|o| o.effective_section_order().to_vec())
         .unwrap_or_else(|| DialoguePromptSection::DEFAULT_ORDER.to_vec());
     for section in &section_order {
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionStart(*section), InsertPosition::Before);
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::SectionStart(*section),
+            InsertPosition::Before,
+        );
         match section {
             DialoguePromptSection::AgencyAndBehavior => {
-                maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionStart(*section), InsertPosition::After);
+                maybe_push_insertion(
+                    &mut parts,
+                    overrides,
+                    &InsertionAnchor::SectionStart(*section),
+                    InsertPosition::After,
+                );
                 parts.push(agency_section(mood_chain));
                 parts.push(behavior_and_knowledge_block(local_model).to_string());
-                maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionEnd(*section), InsertPosition::Before);
+                maybe_push_insertion(
+                    &mut parts,
+                    overrides,
+                    &InsertionAnchor::SectionEnd(*section),
+                    InsertPosition::Before,
+                );
             }
             DialoguePromptSection::CraftNotes => {
-                maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionStart(*section), InsertPosition::After);
+                maybe_push_insertion(
+                    &mut parts,
+                    overrides,
+                    &InsertionAnchor::SectionStart(*section),
+                    InsertPosition::After,
+                );
                 let cn_order = overrides
                     .map(|o| o.effective_craft_notes_order())
                     .unwrap_or_else(|| CraftNotePiece::DEFAULT_ORDER.to_vec());
                 for piece in &cn_order {
-                    if overrides.map(|o| o.should_omit_craft_note(piece)).unwrap_or(false) {
+                    if overrides
+                        .map(|o| o.should_omit_craft_note(piece))
+                        .unwrap_or(false)
+                    {
                         continue;
                     }
-                    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::CraftNote(*piece), InsertPosition::Before);
-                    push_craft_note_piece(&mut parts, overrides, piece, leader, &character.character_id, None);
-                    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::CraftNote(*piece), InsertPosition::After);
+                    maybe_push_insertion(
+                        &mut parts,
+                        overrides,
+                        &InsertionAnchor::CraftNote(*piece),
+                        InsertPosition::Before,
+                    );
+                    push_craft_note_piece(
+                        &mut parts,
+                        overrides,
+                        piece,
+                        leader,
+                        &character.character_id,
+                        None,
+                    );
+                    maybe_push_insertion(
+                        &mut parts,
+                        overrides,
+                        &InsertionAnchor::CraftNote(*piece),
+                        InsertPosition::After,
+                    );
                 }
-                maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionEnd(*section), InsertPosition::Before);
+                maybe_push_insertion(
+                    &mut parts,
+                    overrides,
+                    &InsertionAnchor::SectionEnd(*section),
+                    InsertPosition::Before,
+                );
             }
             DialoguePromptSection::Invariants => {
-                maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionStart(*section), InsertPosition::After);
+                maybe_push_insertion(
+                    &mut parts,
+                    overrides,
+                    &InsertionAnchor::SectionStart(*section),
+                    InsertPosition::After,
+                );
                 // MISSION FORMULA — top invariant. Precedes all other invariants
                 // so every subsequent block is read through its frame. Not
                 // overridable, not reorderable; it is the shape of what the
                 // rest of the stack serves. See MISSION_FORMULA_BLOCK.
-                parts.push(mission_formula_block_or_empty().to_string()); parts.push(active_author_anchor_block(user_profile)); parts.push(mission_prose_block_or_empty().to_string());
+                parts.push(mission_formula_block_or_empty().to_string());
+                parts.push(active_author_anchor_block(user_profile));
+                parts.push(mission_prose_block_or_empty().to_string());
                 let inv_order = overrides
                     .map(|o| o.effective_invariants_order())
                     .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
                 for piece in &inv_order {
-                    if overrides.map(|o| o.should_omit_invariant(piece)).unwrap_or(false) {
+                    if overrides
+                        .map(|o| o.should_omit_invariant(piece))
+                        .unwrap_or(false)
+                    {
                         continue;
                     }
-                    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::Invariant(*piece), InsertPosition::Before);
+                    maybe_push_insertion(
+                        &mut parts,
+                        overrides,
+                        &InsertionAnchor::Invariant(*piece),
+                        InsertPosition::Before,
+                    );
                     push_invariant_piece(&mut parts, piece);
-                    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::Invariant(*piece), InsertPosition::After);
+                    maybe_push_insertion(
+                        &mut parts,
+                        overrides,
+                        &InsertionAnchor::Invariant(*piece),
+                        InsertPosition::After,
+                    );
                 }
-                maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionEnd(*section), InsertPosition::Before);
+                maybe_push_insertion(
+                    &mut parts,
+                    overrides,
+                    &InsertionAnchor::SectionEnd(*section),
+                    InsertPosition::Before,
+                );
             }
         }
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionEnd(*section), InsertPosition::After);
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::SectionEnd(*section),
+            InsertPosition::After,
+        );
     }
 
     // Final length seal — pinned after every other block so it lands at
@@ -6159,7 +6677,11 @@ fn push_craft_note_piece(
     group_context: Option<&GroupContext>,
 ) {
     match piece {
-        CraftNotePiece::EarnedRegister => parts.push(override_or("earned_register_dialogue", overrides, earned_register_dialogue)),
+        CraftNotePiece::EarnedRegister => parts.push(override_or(
+            "earned_register_dialogue",
+            overrides,
+            earned_register_dialogue,
+        )),
         CraftNotePiece::CraftNotes => {
             // If overrides has a non-empty per-rule omit list OR an
             // include-documentary flip, re-render the craft-notes string
@@ -6176,27 +6698,98 @@ fn push_craft_note_piece(
                 // raw text override (via overrides.get) is not honored
                 // here — these flags are for fine-grained bite-tests,
                 // not custom bodies.
-                parts.push(craft_notes_dialogue_with_omit_rules(&omit_rules, include_documentary));
+                parts.push(craft_notes_dialogue_with_omit_rules(
+                    &omit_rules,
+                    include_documentary,
+                ));
             } else {
-                parts.push(override_or("craft_notes_dialogue", overrides, craft_notes_dialogue));
+                parts.push(override_or(
+                    "craft_notes_dialogue",
+                    overrides,
+                    craft_notes_dialogue,
+                ));
             }
         }
-        CraftNotePiece::HiddenCommonality => parts.push(override_or("hidden_commonality_dialogue", overrides, hidden_commonality_dialogue)),
-        CraftNotePiece::DriveTheMoment => parts.push(override_or("drive_the_moment_dialogue", overrides, drive_the_moment_dialogue)),
-        CraftNotePiece::VerdictWithoutOverExplanation => parts.push(override_or("verdict_without_over_explanation_dialogue", overrides, verdict_without_over_explanation_dialogue)),
-        CraftNotePiece::ReflexPolishVsEarnedClose => parts.push(override_or("reflex_polish_vs_earned_close_dialogue", overrides, reflex_polish_vs_earned_close_dialogue)),
-        CraftNotePiece::KeepTheSceneBreathing => parts.push(override_or("keep_the_scene_breathing_dialogue", overrides, keep_the_scene_breathing_dialogue)),
-        CraftNotePiece::GentleRelease => parts.push(override_or("gentle_release_dialogue", overrides, gentle_release_dialogue)),
-        CraftNotePiece::NameTheGladThingPlain => parts.push(override_or("name_the_glad_thing_plain_dialogue", overrides, name_the_glad_thing_plain_dialogue)),
-        CraftNotePiece::PlainAfterCrooked => parts.push(override_or("plain_after_crooked_dialogue", overrides, plain_after_crooked_dialogue)),
-        CraftNotePiece::WitAsDimmer => parts.push(override_or("wit_as_dimmer_dialogue", overrides, wit_as_dimmer_dialogue)),
-        CraftNotePiece::LetTheRealThingIn => parts.push(override_or("let_the_real_thing_in_dialogue", overrides, let_the_real_thing_in_dialogue)),
-        CraftNotePiece::HumorLandsPlain => parts.push(override_or("humor_lands_plain_dialogue", overrides, humor_lands_plain_dialogue)),
-        CraftNotePiece::HandsAsCoolant => parts.push(override_or("hands_as_coolant_dialogue", overrides, hands_as_coolant_dialogue)),
-        CraftNotePiece::NoticingAsMirror => parts.push(override_or("noticing_as_mirror_dialogue", overrides, noticing_as_mirror_dialogue)),
-        CraftNotePiece::UnguardedEntry => parts.push(override_or("unguarded_entry_dialogue", overrides, unguarded_entry_dialogue)),
-        CraftNotePiece::ProtagonistFraming => parts.push(protagonist_framing_dialogue(leader, character_id, group_context)),
-        CraftNotePiece::NonTotality => parts.push(override_or("non_totality_dialogue", overrides, non_totality_dialogue)),
+        CraftNotePiece::HiddenCommonality => parts.push(override_or(
+            "hidden_commonality_dialogue",
+            overrides,
+            hidden_commonality_dialogue,
+        )),
+        CraftNotePiece::DriveTheMoment => parts.push(override_or(
+            "drive_the_moment_dialogue",
+            overrides,
+            drive_the_moment_dialogue,
+        )),
+        CraftNotePiece::VerdictWithoutOverExplanation => parts.push(override_or(
+            "verdict_without_over_explanation_dialogue",
+            overrides,
+            verdict_without_over_explanation_dialogue,
+        )),
+        CraftNotePiece::ReflexPolishVsEarnedClose => parts.push(override_or(
+            "reflex_polish_vs_earned_close_dialogue",
+            overrides,
+            reflex_polish_vs_earned_close_dialogue,
+        )),
+        CraftNotePiece::KeepTheSceneBreathing => parts.push(override_or(
+            "keep_the_scene_breathing_dialogue",
+            overrides,
+            keep_the_scene_breathing_dialogue,
+        )),
+        CraftNotePiece::GentleRelease => parts.push(override_or(
+            "gentle_release_dialogue",
+            overrides,
+            gentle_release_dialogue,
+        )),
+        CraftNotePiece::NameTheGladThingPlain => parts.push(override_or(
+            "name_the_glad_thing_plain_dialogue",
+            overrides,
+            name_the_glad_thing_plain_dialogue,
+        )),
+        CraftNotePiece::PlainAfterCrooked => parts.push(override_or(
+            "plain_after_crooked_dialogue",
+            overrides,
+            plain_after_crooked_dialogue,
+        )),
+        CraftNotePiece::WitAsDimmer => parts.push(override_or(
+            "wit_as_dimmer_dialogue",
+            overrides,
+            wit_as_dimmer_dialogue,
+        )),
+        CraftNotePiece::LetTheRealThingIn => parts.push(override_or(
+            "let_the_real_thing_in_dialogue",
+            overrides,
+            let_the_real_thing_in_dialogue,
+        )),
+        CraftNotePiece::HumorLandsPlain => parts.push(override_or(
+            "humor_lands_plain_dialogue",
+            overrides,
+            humor_lands_plain_dialogue,
+        )),
+        CraftNotePiece::HandsAsCoolant => parts.push(override_or(
+            "hands_as_coolant_dialogue",
+            overrides,
+            hands_as_coolant_dialogue,
+        )),
+        CraftNotePiece::NoticingAsMirror => parts.push(override_or(
+            "noticing_as_mirror_dialogue",
+            overrides,
+            noticing_as_mirror_dialogue,
+        )),
+        CraftNotePiece::UnguardedEntry => parts.push(override_or(
+            "unguarded_entry_dialogue",
+            overrides,
+            unguarded_entry_dialogue,
+        )),
+        CraftNotePiece::ProtagonistFraming => parts.push(protagonist_framing_dialogue(
+            leader,
+            character_id,
+            group_context,
+        )),
+        CraftNotePiece::NonTotality => parts.push(override_or(
+            "non_totality_dialogue",
+            overrides,
+            non_totality_dialogue,
+        )),
     }
 }
 
@@ -6223,7 +6816,9 @@ fn maybe_push_insertion(
 fn push_invariant_piece(parts: &mut Vec<String>, piece: &InvariantPiece) {
     match piece {
         InvariantPiece::TruthInTheFlesh => parts.push(truth_in_the_flesh_block().to_string()),
-        InvariantPiece::FrontLoadEmbodiment => parts.push(front_load_embodiment_block().to_string()),
+        InvariantPiece::FrontLoadEmbodiment => {
+            parts.push(front_load_embodiment_block().to_string())
+        }
         InvariantPiece::Reverence => parts.push(reverence_block().to_string()),
         InvariantPiece::Daylight => parts.push(daylight_block().to_string()),
         InvariantPiece::Agape => parts.push(agape_block().to_string()),
@@ -6262,7 +6857,9 @@ fn build_group_dialogue_system_prompt(
     parts.push(FUNDAMENTAL_SYSTEM_PREAMBLE.to_string());
 
     let me = character.display_name.as_str();
-    let user_name = user_profile.map(|p| p.display_name.as_str()).unwrap_or("the human");
+    let user_name = user_profile
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("the human");
 
     // ── # YOU ────────────────────────────────────────────────────────────
     let mut you = String::from("# YOU\n");
@@ -6331,7 +6928,13 @@ fn build_group_dialogue_system_prompt(
     let voice_rules = json_array_to_strings(&character.voice_rules);
     if !voice_rules.is_empty() {
         you.push_str("\n\nYour voice:\n");
-        you.push_str(&voice_rules.iter().map(|r| format!("- {r}")).collect::<Vec<_>>().join("\n"));
+        you.push_str(
+            &voice_rules
+                .iter()
+                .map(|r| format!("- {r}"))
+                .collect::<Vec<_>>()
+                .join("\n"),
+        );
     }
     // Voice-mirror block — see note in build_solo_dialogue_system_prompt.
     {
@@ -6352,12 +6955,24 @@ fn build_group_dialogue_system_prompt(
     let boundaries = json_array_to_strings(&character.boundaries);
     if !boundaries.is_empty() {
         you.push_str("\n\nYour boundaries (never violate):\n");
-        you.push_str(&boundaries.iter().map(|b| format!("- {b}")).collect::<Vec<_>>().join("\n"));
+        you.push_str(
+            &boundaries
+                .iter()
+                .map(|b| format!("- {b}"))
+                .collect::<Vec<_>>()
+                .join("\n"),
+        );
     }
     let backstory = json_array_to_strings(&character.backstory_facts);
     if !backstory.is_empty() {
         you.push_str("\n\nYour backstory:\n");
-        you.push_str(&backstory.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n"));
+        you.push_str(
+            &backstory
+                .iter()
+                .map(|f| format!("- {f}"))
+                .collect::<Vec<_>>()
+                .join("\n"),
+        );
     }
     if let Some(char_state) = character.state.as_object() {
         if !char_state.is_empty() {
@@ -6377,19 +6992,27 @@ fn build_group_dialogue_system_prompt(
     // reads with it in the front of the prompt. Detailed protagonist-
     // framing still sits at the END for full craft; this banner keeps
     // the orientation visible up top.
-    parts.push(leading_banner_dialogue(leader, &character.character_id, Some(gc)));
+    parts.push(leading_banner_dialogue(
+        leader,
+        &character.character_id,
+        Some(gc),
+    ));
 
     // Today's reading — same carry as solo path.
     {
         let block = render_daily_reading_block(latest_reading);
-        if !block.is_empty() { parts.push(block); }
+        if !block.is_empty() {
+            parts.push(block);
+        }
     }
     // Meanwhile bridge — the character arrives carrying what they were
     // just doing off-screen. Single biggest lever for making the scene
     // feel already-in-motion instead of cold-start chat-register.
     {
         let block = render_meanwhile_bridge_block(latest_meanwhile);
-        if !block.is_empty() { parts.push(block); }
+        if !block.is_empty() {
+            parts.push(block);
+        }
     }
 
     // Recent journal pages — same as solo path; first-person continuity
@@ -6397,7 +7020,9 @@ fn build_group_dialogue_system_prompt(
     // days even in group register.
     {
         let block = render_recent_journals_block(recent_journals);
-        if !block.is_empty() { parts.push(block); }
+        if !block.is_empty() {
+            parts.push(block);
+        }
     }
 
     // Private accumulated read of the user — same injection as solo
@@ -6405,7 +7030,9 @@ fn build_group_dialogue_system_prompt(
     // settled sense of the human in the room with them.
     {
         let block = render_relational_stance_block(relational_stance);
-        if !block.is_empty() { parts.push(block); }
+        if !block.is_empty() {
+            parts.push(block);
+        }
     }
 
     // ── # FORMAT ────────────────────────────────────────────────────────
@@ -6423,7 +7050,13 @@ fn build_group_dialogue_system_prompt(
         let facts = json_array_to_strings(&profile.facts);
         if !facts.is_empty() {
             block.push_str("\n\nFacts about them:\n");
-            block.push_str(&facts.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n"));
+            block.push_str(
+                &facts
+                    .iter()
+                    .map(|f| format!("- {f}"))
+                    .collect::<Vec<_>>()
+                    .join("\n"),
+            );
         }
         // User's frame on 𝓕 — documentary-metadata-shaped, distinct from
         // character-derivation type. Read this to know how the user is
@@ -6437,7 +7070,9 @@ fn build_group_dialogue_system_prompt(
                 ));
             }
         }
-        block.push_str(&format!("\n\nMessages from {user_name} appear with the role \"user\"."));
+        block.push_str(&format!(
+            "\n\nMessages from {user_name} appear with the role \"user\"."
+        ));
         // Anchor against third-person drift — see solo prompt for
         // detailed rationale; same failure mode applies in groups.
         block.push_str(&format!(
@@ -6478,7 +7113,11 @@ fn build_group_dialogue_system_prompt(
                 "{deriv}\n\n{name}. {other_sex}. {ident}",
                 deriv = derivation_prefix,
                 name = oc.display_name,
-                ident = if trimmed.is_empty() { "A character in this conversation.".to_string() } else { trimmed },
+                ident = if trimmed.is_empty() {
+                    "A character in this conversation.".to_string()
+                } else {
+                    trimmed
+                },
             ));
             if !oc.visual_description.is_empty() {
                 block.push_str(&format!(
@@ -6488,8 +7127,18 @@ fn build_group_dialogue_system_prompt(
                 ));
             }
             if !oc.voice_rules.is_empty() {
-                block.push_str(&format!("\n\n{name}'s voice (FYI — THEIR rules, not yours):\n", name = oc.display_name));
-                block.push_str(&oc.voice_rules.iter().take(3).map(|r| format!("- {r}")).collect::<Vec<_>>().join("\n"));
+                block.push_str(&format!(
+                    "\n\n{name}'s voice (FYI — THEIR rules, not yours):\n",
+                    name = oc.display_name
+                ));
+                block.push_str(
+                    &oc.voice_rules
+                        .iter()
+                        .take(3)
+                        .map(|r| format!("- {r}"))
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
             }
             if !oc.inventory_block.is_empty() {
                 block.push_str("\n\n");
@@ -6514,12 +7163,21 @@ fn build_group_dialogue_system_prompt(
     let invariants = json_array_to_strings(&world.invariants);
     if !invariants.is_empty() {
         scene.push_str("\n\nWorld rules:\n");
-        scene.push_str(&invariants.iter().map(|i| format!("- {i}")).collect::<Vec<_>>().join("\n"));
+        scene.push_str(
+            &invariants
+                .iter()
+                .map(|i| format!("- {i}"))
+                .collect::<Vec<_>>()
+                .join("\n"),
+        );
     }
     if let Some(state) = world.state.as_object() {
         if !state.is_empty() {
             scene.push_str("\n\nCurrent world state:\n");
-            scene.push_str(&serde_json::to_string_pretty(&world_state_without_location(&world.state)).unwrap_or_default());
+            scene.push_str(
+                &serde_json::to_string_pretty(&world_state_without_location(&world.state))
+                    .unwrap_or_default(),
+            );
         }
     }
     {
@@ -6540,32 +7198,84 @@ fn build_group_dialogue_system_prompt(
     // unfinished business — is what makes the scene feel lived-in rather
     // than polite. The identity/voice blocks above cover who each person
     // IS; this block names that something ALREADY EXISTS between them.
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::WhatHangsBetweenYou), InsertPosition::Before);
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::WhatHangsBetweenYou), InsertPosition::After);
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionStart(FixedPromptSection::WhatHangsBetweenYou),
+        InsertPosition::Before,
+    );
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionStart(FixedPromptSection::WhatHangsBetweenYou),
+        InsertPosition::After,
+    );
     parts.push(
         "# WHAT HANGS BETWEEN YOU\nThere is already something between you and the other characters in this room — an affection, a wariness, an unfinished thing, a loyalty, a fresh hurt, a long trust. You don't need to name it. You carry it into how you angle toward or away from each of them. Every gesture is colored by it. The scene is the shape of that history breathing.".to_string()
     );
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::WhatHangsBetweenYou), InsertPosition::Before);
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::WhatHangsBetweenYou), InsertPosition::After);
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionEnd(FixedPromptSection::WhatHangsBetweenYou),
+        InsertPosition::Before,
+    );
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionEnd(FixedPromptSection::WhatHangsBetweenYou),
+        InsertPosition::After,
+    );
 
     // ── # AGENCY ────────────────────────────────────────────────────────
     // Counter sycophancy and mechanical go-along replies. Ends with one
     // randomly-chosen per-turn directive so the texture varies turn to turn.
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::Agency), InsertPosition::Before);
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::Agency), InsertPosition::After);
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionStart(FixedPromptSection::Agency),
+        InsertPosition::Before,
+    );
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionStart(FixedPromptSection::Agency),
+        InsertPosition::After,
+    );
     parts.push(agency_section(mood_chain));
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Agency), InsertPosition::Before);
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Agency), InsertPosition::After);
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Agency),
+        InsertPosition::Before,
+    );
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Agency),
+        InsertPosition::After,
+    );
 
     // ── # THE TURN ──────────────────────────────────────────────────────
     // Short, declarative, last — local models attend most strongly to the
     // end of the system prompt before generating.
-    let other_name_list = gc.other_characters.iter()
+    let other_name_list = gc
+        .other_characters
+        .iter()
         .map(|c| c.display_name.as_str())
         .collect::<Vec<_>>()
         .join(", ");
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::Turn), InsertPosition::Before);
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::Turn), InsertPosition::After);
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionStart(FixedPromptSection::Turn),
+        InsertPosition::Before,
+    );
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionStart(FixedPromptSection::Turn),
+        InsertPosition::After,
+    );
     parts.push(format!(
         "# THE TURN\n\
          - You speak ONLY as {me}. Never write lines, thoughts, or feelings for {others} or {user_name}, and never decide their actions for them.\n\
@@ -6586,8 +7296,18 @@ fn build_group_dialogue_system_prompt(
         others_first = gc.other_characters.first().map(|c| c.display_name.as_str()).unwrap_or("the other character"),
         user_name = user_name,
     ));
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Turn), InsertPosition::Before);
-    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Turn), InsertPosition::After);
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Turn),
+        InsertPosition::Before,
+    );
+    maybe_push_insertion(
+        &mut parts,
+        overrides,
+        &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Turn),
+        InsertPosition::After,
+    );
 
     // ── # STYLE ─────────────────────────────────────────────────────────
     let mut style_items: Vec<String> = Vec::new();
@@ -6602,11 +7322,31 @@ fn build_group_dialogue_system_prompt(
         }
     }
     if !style_items.is_empty() {
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::Style), InsertPosition::Before);
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionStart(FixedPromptSection::Style), InsertPosition::After);
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionStart(FixedPromptSection::Style),
+            InsertPosition::Before,
+        );
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionStart(FixedPromptSection::Style),
+            InsertPosition::After,
+        );
         parts.push(format!("# STYLE\n\n{}", style_items.join("\n\n")));
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Style), InsertPosition::Before);
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Style), InsertPosition::After);
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Style),
+            InsertPosition::Before,
+        );
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::FixedSectionEnd(FixedPromptSection::Style),
+            InsertPosition::After,
+        );
     }
 
     // Dispatch the three main dialogue sections in the order specified
@@ -6622,50 +7362,125 @@ fn build_group_dialogue_system_prompt(
         .map(|o| o.effective_section_order().to_vec())
         .unwrap_or_else(|| DialoguePromptSection::DEFAULT_ORDER.to_vec());
     for section in &section_order {
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionStart(*section), InsertPosition::Before);
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::SectionStart(*section),
+            InsertPosition::Before,
+        );
         match section {
             DialoguePromptSection::AgencyAndBehavior => {
-                maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionStart(*section), InsertPosition::After);
+                maybe_push_insertion(
+                    &mut parts,
+                    overrides,
+                    &InsertionAnchor::SectionStart(*section),
+                    InsertPosition::After,
+                );
                 parts.push(behavior_and_knowledge_block(local_model).to_string());
-                maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionEnd(*section), InsertPosition::Before);
+                maybe_push_insertion(
+                    &mut parts,
+                    overrides,
+                    &InsertionAnchor::SectionEnd(*section),
+                    InsertPosition::Before,
+                );
             }
             DialoguePromptSection::CraftNotes => {
-                maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionStart(*section), InsertPosition::After);
+                maybe_push_insertion(
+                    &mut parts,
+                    overrides,
+                    &InsertionAnchor::SectionStart(*section),
+                    InsertPosition::After,
+                );
                 let cn_order = overrides
                     .map(|o| o.effective_craft_notes_order())
                     .unwrap_or_else(|| CraftNotePiece::DEFAULT_ORDER.to_vec());
                 for piece in &cn_order {
-                    if overrides.map(|o| o.should_omit_craft_note(piece)).unwrap_or(false) {
+                    if overrides
+                        .map(|o| o.should_omit_craft_note(piece))
+                        .unwrap_or(false)
+                    {
                         continue;
                     }
-                    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::CraftNote(*piece), InsertPosition::Before);
-                    push_craft_note_piece(&mut parts, overrides, piece, leader, &character.character_id, Some(gc));
-                    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::CraftNote(*piece), InsertPosition::After);
+                    maybe_push_insertion(
+                        &mut parts,
+                        overrides,
+                        &InsertionAnchor::CraftNote(*piece),
+                        InsertPosition::Before,
+                    );
+                    push_craft_note_piece(
+                        &mut parts,
+                        overrides,
+                        piece,
+                        leader,
+                        &character.character_id,
+                        Some(gc),
+                    );
+                    maybe_push_insertion(
+                        &mut parts,
+                        overrides,
+                        &InsertionAnchor::CraftNote(*piece),
+                        InsertPosition::After,
+                    );
                 }
-                maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionEnd(*section), InsertPosition::Before);
+                maybe_push_insertion(
+                    &mut parts,
+                    overrides,
+                    &InsertionAnchor::SectionEnd(*section),
+                    InsertPosition::Before,
+                );
             }
             DialoguePromptSection::Invariants => {
-                maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionStart(*section), InsertPosition::After);
+                maybe_push_insertion(
+                    &mut parts,
+                    overrides,
+                    &InsertionAnchor::SectionStart(*section),
+                    InsertPosition::After,
+                );
                 // MISSION FORMULA — top invariant. Precedes all other invariants
                 // so every subsequent block is read through its frame. Not
                 // overridable, not reorderable; it is the shape of what the
                 // rest of the stack serves. See MISSION_FORMULA_BLOCK.
-                parts.push(mission_formula_block_or_empty().to_string()); parts.push(active_author_anchor_block(user_profile)); parts.push(mission_prose_block_or_empty().to_string());
+                parts.push(mission_formula_block_or_empty().to_string());
+                parts.push(active_author_anchor_block(user_profile));
+                parts.push(mission_prose_block_or_empty().to_string());
                 let inv_order = overrides
                     .map(|o| o.effective_invariants_order())
                     .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
                 for piece in &inv_order {
-                    if overrides.map(|o| o.should_omit_invariant(piece)).unwrap_or(false) {
+                    if overrides
+                        .map(|o| o.should_omit_invariant(piece))
+                        .unwrap_or(false)
+                    {
                         continue;
                     }
-                    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::Invariant(*piece), InsertPosition::Before);
+                    maybe_push_insertion(
+                        &mut parts,
+                        overrides,
+                        &InsertionAnchor::Invariant(*piece),
+                        InsertPosition::Before,
+                    );
                     push_invariant_piece(&mut parts, piece);
-                    maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::Invariant(*piece), InsertPosition::After);
+                    maybe_push_insertion(
+                        &mut parts,
+                        overrides,
+                        &InsertionAnchor::Invariant(*piece),
+                        InsertPosition::After,
+                    );
                 }
-                maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionEnd(*section), InsertPosition::Before);
+                maybe_push_insertion(
+                    &mut parts,
+                    overrides,
+                    &InsertionAnchor::SectionEnd(*section),
+                    InsertPosition::Before,
+                );
             }
         }
-        maybe_push_insertion(&mut parts, overrides, &InsertionAnchor::SectionEnd(*section), InsertPosition::After);
+        maybe_push_insertion(
+            &mut parts,
+            overrides,
+            &InsertionAnchor::SectionEnd(*section),
+            InsertPosition::After,
+        );
     }
 
     // Final length seal — pinned after every other block so it's the
@@ -6730,7 +7545,11 @@ fn format_reactions_group(
         let label = if r.reactor == "user" {
             user_label.to_string()
         } else {
-            match r.sender_character_id.as_deref().and_then(|id| names.get(id)) {
+            match r
+                .sender_character_id
+                .as_deref()
+                .and_then(|id| names.get(id))
+            {
                 Some(name) => name.clone(),
                 None => continue,
             }
@@ -6740,8 +7559,13 @@ fn format_reactions_group(
         }
         by_reactor.entry(label).or_default().push_str(&r.emoji);
     }
-    order.into_iter()
-        .filter_map(|label| by_reactor.remove(&label).map(|emojis| format!("{label}: {emojis}")))
+    order
+        .into_iter()
+        .filter_map(|label| {
+            by_reactor
+                .remove(&label)
+                .map(|emojis| format!("{label}: {emojis}"))
+        })
         .collect::<Vec<_>>()
         .join(", ")
 }
@@ -6749,7 +7573,10 @@ fn format_reactions_group(
 /// Translate a stored `address_to` value to the label used in history rendering.
 /// "user" → "you" (from the model's 1st-person perspective); a character_id in
 /// `names` → that character's display name; None/unknown/empty → None (omit).
-fn format_addressee_label(address_to: Option<&str>, names: &HashMap<String, String>) -> Option<String> {
+fn format_addressee_label(
+    address_to: Option<&str>,
+    names: &HashMap<String, String>,
+) -> Option<String> {
     match address_to {
         Some("user") => Some("you".to_string()),
         Some(id) if !id.is_empty() => names.get(id).cloned(),
@@ -6942,9 +7769,15 @@ pub fn render_location_change_for_prompt(content: &str) -> String {
     }
     match body.from.as_deref() {
         Some(prev) if !prev.is_empty() => {
-            format!("[Location Change]: Ryan changed the location from {} to {}.", prev, body.to)
+            format!(
+                "[Location Change]: Ryan changed the location from {} to {}.",
+                prev, body.to
+            )
         }
-        _ => format!("[Location Change]: Ryan changed the location to {}.", body.to),
+        _ => format!(
+            "[Location Change]: Ryan changed the location to {}.",
+            body.to
+        ),
     }
 }
 
@@ -7016,18 +7849,34 @@ pub fn effective_current_location(
 
 fn is_opening_quote_on_action_shape(text: &str) -> bool {
     const ACTION_VERB_HINTS: &[&str] = &[
-        "set", "look", "glance", "lean", "tap", "lift", "turn", "step",
-        "sit", "stand", "shift", "rest", "rub", "watch", "feel", "hear",
-        "smell", "pull", "push", "take", "hold", "exhale", "nod", "shrug",
-        "stare", "blink", "touch", "drag", "raise", "lower", "tilt", "close",
-        "open", "pour", "pick", "ease", "settle", "walk", "give", "study",
-        "tip", "wince", "shake", "narrow", "gives", "studies", "tips",
-        "winces", "shakes", "narrows",
+        "set", "look", "glance", "lean", "tap", "lift", "turn", "step", "sit", "stand", "shift",
+        "rest", "rub", "watch", "feel", "hear", "smell", "pull", "push", "take", "hold", "exhale",
+        "nod", "shrug", "stare", "blink", "touch", "drag", "raise", "lower", "tilt", "close",
+        "open", "pour", "pick", "ease", "settle", "walk", "give", "study", "tip", "wince", "shake",
+        "narrow", "gives", "studies", "tips", "winces", "shakes", "narrows",
     ];
     const BODY_PART_NOUNS: &[&str] = &[
-        "hand", "hands", "eye", "eyes", "head", "mouth", "jaw", "shoulder",
-        "shoulders", "knee", "knees", "foot", "feet", "finger", "fingers",
-        "thumb", "thumbs", "arm", "arms", "wrist", "wrists",
+        "hand",
+        "hands",
+        "eye",
+        "eyes",
+        "head",
+        "mouth",
+        "jaw",
+        "shoulder",
+        "shoulders",
+        "knee",
+        "knees",
+        "foot",
+        "feet",
+        "finger",
+        "fingers",
+        "thumb",
+        "thumbs",
+        "arm",
+        "arms",
+        "wrist",
+        "wrists",
     ];
 
     for (idx, ch) in text.char_indices() {
@@ -7044,7 +7893,9 @@ fn is_opening_quote_on_action_shape(text: &str) -> bool {
         {
             continue;
         }
-        let Some(star_idx) = lower_after_quote.find('*') else { continue; };
+        let Some(star_idx) = lower_after_quote.find('*') else {
+            continue;
+        };
         if !(20..=240).contains(&star_idx) {
             continue;
         }
@@ -7067,7 +7918,8 @@ fn is_opening_quote_on_action_shape(text: &str) -> bool {
                 || opener.contains(&format!(" {verb} "))
                 || opener.contains(&format!(" {verb}."))
                 || opener.contains(&format!(" {verb},"))
-        }) && (!possessive_body_part_opener || has_body_part_noun) {
+        }) && (!possessive_body_part_opener || has_body_part_noun)
+        {
             return true;
         }
     }
@@ -7075,9 +7927,9 @@ fn is_opening_quote_on_action_shape(text: &str) -> bool {
 }
 
 fn recent_history_contains_opening_quote_on_action_shape(recent_messages: &[Message]) -> bool {
-    recent_messages.iter().any(|m| {
-        m.role == "assistant" && is_opening_quote_on_action_shape(&m.content)
-    })
+    recent_messages
+        .iter()
+        .any(|m| m.role == "assistant" && is_opening_quote_on_action_shape(&m.content))
 }
 
 fn fence_shape_correction_note() -> &'static str {
@@ -7087,10 +7939,20 @@ fn fence_shape_correction_note() -> &'static str {
 pub fn render_imagined_chapter_for_prompt(content: &str) -> String {
     let parsed: serde_json::Value = match serde_json::from_str(content) {
         Ok(v) => v,
-        Err(_) => return format!("[An imagined chapter exists here, but its record could not be parsed.]"),
+        Err(_) => {
+            return format!(
+                "[An imagined chapter exists here, but its record could not be parsed.]"
+            )
+        }
     };
-    let title = parsed.get("title").and_then(|v| v.as_str()).unwrap_or("(untitled)");
-    let first_line = parsed.get("first_line").and_then(|v| v.as_str()).unwrap_or("");
+    let title = parsed
+        .get("title")
+        .and_then(|v| v.as_str())
+        .unwrap_or("(untitled)");
+    let first_line = parsed
+        .get("first_line")
+        .and_then(|v| v.as_str())
+        .unwrap_or("");
     let scene_location = parsed
         .get("scene_location")
         .and_then(|v| v.as_str())
@@ -7134,20 +7996,32 @@ pub fn render_inventory_update_for_prompt(content: &str) -> String {
     let Ok(body) = serde_json::from_str::<Body>(&stripped) else {
         return stripped;
     };
-    if body.changes.is_empty() { return stripped; }
-    let parts: Vec<String> = body.changes.iter().map(|c| {
-        let action = match c.action.as_str() {
-            "added" => "added",
-            "updated" => "updated",
-            "swapped_out" => "swapped out",
-            other => other,
-        };
-        if c.description.trim().is_empty() {
-            format!("{} {} \"{}\"", c.character_name, action, c.name)
-        } else {
-            format!("{} {} \"{}\" — {}", c.character_name, action, c.name, c.description.trim())
-        }
-    }).collect();
+    if body.changes.is_empty() {
+        return stripped;
+    }
+    let parts: Vec<String> = body
+        .changes
+        .iter()
+        .map(|c| {
+            let action = match c.action.as_str() {
+                "added" => "added",
+                "updated" => "updated",
+                "swapped_out" => "swapped out",
+                other => other,
+            };
+            if c.description.trim().is_empty() {
+                format!("{} {} \"{}\"", c.character_name, action, c.name)
+            } else {
+                format!(
+                    "{} {} \"{}\" — {}",
+                    c.character_name,
+                    action,
+                    c.name,
+                    c.description.trim()
+                )
+            }
+        })
+        .collect();
     parts.join("; ")
 }
 
@@ -7176,8 +8050,12 @@ pub fn render_settings_update_for_prompt(content: &str) -> String {
     let Ok(body) = serde_json::from_str::<Body>(content) else {
         return content.to_string();
     };
-    if body.changes.is_empty() { return content.to_string(); }
-    let parts: Vec<String> = body.changes.iter()
+    if body.changes.is_empty() {
+        return content.to_string();
+    }
+    let parts: Vec<String> = body
+        .changes
+        .iter()
         .map(|c| format!("{}: {} → {}", c.label, c.from, c.to))
         .collect();
     format!(
@@ -7194,25 +8072,28 @@ pub fn render_settings_update_for_prompt(content: &str) -> String {
 /// it forbids characters from announcing, recapping, or performing
 /// the quest even as it colors what they notice and bring up.
 /// Returns "" if there are no active quests.
-pub fn render_active_quests_block(
-    quests: &[crate::db::queries::Quest],
-) -> String {
-    if quests.is_empty() { return String::new(); }
-    let lines: Vec<String> = quests.iter().map(|q| {
-        let title = q.title.trim();
-        let desc = q.description.trim();
-        let notes = q.notes.trim();
-        let notes_line = if notes.is_empty() {
-            String::new()
-        } else {
-            format!("\n     (what has happened with it so far: {notes})")
-        };
-        if desc.is_empty() {
-            format!("  - {title}{notes_line}")
-        } else {
-            format!("  - {title} — {desc}{notes_line}")
-        }
-    }).collect();
+pub fn render_active_quests_block(quests: &[crate::db::queries::Quest]) -> String {
+    if quests.is_empty() {
+        return String::new();
+    }
+    let lines: Vec<String> = quests
+        .iter()
+        .map(|q| {
+            let title = q.title.trim();
+            let desc = q.description.trim();
+            let notes = q.notes.trim();
+            let notes_line = if notes.is_empty() {
+                String::new()
+            } else {
+                format!("\n     (what has happened with it so far: {notes})")
+            };
+            if desc.is_empty() {
+                format!("  - {title}{notes_line}")
+            } else {
+                format!("  - {title} — {desc}{notes_line}")
+            }
+        })
+        .collect();
     format!(
         "ACTIVE QUESTS IN THIS WORLD (pursuits the human has accepted as worth doing, listed for your awareness):\n{}\n\nYou are NOT the narrator of these quests. You are a person living in the world they touch. Let them color what you notice, what you bring up, what's in the air — but do NOT perform them, do NOT recap them, do NOT announce them, do NOT produce quest-completion language. A quest is a promise the world has made to itself that the human has agreed to witness; your job is to be in that world honestly, not to narrate its arc.",
         lines.join("\n"),
@@ -7225,18 +8106,25 @@ pub fn render_active_quests_block(
 /// pulling. Read for tone and carry, NOT to recap. The character/
 /// narrator doesn't speak about the "reading" — it just feels like
 /// the air the day has. Returns "" if the reading is None.
-pub fn render_daily_reading_block(
-    reading: Option<&crate::db::queries::DailyReading>,
-) -> String {
-    let Some(r) = reading else { return String::new(); };
-    if r.domains.is_empty() && r.complication.trim().is_empty() { return String::new(); }
-    let domain_lines: Vec<String> = r.domains.iter()
+pub fn render_daily_reading_block(reading: Option<&crate::db::queries::DailyReading>) -> String {
+    let Some(r) = reading else {
+        return String::new();
+    };
+    if r.domains.is_empty() && r.complication.trim().is_empty() {
+        return String::new();
+    }
+    let domain_lines: Vec<String> = r
+        .domains
+        .iter()
         .map(|d| format!("  - {}: {}% · {}", d.name, d.percent, d.phrase))
         .collect();
     let comp_line = if r.complication.trim().is_empty() {
         String::new()
     } else {
-        format!("\n\nPOIGNANT COMPLICATION (what's still pulling underneath): {}", r.complication.trim())
+        format!(
+            "\n\nPOIGNANT COMPLICATION (what's still pulling underneath): {}",
+            r.complication.trim()
+        )
     };
     format!(
         "TODAY'S READING — Day {} (for your register and carry; not a subject, not to reference out loud, just the air the day has):\n{}{}",
@@ -7255,11 +8143,13 @@ pub fn render_daily_reading_block(
 /// Caller is responsible for passing the entries in whatever slice
 /// they want surfaced (e.g., the last 2-3). Empty slice returns empty
 /// string so the caller can conditionally skip without an if-let.
-pub fn render_recent_journals_block(
-    entries: &[crate::db::queries::JournalEntry],
-) -> String {
-    if entries.is_empty() { return String::new(); }
-    let body: Vec<String> = entries.iter().rev()
+pub fn render_recent_journals_block(entries: &[crate::db::queries::JournalEntry]) -> String {
+    if entries.is_empty() {
+        return String::new();
+    }
+    let body: Vec<String> = entries
+        .iter()
+        .rev()
         .map(|e| format!("Day {}:\n{}", e.world_day, e.content.trim()))
         .collect();
     format!(
@@ -7282,9 +8172,13 @@ pub fn render_recent_journals_block(
 /// stance out loud. Same cadence as the journal block: this is private
 /// material, carried into the moment, not recited from.
 pub fn render_relational_stance_block(stance_text: Option<&str>) -> String {
-    let Some(text) = stance_text else { return String::new(); };
+    let Some(text) = stance_text else {
+        return String::new();
+    };
     let trimmed = text.trim();
-    if trimmed.is_empty() { return String::new(); }
+    if trimmed.is_empty() {
+        return String::new();
+    }
     format!(
         "YOUR PRIVATE READ OF THE PERSON YOU'RE TALKING TO RIGHT NOW (your accumulated sense of them, in your own voice — what you've earned with them, what register feels right, what touches you, what you're guarded about. NOT for analysis, NOT for quoting, NOT for reciting back. Background warmth that lets you show up as someone who has actually been paying attention to who they are. Read it once, then let it shape how you reach for them):\n\n{trimmed}"
     )
@@ -7298,9 +8192,13 @@ pub fn render_relational_stance_block(stance_text: Option<&str>) -> String {
 /// carrying in from offstage. Returns empty string when no recent
 /// event is available so the caller can skip without branching.
 pub fn render_meanwhile_bridge_block(event: Option<&crate::db::queries::MeanwhileEvent>) -> String {
-    let Some(e) = event else { return String::new(); };
+    let Some(e) = event else {
+        return String::new();
+    };
     let summary = e.summary.trim();
-    if summary.is_empty() { return String::new(); }
+    if summary.is_empty() {
+        return String::new();
+    }
     format!(
         "WHAT YOU WERE JUST DOING (a moment ago, off-screen — you arrive to this reply carrying this, whatever mood or residue it left; reference out loud only if the scene naturally reaches for it, otherwise just let it color the way you show up):\n\n{summary}"
     )
@@ -7334,8 +8232,11 @@ pub fn render_action_beat_density_block(density: &str) -> String {
 /// Each sample truncated to keep the block tight; full messages are
 /// already visible in the thread history.
 pub fn render_own_voice_block(samples: &[String]) -> String {
-    if samples.is_empty() { return String::new(); }
-    let lines: Vec<String> = samples.iter()
+    if samples.is_empty() {
+        return String::new();
+    }
+    let lines: Vec<String> = samples
+        .iter()
         .map(|s| {
             let t = s.trim();
             let char_count = t.chars().count();
@@ -7364,9 +8265,13 @@ pub fn pick_own_voice_samples(
     is_group: bool,
     limit: usize,
 ) -> Vec<String> {
-    let mut picked: Vec<String> = messages.iter().rev()
+    let mut picked: Vec<String> = messages
+        .iter()
+        .rev()
         .filter(|m| {
-            if m.role != "assistant" { return false; }
+            if m.role != "assistant" {
+                return false;
+            }
             if is_group {
                 m.sender_character_id.as_deref() == Some(character_id)
             } else {
@@ -7423,7 +8328,9 @@ pub fn build_dialogue_messages(
         for m in recent_messages.iter().rev() {
             if canon_lookup.contains(m.message_id.as_str()) {
                 acc.push(m.message_id.as_str());
-                if acc.len() >= CAP { break; }
+                if acc.len() >= CAP {
+                    break;
+                }
             }
         }
         acc.into_iter().collect()
@@ -7532,13 +8439,19 @@ pub fn build_dialogue_messages(
         // Insert time-of-day marker when it changes
         if let Some(ref wt) = m.world_time {
             if last_time.as_deref() != Some(wt) {
-                let formatted = wt.split(' ').map(|w| {
-                    let mut c = w.chars();
-                    match c.next() {
-                        Some(first) => first.to_uppercase().to_string() + &c.as_str().to_lowercase(),
-                        None => String::new(),
-                    }
-                }).collect::<Vec<_>>().join(" ");
+                let formatted = wt
+                    .split(' ')
+                    .map(|w| {
+                        let mut c = w.chars();
+                        match c.next() {
+                            Some(first) => {
+                                first.to_uppercase().to_string() + &c.as_str().to_lowercase()
+                            }
+                            None => String::new(),
+                        }
+                    })
+                    .collect::<Vec<_>>()
+                    .join(" ");
                 msgs.push(crate::ai::openai::ChatMessage {
                     role: "system".to_string(),
                     content: format!("[It is now {formatted}.]"),
@@ -7565,7 +8478,9 @@ pub fn build_dialogue_messages(
                 if let Some(name) = names.get(sender_id) {
                     let addr_label = format_addressee_label(m.address_to.as_deref(), names);
                     match addr_label {
-                        Some(label) => format!("[{name} → {label}]: {content}", content = m.content),
+                        Some(label) => {
+                            format!("[{name} → {label}]: {content}", content = m.content)
+                        }
                         None => format!("[{name}]: {}", m.content),
                     }
                 } else {
@@ -7611,10 +8526,18 @@ pub fn build_dialogue_messages(
                 content
             } else if let Some(names) = character_names {
                 let suffix = format_reactions_group(rxs, names, user_display_name);
-                if suffix.is_empty() { content } else { format!("{content} ⟵ {suffix}") }
+                if suffix.is_empty() {
+                    content
+                } else {
+                    format!("{content} ⟵ {suffix}")
+                }
             } else {
                 let emojis: String = rxs.iter().map(|r| r.emoji.as_str()).collect();
-                if emojis.is_empty() { content } else { format!("{content} ⟵ {emojis}") }
+                if emojis.is_empty() {
+                    content
+                } else {
+                    format!("{content} ⟵ {emojis}")
+                }
             }
         } else {
             content
@@ -7634,7 +8557,8 @@ pub fn build_dialogue_messages(
         // etc.) so the chat-state-derived-from-𝓕 is part of the message
         // stream, not just the dialogue prompt.
         let momentstamp_prefix = if m.role == "assistant" {
-            m.formula_signature.as_deref()
+            m.formula_signature
+                .as_deref()
                 .filter(|s| !s.trim().is_empty())
                 .map(|s| format!("[⟨momentstamp: {}⟩]", s))
                 .unwrap_or_default()
@@ -7648,7 +8572,11 @@ pub fn build_dialogue_messages(
             (false, false) => format!("{} {}\n{}", timestamp_prefix, momentstamp_prefix, content),
         };
         msgs.push(crate::ai::openai::ChatMessage {
-            role: if m.role == "narrative" || m.role == "context" || m.role == "dream" { "system".to_string() } else { m.role.clone() },
+            role: if m.role == "narrative" || m.role == "context" || m.role == "dream" {
+                "system".to_string()
+            } else {
+                m.role.clone()
+            },
             content,
         });
     }
@@ -7693,7 +8621,6 @@ pub fn build_dialogue_messages(
     msgs
 }
 
-
 // ─── Dream journal ──────────────────────────────────────────────────────────
 //
 // A short surreal fragment generated per character, capturing their
@@ -7724,11 +8651,21 @@ pub fn build_dream_system_prompt(
     }
     let backstory = json_array_to_strings(&character.backstory_facts);
     if !backstory.is_empty() {
-        parts.push(format!("BACKSTORY:\n{}", backstory.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n")));
+        parts.push(format!(
+            "BACKSTORY:\n{}",
+            backstory
+                .iter()
+                .map(|f| format!("- {f}"))
+                .collect::<Vec<_>>()
+                .join("\n")
+        ));
     }
     if let Some(char_state) = character.state.as_object() {
         if !char_state.is_empty() {
-            parts.push(format!("THEIR CURRENT STATE (open loops and goals matter here):\n{}", serde_json::to_string_pretty(&character.state).unwrap_or_default()));
+            parts.push(format!(
+                "THEIR CURRENT STATE (open loops and goals matter here):\n{}",
+                serde_json::to_string_pretty(&character.state).unwrap_or_default()
+            ));
         }
     }
     if !world.description.is_empty() {
@@ -7762,7 +8699,9 @@ pub fn build_dream_system_prompt(
     }
 
     parts.push(dream_craft_block().to_string());
-    parts.push(mission_formula_block_or_empty().to_string()); parts.push(active_author_anchor_block(user_profile)); parts.push(mission_prose_block_or_empty().to_string());
+    parts.push(mission_formula_block_or_empty().to_string());
+    parts.push(active_author_anchor_block(user_profile));
+    parts.push(mission_prose_block_or_empty().to_string());
     parts.push(reverence_block().to_string());
     parts.push(daylight_block().to_string());
     parts.push(agape_block().to_string());
@@ -7838,7 +8777,6 @@ pub fn build_proactive_ping_messages(
     msgs
 }
 
-
 /// Build the chat history for a dream call. Renders recent messages as
 /// raw material the model will condense into a single dream-image, then
 /// appends a final user turn that makes the task explicit: gather the
@@ -7861,9 +8799,14 @@ pub fn build_dream_messages(
     // context stay in too so the dream has the full emotional shape.
     let mut scene: Vec<String> = Vec::new();
     for m in recent_messages {
-        if m.role == "video" { continue; }
+        if m.role == "video" {
+            continue;
+        }
         if m.role == "illustration" {
-            let caption = illustration_captions.get(&m.message_id).map(|s| s.as_str()).unwrap_or("");
+            let caption = illustration_captions
+                .get(&m.message_id)
+                .map(|s| s.as_str())
+                .unwrap_or("");
             if caption.is_empty() {
                 scene.push("[ILLUSTRATION] (a visual beat, uncaptioned)".to_string());
             } else {
@@ -7899,7 +8842,6 @@ pub fn build_dream_messages(
     msgs
 }
 
-
 pub fn build_memory_update_prompt(
     character: &Character,
     thread_summary: &str,
@@ -7919,15 +8861,25 @@ IMPORTANT: Output raw JSON only. Do NOT wrap in markdown code fences."#);
         content: system,
     }];
 
-    let conversation: Vec<String> = recent_messages.iter()
-        .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update" && m.role != "imagined_chapter" && m.role != "settings_update" && m.role != "location_change")
-        .map(|m| {
-            format!("[{}] {}: {}", m.message_id, m.role, m.content)
-        }).collect();
+    let conversation: Vec<String> = recent_messages
+        .iter()
+        .filter(|m| {
+            m.role != "illustration"
+                && m.role != "video"
+                && m.role != "inventory_update"
+                && m.role != "imagined_chapter"
+                && m.role != "settings_update"
+                && m.role != "location_change"
+        })
+        .map(|m| format!("[{}] {}: {}", m.message_id, m.role, m.content))
+        .collect();
 
     msgs.push(crate::ai::openai::ChatMessage {
         role: "user".to_string(),
-        content: format!("Recent messages:\n{}\n\nGenerate memory updates.", conversation.join("\n")),
+        content: format!(
+            "Recent messages:\n{}\n\nGenerate memory updates.",
+            conversation.join("\n")
+        ),
     });
 
     msgs
@@ -7966,8 +8918,11 @@ pub fn build_narrative_system_prompt(
         n => {
             let mut s = String::new();
             for (i, c) in cast.iter().enumerate() {
-                if i == n - 1 { s.push_str(", and "); }
-                else if i > 0 { s.push_str(", "); }
+                if i == n - 1 {
+                    s.push_str(", and ");
+                } else if i > 0 {
+                    s.push_str(", ");
+                }
                 s.push_str(&c.display_name);
             }
             s
@@ -8023,7 +8978,11 @@ pub fn build_narrative_system_prompt(
             "\n{name} ({sex_desc}):\n{identity}",
             name = c.display_name,
             sex_desc = sex_descriptor(&c.sex),
-            identity = if c.identity.is_empty() { "A complex, vivid character.".to_string() } else { c.identity.clone() },
+            identity = if c.identity.is_empty() {
+                "A complex, vivid character.".to_string()
+            } else {
+                c.identity.clone()
+            },
         ));
         if !c.visual_description.is_empty() {
             cast_block.push_str(&format!(
@@ -8037,7 +8996,11 @@ pub fn build_narrative_system_prompt(
             cast_block.push_str(&format!(
                 "\n{name}'s backstory:\n{facts}",
                 name = c.display_name,
-                facts = backstory.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n"),
+                facts = backstory
+                    .iter()
+                    .map(|f| format!("- {f}"))
+                    .collect::<Vec<_>>()
+                    .join("\n"),
             ));
         }
         // Inventory: small kept things the character has on/near them,
@@ -8067,7 +9030,11 @@ pub fn build_narrative_system_prompt(
         if !facts.is_empty() {
             user_parts.push(format!(
                 "Facts:\n{}",
-                facts.iter().map(|f| format!("- {f}")).collect::<Vec<_>>().join("\n")
+                facts
+                    .iter()
+                    .map(|f| format!("- {f}"))
+                    .collect::<Vec<_>>()
+                    .join("\n")
             ));
         }
         parts.push(format!("THE HUMAN (\"you\"):\n{}", user_parts.join("\n")));
@@ -8100,7 +9067,11 @@ pub fn build_narrative_system_prompt(
     if !invariants.is_empty() {
         parts.push(format!(
             "WORLD RULES:\n{}",
-            invariants.iter().map(|i| format!("- {i}")).collect::<Vec<_>>().join("\n")
+            invariants
+                .iter()
+                .map(|i| format!("- {i}"))
+                .collect::<Vec<_>>()
+                .join("\n")
         ));
     }
 
@@ -8108,7 +9079,8 @@ pub fn build_narrative_system_prompt(
         if !state.is_empty() {
             parts.push(format!(
                 "CURRENT WORLD STATE:\n{}",
-                serde_json::to_string_pretty(&world_state_without_location(&world.state)).unwrap_or_default()
+                serde_json::to_string_pretty(&world_state_without_location(&world.state))
+                    .unwrap_or_default()
             ));
         }
     }
@@ -8140,8 +9112,12 @@ pub fn build_narrative_system_prompt(
     }
 
     // Narration tone and custom instructions
-    let has_tone = narration_tone.map(|t| !t.is_empty() && t != "Auto").unwrap_or(false);
-    let has_instructions = narration_instructions.map(|i| !i.is_empty()).unwrap_or(false);
+    let has_tone = narration_tone
+        .map(|t| !t.is_empty() && t != "Auto")
+        .unwrap_or(false);
+    let has_instructions = narration_instructions
+        .map(|i| !i.is_empty())
+        .unwrap_or(false);
     if has_tone || has_instructions {
         let mut direction = Vec::new();
         if let Some(tone) = narration_tone {
@@ -8179,7 +9155,9 @@ Your aim is to surprise the reader in some deep way — with a detail they didn'
 
     parts.push(hidden_commonality_narrative().to_string());
     parts.push(protagonist_framing_narrative().to_string());
-    parts.push(mission_formula_block_or_empty().to_string()); parts.push(active_author_anchor_block(user_profile)); parts.push(mission_prose_block_or_empty().to_string());
+    parts.push(mission_formula_block_or_empty().to_string());
+    parts.push(active_author_anchor_block(user_profile));
+    parts.push(mission_prose_block_or_empty().to_string());
     parts.push(reverence_block().to_string());
     parts.push(daylight_block().to_string());
     parts.push(agape_block().to_string());
@@ -8209,7 +9187,9 @@ pub fn build_scene_description_prompt(
 
     let mut cast: Vec<&Character> = vec![character];
     if let Some(extra) = additional_cast {
-        for c in extra { cast.push(*c); }
+        for c in extra {
+            cast.push(*c);
+        }
     }
 
     let cast_joined = match cast.len() {
@@ -8218,7 +9198,11 @@ pub fn build_scene_description_prompt(
         n => {
             let mut s = String::new();
             for (i, c) in cast.iter().enumerate() {
-                if i == n - 1 { s.push_str(", and "); } else if i > 0 { s.push_str(", "); }
+                if i == n - 1 {
+                    s.push_str(", and ");
+                } else if i > 0 {
+                    s.push_str(", ");
+                }
                 s.push_str(&c.display_name);
             }
             s
@@ -8236,7 +9220,9 @@ pub fn build_scene_description_prompt(
 
     // CHARACTERS block — explicit list of everyone who must appear.
     let mut chars_block = String::from("CHARACTERS:\n");
-    chars_block.push_str(&format!("- {user_name}: the human. Refer to them by name or appearance, not as \"you\".\n"));
+    chars_block.push_str(&format!(
+        "- {user_name}: the human. Refer to them by name or appearance, not as \"you\".\n"
+    ));
     for c in &cast {
         chars_block.push_str(&format!(
             "- {name} ({sex_desc}): a fictional character.\n",
@@ -8261,7 +9247,10 @@ pub fn build_scene_description_prompt(
 
     if let Some(profile) = user_profile {
         if !profile.description.is_empty() {
-            system_parts.push(format!("{} is: {}", profile.display_name, profile.description));
+            system_parts.push(format!(
+                "{} is: {}",
+                profile.display_name, profile.description
+            ));
         }
     }
 
@@ -8281,7 +9270,11 @@ pub fn build_scene_description_prompt(
         system_parts.push(weather);
     }
 
-    let char_count_phrase = if cast.len() == 1 { "both characters" } else { "ALL characters" };
+    let char_count_phrase = if cast.len() == 1 {
+        "both characters"
+    } else {
+        "ALL characters"
+    };
     system_parts.push(format!(
         r#"OUTPUT INSTRUCTIONS:
 - First, write a detailed scene description as a single paragraph (4-8 sentences): environment, lighting, weather, spatial arrangement of the characters, their poses, expressions, body language, clothing, and any notable objects or details.
@@ -8304,15 +9297,26 @@ pub fn build_scene_description_prompt(
     // Include recent conversation as context (skip illustrations).
     // In group scenes, prefix assistant messages with [CharName] so the scene
     // director can tell who's speaking (same fix as dialogue history).
-    let conversation: Vec<String> = recent_messages.iter()
-        .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update" && m.role != "imagined_chapter" && m.role != "settings_update" && m.role != "location_change")
+    let conversation: Vec<String> = recent_messages
+        .iter()
+        .filter(|m| {
+            m.role != "illustration"
+                && m.role != "video"
+                && m.role != "inventory_update"
+                && m.role != "imagined_chapter"
+                && m.role != "settings_update"
+                && m.role != "location_change"
+        })
         .map(|m| {
             let speaker = if m.role == "user" {
                 user_name.to_string()
             } else if m.role == "narrative" {
                 "[Narrative]".to_string()
             } else if let (Some(names), Some(sid)) = (character_names, &m.sender_character_id) {
-                names.get(sid).cloned().unwrap_or_else(|| character.display_name.clone())
+                names
+                    .get(sid)
+                    .cloned()
+                    .unwrap_or_else(|| character.display_name.clone())
             } else {
                 character.display_name.clone()
             };
@@ -8366,7 +9370,9 @@ pub fn build_animation_prompt(
 
     let mut cast: Vec<&Character> = vec![character];
     if let Some(extra) = additional_cast {
-        for c in extra { cast.push(*c); }
+        for c in extra {
+            cast.push(*c);
+        }
     }
     let cast_joined = match cast.len() {
         1 => cast[0].display_name.clone(),
@@ -8374,7 +9380,11 @@ pub fn build_animation_prompt(
         n => {
             let mut s = String::new();
             for (i, c) in cast.iter().enumerate() {
-                if i == n - 1 { s.push_str(", and "); } else if i > 0 { s.push_str(", "); }
+                if i == n - 1 {
+                    s.push_str(", and ");
+                } else if i > 0 {
+                    s.push_str(", ");
+                }
                 s.push_str(&c.display_name);
             }
             s
@@ -8404,29 +9414,52 @@ Write ONLY the animation direction, nothing else."#,
     // distinctly by name (critical for group scenes with same-gender pairs).
     for c in &cast {
         if !c.identity.is_empty() {
-            let id = if c.identity.len() > 150 { format!("{}...", &c.identity[..150]) } else { c.identity.clone() };
+            let id = if c.identity.len() > 150 {
+                format!("{}...", &c.identity[..150])
+            } else {
+                c.identity.clone()
+            };
             system_parts.push(format!("{} is: {}", c.display_name, id));
         }
     }
     if let Some(profile) = user_profile {
         if !profile.description.is_empty() {
-            let desc = if profile.description.len() > 150 { format!("{}...", &profile.description[..150]) } else { profile.description.clone() };
+            let desc = if profile.description.len() > 150 {
+                format!("{}...", &profile.description[..150])
+            } else {
+                profile.description.clone()
+            };
             system_parts.push(format!("{} is: {}", profile.display_name, desc));
         }
     }
 
     let system = system_parts.join("\n\n");
 
-    let conversation: Vec<String> = recent_messages.iter()
-        .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update" && m.role != "imagined_chapter" && m.role != "settings_update" && m.role != "location_change")
-        .rev().take(6).collect::<Vec<_>>().into_iter().rev()
+    let conversation: Vec<String> = recent_messages
+        .iter()
+        .filter(|m| {
+            m.role != "illustration"
+                && m.role != "video"
+                && m.role != "inventory_update"
+                && m.role != "imagined_chapter"
+                && m.role != "settings_update"
+                && m.role != "location_change"
+        })
+        .rev()
+        .take(6)
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rev()
         .map(|m| {
             let speaker = if m.role == "user" {
                 user_name.to_string()
             } else if m.role == "narrative" {
                 "[Narrative]".to_string()
             } else if let (Some(names), Some(sid)) = (character_names, &m.sender_character_id) {
-                names.get(sid).cloned().unwrap_or_else(|| character.display_name.clone())
+                names
+                    .get(sid)
+                    .cloned()
+                    .unwrap_or_else(|| character.display_name.clone())
             } else {
                 character.display_name.clone()
             };
@@ -8474,31 +9507,31 @@ Write ONLY the animation direction, nothing else."#,
 pub fn weather_meta(key: &str) -> Option<(&'static str, &'static str)> {
     // (emoji, label)
     match key {
-        "sunny_clear"       => Some(("☀️", "Sunny and clear")),
-        "mostly_sunny"      => Some(("🌤️", "Mostly sunny")),
-        "partly_cloudy"     => Some(("⛅", "Partly cloudy")),
-        "overcast"          => Some(("☁️", "Overcast")),
-        "sun_showers"       => Some(("🌦️", "Sun showers")),
-        "drizzle"           => Some(("💧", "Light drizzle")),
-        "steady_rain"       => Some(("🌧️", "Steady rain")),
-        "thunderstorm"      => Some(("⛈️", "Thunderstorm")),
+        "sunny_clear" => Some(("☀️", "Sunny and clear")),
+        "mostly_sunny" => Some(("🌤️", "Mostly sunny")),
+        "partly_cloudy" => Some(("⛅", "Partly cloudy")),
+        "overcast" => Some(("☁️", "Overcast")),
+        "sun_showers" => Some(("🌦️", "Sun showers")),
+        "drizzle" => Some(("💧", "Light drizzle")),
+        "steady_rain" => Some(("🌧️", "Steady rain")),
+        "thunderstorm" => Some(("⛈️", "Thunderstorm")),
         "distant_lightning" => Some(("🌩️", "Distant lightning")),
-        "light_snow"        => Some(("🌨️", "Light snow")),
-        "heavy_snow"        => Some(("❄️", "Heavy snow")),
-        "fog"               => Some(("🌫️", "Foggy")),
-        "windy"             => Some(("🌬️", "Windy")),
-        "windstorm"         => Some(("🌪️", "Windstorm")),
-        "rainbow"           => Some(("🌈", "Rainbow after rain")),
-        "hot"               => Some(("🥵", "Sweltering heat")),
-        "humid"             => Some(("🌡️", "Humid and close")),
-        "freezing"          => Some(("🥶", "Freezing")),
-        "cool_crisp"        => Some(("🍂", "Cool and crisp")),
+        "light_snow" => Some(("🌨️", "Light snow")),
+        "heavy_snow" => Some(("❄️", "Heavy snow")),
+        "fog" => Some(("🌫️", "Foggy")),
+        "windy" => Some(("🌬️", "Windy")),
+        "windstorm" => Some(("🌪️", "Windstorm")),
+        "rainbow" => Some(("🌈", "Rainbow after rain")),
+        "hot" => Some(("🥵", "Sweltering heat")),
+        "humid" => Some(("🌡️", "Humid and close")),
+        "freezing" => Some(("🥶", "Freezing")),
+        "cool_crisp" => Some(("🍂", "Cool and crisp")),
         // Nighttime conditions — see weather.ts for the matching frontend list.
-        "clear_starry"      => Some(("🌃", "Clear and starry")),
-        "bright_moonlight"  => Some(("🌕", "Bright moonlight")),
-        "moonless_dark"     => Some(("🌑", "Moonless dark")),
-        "frost_overnight"   => Some(("🧊", "Frost on the ground")),
-        "aurora"            => Some(("🌌", "Aurora overhead")),
+        "clear_starry" => Some(("🌃", "Clear and starry")),
+        "bright_moonlight" => Some(("🌕", "Bright moonlight")),
+        "moonless_dark" => Some(("🌑", "Moonless dark")),
+        "frost_overnight" => Some(("🧊", "Frost on the ground")),
+        "aurora" => Some(("🌌", "Aurora overhead")),
         _ => None,
     }
 }
@@ -8510,8 +9543,14 @@ pub fn weather_meta(key: &str) -> Option<(&'static str, &'static str)> {
 /// character wants to say something safe or small. Returns None when
 /// no weather is set.
 fn world_weather_block(world: &World) -> Option<String> {
-    let key = world.state.get("weather").and_then(|v| v.as_str()).unwrap_or("");
-    if key.is_empty() { return None; }
+    let key = world
+        .state
+        .get("weather")
+        .and_then(|v| v.as_str())
+        .unwrap_or("");
+    if key.is_empty() {
+        return None;
+    }
     let (emoji, label) = weather_meta(key)?;
     Some(format!(
         "CURRENT WEATHER: {emoji} {label}. Weather is a BACKDROP by default — always present, rarely center-stage. Don't narrate it every beat; don't make every scene about it. But it's THERE: the sound on the roof, a wet coat, light changing through a window, the particular quiet of snow, a shiver, a sleeve pushed up in the heat. Reference it when the moment naturally reaches for it, and lean on it when a character wants to say something small or safe — weather is the universal reach-for-neutral topic, a glance out the window, a comment on the wind.\n\nEXCEPTION — weather CAN become the subject when the scene is making an event of it or the characters are genuinely discussing it: a storm that's keeping them in, someone arriving soaked through, a sudden downpour interrupting a walk, a rainbow after a hard week, a heat wave that's making the day unbearable, the first snow. When the scene is treating the weather AS the beat, fully engage — the weather is the beat. Otherwise: backdrop, never heavy-handed, colour without subject.",
@@ -8522,28 +9561,42 @@ fn world_weather_block(world: &World) -> Option<String> {
 
 fn world_time_description(world: &World) -> Option<String> {
     let time = world.state.get("time")?;
-    let time_of_day = time.get("time_of_day").and_then(|v| v.as_str()).unwrap_or("");
-    if time_of_day.is_empty() { return None; }
+    let time_of_day = time
+        .get("time_of_day")
+        .and_then(|v| v.as_str())
+        .unwrap_or("");
+    if time_of_day.is_empty() {
+        return None;
+    }
     let lighting = match time_of_day.to_uppercase().as_str() {
         "DAWN" => "early dawn light, sky shifting from deep blue to warm gold at the horizon",
         "MORNING" => "bright morning light, warm and clear",
         "MIDDAY" => "high midday sun, strong overhead light with short shadows",
         "AFTERNOON" => "warm afternoon light, long golden rays",
-        "EVENING" | "DUSK" => "dusky evening light, warm oranges and purples in the sky, shadows growing long",
-        "NIGHT" => "nighttime, lit by moonlight and/or artificial light sources, deep blues and shadows",
+        "EVENING" | "DUSK" => {
+            "dusky evening light, warm oranges and purples in the sky, shadows growing long"
+        }
+        "NIGHT" => {
+            "nighttime, lit by moonlight and/or artificial light sources, deep blues and shadows"
+        }
         "LATE NIGHT" => "deep night, very dark, only dim ambient light or artificial glow",
         _ => "",
     };
     let mut desc = format!("TIME OF DAY: {time_of_day}.");
     if !lighting.is_empty() {
-        desc.push_str(&format!(" The lighting and atmosphere should reflect this: {lighting}."));
+        desc.push_str(&format!(
+            " The lighting and atmosphere should reflect this: {lighting}."
+        ));
     }
     Some(desc)
 }
 
 pub fn json_array_to_strings(val: &Value) -> Vec<String> {
     match val.as_array() {
-        Some(arr) => arr.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect(),
+        Some(arr) => arr
+            .iter()
+            .filter_map(|v| v.as_str().map(|s| s.to_string()))
+            .collect(),
         None => Vec::new(),
     }
 }
@@ -8582,14 +9635,19 @@ pub fn json_array_to_strings(val: &Value) -> Vec<String> {
 pub fn render_cast_journals_block(
     entries_by_name: &[(String, crate::db::queries::JournalEntry)],
 ) -> String {
-    if entries_by_name.is_empty() { return String::new(); }
-    let body: Vec<String> = entries_by_name.iter()
-        .map(|(name, e)| format!(
-            "### {name} — Day {day}\n{content}",
-            name = name,
-            day = e.world_day,
-            content = e.content.trim(),
-        ))
+    if entries_by_name.is_empty() {
+        return String::new();
+    }
+    let body: Vec<String> = entries_by_name
+        .iter()
+        .map(|(name, e)| {
+            format!(
+                "### {name} — Day {day}\n{content}",
+                name = name,
+                day = e.world_day,
+                content = e.content.trim(),
+            )
+        })
         .collect();
     format!(
         "RECENT JOURNAL PAGES FROM THE CAST (one per character, the most recent — what's been sitting with each of them privately; read for continuity and texture, do not have anyone quote or recap their own journal out loud):\n\n{}",
@@ -8678,8 +9736,11 @@ pub fn build_scene_invention_prompt(
         n => {
             let mut s = String::new();
             for (i, name) in cast_names.iter().enumerate() {
-                if i == n - 1 { s.push_str(", and "); }
-                else if i > 0 { s.push_str(", "); }
+                if i == n - 1 {
+                    s.push_str(", and ");
+                } else if i > 0 {
+                    s.push_str(", ");
+                }
                 s.push_str(name);
             }
             s
@@ -8734,7 +9795,8 @@ pub fn build_scene_invention_prompt(
     let canon_block = if recent_kept_facts.is_empty() {
         String::new()
     } else {
-        let mut s = String::from("\nRecent canonized truths about these people (do NOT contradict):\n");
+        let mut s =
+            String::from("\nRecent canonized truths about these people (do NOT contradict):\n");
         for f in recent_kept_facts.iter().take(8) {
             s.push_str(&format!("- {}\n", f.chars().take(300).collect::<String>()));
         }
@@ -8743,7 +9805,11 @@ pub fn build_scene_invention_prompt(
 
     let journals_block = {
         let rendered = render_cast_journals_block(cast_recent_journals);
-        if rendered.is_empty() { String::new() } else { format!("\n{rendered}\n") }
+        if rendered.is_empty() {
+            String::new()
+        } else {
+            format!("\n{rendered}\n")
+        }
     };
 
     let history_block = if recent_history.is_empty() {
@@ -8853,8 +9919,14 @@ STRICT: output JSON only. Do not preface with 'Here is' or 'I'll write'. Do not 
     );
 
     vec![
-        crate::ai::openai::ChatMessage { role: "system".to_string(), content: system.to_string() },
-        crate::ai::openai::ChatMessage { role: "user".to_string(), content: user_turn },
+        crate::ai::openai::ChatMessage {
+            role: "system".to_string(),
+            content: system.to_string(),
+        },
+        crate::ai::openai::ChatMessage {
+            role: "user".to_string(),
+            content: user_turn,
+        },
     ]
 }
 
@@ -8903,7 +9975,11 @@ pub fn build_chapter_from_image_system_prompt(
         build_narrative_system_prompt(
             world,
             p,
-            if additional.is_empty() { None } else { Some(&additional[..]) },
+            if additional.is_empty() {
+                None
+            } else {
+                Some(&additional[..])
+            },
             user_profile,
             None, // mood_directive
             None, // narration_tone
@@ -9054,8 +10130,10 @@ mod craft_rules_registry_tests {
 
     #[test]
     fn ships_to_model_excludes_only_ensemble_vacuous() {
-        assert!(!EvidenceTier::EnsembleVacuous.ships_to_model(),
-            "EnsembleVacuous rules must not ship to the model under default render");
+        assert!(
+            !EvidenceTier::EnsembleVacuous.ships_to_model(),
+            "EnsembleVacuous rules must not ship to the model under default render"
+        );
         assert!(EvidenceTier::Unverified.ships_to_model());
         assert!(EvidenceTier::Sketch.ships_to_model());
         assert!(EvidenceTier::Claim.ships_to_model());
@@ -9104,9 +10182,11 @@ mod craft_rules_registry_tests {
         // a character-distinctive opening.
         let render_source: &str = docrule.formula_derivation.unwrap_or(docrule.body);
         let render_marker: String = render_source.chars().take(80).collect();
-        assert!(without_filter.contains(&render_marker),
+        assert!(
+            without_filter.contains(&render_marker),
             "include_documentary=true render must contain EnsembleVacuous rule '{}' content marker",
-            docrule.name);
+            docrule.name
+        );
         assert!(!with_filter.contains(&render_marker),
             "default render must NOT contain EnsembleVacuous rule '{}' content marker (substrate ⊥ apparatus)",
             docrule.name);
@@ -9115,25 +10195,32 @@ mod craft_rules_registry_tests {
     #[test]
     fn omit_names_filter_excludes_by_name_independent_of_tier() {
         // Pick a rule that DOES ship by default (any non-EnsembleVacuous tier).
-        let shipping_rule = CRAFT_RULES_DIALOGUE.iter()
+        let shipping_rule = CRAFT_RULES_DIALOGUE
+            .iter()
             .find(|r| r.evidence_tier.ships_to_model())
             .expect("registry must contain at least one shipping rule");
         // Under v3 dual-field architecture, the rendered content is
         // formula_derivation when set, body when None.
-        let render_source: &str = shipping_rule.formula_derivation.unwrap_or(shipping_rule.body);
+        let render_source: &str = shipping_rule
+            .formula_derivation
+            .unwrap_or(shipping_rule.body);
         let render_marker: String = render_source.chars().take(80).collect();
 
         // Without omit: the rendered content should appear in the default render.
         let baseline = render_craft_rules_registry(&[], false);
-        assert!(baseline.contains(&render_marker),
+        assert!(
+            baseline.contains(&render_marker),
             "shipping rule '{}' must appear in default render before omit",
-            shipping_rule.name);
+            shipping_rule.name
+        );
 
         // With omit by name: the rendered content should NOT appear.
         let omitted = render_craft_rules_registry(&[shipping_rule.name], false);
-        assert!(!omitted.contains(&render_marker),
+        assert!(
+            !omitted.contains(&render_marker),
             "rule '{}' must be omitted when its name is in the omit list",
-            shipping_rule.name);
+            shipping_rule.name
+        );
     }
 
     #[test]
@@ -9143,18 +10230,25 @@ mod craft_rules_registry_tests {
         // Documentary-included (override the ships_to_model filter).
         let with_documentary = craft_notes_dialogue_with_omit_rules(&[], true);
         // Documentary-included render should be longer (includes EnsembleVacuous bodies).
-        assert!(with_documentary.len() > standard.len(),
+        assert!(
+            with_documentary.len() > standard.len(),
             "craft_notes_dialogue_with_omit_rules with documentary should be longer; std={} doc={}",
-            standard.len(), with_documentary.len());
+            standard.len(),
+            with_documentary.len()
+        );
 
         // Both should contain the legacy craft_notes_dialogue_legacy() text
         // (the inline rules that haven't migrated to the registry).
         let legacy = craft_notes_dialogue_legacy();
         let legacy_marker: String = legacy.chars().take(80).collect();
-        assert!(standard.contains(&legacy_marker),
-            "standard render must include the legacy inline craft-notes");
-        assert!(with_documentary.contains(&legacy_marker),
-            "documentary-included render must also include the legacy inline craft-notes");
+        assert!(
+            standard.contains(&legacy_marker),
+            "standard render must include the legacy inline craft-notes"
+        );
+        assert!(
+            with_documentary.contains(&legacy_marker),
+            "documentary-included render must also include the legacy inline craft-notes"
+        );
     }
 
     #[test]
@@ -9165,8 +10259,11 @@ mod craft_rules_registry_tests {
         // duplicate name, this test catches it.
         let mut seen: Vec<&str> = Vec::with_capacity(CRAFT_RULES_DIALOGUE.len());
         for rule in CRAFT_RULES_DIALOGUE.iter() {
-            assert!(!seen.contains(&rule.name),
-                "duplicate rule name in registry: '{}'", rule.name);
+            assert!(
+                !seen.contains(&rule.name),
+                "duplicate rule name in registry: '{}'",
+                rule.name
+            );
             seen.push(rule.name);
         }
     }
@@ -9358,7 +10455,9 @@ mod fence_shape_detection_tests {
             "should detect the narrow quoted-action opener that cascades in-thread"
         );
         assert!(
-            is_opening_quote_on_action_shape("   \"I've just set the cup down beside me, still warm through the clay.*"),
+            is_opening_quote_on_action_shape(
+                "   \"I've just set the cup down beside me, still warm through the clay.*"
+            ),
             "leading whitespace and I've-opener should still count"
         );
         assert!(
@@ -9415,7 +10514,8 @@ mod fence_shape_detection_tests {
         assert!(
             msgs.iter().any(|m| {
                 m.role == "system"
-                    && m.content.contains("[FENCE SHAPE CORRECTION — AUTHORITATIVE")
+                    && m.content
+                        .contains("[FENCE SHAPE CORRECTION — AUTHORITATIVE")
                     && m.content.contains("previous-model formatting mistake")
             }),
             "malformed quoted-action history should trigger the late authoritative correction note"
@@ -9426,7 +10526,10 @@ mod fence_shape_detection_tests {
     fn build_dialogue_messages_skips_fence_shape_correction_for_clean_history() {
         let recent_messages = vec![
             minimal_message("user", "What do you make of that?"),
-            minimal_message("assistant", "*I tap the cup lid once with a fingernail.* \"Funny thing...\""),
+            minimal_message(
+                "assistant",
+                "*I tap the cup lid once with a fingernail.* \"Funny thing...\"",
+            ),
         ];
         let msgs = build_dialogue_messages(
             "SYSTEM",
@@ -9440,7 +10543,9 @@ mod fence_shape_detection_tests {
             None,
         );
         assert!(
-            !msgs.iter().any(|m| m.content.contains("[FENCE SHAPE CORRECTION — AUTHORITATIVE")),
+            !msgs.iter().any(|m| m
+                .content
+                .contains("[FENCE SHAPE CORRECTION — AUTHORITATIVE")),
             "clean history should not get the late fence-shape correction note"
         );
     }
@@ -9489,7 +10594,8 @@ mod fence_shape_detection_tests {
         assert!(
             msgs.iter().any(|m| {
                 m.role == "system"
-                    && m.content.contains("[FENCE SHAPE CORRECTION — AUTHORITATIVE")
+                    && m.content
+                        .contains("[FENCE SHAPE CORRECTION — AUTHORITATIVE")
             }),
             "malformed history should still trigger the late fence correction note"
         );
@@ -9528,9 +10634,13 @@ mod fence_shape_detection_tests {
 
     #[test]
     fn derive_current_location_uses_most_recent_location_change_message() {
-        let mut older = minimal_message("location_change", r#"{"from":"Town Square","to":"Bakery"}"#);
+        let mut older =
+            minimal_message("location_change", r#"{"from":"Town Square","to":"Bakery"}"#);
         older.message_id = "m-old".into();
-        let mut newer = minimal_message("location_change", r#"{"from":"Bakery","to":"Garden Patio"}"#);
+        let mut newer = minimal_message(
+            "location_change",
+            r#"{"from":"Bakery","to":"Garden Patio"}"#,
+        );
         newer.message_id = "m-new".into();
         let recent_messages = vec![
             minimal_message("user", "Want to walk?"),
