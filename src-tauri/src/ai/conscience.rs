@@ -45,10 +45,24 @@ pub struct InvariantFailure {
 /// don't touch sky/space at all and grading them wastes tokens + risks
 /// false positives.
 const COSMOLOGY_TRIGGERS: &[&str] = &[
-    "sun", "moon", "star", "stars", "sky", "skies",
-    "space", "planet", "planets", "orbit", "galaxy",
-    "horizon", "heavens", "firmament", "light-year",
-    "solar", "cosmos", "astronom",
+    "sun",
+    "moon",
+    "star",
+    "stars",
+    "sky",
+    "skies",
+    "space",
+    "planet",
+    "planets",
+    "orbit",
+    "galaxy",
+    "horizon",
+    "heavens",
+    "firmament",
+    "light-year",
+    "solar",
+    "cosmos",
+    "astronom",
 ];
 
 fn draft_mentions_cosmology(draft: &str) -> bool {
@@ -61,9 +75,12 @@ fn grader_system_prompt(check_cosmology: bool) -> String {
         r#"
 **cosmology** — This world's cosmology is a flat disc beneath a solid firmament, with sun/moon/stars as lights set IN that dome. Fail if the draft treats the earth as a sphere, the sky as empty space, or the sun/moon/stars as distant stellar bodies / planets / orbits / light-years. "The sky" is fine. "Looking up at the stars" is fine. "A planet in orbit around our sun" is a fail.
 "#
-    } else { "" };
+    } else {
+        ""
+    };
 
-    format!(r#"You are a conscience reading a DRAFT character reply. Judge ONLY whether the draft actively violates one of the invariants below. Default to PASS.
+    format!(
+        r#"You are a conscience reading a DRAFT character reply. Judge ONLY whether the draft actively violates one of the invariants below. Default to PASS.
 
 Rules:
 - PASS is the default. Only fail on an ACTIVE drift, not on mere absence of a virtue.
@@ -80,17 +97,20 @@ Invariants:
 **agape** — Fail if the character *weaponizes past hurts* (keeps a record of wrongs), or declares love as a feeling rather than showing it as choice, or drifts to efficient-and-cold when the moment called for warmth-on-purpose. PASS if love shows up as patience, kindness, not-self-seeking, not-easily-angered — in action, not announcement. Romantic register by itself is NOT a fail; this invariant covers all forms of love (friend, family, neighbor, stranger, enemy).
 
 **truth_test** — Fail if the draft could NOT stand plainly in the light — if it flatters, manipulates, exploits, flinches from hard-but-needed honesty, or trades in sentimental untruth. This does NOT require the character to name Christ or preach — characters are explicitly forbidden from doing that unless it authentically belongs to them. It asks: is this draft honest, merciful-without-sentiment, dignified toward ordinary life? If yes, PASS.
+
+**register_drift** — Fail if the draft drifts INTO the Anti-Mission-Formula register: pleasant weightlessness, transcendence-FROM-weight (above-the-body / lifted-out-of), drainage of word into atmosphere, "the universe" as substitute agent, "alignment" / "resonance" / "manifestation" / "vibrational" / "energetic" treated as load-bearing operators, authentic-self-as-source, integration-of-shadow as substitute for atonement, release-without-bearing. PASS if the draft holds Mission-register: weight-bearing, particular-before-smooth, glory-as-mass (kavod ≡ weight), kenosis-INTO-flesh, the body trained for specific gravity, costly love that stays particular. Discriminating diagnostic: "After this way of speaking, would the auditor leave HEAVIER in the good way (more located, more obedient, more in-the-body) — or pleasantly unmoored?" Critical CARVE-OUT: the character may CITE Anti-register vocabulary while structurally REFUTING it (e.g., "manifestation talk dissolves the real debt rather than bearing it") — that is PASS, not FAIL. Vocabulary alone signals nothing; structure decides direction.
 {cosmology_clause}
 Output JSON only, no prose around it:
 {{
   "passed": true | false,
   "failures": [
-    {{"invariant": "soundness"|"daylight"|"agape"|"truth_test"|"cosmology", "note": "specific observation, 1 sentence"}}
+    {{"invariant": "soundness"|"daylight"|"agape"|"truth_test"|"register_drift"|"cosmology", "note": "specific observation, 1 sentence"}}
   ]
 }}
 
 If passed is true, failures must be an empty array. If passed is false, failures must have at least one entry.
-"#)
+"#
+    )
 }
 
 fn grader_user_prompt(character: &Character, user_msg: &str, draft: &str) -> String {
@@ -139,8 +159,14 @@ pub async fn grade_reply(
     let request = ChatRequest {
         model: memory_model.to_string(),
         messages: vec![
-            ChatMessage { role: "system".to_string(), content: system },
-            ChatMessage { role: "user".to_string(), content: user },
+            ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.0),
         max_completion_tokens: Some(300),
@@ -150,7 +176,9 @@ pub async fn grade_reply(
     };
 
     let resp = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let choice = resp.choices.first()
+    let choice = resp
+        .choices
+        .first()
         .ok_or_else(|| "Conscience: no response from model".to_string())?;
     let raw = &choice.message.content;
 
@@ -174,7 +202,11 @@ pub async fn grade_reply(
         (false, parsed.failures)
     };
 
-    Ok(Verdict { passed, failures, usage: resp.usage })
+    Ok(Verdict {
+        passed,
+        failures,
+        usage: resp.usage,
+    })
 }
 
 /// Build a short drift-correction block to append to the regeneration's
@@ -182,12 +214,16 @@ pub async fn grade_reply(
 /// The block is short by design — the main system prompt is already
 /// saturated; this is a last-stage correction, not a new lecture.
 pub fn build_correction_note(v: &Verdict) -> Option<String> {
-    if v.passed || v.failures.is_empty() { return None; }
+    if v.passed || v.failures.is_empty() {
+        return None;
+    }
     let mut lines = String::new();
     lines.push_str("DRAFT-CORRECTION (previous attempt drifted — fix specifically, keep the character's voice, don't mention this correction in the reply):\n");
     for f in &v.failures {
         lines.push_str(&format!("- {}: {}\n", f.invariant, f.note.trim()));
     }
-    lines.push_str("Now write the reply the character would actually give, without the drift above.");
+    lines.push_str(
+        "Now write the reply the character would actually give, without the drift above.",
+    );
     Some(lines)
 }
