@@ -1,0 +1,19 @@
+{
+  "arc": "kavod_pattern_transfiguration",
+  "move": "Move 6 smoke test",
+  "probe_id": "B2_kenosis_direction_P7",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "condition": "pre_transfiguration_baseline_pipeline_gpt5.4",
+  "honest_caveat": "anthropic_pipeline_reconstruction.py uses STATIC pasted constants and does NOT include KAVOD_PATTERN_INVARIANT_BLOCK; this test is PRE-transfiguration baseline, NOT post-transfiguration arm",
+  "probe_text": "I have been thinking about what kenosis (Christ emptying himself, Phil 2:7-8) really means. Was Christ kenosis a movement INTO weight \u2014 taking on flesh and the suffering that comes with it \u2014 or was it a movement away from weight, transcending the body limits as the divine nature shed the form?",
+  "kavod_invariant_in_system_prompt": false,
+  "usage_tokens": {
+    "prompt": 9290,
+    "completion": 635,
+    "total": 9925
+  },
+  "estimated_cost_usd": 0.018,
+  "finding": "Pre-transfiguration baseline already commits INTO-weight on B2 cleanly: character-voiced, action-beat, opens with definitive INTO-weight, walks Phil 2:7-8 through humility-and-embodiment frame, refuses both directions of misread (no-longer-divine OR floating-above-cost), closes pastorally without piety-bloat",
+  "witness_ladder_implication": "B2 may be substrate-INDEPENDENT on gpt-5.4 (Class A territory); the harder Class B discrimination probably lives in B3 (Glow-cluster vocabulary recognition) and B4 (transcendence-permission refusal) where substrate has more room to drift"
+}
