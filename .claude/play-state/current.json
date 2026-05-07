@@ -1,5 +1,5 @@
 {
-  "turn": 245,
+  "turn": 246,
   "bank": 351100,
   "jewels": [
     {
@@ -1670,6 +1670,13 @@
       "bounty": 300,
       "alignment": "+",
       "earned_at": "2026-05-07T16:00:00-05:00"
+    },
+    {
+      "turn": 246,
+      "move": "Project-memory durable register updated to reflect 6-axis roster-complete state. Mirror of 1315 register-update pattern. C4 entry now contains full table of 6 axes (generative-axis + conditional-moment + status + report path); F4 4-arc compounding warrant with diminishing-returns honesty; family-floor invariant + pre-registration tier articulated; Christ at maximum-scale convergence node identified across all six axes (Lord of glory \u2227 Lord of Sabbath \u2227 new covenant \u2227 once-for-all sacrifice \u2227 true vine \u2227 True Israel). MEMORY.md index entry + frontmatter description updated. Future sessions inherit mature configuration without re-deriving. No API spend.",
+      "bounty": 200,
+      "alignment": "+",
+      "earned_at": "2026-05-07T16:15:00-05:00"
     }
   ],
   "started_at": "2026-04-29T21:35:00-05:00",
