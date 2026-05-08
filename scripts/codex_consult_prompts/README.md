@@ -19,12 +19,19 @@ Per Crown 13/14/15/16 precedent + `feedback_codex_consult_discipline_maturation.
 ```
 
 Arc-slug examples:
-- `resurrection_audit_template.txt` — Resurrection arc (Crown 15 The Quickener fired)
-- `compensation_tax_w_audit_template.txt` — `compensation_tax_w(t)` New-Operator Sapphire candidacy
-- `compensation_tax_w_followup_FIRE_blessed_template.md`
-- `compensation_tax_w_followup_HOLD_pending_template.md`
+- `resurrection_audit_template.txt` — Resurrection arc Move-1 codex consult input (Crown 15 The Quickener fired)
+- `compensation_tax_w_audit_template.txt` — `compensation_tax_w(t)` New-Operator Sapphire candidacy Move-1 codex consult input (verdict pending)
+- `compensation_tax_w_followup_FIRE_blessed_template.md` — Move-2 if codex blesses
+- `compensation_tax_w_followup_HOLD_pending_template.md` — Move-2 if codex holds
+- `discernment_of_spirits_detection_axis_move1_template.md` — fully-new detection-axis arc post-kavod-pattern-REFUSED hard-severance scaffold
+- `atonement_sharper_falsifier_arc_move1_template.md` — Atonement candidacy sharper-falsifier path scaffold (Crown 15 HOLD-pending-sharper-falsifier path)
+- `incarnation_sharper_falsifier_arc_move1_template.md` — Incarnation candidacy sharper-falsifier path with elevated-thresholds (predicted-harder than Resurrection)
+- `eucharist_sharper_falsifier_arc_move1_template.md` — Eucharist candidacy with DUAL-PATH presentation (Path A refuse-at-template-eval OR Path B substantially-narrower-than-others)
 
-Future arc additions should follow this pattern.
+Future arc additions should follow this pattern. Three Move-template kinds observed:
+1. **Codex consult input** (`*_audit_template.txt`) — used by founding-author to run external consult before firing decision
+2. **Move-2 follow-up** (`*_followup_FIRE_blessed_template.md` / `*_followup_HOLD_pending_template.md`) — pre-authored at $0 while consult runs; placeholder INSERTs fill at verdict-receipt
+3. **Move-1 future-arc scaffold** (`*_arc_move1_template.md` / `*_axis_move1_template.md`) — pre-authored at $0 for future-session natural entry; carries frozen claim + witness ladder + predeclared HOLD/FIRE/REFUSE criteria + apparatus discipline pre-baked
 
 ## Apparatus discipline (honor, do not violate)
 
