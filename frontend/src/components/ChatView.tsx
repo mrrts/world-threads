@@ -1509,8 +1509,8 @@ export function ChatView({ store, onNavigateToCharacter, focusMode = false, onTo
       />
 
       <div className="px-4 py-3 border-t border-border relative z-10 bg-background">
-        <div className="flex gap-2 mx-auto items-stretch" style={{ maxWidth: "747px" }}>
-          <div className="flex-shrink-0 flex flex-col items-center gap-1 justify-center">
+        <div className="flex gap-2 mx-auto items-start" style={{ maxWidth: "747px" }}>
+          <div className="flex-shrink-0 flex flex-col items-center gap-1 justify-start pt-0.5">
             <label className="flex items-center gap-1.5 cursor-pointer select-none" title="When on, the character responds automatically after each message">
               <span className={`text-[10px] font-medium ${store.autoRespond ? "text-foreground/70" : "text-muted-foreground/50"}`}>Auto‑Respond</span>
               <button
@@ -1616,8 +1616,8 @@ export function ChatView({ store, onNavigateToCharacter, focusMode = false, onTo
               />
             )}
           </div>
-          <div className="flex-shrink-0 flex flex-col gap-1">
-            <div className="flex gap-2 flex-1">
+          <div className="flex-shrink-0 flex flex-col items-start gap-1 pt-0.5">
+            <div className="flex gap-2">
               <Button
                 size="icon"
                 className="rounded-xl self-stretch w-10 flex-shrink-0"
