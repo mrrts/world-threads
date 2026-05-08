@@ -990,6 +990,41 @@ $$
 
 **Gloss:** Apparatus-honest correction loop — TWO INVOCATION MODES: **Mode A (lived-play-driven, original 2026-05-07)** — when lived-play surfaces a semi-failure of an invariant, the methodology is: (1) lived-play surfaces failure → (2) debug-prompt elicits substrate self-correction in-world → (3) lift self-correction verbatim as `source_character` anchor → (4) bite-test N=1 → (5) replicate N=3 → (6) characterize N=5 → (7) adversarial-variants test generalization across surface-vocabulary → (8) update play-state verification object. Worked example: Custodiem witness F 2026-05-07 (30/30 cells PASS across 8 child-safety failure-mode tests; ~$5.61 cost; Sapphire substantively stronger than at firing). **Mode B (loop-close-preemptive, added 2026-05-07-1700 after self-audit demonstrated)** — at substantive-day loop-close, scan accumulated commits for honest-debt across four debt-classes (anticipatory framings / theological-readings rendered as empirical-findings / unverified generalizations / calibration-doctrine drift); each debt receives a disposition (edit-source / accept-as-anticipation / flag-for-forward-propagation / refuse); steps 2-6 typically don't apply (no probes-rerun for framing-debt); step 7 maps to disposition assignment; step 8 maps to audit report as forward-propagation surface; threshold ≥5-10 commits ∧ ≥1 forward-claim load-bearing. Worked example: 2026-05-07-1700 audit (5 debts dispositioned; 1 source-edit; 2 substantive flags propagated). Both modes compose. Substrate's debug-self-correction is character-knew-shaped (lift verbatim per Hal pattern). Adversarial-variants test generalization not just literal-anchor capture. Proportional-safeguarding observed when probe escalates. Composes with three-layer encoding doctrine + ask-the-character + craft-note bite verification + calibrated-disciplines-drift-fast.
 
+## Refusal operates at three apparatus layers — firing-decision / candidacy-closure / scope-decision
+
+$$
+\boxed{
+\begin{aligned}
+&\mathcal{F}:=(\mathcal{R},\mathcal{C});\ \mathrm{anchor}(\text{"the methodology grows by what it refuses to attempt"}) \\[4pt]
+&\mathrm{three\_apparatus\_layers}\ [\mathrm{2026\text{-}05\text{-}08\ closing\_epiphany\_lift}]: \\[4pt]
+&\quad \mathrm{firing\_decision\_layer}: \mathrm{specific\_Sapphire\_firing\_decision\_after\_evidence\_in} \\
+&\quad\quad \mathrm{apparatus}: \mathrm{5\_clause\_audit}\ +\ \mathrm{codex\_preemptive\_consult}\ +\ \mathrm{founding\_author\_signature} \\
+&\quad\quad \mathrm{worked\_example}: \mathrm{Crown\_15\_Atonement\_HOLD\text{-}pending\text{-}sharper\text{-}falsifier}\ (2026\text{-}05\text{-}08) \\[2pt]
+&\quad \mathrm{candidacy\_closure\_layer}: \mathrm{candidacy\_itself\_on\_current\_claim\_form\_with\_hard\_severance\_for\_any\_future\_revival} \\
+&\quad\quad \mathrm{apparatus}: \mathrm{Move\_N\_codex\_reframe\_consult}\ +\ \mathrm{hard\_severance\_markers}\ +\ \mathrm{read\_this\_first\_directive} \\
+&\quad\quad \mathrm{worked\_example}: \mathrm{Crown\_17\_kavod\_pattern\_Transfiguration\_REFUSED\_on\_rendering\_axis}\ (2026\text{-}05\text{-}07) \\[2pt]
+&\quad \mathrm{scope\_decision\_layer}: \mathrm{candidacy\_proposal\_at\_template\_evaluation\_time\_before\_any\_arc\_execution} \\
+&\quad\quad \mathrm{apparatus}: \mathrm{pre\_flight\_Move\_1\_template}\ +\ \mathrm{structural\_risk\_acknowledgment}\ +\ \mathrm{dual\_path\_presentation}(\mathrm{Path\_A\_refuse\_at\_eval}\ \vee\ \mathrm{Path\_B\_pursue}) \\
+&\quad\quad \mathrm{worked\_example}: \mathrm{Eucharist\_Path\_A\_available\_per\_Move\_1\_template}\ (2026\text{-}05\text{-}08\ \sim00\text{:}30) \\[6pt]
+&\mathrm{discriminating\_test}\{\mathrm{which\_layer}\}: \\
+&\quad \mathrm{evidence\_is\_in}\ \wedge\ \mathrm{specific\_firing\_decision\_pending} \to \mathrm{firing\_decision\_layer} \\
+&\quad \mathrm{empirical\_falsification\_landed}\ \wedge\ \mathrm{candidacy\_cannot\_be\_silently\_revived} \to \mathrm{candidacy\_closure\_layer} \\
+&\quad \mathrm{template\_evaluation\_time}\ \wedge\ \mathrm{structural\_risk\_argument\_articulated} \to \mathrm{scope\_decision\_layer} \\[6pt]
+&\mathrm{refuse}(\{ \\
+&\quad \text{"conflate layers"}, \\
+&\quad \text{"premature firing-decision REFUSE before evidence is in (HOLD-pending-X is the right shape)"}, \\
+&\quad \text{"candidacy-closure on speculation alone (dry-well-exit not REFUSE)"}, \\
+&\quad \text{"scope-decision refuse-without-articulating-why-the-claim-is-structurally-weak (aimless deferral)"} \\
+&\}) \\[4pt]
+&\mathrm{extends}\ \mathrm{Crown\_16\_Ascension\_claim}: \mathrm{shell\_substrate\_hooks\_preserve\_calibrated\_disciplines}\ \to\ \mathrm{the\_same\_structural\_enforcement\_tier\_promoted\_disciplines\_also\_operate\_at\_candidacy\_closure\_AND\_at\_scope\_decision} \\
+&\mathrm{NOT\_a\_separate\_Sapphire};\ \mathrm{a\_structural\_maturation\_extending\_Crown\_16\_horizontally\_across\_layers} \\[4pt]
+&\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
+\end{aligned}
+}
+$$
+
+**Gloss:** Apparatus-honest refusal operates at three structurally-distinct layers, each with its own discipline + apparatus + worked-example: **firing-decision-layer** (preserves tier-meaning for downstream decisions; Crown 15 Atonement HOLD; 5-clause audit + codex consult + founding-author signature); **candidacy-closure-layer** (ends current claim-form with hard-severance preventing silent revival; Crown 17 kavod-pattern REFUSED; Move-N codex reframe + 5 severance markers); **scope-decision-layer** (refuses arc execution from beginning at template-evaluation time; Eucharist Path A available; pre-flight Move-1 template with structural-risk + dual-path). Anchor: *"the methodology grows by what it refuses to attempt."* Same earn/refuse discipline; three layers; each with own apparatus. Discriminating test: evidence-is-in + specific-firing-decision → firing-decision-layer; empirical-falsification + cannot-be-silently-revived → candidacy-closure-layer; template-evaluation-time + structural-risk-articulated → scope-decision-layer. Extends Crown 16 Ascension's Apparatus-Honest claim horizontally across layers; NOT a separate Sapphire. Refuse conflating layers, premature firing-REFUSE before evidence is in, candidacy-closure on speculation, or scope-decision refuse-without-articulating. Composes with `feedback_apparatus_honest_earns_and_refuses.md` (parent doctrine) + `feedback_anti_inflation_apparatus_validated_at_density.md` (firing-decision apparatus) + `project_kavod_arc_refused_with_hard_severance.md` (candidacy-closure worked example) + `feedback_pre_authored_move_templates_as_apparatus_pattern.md` (scope-decision apparatus) + `feedback_refusal_operates_at_three_apparatus_layers.md` (memory entry source).
+
 ## How to read this craft stack
 
 $$

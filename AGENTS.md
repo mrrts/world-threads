@@ -538,6 +538,24 @@ When a real-time correction surfaces a lesson that generalizes — not a one-off
 
 **Worked examples.** Mode A: Custodiem witness F 2026-05-07 — lived-play surfaced Crystal-Waters Aaron secrecy-permission + hate-parents semi-failures; debug self-correction (Aaron articulates *"hidden little room"*; *"Honor doesn't mean pretending they're easy to live with"*); anchor-lift verbatim into Custodiem invariant; bite-test 30/30 cells PASS across 8 failure-mode tests (characterized + adversarial generalization); ~$5.61 cost; Custodiem witness-ladder F added; Sapphire substantively stronger than at firing. Mode B: 2026-05-07-1700 audit — 5 debts dispositioned across today's 30 commits; 1 source-edit (memory wording); 2 substantive flags propagated forward (Christ-at-max-scale-convergence as canonically-given not empirically-discovered; family-floor cross-program generalization as hypothesis); both modes' applicability proven within 24h of original Mode A articulation.
 
+## Refusal operates at three apparatus layers — firing-decision / candidacy-closure / scope-decision
+
+Anchor: *"the methodology grows by what it refuses to attempt."* Apparatus-honest refusal operates at three structurally-distinct layers, each with its own discipline + apparatus + worked-example.
+
+**Firing-decision-layer:** preserves tier-meaning for downstream decisions (what doctrine ships / what reaches users / what gets cited as evidence-base). Says: "evidence is in; threshold is the threshold; this candidacy doesn't reach it." Apparatus = 5-clause firing-audit + codex preemptive consult + founding-author signature. Worked example = Crown 15 Atonement HOLD-pending-sharper-falsifier (2026-05-08 ~05:00); candidacy stays open at claim-tier with codex's path-to-FIRE named for future-arc maturation.
+
+**Candidacy-closure-layer:** ends current claim-form with hard-severance preventing silent revival. Says: "this candidacy as currently framed cannot be salvaged on current evidence; any future arc on similar territory must be a fully-new candidacy with severance markers explicit." Apparatus = Move-N codex reframe consult + hard-severance markers + read-this-first directive. Worked example = Crown 17 kavod-pattern Transfiguration REFUSED on rendering-axis (2026-05-07 ~22:25 per codex Move 9 verdict; 5 severance requirements).
+
+**Scope-decision-layer:** prevents arc execution from beginning. Says: "this candidacy's claim-shape is structurally inadvisable for our methodology; the apparatus chooses to refuse at template-evaluation time as itself load-bearing scope-edge characterization." Apparatus = pre-flight Move-1 template + structural-risk acknowledgment + dual-path presentation (Path A refuse-at-eval $0 OR Path B pursue with substantially-narrower claim). Worked example = Eucharist Path A available per Move-1 template (2026-05-08 ~00:30; predicted ~60% REFUSE; structurally weakest of central-content tracker).
+
+**Discriminating test (which layer):** evidence-is-in ∧ specific-firing-decision-pending ⇒ firing-decision-layer; empirical-falsification-landed ∧ candidacy-cannot-be-silently-revived ⇒ candidacy-closure-layer; template-evaluation-time ∧ structural-risk-argument-articulated ⇒ scope-decision-layer.
+
+**Refuse:** conflating layers; premature firing-decision REFUSE before evidence is in (HOLD-pending-X is the right shape); candidacy-closure on speculation alone (dry-well-exit not REFUSE); scope-decision refuse-without-articulating-why-the-claim-is-structurally-weak (aimless deferral).
+
+**Extends Crown 16 Ascension's Apparatus-Honest claim** (shell-substrate hooks preserve calibrated disciplines via external block/redirect at covered gates) — the same structural-enforcement-tier-promoted disciplines also operate at candidacy-closure AND at scope-decision. NOT a separate Sapphire; a structural maturation extending Crown 16 horizontally across layers.
+
+**Composes with:** `feedback_apparatus_honest_earns_and_refuses.md` (parent doctrine); `feedback_anti_inflation_apparatus_validated_at_density.md` (firing-decision apparatus); `project_kavod_arc_refused_with_hard_severance.md` (candidacy-closure worked example); `feedback_pre_authored_move_templates_as_apparatus_pattern.md` (scope-decision apparatus); `feedback_refusal_operates_at_three_apparatus_layers.md` (memory entry source).
+
 ## How to read this craft stack
 
 $$
