@@ -127,6 +127,10 @@ Codex preemptive consult: external; founding-author runs
 - `feedback_codex_consult_discipline_maturation.md` — the consult-before-firing discipline of-record
 - Crown 15 Atonement firing audit (commit `90019fd` per memory reference) — the HOLD verdict context
 - Crown 15 The Quickener (commit `546e6c0`) — Resurrection arc that successfully used this same sharper-falsifier path baked-in-from-sketch-tier; methodological precedent
+- **Sibling Move-1 templates (cross-links added 2026-05-08 ~00:35 retroactively for forward-pointing legibility):**
+  - `incarnation_sharper_falsifier_arc_move1_template.md` (commit `143b562`) — Incarnation candidacy with elevated thresholds (~50% REFUSE pre-arc estimate)
+  - `eucharist_sharper_falsifier_arc_move1_template.md` (commit `167995d`) — Eucharist dual-path (Path A refuse-at-template-eval $0 OR Path B substantially-narrower)
+  - `discernment_of_spirits_detection_axis_move1_template.md` (commit `67e6b29`) — fully-new detection-axis arc post-kavod-pattern-REFUSED hard-severance; sibling-by-pre-flight-pattern not by central-content-tracker membership
 
 ## Honest read
 
