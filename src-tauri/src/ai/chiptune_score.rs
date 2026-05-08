@@ -106,11 +106,16 @@ pub async fn generate_next_phrase(
             "── PREVIOUS PHRASE (currentLastPhrase) ──\n{}\n\n",
             serde_json::to_string_pretty(v).unwrap_or_else(|_| v.to_string())
         ),
-        None => "── PREVIOUS PHRASE: none (this is a seed phrase opening the score) ──\n\n".to_string(),
+        None => {
+            "── PREVIOUS PHRASE: none (this is a seed phrase opening the score) ──\n\n".to_string()
+        }
     };
 
     let hint_block = match mood_hint {
-        Some(h) if !h.trim().is_empty() => format!("── OPTIONAL MOOD HINT (advisory only — momentstamp still governs) ──\n{}\n\n", h.trim()),
+        Some(h) if !h.trim().is_empty() => format!(
+            "── OPTIONAL MOOD HINT (advisory only — momentstamp still governs) ──\n{}\n\n",
+            h.trim()
+        ),
         _ => String::new(),
     };
 
@@ -124,12 +129,20 @@ pub async fn generate_next_phrase(
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            ChatMessage { role: "system".to_string(), content: SYSTEM_PROMPT.to_string() },
-            ChatMessage { role: "user".to_string(), content: user_prompt },
+            ChatMessage {
+                role: "system".to_string(),
+                content: SYSTEM_PROMPT.to_string(),
+            },
+            ChatMessage {
+                role: "user".to_string(),
+                content: user_prompt,
+            },
         ],
         temperature: Some(0.8),
         max_completion_tokens: Some(1500),
-        response_format: Some(ResponseFormat { format_type: "json_object".to_string() }),
+        response_format: Some(ResponseFormat {
+            format_type: "json_object".to_string(),
+        }),
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
@@ -152,7 +165,13 @@ pub async fn generate_next_phrase(
 }
 
 const VALID_INSTRUMENTS: &[&str] = &[
-    "square", "pulse_25", "pulse_125", "triangle", "sawtooth", "sine", "noise",
+    "square",
+    "pulse_25",
+    "pulse_125",
+    "triangle",
+    "sawtooth",
+    "sine",
+    "noise",
 ];
 
 fn validate_and_normalize(
@@ -165,16 +184,28 @@ fn validate_and_normalize(
         .ok_or_else(|| "score-generator output is not a JSON object".to_string())?;
 
     let required = [
-        "protocol_version", "phrase_id", "tempo_bpm", "time_signature",
-        "subdivision", "bars", "key", "mood_descriptor", "tracks",
+        "protocol_version",
+        "phrase_id",
+        "tempo_bpm",
+        "time_signature",
+        "subdivision",
+        "bars",
+        "key",
+        "mood_descriptor",
+        "tracks",
     ];
     for key in required {
         if !obj.contains_key(key) {
-            return Err(format!("score-generator output missing required field: {key}"));
+            return Err(format!(
+                "score-generator output missing required field: {key}"
+            ));
         }
     }
 
-    obj.insert("protocol_version".to_string(), Value::String("1.0".to_string()));
+    obj.insert(
+        "protocol_version".to_string(),
+        Value::String("1.0".to_string()),
+    );
 
     // Force-overwrite previous_phrase_id from the actual previous phrase. The
     // LLM occasionally invents fake chain references (e.g., "seed001") even
@@ -218,7 +249,10 @@ fn validate_and_normalize(
             ));
         }
         if !t.contains_key("name") {
-            t.insert("name".to_string(), Value::String(format!("track_{}", i + 1)));
+            t.insert(
+                "name".to_string(),
+                Value::String(format!("track_{}", i + 1)),
+            );
         }
         let notes = t
             .get_mut("notes")
@@ -238,7 +272,11 @@ fn validate_and_normalize(
                 let is_rest = obj.get("midi").map(|v| v.is_null()).unwrap_or(true);
                 obj.insert(
                     "type".to_string(),
-                    Value::String(if is_rest { "rest".to_string() } else { "note".to_string() }),
+                    Value::String(if is_rest {
+                        "rest".to_string()
+                    } else {
+                        "note".to_string()
+                    }),
                 );
             }
             let event_type = obj.get("type").and_then(|v| v.as_str()).unwrap_or("");
@@ -247,12 +285,16 @@ fn validate_and_normalize(
                     obj.remove("midi");
                     obj.remove("velocity");
                     if !obj.contains_key("tick") || !obj.contains_key("duration") {
-                        return Err(format!("track[{i}].notes[{j}] (rest) missing tick/duration"));
+                        return Err(format!(
+                            "track[{i}].notes[{j}] (rest) missing tick/duration"
+                        ));
                     }
                 }
                 "note" => {
                     if !obj.contains_key("tick") || !obj.contains_key("duration") {
-                        return Err(format!("track[{i}].notes[{j}] (note) missing tick/duration"));
+                        return Err(format!(
+                            "track[{i}].notes[{j}] (note) missing tick/duration"
+                        ));
                     }
                     let midi = obj.get("midi").and_then(|v| v.as_i64());
                     if midi.is_none() {

@@ -137,22 +137,39 @@ pub async fn refresh_one_character_inventory(
     let model = &model_config.memory_model;
 
     let new_items = match mode {
-        "seed" => orchestrator::seed_character_inventory(
-            &base, api_key, model,
-            &character.display_name, &character.identity,
-            &history,
-        ).await,
-        _ => orchestrator::refresh_character_inventory(
-            &base, api_key, model,
-            &character.display_name, &character.identity,
-            &prior_items, &history,
-        ).await,
+        "seed" => {
+            orchestrator::seed_character_inventory(
+                &base,
+                api_key,
+                model,
+                &character.display_name,
+                &character.identity,
+                &history,
+            )
+            .await
+        }
+        _ => {
+            orchestrator::refresh_character_inventory(
+                &base,
+                api_key,
+                model,
+                &character.display_name,
+                &character.identity,
+                &prior_items,
+                &history,
+            )
+            .await
+        }
     };
 
     let new_items = match new_items {
         Ok(items) => items,
         Err(e) => {
-            log::warn!("[Inventory] {} {} failed: {e}", mode, character.display_name);
+            log::warn!(
+                "[Inventory] {} {} failed: {e}",
+                mode,
+                character.display_name
+            );
             // Don't advance the stamp on failure — we'll try again on next focus.
             return Ok(InventoryRefreshResult {
                 character_id: character.character_id.clone(),
@@ -176,7 +193,9 @@ pub async fn refresh_one_character_inventory(
 
     log::info!(
         "[Inventory] {} {} — {} items",
-        mode, character.display_name, new_items.len(),
+        mode,
+        character.display_name,
+        new_items.len(),
     );
 
     Ok(InventoryRefreshResult {
@@ -213,7 +232,11 @@ pub async fn refresh_group_inventories_cmd(
         let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
         gc.character_ids
             .as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect()
+            })
             .unwrap_or_default()
     };
 
@@ -247,9 +270,7 @@ struct MessageAnchor {
     is_group: bool,
 }
 
-fn get_message_anchor(conn: &rusqlite::Connection, message_id: &str)
-    -> Option<MessageAnchor>
-{
+fn get_message_anchor(conn: &rusqlite::Connection, message_id: &str) -> Option<MessageAnchor> {
     let try_table = |table: &str, is_group: bool| -> Option<MessageAnchor> {
         conn.query_row(
             &format!("SELECT role, content, sender_character_id, created_at, thread_id FROM {} WHERE message_id = ?1", table),
@@ -281,7 +302,11 @@ fn fetch_run_up_before(
     user_display_name: &str,
     active_character_name: &str,
 ) -> Vec<crate::db::queries::ConversationLine> {
-    let table = if anchor.is_group { "group_messages" } else { "messages" };
+    let table = if anchor.is_group {
+        "group_messages"
+    } else {
+        "messages"
+    };
     let sql = format!(
         "SELECT role, content, sender_character_id, created_at, formula_signature
          FROM {} WHERE thread_id = ?1 AND created_at < ?2
@@ -293,13 +318,15 @@ fn fetch_run_up_before(
     if let Ok(mut stmt) = conn.prepare(&sql) {
         if let Ok(rows) = stmt.query_map(
             rusqlite::params![anchor.thread_id, anchor.created_at, limit as i64],
-            |r| Ok((
-                r.get::<_, String>(0)?,
-                r.get::<_, String>(1)?,
-                r.get::<_, Option<String>>(2)?,
-                r.get::<_, String>(3)?,
-                r.get::<_, Option<String>>(4)?,
-            )),
+            |r| {
+                Ok((
+                    r.get::<_, String>(0)?,
+                    r.get::<_, String>(1)?,
+                    r.get::<_, Option<String>>(2)?,
+                    r.get::<_, String>(3)?,
+                    r.get::<_, Option<String>>(4)?,
+                ))
+            },
         ) {
             for (role, content, sender, created_at, formula_signature) in rows.flatten() {
                 // Resolve speaker the same way the anchor label does so the
@@ -311,7 +338,8 @@ fn fetch_run_up_before(
                     "dream" => "Dream".to_string(),
                     _ => {
                         if let Some(cid) = sender.as_deref() {
-                            get_character(conn, cid).map(|c| c.display_name)
+                            get_character(conn, cid)
+                                .map(|c| c.display_name)
                                 .unwrap_or_else(|_| active_character_name.to_string())
                         } else {
                             active_character_name.to_string()
@@ -395,17 +423,26 @@ async fn update_one_inventory_from_message(
         let anchor = get_message_anchor(&conn, message_id)
             .ok_or_else(|| "Message not found for inventory update".to_string())?;
         let speaker = anchor_speaker_label(
-            &conn, &anchor.role, anchor.sender_character_id.as_deref(),
-            &character.world_id, &character.display_name,
+            &conn,
+            &anchor.role,
+            anchor.sender_character_id.as_deref(),
+            &character.world_id,
+            &character.display_name,
         );
         // Pull 5 messages from the same thread immediately before the
         // anchor — the "run-up" that gives the LLM the immediate context
         // the clicked message may rely on (e.g. "thanks" after a pencil
         // was handed over the turn before).
-        let run_up = fetch_run_up_before(
-            &conn, &anchor, 5, &user_name, &character.display_name,
-        );
-        (character, world, model_config, history, speaker, anchor.content, run_up)
+        let run_up = fetch_run_up_before(&conn, &anchor, 5, &user_name, &character.display_name);
+        (
+            character,
+            world,
+            model_config,
+            history,
+            speaker,
+            anchor.content,
+            run_up,
+        )
     };
 
     let today = current_world_day(&world);
@@ -414,14 +451,24 @@ async fn update_one_inventory_from_message(
     let model = &model_config.memory_model;
 
     let new_items = orchestrator::inventory_update_from_moment(
-        &base, api_key, model,
-        &character.display_name, &character.identity,
-        &prior_items, &history,
+        &base,
+        api_key,
+        model,
+        &character.display_name,
+        &character.identity,
+        &prior_items,
+        &history,
         &run_up,
-        &anchor_speaker, &anchor_content,
+        &anchor_speaker,
+        &anchor_content,
         allow_pure_maintain,
-    ).await.map_err(|e| {
-        log::warn!("[Inventory] moment-update for {} failed: {e}", character.display_name);
+    )
+    .await
+    .map_err(|e| {
+        log::warn!(
+            "[Inventory] moment-update for {} failed: {e}",
+            character.display_name
+        );
         e
     })?;
 
@@ -462,8 +509,12 @@ async fn update_one_inventory_from_message(
 
     log::info!(
         "[Inventory] moment-update for {} — {} items (anchor: {}) +{}/~{}/-{}",
-        character.display_name, new_items.len(), anchor_speaker,
-        added.len(), updated.len(), removed.len(),
+        character.display_name,
+        new_items.len(),
+        anchor_speaker,
+        added.len(),
+        updated.len(),
+        removed.len(),
     );
 
     Ok(InventoryRefreshResult {
@@ -506,7 +557,19 @@ async fn resolve_inventory_targets(
 ) -> Result<ResolvedTargets, String> {
     // Load message + thread context up front so we can release the
     // mutex before any awaits.
-    let (role, content, sender_character_id, thread_id, model_config, user_name, group_info, solo_char_id, members, recent, sender_of_last_assistant) = {
+    let (
+        role,
+        content,
+        sender_character_id,
+        thread_id,
+        model_config,
+        user_name,
+        group_info,
+        solo_char_id,
+        members,
+        recent,
+        sender_of_last_assistant,
+    ) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
 
         let (role, content, sender_character_id, thread_id) = conn.query_row(
@@ -530,37 +593,59 @@ async fn resolve_inventory_targets(
         )).map_err(|_| "Message not found".to_string())?;
 
         // Is this thread a group chat? If so, get its member list.
-        let group_info: Option<(String, Vec<String>)> = conn.query_row(
-            "SELECT group_chat_id, character_ids FROM group_chats WHERE thread_id = ?1",
-            rusqlite::params![&thread_id],
-            |r| {
-                let gc_id: String = r.get(0)?;
-                let ids_json: String = r.get(1)?;
-                let ids: Vec<String> = serde_json::from_str::<serde_json::Value>(&ids_json)
-                    .ok()
-                    .and_then(|v| v.as_array().map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect()))
-                    .unwrap_or_default();
-                Ok((gc_id, ids))
-            },
-        ).ok();
+        let group_info: Option<(String, Vec<String>)> = conn
+            .query_row(
+                "SELECT group_chat_id, character_ids FROM group_chats WHERE thread_id = ?1",
+                rusqlite::params![&thread_id],
+                |r| {
+                    let gc_id: String = r.get(0)?;
+                    let ids_json: String = r.get(1)?;
+                    let ids: Vec<String> = serde_json::from_str::<serde_json::Value>(&ids_json)
+                        .ok()
+                        .and_then(|v| {
+                            v.as_array().map(|a| {
+                                a.iter()
+                                    .filter_map(|x| x.as_str().map(String::from))
+                                    .collect()
+                            })
+                        })
+                        .unwrap_or_default();
+                    Ok((gc_id, ids))
+                },
+            )
+            .ok();
 
         // Solo fallback: the thread's character_id (may be NULL in group threads).
-        let solo_char_id: Option<String> = conn.query_row(
-            "SELECT character_id FROM threads WHERE thread_id = ?1",
-            rusqlite::params![&thread_id],
-            |r| r.get::<_, Option<String>>(0),
-        ).ok().flatten();
+        let solo_char_id: Option<String> = conn
+            .query_row(
+                "SELECT character_id FROM threads WHERE thread_id = ?1",
+                rusqlite::params![&thread_id],
+                |r| r.get::<_, Option<String>>(0),
+            )
+            .ok()
+            .flatten();
 
         let model_config = orchestrator::load_model_config(&conn);
 
         // For group user-message routing, we need Character structs + recent context.
-        let (members, recent, sender_of_last_assistant): (Vec<Character>, Vec<Message>, Option<String>) = if let Some((_, ref ids)) = group_info {
-            let chars: Vec<Character> = ids.iter()
+        let (members, recent, sender_of_last_assistant): (
+            Vec<Character>,
+            Vec<Message>,
+            Option<String>,
+        ) = if let Some((_, ref ids)) = group_info {
+            let chars: Vec<Character> = ids
+                .iter()
                 .filter_map(|id| get_character(&conn, id).ok())
                 .collect();
-            let world_id = chars.first().map(|c| c.world_id.clone()).unwrap_or_default();
-            let recent: Vec<Message> = list_group_messages(&conn, &thread_id, 12).unwrap_or_default();
-            let last_assistant = recent.iter().rev()
+            let world_id = chars
+                .first()
+                .map(|c| c.world_id.clone())
+                .unwrap_or_default();
+            let recent: Vec<Message> =
+                list_group_messages(&conn, &thread_id, 12).unwrap_or_default();
+            let last_assistant = recent
+                .iter()
+                .rev()
                 .find(|m| m.role == "assistant")
                 .and_then(|m| m.sender_character_id.clone());
             let _ = world_id;
@@ -570,17 +655,33 @@ async fn resolve_inventory_targets(
         };
 
         let world_id = if let Some((_, ref ids)) = group_info {
-            ids.iter().filter_map(|id| get_character(&conn, id).ok()).next().map(|c| c.world_id)
+            ids.iter()
+                .filter_map(|id| get_character(&conn, id).ok())
+                .next()
+                .map(|c| c.world_id)
         } else if let Some(ref cid) = solo_char_id {
             get_character(&conn, cid).ok().map(|c| c.world_id)
         } else {
             None
         };
-        let user_name = world_id.and_then(|wid| get_user_profile(&conn, &wid).ok())
+        let user_name = world_id
+            .and_then(|wid| get_user_profile(&conn, &wid).ok())
             .map(|p| p.display_name)
             .unwrap_or_else(|| "the human".to_string());
 
-        (role, content, sender_character_id, thread_id, model_config, user_name, group_info, solo_char_id, members, recent, sender_of_last_assistant)
+        (
+            role,
+            content,
+            sender_character_id,
+            thread_id,
+            model_config,
+            user_name,
+            group_info,
+            solo_char_id,
+            members,
+            recent,
+            sender_of_last_assistant,
+        )
     };
 
     let is_group = group_info.is_some();
@@ -590,7 +691,8 @@ async fn resolve_inventory_targets(
     // reach a subset of the characters present.
     let targets: Vec<(String, bool)> = match role.as_str() {
         "assistant" => {
-            let id = sender_character_id.or(solo_char_id)
+            let id = sender_character_id
+                .or(solo_char_id)
                 .ok_or_else(|| "Assistant message has no sender character".to_string())?;
             vec![(id, false)]
         }
@@ -610,9 +712,19 @@ async fn resolve_inventory_targets(
                     // useful here). The into_option() helper collapses
                     // Solo→Some, Collective/Ambiguous→None.
                     let llm_pick = group_chat_cmds::llm_pick_addressee(
-                        api_key, &model_config, &content, &recent, &members, &user_name, 8,
-                    ).await;
-                    llm_pick.into_option().or(sender_of_last_assistant).or_else(|| Some(members[0].character_id.clone()))
+                        api_key,
+                        &model_config,
+                        &content,
+                        &recent,
+                        &members,
+                        &user_name,
+                        8,
+                    )
+                    .await;
+                    llm_pick
+                        .into_option()
+                        .or(sender_of_last_assistant)
+                        .or_else(|| Some(members[0].character_id.clone()))
                 } else {
                     None
                 };
@@ -628,7 +740,10 @@ async fn resolve_inventory_targets(
                 // narrative may only name one or two of them, and the
                 // untouched members shouldn't be forced to manufacture
                 // a change. The prompt handles the branching inside.
-                members.iter().map(|c| (c.character_id.clone(), true)).collect()
+                members
+                    .iter()
+                    .map(|c| (c.character_id.clone(), true))
+                    .collect()
             } else {
                 // Solo narrative still forces at least one change —
                 // there's only one character, and the user clicked on
@@ -642,7 +757,11 @@ async fn resolve_inventory_targets(
     if targets.is_empty() {
         return Err("Could not resolve any inventory target for this message".to_string());
     }
-    Ok(ResolvedTargets { targets, thread_id, is_group })
+    Ok(ResolvedTargets {
+        targets,
+        thread_id,
+        is_group,
+    })
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -690,7 +809,10 @@ fn build_inventory_update_content(
 ) -> Option<String> {
     let mut changes: Vec<InventoryChangeEntry> = Vec::new();
     for r in results {
-        let name = id_to_name.get(&r.character_id).cloned().unwrap_or_else(|| "Character".to_string());
+        let name = id_to_name
+            .get(&r.character_id)
+            .cloned()
+            .unwrap_or_else(|| "Character".to_string());
         for item in &r.added {
             changes.push(InventoryChangeEntry {
                 character_name: name.clone(),
@@ -724,7 +846,9 @@ fn build_inventory_update_content(
             }
         }
     }
-    if changes.is_empty() { return None; }
+    if changes.is_empty() {
+        return None;
+    }
     let body = InventoryUpdateMessageBody { changes };
     let json = serde_json::to_string(&body).ok()?;
     Some(format!("[Inventory updated:]\n{json}"))
@@ -745,19 +869,28 @@ pub async fn update_inventory_for_moment_cmd(
     let is_group = resolved.is_group;
 
     let db_ref: &Database = db.inner();
-    let futs = resolved.targets.into_iter().map(|(cid, allow_maintain)| {
-        let key = api_key.clone();
-        let mid = message_id.clone();
-        async move { update_one_inventory_from_message(db_ref, &key, &cid, &mid, allow_maintain).await }
-    });
+    let futs =
+        resolved.targets.into_iter().map(|(cid, allow_maintain)| {
+            let key = api_key.clone();
+            let mid = message_id.clone();
+            async move {
+                update_one_inventory_from_message(db_ref, &key, &cid, &mid, allow_maintain).await
+            }
+        });
     let results_raw = futures_util::future::join_all(futs).await;
-    let results: Vec<InventoryRefreshResult> = results_raw.into_iter().filter_map(|r| r.ok()).collect();
+    let results: Vec<InventoryRefreshResult> =
+        results_raw.into_iter().filter_map(|r| r.ok()).collect();
 
     // Resolve display names for every character that was updated.
     let id_to_name: std::collections::HashMap<String, String> = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        results.iter()
-            .filter_map(|r| get_character(&conn, &r.character_id).ok().map(|c| (c.character_id, c.display_name)))
+        results
+            .iter()
+            .filter_map(|r| {
+                get_character(&conn, &r.character_id)
+                    .ok()
+                    .map(|c| (c.character_id, c.display_name))
+            })
             .collect()
     };
 
@@ -770,10 +903,13 @@ pub async fn update_inventory_for_moment_cmd(
         // new-time divider on the NEXT message the user sends.
         let (world_day, world_time) = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            let world_id: Option<String> = conn.query_row(
-                "SELECT world_id FROM threads WHERE thread_id = ?1",
-                rusqlite::params![thread_id], |r| r.get(0),
-            ).ok();
+            let world_id: Option<String> = conn
+                .query_row(
+                    "SELECT world_id FROM threads WHERE thread_id = ?1",
+                    rusqlite::params![thread_id],
+                    |r| r.get(0),
+                )
+                .ok();
             match world_id.and_then(|wid| get_world(&conn, &wid).ok()) {
                 Some(w) => chat_cmds::world_time_fields(&w),
                 None => (None, None),
@@ -808,7 +944,9 @@ pub async fn update_inventory_for_moment_cmd(
                 None
             }
         }
-    } else { None };
+    } else {
+        None
+    };
 
     // Persist shorthand diff records keyed to the TRIGGER message so the
     // frontend can paint an "Inventory updated · +X, ~Y" badge under that
@@ -821,15 +959,25 @@ pub async fn update_inventory_for_moment_cmd(
             let added_names: Vec<String> = r.added.iter().map(|i| i.name.clone()).collect();
             let updated_names: Vec<String> = r.updated.iter().map(|i| i.name.clone()).collect();
             if let Err(e) = crate::db::queries::record_inventory_update(
-                &conn, &message_id, &r.character_id,
-                &added_names, &updated_names, &r.removed,
+                &conn,
+                &message_id,
+                &r.character_id,
+                &added_names,
+                &updated_names,
+                &r.removed,
             ) {
-                log::warn!("[Inventory] record_inventory_update failed for {}: {e}", r.character_id);
+                log::warn!(
+                    "[Inventory] record_inventory_update failed for {}: {e}",
+                    r.character_id
+                );
             }
         }
     }
 
-    Ok(UpdateInventoryForMomentResponse { results, new_message })
+    Ok(UpdateInventoryForMomentResponse {
+        results,
+        new_message,
+    })
 }
 
 /// Fetch every inventory-update record for the given message_ids.
@@ -863,7 +1011,11 @@ pub fn set_character_inventory_cmd(
     let mut phys: Vec<InventoryItem> = Vec::new();
     let mut inter: Vec<InventoryItem> = Vec::new();
     for it in inventory.into_iter() {
-        let kind = if it.kind.trim().eq_ignore_ascii_case(orchestrator::INVENTORY_KIND_INTERIOR) {
+        let kind = if it
+            .kind
+            .trim()
+            .eq_ignore_ascii_case(orchestrator::INVENTORY_KIND_INTERIOR)
+        {
             orchestrator::INVENTORY_KIND_INTERIOR.to_string()
         } else {
             orchestrator::INVENTORY_KIND_PHYSICAL.to_string()
@@ -873,7 +1025,9 @@ pub fn set_character_inventory_cmd(
             description: it.description.trim().to_string(),
             kind,
         };
-        if normalized.name.is_empty() { continue; }
+        if normalized.name.is_empty() {
+            continue;
+        }
         if normalized.kind == orchestrator::INVENTORY_KIND_INTERIOR {
             inter.push(normalized);
         } else {
@@ -892,7 +1046,6 @@ pub fn set_character_inventory_cmd(
     let today = current_world_day(&world);
     let _ = snapshot_inventory_pre_mutation(&conn, &character_id, "user_edit");
     let json = serde_json::to_value(&cleaned).unwrap_or(Value::Array(vec![]));
-    set_character_inventory(&conn, &character_id, &json, Some(today))
-        .map_err(|e| e.to_string())?;
+    set_character_inventory(&conn, &character_id, &json, Some(today)).map_err(|e| e.to_string())?;
     Ok(cleaned)
 }

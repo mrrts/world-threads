@@ -1,4 +1,4 @@
-use crate::ai::openai::{self, ChatRequest, ChatMessage, StreamingRequest};
+use crate::ai::openai::{self, ChatMessage, ChatRequest, StreamingRequest};
 use crate::ai::orchestrator;
 use crate::db::queries::*;
 use crate::db::Database;
@@ -46,7 +46,8 @@ pub fn create_consultant_chat_cmd(
         "SELECT message_id FROM group_messages WHERE thread_id = ?1 ORDER BY created_at DESC LIMIT 1",
         params![thread_id], |r| r.get(0),
     ).ok());
-    let mode = mode.filter(|m| m == "immersive" || m == "backstage")
+    let mode = mode
+        .filter(|m| m == "immersive" || m == "backstage")
         .unwrap_or_else(|| "immersive".to_string());
     let chat = ConsultantChat {
         chat_id: uuid::Uuid::new_v4().to_string(),
@@ -74,17 +75,22 @@ pub fn list_consultant_chats_cmd(
     let mut stmt = conn.prepare(
         "SELECT chat_id, thread_id, title, created_at, last_seen_message_id, mode FROM consultant_chats WHERE thread_id = ?1 ORDER BY created_at DESC"
     ).map_err(|e| e.to_string())?;
-    let rows = stmt.query_map(params![thread_id], |row| {
-        Ok(ConsultantChat {
-            chat_id: row.get(0)?,
-            thread_id: row.get(1)?,
-            title: row.get(2)?,
-            created_at: row.get(3)?,
-            last_seen_message_id: row.get(4).ok(),
-            mode: row.get::<_, Option<String>>(5)?.unwrap_or_else(|| "immersive".to_string()),
+    let rows = stmt
+        .query_map(params![thread_id], |row| {
+            Ok(ConsultantChat {
+                chat_id: row.get(0)?,
+                thread_id: row.get(1)?,
+                title: row.get(2)?,
+                created_at: row.get(3)?,
+                last_seen_message_id: row.get(4).ok(),
+                mode: row
+                    .get::<_, Option<String>>(5)?
+                    .unwrap_or_else(|| "immersive".to_string()),
+            })
         })
-    }).map_err(|e| e.to_string())?;
-    rows.collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())
+        .map_err(|e| e.to_string())?;
+    rows.collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())
 }
 
 /// Update the title of a consultant chat.
@@ -98,20 +104,25 @@ pub fn update_consultant_chat_title_cmd(
     conn.execute(
         "UPDATE consultant_chats SET title = ?2 WHERE chat_id = ?1",
         params![chat_id, title],
-    ).map_err(|e| e.to_string())?;
+    )
+    .map_err(|e| e.to_string())?;
     Ok(())
 }
 
 /// Delete a consultant chat and all its messages.
 #[tauri::command]
-pub fn delete_consultant_chat_cmd(
-    db: State<'_, Database>,
-    chat_id: String,
-) -> Result<(), String> {
+pub fn delete_consultant_chat_cmd(db: State<'_, Database>, chat_id: String) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    conn.execute("DELETE FROM consultant_messages WHERE chat_id = ?1", params![chat_id]).ok();
-    conn.execute("DELETE FROM consultant_chats WHERE chat_id = ?1", params![chat_id])
-        .map_err(|e| e.to_string())?;
+    conn.execute(
+        "DELETE FROM consultant_messages WHERE chat_id = ?1",
+        params![chat_id],
+    )
+    .ok();
+    conn.execute(
+        "DELETE FROM consultant_chats WHERE chat_id = ?1",
+        params![chat_id],
+    )
+    .map_err(|e| e.to_string())?;
     Ok(())
 }
 
@@ -124,24 +135,30 @@ pub fn load_consultant_chat_cmd(
     chat_id: String,
 ) -> Result<Vec<ConsultantMessage>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    let mut stmt = conn.prepare(
-        "SELECT role, content FROM consultant_messages WHERE chat_id = ?1 ORDER BY id ASC"
-    ).map_err(|e| e.to_string())?;
-    let rows = stmt.query_map(params![chat_id], |row| {
-        Ok(ConsultantMessage { role: row.get(0)?, content: row.get(1)? })
-    }).map_err(|e| e.to_string())?;
-    rows.collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())
+    let mut stmt = conn
+        .prepare("SELECT role, content FROM consultant_messages WHERE chat_id = ?1 ORDER BY id ASC")
+        .map_err(|e| e.to_string())?;
+    let rows = stmt
+        .query_map(params![chat_id], |row| {
+            Ok(ConsultantMessage {
+                role: row.get(0)?,
+                content: row.get(1)?,
+            })
+        })
+        .map_err(|e| e.to_string())?;
+    rows.collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())
 }
 
 /// Clear all messages in a consultant chat.
 #[tauri::command]
-pub fn clear_consultant_chat_cmd(
-    db: State<'_, Database>,
-    chat_id: String,
-) -> Result<(), String> {
+pub fn clear_consultant_chat_cmd(db: State<'_, Database>, chat_id: String) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    conn.execute("DELETE FROM consultant_messages WHERE chat_id = ?1", params![chat_id])
-        .map_err(|e| e.to_string())?;
+    conn.execute(
+        "DELETE FROM consultant_messages WHERE chat_id = ?1",
+        params![chat_id],
+    )
+    .map_err(|e| e.to_string())?;
     Ok(())
 }
 
@@ -168,13 +185,17 @@ pub fn save_consultant_messages_cmd(
     messages: Vec<ConsultantMessage>,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    conn.execute("DELETE FROM consultant_messages WHERE chat_id = ?1", params![chat_id])
-        .map_err(|e| e.to_string())?;
+    conn.execute(
+        "DELETE FROM consultant_messages WHERE chat_id = ?1",
+        params![chat_id],
+    )
+    .map_err(|e| e.to_string())?;
     for msg in &messages {
         conn.execute(
             "INSERT INTO consultant_messages (chat_id, role, content) VALUES (?1, ?2, ?3)",
             params![chat_id, msg.role, msg.content],
-        ).map_err(|e| e.to_string())?;
+        )
+        .map_err(|e| e.to_string())?;
     }
     Ok(())
 }
@@ -194,20 +215,34 @@ pub fn import_chat_messages_cmd(
     let is_group = group_chat_id.is_some();
 
     // Get the last seen message ID for this consultant chat
-    let last_seen: Option<String> = conn.query_row(
-        "SELECT last_seen_message_id FROM consultant_chats WHERE chat_id = ?1",
-        params![chat_id], |r| r.get(0),
-    ).ok().flatten();
+    let last_seen: Option<String> = conn
+        .query_row(
+            "SELECT last_seen_message_id FROM consultant_chats WHERE chat_id = ?1",
+            params![chat_id],
+            |r| r.get(0),
+        )
+        .ok()
+        .flatten();
 
     let (new_msgs, characters, user_name, _thread_id) = if is_group {
-        let gc = get_group_chat(&conn, group_chat_id.as_deref().unwrap()).map_err(|e| e.to_string())?;
+        let gc =
+            get_group_chat(&conn, group_chat_id.as_deref().unwrap()).map_err(|e| e.to_string())?;
         let all_msgs = get_all_group_messages(&conn, &gc.thread_id).map_err(|e| e.to_string())?;
         let user_name = get_user_profile(&conn, &gc.world_id)
-            .ok().map(|p| p.display_name).unwrap_or_else(|| "the user".to_string());
-        let char_ids: Vec<String> = gc.character_ids.as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+            .ok()
+            .map(|p| p.display_name)
+            .unwrap_or_else(|| "the user".to_string());
+        let char_ids: Vec<String> = gc
+            .character_ids
+            .as_array()
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect()
+            })
             .unwrap_or_default();
-        let characters: Vec<Character> = char_ids.iter()
+        let characters: Vec<Character> = char_ids
+            .iter()
             .filter_map(|id| get_character(&conn, id).ok())
             .collect();
         // Filter to messages after last_seen
@@ -215,11 +250,25 @@ pub fn import_chat_messages_cmd(
             let idx = all_msgs.iter().position(|m| m.message_id == *seen_id);
             match idx {
                 Some(i) => all_msgs[i + 1..].to_vec(),
-                None => all_msgs.into_iter().rev().take(30).collect::<Vec<_>>().into_iter().rev().collect(),
+                None => all_msgs
+                    .into_iter()
+                    .rev()
+                    .take(30)
+                    .collect::<Vec<_>>()
+                    .into_iter()
+                    .rev()
+                    .collect(),
             }
         } else {
             // No last_seen — take the most recent 30
-            all_msgs.into_iter().rev().take(30).collect::<Vec<_>>().into_iter().rev().collect()
+            all_msgs
+                .into_iter()
+                .rev()
+                .take(30)
+                .collect::<Vec<_>>()
+                .into_iter()
+                .rev()
+                .collect()
         };
         (msgs, characters, user_name, gc.thread_id)
     } else {
@@ -228,15 +277,31 @@ pub fn import_chat_messages_cmd(
         let thread = get_thread_for_character(&conn, char_id).map_err(|e| e.to_string())?;
         let all_msgs = get_all_messages(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
         let user_name = get_user_profile(&conn, &character.world_id)
-            .ok().map(|p| p.display_name).unwrap_or_else(|| "the user".to_string());
+            .ok()
+            .map(|p| p.display_name)
+            .unwrap_or_else(|| "the user".to_string());
         let msgs = if let Some(ref seen_id) = last_seen {
             let idx = all_msgs.iter().position(|m| m.message_id == *seen_id);
             match idx {
                 Some(i) => all_msgs[i + 1..].to_vec(),
-                None => all_msgs.into_iter().rev().take(30).collect::<Vec<_>>().into_iter().rev().collect(),
+                None => all_msgs
+                    .into_iter()
+                    .rev()
+                    .take(30)
+                    .collect::<Vec<_>>()
+                    .into_iter()
+                    .rev()
+                    .collect(),
             }
         } else {
-            all_msgs.into_iter().rev().take(30).collect::<Vec<_>>().into_iter().rev().collect()
+            all_msgs
+                .into_iter()
+                .rev()
+                .take(30)
+                .collect::<Vec<_>>()
+                .into_iter()
+                .rev()
+                .collect()
         };
         (msgs, vec![character], user_name, thread.thread_id)
     };
@@ -246,19 +311,20 @@ pub fn import_chat_messages_cmd(
     }
 
     // Format messages
-    let conversation: Vec<String> = new_msgs.iter()
+    let conversation: Vec<String> = new_msgs
+        .iter()
         .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update")
         .map(|m| {
             let speaker = match m.role.as_str() {
                 "user" => user_name.clone(),
                 "narrative" => "[Narrative]".to_string(),
                 "context" => "[Context]".to_string(),
-                "assistant" => {
-                    m.sender_character_id.as_ref()
-                        .and_then(|id| characters.iter().find(|c| c.character_id == *id))
-                        .map(|c| c.display_name.clone())
-                        .unwrap_or_else(|| "Character".to_string())
-                }
+                "assistant" => m
+                    .sender_character_id
+                    .as_ref()
+                    .and_then(|id| characters.iter().find(|c| c.character_id == *id))
+                    .map(|c| c.display_name.clone())
+                    .unwrap_or_else(|| "Character".to_string()),
                 _ => m.role.clone(),
             };
             format!("{}: {}", speaker, m.content)
@@ -267,7 +333,11 @@ pub fn import_chat_messages_cmd(
 
     let char_names: Vec<String> = characters.iter().map(|c| c.display_name.clone()).collect();
     let msg_count = new_msgs.len();
-    let label = format!("Imported {} new messages with {}", msg_count, char_names.join(" & "));
+    let label = format!(
+        "Imported {} new messages with {}",
+        msg_count,
+        char_names.join(" & ")
+    );
     let content = format!("{}\n---\n{}", label, conversation.join("\n"));
 
     // Update last_seen_message_id to the latest message
@@ -276,14 +346,16 @@ pub fn import_chat_messages_cmd(
         conn.execute(
             "UPDATE consultant_chats SET last_seen_message_id = ?2 WHERE chat_id = ?1",
             params![chat_id, id],
-        ).map_err(|e| e.to_string())?;
+        )
+        .map_err(|e| e.to_string())?;
     }
 
     // Persist as import message
     conn.execute(
         "INSERT INTO consultant_messages (chat_id, role, content) VALUES (?1, 'import', ?2)",
         params![chat_id, content],
-    ).map_err(|e| e.to_string())?;
+    )
+    .map_err(|e| e.to_string())?;
 
     Ok(ConsultantMessage {
         role: "import".to_string(),
@@ -310,48 +382,83 @@ pub fn get_last_seen_message_cmd(
 ) -> Result<Option<LastSeenPreview>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
 
-    let last_seen_id: Option<String> = conn.query_row(
-        "SELECT last_seen_message_id FROM consultant_chats WHERE chat_id = ?1",
-        params![chat_id], |r| r.get(0),
-    ).ok().flatten();
+    let last_seen_id: Option<String> = conn
+        .query_row(
+            "SELECT last_seen_message_id FROM consultant_chats WHERE chat_id = ?1",
+            params![chat_id],
+            |r| r.get(0),
+        )
+        .ok()
+        .flatten();
 
-    let Some(msg_id) = last_seen_id else { return Ok(None) };
+    let Some(msg_id) = last_seen_id else {
+        return Ok(None);
+    };
 
     // Try individual messages first, then group messages
-    let msg: Option<Message> = conn.query_row(
-        &format!("SELECT {} FROM messages WHERE message_id = ?1", crate::db::queries::MSG_COLS),
-        params![msg_id], crate::db::queries::row_to_message,
-    ).ok().or_else(|| conn.query_row(
-        &format!("SELECT {} FROM group_messages WHERE message_id = ?1", crate::db::queries::MSG_COLS),
-        params![msg_id], crate::db::queries::row_to_message,
-    ).ok());
+    let msg: Option<Message> = conn
+        .query_row(
+            &format!(
+                "SELECT {} FROM messages WHERE message_id = ?1",
+                crate::db::queries::MSG_COLS
+            ),
+            params![msg_id],
+            crate::db::queries::row_to_message,
+        )
+        .ok()
+        .or_else(|| {
+            conn.query_row(
+                &format!(
+                    "SELECT {} FROM group_messages WHERE message_id = ?1",
+                    crate::db::queries::MSG_COLS
+                ),
+                params![msg_id],
+                crate::db::queries::row_to_message,
+            )
+            .ok()
+        });
 
     let Some(m) = msg else { return Ok(None) };
-    if m.role == "illustration" || m.role == "video" { return Ok(None); }
+    if m.role == "illustration" || m.role == "video" {
+        return Ok(None);
+    }
 
     // Look up the character — try sender_character_id first, then thread's character_id
-    let character = m.sender_character_id.as_ref()
+    let character = m
+        .sender_character_id
+        .as_ref()
         .and_then(|id| get_character(&conn, id).ok())
         .or_else(|| {
             // For individual chats, get the character from the thread
             conn.query_row(
                 "SELECT character_id FROM threads WHERE thread_id = ?1",
-                params![m.thread_id], |r| r.get::<_, Option<String>>(0),
-            ).ok().flatten().and_then(|id| get_character(&conn, &id).ok())
+                params![m.thread_id],
+                |r| r.get::<_, Option<String>>(0),
+            )
+            .ok()
+            .flatten()
+            .and_then(|id| get_character(&conn, &id).ok())
         });
 
     let (speaker_name, avatar_color) = match m.role.as_str() {
         "user" => {
-            let world_id: Option<String> = conn.query_row(
-                "SELECT world_id FROM threads WHERE thread_id = ?1",
-                params![m.thread_id], |r| r.get(0),
-            ).ok();
-            let name = world_id.and_then(|wid| get_user_profile(&conn, &wid).ok().map(|p| p.display_name))
+            let world_id: Option<String> = conn
+                .query_row(
+                    "SELECT world_id FROM threads WHERE thread_id = ?1",
+                    params![m.thread_id],
+                    |r| r.get(0),
+                )
+                .ok();
+            let name = world_id
+                .and_then(|wid| get_user_profile(&conn, &wid).ok().map(|p| p.display_name))
                 .unwrap_or_else(|| "You".to_string());
             (name, None)
         }
         "assistant" => {
-            let name = character.as_ref().map(|c| c.display_name.clone()).unwrap_or_else(|| "Character".to_string());
+            let name = character
+                .as_ref()
+                .map(|c| c.display_name.clone())
+                .unwrap_or_else(|| "Character".to_string());
             let color = character.as_ref().map(|c| c.avatar_color.clone());
             (name, color)
         }
@@ -396,11 +503,13 @@ pub async fn generate_consultant_title_cmd(
         response_format: None,
     };
 
-    let response = openai::chat_completion_with_base(
-        &model_config.chat_api_base(), &api_key, &request,
-    ).await?;
+    let response =
+        openai::chat_completion_with_base(&model_config.chat_api_base(), &api_key, &request)
+            .await?;
 
-    Ok(response.choices.first()
+    Ok(response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_else(|| "Story Chat".to_string()))
 }
@@ -424,8 +533,12 @@ pub async fn story_consultant_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         conn.query_row(
             "SELECT mode FROM consultant_chats WHERE chat_id = ?1",
-            params![chat_id], |r| r.get::<_, Option<String>>(0),
-        ).ok().flatten().unwrap_or_else(|| "immersive".to_string())
+            params![chat_id],
+            |r| r.get::<_, Option<String>>(0),
+        )
+        .ok()
+        .flatten()
+        .unwrap_or_else(|| "immersive".to_string())
     };
 
     // Build the shared system prompt via the ai::consultant helper.
@@ -443,30 +556,48 @@ pub async fn story_consultant_cmd(
     // chat_id-specific — it reads from consultant_messages, where
     // this command persists; worldcli `consult` uses its own
     // dev_chat_sessions store.
-    let consultant_history: Vec<ChatMessage> = {
-        let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let mut stmt = conn.prepare(
+    let consultant_history: Vec<ChatMessage> =
+        {
+            let conn = db.conn.lock().map_err(|e| e.to_string())?;
+            let mut stmt = conn.prepare(
             "SELECT role, content FROM consultant_messages WHERE chat_id = ?1 ORDER BY id ASC"
         ).map_err(|e| e.to_string())?;
-        let rows = stmt.query_map(params![chat_id], |row| {
-            let role: String = row.get(0)?;
-            let content: String = row.get(1)?;
-            let mapped_role = if role == "import" { "user".to_string() } else { role };
-            let mapped_content = if mapped_role == "user" && content.contains("\n---\n") {
-                format!("[Here's what happened recently in the conversation:]\n{}", content.split("\n---\n").nth(1).unwrap_or(&content))
-            } else {
-                content
-            };
-            Ok(ChatMessage { role: mapped_role, content: mapped_content })
-        }).map_err(|e| e.to_string())?;
-        rows.collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())?
-    };
+            let rows = stmt
+                .query_map(params![chat_id], |row| {
+                    let role: String = row.get(0)?;
+                    let content: String = row.get(1)?;
+                    let mapped_role = if role == "import" {
+                        "user".to_string()
+                    } else {
+                        role
+                    };
+                    let mapped_content = if mapped_role == "user" && content.contains("\n---\n") {
+                        format!(
+                            "[Here's what happened recently in the conversation:]\n{}",
+                            content.split("\n---\n").nth(1).unwrap_or(&content)
+                        )
+                    } else {
+                        content
+                    };
+                    Ok(ChatMessage {
+                        role: mapped_role,
+                        content: mapped_content,
+                    })
+                })
+                .map_err(|e| e.to_string())?;
+            rows.collect::<Result<Vec<_>, _>>()
+                .map_err(|e| e.to_string())?
+        };
 
-    let mut messages: Vec<ChatMessage> = vec![
-        ChatMessage { role: "system".to_string(), content: system_prompt },
-    ];
+    let mut messages: Vec<ChatMessage> = vec![ChatMessage {
+        role: "system".to_string(),
+        content: system_prompt,
+    }];
     messages.extend(consultant_history);
-    messages.push(ChatMessage { role: "user".to_string(), content: user_message.clone() });
+    messages.push(ChatMessage {
+        role: "user".to_string(),
+        content: user_message.clone(),
+    });
 
     let request = StreamingRequest {
         model: model_config.dialogue_model.clone(),
@@ -477,8 +608,13 @@ pub async fn story_consultant_cmd(
     };
 
     let reply = openai::chat_completion_stream(
-        &model_config.chat_api_base(), &api_key, &request, &app_handle, "consultant-token",
-    ).await?;
+        &model_config.chat_api_base(),
+        &api_key,
+        &request,
+        &app_handle,
+        "consultant-token",
+    )
+    .await?;
 
     // Persist both messages
     {
@@ -486,11 +622,13 @@ pub async fn story_consultant_cmd(
         conn.execute(
             "INSERT INTO consultant_messages (chat_id, role, content) VALUES (?1, 'user', ?2)",
             params![chat_id, user_message],
-        ).map_err(|e| e.to_string())?;
+        )
+        .map_err(|e| e.to_string())?;
         conn.execute(
             "INSERT INTO consultant_messages (chat_id, role, content) VALUES (?1, 'assistant', ?2)",
             params![chat_id, reply],
-        ).map_err(|e| e.to_string())?;
+        )
+        .map_err(|e| e.to_string())?;
     }
 
     Ok(reply)

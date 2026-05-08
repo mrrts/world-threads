@@ -79,5 +79,3 @@ fn row_to_world(row: &rusqlite::Row) -> Result<World, rusqlite::Error> {
         derived_formula: row.get::<_, Option<String>>(8).unwrap_or(None),
     })
 }
-
-

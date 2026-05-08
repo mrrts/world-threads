@@ -51,7 +51,9 @@ pub fn list_cross_thread_recent_for_character(
 
     if let Some(tid) = solo_thread_id.as_deref() {
         if tid != current_thread_id {
-            if let Some(block) = render_solo_block(conn, tid, character_id, user_name, per_thread_limit) {
+            if let Some(block) =
+                render_solo_block(conn, tid, character_id, user_name, per_thread_limit)
+            {
                 blocks.push(block);
             }
         }
@@ -156,7 +158,11 @@ fn render_solo_block(
         weather = super::weathering::weathering_label(&newest_at),
         body = lines.join("\n"),
     );
-    Some(CrossThreadBlock { label, newest_at, rendered })
+    Some(CrossThreadBlock {
+        label,
+        newest_at,
+        rendered,
+    })
 }
 
 fn render_group_block(
@@ -170,8 +176,7 @@ fn render_group_block(
     // Parse character_ids JSON.
     let ids: Vec<String> = serde_json::from_str(character_ids_json).ok()?;
     // Build a sender_character_id → display_name map for rendering + label.
-    let mut name_map: std::collections::HashMap<String, String> =
-        std::collections::HashMap::new();
+    let mut name_map: std::collections::HashMap<String, String> = std::collections::HashMap::new();
     let mut other_names: Vec<String> = Vec::new();
     for cid in &ids {
         let name: Option<String> = conn
@@ -247,7 +252,11 @@ fn render_group_block(
         weather = super::weathering::weathering_label(&newest_at),
         body = lines.join("\n"),
     );
-    Some(CrossThreadBlock { label, newest_at, rendered })
+    Some(CrossThreadBlock {
+        label,
+        newest_at,
+        rendered,
+    })
 }
 
 fn render_line(role: &str, content: &str, character_name: &str, user_name: &str) -> String {
@@ -286,4 +295,3 @@ fn join_names(names: &[String]) -> String {
         }
     }
 }
-

@@ -174,7 +174,7 @@ What to update:
 
 ### Step 8 — Present the chooser (inherits practice's `Chooser(t)` clause)
 
-This skill inherits the chooser-tail from the practice's structural `Chooser(t)` and `Next(t+1)` clauses (canonical statement: persona-sim SKILL.md formula). Every Output is followed by 2-4 concrete next-move options annotated with their forecast cost; selection IS authorization to spend up to that forecast on that next move; no second prompt. Free options carry `$0`. If actual cost would exceed forecast at runtime, return to the developer for re-authorization.
+This skill inherits the chooser-tail from the practice's structural `Chooser(t)` and `Next(t+1)` clauses (canonical statement: persona-sim SKILL.md formula). Every Output is followed by exactly four concrete next-move options annotated with their forecast cost; selection IS authorization to spend up to that forecast on that next move; no second prompt. Free options carry `$0`. If actual cost would exceed forecast at runtime, return to the developer for re-authorization.
 
 Typical options for this skill:
 

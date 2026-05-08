@@ -69,18 +69,19 @@ pub fn set_chat_location_cmd(
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
 
     // Resolve thread_id, world_id, and previous location.
-    let (thread_id, world_id, previous): (String, String, Option<String>) = if let Some(gc_id) = &group_chat_id {
-        let gc = get_group_chat(&conn, gc_id).map_err(|e| e.to_string())?;
-        let prev = get_group_chat_location(&conn, gc_id).map_err(|e| e.to_string())?;
-        (gc.thread_id, gc.world_id, prev)
-    } else if let Some(char_id) = &character_id {
-        let thread = get_thread_for_character(&conn, char_id).map_err(|e| e.to_string())?;
-        let ch = get_character(&conn, char_id).map_err(|e| e.to_string())?;
-        let prev = get_thread_location(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
-        (thread.thread_id, ch.world_id, prev)
-    } else {
-        return Err("Either character_id or group_chat_id must be provided".to_string());
-    };
+    let (thread_id, world_id, previous): (String, String, Option<String>) =
+        if let Some(gc_id) = &group_chat_id {
+            let gc = get_group_chat(&conn, gc_id).map_err(|e| e.to_string())?;
+            let prev = get_group_chat_location(&conn, gc_id).map_err(|e| e.to_string())?;
+            (gc.thread_id, gc.world_id, prev)
+        } else if let Some(char_id) = &character_id {
+            let thread = get_thread_for_character(&conn, char_id).map_err(|e| e.to_string())?;
+            let ch = get_character(&conn, char_id).map_err(|e| e.to_string())?;
+            let prev = get_thread_location(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
+            (thread.thread_id, ch.world_id, prev)
+        } else {
+            return Err("Either character_id or group_chat_id must be provided".to_string());
+        };
 
     let now = Utc::now().to_rfc3339();
 
@@ -109,8 +110,7 @@ pub fn set_chat_location_cmd(
         set_group_chat_location(&conn, group_chat_id.as_deref().unwrap(), Some(&trimmed))
             .map_err(|e| e.to_string())?;
     } else {
-        set_thread_location(&conn, &thread_id, Some(&trimmed))
-            .map_err(|e| e.to_string())?;
+        set_thread_location(&conn, &thread_id, Some(&trimmed)).map_err(|e| e.to_string())?;
     }
 
     // Build the location_change message. content is JSON so the renderer
@@ -120,7 +120,8 @@ pub fn set_chat_location_cmd(
     let payload = json!({
         "from": previous.clone(),
         "to": trimmed.clone(),
-    }).to_string();
+    })
+    .to_string();
 
     let msg = Message {
         message_id: uuid::Uuid::new_v4().to_string(),
@@ -215,10 +216,7 @@ pub fn list_saved_places_cmd(
 }
 
 #[tauri::command]
-pub fn delete_saved_place_cmd(
-    db: State<Database>,
-    saved_place_id: String,
-) -> Result<(), String> {
+pub fn delete_saved_place_cmd(db: State<Database>, saved_place_id: String) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     delete_saved_place(&conn, &saved_place_id).map_err(|e| e.to_string())
 }

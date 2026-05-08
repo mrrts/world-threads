@@ -12,7 +12,10 @@ pub struct PortraitsDir(pub PathBuf);
 
 fn json_array_to_strings(val: &serde_json::Value) -> Vec<String> {
     match val.as_array() {
-        Some(arr) => arr.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect(),
+        Some(arr) => arr
+            .iter()
+            .filter_map(|v| v.as_str().map(|s| s.to_string()))
+            .collect(),
         None => Vec::new(),
     }
 }
@@ -38,7 +41,12 @@ fn build_portrait_prompt(character: &Character, world: &World) -> String {
 
     let backstory = json_array_to_strings(&character.backstory_facts);
     if !backstory.is_empty() {
-        let facts = backstory.iter().take(3).cloned().collect::<Vec<_>>().join("; ");
+        let facts = backstory
+            .iter()
+            .take(3)
+            .cloned()
+            .collect::<Vec<_>>()
+            .join("; ");
         parts.push(format!("Key traits: {facts}"));
     }
 
@@ -131,9 +139,15 @@ pub async fn generate_portrait_cmd(
     };
 
     if let Some(hint) = form_hint {
-        if let Some(name) = hint.display_name { character.display_name = name; }
-        if let Some(id) = hint.identity { character.identity = id; }
-        if let Some(facts) = hint.backstory_facts { character.backstory_facts = facts; }
+        if let Some(name) = hint.display_name {
+            character.display_name = name;
+        }
+        if let Some(id) = hint.identity {
+            character.identity = id;
+        }
+        if let Some(facts) = hint.backstory_facts {
+            character.backstory_facts = facts;
+        }
     }
 
     let model_config = {
@@ -142,7 +156,11 @@ pub async fn generate_portrait_cmd(
     };
 
     let prompt = build_portrait_prompt(&character, &world);
-    log::info!("[Portrait] Generating for '{}': {:.120}...", character.display_name, prompt);
+    log::info!(
+        "[Portrait] Generating for '{}': {:.120}...",
+        character.display_name,
+        prompt
+    );
 
     let request = ImageRequest {
         model: model_config.image_model.clone(),
@@ -154,13 +172,16 @@ pub async fn generate_portrait_cmd(
         output_format: model_config.image_output_format(),
     };
 
-    let response = openai::generate_image_with_base(&model_config.openai_api_base(), &api_key, &request).await?;
-    let b64 = response.data.first()
+    let response =
+        openai::generate_image_with_base(&model_config.openai_api_base(), &api_key, &request)
+            .await?;
+    let b64 = response
+        .data
+        .first()
         .and_then(|d| d.image_b64())
         .ok_or_else(|| "No image data in response".to_string())?;
 
-    let image_bytes = base64_decode(b64)
-        .map_err(|e| format!("Failed to decode image: {e}"))?;
+    let image_bytes = base64_decode(b64).map_err(|e| format!("Failed to decode image: {e}"))?;
 
     let portrait_id = uuid::Uuid::new_v4().to_string();
     let file_name = format!("{portrait_id}.png");
@@ -169,7 +190,11 @@ pub async fn generate_portrait_cmd(
     let file_path = dir.join(&file_name);
     std::fs::write(&file_path, &image_bytes).map_err(|e| format!("Failed to save image: {e}"))?;
 
-    log::info!("[Portrait] Saved {} ({} bytes)", file_name, image_bytes.len());
+    log::info!(
+        "[Portrait] Saved {} ({} bytes)",
+        file_name,
+        image_bytes.len()
+    );
 
     let portrait = Portrait {
         portrait_id: portrait_id.clone(),
@@ -183,7 +208,10 @@ pub async fn generate_portrait_cmd(
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         // Deactivate all existing, then insert new as active
-        let _ = conn.execute("UPDATE character_portraits SET is_active = 0 WHERE character_id = ?1", rusqlite::params![character_id]);
+        let _ = conn.execute(
+            "UPDATE character_portraits SET is_active = 0 WHERE character_id = ?1",
+            rusqlite::params![character_id],
+        );
         create_portrait(&conn, &portrait).map_err(|e| e.to_string())?;
     }
 
@@ -208,10 +236,16 @@ fn base64_decode(input: &str) -> Result<Vec<u8>, String> {
     let mut bits = 0;
 
     for &b in input {
-        if b == b'=' || b == b'\n' || b == b'\r' { continue; }
-        if b >= 128 { return Err("Invalid base64 character".to_string()); }
+        if b == b'=' || b == b'\n' || b == b'\r' {
+            continue;
+        }
+        if b >= 128 {
+            return Err("Invalid base64 character".to_string());
+        }
         let val = DECODE[b as usize];
-        if val == 255 { return Err(format!("Invalid base64 character: {}", b as char)); }
+        if val == 255 {
+            return Err(format!("Invalid base64 character: {}", b as char));
+        }
         buf = (buf << 6) | val as u32;
         bits += 6;
         if bits >= 8 {
@@ -231,7 +265,10 @@ pub fn list_portraits_cmd(
 ) -> Result<Vec<PortraitInfo>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let portraits = list_portraits(&conn, &character_id).map_err(|e| e.to_string())?;
-    Ok(portraits.iter().map(|p| portrait_to_info(p, &portraits_dir.0)).collect())
+    Ok(portraits
+        .iter()
+        .map(|p| portrait_to_info(p, &portraits_dir.0))
+        .collect())
 }
 
 #[tauri::command]
@@ -297,16 +334,26 @@ pub async fn generate_character_visual_description_cmd(
     // portrait, skip the vision call entirely.
     if !force.unwrap_or(false)
         && !character.visual_description.is_empty()
-        && character.visual_description_portrait_id.as_deref() == Some(portrait.portrait_id.as_str())
+        && character.visual_description_portrait_id.as_deref()
+            == Some(portrait.portrait_id.as_str())
     {
-        log::info!("[Vision] {} — description fresh for portrait {}, skipping call", character.display_name, portrait.portrait_id);
+        log::info!(
+            "[Vision] {} — description fresh for portrait {}, skipping call",
+            character.display_name,
+            portrait.portrait_id
+        );
         return Ok(character);
     }
 
     let file_path = portraits_dir.0.join(&portrait.file_name);
     let bytes = std::fs::read(&file_path).map_err(|e| format!("read portrait file: {e}"))?;
 
-    log::info!("[Vision] Describing {} from portrait {} ({} bytes)", character.display_name, portrait.portrait_id, bytes.len());
+    log::info!(
+        "[Vision] Describing {} from portrait {} ({} bytes)",
+        character.display_name,
+        portrait.portrait_id,
+        bytes.len()
+    );
 
     let description = orchestrator::describe_character_portrait(
         &model_config.openai_api_base(),
@@ -314,7 +361,8 @@ pub async fn generate_character_visual_description_cmd(
         &model_config.vision_model,
         &bytes,
         &character.display_name,
-    ).await?;
+    )
+    .await?;
 
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -340,7 +388,9 @@ pub fn list_characters_needing_visual_description_cmd(
     let characters = list_characters(&conn, &world_id).map_err(|e| e.to_string())?;
     let mut out = Vec::new();
     for ch in characters {
-        let Some(active) = get_active_portrait(&conn, &ch.character_id) else { continue; };
+        let Some(active) = get_active_portrait(&conn, &ch.character_id) else {
+            continue;
+        };
         let stale = ch.visual_description.is_empty()
             || ch.visual_description_portrait_id.as_deref() != Some(active.portrait_id.as_str());
         if stale {
@@ -415,20 +465,30 @@ pub async fn generate_portrait_variation_cmd(
 
     let prompt = prompt_parts.join(" ");
 
-    log::info!("[PortraitVariation] Generating variation for '{}' with {} reference images", character.display_name, reference_images.len());
+    log::info!(
+        "[PortraitVariation] Generating variation for '{}' with {} reference images",
+        character.display_name,
+        reference_images.len()
+    );
 
     let response = openai::generate_image_edit_with_base(
-        &mc.openai_api_base(), &api_key, &mc.image_model,
-        &prompt, &reference_images,
-        "1024x1024", mc.image_quality(),
+        &mc.openai_api_base(),
+        &api_key,
+        &mc.image_model,
+        &prompt,
+        &reference_images,
+        "1024x1024",
+        mc.image_quality(),
         mc.image_output_format().as_deref(),
-    ).await?;
-    let b64 = response.data.first()
+    )
+    .await?;
+    let b64 = response
+        .data
+        .first()
         .and_then(|d| d.image_b64())
         .ok_or_else(|| "No image data in response".to_string())?;
 
-    let new_bytes = base64_decode(b64)
-        .map_err(|e| format!("Failed to decode image: {e}"))?;
+    let new_bytes = base64_decode(b64).map_err(|e| format!("Failed to decode image: {e}"))?;
 
     let portrait_id = uuid::Uuid::new_v4().to_string();
     let file_name = format!("{portrait_id}.png");
@@ -437,7 +497,11 @@ pub async fn generate_portrait_variation_cmd(
     std::fs::write(dir.join(&file_name), &new_bytes)
         .map_err(|e| format!("Failed to save image: {e}"))?;
 
-    log::info!("[PortraitVariation] Saved variation {} ({} bytes)", file_name, new_bytes.len());
+    log::info!(
+        "[PortraitVariation] Saved variation {} ({} bytes)",
+        file_name,
+        new_bytes.len()
+    );
 
     let portrait = Portrait {
         portrait_id,
@@ -522,20 +586,31 @@ pub async fn generate_portrait_with_pose_cmd(
 
     let prompt = prompt_parts.join(" ");
 
-    log::info!("[PortraitPose] Generating for '{}' with {} reference images, pose: {:.100}", character.display_name, reference_images.len(), pose_description);
+    log::info!(
+        "[PortraitPose] Generating for '{}' with {} reference images, pose: {:.100}",
+        character.display_name,
+        reference_images.len(),
+        pose_description
+    );
 
     let response = openai::generate_image_edit_with_base(
-        &mc.openai_api_base(), &api_key, &mc.image_model,
-        &prompt, &reference_images,
-        "1024x1024", mc.image_quality(),
+        &mc.openai_api_base(),
+        &api_key,
+        &mc.image_model,
+        &prompt,
+        &reference_images,
+        "1024x1024",
+        mc.image_quality(),
         mc.image_output_format().as_deref(),
-    ).await?;
-    let b64 = response.data.first()
+    )
+    .await?;
+    let b64 = response
+        .data
+        .first()
         .and_then(|d| d.image_b64())
         .ok_or_else(|| "No image data in response".to_string())?;
 
-    let new_bytes = base64_decode(b64)
-        .map_err(|e| format!("Failed to decode image: {e}"))?;
+    let new_bytes = base64_decode(b64).map_err(|e| format!("Failed to decode image: {e}"))?;
 
     let portrait_id = uuid::Uuid::new_v4().to_string();
     let file_name = format!("{portrait_id}.png");

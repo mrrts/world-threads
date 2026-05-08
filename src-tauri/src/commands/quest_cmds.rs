@@ -6,7 +6,9 @@ use tauri::State;
 /// Read the current world-day from the world state JSON. Missing /
 /// malformed → None so lifecycle records don't lie about timing.
 fn current_world_day(world: &World) -> Option<i64> {
-    world.state.get("time")
+    world
+        .state
+        .get("time")
         .and_then(|t| t.get("day_index"))
         .and_then(|v| v.as_i64())
 }
@@ -31,7 +33,12 @@ pub fn create_quest_cmd(
     let world = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
     let day = current_world_day(&world);
     let kind = origin_kind
-        .filter(|k| matches!(k.as_str(), "user_authored" | "message" | "meanwhile" | "backstage"))
+        .filter(|k| {
+            matches!(
+                k.as_str(),
+                "user_authored" | "message" | "meanwhile" | "backstage"
+            )
+        })
         .unwrap_or_else(|| "user_authored".to_string());
     let quest = Quest {
         quest_id: uuid::Uuid::new_v4().to_string(),
@@ -55,19 +62,13 @@ pub fn create_quest_cmd(
 }
 
 #[tauri::command]
-pub fn list_quests_cmd(
-    db: State<'_, Database>,
-    world_id: String,
-) -> Result<Vec<Quest>, String> {
+pub fn list_quests_cmd(db: State<'_, Database>, world_id: String) -> Result<Vec<Quest>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     list_quests(&conn, &world_id).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn get_quest_cmd(
-    db: State<'_, Database>,
-    quest_id: String,
-) -> Result<Quest, String> {
+pub fn get_quest_cmd(db: State<'_, Database>, quest_id: String) -> Result<Quest, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     get_quest(&conn, &quest_id).map_err(|e| e.to_string())
 }
@@ -132,20 +133,14 @@ pub fn abandon_quest_cmd(
 }
 
 #[tauri::command]
-pub fn reopen_quest_cmd(
-    db: State<'_, Database>,
-    quest_id: String,
-) -> Result<Quest, String> {
+pub fn reopen_quest_cmd(db: State<'_, Database>, quest_id: String) -> Result<Quest, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     reopen_quest(&conn, &quest_id).map_err(|e| e.to_string())?;
     get_quest(&conn, &quest_id).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn delete_quest_cmd(
-    db: State<'_, Database>,
-    quest_id: String,
-) -> Result<(), String> {
+pub fn delete_quest_cmd(db: State<'_, Database>, quest_id: String) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     delete_quest(&conn, &quest_id).map_err(|e| e.to_string())
 }

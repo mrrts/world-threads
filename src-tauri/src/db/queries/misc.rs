@@ -5,7 +5,11 @@ use serde_json::Value;
 // ─── Token Usage ────────────────────────────────────────────────────────────
 
 pub fn record_token_usage(
-    conn: &Connection, call_type: &str, model: &str, prompt_tokens: u32, completion_tokens: u32,
+    conn: &Connection,
+    call_type: &str,
+    model: &str,
+    prompt_tokens: u32,
+    completion_tokens: u32,
 ) -> Result<(), rusqlite::Error> {
     conn.execute(
         "INSERT INTO token_usage (call_type, model, prompt_tokens, completion_tokens) VALUES (?1, ?2, ?3, ?4)",
@@ -35,7 +39,6 @@ pub fn get_today_usage(conn: &Connection) -> DailyUsage {
     }
 }
 
-
 // ─── Reactions ──────────────────────────────────────────────────────────────
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -61,7 +64,12 @@ pub fn add_reaction(conn: &Connection, r: &Reaction) -> Result<(), rusqlite::Err
     Ok(())
 }
 
-pub fn remove_reaction(conn: &Connection, message_id: &str, emoji: &str, reactor: &str) -> Result<(), rusqlite::Error> {
+pub fn remove_reaction(
+    conn: &Connection,
+    message_id: &str,
+    emoji: &str,
+    reactor: &str,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "DELETE FROM reactions WHERE message_id = ?1 AND emoji = ?2 AND reactor = ?3",
         params![message_id, emoji, reactor],
@@ -81,19 +89,23 @@ pub fn remove_reaction(conn: &Connection, message_id: &str, emoji: &str, reactor
 pub fn get_contributing_message_ids(conn: &Connection, target_id: &str) -> Vec<String> {
     let mut result = vec![target_id.to_string()];
 
-    let from_messages: Option<(String, String)> = conn.query_row(
-        "SELECT thread_id, created_at FROM messages WHERE message_id = ?1",
-        params![target_id],
-        |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
-    ).ok();
+    let from_messages: Option<(String, String)> = conn
+        .query_row(
+            "SELECT thread_id, created_at FROM messages WHERE message_id = ?1",
+            params![target_id],
+            |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
+        )
+        .ok();
     let (table, thread_id, created_at) = match from_messages {
         Some((t, c)) => ("messages", t, c),
         None => {
-            let from_group: Option<(String, String)> = conn.query_row(
-                "SELECT thread_id, created_at FROM group_messages WHERE message_id = ?1",
-                params![target_id],
-                |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
-            ).ok();
+            let from_group: Option<(String, String)> = conn
+                .query_row(
+                    "SELECT thread_id, created_at FROM group_messages WHERE message_id = ?1",
+                    params![target_id],
+                    |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
+                )
+                .ok();
             match from_group {
                 Some((t, c)) => ("group_messages", t, c),
                 None => return result,
@@ -114,7 +126,9 @@ pub fn get_contributing_message_ids(conn: &Connection, target_id: &str) -> Vec<S
                 result.push(mid);
                 // Stop at the first user message walking backward — that's
                 // the prompt the burst was answering.
-                if role == "user" { break; }
+                if role == "user" {
+                    break;
+                }
             }
         }
     }
@@ -127,16 +141,22 @@ pub fn get_thread_id_for_message(conn: &Connection, message_id: &str) -> Option<
         "SELECT thread_id FROM messages WHERE message_id = ?1",
         params![message_id],
         |r| r.get::<_, String>(0),
-    ).ok().or_else(|| {
+    )
+    .ok()
+    .or_else(|| {
         conn.query_row(
             "SELECT thread_id FROM group_messages WHERE message_id = ?1",
             params![message_id],
             |r| r.get::<_, String>(0),
-        ).ok()
+        )
+        .ok()
     })
 }
 
-pub fn get_reactions_for_messages(conn: &Connection, message_ids: &[String]) -> Result<Vec<Reaction>, rusqlite::Error> {
+pub fn get_reactions_for_messages(
+    conn: &Connection,
+    message_ids: &[String],
+) -> Result<Vec<Reaction>, rusqlite::Error> {
     if message_ids.is_empty() {
         return Ok(Vec::new());
     }
@@ -146,17 +166,22 @@ pub fn get_reactions_for_messages(conn: &Connection, message_ids: &[String]) -> 
         placeholders.join(", ")
     );
     let mut stmt = conn.prepare(&sql)?;
-    let params: Vec<&dyn rusqlite::types::ToSql> = message_ids.iter().map(|id| id as &dyn rusqlite::types::ToSql).collect();
+    let params: Vec<&dyn rusqlite::types::ToSql> = message_ids
+        .iter()
+        .map(|id| id as &dyn rusqlite::types::ToSql)
+        .collect();
     let rows = stmt.query_map(params.as_slice(), |row| {
         Ok(Reaction {
-            reaction_id: row.get(0)?, message_id: row.get(1)?, emoji: row.get(2)?,
-            reactor: row.get(3)?, created_at: row.get(4)?,
+            reaction_id: row.get(0)?,
+            message_id: row.get(1)?,
+            emoji: row.get(2)?,
+            reactor: row.get(3)?,
+            created_at: row.get(4)?,
             sender_character_id: row.get(5).ok(),
         })
     })?;
     rows.collect()
 }
-
 
 // ─── Character Mood ─────────────────────────────────────────────────────────
 
@@ -185,7 +210,10 @@ pub fn get_character_mood(conn: &Connection, character_id: &str) -> Option<Chara
     ).ok()
 }
 
-pub fn upsert_character_mood(conn: &Connection, mood: &CharacterMood) -> Result<(), rusqlite::Error> {
+pub fn upsert_character_mood(
+    conn: &Connection,
+    mood: &CharacterMood,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "INSERT INTO character_mood (character_id, valence, energy, tension, history, updated_at)
          VALUES (?1, ?2, ?3, ?4, ?5, datetime('now'))
@@ -195,11 +223,14 @@ pub fn upsert_character_mood(conn: &Connection, mood: &CharacterMood) -> Result<
     Ok(())
 }
 
-
 // ─── Settings ───────────────────────────────────────────────────────────────
 
 pub fn get_setting(conn: &Connection, key: &str) -> Result<Option<String>, rusqlite::Error> {
-    match conn.query_row("SELECT value FROM settings WHERE key = ?1", params![key], |r| r.get(0)) {
+    match conn.query_row(
+        "SELECT value FROM settings WHERE key = ?1",
+        params![key],
+        |r| r.get(0),
+    ) {
         Ok(v) => Ok(Some(v)),
         Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
         Err(e) => Err(e),
@@ -213,6 +244,3 @@ pub fn set_setting(conn: &Connection, key: &str, value: &str) -> Result<(), rusq
     )?;
     Ok(())
 }
-
-
-

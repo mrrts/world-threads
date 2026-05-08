@@ -95,12 +95,14 @@ pub fn upsert_user_profile(conn: &Connection, p: &UserProfile) -> Result<(), rus
     Ok(())
 }
 
-pub fn set_user_avatar_file(conn: &Connection, world_id: &str, avatar_file: &str) -> Result<(), rusqlite::Error> {
+pub fn set_user_avatar_file(
+    conn: &Connection,
+    world_id: &str,
+    avatar_file: &str,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "UPDATE user_profiles SET avatar_file = ?2, updated_at = datetime('now') WHERE world_id = ?1",
         params![world_id, avatar_file],
     )?;
     Ok(())
 }
-
-

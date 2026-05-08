@@ -66,12 +66,16 @@ pub fn create_world_cmd(db: State<Database>, name: String) -> Result<World, Stri
             has_read_empiricon: false,
         };
         create_character(&conn, &ch).map_err(|e| e.to_string())?;
-        create_thread(&conn, &Thread {
-            thread_id,
-            character_id: char_id,
-            world_id: world_id.clone(),
-            created_at: ch_now,
-        }).map_err(|e| e.to_string())?;
+        create_thread(
+            &conn,
+            &Thread {
+                thread_id,
+                character_id: char_id,
+                world_id: world_id.clone(),
+                created_at: ch_now,
+            },
+        )
+        .map_err(|e| e.to_string())?;
     }
 
     get_world(&conn, &world_id).map_err(|e| e.to_string())
@@ -86,12 +90,18 @@ pub fn get_world_cmd(db: State<Database>, world_id: String) -> Result<World, Str
 /// Read the documentary `derived_formula` for a world. Same shape
 /// and rationale as get_character_derivation_cmd. Read-only for now.
 #[tauri::command]
-pub fn get_world_derivation_cmd(db: State<Database>, world_id: String) -> Result<Option<String>, String> {
+pub fn get_world_derivation_cmd(
+    db: State<Database>,
+    world_id: String,
+) -> Result<Option<String>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    let derived: Option<String> = conn.query_row(
-        "SELECT derived_formula FROM worlds WHERE world_id = ?1",
-        rusqlite::params![world_id], |r| r.get(0),
-    ).map_err(|e| e.to_string())?;
+    let derived: Option<String> = conn
+        .query_row(
+            "SELECT derived_formula FROM worlds WHERE world_id = ?1",
+            rusqlite::params![world_id],
+            |r| r.get(0),
+        )
+        .map_err(|e| e.to_string())?;
     Ok(derived)
 }
 
@@ -114,7 +124,11 @@ pub fn delete_world_cmd(db: State<Database>, world_id: String) -> Result<(), Str
 }
 
 #[tauri::command]
-pub fn update_world_state_cmd(db: State<Database>, world_id: String, state: Value) -> Result<(), String> {
+pub fn update_world_state_cmd(
+    db: State<Database>,
+    world_id: String,
+    state: Value,
+) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let mut world = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
     world.state = state;

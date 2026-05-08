@@ -21,7 +21,10 @@ pub struct ChatMessage {
 
 fn normalize_chat_roles(messages: &mut [ChatMessage]) {
     fn is_supported(role: &str) -> bool {
-        matches!(role, "system" | "assistant" | "user" | "tool" | "function" | "developer")
+        matches!(
+            role,
+            "system" | "assistant" | "user" | "tool" | "function" | "developer"
+        )
     }
 
     for m in messages.iter_mut() {
@@ -41,7 +44,11 @@ fn normalize_chat_roles(messages: &mut [ChatMessage]) {
             let summary = match serde_json::from_str::<LocationBody>(&m.content) {
                 Ok(body) if !body.to.trim().is_empty() => match body.from {
                     Some(from) if !from.trim().is_empty() => {
-                        format!("Ryan changed the location from {} to {}.", from.trim(), body.to.trim())
+                        format!(
+                            "Ryan changed the location from {} to {}.",
+                            from.trim(),
+                            body.to.trim()
+                        )
                     }
                     _ => format!("Ryan changed the location to {}.", body.to.trim()),
                 },
@@ -90,9 +97,12 @@ const CUSTODIEM_CHILD_MODE_SENTINEL: &str =
     "a child must never be made to feel secretly chosen by a character, only safely welcomed";
 
 fn vision_message_has_sentinel(msg: &VisionMessage, sentinel: &str) -> bool {
-    msg.content
-        .iter()
-        .any(|c| c.text.as_deref().map(|t| t.contains(sentinel)).unwrap_or(false))
+    msg.content.iter().any(|c| {
+        c.text
+            .as_deref()
+            .map(|t| t.contains(sentinel))
+            .unwrap_or(false)
+    })
 }
 
 fn prepend_vision_text(msg: &mut VisionMessage, text: &str) {
@@ -108,11 +118,7 @@ fn prepend_vision_text(msg: &mut VisionMessage, text: &str) {
     );
 }
 
-fn inject_vision_block(
-    messages: &mut Vec<VisionMessage>,
-    block_text: &str,
-    sentinel: &str,
-) {
+fn inject_vision_block(messages: &mut Vec<VisionMessage>, block_text: &str, sentinel: &str) {
     if let Some(first_system) = messages.iter_mut().find(|m| m.role == "system") {
         if !vision_message_has_sentinel(first_system, sentinel) {
             prepend_vision_text(first_system, block_text);
@@ -287,7 +293,10 @@ pub fn inject_mission_formula(messages: &mut Vec<ChatMessage>) {
     // (paired with the same env-var hook at the prompts.rs top-position
     // push sites; both must skip for a clean WITHOUT cell). See
     // reports/2026-04-26-formula-bite-check.
-    if std::env::var("WORLDTHREADS_NO_FORMULA").map(|v| v == "1").unwrap_or(false) {
+    if std::env::var("WORLDTHREADS_NO_FORMULA")
+        .map(|v| v == "1")
+        .unwrap_or(false)
+    {
         return;
     }
     let formula = crate::ai::prompts::mission_formula_block();
@@ -296,10 +305,13 @@ pub fn inject_mission_formula(messages: &mut Vec<ChatMessage>) {
             first_system.content = format!("{formula}\n\n{}", first_system.content);
         }
     } else {
-        messages.insert(0, ChatMessage {
-            role: "system".to_string(),
-            content: formula.to_string(),
-        });
+        messages.insert(
+            0,
+            ChatMessage {
+                role: "system".to_string(),
+                content: formula.to_string(),
+            },
+        );
     }
 }
 
@@ -318,7 +330,10 @@ pub fn inject_mission_formula(messages: &mut Vec<ChatMessage>) {
 /// WORLDTHREADS_NO_RYAN_FORMULA=1 disables injection for Mode-C bite-tests
 /// of "is the founding author's anchor doing work in real-time output?"
 pub fn inject_ryan_formula(messages: &mut Vec<ChatMessage>) {
-    if std::env::var("WORLDTHREADS_NO_RYAN_FORMULA").map(|v| v == "1").unwrap_or(false) {
+    if std::env::var("WORLDTHREADS_NO_RYAN_FORMULA")
+        .map(|v| v == "1")
+        .unwrap_or(false)
+    {
         return;
     }
     let anchor = crate::ai::prompts::RYAN_FORMULA_BLOCK;
@@ -327,10 +342,13 @@ pub fn inject_ryan_formula(messages: &mut Vec<ChatMessage>) {
             first_system.content = format!("{anchor}\n\n{}", first_system.content);
         }
     } else {
-        messages.insert(0, ChatMessage {
-            role: "system".to_string(),
-            content: anchor.to_string(),
-        });
+        messages.insert(
+            0,
+            ChatMessage {
+                role: "system".to_string(),
+                content: anchor.to_string(),
+            },
+        );
     }
 }
 
@@ -489,19 +507,29 @@ pub async fn vision_completion_with_base(
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
-    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let resp = builder
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {e}"))?;
     let status = resp.status();
     let body = resp.text().await.map_err(|e| format!("Read error: {e}"))?;
     if !status.is_success() {
         if let Ok(err) = serde_json::from_str::<ApiError>(&body) {
-            return Err(format!("Vision API error ({}): {}", status, err.error.message));
+            return Err(format!(
+                "Vision API error ({}): {}",
+                status, err.error.message
+            ));
         }
         return Err(format!("Vision API error ({}): {}", status, body));
     }
     serde_json::from_str(&body).map_err(|e| format!("Parse error: {e}"))
 }
 
-pub async fn chat_completion_with_base(base_url: &str, api_key: &str, request: &ChatRequest) -> Result<ChatResponse, String> {
+pub async fn chat_completion_with_base(
+    base_url: &str,
+    api_key: &str,
+    request: &ChatRequest,
+) -> Result<ChatResponse, String> {
     let client = Client::new();
     let url = format!("{base_url}/chat/completions");
     let mut request = request.clone();
@@ -517,7 +545,10 @@ pub async fn chat_completion_with_base(base_url: &str, api_key: &str, request: &
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
-    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let resp = builder
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {e}"))?;
 
     let status = resp.status();
     let body = resp.text().await.map_err(|e| format!("Read error: {e}"))?;
@@ -663,14 +694,14 @@ pub async fn anthropic_messages_completion(
         .map_err(|e| format!("Network error: {e}"))?;
 
     let status = resp.status();
-    let text = resp
-        .text()
-        .await
-        .map_err(|e| format!("Read error: {e}"))?;
+    let text = resp.text().await.map_err(|e| format!("Read error: {e}"))?;
 
     if !status.is_success() {
         if let Ok(err) = serde_json::from_str::<AnthropicApiError>(&text) {
-            return Err(format!("Anthropic API error ({}): {}", status, err.error.message));
+            return Err(format!(
+                "Anthropic API error ({}): {}",
+                status, err.error.message
+            ));
         }
         return Err(format!("Anthropic API error ({}): {}", status, text));
     }
@@ -738,12 +769,18 @@ pub async fn vision_completion_stream(
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
 
-    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let resp = builder
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {e}"))?;
     let status = resp.status();
     if !status.is_success() {
         let body = resp.text().await.unwrap_or_default();
         if let Ok(err) = serde_json::from_str::<ApiError>(&body) {
-            return Err(format!("Vision API error ({}): {}", status, err.error.message));
+            return Err(format!(
+                "Vision API error ({}): {}",
+                status, err.error.message
+            ));
         }
         return Err(format!("Vision API error ({}): {}", status, body));
     }
@@ -764,7 +801,9 @@ pub async fn vision_completion_stream(
         while let Some(line_end) = buffer.find('\n') {
             let line = buffer[..line_end].trim().to_string();
             buffer = buffer[line_end + 1..].to_string();
-            if line.is_empty() || line == "data: [DONE]" { continue; }
+            if line.is_empty() || line == "data: [DONE]" {
+                continue;
+            }
             if let Some(json_str) = line.strip_prefix("data: ") {
                 sse_events_seen += 1;
                 if let Ok(err) = serde_json::from_str::<ApiError>(json_str) {
@@ -876,7 +915,10 @@ pub async fn chat_completion_stream(
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
 
-    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let resp = builder
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {e}"))?;
     let status = resp.status();
     if !status.is_success() {
         let body = resp.text().await.unwrap_or_default();
@@ -991,7 +1033,10 @@ pub async fn chat_completion_stream_silent(
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
-    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let resp = builder
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {e}"))?;
     let status = resp.status();
     if !status.is_success() {
         let body = resp.text().await.unwrap_or_default();
@@ -1015,7 +1060,9 @@ pub async fn chat_completion_stream_silent(
         while let Some(line_end) = buffer.find('\n') {
             let line = buffer[..line_end].trim().to_string();
             buffer = buffer[line_end + 1..].to_string();
-            if line.is_empty() || line == "data: [DONE]" { continue; }
+            if line.is_empty() || line == "data: [DONE]" {
+                continue;
+            }
             if let Some(json_str) = line.strip_prefix("data: ") {
                 sse_events_seen += 1;
                 if let Ok(err) = serde_json::from_str::<ApiError>(json_str) {
@@ -1040,7 +1087,9 @@ pub async fn chat_completion_stream_silent(
     if full_text.is_empty() {
         if let Ok(parsed) = serde_json::from_str::<ChatResponse>(raw_body.trim()) {
             if let Some(content) = parsed.choices.first().map(|c| c.message.content.clone()) {
-                if !content.is_empty() { return Ok(content); }
+                if !content.is_empty() {
+                    return Ok(content);
+                }
             }
         }
     }
@@ -1089,18 +1138,32 @@ impl ImageData {
     }
 }
 
-pub async fn generate_image_with_base(base_url: &str, api_key: &str, request: &ImageRequest) -> Result<ImageResponse, String> {
+pub async fn generate_image_with_base(
+    base_url: &str,
+    api_key: &str,
+    request: &ImageRequest,
+) -> Result<ImageResponse, String> {
     let debug_path = std::path::PathBuf::from("/tmp/world-chat-image-debug.log");
 
     let log_debug = |msg: &str| {
         use std::io::Write;
-        if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open(&debug_path) {
+        if let Ok(mut f) = std::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&debug_path)
+        {
             let _ = writeln!(f, "[{}] {}", chrono::Utc::now().to_rfc3339(), msg);
         }
     };
 
-    log_debug(&format!("REQUEST url={base_url}/images/generations model={} size={} quality={}", request.model, request.size, request.quality));
-    log_debug(&format!("REQUEST body (prompt truncated): model={} n={} size={} quality={} prompt={:.200}", request.model, request.n, request.size, request.quality, request.prompt));
+    log_debug(&format!(
+        "REQUEST url={base_url}/images/generations model={} size={} quality={}",
+        request.model, request.size, request.quality
+    ));
+    log_debug(&format!(
+        "REQUEST body (prompt truncated): model={} n={} size={} quality={} prompt={:.200}",
+        request.model, request.n, request.size, request.quality, request.prompt
+    ));
 
     let client = Client::new();
     let url = format!("{base_url}/images/generations");
@@ -1122,7 +1185,11 @@ pub async fn generate_image_with_base(base_url: &str, api_key: &str, request: &I
         format!("Read error: {e}")
     })?;
 
-    log_debug(&format!("RESPONSE status={} body_len={}", status, body.len()));
+    log_debug(&format!(
+        "RESPONSE status={} body_len={}",
+        status,
+        body.len()
+    ));
 
     if !status.is_success() {
         // Log the full error body (it won't contain image data so it's small)
@@ -1145,15 +1212,28 @@ pub async fn generate_image_with_base(base_url: &str, api_key: &str, request: &I
 
     match serde_json::from_str::<ImageResponse>(&body) {
         Ok(parsed) => {
-            let has_b64_json = parsed.data.first().and_then(|d| d.b64_json.as_ref()).is_some();
+            let has_b64_json = parsed
+                .data
+                .first()
+                .and_then(|d| d.b64_json.as_ref())
+                .is_some();
             let has_b64 = parsed.data.first().and_then(|d| d.b64.as_ref()).is_some();
             let has_any = parsed.data.first().and_then(|d| d.image_b64()).is_some();
-            log_debug(&format!("PARSED OK: data_len={} has_b64_json={} has_b64={} has_any={}", parsed.data.len(), has_b64_json, has_b64, has_any));
+            log_debug(&format!(
+                "PARSED OK: data_len={} has_b64_json={} has_b64={} has_any={}",
+                parsed.data.len(),
+                has_b64_json,
+                has_b64,
+                has_any
+            ));
             Ok(parsed)
         }
         Err(e) => {
             log_debug(&format!("PARSE ERROR: {e}"));
-            log_debug(&format!("FULL RESPONSE KEYS: {}", &body[..body.len().min(2000)]));
+            log_debug(&format!(
+                "FULL RESPONSE KEYS: {}",
+                &body[..body.len().min(2000)]
+            ));
             Err(format!("Parse error: {e}"))
         }
     }
@@ -1175,7 +1255,11 @@ pub async fn generate_image_edit_with_base(
 
     let log_debug = |msg: &str| {
         use std::io::Write;
-        if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open(&debug_path) {
+        if let Ok(mut f) = std::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&debug_path)
+        {
             let _ = writeln!(f, "[{}] {}", chrono::Utc::now().to_rfc3339(), msg);
         }
     };
@@ -1225,7 +1309,11 @@ pub async fn generate_image_edit_with_base(
         format!("Read error: {e}")
     })?;
 
-    log_debug(&format!("EDIT RESPONSE status={} body_len={}", status, body.len()));
+    log_debug(&format!(
+        "EDIT RESPONSE status={} body_len={}",
+        status,
+        body.len()
+    ));
 
     if !status.is_success() {
         log_debug(&format!("EDIT ERROR BODY: {body}"));
@@ -1246,7 +1334,11 @@ pub async fn generate_image_edit_with_base(
     match serde_json::from_str::<ImageResponse>(&body) {
         Ok(parsed) => {
             let has_any = parsed.data.first().and_then(|d| d.image_b64()).is_some();
-            log_debug(&format!("EDIT PARSED OK: data_len={} has_image={}", parsed.data.len(), has_any));
+            log_debug(&format!(
+                "EDIT PARSED OK: data_len={} has_image={}",
+                parsed.data.len(),
+                has_any
+            ));
             Ok(parsed)
         }
         Err(e) => {
@@ -1258,7 +1350,12 @@ pub async fn generate_image_edit_with_base(
 
 // ─── Embeddings ─────────────────────────────────────────────────────────────
 
-pub async fn create_embeddings_with_base(base_url: &str, api_key: &str, model: &str, texts: Vec<String>) -> Result<(Vec<Vec<f32>>, u32), String> {
+pub async fn create_embeddings_with_base(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    texts: Vec<String>,
+) -> Result<(Vec<Vec<f32>>, u32), String> {
     let client = Client::new();
     let request = EmbeddingRequest {
         model: model.to_string(),
@@ -1269,7 +1366,10 @@ pub async fn create_embeddings_with_base(base_url: &str, api_key: &str, model: &
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
-    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let resp = builder
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {e}"))?;
 
     let status = resp.status();
     let body = resp.text().await.map_err(|e| format!("Read error: {e}"))?;
@@ -1281,9 +1381,13 @@ pub async fn create_embeddings_with_base(base_url: &str, api_key: &str, model: &
         return Err(format!("API error ({}): {}", status, body));
     }
 
-    let parsed: EmbeddingResponse = serde_json::from_str(&body).map_err(|e| format!("Parse error: {e}"))?;
+    let parsed: EmbeddingResponse =
+        serde_json::from_str(&body).map_err(|e| format!("Parse error: {e}"))?;
     let tokens = parsed.usage.map(|u| u.total_tokens).unwrap_or(0);
-    Ok((parsed.data.into_iter().map(|d| d.embedding).collect(), tokens))
+    Ok((
+        parsed.data.into_iter().map(|d| d.embedding).collect(),
+        tokens,
+    ))
 }
 
 // ─── Text-to-Speech ────────────────────────────────────────────────────────
@@ -1298,7 +1402,11 @@ pub struct TtsRequest {
 /// Generate speech audio via OpenAI TTS API. Returns raw MP3 bytes.
 /// Routes to /audio/speech for dedicated TTS models, or /chat/completions
 /// with audio modality for chat-based audio models (e.g. gpt-audio-1.5).
-pub async fn text_to_speech(base_url: &str, api_key: &str, request: &TtsRequest) -> Result<Vec<u8>, String> {
+pub async fn text_to_speech(
+    base_url: &str,
+    api_key: &str,
+    request: &TtsRequest,
+) -> Result<Vec<u8>, String> {
     if is_chat_audio_model(&request.model) {
         text_to_speech_via_chat(base_url, api_key, request).await
     } else {
@@ -1312,14 +1420,21 @@ fn is_chat_audio_model(model: &str) -> bool {
 }
 
 /// Direct TTS via /audio/speech (tts-1, tts-1-hd, gpt-4o-mini-tts).
-async fn text_to_speech_direct(base_url: &str, api_key: &str, request: &TtsRequest) -> Result<Vec<u8>, String> {
+async fn text_to_speech_direct(
+    base_url: &str,
+    api_key: &str,
+    request: &TtsRequest,
+) -> Result<Vec<u8>, String> {
     let client = Client::new();
     let url = format!("{base_url}/audio/speech");
     let mut builder = client.post(&url).json(request);
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
-    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let resp = builder
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {e}"))?;
     let status = resp.status();
     if !status.is_success() {
         let body = resp.text().await.unwrap_or_default();
@@ -1328,11 +1443,18 @@ async fn text_to_speech_direct(base_url: &str, api_key: &str, request: &TtsReque
         }
         return Err(format!("API error ({}): {}", status, body));
     }
-    resp.bytes().await.map(|b| b.to_vec()).map_err(|e| format!("Read error: {e}"))
+    resp.bytes()
+        .await
+        .map(|b| b.to_vec())
+        .map_err(|e| format!("Read error: {e}"))
 }
 
 /// Chat-based TTS via /chat/completions with audio modality (gpt-audio-1.5 etc.).
-async fn text_to_speech_via_chat(base_url: &str, api_key: &str, request: &TtsRequest) -> Result<Vec<u8>, String> {
+async fn text_to_speech_via_chat(
+    base_url: &str,
+    api_key: &str,
+    request: &TtsRequest,
+) -> Result<Vec<u8>, String> {
     let client = Client::new();
     let url = format!("{base_url}/chat/completions");
 
@@ -1355,7 +1477,10 @@ async fn text_to_speech_via_chat(base_url: &str, api_key: &str, request: &TtsReq
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
-    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let resp = builder
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {e}"))?;
     let status = resp.status();
     let resp_body = resp.text().await.map_err(|e| format!("Read error: {e}"))?;
 
@@ -1367,16 +1492,22 @@ async fn text_to_speech_via_chat(base_url: &str, api_key: &str, request: &TtsReq
     }
 
     // Parse the audio data from the chat response
-    let parsed: serde_json::Value = serde_json::from_str(&resp_body)
-        .map_err(|e| format!("Parse error: {e}"))?;
+    let parsed: serde_json::Value =
+        serde_json::from_str(&resp_body).map_err(|e| format!("Parse error: {e}"))?;
 
     let audio_b64 = parsed
-        .get("choices").and_then(|c| c.get(0))
+        .get("choices")
+        .and_then(|c| c.get(0))
         .and_then(|c| c.get("message"))
         .and_then(|m| m.get("audio"))
         .and_then(|a| a.get("data"))
         .and_then(|d| d.as_str())
-        .ok_or_else(|| format!("No audio data in response: {}", &resp_body[..resp_body.len().min(500)]))?;
+        .ok_or_else(|| {
+            format!(
+                "No audio data in response: {}",
+                &resp_body[..resp_body.len().min(500)]
+            )
+        })?;
 
     b64_decode(audio_b64)
 }
@@ -1386,7 +1517,10 @@ fn b64_decode(input: &str) -> Result<Vec<u8>, String> {
         let mut table = [255u8; 128];
         let chars = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         let mut i = 0;
-        while i < 64 { table[chars[i] as usize] = i as u8; i += 1; }
+        while i < 64 {
+            table[chars[i] as usize] = i as u8;
+            i += 1;
+        }
         table
     };
     let input = input.as_bytes();
@@ -1394,13 +1528,23 @@ fn b64_decode(input: &str) -> Result<Vec<u8>, String> {
     let mut buf = 0u32;
     let mut bits = 0;
     for &b in input {
-        if b == b'=' || b == b'\n' || b == b'\r' { continue; }
-        if b >= 128 { return Err("Invalid base64 character".to_string()); }
+        if b == b'=' || b == b'\n' || b == b'\r' {
+            continue;
+        }
+        if b >= 128 {
+            return Err("Invalid base64 character".to_string());
+        }
         let val = DECODE[b as usize];
-        if val == 255 { return Err(format!("Invalid base64 character: {}", b as char)); }
+        if val == 255 {
+            return Err(format!("Invalid base64 character: {}", b as char));
+        }
         buf = (buf << 6) | val as u32;
         bits += 6;
-        if bits >= 8 { bits -= 8; result.push((buf >> bits) as u8); buf &= (1 << bits) - 1; }
+        if bits >= 8 {
+            bits -= 8;
+            result.push((buf >> bits) as u8);
+            buf &= (1 << bits) - 1;
+        }
     }
     Ok(result)
 }
@@ -1426,7 +1570,10 @@ pub async fn list_models(base_url: &str, api_key: &str) -> Result<Vec<ModelInfo>
     if !api_key.is_empty() {
         builder = builder.header("Authorization", format!("Bearer {api_key}"));
     }
-    let resp = builder.send().await.map_err(|e| format!("Network error: {e}"))?;
+    let resp = builder
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {e}"))?;
 
     let status = resp.status();
     let body = resp.text().await.map_err(|e| format!("Read error: {e}"))?;
@@ -1435,6 +1582,7 @@ pub async fn list_models(base_url: &str, api_key: &str) -> Result<Vec<ModelInfo>
         return Err(format!("Failed to list models ({}): {}", status, body));
     }
 
-    let parsed: ModelsResponse = serde_json::from_str(&body).map_err(|e| format!("Parse error: {e}"))?;
+    let parsed: ModelsResponse =
+        serde_json::from_str(&body).map_err(|e| format!("Parse error: {e}"))?;
     Ok(parsed.data)
 }

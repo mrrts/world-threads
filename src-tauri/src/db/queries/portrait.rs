@@ -21,14 +21,21 @@ pub fn create_portrait(conn: &Connection, p: &Portrait) -> Result<(), rusqlite::
     Ok(())
 }
 
-pub fn list_portraits(conn: &Connection, character_id: &str) -> Result<Vec<Portrait>, rusqlite::Error> {
+pub fn list_portraits(
+    conn: &Connection,
+    character_id: &str,
+) -> Result<Vec<Portrait>, rusqlite::Error> {
     let mut stmt = conn.prepare(
         "SELECT portrait_id, character_id, prompt, file_name, is_active, created_at FROM character_portraits WHERE character_id = ?1 ORDER BY created_at DESC"
     )?;
     let rows = stmt.query_map(params![character_id], |row| {
         Ok(Portrait {
-            portrait_id: row.get(0)?, character_id: row.get(1)?, prompt: row.get(2)?,
-            file_name: row.get(3)?, is_active: row.get(4)?, created_at: row.get(5)?,
+            portrait_id: row.get(0)?,
+            character_id: row.get(1)?,
+            prompt: row.get(2)?,
+            file_name: row.get(3)?,
+            is_active: row.get(4)?,
+            created_at: row.get(5)?,
         })
     })?;
     rows.collect()
@@ -45,9 +52,19 @@ pub fn get_active_portrait(conn: &Connection, character_id: &str) -> Option<Port
     ).ok()
 }
 
-pub fn set_active_portrait(conn: &Connection, character_id: &str, portrait_id: &str) -> Result<(), rusqlite::Error> {
-    conn.execute("UPDATE character_portraits SET is_active = 0 WHERE character_id = ?1", params![character_id])?;
-    conn.execute("UPDATE character_portraits SET is_active = 1 WHERE portrait_id = ?1", params![portrait_id])?;
+pub fn set_active_portrait(
+    conn: &Connection,
+    character_id: &str,
+    portrait_id: &str,
+) -> Result<(), rusqlite::Error> {
+    conn.execute(
+        "UPDATE character_portraits SET is_active = 0 WHERE character_id = ?1",
+        params![character_id],
+    )?;
+    conn.execute(
+        "UPDATE character_portraits SET is_active = 1 WHERE portrait_id = ?1",
+        params![portrait_id],
+    )?;
     Ok(())
 }
 
@@ -57,8 +74,9 @@ pub fn delete_portrait(conn: &Connection, portrait_id: &str) -> Result<String, r
         params![portrait_id],
         |r| r.get(0),
     )?;
-    conn.execute("DELETE FROM character_portraits WHERE portrait_id = ?1", params![portrait_id])?;
+    conn.execute(
+        "DELETE FROM character_portraits WHERE portrait_id = ?1",
+        params![portrait_id],
+    )?;
     Ok(file_name)
 }
-
-

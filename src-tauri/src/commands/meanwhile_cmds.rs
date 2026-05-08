@@ -7,11 +7,15 @@ use tauri::State;
 const MEANWHILE_HISTORY_WINDOW: usize = 30;
 
 fn current_world_day_and_time(world: &World) -> (i64, String) {
-    let day = world.state.get("time")
+    let day = world
+        .state
+        .get("time")
         .and_then(|t| t.get("day_index"))
         .and_then(|v| v.as_i64())
         .unwrap_or(0);
-    let time = world.state.get("time")
+    let time = world
+        .state
+        .get("time")
         .and_then(|t| t.get("time_of_day"))
         .and_then(|v| v.as_str())
         .unwrap_or("")
@@ -40,11 +44,15 @@ pub async fn generate_meanwhile_events_cmd(
         let model_config = orchestrator::load_model_config(&conn);
         let characters = list_characters(&conn, &world_id).map_err(|e| e.to_string())?;
         let (wd, wt) = current_world_day_and_time(&world);
-        let weather_label = world.state.get("weather")
+        let weather_label = world
+            .state
+            .get("weather")
             .and_then(|v| v.as_str())
             .and_then(|k| prompts::weather_meta(k).map(|(_emoji, label)| label.to_string()));
         let user_name = get_user_profile(&conn, &world_id)
-            .ok().map(|p| p.display_name).unwrap_or_else(|| "the human".to_string());
+            .ok()
+            .map(|p| p.display_name)
+            .unwrap_or_else(|| "the human".to_string());
         (characters, model_config, wd, wt, weather_label, user_name)
     };
 
@@ -55,28 +63,48 @@ pub async fn generate_meanwhile_events_cmd(
         // Per-character context — inventory + recent history.
         let (prior_items, history) = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            let items: Vec<orchestrator::InventoryItem> = character.inventory.as_array()
-                .map(|a| a.iter()
-                    .filter_map(|v| serde_json::from_value::<orchestrator::InventoryItem>(v.clone()).ok())
-                    .collect())
+            let items: Vec<orchestrator::InventoryItem> = character
+                .inventory
+                .as_array()
+                .map(|a| {
+                    a.iter()
+                        .filter_map(|v| {
+                            serde_json::from_value::<orchestrator::InventoryItem>(v.clone()).ok()
+                        })
+                        .collect()
+                })
                 .unwrap_or_default();
             let hist = gather_character_recent_messages(
-                &conn, &character.character_id, &user_name, MEANWHILE_HISTORY_WINDOW,
+                &conn,
+                &character.character_id,
+                &user_name,
+                MEANWHILE_HISTORY_WINDOW,
             );
             (items, hist)
         };
         let summary = match orchestrator::generate_meanwhile_event(
-            &base, &api_key, &model_config.memory_model,
+            &base,
+            &api_key,
+            &model_config.memory_model,
             &character.display_name,
             &character.identity,
             &prior_items,
             &history,
             world_day,
-            if time_of_day.is_empty() { "day" } else { &time_of_day },
+            if time_of_day.is_empty() {
+                "day"
+            } else {
+                &time_of_day
+            },
             weather_label.as_deref(),
-        ).await {
+        )
+        .await
+        {
             Ok(s) => s,
-            Err(e) => { log::warn!("[Meanwhile] failed for {}: {e}", character.display_name); continue; }
+            Err(e) => {
+                log::warn!("[Meanwhile] failed for {}: {e}", character.display_name);
+                continue;
+            }
         };
         let event = MeanwhileEvent {
             event_id: uuid::Uuid::new_v4().to_string(),
@@ -90,7 +118,10 @@ pub async fn generate_meanwhile_events_cmd(
         {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
             if let Err(e) = create_meanwhile_event(&conn, &event) {
-                log::warn!("[Meanwhile] insert failed for {}: {e}", character.display_name);
+                log::warn!(
+                    "[Meanwhile] insert failed for {}: {e}",
+                    character.display_name
+                );
                 continue;
             }
         }
@@ -105,7 +136,10 @@ pub async fn generate_meanwhile_events_cmd(
             created_at: event.created_at,
         });
     }
-    log::info!("[Meanwhile] wrote {} events for world {world_id}", inserted.len());
+    log::info!(
+        "[Meanwhile] wrote {} events for world {world_id}",
+        inserted.len()
+    );
     Ok(inserted)
 }
 
@@ -125,10 +159,13 @@ pub async fn maybe_generate_meanwhile_events_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let world = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
         let (wd, _) = current_world_day_and_time(&world);
-        let count: i64 = conn.query_row(
-            "SELECT COUNT(*) FROM meanwhile_events WHERE world_id = ?1 AND world_day = ?2",
-            rusqlite::params![world_id, wd], |r| r.get(0),
-        ).unwrap_or(0);
+        let count: i64 = conn
+            .query_row(
+                "SELECT COUNT(*) FROM meanwhile_events WHERE world_id = ?1 AND world_day = ?2",
+                rusqlite::params![world_id, wd],
+                |r| r.get(0),
+            )
+            .unwrap_or(0);
         (wd, count > 0)
     };
     if already_exists {
@@ -155,6 +192,5 @@ pub fn list_meanwhile_events_cmd(
     limit: Option<usize>,
 ) -> Result<Vec<MeanwhileEventWithName>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    list_meanwhile_events(&conn, &world_id, limit.unwrap_or(30))
-        .map_err(|e| e.to_string())
+    list_meanwhile_events(&conn, &world_id, limit.unwrap_or(30)).map_err(|e| e.to_string())
 }

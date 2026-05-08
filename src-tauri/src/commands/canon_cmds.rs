@@ -22,23 +22,36 @@ fn find_message(conn: &rusqlite::Connection, message_id: &str) -> Option<(Messag
     let mut found = None;
     if let Ok(m) = conn.query_row(
         &format!("SELECT {MSG_COLS} FROM messages WHERE message_id = ?1"),
-        params![message_id], row_to_message,
+        params![message_id],
+        row_to_message,
     ) {
         found = Some((m, "messages".to_string()));
     } else if let Ok(m) = conn.query_row(
         &format!("SELECT {MSG_COLS} FROM group_messages WHERE message_id = ?1"),
-        params![message_id], row_to_message,
+        params![message_id],
+        row_to_message,
     ) {
         found = Some((m, "group_messages".to_string()));
     }
     if let Some((mut m, table)) = found {
         if m.role == "imagined_chapter" {
             if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&m.content) {
-                let chapter_id = parsed.get("chapter_id").and_then(|v| v.as_str()).unwrap_or("");
+                let chapter_id = parsed
+                    .get("chapter_id")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("");
                 if !chapter_id.is_empty() {
                     if let Ok(chapter) = get_imagined_chapter(conn, chapter_id) {
-                        let title = if chapter.title.trim().is_empty() { "(untitled)" } else { chapter.title.trim() };
-                        m.content = format!("[Imagined chapter — '{}']\n\n{}", title, chapter.content.trim());
+                        let title = if chapter.title.trim().is_empty() {
+                            "(untitled)"
+                        } else {
+                            chapter.title.trim()
+                        };
+                        m.content = format!(
+                            "[Imagined chapter — '{}']\n\n{}",
+                            title,
+                            chapter.content.trim()
+                        );
                     }
                 }
             }
@@ -63,20 +76,26 @@ fn surrounding_messages(
     let after_sql = format!(
         "SELECT {MSG_COLS} FROM {table} WHERE thread_id = ?1 AND created_at > ?2 ORDER BY created_at ASC LIMIT ?3"
     );
-    let source_sql = format!(
-        "SELECT {MSG_COLS} FROM {table} WHERE thread_id = ?1 AND created_at = ?2"
-    );
+    let source_sql =
+        format!("SELECT {MSG_COLS} FROM {table} WHERE thread_id = ?1 AND created_at = ?2");
 
-    let mut before: Vec<Message> = conn.prepare(&before_sql).ok()
+    let mut before: Vec<Message> = conn
+        .prepare(&before_sql)
+        .ok()
         .and_then(|mut s| {
-            s.query_map(params![thread_id, source_created_at, CONTEXT_BEFORE], row_to_message)
-                .ok()
-                .map(|rows| rows.filter_map(|r| r.ok()).collect())
+            s.query_map(
+                params![thread_id, source_created_at, CONTEXT_BEFORE],
+                row_to_message,
+            )
+            .ok()
+            .map(|rows| rows.filter_map(|r| r.ok()).collect())
         })
         .unwrap_or_default();
     before.reverse();
 
-    let source_rows: Vec<Message> = conn.prepare(&source_sql).ok()
+    let source_rows: Vec<Message> = conn
+        .prepare(&source_sql)
+        .ok()
         .and_then(|mut s| {
             s.query_map(params![thread_id, source_created_at], row_to_message)
                 .ok()
@@ -84,11 +103,16 @@ fn surrounding_messages(
         })
         .unwrap_or_default();
 
-    let after: Vec<Message> = conn.prepare(&after_sql).ok()
+    let after: Vec<Message> = conn
+        .prepare(&after_sql)
+        .ok()
         .and_then(|mut s| {
-            s.query_map(params![thread_id, source_created_at, CONTEXT_AFTER], row_to_message)
-                .ok()
-                .map(|rows| rows.filter_map(|r| r.ok()).collect())
+            s.query_map(
+                params![thread_id, source_created_at, CONTEXT_AFTER],
+                row_to_message,
+            )
+            .ok()
+            .map(|rows| rows.filter_map(|r| r.ok()).collect())
         })
         .unwrap_or_default();
 
@@ -116,10 +140,13 @@ fn speaker_label_for(
         }
     }
     // Solo chat assistant fallback: look up the thread's character.
-    let char_id: Option<String> = conn.query_row(
-        "SELECT character_id FROM threads WHERE thread_id = ?1",
-        params![msg.thread_id], |r| r.get(0),
-    ).ok();
+    let char_id: Option<String> = conn
+        .query_row(
+            "SELECT character_id FROM threads WHERE thread_id = ?1",
+            params![msg.thread_id],
+            |r| r.get(0),
+        )
+        .ok();
     if let Some(cid) = char_id {
         if let Ok(ch) = get_character(conn, &cid) {
             return ch.display_name;
@@ -151,7 +178,15 @@ pub async fn propose_kept_weave_cmd(
     request: WeaveRequest,
 ) -> Result<WeaveResponse, String> {
     // Read everything needed up-front (lock released before awaiting).
-    let (model_config, subject_label, current_description, context_msgs, source_msg, source_speaker_label, world_id_for_user) = {
+    let (
+        model_config,
+        subject_label,
+        current_description,
+        context_msgs,
+        source_msg,
+        source_speaker_label,
+        world_id_for_user,
+    ) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let model_config = orchestrator::load_model_config(&conn);
 
@@ -161,51 +196,79 @@ pub async fn propose_kept_weave_cmd(
         // User display name (for labeling user-role messages in context).
         let user_display_name: String = get_world(&conn, &{
             // find world via thread
-            let thread_world: Option<String> = conn.query_row(
-                "SELECT world_id FROM threads WHERE thread_id = ?1",
-                params![source_msg.thread_id], |r| r.get(0),
-            ).ok();
+            let thread_world: Option<String> = conn
+                .query_row(
+                    "SELECT world_id FROM threads WHERE thread_id = ?1",
+                    params![source_msg.thread_id],
+                    |r| r.get(0),
+                )
+                .ok();
             thread_world.unwrap_or_default()
         })
-            .ok()
-            .and_then(|w| get_user_profile(&conn, &w.world_id).ok())
-            .map(|p| p.display_name)
-            .unwrap_or_else(|| "The human".to_string());
+        .ok()
+        .and_then(|w| get_user_profile(&conn, &w.world_id).ok())
+        .map(|p| p.display_name)
+        .unwrap_or_else(|| "The human".to_string());
 
         // Pull current description + subject label based on subject_type.
-        let (subject_label, current_description, world_id_for_user) = match request.subject_type.as_str() {
-            "character" => {
-                let ch = get_character(&conn, &request.subject_id).map_err(|e| e.to_string())?;
-                (ch.display_name, ch.identity, None::<String>)
-            }
-            "user" => {
-                // subject_id is world_id for user
-                let profile = get_user_profile(&conn, &request.subject_id).map_err(|e| e.to_string())?;
-                (profile.display_name, profile.description, Some(request.subject_id.clone()))
-            }
-            other => return Err(format!("weave not supported for subject_type={other}")),
-        };
+        let (subject_label, current_description, world_id_for_user) =
+            match request.subject_type.as_str() {
+                "character" => {
+                    let ch =
+                        get_character(&conn, &request.subject_id).map_err(|e| e.to_string())?;
+                    (ch.display_name, ch.identity, None::<String>)
+                }
+                "user" => {
+                    // subject_id is world_id for user
+                    let profile =
+                        get_user_profile(&conn, &request.subject_id).map_err(|e| e.to_string())?;
+                    (
+                        profile.display_name,
+                        profile.description,
+                        Some(request.subject_id.clone()),
+                    )
+                }
+                other => return Err(format!("weave not supported for subject_type={other}")),
+            };
 
-        let context_msgs = surrounding_messages(&conn, &table, &source_msg.thread_id, &source_msg.created_at);
+        let context_msgs =
+            surrounding_messages(&conn, &table, &source_msg.thread_id, &source_msg.created_at);
         let speaker_label = speaker_label_for(&conn, &source_msg, &user_display_name);
 
-        (model_config, subject_label, current_description, context_msgs, source_msg, speaker_label, world_id_for_user)
+        (
+            model_config,
+            subject_label,
+            current_description,
+            context_msgs,
+            source_msg,
+            speaker_label,
+            world_id_for_user,
+        )
     };
 
     let _ = world_id_for_user; // kept for future use; not needed by weave itself
 
     let (proposed, usage) = orchestrator::generate_canon_weave_description(
-        &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
+        &model_config.chat_api_base(),
+        &api_key,
+        &model_config.dialogue_model,
         &subject_label,
         &current_description,
         &context_msgs,
         &source_msg,
         &source_speaker_label,
-    ).await?;
+    )
+    .await?;
 
     if let Some(u) = &usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "canon_weave", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
+        let _ = record_token_usage(
+            &conn,
+            "canon_weave",
+            &model_config.dialogue_model,
+            u.prompt_tokens,
+            u.completion_tokens,
+        );
     }
 
     Ok(WeaveResponse {
@@ -218,9 +281,9 @@ pub async fn propose_kept_weave_cmd(
 #[serde(rename_all = "camelCase")]
 pub struct SaveCanonRequest {
     pub source_message_id: Option<String>,
-    pub subject_type: String,      // "character" | "user" | "world" | "relationship"
-    pub subject_id: String,        // character_id | world_id | world_id | "char_a::char_b|user"
-    pub record_type: String,        // "description_weave" | "known_fact" | "relationship_note" | "world_fact"
+    pub subject_type: String, // "character" | "user" | "world" | "relationship"
+    pub subject_id: String,   // character_id | world_id | world_id | "char_a::char_b|user"
+    pub record_type: String, // "description_weave" | "known_fact" | "relationship_note" | "world_fact"
     pub content: String,
     #[serde(default)]
     pub user_note: String,
@@ -236,15 +299,14 @@ pub fn save_kept_record_cmd(
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
 
     // Look up source message metadata for provenance (if provided).
-    let (source_thread_id, source_world_day, source_created_at) = match request.source_message_id.as_deref() {
-        Some(mid) if !mid.is_empty() => {
-            match find_message(&conn, mid) {
+    let (source_thread_id, source_world_day, source_created_at) =
+        match request.source_message_id.as_deref() {
+            Some(mid) if !mid.is_empty() => match find_message(&conn, mid) {
                 Some((m, _)) => (Some(m.thread_id), m.world_day, Some(m.created_at)),
                 None => (None, None, None),
-            }
-        }
-        _ => (None, None, None),
-    };
+            },
+            _ => (None, None, None),
+        };
 
     // Apply side effect to the subject row. The UI now only exposes
     // description_weave for character|user — known_fact, relationship_note,
@@ -290,11 +352,14 @@ pub fn save_kept_record_cmd(
     } else if entry.subject_type == "user" {
         if let Some(mid) = entry.source_message_id.as_deref() {
             if let Some((m, _)) = find_message(&conn, mid) {
-                let cid: Option<String> = conn.query_row(
-                    "SELECT character_id FROM threads WHERE thread_id = ?1",
-                    params![m.thread_id],
-                    |r| r.get(0),
-                ).ok().flatten();
+                let cid: Option<String> = conn
+                    .query_row(
+                        "SELECT character_id FROM threads WHERE thread_id = ?1",
+                        params![m.thread_id],
+                        |r| r.get(0),
+                    )
+                    .ok()
+                    .flatten();
                 character_id_to_refresh = cid;
             }
         }
@@ -338,7 +403,9 @@ pub struct ProposeAutoCanonRequest {
     pub user_hint: String,
 }
 
-fn default_light_act() -> String { "light".to_string() }
+fn default_light_act() -> String {
+    "light".to_string()
+}
 
 /// Build the inputs for `propose_canonization_updates` from a source
 /// message id. Extracted as a pub helper so the worldcli affordance
@@ -352,26 +419,39 @@ pub fn build_canonization_inputs(
     conn: &rusqlite::Connection,
     source_message_id: &str,
 ) -> Result<
-    (orchestrator::ModelConfig, Message, String, Vec<Message>, Vec<orchestrator::CanonizationSubject>),
+    (
+        orchestrator::ModelConfig,
+        Message,
+        String,
+        Vec<Message>,
+        Vec<orchestrator::CanonizationSubject>,
+    ),
     String,
 > {
     let model_config = orchestrator::load_model_config(conn);
     let (source_msg, table) = find_message(conn, source_message_id)
         .ok_or_else(|| "source message not found".to_string())?;
-    let world_id: String = conn.query_row(
-        "SELECT world_id FROM threads WHERE thread_id = ?1",
-        params![source_msg.thread_id], |r| r.get(0),
-    ).map_err(|e| format!("couldn't resolve world for source message: {e}"))?;
+    let world_id: String = conn
+        .query_row(
+            "SELECT world_id FROM threads WHERE thread_id = ?1",
+            params![source_msg.thread_id],
+            |r| r.get(0),
+        )
+        .map_err(|e| format!("couldn't resolve world for source message: {e}"))?;
     let user_profile = get_user_profile(conn, &world_id).ok();
-    let user_display_name = user_profile.as_ref()
+    let user_display_name = user_profile
+        .as_ref()
         .map(|p| p.display_name.clone())
         .unwrap_or_else(|| "The human".to_string());
     let speaker_label = speaker_label_for(conn, &source_msg, &user_display_name);
-    let context_msgs = surrounding_messages(conn, &table, &source_msg.thread_id, &source_msg.created_at);
+    let context_msgs =
+        surrounding_messages(conn, &table, &source_msg.thread_id, &source_msg.created_at);
     let characters = list_characters(conn, &world_id).unwrap_or_default();
     let mut subjects: Vec<orchestrator::CanonizationSubject> = Vec::new();
     for ch in &characters {
-        if ch.is_archived { continue; }
+        if ch.is_archived {
+            continue;
+        }
         subjects.push(orchestrator::CanonizationSubject {
             subject_type: "character".to_string(),
             subject_id: ch.character_id.clone(),
@@ -387,7 +467,11 @@ pub fn build_canonization_inputs(
         subjects.push(orchestrator::CanonizationSubject {
             subject_type: "user".to_string(),
             subject_id: world_id.clone(),
-            subject_label: if profile.display_name.trim().is_empty() { "You".to_string() } else { profile.display_name.clone() },
+            subject_label: if profile.display_name.trim().is_empty() {
+                "You".to_string()
+            } else {
+                profile.display_name.clone()
+            },
             current_description: profile.description.clone(),
             voice_rules: Vec::new(),
             boundaries: json_array_to_strings(&profile.boundaries),
@@ -395,7 +479,13 @@ pub fn build_canonization_inputs(
             open_loops: Vec::new(),
         });
     }
-    Ok((model_config, source_msg, speaker_label, context_msgs, subjects))
+    Ok((
+        model_config,
+        source_msg,
+        speaker_label,
+        context_msgs,
+        subjects,
+    ))
 }
 
 /// Classify a moment into 1-2 proposed canonization updates without
@@ -418,15 +508,27 @@ pub async fn propose_auto_canon_cmd(
     };
 
     let (proposals, usage) = orchestrator::propose_canonization_updates(
-        &model_config.chat_api_base(), &api_key, &model_config.memory_model,
-        &source_msg, &source_speaker_label, &context_msgs, &subjects,
+        &model_config.chat_api_base(),
+        &api_key,
+        &model_config.memory_model,
+        &source_msg,
+        &source_speaker_label,
+        &context_msgs,
+        &subjects,
         Some(&request.user_hint),
         &request.act,
-    ).await?;
+    )
+    .await?;
 
     if let Some(u) = &usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "canon_auto_propose", &model_config.memory_model, u.prompt_tokens, u.completion_tokens);
+        let _ = record_token_usage(
+            &conn,
+            "canon_auto_propose",
+            &model_config.memory_model,
+            u.prompt_tokens,
+            u.completion_tokens,
+        );
     }
 
     Ok(proposals)
@@ -472,7 +574,10 @@ pub fn commit_auto_canon_cmd(
         return Err("no updates to commit".to_string());
     }
     if request.updates.len() > 2 {
-        return Err(format!("too many updates ({}); max is 2", request.updates.len()));
+        return Err(format!(
+            "too many updates ({}); max is 2",
+            request.updates.len()
+        ));
     }
 
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -481,23 +586,40 @@ pub fn commit_auto_canon_cmd(
     for u in &request.updates {
         // Normalize fields for this update.
         let kind = u.kind.as_str();
-        let action = if kind == "description_weave" { "update" } else { u.action.as_str() };
+        let action = if kind == "description_weave" {
+            "update"
+        } else {
+            u.action.as_str()
+        };
         let trimmed = u.new_content.trim().to_string();
-        let target = u.target_existing_text.as_ref().map(|s| s.trim().to_string()).filter(|s| !s.is_empty());
+        let target = u
+            .target_existing_text
+            .as_ref()
+            .map(|s| s.trim().to_string())
+            .filter(|s| !s.is_empty());
 
         // Validate content vs. action expectations.
         if action != "remove" && trimmed.is_empty() {
-            return Err(format!("{} on {} has empty content", action, u.subject_label));
+            return Err(format!(
+                "{} on {} has empty content",
+                action, u.subject_label
+            ));
         }
         if action == "update" || action == "remove" {
             if target.is_none() {
-                return Err(format!("{} on {} requires target_existing_text", action, u.subject_label));
+                return Err(format!(
+                    "{} on {} requires target_existing_text",
+                    action, u.subject_label
+                ));
             }
         }
 
         // Execute side effect. For list kinds we dispatch on (kind, action);
         // for description_weave we always do a full rewrite.
-        let (prior_for_report, kept_id): (Option<String>, Option<String>) = match (u.subject_type.as_str(), kind) {
+        let (prior_for_report, kept_id): (Option<String>, Option<String>) = match (
+            u.subject_type.as_str(),
+            kind,
+        ) {
             ("character", "description_weave") => {
                 let ch = get_character(&conn, &u.subject_id).map_err(|e| e.to_string())?;
                 let prior = ch.identity.clone();
@@ -522,7 +644,13 @@ pub fn commit_auto_canon_cmd(
                     }
                     "update" => {
                         let target_text = target.as_deref().unwrap();
-                        replace_character_list_item(&conn, &u.subject_id, field, target_text, &trimmed)?;
+                        replace_character_list_item(
+                            &conn,
+                            &u.subject_id,
+                            field,
+                            target_text,
+                            &trimmed,
+                        )?;
                         let id = write_kept_record(&conn, u, &trimmed, &request)?;
                         (Some(target_text.to_string()), Some(id))
                     }
@@ -538,29 +666,29 @@ pub fn commit_auto_canon_cmd(
                     other => return Err(format!("unknown action: {other}")),
                 }
             }
-            ("character", "open_loop") => {
-                match action {
-                    "add" => {
-                        append_character_state_open_loop(&conn, &u.subject_id, &trimmed)?;
-                        let id = write_kept_record(&conn, u, &trimmed, &request)?;
-                        (None, Some(id))
-                    }
-                    "update" => {
-                        let target_text = target.as_deref().unwrap();
-                        replace_character_open_loop(&conn, &u.subject_id, target_text, &trimmed)?;
-                        let id = write_kept_record(&conn, u, &trimmed, &request)?;
-                        (Some(target_text.to_string()), Some(id))
-                    }
-                    "remove" => {
-                        let target_text = target.as_deref().unwrap();
-                        remove_character_open_loop(&conn, &u.subject_id, target_text)?;
-                        (Some(target_text.to_string()), None)
-                    }
-                    other => return Err(format!("unknown action: {other}")),
+            ("character", "open_loop") => match action {
+                "add" => {
+                    append_character_state_open_loop(&conn, &u.subject_id, &trimmed)?;
+                    let id = write_kept_record(&conn, u, &trimmed, &request)?;
+                    (None, Some(id))
                 }
-            }
+                "update" => {
+                    let target_text = target.as_deref().unwrap();
+                    replace_character_open_loop(&conn, &u.subject_id, target_text, &trimmed)?;
+                    let id = write_kept_record(&conn, u, &trimmed, &request)?;
+                    (Some(target_text.to_string()), Some(id))
+                }
+                "remove" => {
+                    let target_text = target.as_deref().unwrap();
+                    remove_character_open_loop(&conn, &u.subject_id, target_text)?;
+                    (Some(target_text.to_string()), None)
+                }
+                other => return Err(format!("unknown action: {other}")),
+            },
             ("user", "description_weave") => {
-                let prior = get_user_profile(&conn, &u.subject_id).map(|p| p.description).unwrap_or_default();
+                let prior = get_user_profile(&conn, &u.subject_id)
+                    .map(|p| p.description)
+                    .unwrap_or_default();
                 conn.execute(
                     "UPDATE user_profiles SET description = ?2, updated_at = datetime('now') WHERE world_id = ?1",
                     params![u.subject_id, trimmed],
@@ -587,7 +715,13 @@ pub fn commit_auto_canon_cmd(
                     }
                     "update" => {
                         let target_text = target.as_deref().unwrap();
-                        replace_user_profile_list_item(&conn, &u.subject_id, field, target_text, &trimmed)?;
+                        replace_user_profile_list_item(
+                            &conn,
+                            &u.subject_id,
+                            field,
+                            target_text,
+                            &trimmed,
+                        )?;
                         let id = write_kept_record(&conn, u, &trimmed, &request)?;
                         (Some(target_text.to_string()), Some(id))
                     }
@@ -619,7 +753,11 @@ pub fn commit_auto_canon_cmd(
             subject_type: u.subject_type.clone(),
             subject_id: u.subject_id.clone(),
             subject_label: u.subject_label.clone(),
-            new_content: if action == "remove" { String::new() } else { trimmed },
+            new_content: if action == "remove" {
+                String::new()
+            } else {
+                trimmed
+            },
             prior_content: prior_for_report,
             justification: u.justification.clone(),
         });
@@ -640,11 +778,14 @@ pub fn commit_auto_canon_cmd(
     }
     if applied.iter().any(|u| u.subject_type == "user") {
         if let Some((m, _)) = find_message(&conn, &request.source_message_id) {
-            let cid: Option<String> = conn.query_row(
-                "SELECT character_id FROM threads WHERE thread_id = ?1",
-                params![m.thread_id],
-                |r| r.get(0),
-            ).ok().flatten();
+            let cid: Option<String> = conn
+                .query_row(
+                    "SELECT character_id FROM threads WHERE thread_id = ?1",
+                    params![m.thread_id],
+                    |r| r.get(0),
+                )
+                .ok()
+                .flatten();
             if let Some(c) = cid {
                 character_ids_to_refresh.insert(c);
             }
@@ -679,10 +820,11 @@ fn write_kept_record(
     content: &str,
     request: &CommitAutoCanonRequest,
 ) -> Result<String, String> {
-    let (source_thread_id, source_world_day, source_created_at) = match find_message(conn, &request.source_message_id) {
-        Some((m, _)) => (Some(m.thread_id), m.world_day, Some(m.created_at)),
-        None => (None, None, None),
-    };
+    let (source_thread_id, source_world_day, source_created_at) =
+        match find_message(conn, &request.source_message_id) {
+            Some((m, _)) => (Some(m.thread_id), m.world_day, Some(m.created_at)),
+            None => (None, None, None),
+        };
     let kept_id = uuid::Uuid::new_v4().to_string();
     let entry = KeptRecord {
         kept_id: kept_id.clone(),
@@ -712,12 +854,15 @@ fn append_character_list(
     field: &str,
     value: &str,
 ) -> Result<(), String> {
-    let current_json: String = conn.query_row(
-        &format!("SELECT {field} FROM characters WHERE character_id = ?1"),
-        params![character_id], |r| r.get(0),
-    ).map_err(|e| format!("character load failed: {e}"))?;
-    let mut arr: Vec<serde_json::Value> = serde_json::from_str(&current_json)
-        .unwrap_or_else(|_| Vec::new());
+    let current_json: String = conn
+        .query_row(
+            &format!("SELECT {field} FROM characters WHERE character_id = ?1"),
+            params![character_id],
+            |r| r.get(0),
+        )
+        .map_err(|e| format!("character load failed: {e}"))?;
+    let mut arr: Vec<serde_json::Value> =
+        serde_json::from_str(&current_json).unwrap_or_else(|_| Vec::new());
     arr.push(serde_json::Value::String(value.to_string()));
     let new_json = serde_json::to_string(&arr).map_err(|e| e.to_string())?;
     conn.execute(
@@ -739,12 +884,15 @@ fn replace_character_list_item(
     target: &str,
     replacement: &str,
 ) -> Result<(), String> {
-    let current_json: String = conn.query_row(
-        &format!("SELECT {field} FROM characters WHERE character_id = ?1"),
-        params![character_id], |r| r.get(0),
-    ).map_err(|e| format!("character load failed: {e}"))?;
-    let mut arr: Vec<serde_json::Value> = serde_json::from_str(&current_json)
-        .unwrap_or_else(|_| Vec::new());
+    let current_json: String = conn
+        .query_row(
+            &format!("SELECT {field} FROM characters WHERE character_id = ?1"),
+            params![character_id],
+            |r| r.get(0),
+        )
+        .map_err(|e| format!("character load failed: {e}"))?;
+    let mut arr: Vec<serde_json::Value> =
+        serde_json::from_str(&current_json).unwrap_or_else(|_| Vec::new());
     let target_norm = target.trim().to_ascii_lowercase();
     let mut replaced = false;
     for v in arr.iter_mut() {
@@ -776,17 +924,22 @@ fn remove_character_list_item(
     field: &str,
     target: &str,
 ) -> Result<(), String> {
-    let current_json: String = conn.query_row(
-        &format!("SELECT {field} FROM characters WHERE character_id = ?1"),
-        params![character_id], |r| r.get(0),
-    ).map_err(|e| format!("character load failed: {e}"))?;
-    let mut arr: Vec<serde_json::Value> = serde_json::from_str(&current_json)
-        .unwrap_or_else(|_| Vec::new());
+    let current_json: String = conn
+        .query_row(
+            &format!("SELECT {field} FROM characters WHERE character_id = ?1"),
+            params![character_id],
+            |r| r.get(0),
+        )
+        .map_err(|e| format!("character load failed: {e}"))?;
+    let mut arr: Vec<serde_json::Value> =
+        serde_json::from_str(&current_json).unwrap_or_else(|_| Vec::new());
     let target_norm = target.trim().to_ascii_lowercase();
     let before_len = arr.len();
     let mut removed_once = false;
     arr.retain(|v| {
-        if removed_once { return true; }
+        if removed_once {
+            return true;
+        }
         match v.as_str() {
             Some(s) if s.trim().to_ascii_lowercase() == target_norm => {
                 removed_once = true;
@@ -816,12 +969,15 @@ fn append_user_profile_list(
     field: &str,
     value: &str,
 ) -> Result<(), String> {
-    let current_json: String = conn.query_row(
-        &format!("SELECT {field} FROM user_profiles WHERE world_id = ?1"),
-        params![world_id], |r| r.get(0),
-    ).map_err(|e| format!("user_profile load failed: {e}"))?;
-    let mut arr: Vec<serde_json::Value> = serde_json::from_str(&current_json)
-        .unwrap_or_else(|_| Vec::new());
+    let current_json: String = conn
+        .query_row(
+            &format!("SELECT {field} FROM user_profiles WHERE world_id = ?1"),
+            params![world_id],
+            |r| r.get(0),
+        )
+        .map_err(|e| format!("user_profile load failed: {e}"))?;
+    let mut arr: Vec<serde_json::Value> =
+        serde_json::from_str(&current_json).unwrap_or_else(|_| Vec::new());
     arr.push(serde_json::Value::String(value.to_string()));
     let new_json = serde_json::to_string(&arr).map_err(|e| e.to_string())?;
     conn.execute(
@@ -838,12 +994,15 @@ fn replace_user_profile_list_item(
     target: &str,
     replacement: &str,
 ) -> Result<(), String> {
-    let current_json: String = conn.query_row(
-        &format!("SELECT {field} FROM user_profiles WHERE world_id = ?1"),
-        params![world_id], |r| r.get(0),
-    ).map_err(|e| format!("user_profile load failed: {e}"))?;
-    let mut arr: Vec<serde_json::Value> = serde_json::from_str(&current_json)
-        .unwrap_or_else(|_| Vec::new());
+    let current_json: String = conn
+        .query_row(
+            &format!("SELECT {field} FROM user_profiles WHERE world_id = ?1"),
+            params![world_id],
+            |r| r.get(0),
+        )
+        .map_err(|e| format!("user_profile load failed: {e}"))?;
+    let mut arr: Vec<serde_json::Value> =
+        serde_json::from_str(&current_json).unwrap_or_else(|_| Vec::new());
     let target_norm = target.trim().to_ascii_lowercase();
     let mut replaced = false;
     for v in arr.iter_mut() {
@@ -856,7 +1015,9 @@ fn replace_user_profile_list_item(
         }
     }
     if !replaced {
-        return Err(format!("target not found in user_profile.{field}: {target:?}"));
+        return Err(format!(
+            "target not found in user_profile.{field}: {target:?}"
+        ));
     }
     let new_json = serde_json::to_string(&arr).map_err(|e| e.to_string())?;
     conn.execute(
@@ -872,17 +1033,22 @@ fn remove_user_profile_list_item(
     field: &str,
     target: &str,
 ) -> Result<(), String> {
-    let current_json: String = conn.query_row(
-        &format!("SELECT {field} FROM user_profiles WHERE world_id = ?1"),
-        params![world_id], |r| r.get(0),
-    ).map_err(|e| format!("user_profile load failed: {e}"))?;
-    let mut arr: Vec<serde_json::Value> = serde_json::from_str(&current_json)
-        .unwrap_or_else(|_| Vec::new());
+    let current_json: String = conn
+        .query_row(
+            &format!("SELECT {field} FROM user_profiles WHERE world_id = ?1"),
+            params![world_id],
+            |r| r.get(0),
+        )
+        .map_err(|e| format!("user_profile load failed: {e}"))?;
+    let mut arr: Vec<serde_json::Value> =
+        serde_json::from_str(&current_json).unwrap_or_else(|_| Vec::new());
     let target_norm = target.trim().to_ascii_lowercase();
     let before_len = arr.len();
     let mut removed_once = false;
     arr.retain(|v| {
-        if removed_once { return true; }
+        if removed_once {
+            return true;
+        }
         match v.as_str() {
             Some(s) if s.trim().to_ascii_lowercase() == target_norm => {
                 removed_once = true;
@@ -892,7 +1058,9 @@ fn remove_user_profile_list_item(
         }
     });
     if arr.len() == before_len {
-        return Err(format!("target not found in user_profile.{field}: {target:?}"));
+        return Err(format!(
+            "target not found in user_profile.{field}: {target:?}"
+        ));
     }
     let new_json = serde_json::to_string(&arr).map_err(|e| e.to_string())?;
     conn.execute(
@@ -910,12 +1078,15 @@ fn replace_character_open_loop(
     target: &str,
     replacement: &str,
 ) -> Result<(), String> {
-    let current_json: String = conn.query_row(
-        "SELECT state FROM characters WHERE character_id = ?1",
-        params![character_id], |r| r.get(0),
-    ).map_err(|e| format!("character load failed: {e}"))?;
-    let mut state: serde_json::Value = serde_json::from_str(&current_json)
-        .unwrap_or_else(|_| serde_json::json!({}));
+    let current_json: String = conn
+        .query_row(
+            "SELECT state FROM characters WHERE character_id = ?1",
+            params![character_id],
+            |r| r.get(0),
+        )
+        .map_err(|e| format!("character load failed: {e}"))?;
+    let mut state: serde_json::Value =
+        serde_json::from_str(&current_json).unwrap_or_else(|_| serde_json::json!({}));
     let target_norm = target.trim().to_ascii_lowercase();
     let mut replaced = false;
     if let Some(loops) = state.get_mut("open_loops").and_then(|v| v.as_array_mut()) {
@@ -936,7 +1107,8 @@ fn replace_character_open_loop(
     conn.execute(
         "UPDATE characters SET state = ?2, updated_at = datetime('now') WHERE character_id = ?1",
         params![character_id, new_json],
-    ).map_err(|e| format!("character state update failed: {e}"))?;
+    )
+    .map_err(|e| format!("character state update failed: {e}"))?;
     Ok(())
 }
 
@@ -947,21 +1119,29 @@ fn remove_character_open_loop(
     character_id: &str,
     target: &str,
 ) -> Result<(), String> {
-    let current_json: String = conn.query_row(
-        "SELECT state FROM characters WHERE character_id = ?1",
-        params![character_id], |r| r.get(0),
-    ).map_err(|e| format!("character load failed: {e}"))?;
-    let mut state: serde_json::Value = serde_json::from_str(&current_json)
-        .unwrap_or_else(|_| serde_json::json!({}));
+    let current_json: String = conn
+        .query_row(
+            "SELECT state FROM characters WHERE character_id = ?1",
+            params![character_id],
+            |r| r.get(0),
+        )
+        .map_err(|e| format!("character load failed: {e}"))?;
+    let mut state: serde_json::Value =
+        serde_json::from_str(&current_json).unwrap_or_else(|_| serde_json::json!({}));
     let target_norm = target.trim().to_ascii_lowercase();
     let mut removed = false;
     if let Some(loops) = state.get_mut("open_loops").and_then(|v| v.as_array_mut()) {
         let before = loops.len();
         let mut once = false;
         loops.retain(|v| {
-            if once { return true; }
+            if once {
+                return true;
+            }
             match v.as_str() {
-                Some(s) if s.trim().to_ascii_lowercase() == target_norm => { once = true; false }
+                Some(s) if s.trim().to_ascii_lowercase() == target_norm => {
+                    once = true;
+                    false
+                }
                 _ => true,
             }
         });
@@ -974,7 +1154,8 @@ fn remove_character_open_loop(
     conn.execute(
         "UPDATE characters SET state = ?2, updated_at = datetime('now') WHERE character_id = ?1",
         params![character_id, new_json],
-    ).map_err(|e| format!("character state update failed: {e}"))?;
+    )
+    .map_err(|e| format!("character state update failed: {e}"))?;
     Ok(())
 }
 
@@ -985,12 +1166,15 @@ fn append_character_state_open_loop(
     character_id: &str,
     value: &str,
 ) -> Result<(), String> {
-    let current_json: String = conn.query_row(
-        "SELECT state FROM characters WHERE character_id = ?1",
-        params![character_id], |r| r.get(0),
-    ).map_err(|e| format!("character load failed: {e}"))?;
-    let mut state: serde_json::Value = serde_json::from_str(&current_json)
-        .unwrap_or_else(|_| serde_json::json!({}));
+    let current_json: String = conn
+        .query_row(
+            "SELECT state FROM characters WHERE character_id = ?1",
+            params![character_id],
+            |r| r.get(0),
+        )
+        .map_err(|e| format!("character load failed: {e}"))?;
+    let mut state: serde_json::Value =
+        serde_json::from_str(&current_json).unwrap_or_else(|_| serde_json::json!({}));
     let loops = state
         .as_object_mut()
         .ok_or_else(|| "character state is not an object".to_string())?
@@ -1005,18 +1189,22 @@ fn append_character_state_open_loop(
     conn.execute(
         "UPDATE characters SET state = ?2, updated_at = datetime('now') WHERE character_id = ?1",
         params![character_id, new_json],
-    ).map_err(|e| format!("character state update failed: {e}"))?;
+    )
+    .map_err(|e| format!("character state update failed: {e}"))?;
     Ok(())
 }
 
 /// Pull the list of `state.open_loops` strings from a character, for the
 /// classifier's "don't duplicate existing canon" awareness.
 fn character_open_loops(ch: &Character) -> Vec<String> {
-    ch.state.get("open_loops")
+    ch.state
+        .get("open_loops")
         .and_then(|v| v.as_array())
-        .map(|arr| arr.iter()
-            .filter_map(|x| x.as_str().map(|s| s.to_string()))
-            .collect())
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|x| x.as_str().map(|s| s.to_string()))
+                .collect()
+        })
         .unwrap_or_default()
 }
 
@@ -1024,9 +1212,11 @@ fn character_open_loops(ch: &Character) -> Vec<String> {
 /// empty if the value isn't an array or entries aren't strings.
 fn json_array_to_strings(v: &serde_json::Value) -> Vec<String> {
     v.as_array()
-        .map(|arr| arr.iter()
-            .filter_map(|x| x.as_str().map(|s| s.to_string()))
-            .collect())
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|x| x.as_str().map(|s| s.to_string()))
+                .collect()
+        })
         .unwrap_or_default()
 }
 
@@ -1057,10 +1247,7 @@ pub fn list_kept_for_message_cmd(
 /// back a character description). Undo of the side effect would need a
 /// separate path that snapshots the pre-state.
 #[tauri::command]
-pub fn delete_kept_record_cmd(
-    db: State<Database>,
-    kept_id: String,
-) -> Result<(), String> {
+pub fn delete_kept_record_cmd(db: State<Database>, kept_id: String) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     delete_kept_record(&conn, &kept_id).map_err(|e| e.to_string())
 }

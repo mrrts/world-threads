@@ -42,7 +42,9 @@ pub fn add_reaction_cmd(
             rusqlite::params![mid, emoji, reactor],
             |r| r.get(0),
         ).ok();
-        if dup.is_some() { continue; }
+        if dup.is_some() {
+            continue;
+        }
 
         let r = Reaction {
             reaction_id: uuid::Uuid::new_v4().to_string(),

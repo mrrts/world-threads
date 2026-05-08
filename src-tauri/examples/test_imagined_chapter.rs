@@ -18,8 +18,8 @@
 
 use app_lib::ai::{openai, orchestrator, prompts};
 use app_lib::db::queries::{
-    get_active_portrait, get_character, get_user_profile, get_world,
-    gather_character_recent_messages, list_journal_entries, JournalEntry,
+    gather_character_recent_messages, get_active_portrait, get_character, get_user_profile,
+    get_world, list_journal_entries, JournalEntry,
 };
 use rusqlite::{params, Connection};
 use std::process::Command;
@@ -35,10 +35,11 @@ async fn main() {
 async fn run() -> Result<(), Box<dyn std::error::Error>> {
     let api_key = resolve_api_key()?;
     let home = std::env::var("HOME")?;
-    let db_path = format!("{home}/Library/Application Support/com.worldthreads.app/worldthreads.db");
-    let portraits_dir = std::path::PathBuf::from(
-        format!("{home}/Library/Application Support/com.worldthreads.app/portraits")
-    );
+    let db_path =
+        format!("{home}/Library/Application Support/com.worldthreads.app/worldthreads.db");
+    let portraits_dir = std::path::PathBuf::from(format!(
+        "{home}/Library/Application Support/com.worldthreads.app/portraits"
+    ));
     println!("DB:       {db_path}");
     println!("Portraits: {}", portraits_dir.display());
 
@@ -49,7 +50,8 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
         "SELECT t.thread_id, c.character_id
          FROM threads t JOIN characters c ON c.character_id = t.character_id
          WHERE c.display_name = 'Darren' LIMIT 1",
-        [], |r| Ok((r.get(0)?, r.get(1)?)),
+        [],
+        |r| Ok((r.get(0)?, r.get(1)?)),
     )?;
     println!("Thread:    {thread_id}");
     println!("Character: Darren ({character_id})");
@@ -61,7 +63,9 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
     let character = get_character(&conn, &character_id)?;
     let world = get_world(&conn, &character.world_id)?;
     let user_profile = get_user_profile(&conn, &world.world_id).ok();
-    let user_display = user_profile.as_ref().map(|p| p.display_name.clone())
+    let user_display = user_profile
+        .as_ref()
+        .map(|p| p.display_name.clone())
         .unwrap_or_else(|| "the human".to_string());
 
     // Recent kept facts about the cast.
@@ -83,9 +87,14 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Merged cross-thread recent history for the primary character.
-    let recent_history = gather_character_recent_messages(&conn, &character.character_id, &user_display, 40);
-    println!("Loaded {} history lines, {} journals, {} kept facts",
-        recent_history.len(), cast_journals.len(), recent_kept_facts.len());
+    let recent_history =
+        gather_character_recent_messages(&conn, &character.character_id, &user_display, 40);
+    println!(
+        "Loaded {} history lines, {} journals, {} kept facts",
+        recent_history.len(),
+        cast_journals.len(),
+        recent_kept_facts.len()
+    );
 
     // Load portraits.
     let mut portrait_refs: Vec<(String, Vec<u8>)> = Vec::new();
@@ -94,14 +103,19 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
             portrait_refs.push((character.display_name.clone(), bytes));
         }
     }
-    let user_portrait_bytes: Option<(String, Vec<u8>)> = user_profile.as_ref()
+    let user_portrait_bytes: Option<(String, Vec<u8>)> = user_profile
+        .as_ref()
         .filter(|p| !p.avatar_file.is_empty())
         .and_then(|p| {
-            std::fs::read(portraits_dir.join(&p.avatar_file)).ok()
+            std::fs::read(portraits_dir.join(&p.avatar_file))
+                .ok()
                 .map(|bytes| (p.display_name.clone(), bytes))
         });
-    println!("Portraits loaded: {} character + {} user",
-        portrait_refs.len(), if user_portrait_bytes.is_some() {1} else {0});
+    println!(
+        "Portraits loaded: {} character + {} user",
+        portrait_refs.len(),
+        if user_portrait_bytes.is_some() { 1 } else { 0 }
+    );
 
     let cast = vec![&character];
     let out_root = std::path::PathBuf::from("/tmp/imagined_chapter_test");
@@ -127,8 +141,14 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
             &recent_history,
             None,
             None,
-        ).await?;
-        println!("ok ({:.1}s). Title: '{}', tone: '{}'", started.elapsed().as_secs_f32(), scene.title, scene.tone_hint);
+        )
+        .await?;
+        println!(
+            "ok ({:.1}s). Title: '{}', tone: '{}'",
+            started.elapsed().as_secs_f32(),
+            scene.title,
+            scene.tone_hint
+        );
         println!("     image_prompt: {:.120}...", scene.image_prompt);
         std::fs::write(
             run_dir.join("scene.json"),
@@ -165,10 +185,19 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
             Some(&scene.image_prompt),
             false,
             false,
-            if all_names.is_empty() { None } else { Some(&all_names[..]) },
+            if all_names.is_empty() {
+                None
+            } else {
+                Some(&all_names[..])
+            },
             None,
-        ).await?;
-        println!("ok ({:.1}s, {} bytes)", started.elapsed().as_secs_f32(), image_bytes.len());
+        )
+        .await?;
+        println!(
+            "ok ({:.1}s, {} bytes)",
+            started.elapsed().as_secs_f32(),
+            image_bytes.len()
+        );
         std::fs::write(run_dir.join("image.png"), &image_bytes)?;
 
         // ── Stage 3: vision-write the chapter (non-streaming) ──────
@@ -194,7 +223,10 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
         user_content.push(openai::VisionContent {
             content_type: "image_url".to_string(),
             text: None,
-            image_url: Some(openai::VisionImageUrl { url: scene_data_url, detail: Some("high".to_string()) }),
+            image_url: Some(openai::VisionImageUrl {
+                url: scene_data_url,
+                detail: Some("high".to_string()),
+            }),
         });
         for (label, bytes) in &portrait_refs {
             let pb64 = orchestrator::base64_encode_bytes(bytes);
@@ -253,16 +285,25 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
             temperature: Some(0.85),
             max_completion_tokens: Some(2200),
         };
-        let resp = openai::vision_completion_with_base(
-            &model_config.chat_api_base(),
-            &api_key,
-            &req,
-        ).await?;
-        let chapter = resp.choices.first().map(|c| c.message.content.clone()).unwrap_or_default();
-        println!("ok ({:.1}s, {} chars)", started.elapsed().as_secs_f32(), chapter.len());
+        let resp =
+            openai::vision_completion_with_base(&model_config.chat_api_base(), &api_key, &req)
+                .await?;
+        let chapter = resp
+            .choices
+            .first()
+            .map(|c| c.message.content.clone())
+            .unwrap_or_default();
+        println!(
+            "ok ({:.1}s, {} chars)",
+            started.elapsed().as_secs_f32(),
+            chapter.len()
+        );
         std::fs::write(
             run_dir.join("chapter.md"),
-            format!("# {}\n\n_{}_\n\n{}\n", scene.title, scene.tone_hint, chapter),
+            format!(
+                "# {}\n\n_{}_\n\n{}\n",
+                scene.title, scene.tone_hint, chapter
+            ),
         )?;
 
         // Print a preview so we can eyeball quality without opening files.
@@ -278,7 +319,9 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
 
 fn resolve_api_key() -> Result<String, Box<dyn std::error::Error>> {
     if let Ok(k) = std::env::var("LLM_API_KEY") {
-        if !k.trim().is_empty() { return Ok(k); }
+        if !k.trim().is_empty() {
+            return Ok(k);
+        }
     }
     // Fallback: the repo's keychain helper script.
     let out = Command::new("bash")
@@ -286,7 +329,9 @@ fn resolve_api_key() -> Result<String, Box<dyn std::error::Error>> {
         .output()?;
     let key = String::from_utf8_lossy(&out.stdout).trim().to_string();
     if key.is_empty() {
-        return Err("No API key found: set LLM_API_KEY or run scripts/setup-claude-code-llm-key.sh".into());
+        return Err(
+            "No API key found: set LLM_API_KEY or run scripts/setup-claude-code-llm-key.sh".into(),
+        );
     }
     Ok(key)
 }

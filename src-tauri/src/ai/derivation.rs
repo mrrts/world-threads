@@ -202,7 +202,10 @@ fn release(key: &DerivationKey) {
 fn build_character_user_prompt(conn: &Connection, character: &Character) -> String {
     let mut buf = String::new();
     buf.push_str(&format!("# CHARACTER: {}\n\n", character.display_name));
-    buf.push_str(&format!("IDENTITY:\n{}\n\n", clip(&character.identity, 600)));
+    buf.push_str(&format!(
+        "IDENTITY:\n{}\n\n",
+        clip(&character.identity, 600)
+    ));
     if let Some(block) = crate::ai::prompts::empiricon_reader_substrate(character) {
         buf.push_str(&block);
         buf.push_str("\n\n");
@@ -259,7 +262,10 @@ fn build_world_user_prompt(conn: &Connection, world: &World) -> String {
     let mut buf = String::new();
     buf.push_str(&format!("# WORLD: {}\n\n", world.name));
     if !world.description.is_empty() {
-        buf.push_str(&format!("DESCRIPTION:\n{}\n\n", clip(&world.description, 800)));
+        buf.push_str(&format!(
+            "DESCRIPTION:\n{}\n\n",
+            clip(&world.description, 800)
+        ));
     }
     let state_str = world.state.to_string();
     if state_str != "null" && state_str != "{}" && state_str != "\"\"" {
@@ -290,7 +296,9 @@ fn build_world_user_prompt(conn: &Connection, world: &World) -> String {
         }
     }
 
-    buf.push_str("\nNow synthesize a derivation in this world's own voice from the material above.");
+    buf.push_str(
+        "\nNow synthesize a derivation in this world's own voice from the material above.",
+    );
     buf
 }
 
@@ -302,9 +310,15 @@ fn build_user_in_world_prompt(
     profile: &crate::db::queries::UserProfile,
 ) -> String {
     let mut buf = String::new();
-    buf.push_str(&format!("# USER (Me-character in this world): {}\n\n", profile.display_name));
+    buf.push_str(&format!(
+        "# USER (Me-character in this world): {}\n\n",
+        profile.display_name
+    ));
     if !profile.description.is_empty() {
-        buf.push_str(&format!("DESCRIPTION (self-authored):\n{}\n\n", clip(&profile.description, 800)));
+        buf.push_str(&format!(
+            "DESCRIPTION (self-authored):\n{}\n\n",
+            clip(&profile.description, 800)
+        ));
     }
 
     let facts = crate::ai::prompts::json_array_to_strings(&profile.facts);
@@ -336,7 +350,9 @@ fn build_user_in_world_prompt(
          ORDER BY m.created_at DESC LIMIT 20",
     ) {
         if let Ok(rows) = stmt.query_map(params![profile.world_id], |r| r.get::<_, String>(0)) {
-            for r in rows.flatten() { user_msgs.push(r); }
+            for r in rows.flatten() {
+                user_msgs.push(r);
+            }
         }
     }
     if let Ok(mut stmt) = conn.prepare(
@@ -346,7 +362,9 @@ fn build_user_in_world_prompt(
          ORDER BY m.created_at DESC LIMIT 20",
     ) {
         if let Ok(rows) = stmt.query_map(params![profile.world_id], |r| r.get::<_, String>(0)) {
-            for r in rows.flatten() { user_msgs.push(r); }
+            for r in rows.flatten() {
+                user_msgs.push(r);
+            }
         }
     }
     if !user_msgs.is_empty() {
@@ -361,8 +379,11 @@ fn build_user_in_world_prompt(
 }
 
 fn clip(s: &str, max: usize) -> String {
-    if s.chars().count() <= max { s.to_string() }
-    else { format!("{}…", s.chars().take(max).collect::<String>()) }
+    if s.chars().count() <= max {
+        s.to_string()
+    } else {
+        format!("{}…", s.chars().take(max).collect::<String>())
+    }
 }
 
 /// Extract the substring between `start` and `end` markers (exclusive of
@@ -406,9 +427,15 @@ pub fn build_location_prompt(
     let world = crate::db::queries::get_world(conn, world_id)
         .map_err(|e| format!("derivation: get_world failed: {e}"))?;
     let mut buf = String::new();
-    buf.push_str(&format!("# LOCATION (in world {}): {}\n\n", world.name, location_name));
+    buf.push_str(&format!(
+        "# LOCATION (in world {}): {}\n\n",
+        world.name, location_name
+    ));
     if !world.description.is_empty() {
-        buf.push_str(&format!("WORLD DESCRIPTION (the larger frame):\n{}\n\n", clip(&world.description, 600)));
+        buf.push_str(&format!(
+            "WORLD DESCRIPTION (the larger frame):\n{}\n\n",
+            clip(&world.description, 600)
+        ));
     }
     if let Some(deriv) = world.derived_formula.as_deref() {
         let trimmed = deriv.trim();
@@ -435,7 +462,10 @@ pub fn build_location_prompt(
         }) {
             let samples: Vec<(String, String)> = rows.flatten().collect();
             if !samples.is_empty() {
-                buf.push_str(&format!("RECENT VOICES SET IN \"{}\" (sampling characters' replies, newest first):\n", location_name));
+                buf.push_str(&format!(
+                    "RECENT VOICES SET IN \"{}\" (sampling characters' replies, newest first):\n",
+                    location_name
+                ));
                 for (content, speaker) in samples.iter().take(6) {
                     buf.push_str(&format!("{}: {}\n", speaker, clip(content, 220)));
                 }
@@ -451,7 +481,10 @@ pub fn build_location_prompt(
     Ok(buf)
 }
 
-pub fn build_user_in_world_prompt_owned(conn: &Connection, world_id: &str) -> Result<String, String> {
+pub fn build_user_in_world_prompt_owned(
+    conn: &Connection,
+    world_id: &str,
+) -> Result<String, String> {
     let profile = crate::db::queries::get_user_profile(conn, world_id)
         .map_err(|e| format!("derivation: get_user_profile failed: {e}"))?;
     Ok(build_user_in_world_prompt(conn, &profile))
@@ -468,17 +501,27 @@ pub async fn synthesize_from_prompt(
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            ChatMessage { role: "system".to_string(), content: DERIVATION_SYSTEM_PROMPT.to_string() },
-            ChatMessage { role: "user".to_string(), content: user_prompt },
+            ChatMessage {
+                role: "system".to_string(),
+                content: DERIVATION_SYSTEM_PROMPT.to_string(),
+            },
+            ChatMessage {
+                role: "user".to_string(),
+                content: user_prompt,
+            },
         ],
         temperature: Some(0.6),
         max_completion_tokens: Some(256),
         response_format: None,
     };
     let resp = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let raw = resp.choices.first()
+    let raw = resp
+        .choices
+        .first()
         .ok_or_else(|| "derivation: no choices in response".to_string())?
-        .message.content.clone();
+        .message
+        .content
+        .clone();
     validate_derivation(&raw)
 }
 
@@ -502,7 +545,11 @@ pub fn persist_character_derivation_two_output(
     Ok(())
 }
 
-pub fn persist_character_derivation(conn: &Connection, character_id: &str, derivation: &str) -> Result<(), rusqlite::Error> {
+pub fn persist_character_derivation(
+    conn: &Connection,
+    character_id: &str,
+    derivation: &str,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "UPDATE characters SET derived_formula = ?2, derived_formula_updated_at = datetime('now') WHERE character_id = ?1",
         params![character_id, derivation],
@@ -510,7 +557,11 @@ pub fn persist_character_derivation(conn: &Connection, character_id: &str, deriv
     Ok(())
 }
 
-pub fn persist_world_derivation(conn: &Connection, world_id: &str, derivation: &str) -> Result<(), rusqlite::Error> {
+pub fn persist_world_derivation(
+    conn: &Connection,
+    world_id: &str,
+    derivation: &str,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "UPDATE worlds SET derived_formula = ?2, derived_formula_updated_at = datetime('now') WHERE world_id = ?1",
         params![world_id, derivation],
@@ -518,7 +569,11 @@ pub fn persist_world_derivation(conn: &Connection, world_id: &str, derivation: &
     Ok(())
 }
 
-pub fn persist_user_derivation(conn: &Connection, world_id: &str, derivation: &str) -> Result<(), rusqlite::Error> {
+pub fn persist_user_derivation(
+    conn: &Connection,
+    world_id: &str,
+    derivation: &str,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "UPDATE user_profiles SET derived_formula = ?2, derived_formula_updated_at = datetime('now') WHERE world_id = ?1",
         params![world_id, derivation],
@@ -615,8 +670,14 @@ pub async fn synthesize_two_output_from_prompt(
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            ChatMessage { role: "system".to_string(), content: DERIVATION_TWO_OUTPUT_SYSTEM_PROMPT.to_string() },
-            ChatMessage { role: "user".to_string(), content: user_prompt },
+            ChatMessage {
+                role: "system".to_string(),
+                content: DERIVATION_TWO_OUTPUT_SYSTEM_PROMPT.to_string(),
+            },
+            ChatMessage {
+                role: "user".to_string(),
+                content: user_prompt,
+            },
         ],
         temperature: Some(0.6),
         max_completion_tokens: Some(800),
@@ -627,14 +688,24 @@ pub async fn synthesize_two_output_from_prompt(
         response_format: None,
     };
     let resp = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let raw = resp.choices.first()
+    let raw = resp
+        .choices
+        .first()
         .ok_or_else(|| "derivation: no choices in response".to_string())?
-        .message.content.clone();
+        .message
+        .content
+        .clone();
 
     let derivation_raw = extract_between(&raw, "<<<DERIVATION>>>", "<<<END_DERIVATION>>>")
-        .ok_or_else(|| format!("derivation: missing <<<DERIVATION>>>...<<<END_DERIVATION>>> markers; body: {raw}"))?;
-    let summary_raw = extract_between(&raw, "<<<SUMMARY>>>", "<<<END_SUMMARY>>>")
-        .ok_or_else(|| format!("derivation: missing <<<SUMMARY>>>...<<<END_SUMMARY>>> markers; body: {raw}"))?;
+        .ok_or_else(|| {
+            format!(
+                "derivation: missing <<<DERIVATION>>>...<<<END_DERIVATION>>> markers; body: {raw}"
+            )
+        })?;
+    let summary_raw =
+        extract_between(&raw, "<<<SUMMARY>>>", "<<<END_SUMMARY>>>").ok_or_else(|| {
+            format!("derivation: missing <<<SUMMARY>>>...<<<END_SUMMARY>>> markers; body: {raw}")
+        })?;
 
     let derivation = validate_derivation(derivation_raw)?;
 
@@ -643,7 +714,10 @@ pub async fn synthesize_two_output_from_prompt(
         return Err("derivation: empty summary".to_string());
     }
     if summary.len() > 800 {
-        return Err(format!("derivation: summary too long ({} chars > 800)", summary.len()));
+        return Err(format!(
+            "derivation: summary too long ({} chars > 800)",
+            summary.len()
+        ));
     }
 
     Ok((derivation, summary))
@@ -668,9 +742,15 @@ pub fn build_user_in_world_prompt_with_choices(
     let profile = crate::db::queries::get_user_profile(conn, world_id)
         .map_err(|e| format!("derivation: get_user_profile failed: {e}"))?;
     let mut buf = String::new();
-    buf.push_str(&format!("# USER (Me-character in this world): {}\n\n", profile.display_name));
+    buf.push_str(&format!(
+        "# USER (Me-character in this world): {}\n\n",
+        profile.display_name
+    ));
     if !profile.description.is_empty() {
-        buf.push_str(&format!("DESCRIPTION (self-authored):\n{}\n\n", clip(&profile.description, 800)));
+        buf.push_str(&format!(
+            "DESCRIPTION (self-authored):\n{}\n\n",
+            clip(&profile.description, 800)
+        ));
     }
 
     let facts = crate::ai::prompts::json_array_to_strings(&profile.facts);
@@ -696,7 +776,8 @@ pub fn build_user_in_world_prompt_with_choices(
     // the synthesis pipeline reads them as additional substrate, not as
     // literal string-slots.
     let mut any_choice = false;
-    let mut choices_block = String::from("MY CHOICES (from the 'How do characters see you?' wizard):\n");
+    let mut choices_block =
+        String::from("MY CHOICES (from the 'How do characters see you?' wizard):\n");
     if let Some(v) = way_of_being.filter(|s| !s.trim().is_empty()) {
         choices_block.push_str(&format!("- My way of being in this world: {v}\n"));
         any_choice = true;
@@ -732,106 +813,132 @@ pub fn build_user_in_world_prompt_with_choices(
 /// either time OR event threshold is hit.
 pub mod staleness {
     pub const CHARACTER_TIME_HOURS: i64 = 24;
-    pub const CHARACTER_EVENTS: i64 = 30;     // assistant replies since last refresh
+    pub const CHARACTER_EVENTS: i64 = 30; // assistant replies since last refresh
     pub const USER_TIME_HOURS: i64 = 72;
-    pub const USER_EVENTS: i64 = 40;          // user messages in this world since last refresh
-    pub const WORLD_TIME_HOURS: i64 = 168;    // 7 days
-    pub const WORLD_EVENTS: i64 = 120;        // total assistant replies in-world since last refresh
+    pub const USER_EVENTS: i64 = 40; // user messages in this world since last refresh
+    pub const WORLD_TIME_HOURS: i64 = 168; // 7 days
+    pub const WORLD_EVENTS: i64 = 120; // total assistant replies in-world since last refresh
     /// A location derivation goes stale when its parent world's
     /// derivation has been updated since (the world's tuning frame
     /// changed; the location's sub-instantiation should follow), OR
     /// when enough fresh in-place corpus accumulates that the original
     /// derivation no longer reflects what's actually happening there.
-    pub const LOCATION_TIME_HOURS: i64 = 168;     // 7 days
+    pub const LOCATION_TIME_HOURS: i64 = 168; // 7 days
     pub const LOCATION_IN_PLACE_EVENTS: i64 = 60; // assistant replies set at this location since last refresh
 }
 
 /// Returns true if the character's derivation is stale per the hybrid
 /// time-or-events policy. NULL last_derived_at → stale.
 pub fn is_stale_character(conn: &Connection, character_id: &str) -> bool {
-    let row: Option<(Option<String>, i64)> = conn.query_row(
-        "SELECT derived_formula_updated_at,
+    let row: Option<(Option<String>, i64)> = conn
+        .query_row(
+            "SELECT derived_formula_updated_at,
                 (SELECT COUNT(*) FROM messages m
                   JOIN threads t ON t.thread_id = m.thread_id
                   WHERE t.character_id = ?1 AND m.role = 'assistant'
                     AND (?2 IS NULL OR m.created_at > ?2)) AS evts
          FROM characters WHERE character_id = ?1",
-        params![character_id, None::<String>],
-        |r| Ok((r.get::<_, Option<String>>(0)?, r.get::<_, i64>(1)?)),
-    ).ok();
+            params![character_id, None::<String>],
+            |r| Ok((r.get::<_, Option<String>>(0)?, r.get::<_, i64>(1)?)),
+        )
+        .ok();
     match row {
         None => true,
         Some((None, _)) => true,
         Some((Some(last_at), _)) => {
             // Re-query event count using actual last_at as the floor.
-            let evts: i64 = conn.query_row(
-                "SELECT COUNT(*) FROM messages m
+            let evts: i64 = conn
+                .query_row(
+                    "SELECT COUNT(*) FROM messages m
                   JOIN threads t ON t.thread_id = m.thread_id
                   WHERE t.character_id = ?1 AND m.role = 'assistant' AND m.created_at > ?2",
-                params![character_id, last_at],
-                |r| r.get(0),
-            ).unwrap_or(0);
-            let time_stale: bool = conn.query_row(
-                "SELECT (julianday('now') - julianday(?1)) * 24.0 >= ?2",
-                params![last_at, staleness::CHARACTER_TIME_HOURS as f64],
-                |r| r.get(0),
-            ).unwrap_or(true);
+                    params![character_id, last_at],
+                    |r| r.get(0),
+                )
+                .unwrap_or(0);
+            let time_stale: bool = conn
+                .query_row(
+                    "SELECT (julianday('now') - julianday(?1)) * 24.0 >= ?2",
+                    params![last_at, staleness::CHARACTER_TIME_HOURS as f64],
+                    |r| r.get(0),
+                )
+                .unwrap_or(true);
             time_stale || evts >= staleness::CHARACTER_EVENTS
         }
     }
 }
 
 pub fn is_stale_world(conn: &Connection, world_id: &str) -> bool {
-    let last_at: Option<String> = conn.query_row(
-        "SELECT derived_formula_updated_at FROM worlds WHERE world_id = ?1",
-        params![world_id],
-        |r| r.get(0),
-    ).ok().flatten();
-    let Some(last_at) = last_at else { return true; };
-    let evts: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM messages m
+    let last_at: Option<String> = conn
+        .query_row(
+            "SELECT derived_formula_updated_at FROM worlds WHERE world_id = ?1",
+            params![world_id],
+            |r| r.get(0),
+        )
+        .ok()
+        .flatten();
+    let Some(last_at) = last_at else {
+        return true;
+    };
+    let evts: i64 = conn
+        .query_row(
+            "SELECT COUNT(*) FROM messages m
           JOIN threads t ON t.thread_id = m.thread_id
           JOIN characters c ON c.character_id = t.character_id
           WHERE c.world_id = ?1 AND m.role = 'assistant' AND m.created_at > ?2",
-        params![world_id, last_at],
-        |r| r.get(0),
-    ).unwrap_or(0);
-    let time_stale: bool = conn.query_row(
-        "SELECT (julianday('now') - julianday(?1)) * 24.0 >= ?2",
-        params![last_at, staleness::WORLD_TIME_HOURS as f64],
-        |r| r.get(0),
-    ).unwrap_or(true);
+            params![world_id, last_at],
+            |r| r.get(0),
+        )
+        .unwrap_or(0);
+    let time_stale: bool = conn
+        .query_row(
+            "SELECT (julianday('now') - julianday(?1)) * 24.0 >= ?2",
+            params![last_at, staleness::WORLD_TIME_HOURS as f64],
+            |r| r.get(0),
+        )
+        .unwrap_or(true);
     time_stale || evts >= staleness::WORLD_EVENTS
 }
 
 pub fn is_stale_user_in_world(conn: &Connection, world_id: &str) -> bool {
-    let last_at: Option<String> = conn.query_row(
-        "SELECT derived_formula_updated_at FROM user_profiles WHERE world_id = ?1",
-        params![world_id],
-        |r| r.get(0),
-    ).ok().flatten();
-    let Some(last_at) = last_at else { return true; };
-    let solo_msgs: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM messages m
+    let last_at: Option<String> = conn
+        .query_row(
+            "SELECT derived_formula_updated_at FROM user_profiles WHERE world_id = ?1",
+            params![world_id],
+            |r| r.get(0),
+        )
+        .ok()
+        .flatten();
+    let Some(last_at) = last_at else {
+        return true;
+    };
+    let solo_msgs: i64 = conn
+        .query_row(
+            "SELECT COUNT(*) FROM messages m
           JOIN threads t ON t.thread_id = m.thread_id
           JOIN characters c ON c.character_id = t.character_id
           WHERE c.world_id = ?1 AND m.role = 'user' AND m.created_at > ?2",
-        params![world_id, last_at],
-        |r| r.get(0),
-    ).unwrap_or(0);
-    let group_msgs: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM group_messages m
+            params![world_id, last_at],
+            |r| r.get(0),
+        )
+        .unwrap_or(0);
+    let group_msgs: i64 = conn
+        .query_row(
+            "SELECT COUNT(*) FROM group_messages m
           JOIN group_chats g ON g.thread_id = m.thread_id
           WHERE g.world_id = ?1 AND m.role = 'user' AND m.created_at > ?2",
-        params![world_id, last_at],
-        |r| r.get(0),
-    ).unwrap_or(0);
+            params![world_id, last_at],
+            |r| r.get(0),
+        )
+        .unwrap_or(0);
     let evts = solo_msgs + group_msgs;
-    let time_stale: bool = conn.query_row(
-        "SELECT (julianday('now') - julianday(?1)) * 24.0 >= ?2",
-        params![last_at, staleness::USER_TIME_HOURS as f64],
-        |r| r.get(0),
-    ).unwrap_or(true);
+    let time_stale: bool = conn
+        .query_row(
+            "SELECT (julianday('now') - julianday(?1)) * 24.0 >= ?2",
+            params![last_at, staleness::USER_TIME_HOURS as f64],
+            |r| r.get(0),
+        )
+        .unwrap_or(true);
     time_stale || evts >= staleness::USER_EVENTS
 }
 
@@ -849,7 +956,9 @@ pub fn is_stale_location(conn: &Connection, world_id: &str, location_name: &str)
         params![world_id, location_name],
         |r| r.get(0),
     ).ok().flatten();
-    let Some(updated_at) = updated_at else { return true; };
+    let Some(updated_at) = updated_at else {
+        return true;
+    };
 
     // World-derivation-newer-than-location → stale (parent updated, child follows).
     let world_newer: bool = conn.query_row(
@@ -858,38 +967,48 @@ pub fn is_stale_location(conn: &Connection, world_id: &str, location_name: &str)
         params![world_id, updated_at],
         |r| r.get(0),
     ).unwrap_or(false);
-    if world_newer { return true; }
+    if world_newer {
+        return true;
+    }
 
     // Time ceiling.
-    let time_stale: bool = conn.query_row(
-        "SELECT (julianday('now') - julianday(?1)) * 24.0 >= ?2",
-        params![updated_at, staleness::LOCATION_TIME_HOURS as f64],
-        |r| r.get(0),
-    ).unwrap_or(true);
-    if time_stale { return true; }
+    let time_stale: bool = conn
+        .query_row(
+            "SELECT (julianday('now') - julianday(?1)) * 24.0 >= ?2",
+            params![updated_at, staleness::LOCATION_TIME_HOURS as f64],
+            |r| r.get(0),
+        )
+        .unwrap_or(true);
+    if time_stale {
+        return true;
+    }
 
     // In-place corpus growth: assistant replies set when chat's
     // current_location matched this name, since last refresh. Pulls from
     // both solo and group threads.
-    let solo_evts: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM messages m \
+    let solo_evts: i64 = conn
+        .query_row(
+            "SELECT COUNT(*) FROM messages m \
           JOIN threads t ON t.thread_id = m.thread_id \
           JOIN characters c ON c.character_id = t.character_id \
           WHERE c.world_id = ?1 AND m.role = 'assistant' \
             AND t.current_location = ?2 COLLATE NOCASE \
             AND m.created_at > ?3",
-        params![world_id, location_name, updated_at],
-        |r| r.get(0),
-    ).unwrap_or(0);
-    let group_evts: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM group_messages m \
+            params![world_id, location_name, updated_at],
+            |r| r.get(0),
+        )
+        .unwrap_or(0);
+    let group_evts: i64 = conn
+        .query_row(
+            "SELECT COUNT(*) FROM group_messages m \
           JOIN group_chats g ON g.thread_id = m.thread_id \
           WHERE g.world_id = ?1 AND m.role = 'assistant' \
             AND g.current_location = ?2 COLLATE NOCASE \
             AND m.created_at > ?3",
-        params![world_id, location_name, updated_at],
-        |r| r.get(0),
-    ).unwrap_or(0);
+            params![world_id, location_name, updated_at],
+            |r| r.get(0),
+        )
+        .unwrap_or(0);
     (solo_evts + group_evts) >= staleness::LOCATION_IN_PLACE_EVENTS
 }
 
@@ -953,7 +1072,9 @@ pub async fn maybe_refresh_after_turn(
             let api_key = api_key.clone();
             let model = model.clone();
             tokio::spawn(async move {
-                if let Err(e) = refresh_character_inner(&db, &base_url, &api_key, &model, &cid).await {
+                if let Err(e) =
+                    refresh_character_inner(&db, &base_url, &api_key, &model, &cid).await
+                {
                     log::warn!("[derivation] character {cid} refresh failed: {e}");
                 }
                 release(&key);
@@ -1007,13 +1128,16 @@ async fn refresh_character_inner(
     // doesn't span the async LLM call below.
     let prompt = {
         let conn = db.lock().map_err(|e| format!("lock: {e}"))?;
-        if !is_stale_character(&conn, character_id) { return Ok(()); }
+        if !is_stale_character(&conn, character_id) {
+            return Ok(());
+        }
         build_character_prompt(&conn, character_id)?
     };
     let derivation = synthesize_from_prompt(base_url, api_key, model, prompt).await?;
     {
         let conn = db.lock().map_err(|e| format!("lock: {e}"))?;
-        persist_character_derivation(&conn, character_id, &derivation).map_err(|e| e.to_string())?;
+        persist_character_derivation(&conn, character_id, &derivation)
+            .map_err(|e| e.to_string())?;
     }
     log::info!("[derivation] character {character_id} refreshed");
     Ok(())
@@ -1028,7 +1152,9 @@ async fn refresh_world_inner(
 ) -> Result<(), String> {
     let prompt = {
         let conn = db.lock().map_err(|e| format!("lock: {e}"))?;
-        if !is_stale_world(&conn, world_id) { return Ok(()); }
+        if !is_stale_world(&conn, world_id) {
+            return Ok(());
+        }
         build_world_prompt(&conn, world_id)?
     };
     let derivation = synthesize_from_prompt(base_url, api_key, model, prompt).await?;
@@ -1049,7 +1175,9 @@ async fn refresh_user_inner(
 ) -> Result<(), String> {
     let prompt = {
         let conn = db.lock().map_err(|e| format!("lock: {e}"))?;
-        if !is_stale_user_in_world(&conn, world_id) { return Ok(()); }
+        if !is_stale_user_in_world(&conn, world_id) {
+            return Ok(());
+        }
         build_user_in_world_prompt_owned(&conn, world_id)?
     };
     let derivation = synthesize_from_prompt(base_url, api_key, model, prompt).await?;
@@ -1110,7 +1238,9 @@ pub fn maybe_refresh_location(
     }
     let key_for_release = key.clone();
     tokio::spawn(async move {
-        if let Err(e) = refresh_location_inner(&db, &base_url, &api_key, &model, &world_id, &trimmed_name).await {
+        if let Err(e) =
+            refresh_location_inner(&db, &base_url, &api_key, &model, &world_id, &trimmed_name).await
+        {
             log::warn!("[derivation] location ({world_id}, {trimmed_name}) refresh failed: {e}");
         }
         release(&key_for_release);

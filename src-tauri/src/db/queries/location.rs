@@ -16,23 +16,37 @@ pub struct SavedPlace {
 
 /// Read the current_location for a thread (individual chat) or group_chat.
 /// Returns None if unset or chat doesn't exist.
-pub fn get_thread_location(conn: &Connection, thread_id: &str) -> Result<Option<String>, rusqlite::Error> {
+pub fn get_thread_location(
+    conn: &Connection,
+    thread_id: &str,
+) -> Result<Option<String>, rusqlite::Error> {
     conn.query_row(
         "SELECT current_location FROM threads WHERE thread_id = ?1",
         params![thread_id],
         |row| row.get::<_, Option<String>>(0),
-    ).optional().map(|opt| opt.flatten())
+    )
+    .optional()
+    .map(|opt| opt.flatten())
 }
 
-pub fn get_group_chat_location(conn: &Connection, group_chat_id: &str) -> Result<Option<String>, rusqlite::Error> {
+pub fn get_group_chat_location(
+    conn: &Connection,
+    group_chat_id: &str,
+) -> Result<Option<String>, rusqlite::Error> {
     conn.query_row(
         "SELECT current_location FROM group_chats WHERE group_chat_id = ?1",
         params![group_chat_id],
         |row| row.get::<_, Option<String>>(0),
-    ).optional().map(|opt| opt.flatten())
+    )
+    .optional()
+    .map(|opt| opt.flatten())
 }
 
-pub fn set_thread_location(conn: &Connection, thread_id: &str, location: Option<&str>) -> Result<(), rusqlite::Error> {
+pub fn set_thread_location(
+    conn: &Connection,
+    thread_id: &str,
+    location: Option<&str>,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "UPDATE threads SET current_location = ?1 WHERE thread_id = ?2",
         params![location, thread_id],
@@ -40,7 +54,11 @@ pub fn set_thread_location(conn: &Connection, thread_id: &str, location: Option<
     Ok(())
 }
 
-pub fn set_group_chat_location(conn: &Connection, group_chat_id: &str, location: Option<&str>) -> Result<(), rusqlite::Error> {
+pub fn set_group_chat_location(
+    conn: &Connection,
+    group_chat_id: &str,
+    location: Option<&str>,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "UPDATE group_chats SET current_location = ?1 WHERE group_chat_id = ?2",
         params![location, group_chat_id],
@@ -48,7 +66,10 @@ pub fn set_group_chat_location(conn: &Connection, group_chat_id: &str, location:
     Ok(())
 }
 
-pub fn list_saved_places(conn: &Connection, world_id: &str) -> Result<Vec<SavedPlace>, rusqlite::Error> {
+pub fn list_saved_places(
+    conn: &Connection,
+    world_id: &str,
+) -> Result<Vec<SavedPlace>, rusqlite::Error> {
     // Most-recently-used first. COALESCE handles older rows that may not
     // have last_used_at populated (they fall back to created_at, which
     // the migration backfills, but defense-in-depth is cheap).
@@ -86,7 +107,12 @@ pub fn create_saved_place(conn: &Connection, place: &SavedPlace) -> Result<(), r
 /// commits a new location whose name matches a saved place (case-
 /// insensitive). No-op when no row matches — the user typed a fresh
 /// place that isn't in the library.
-pub fn touch_saved_place(conn: &Connection, world_id: &str, name: &str, when: &str) -> Result<(), rusqlite::Error> {
+pub fn touch_saved_place(
+    conn: &Connection,
+    world_id: &str,
+    name: &str,
+    when: &str,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "UPDATE saved_places SET last_used_at = ?3 WHERE world_id = ?1 AND name = ?2 COLLATE NOCASE",
         params![world_id, name, when],

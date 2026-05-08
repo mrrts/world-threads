@@ -22,11 +22,14 @@
 /// Parse the stored setting value into one of three canonical modes.
 /// Returns a static string so callers don't have to allocate.
 pub fn parse_reactions_mode(setting_value: Option<&str>) -> &'static str {
-    match setting_value.map(|s| s.trim().to_ascii_lowercase()).as_deref() {
-        Some("always") | Some("true") | Some("on")  => "always",
-        Some("occasional")                           => "occasional",
-        Some("off") | Some("false") | None           => "off",
-        _                                             => "off",
+    match setting_value
+        .map(|s| s.trim().to_ascii_lowercase())
+        .as_deref()
+    {
+        Some("always") | Some("true") | Some("on") => "always",
+        Some("occasional") => "occasional",
+        Some("off") | Some("false") | None => "off",
+        _ => "off",
     }
 }
 

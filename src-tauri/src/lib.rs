@@ -8,9 +8,7 @@ pub mod db;
 // pressure. Adding new exports is fine; keep the surface minimal.
 pub mod group_chat_internals {
     pub use crate::commands::group_chat_cmds::{
-        consecutive_run_by_recent_speaker,
-        llm_pick_responders_with_overrides,
-        llm_pick_addressee,
+        consecutive_run_by_recent_speaker, llm_pick_addressee, llm_pick_responders_with_overrides,
         AddresseePick,
     };
 }
@@ -24,33 +22,33 @@ pub mod canon_internals {
 
 use commands::audio_cmds::*;
 use commands::backup_cmds::*;
+use commands::canon_cmds::*;
 use commands::character_cmds::*;
 use commands::chat_cmds::*;
+use commands::chiptune_score_cmds::*;
 use commands::consultant_cmds::*;
-use commands::illustration_cmds::*;
-use commands::video_cmds::*;
+use commands::daily_reading_cmds::*;
+use commands::genesis_cmds::*;
 use commands::group_chat_cmds::*;
+use commands::illustration_cmds::*;
+use commands::imagined_chapter_cmds::*;
 use commands::inventory_cmds::*;
 use commands::journal_cmds::*;
-use commands::user_journal_cmds::*;
+use commands::location_cmds::*;
 use commands::meanwhile_cmds::*;
-use commands::daily_reading_cmds::*;
-use commands::imagined_chapter_cmds::*;
-use commands::quest_cmds::*;
-use commands::genesis_cmds::*;
 use commands::memory_cmds::*;
 use commands::mood_cmds::*;
 use commands::novel_cmds::*;
 use commands::portrait_cmds::*;
+use commands::quest_cmds::*;
 use commands::reaction_cmds::*;
-use commands::canon_cmds::*;
 use commands::settings_cmds::*;
 use commands::usage_cmds::*;
+use commands::user_journal_cmds::*;
 use commands::user_profile_cmds::*;
+use commands::video_cmds::*;
 use commands::world_cmds::*;
 use commands::world_image_cmds::*;
-use commands::location_cmds::*;
-use commands::chiptune_score_cmds::*;
 use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -65,8 +63,7 @@ pub fn run() {
             let db_path = app_dir.join("worldthreads.db");
             log::info!("Database path: {}", db_path.display());
 
-            let database = db::Database::open(&db_path)
-                .expect("failed to open database");
+            let database = db::Database::open(&db_path).expect("failed to open database");
 
             // Mirror persisted children-mode setting into a process env gate
             // consumed by the OpenAI injection layer on every LLM call.
@@ -90,11 +87,9 @@ pub fn run() {
             // Periodic backup every 20 minutes
             {
                 let path = db_path.clone();
-                std::thread::spawn(move || {
-                    loop {
-                        std::thread::sleep(std::time::Duration::from_secs(60 * 60));
-                        db::Database::backup_database(&path);
-                    }
+                std::thread::spawn(move || loop {
+                    std::thread::sleep(std::time::Duration::from_secs(60 * 60));
+                    db::Database::backup_database(&path);
                 });
             }
 
@@ -107,7 +102,10 @@ pub fn run() {
             // when nothing to clean.
             if let Some(db) = app.try_state::<db::Database>() {
                 if let Ok(conn) = db.conn.lock() {
-                    if let Err(e) = commands::illustration_cmds::cleanup_orphaned_illustrations(&conn, &portraits_dir) {
+                    if let Err(e) = commands::illustration_cmds::cleanup_orphaned_illustrations(
+                        &conn,
+                        &portraits_dir,
+                    ) {
                         log::warn!("[startup] orphan-illustration cleanup failed: {e}");
                     }
                 }
@@ -126,9 +124,8 @@ pub fn run() {
                 .app_local_data_dir()
                 .expect("could not resolve app local data path")
                 .join("salt.txt");
-            app.handle().plugin(
-                tauri_plugin_stronghold::Builder::with_argon2(&salt_path).build(),
-            )?;
+            app.handle()
+                .plugin(tauri_plugin_stronghold::Builder::with_argon2(&salt_path).build())?;
 
             if cfg!(debug_assertions) {
                 app.handle().plugin(
@@ -146,7 +143,10 @@ pub fn run() {
                     let sw = (screen.width as f64 / scale) as u32;
                     let sh = (screen.height as f64 / scale) as u32;
                     let margin_bottom: u32 = 120;
-                    let _ = window.set_size(tauri::LogicalSize::new(sw, sh.saturating_sub(margin_bottom)));
+                    let _ = window.set_size(tauri::LogicalSize::new(
+                        sw,
+                        sh.saturating_sub(margin_bottom),
+                    ));
                     let _ = window.set_position(tauri::LogicalPosition::new(0, 0));
                 }
             }

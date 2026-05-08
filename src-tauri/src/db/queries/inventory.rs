@@ -56,8 +56,7 @@ pub fn gather_character_recent_messages(
     // Per-member display-name map. Keyed by character_id. Used so group
     // assistant lines can be labeled by whichever character actually
     // spoke (sender_character_id) rather than blanket "Character".
-    let mut names: std::collections::HashMap<String, String> =
-        std::collections::HashMap::new();
+    let mut names: std::collections::HashMap<String, String> = std::collections::HashMap::new();
     names.insert(character_id.to_string(), my_name.clone());
 
     // Group threads the character is in — collected first so we can also
@@ -266,7 +265,9 @@ pub fn snapshot_inventory_pre_mutation(
             |r| Ok((r.get::<_, String>(0)?, r.get::<_, Option<i64>>(1)?)),
         )
         .ok();
-    let Some((inv_json, last_day)) = current else { return Ok(()); };
+    let Some((inv_json, last_day)) = current else {
+        return Ok(());
+    };
 
     let snapshot_id = uuid::Uuid::new_v4().to_string();
     conn.execute(
@@ -306,11 +307,14 @@ pub fn get_inventory_snapshot_at_or_before(
          WHERE character_id = ?1 AND created_at <= ?2
          ORDER BY created_at DESC LIMIT 1",
         params![character_id, at_or_before_iso],
-        |r| Ok(InventorySnapshotData {
-            inventory_json: r.get::<_, String>(0)?,
-            last_inventory_day: r.get::<_, Option<i64>>(1)?,
-        }),
-    ).ok()
+        |r| {
+            Ok(InventorySnapshotData {
+                inventory_json: r.get::<_, String>(0)?,
+                last_inventory_day: r.get::<_, Option<i64>>(1)?,
+            })
+        },
+    )
+    .ok()
 }
 
 /// Fetch all records whose message_id is in `message_ids`. Returns a
@@ -320,8 +324,14 @@ pub fn get_inventory_updates_for_messages(
     conn: &Connection,
     message_ids: &[String],
 ) -> Result<Vec<InventoryUpdateRecord>, rusqlite::Error> {
-    if message_ids.is_empty() { return Ok(Vec::new()); }
-    let placeholders = message_ids.iter().map(|_| "?").collect::<Vec<_>>().join(",");
+    if message_ids.is_empty() {
+        return Ok(Vec::new());
+    }
+    let placeholders = message_ids
+        .iter()
+        .map(|_| "?")
+        .collect::<Vec<_>>()
+        .join(",");
     let sql = format!(
         "SELECT r.message_id, r.character_id, COALESCE(c.display_name, ''), r.added, r.updated, r.removed, r.created_at
          FROM inventory_update_records r
@@ -330,7 +340,10 @@ pub fn get_inventory_updates_for_messages(
          ORDER BY r.created_at DESC"
     );
     let mut stmt = conn.prepare(&sql)?;
-    let params_vec: Vec<&dyn rusqlite::ToSql> = message_ids.iter().map(|s| s as &dyn rusqlite::ToSql).collect();
+    let params_vec: Vec<&dyn rusqlite::ToSql> = message_ids
+        .iter()
+        .map(|s| s as &dyn rusqlite::ToSql)
+        .collect();
     let rows = stmt.query_map(&params_vec[..], |r| {
         let added_json: String = r.get(3)?;
         let updated_json: String = r.get(4)?;
@@ -369,8 +382,7 @@ pub fn gather_character_messages_for_world_day(
         )
         .unwrap_or_else(|_| "Character".to_string());
 
-    let mut names: std::collections::HashMap<String, String> =
-        std::collections::HashMap::new();
+    let mut names: std::collections::HashMap<String, String> = std::collections::HashMap::new();
     names.insert(character_id.to_string(), my_name.clone());
 
     let group_threads: Vec<String> = {

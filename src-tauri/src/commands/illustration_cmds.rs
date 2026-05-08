@@ -43,7 +43,11 @@ pub fn png_aspect_ratio(bytes: &[u8]) -> f64 {
     if bytes.len() >= 24 && &bytes[0..4] == b"\x89PNG" {
         let w = u32::from_be_bytes([bytes[16], bytes[17], bytes[18], bytes[19]]) as f64;
         let h = u32::from_be_bytes([bytes[20], bytes[21], bytes[22], bytes[23]]) as f64;
-        if h > 0.0 { w / h } else { 1.0 }
+        if h > 0.0 {
+            w / h
+        } else {
+            1.0
+        }
     } else {
         1.0
     }
@@ -63,12 +67,14 @@ pub fn cleanup_orphaned_illustrations(
     conn: &rusqlite::Connection,
     portraits_dir: &std::path::Path,
 ) -> Result<usize, String> {
-    let mut stmt = conn.prepare(
-        "SELECT image_id, file_name, video_file FROM world_images
+    let mut stmt = conn
+        .prepare(
+            "SELECT image_id, file_name, video_file FROM world_images
          WHERE source = 'illustration'
            AND image_id NOT IN (SELECT message_id FROM messages)
-           AND image_id NOT IN (SELECT message_id FROM group_messages)"
-    ).map_err(|e| e.to_string())?;
+           AND image_id NOT IN (SELECT message_id FROM group_messages)",
+        )
+        .map_err(|e| e.to_string())?;
     let orphans: Vec<(String, String, String)> = stmt
         .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
         .map_err(|e| e.to_string())?
@@ -80,14 +86,21 @@ pub fn cleanup_orphaned_illustrations(
     for (image_id, file_name, video_file) in orphans {
         if !file_name.is_empty() {
             let p = portraits_dir.join(&file_name);
-            if p.exists() { let _ = std::fs::remove_file(&p); }
+            if p.exists() {
+                let _ = std::fs::remove_file(&p);
+            }
         }
         if !video_file.is_empty() {
             let p = portraits_dir.join(&video_file);
-            if p.exists() { let _ = std::fs::remove_file(&p); }
+            if p.exists() {
+                let _ = std::fs::remove_file(&p);
+            }
         }
-        conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![image_id])
-            .map_err(|e| e.to_string())?;
+        conn.execute(
+            "DELETE FROM world_images WHERE image_id = ?1",
+            params![image_id],
+        )
+        .map_err(|e| e.to_string())?;
     }
     if count > 0 {
         log::info!("[illustration cleanup] Removed {count} orphaned world_images entries (no matching message)");
@@ -103,12 +116,19 @@ pub fn cleanup_orphaned_illustrations(
 /// match. Critical: previous version only hit `messages`, so deleting
 /// a group-chat illustration silently failed (gallery + file were
 /// cleaned but the message row persisted, so reload showed it again).
-pub(crate) fn delete_illustration_inner(conn: &rusqlite::Connection, portraits_dir: &std::path::Path, message_id: &str) -> Result<(), String> {
+pub(crate) fn delete_illustration_inner(
+    conn: &rusqlite::Connection,
+    portraits_dir: &std::path::Path,
+    message_id: &str,
+) -> Result<(), String> {
     // Delete associated video file if one exists
-    let video_file: Option<String> = conn.query_row(
-        "SELECT video_file FROM world_images WHERE image_id = ?1",
-        params![message_id], |r| r.get(0),
-    ).ok();
+    let video_file: Option<String> = conn
+        .query_row(
+            "SELECT video_file FROM world_images WHERE image_id = ?1",
+            params![message_id],
+            |r| r.get(0),
+        )
+        .ok();
     if let Some(ref vf) = video_file {
         if !vf.is_empty() {
             let path = portraits_dir.join(vf);
@@ -118,22 +138,44 @@ pub(crate) fn delete_illustration_inner(conn: &rusqlite::Connection, portraits_d
         }
     }
     // Delete gallery entry (linked by message_id = image_id)
-    let file_name: Option<String> = conn.query_row(
-        "SELECT file_name FROM world_images WHERE image_id = ?1",
-        params![message_id], |r| r.get(0),
-    ).ok();
-    conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![message_id])
-        .map_err(|e| e.to_string())?;
+    let file_name: Option<String> = conn
+        .query_row(
+            "SELECT file_name FROM world_images WHERE image_id = ?1",
+            params![message_id],
+            |r| r.get(0),
+        )
+        .ok();
+    conn.execute(
+        "DELETE FROM world_images WHERE image_id = ?1",
+        params![message_id],
+    )
+    .map_err(|e| e.to_string())?;
     // Delete FTS entries from both tables (one will no-op).
-    conn.execute("DELETE FROM messages_fts WHERE message_id = ?1", params![message_id]).ok();
-    conn.execute("DELETE FROM group_messages_fts WHERE message_id = ?1", params![message_id]).ok();
+    conn.execute(
+        "DELETE FROM messages_fts WHERE message_id = ?1",
+        params![message_id],
+    )
+    .ok();
+    conn.execute(
+        "DELETE FROM group_messages_fts WHERE message_id = ?1",
+        params![message_id],
+    )
+    .ok();
     // Delete message from both tables (one will no-op). At least one
     // must succeed without error; collect both row-counts so we can
     // detect the "no row found anywhere" case (silent corruption
     // signal we want logged).
-    let solo_rows = conn.execute("DELETE FROM messages WHERE message_id = ?1", params![message_id])
+    let solo_rows = conn
+        .execute(
+            "DELETE FROM messages WHERE message_id = ?1",
+            params![message_id],
+        )
         .map_err(|e| e.to_string())?;
-    let group_rows = conn.execute("DELETE FROM group_messages WHERE message_id = ?1", params![message_id])
+    let group_rows = conn
+        .execute(
+            "DELETE FROM group_messages WHERE message_id = ?1",
+            params![message_id],
+        )
         .map_err(|e| e.to_string())?;
     if solo_rows == 0 && group_rows == 0 {
         log::warn!("[delete_illustration] no message row found in messages or group_messages for {message_id} (gallery + file still cleaned)");
@@ -163,12 +205,15 @@ pub fn get_illustration_captions_cmd(
         placeholders.join(", ")
     );
     let mut stmt = conn.prepare(&sql).map_err(|e| e.to_string())?;
-    let params_vec: Vec<&dyn rusqlite::types::ToSql> = message_ids.iter()
+    let params_vec: Vec<&dyn rusqlite::types::ToSql> = message_ids
+        .iter()
         .map(|id| id as &dyn rusqlite::types::ToSql)
         .collect();
-    let rows = stmt.query_map(params_vec.as_slice(), |row| {
-        Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
-    }).map_err(|e| e.to_string())?;
+    let rows = stmt
+        .query_map(params_vec.as_slice(), |row| {
+            Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+        })
+        .map_err(|e| e.to_string())?;
     let mut out = std::collections::HashMap::new();
     for r in rows.flatten() {
         out.insert(r.0, r.1);
@@ -190,7 +235,8 @@ pub fn update_illustration_caption_cmd(
     conn.execute(
         "UPDATE world_images SET caption = ?2 WHERE image_id = ?1",
         rusqlite::params![message_id, caption],
-    ).map_err(|e| e.to_string())?;
+    )
+    .map_err(|e| e.to_string())?;
     Ok(())
 }
 
@@ -214,7 +260,15 @@ pub async fn generate_illustration_cmd(
         let recent_msgs = list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?;
         let user_profile = get_user_profile(&conn, &character.world_id).ok();
         let current_loc = get_thread_location(&conn, &thread.thread_id).ok().flatten();
-        (world, character, thread.thread_id, recent_msgs, model_config, user_profile, current_loc)
+        (
+            world,
+            character,
+            thread.thread_id,
+            recent_msgs,
+            model_config,
+            user_profile,
+            current_loc,
+        )
     };
 
     // Load reference portraits: user avatar first, then character's active portrait
@@ -251,24 +305,33 @@ pub async fn generate_illustration_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         if let Ok(file_name) = conn.query_row(
             "SELECT file_name FROM world_images WHERE image_id = ?1",
-            params![prev_id], |r| r.get::<_, String>(0),
+            params![prev_id],
+            |r| r.get::<_, String>(0),
         ) {
             let path = dir.join(&file_name);
             if path.exists() {
                 if let Ok(bytes) = std::fs::read(&path) {
                     reference_images.push(bytes);
                     true
-                } else { false }
-            } else { false }
-        } else { false }
-    } else { false };
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        } else {
+            false
+        }
+    } else {
+        false
+    };
 
     // Resolve quality tier to image size and quality
     let tier = quality_tier.as_deref().unwrap_or("high");
     let (img_size, img_quality) = match tier {
         "low" => ("1024x1024", "low"),
         "medium" => ("1024x1024", "medium"),
-        _ => ("1536x1024", "medium"),  // "high"
+        _ => ("1536x1024", "medium"), // "high"
     };
 
     log::info!("[Illustration] Generating for '{}' with {} reference images (tier={}, size={}, quality={})",
@@ -278,7 +341,8 @@ pub async fn generate_illustration_cmd(
     // a memorable moment from recent scene messages. The picked sentence
     // serves double duty: guides the image generation AND becomes the
     // stored caption/alt-text for the illustration.
-    let user_display_name = user_profile.as_ref()
+    let user_display_name = user_profile
+        .as_ref()
         .map(|p| p.display_name.as_str())
         .unwrap_or("The human");
     let resolved_instructions: Option<String> = match custom_instructions.as_deref() {
@@ -290,35 +354,44 @@ pub async fn generate_illustration_cmd(
                 &model_config.dialogue_model,
                 &recent_msgs,
                 user_display_name,
-            ).await {
+            )
+            .await
+            {
                 Ok(moment) => Some(moment),
                 Err(e) => {
-                    log::warn!("[Illustration] memorable-moment pick failed: {e}; proceeding without");
+                    log::warn!(
+                        "[Illustration] memorable-moment pick failed: {e}; proceeding without"
+                    );
                     None
                 }
             }
         }
     };
 
-    let (scene_description, image_bytes, chat_usage) = orchestrator::generate_illustration_with_base(
-        &model_config.chat_api_base(),
-        &model_config.openai_api_base(),
-        &api_key,
-        &model_config.dialogue_model,
-        &model_config.image_model,
-        img_quality,
-        img_size,
-        model_config.image_output_format().as_deref(),
-        &world, &character, None, &recent_msgs,
-        user_profile.as_ref(),
-        &reference_images,
-        resolved_instructions.as_deref(),
-        has_previous,
-        include_scene_summary.unwrap_or(true),
-        None,
-        None,
-        current_loc.as_deref(),
-    ).await?;
+    let (scene_description, image_bytes, chat_usage) =
+        orchestrator::generate_illustration_with_base(
+            &model_config.chat_api_base(),
+            &model_config.openai_api_base(),
+            &api_key,
+            &model_config.dialogue_model,
+            &model_config.image_model,
+            img_quality,
+            img_size,
+            model_config.image_output_format().as_deref(),
+            &world,
+            &character,
+            None,
+            &recent_msgs,
+            user_profile.as_ref(),
+            &reference_images,
+            resolved_instructions.as_deref(),
+            has_previous,
+            include_scene_summary.unwrap_or(true),
+            None,
+            None,
+            current_loc.as_deref(),
+        )
+        .await?;
 
     // Caption: user's instructions verbatim when provided; otherwise
     // derive from scene_description so it describes what was actually
@@ -335,7 +408,9 @@ pub async fn generate_illustration_cmd(
                 &api_key,
                 &model_config.dialogue_model,
                 &scene_description,
-            ).await {
+            )
+            .await
+            {
                 Ok(c) => c,
                 Err(e) => {
                     log::warn!("[Illustration] caption derivation failed: {e}; falling back to memorable-moment");
@@ -347,7 +422,13 @@ pub async fn generate_illustration_cmd(
 
     if let Some(u) = &chat_usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "illustration", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
+        let _ = record_token_usage(
+            &conn,
+            "illustration",
+            &model_config.dialogue_model,
+            u.prompt_tokens,
+            u.completion_tokens,
+        );
     }
 
     // Use message_id as image_id so they're linked for cleanup
@@ -357,7 +438,11 @@ pub async fn generate_illustration_cmd(
     std::fs::write(dir.join(&file_name), &image_bytes)
         .map_err(|e| format!("Failed to save illustration: {e}"))?;
 
-    log::info!("[Illustration] Saved {} ({} bytes)", file_name, image_bytes.len());
+    log::info!(
+        "[Illustration] Saved {} ({} bytes)",
+        file_name,
+        image_bytes.len()
+    );
 
     let aspect = png_aspect_ratio(&image_bytes);
     let b64 = base64_encode_bytes(&image_bytes);
@@ -390,11 +475,12 @@ pub async fn generate_illustration_cmd(
             tokens_estimate: 0,
             sender_character_id: None,
             created_at: now,
-            world_day: wd_ill, world_time: wt_ill,
+            world_day: wd_ill,
+            world_time: wt_ill,
             address_to: None,
-        mood_chain: None,
-        is_proactive: false,
-        formula_signature: None,
+            mood_chain: None,
+            is_proactive: false,
+            formula_signature: None,
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
     }
@@ -435,10 +521,13 @@ pub fn get_illustration_data_cmd(
     message_id: String,
 ) -> Result<Option<String>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    let file_name: Option<String> = conn.query_row(
-        "SELECT file_name FROM world_images WHERE image_id = ?1",
-        params![message_id], |r| r.get(0),
-    ).ok();
+    let file_name: Option<String> = conn
+        .query_row(
+            "SELECT file_name FROM world_images WHERE image_id = ?1",
+            params![message_id],
+            |r| r.get(0),
+        )
+        .ok();
     if let Some(f) = file_name {
         let path = portraits_dir.0.join(&f);
         if path.exists() {
@@ -468,7 +557,17 @@ pub async fn regenerate_illustration_cmd(
     }
 
     // Generate a new one (reuses the full generate_illustration_cmd logic)
-    generate_illustration_cmd(db, portraits_dir, api_key, character_id, Some("high".to_string()), None, None, None).await
+    generate_illustration_cmd(
+        db,
+        portraits_dir,
+        api_key,
+        character_id,
+        Some("high".to_string()),
+        None,
+        None,
+        None,
+    )
+    .await
 }
 
 #[tauri::command]
@@ -490,14 +589,17 @@ pub async fn adjust_illustration_cmd(
         let user_profile = get_user_profile(&conn, &character.world_id).ok();
 
         // Read the current illustration file
-        let file_name: String = conn.query_row(
-            "SELECT file_name FROM world_images WHERE image_id = ?1",
-            params![message_id], |r| r.get(0),
-        ).map_err(|_| "Illustration not found in gallery".to_string())?;
+        let file_name: String = conn
+            .query_row(
+                "SELECT file_name FROM world_images WHERE image_id = ?1",
+                params![message_id],
+                |r| r.get(0),
+            )
+            .map_err(|_| "Illustration not found in gallery".to_string())?;
 
         let path = portraits_dir.0.join(&file_name);
-        let bytes = std::fs::read(&path)
-            .map_err(|e| format!("Failed to read illustration file: {e}"))?;
+        let bytes =
+            std::fs::read(&path).map_err(|e| format!("Failed to read illustration file: {e}"))?;
 
         (bytes, world, character, thread, model_config, user_profile)
     };
@@ -530,7 +632,8 @@ pub async fn adjust_illustration_cmd(
         }
     }
 
-    let user_name = user_profile.as_ref()
+    let user_name = user_profile
+        .as_ref()
         .map(|p| p.display_name.as_str())
         .unwrap_or("the human");
 
@@ -564,16 +667,27 @@ pub async fn adjust_illustration_cmd(
 
     let prompt = prompt_parts.join(" ");
 
-    log::info!("[Illustration Adjust] Adjusting with {} reference images, instructions: {:.100}", reference_images.len(), instructions);
+    log::info!(
+        "[Illustration Adjust] Adjusting with {} reference images, instructions: {:.100}",
+        reference_images.len(),
+        instructions
+    );
 
     let response = crate::ai::openai::generate_image_edit_with_base(
-        &model_config.openai_api_base(), &api_key, &model_config.image_model,
-        &prompt, &reference_images,
-        "1536x1024", model_config.image_quality(),
+        &model_config.openai_api_base(),
+        &api_key,
+        &model_config.image_model,
+        &prompt,
+        &reference_images,
+        "1536x1024",
+        model_config.image_quality(),
         model_config.image_output_format().as_deref(),
-    ).await?;
+    )
+    .await?;
 
-    let b64 = response.data.first()
+    let b64 = response
+        .data
+        .first()
         .and_then(|d| d.image_b64())
         .ok_or_else(|| "No image data in response".to_string())?;
 
@@ -621,11 +735,12 @@ pub async fn adjust_illustration_cmd(
             tokens_estimate: 0,
             sender_character_id: None,
             created_at: now,
-            world_day: wd_adj, world_time: wt_adj,
+            world_day: wd_adj,
+            world_time: wt_adj,
             address_to: None,
-        mood_chain: None,
-        is_proactive: false,
-        formula_signature: None,
+            mood_chain: None,
+            is_proactive: false,
+            formula_signature: None,
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
     }
@@ -656,10 +771,13 @@ pub fn download_illustration_cmd(
     illustration_message_id: String,
 ) -> Result<String, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    let file_name: String = conn.query_row(
-        "SELECT file_name FROM world_images WHERE image_id = ?1",
-        params![illustration_message_id], |r| r.get(0),
-    ).map_err(|_| "Illustration not found".to_string())?;
+    let file_name: String = conn
+        .query_row(
+            "SELECT file_name FROM world_images WHERE image_id = ?1",
+            params![illustration_message_id],
+            |r| r.get(0),
+        )
+        .map_err(|_| "Illustration not found".to_string())?;
 
     let src = portraits_dir.0.join(&file_name);
     if !src.exists() {
@@ -682,10 +800,13 @@ pub fn get_illustration_aspect_ratio_cmd(
     illustration_message_id: String,
 ) -> Result<f64, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    let (ratio, file_name): (f64, String) = conn.query_row(
-        "SELECT COALESCE(aspect_ratio, 0.0), file_name FROM world_images WHERE image_id = ?1",
-        params![illustration_message_id], |r| Ok((r.get(0)?, r.get(1)?)),
-    ).unwrap_or((0.0, String::new()));
+    let (ratio, file_name): (f64, String) = conn
+        .query_row(
+            "SELECT COALESCE(aspect_ratio, 0.0), file_name FROM world_images WHERE image_id = ?1",
+            params![illustration_message_id],
+            |r| Ok((r.get(0)?, r.get(1)?)),
+        )
+        .unwrap_or((0.0, String::new()));
 
     // Backfill if unknown
     if ratio == 0.0 && !file_name.is_empty() {
@@ -850,40 +971,78 @@ pub async fn preview_backstage_illustration_cmd(
             let mut model_config = orchestrator::load_model_config(&conn);
             model_config.apply_provider_override(&conn, &format!("provider_override.{}", gc_id));
             let recent_msgs = list_group_messages_within_budget(
-                &conn, &gc.thread_id, model_config.safe_history_budget() as i64, 30,
-            ).map_err(|e| e.to_string())?;
+                &conn,
+                &gc.thread_id,
+                model_config.safe_history_budget() as i64,
+                30,
+            )
+            .map_err(|e| e.to_string())?;
             let user_profile = get_user_profile(&conn, &gc.world_id).ok();
-            let char_ids: Vec<String> = gc.character_ids.as_array()
-                .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+            let char_ids: Vec<String> = gc
+                .character_ids
+                .as_array()
+                .map(|a| {
+                    a.iter()
+                        .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                        .collect()
+                })
                 .unwrap_or_default();
-            let characters: Vec<Character> = char_ids.iter()
+            let characters: Vec<Character> = char_ids
+                .iter()
                 .filter_map(|id| get_character(&conn, id).ok())
                 .collect();
-            let primary = characters.iter().find(|c| c.character_id == character_id)
+            let primary = characters
+                .iter()
+                .find(|c| c.character_id == character_id)
                 .cloned()
                 .or_else(|| characters.first().cloned())
                 .ok_or_else(|| "No characters in group chat".to_string())?;
-            let additional: Vec<Character> = characters.iter()
+            let additional: Vec<Character> = characters
+                .iter()
                 .filter(|c| c.character_id != primary.character_id)
                 .cloned()
                 .collect();
-            let all_names: Vec<String> = characters.iter().map(|c| c.display_name.clone()).collect();
-            let names_map: std::collections::HashMap<String, String> = characters.iter()
+            let all_names: Vec<String> =
+                characters.iter().map(|c| c.display_name.clone()).collect();
+            let names_map: std::collections::HashMap<String, String> = characters
+                .iter()
                 .map(|c| (c.character_id.clone(), c.display_name.clone()))
                 .collect();
             let current_loc = get_group_chat_location(&conn, gc_id).ok().flatten();
-            (world, primary, additional, recent_msgs, model_config, user_profile,
-             all_names, Some(names_map), std::collections::HashSet::new(), current_loc)
+            (
+                world,
+                primary,
+                additional,
+                recent_msgs,
+                model_config,
+                user_profile,
+                all_names,
+                Some(names_map),
+                std::collections::HashSet::new(),
+                current_loc,
+            )
         } else {
             let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
             let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
-            let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
+            let thread =
+                get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
             let model_config = orchestrator::load_model_config(&conn);
-            let recent_msgs = list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?;
+            let recent_msgs =
+                list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?;
             let user_profile = get_user_profile(&conn, &character.world_id).ok();
             let current_loc = get_thread_location(&conn, &thread.thread_id).ok().flatten();
-            (world, character, Vec::new(), recent_msgs, model_config, user_profile,
-             Vec::new(), None, std::collections::HashSet::new(), current_loc)
+            (
+                world,
+                character,
+                Vec::new(),
+                recent_msgs,
+                model_config,
+                user_profile,
+                Vec::new(),
+                None,
+                std::collections::HashSet::new(),
+                current_loc,
+            )
         }
     };
     let _ = list_for_thread_msg_id_set;
@@ -893,19 +1052,25 @@ pub async fn preview_backstage_illustration_cmd(
     if let Some(ref profile) = user_profile {
         if !profile.avatar_file.is_empty() {
             let path = dir.join(&profile.avatar_file);
-            if let Ok(bytes) = std::fs::read(&path) { reference_images.push(bytes); }
+            if let Ok(bytes) = std::fs::read(&path) {
+                reference_images.push(bytes);
+            }
         }
     }
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         if let Some(p) = get_active_portrait(&conn, &primary_character.character_id) {
             let path = dir.join(&p.file_name);
-            if let Ok(bytes) = std::fs::read(&path) { reference_images.push(bytes); }
+            if let Ok(bytes) = std::fs::read(&path) {
+                reference_images.push(bytes);
+            }
         }
         for c in &additional_cast_owned {
             if let Some(p) = get_active_portrait(&conn, &c.character_id) {
                 let path = dir.join(&p.file_name);
-                if let Ok(bytes) = std::fs::read(&path) { reference_images.push(bytes); }
+                if let Ok(bytes) = std::fs::read(&path) {
+                    reference_images.push(bytes);
+                }
             }
         }
     }
@@ -914,60 +1079,81 @@ pub async fn preview_backstage_illustration_cmd(
     // to commit them deliberately and shouldn't get the rough draft.
     let (img_size, img_quality) = ("1536x1024", "medium");
 
-    let user_display_name = user_profile.as_ref()
+    let user_display_name = user_profile
+        .as_ref()
         .map(|p| p.display_name.as_str())
         .unwrap_or("The human");
     let resolved_instructions: Option<String> = match custom_instructions.as_deref() {
         Some(s) if !s.trim().is_empty() => Some(s.to_string()),
         _ => orchestrator::pick_memorable_moment_caption(
-                &model_config.chat_api_base(),
-                &api_key,
-                &model_config.dialogue_model,
-                &recent_msgs,
-                user_display_name,
-            ).await.ok(),
+            &model_config.chat_api_base(),
+            &api_key,
+            &model_config.dialogue_model,
+            &recent_msgs,
+            user_display_name,
+        )
+        .await
+        .ok(),
     };
 
     let additional_refs: Vec<&Character> = additional_cast_owned.iter().collect();
-    let additional_opt: Option<&[&Character]> = if additional_refs.is_empty() { None } else { Some(&additional_refs) };
+    let additional_opt: Option<&[&Character]> = if additional_refs.is_empty() {
+        None
+    } else {
+        Some(&additional_refs)
+    };
     let names_map_ref = names_map.as_ref();
 
-    let (scene_description, image_bytes, chat_usage) = orchestrator::generate_illustration_with_base(
-        &model_config.chat_api_base(),
-        &model_config.openai_api_base(),
-        &api_key,
-        &model_config.dialogue_model,
-        &model_config.image_model,
-        img_quality,
-        img_size,
-        model_config.image_output_format().as_deref(),
-        &world,
-        &primary_character,
-        additional_opt,
-        &recent_msgs,
-        user_profile.as_ref(),
-        &reference_images,
-        resolved_instructions.as_deref(),
-        false, // has_previous
-        true,  // include_scene_summary
-        if all_names.is_empty() { None } else { Some(&all_names) },
-        names_map_ref,
-        current_loc.as_deref(),
-    ).await?;
+    let (scene_description, image_bytes, chat_usage) =
+        orchestrator::generate_illustration_with_base(
+            &model_config.chat_api_base(),
+            &model_config.openai_api_base(),
+            &api_key,
+            &model_config.dialogue_model,
+            &model_config.image_model,
+            img_quality,
+            img_size,
+            model_config.image_output_format().as_deref(),
+            &world,
+            &primary_character,
+            additional_opt,
+            &recent_msgs,
+            user_profile.as_ref(),
+            &reference_images,
+            resolved_instructions.as_deref(),
+            false, // has_previous
+            true,  // include_scene_summary
+            if all_names.is_empty() {
+                None
+            } else {
+                Some(&all_names)
+            },
+            names_map_ref,
+            current_loc.as_deref(),
+        )
+        .await?;
 
     let caption = match custom_instructions.as_deref() {
         Some(s) if !s.trim().is_empty() => s.to_string(),
         _ => orchestrator::derive_caption_from_scene(
-                &model_config.chat_api_base(),
-                &api_key,
-                &model_config.dialogue_model,
-                &scene_description,
-            ).await.unwrap_or_else(|_| resolved_instructions.clone().unwrap_or_default()),
+            &model_config.chat_api_base(),
+            &api_key,
+            &model_config.dialogue_model,
+            &scene_description,
+        )
+        .await
+        .unwrap_or_else(|_| resolved_instructions.clone().unwrap_or_default()),
     };
 
     if let Some(u) = &chat_usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "illustration", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
+        let _ = record_token_usage(
+            &conn,
+            "illustration",
+            &model_config.dialogue_model,
+            u.prompt_tokens,
+            u.completion_tokens,
+        );
     }
 
     let image_id = uuid::Uuid::new_v4().to_string();
@@ -1000,7 +1186,12 @@ pub async fn preview_backstage_illustration_cmd(
     }
     let _ = is_group;
 
-    Ok(PreviewedIllustration { image_id, data_url, aspect_ratio: aspect, caption })
+    Ok(PreviewedIllustration {
+        image_id,
+        data_url,
+        aspect_ratio: aspect,
+        caption,
+    })
 }
 
 /// Commit a previewed illustration into the active chat. Routes to the
@@ -1017,10 +1208,13 @@ pub fn attach_previewed_illustration_cmd(
 ) -> Result<Message, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
 
-    let (file_name, world_id): (String, String) = conn.query_row(
-        "SELECT file_name, world_id FROM world_images WHERE image_id = ?1",
-        params![image_id], |r| Ok((r.get(0)?, r.get(1)?)),
-    ).map_err(|_| "Previewed image not found — may have been discarded".to_string())?;
+    let (file_name, world_id): (String, String) = conn
+        .query_row(
+            "SELECT file_name, world_id FROM world_images WHERE image_id = ?1",
+            params![image_id],
+            |r| Ok((r.get(0)?, r.get(1)?)),
+        )
+        .map_err(|_| "Previewed image not found — may have been discarded".to_string())?;
 
     let world = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
     let path = portraits_dir.0.join(&file_name);
@@ -1033,7 +1227,8 @@ pub fn attach_previewed_illustration_cmd(
     conn.execute(
         "UPDATE world_images SET source = 'illustration' WHERE image_id = ?1",
         params![image_id],
-    ).map_err(|e| e.to_string())?;
+    )
+    .map_err(|e| e.to_string())?;
 
     let (wd, wt) = world_time_fields(&world);
     let now = Utc::now().to_rfc3339();
@@ -1071,14 +1266,22 @@ pub fn discard_previewed_illustration_cmd(
     image_id: String,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    let file_name: Option<String> = conn.query_row(
-        "SELECT file_name FROM world_images WHERE image_id = ?1",
-        params![image_id], |r| r.get(0),
-    ).ok();
+    let file_name: Option<String> = conn
+        .query_row(
+            "SELECT file_name FROM world_images WHERE image_id = ?1",
+            params![image_id],
+            |r| r.get(0),
+        )
+        .ok();
     if let Some(f) = file_name {
         let path = portraits_dir.0.join(&f);
-        if path.exists() { let _ = std::fs::remove_file(&path); }
+        if path.exists() {
+            let _ = std::fs::remove_file(&path);
+        }
     }
-    let _ = conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![image_id]);
+    let _ = conn.execute(
+        "DELETE FROM world_images WHERE image_id = ?1",
+        params![image_id],
+    );
     Ok(())
 }

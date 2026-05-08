@@ -1,10 +1,10 @@
-use std::path::PathBuf;
 use std::collections::HashMap;
+use std::path::PathBuf;
 use tauri::State;
 
 use crate::ai::{openai, orchestrator};
-use crate::db::Database;
 use crate::db::queries::{get_setting, set_setting};
+use crate::db::Database;
 
 pub struct AudioDir(pub PathBuf);
 
@@ -15,7 +15,9 @@ pub fn delete_audio_for_message(audio_dir: &std::path::Path, message_id: &str) {
         let prefix = format!("{message_id}_");
         for entry in entries.flatten() {
             let name = entry.file_name().to_string_lossy().to_string();
-            if (name.starts_with(&prefix) || name == format!("{message_id}.mp3")) && name.ends_with(".mp3") {
+            if (name.starts_with(&prefix) || name == format!("{message_id}.mp3"))
+                && name.ends_with(".mp3")
+            {
                 let _ = std::fs::remove_file(entry.path());
             }
         }
@@ -61,9 +63,13 @@ pub async fn generate_speech_cmd(
     let (voice, tts_model) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let v = get_setting(&conn, &format!("voice.{character_id}"))
-            .ok().flatten().unwrap_or_else(|| "ash".to_string());
+            .ok()
+            .flatten()
+            .unwrap_or_else(|| "ash".to_string());
         let m = get_setting(&conn, &format!("tts_model.{character_id}"))
-            .ok().flatten().unwrap_or_else(|| "gpt-4o-mini-tts".to_string());
+            .ok()
+            .flatten()
+            .unwrap_or_else(|| "gpt-4o-mini-tts".to_string());
         (v, m)
     };
 
@@ -109,10 +115,17 @@ pub async fn generate_voice_sample_cmd(
     let tone_key = tone.as_deref().unwrap_or("auto");
     let model_id = model.as_deref().unwrap_or("gpt-4o-mini-tts");
     // Shorten model name for filename: "gpt-4o-mini-tts" → "mini", "gpt-audio-1.5" → "audio15"
-    let model_key = if model_id.contains("audio-1.5") { "audio15" }
-        else if model_id.contains("mini") { "mini" }
-        else { model_id };
-    let file_path = audio_dir.0.join(format!("sample_{model_key}_{voice}_{}.mp3", tone_key.to_lowercase()));
+    let model_key = if model_id.contains("audio-1.5") {
+        "audio15"
+    } else if model_id.contains("mini") {
+        "mini"
+    } else {
+        model_id
+    };
+    let file_path = audio_dir.0.join(format!(
+        "sample_{model_key}_{voice}_{}.mp3",
+        tone_key.to_lowercase()
+    ));
     if file_path.exists() {
         return std::fs::read(&file_path).map_err(|e| format!("Failed to read sample: {e}"));
     }
@@ -174,10 +187,16 @@ pub async fn list_cached_audio_cmd(
         if let Some(last_underscore) = stem.rfind('_') {
             let msg_id = &stem[..last_underscore];
             let tone = &stem[last_underscore + 1..];
-            cached.entry(msg_id.to_string()).or_default().push(tone.to_string());
+            cached
+                .entry(msg_id.to_string())
+                .or_default()
+                .push(tone.to_string());
         } else {
             // Legacy format: {message_id}.mp3 — treat as "auto"
-            cached.entry(stem.to_string()).or_default().push("auto".to_string());
+            cached
+                .entry(stem.to_string())
+                .or_default()
+                .push("auto".to_string());
         }
     }
 
@@ -205,16 +224,17 @@ pub async fn delete_message_audio_cmd(
     delete_audio_for_message(&audio_dir.0, &message_id);
     // Also clear the last_tone setting
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    conn.execute("DELETE FROM settings WHERE key = ?1", rusqlite::params![format!("last_tone.{message_id}")])
-        .map_err(|e| e.to_string())?;
+    conn.execute(
+        "DELETE FROM settings WHERE key = ?1",
+        rusqlite::params![format!("last_tone.{message_id}")],
+    )
+    .map_err(|e| e.to_string())?;
     Ok(())
 }
 
 /// Delete all cached voice preview samples.
 #[tauri::command]
-pub async fn clear_voice_samples_cmd(
-    audio_dir: State<'_, AudioDir>,
-) -> Result<(), String> {
+pub async fn clear_voice_samples_cmd(audio_dir: State<'_, AudioDir>) -> Result<(), String> {
     if let Ok(entries) = std::fs::read_dir(&audio_dir.0) {
         for entry in entries.flatten() {
             let name = entry.file_name().to_string_lossy().to_string();

@@ -35,7 +35,12 @@ pub enum GenesisReveal {
     #[serde(rename = "world_named")]
     WorldNamed { name: String, description: String },
     #[serde(rename = "character_named")]
-    CharacterNamed { character_id: String, name: String, identity: String, avatar_color: String },
+    CharacterNamed {
+        character_id: String,
+        name: String,
+        identity: String,
+        avatar_color: String,
+    },
     #[serde(rename = "world_image_ready")]
     WorldImageReady { world_id: String },
     #[serde(rename = "portrait_ready")]
@@ -64,7 +69,13 @@ fn emit_stage(app: &AppHandle, stage: &str, detail: &str, progress: f32) {
     );
 }
 
-fn emit_stage_with_reveal(app: &AppHandle, stage: &str, detail: &str, progress: f32, reveal: GenesisReveal) {
+fn emit_stage_with_reveal(
+    app: &AppHandle,
+    stage: &str,
+    detail: &str,
+    progress: f32,
+    reveal: GenesisReveal,
+) {
     let _ = app.emit(
         "genesis-stage",
         GenesisStageEvent {
@@ -193,9 +204,15 @@ struct GeneratedCharacter {
     starting_relationship_to_other: String,
 }
 
-fn default_avatar_color() -> String { "#c4a882".to_string() }
-fn default_sex() -> String { "male".to_string() }
-fn default_density() -> String { "normal".to_string() }
+fn default_avatar_color() -> String {
+    "#c4a882".to_string()
+}
+fn default_sex() -> String {
+    "male".to_string()
+}
+fn default_density() -> String {
+    "normal".to_string()
+}
 
 #[derive(Debug, Deserialize)]
 struct GenesisOutput {
@@ -328,35 +345,64 @@ const _: () = {
 const fn const_contains(haystack: &str, needle: &str) -> bool {
     let h = haystack.as_bytes();
     let n = needle.as_bytes();
-    if n.is_empty() { return true; }
-    if n.len() > h.len() { return false; }
+    if n.is_empty() {
+        return true;
+    }
+    if n.len() > h.len() {
+        return false;
+    }
     let mut i = 0usize;
     while i + n.len() <= h.len() {
         let mut j = 0usize;
         let mut ok = true;
         while j < n.len() {
-            if h[i + j] != n[j] { ok = false; break; }
+            if h[i + j] != n[j] {
+                ok = false;
+                break;
+            }
             j += 1;
         }
-        if ok { return true; }
+        if ok {
+            return true;
+        }
         i += 1;
     }
     false
 }
 
-fn build_genesis_prompt(setting: &str, mood: &str, hook: &str, hints: &GenesisHints) -> (String, String) {
+fn build_genesis_prompt(
+    setting: &str,
+    mood: &str,
+    hook: &str,
+    hints: &GenesisHints,
+) -> (String, String) {
     // When the user has set explicit hints in the wizard, inject them
     // as directives that OVERRIDE the random seed's choices. Empty-hint
     // fields leave the LLM free to pick.
     let hints_block = {
         let mut parts: Vec<String> = Vec::new();
-        if let Some(t) = hints.tone.as_deref().map(str::trim).filter(|s| !s.is_empty()) {
+        if let Some(t) = hints
+            .tone
+            .as_deref()
+            .map(str::trim)
+            .filter(|s| !s.is_empty())
+        {
             parts.push(format!("- **Tone override:** the user has specified the tone — \"{t}\". Honor this register over the random mood cue above. Let this shape the world's flavor and the characters' voices."));
         }
-        if let Some(tod) = hints.time_of_day.as_deref().map(str::trim).filter(|s| !s.is_empty()) {
+        if let Some(tod) = hints
+            .time_of_day
+            .as_deref()
+            .map(str::trim)
+            .filter(|s| !s.is_empty())
+        {
             parts.push(format!("- **Time of day override:** output `initial_time_of_day` as exactly \"{tod}\" (one of: morning / midday / afternoon / evening / late night). The user wants to enter the scene at that time."));
         }
-        if let Some(w) = hints.weather_key.as_deref().map(str::trim).filter(|s| !s.is_empty()) {
+        if let Some(w) = hints
+            .weather_key
+            .as_deref()
+            .map(str::trim)
+            .filter(|s| !s.is_empty())
+        {
             parts.push(format!("- **Weather override:** output `weather_key` as exactly \"{w}\". The user specifically wants this weather on entry; the world's description and the characters' current state should fit it."));
         }
         if parts.is_empty() {
@@ -385,8 +431,8 @@ mod _legacy_genesis_prompt_removed {
     // the register phrases. This mod is never compiled.
     fn build_dead(setting: &str, mood: &str, hook: &str, hints: &str) -> (String, String) {
         let hints_block = hints;
-    let system = format!(
-        r###"You are a world-builder helping a user step into a new fictional world they can inhabit with AI-rendered characters. Your job: invent ONE specific world and TWO specific characters who live there, such that the user could open a chat with either of them tomorrow and the scene would already be alive.
+        let system = format!(
+            r###"You are a world-builder helping a user step into a new fictional world they can inhabit with AI-rendered characters. Your job: invent ONE specific world and TWO specific characters who live there, such that the user could open a chat with either of them tomorrow and the scene would already be alive.
 
 The register this app asks for:
 
@@ -456,13 +502,13 @@ Return ONLY valid JSON matching this exact shape:
     {{ ... second character ... }}
   ]
 }}"###,
-        setting = setting,
-        mood = mood,
-        hook = hook,
-        hints_block = hints_block,
-    );
-    let user = "Generate the world and the two characters. Specificity, particularity, warmth, surprise. JSON only.".to_string();
-    (system, user)
+            setting = setting,
+            mood = mood,
+            hook = hook,
+            hints_block = hints_block,
+        );
+        let user = "Generate the world and the two characters. Specificity, particularity, warmth, surprise. JSON only.".to_string();
+        (system, user)
     }
 }
 
@@ -510,7 +556,12 @@ pub async fn auto_generate_world_with_characters_cmd(
         "[Genesis] seed → place={setting} · mood={mood} · hook={hook} · hints={}",
         serde_json::to_string(&hints).unwrap_or_default(),
     );
-    emit_stage(&app_handle, "dreaming", "Sketching the shape of a world…", 0.05);
+    emit_stage(
+        &app_handle,
+        "dreaming",
+        "Sketching the shape of a world…",
+        0.05,
+    );
 
     let (system, user) = build_genesis_prompt(&setting, &mood, &hook, &hints);
     let model_config = {
@@ -520,25 +571,44 @@ pub async fn auto_generate_world_with_characters_cmd(
     let request = ChatRequest {
         model: model_config.memory_model.clone(),
         messages: vec![
-            ChatMessage { role: "system".to_string(), content: system },
-            ChatMessage { role: "user".to_string(), content: user },
+            ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.95),
         max_completion_tokens: Some(2800),
-        response_format: Some(ResponseFormat { format_type: "json_object".to_string() }),
+        response_format: Some(ResponseFormat {
+            format_type: "json_object".to_string(),
+        }),
     };
-    let response = openai::chat_completion_with_base(
-        &model_config.chat_api_base(), &api_key, &request,
-    ).await?;
-    let raw = response.choices.first()
+    let response =
+        openai::chat_completion_with_base(&model_config.chat_api_base(), &api_key, &request)
+            .await?;
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
-    if raw.is_empty() { return Err("empty genesis response".to_string()); }
+    if raw.is_empty() {
+        return Err("empty genesis response".to_string());
+    }
 
-    let parsed: GenesisOutput = serde_json::from_str(&raw)
-        .map_err(|e| format!("genesis JSON parse failed: {e}; raw (first 500): {}", raw.chars().take(500).collect::<String>()))?;
+    let parsed: GenesisOutput = serde_json::from_str(&raw).map_err(|e| {
+        format!(
+            "genesis JSON parse failed: {e}; raw (first 500): {}",
+            raw.chars().take(500).collect::<String>()
+        )
+    })?;
     if parsed.characters.len() < 2 {
-        return Err(format!("genesis returned {} characters; need 2", parsed.characters.len()));
+        return Err(format!(
+            "genesis returned {} characters; need 2",
+            parsed.characters.len()
+        ));
     }
 
     // ── Stage 2: persist world + characters + threads ──────────────────
@@ -559,13 +629,17 @@ pub async fn auto_generate_world_with_characters_cmd(
     let now = Utc::now().to_rfc3339();
     // Hints win over LLM output for the two hint-able state fields;
     // the LLM may have honored them anyway but this is belt-and-suspenders.
-    let tod_upper = hints.time_of_day.as_deref()
+    let tod_upper = hints
+        .time_of_day
+        .as_deref()
         .map(str::trim)
         .filter(|s| !s.is_empty())
         .or(parsed.world.initial_time_of_day.as_deref())
         .unwrap_or("MORNING")
         .to_uppercase();
-    let weather_key = hints.weather_key.as_deref()
+    let weather_key = hints
+        .weather_key
+        .as_deref()
         .map(str::trim)
         .filter(|s| !s.is_empty())
         .or(parsed.world.weather_key.as_deref())
@@ -637,14 +711,23 @@ pub async fn auto_generate_world_with_characters_cmd(
                 has_read_empiricon: false,
             };
             create_character(&conn, &character).map_err(|e| e.to_string())?;
-            create_thread(&conn, &Thread {
-                thread_id,
-                character_id: char_id.clone(),
-                world_id: world_id.clone(),
-                created_at: ch_now,
-            }).map_err(|e| e.to_string())?;
+            create_thread(
+                &conn,
+                &Thread {
+                    thread_id,
+                    character_id: char_id.clone(),
+                    world_id: world_id.clone(),
+                    created_at: ch_now,
+                },
+            )
+            .map_err(|e| e.to_string())?;
             names.push(character.display_name.clone());
-            ids.push((char_id, character.display_name.clone(), character.identity.clone(), character.avatar_color.clone()));
+            ids.push((
+                char_id,
+                character.display_name.clone(),
+                character.identity.clone(),
+                character.avatar_color.clone(),
+            ));
         }
         // character_ids is returned without the name/identity payload;
         // we drain the collected quadruples into the three parallel
@@ -664,7 +747,11 @@ pub async fn auto_generate_world_with_characters_cmd(
             let p = 0.25 + (i as f32) * 0.04;
             emit_stage_with_reveal(
                 &app_handle,
-                if i == 0 { "character_1_named" } else { "character_2_named" },
+                if i == 0 {
+                    "character_1_named"
+                } else {
+                    "character_2_named"
+                },
                 &format!("Choosing who lives here — {}.", cname),
                 p,
                 GenesisReveal::CharacterNamed {
@@ -676,13 +763,27 @@ pub async fn auto_generate_world_with_characters_cmd(
             );
         }
     }
-    log::info!("[Genesis] persisted world '{}' + characters {:?}", world_name_for_log, char_names);
+    log::info!(
+        "[Genesis] persisted world '{}' + characters {:?}",
+        world_name_for_log,
+        char_names
+    );
 
     // ── Stage 3: world image ────────────────────────────────────────
-    emit_stage(&app_handle, "painting_world", "Painting the land and sky…", 0.38);
+    emit_stage(
+        &app_handle,
+        "painting_world",
+        "Painting the land and sky…",
+        0.38,
+    );
     let world_img_res = crate::commands::world_image_cmds::generate_world_image_cmd(
-        db.clone(), portraits_dir.clone(), api_key.clone(), world_id.clone(), None,
-    ).await;
+        db.clone(),
+        portraits_dir.clone(),
+        api_key.clone(),
+        world_id.clone(),
+        None,
+    )
+    .await;
     match world_img_res {
         Ok(_) => {
             emit_stage_with_reveal(
@@ -690,7 +791,9 @@ pub async fn auto_generate_world_with_characters_cmd(
                 "world_image_ready",
                 "The land is visible.",
                 0.48,
-                GenesisReveal::WorldImageReady { world_id: world_id.clone() },
+                GenesisReveal::WorldImageReady {
+                    world_id: world_id.clone(),
+                },
             );
         }
         Err(e) => log::warn!("[Genesis] world image generation failed (non-fatal): {e}"),
@@ -698,24 +801,42 @@ pub async fn auto_generate_world_with_characters_cmd(
 
     // ── Stage 4 & 5: portraits + visual descriptions, sequential ────
     for (idx, char_id) in character_ids.iter().enumerate() {
-        let name = char_names.get(idx).cloned().unwrap_or_else(|| "them".to_string());
+        let name = char_names
+            .get(idx)
+            .cloned()
+            .unwrap_or_else(|| "them".to_string());
         emit_stage(
             &app_handle,
-            if idx == 0 { "painting_char_1" } else { "painting_char_2" },
+            if idx == 0 {
+                "painting_char_1"
+            } else {
+                "painting_char_2"
+            },
             &format!("Painting {name}'s face…"),
             0.52 + (idx as f32) * 0.14,
         );
         let portrait_res = crate::commands::portrait_cmds::generate_portrait_cmd(
-            db.clone(), portraits_dir.clone(), api_key.clone(), char_id.clone(), None,
-        ).await;
+            db.clone(),
+            portraits_dir.clone(),
+            api_key.clone(),
+            char_id.clone(),
+            None,
+        )
+        .await;
         match portrait_res {
             Ok(_) => {
                 emit_stage_with_reveal(
                     &app_handle,
-                    if idx == 0 { "portrait_1_ready" } else { "portrait_2_ready" },
+                    if idx == 0 {
+                        "portrait_1_ready"
+                    } else {
+                        "portrait_2_ready"
+                    },
                     &format!("{name} comes into focus.",),
                     0.58 + (idx as f32) * 0.14,
-                    GenesisReveal::PortraitReady { character_id: char_id.clone() },
+                    GenesisReveal::PortraitReady {
+                        character_id: char_id.clone(),
+                    },
                 );
             }
             Err(e) => {
@@ -725,24 +846,41 @@ pub async fn auto_generate_world_with_characters_cmd(
         }
         emit_stage(
             &app_handle,
-            if idx == 0 { "seeing_char_1" } else { "seeing_char_2" },
+            if idx == 0 {
+                "seeing_char_1"
+            } else {
+                "seeing_char_2"
+            },
             &format!("Learning {name}'s face…"),
             0.62 + (idx as f32) * 0.14,
         );
         let vd_res = crate::commands::portrait_cmds::generate_character_visual_description_cmd(
-            db.clone(), portraits_dir.clone(), api_key.clone(), char_id.clone(), Some(false),
-        ).await;
+            db.clone(),
+            portraits_dir.clone(),
+            api_key.clone(),
+            char_id.clone(),
+            Some(false),
+        )
+        .await;
         if let Err(e) = vd_res {
             log::warn!("[Genesis] visual_description for {char_id} failed (non-fatal): {e}");
         }
     }
 
     // ── Stage 6: seed inventories ──────────────────────────────────
-    emit_stage(&app_handle, "inventories", "Placing what they carry into their pockets…", 0.78);
+    emit_stage(
+        &app_handle,
+        "inventories",
+        "Placing what they carry into their pockets…",
+        0.78,
+    );
     for char_id in &character_ids {
         let inv_res = crate::commands::inventory_cmds::refresh_character_inventory_cmd(
-            db.clone(), api_key.clone(), char_id.clone(),
-        ).await;
+            db.clone(),
+            api_key.clone(),
+            char_id.clone(),
+        )
+        .await;
         if let Err(e) = inv_res {
             log::warn!("[Genesis] inventory seed for {char_id} failed (non-fatal): {e}");
         }
@@ -755,8 +893,11 @@ pub async fn auto_generate_world_with_characters_cmd(
     // were doing something specific when the user arrived.
     emit_stage(&app_handle, "meanwhile", "Catching them mid-day…", 0.84);
     let mw_res = crate::commands::meanwhile_cmds::generate_meanwhile_events_cmd(
-        db.clone(), api_key.clone(), world_id.clone(),
-    ).await;
+        db.clone(),
+        api_key.clone(),
+        world_id.clone(),
+    )
+    .await;
     if let Err(e) = mw_res {
         log::warn!("[Genesis] meanwhile generation failed (non-fatal): {e}");
     }
@@ -774,19 +915,27 @@ pub async fn auto_generate_world_with_characters_cmd(
         for e in events {
             // The first event per character (most recent first in the
             // list; we want their ONE for the opener).
-            map.entry(e.character_id.clone()).or_insert_with(|| e.summary.clone());
+            map.entry(e.character_id.clone())
+                .or_insert_with(|| e.summary.clone());
         }
         map
     };
     for (idx, char_id) in character_ids.iter().enumerate() {
-        let name = char_names.get(idx).cloned().unwrap_or_else(|| "them".to_string());
+        let name = char_names
+            .get(idx)
+            .cloned()
+            .unwrap_or_else(|| "them".to_string());
         let Some(summary) = meanwhile_by_char.get(char_id) else {
             log::warn!("[Genesis] no meanwhile for {char_id}; skipping illustration");
             continue;
         };
         emit_stage(
             &app_handle,
-            if idx == 0 { "first_glimpse_1" } else { "first_glimpse_2" },
+            if idx == 0 {
+                "first_glimpse_1"
+            } else {
+                "first_glimpse_2"
+            },
             &format!("A glimpse of {name} from their day…"),
             0.88 + (idx as f32) * 0.04,
         );
@@ -797,20 +946,31 @@ pub async fn auto_generate_world_with_characters_cmd(
         // scene yet, and previous_illustration_id is None (this IS the
         // first one).
         let illus_res = crate::commands::illustration_cmds::generate_illustration_cmd(
-            db.clone(), portraits_dir.clone(), api_key.clone(),
+            db.clone(),
+            portraits_dir.clone(),
+            api_key.clone(),
             char_id.clone(),
             Some("low".to_string()),
             Some(summary.clone()),
             None,
             Some(false),
-        ).await;
+        )
+        .await;
         if let Err(e) = illus_res {
             log::warn!("[Genesis] first illustration for {char_id} failed (non-fatal): {e}");
         }
     }
 
-    emit_stage(&app_handle, "done", &format!("{world_name_for_log} is awake."), 1.0);
-    Ok(GenesisResult { world_id, character_ids })
+    emit_stage(
+        &app_handle,
+        "done",
+        &format!("{world_name_for_log} is awake."),
+        1.0,
+    );
+    Ok(GenesisResult {
+        world_id,
+        character_ids,
+    })
 }
 
 // ── APP INVARIANT — DO NOT REMOVE OR SOFTEN ───────────────────────────────
@@ -884,9 +1044,13 @@ pub async fn reflect_reaching_as_noble_quest_cmd(
     world_id: String,
     reaching_text: String,
 ) -> Result<String, String> {
-    if api_key.trim().is_empty() { return Err("no API key".to_string()); }
+    if api_key.trim().is_empty() {
+        return Err("no API key".to_string());
+    }
     let reaching_text = reaching_text.trim().to_string();
-    if reaching_text.is_empty() { return Err("empty reaching text".to_string()); }
+    if reaching_text.is_empty() {
+        return Err("empty reaching text".to_string());
+    }
 
     let (world, model_config) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -905,20 +1069,37 @@ pub async fn reflect_reaching_as_noble_quest_cmd(
     let request = ChatRequest {
         model: model_config.memory_model.clone(),
         messages: vec![
-            ChatMessage { role: "system".to_string(), content: NOBLE_REFLECTION_SYSTEM_PROMPT.to_string() },
-            ChatMessage { role: "user".to_string(), content: user },
+            ChatMessage {
+                role: "system".to_string(),
+                content: NOBLE_REFLECTION_SYSTEM_PROMPT.to_string(),
+            },
+            ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.85),
         max_completion_tokens: Some(240),
         response_format: None,
     };
 
-    let response = openai::chat_completion_with_base(
-        &model_config.chat_api_base(), &api_key, &request,
-    ).await?;
-    let raw = response.choices.first()
-        .map(|c| c.message.content.trim().trim_matches('"').trim().to_string())
+    let response =
+        openai::chat_completion_with_base(&model_config.chat_api_base(), &api_key, &request)
+            .await?;
+    let raw = response
+        .choices
+        .first()
+        .map(|c| {
+            c.message
+                .content
+                .trim()
+                .trim_matches('"')
+                .trim()
+                .to_string()
+        })
         .unwrap_or_default();
-    if raw.is_empty() { return Err("empty reflection".to_string()); }
+    if raw.is_empty() {
+        return Err("empty reflection".to_string());
+    }
     Ok(raw)
 }

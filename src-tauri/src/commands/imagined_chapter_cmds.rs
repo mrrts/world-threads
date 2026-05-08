@@ -75,17 +75,22 @@ struct ChapterDoneEvent {
 }
 
 fn build_imagined_chapter_breadcrumb_content(chapter: &ImaginedChapter) -> String {
-    let first_line: String = chapter.content.lines()
+    let first_line: String = chapter
+        .content
+        .lines()
         .find(|l| !l.trim().is_empty())
         .unwrap_or("")
-        .chars().take(200).collect();
+        .chars()
+        .take(200)
+        .collect();
     serde_json::json!({
         "chapter_id": chapter.chapter_id,
         "title": chapter.title,
         "scene_location": chapter.scene_location,
         "image_id": chapter.image_id,
         "first_line": first_line,
-    }).to_string()
+    })
+    .to_string()
 }
 
 fn refresh_imagined_chapter_breadcrumb_if_canonized(
@@ -148,11 +153,13 @@ fn resolve_thread_cast(
         }
         _ => {
             // Group: look up group_chats by thread_id
-            let (world_id, character_ids_json): (String, String) = conn.query_row(
-                "SELECT world_id, character_ids FROM group_chats WHERE thread_id = ?1",
-                params![thread_id],
-                |r| Ok((r.get(0)?, r.get(1)?)),
-            ).map_err(|_| format!("thread {thread_id} is neither solo nor a group chat"))?;
+            let (world_id, character_ids_json): (String, String) = conn
+                .query_row(
+                    "SELECT world_id, character_ids FROM group_chats WHERE thread_id = ?1",
+                    params![thread_id],
+                    |r| Ok((r.get(0)?, r.get(1)?)),
+                )
+                .map_err(|_| format!("thread {thread_id} is neither solo nor a group chat"))?;
             let world = get_world(conn, &world_id).map_err(|e| e.to_string())?;
             let ids: Vec<String> = serde_json::from_str(&character_ids_json).unwrap_or_default();
             let mut chars: Vec<Character> = Vec::new();
@@ -209,15 +216,20 @@ pub async fn generate_imagined_chapter_cmd(
         // Recent canonized facts about anyone in the cast (a few, capped).
         let mut kept_facts: Vec<String> = Vec::new();
         for c in &cast {
-            if let Ok(rows) = conn.prepare(
-                "SELECT content FROM kept_records
+            if let Ok(rows) = conn
+                .prepare(
+                    "SELECT content FROM kept_records
                  WHERE subject_type = 'character' AND subject_id = ?1
-                 ORDER BY created_at DESC LIMIT 2"
-            ).and_then(|mut s| {
-                s.query_map(params![c.character_id], |r| r.get::<_, String>(0))
-                    .map(|rows| rows.filter_map(|r| r.ok()).collect::<Vec<_>>())
-            }) {
-                for r in rows { kept_facts.push(r); }
+                 ORDER BY created_at DESC LIMIT 2",
+                )
+                .and_then(|mut s| {
+                    s.query_map(params![c.character_id], |r| r.get::<_, String>(0))
+                        .map(|rows| rows.filter_map(|r| r.ok()).collect::<Vec<_>>())
+                })
+            {
+                for r in rows {
+                    kept_facts.push(r);
+                }
             }
         }
 
@@ -236,7 +248,8 @@ pub async fn generate_imagined_chapter_cmd(
         // every group they're in. For group chats, all members share the
         // group threads, so the primary's merged view captures everything
         // the group has been through. Capped to 40 lines.
-        let user_display = user_profile.as_ref()
+        let user_display = user_profile
+            .as_ref()
             .map(|p| p.display_name.clone())
             .unwrap_or_else(|| "the user".to_string());
         let recent_history = if let Some(primary) = cast.first() {
@@ -252,16 +265,19 @@ pub async fn generate_imagined_chapter_cmd(
                 portrait_files.push((c.display_name.clone(), p.file_name));
             }
         }
-        let user_portrait = user_profile.as_ref()
+        let user_portrait = user_profile
+            .as_ref()
             .filter(|p| !p.avatar_file.is_empty())
             .map(|p| p.avatar_file.clone());
 
         // Previous chapter content if requested + available.
         let prev = if request.continue_from_previous {
-            let chapters = list_imagined_chapters_for_thread(&conn, &request.thread_id)
-                .unwrap_or_default();
+            let chapters =
+                list_imagined_chapters_for_thread(&conn, &request.thread_id).unwrap_or_default();
             chapters.into_iter().next().map(|c| c.content)
-        } else { None };
+        } else {
+            None
+        };
 
         // CONTEXT SCOPING — two distinct modes, no middle ground:
         //
@@ -299,12 +315,20 @@ pub async fn generate_imagined_chapter_cmd(
             // Group: keyed on group_chat_id resolved from thread_id.
             conn.query_row(
                 "SELECT group_chat_id FROM group_chats WHERE thread_id = ?1",
-                params![request.thread_id], |r| r.get::<_, String>(0),
-            ).map(|gid| format!("narration_tone.{}", gid)).unwrap_or_default()
+                params![request.thread_id],
+                |r| r.get::<_, String>(0),
+            )
+            .map(|gid| format!("narration_tone.{}", gid))
+            .unwrap_or_default()
         };
-        let narration_tone: Option<String> = if tone_setting_key.is_empty() { None }
-            else { get_setting(&conn, &tone_setting_key).ok().flatten()
-                .filter(|s| !s.trim().is_empty() && s != "Auto") };
+        let narration_tone: Option<String> = if tone_setting_key.is_empty() {
+            None
+        } else {
+            get_setting(&conn, &tone_setting_key)
+                .ok()
+                .flatten()
+                .filter(|s| !s.trim().is_empty() && s != "Auto")
+        };
 
         let mut model_config = orchestrator::load_model_config(&conn);
         // Honor the per-chat provider override that lives at
@@ -322,7 +346,9 @@ pub async fn generate_imagined_chapter_cmd(
                 "SELECT group_chat_id FROM group_chats WHERE thread_id = ?1",
                 params![request.thread_id],
                 |r| r.get::<_, String>(0),
-            ).ok().map(|gid| format!("provider_override.{}", gid))
+            )
+            .ok()
+            .map(|gid| format!("provider_override.{}", gid))
         };
         if let Some(key) = override_key.as_deref() {
             model_config.apply_provider_override(&conn, key);
@@ -349,7 +375,9 @@ pub async fn generate_imagined_chapter_cmd(
     // Create the chapter row up-front so the frontend has an id to anchor on.
     let chapter_id = uuid::Uuid::new_v4().to_string();
     let now = Utc::now().to_rfc3339();
-    let world_day = world.state.get("time")
+    let world_day = world
+        .state
+        .get("time")
         .and_then(|t| t.get("day_index"))
         .and_then(|v| v.as_i64());
     {
@@ -372,12 +400,15 @@ pub async fn generate_imagined_chapter_cmd(
     }
 
     // ─── Stage 1: invent the scene ──────────────────────────────────────
-    let _ = app_handle.emit("imagined-chapter-stage", ChapterStageEvent {
-        chapter_id: chapter_id.clone(),
-        phase: "inventing",
-        title: None,
-        tone_hint: None,
-    });
+    let _ = app_handle.emit(
+        "imagined-chapter-stage",
+        ChapterStageEvent {
+            chapter_id: chapter_id.clone(),
+            phase: "inventing",
+            title: None,
+            tone_hint: None,
+        },
+    );
 
     let (invented, invent_usage) = orchestrator::invent_scene_for_chapter(
         &model_config.chat_api_base(),
@@ -394,11 +425,18 @@ pub async fn generate_imagined_chapter_cmd(
         narration_tone.as_deref(),
         previous_chapter_content.as_deref(),
         request.depth.as_deref(),
-    ).await?;
+    )
+    .await?;
 
     if let Some(u) = &invent_usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "imagined_chapter_scene", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
+        let _ = record_token_usage(
+            &conn,
+            "imagined_chapter_scene",
+            &model_config.dialogue_model,
+            u.prompt_tokens,
+            u.completion_tokens,
+        );
     }
 
     // Persist title + scene description on the row.
@@ -410,12 +448,15 @@ pub async fn generate_imagined_chapter_cmd(
         );
     }
 
-    let _ = app_handle.emit("imagined-chapter-stage", ChapterStageEvent {
-        chapter_id: chapter_id.clone(),
-        phase: "rendering",
-        title: Some(invented.title.clone()),
-        tone_hint: Some(invented.tone_hint.clone()),
-    });
+    let _ = app_handle.emit(
+        "imagined-chapter-stage",
+        ChapterStageEvent {
+            chapter_id: chapter_id.clone(),
+            phase: "rendering",
+            title: Some(invented.title.clone()),
+            tone_hint: Some(invented.tone_hint.clone()),
+        },
+    );
 
     // ─── Stage 2: render the image ──────────────────────────────────────
     let dir = &portraits_dir.0;
@@ -427,7 +468,10 @@ pub async fn generate_imagined_chapter_cmd(
         if let Ok(bytes) = std::fs::read(dir.join(file)) {
             reference_images.push(bytes);
             reference_labels.push(
-                user_profile_owned.as_ref().map(|p| p.display_name.clone()).unwrap_or_else(|| "the user".to_string()),
+                user_profile_owned
+                    .as_ref()
+                    .map(|p| p.display_name.clone())
+                    .unwrap_or_else(|| "the user".to_string()),
             );
         }
     }
@@ -447,7 +491,10 @@ pub async fn generate_imagined_chapter_cmd(
 
     // Names map for the existing illustration helper. We pass cast names so
     // the prompt's "Reference image N is X" labels line up.
-    let all_names: Vec<String> = portrait_files_by_name.iter().map(|(n, _)| n.clone()).collect();
+    let all_names: Vec<String> = portrait_files_by_name
+        .iter()
+        .map(|(n, _)| n.clone())
+        .collect();
 
     // Tone-shape the image prompt so the painted scene's mood matches the
     // chat's tone setting. Brief — we trust the scene-invention pass to
@@ -468,32 +515,48 @@ pub async fn generate_imagined_chapter_cmd(
     // thread current_location.
     let primary_char = cast_refs[0];
     let additional: Vec<&Character> = cast_refs.iter().skip(1).copied().collect();
-    let (_used_scene_desc, image_bytes, image_chat_usage) = orchestrator::generate_illustration_with_base(
-        &model_config.chat_api_base(),
-        &model_config.openai_api_base(),
-        &api_key,
-        &model_config.dialogue_model,
-        &model_config.image_model,
-        img_quality,
-        img_size,
-        model_config.image_output_format().as_deref(),
-        &world,
-        primary_char,
-        if additional.is_empty() { None } else { Some(&additional[..]) },
-        &[], // recent_messages — unused when include_scene_summary=false
-        user_profile_ref,
-        &reference_images,
-        Some(&image_prompt_with_tone),
-        false, // has_previous_scene
-        false, // include_scene_summary — we already have the description
-        if all_names.is_empty() { None } else { Some(&all_names[..]) },
-        None,
-        scene_location.as_deref(),
-    ).await?;
+    let (_used_scene_desc, image_bytes, image_chat_usage) =
+        orchestrator::generate_illustration_with_base(
+            &model_config.chat_api_base(),
+            &model_config.openai_api_base(),
+            &api_key,
+            &model_config.dialogue_model,
+            &model_config.image_model,
+            img_quality,
+            img_size,
+            model_config.image_output_format().as_deref(),
+            &world,
+            primary_char,
+            if additional.is_empty() {
+                None
+            } else {
+                Some(&additional[..])
+            },
+            &[], // recent_messages — unused when include_scene_summary=false
+            user_profile_ref,
+            &reference_images,
+            Some(&image_prompt_with_tone),
+            false, // has_previous_scene
+            false, // include_scene_summary — we already have the description
+            if all_names.is_empty() {
+                None
+            } else {
+                Some(&all_names[..])
+            },
+            None,
+            scene_location.as_deref(),
+        )
+        .await?;
 
     if let Some(u) = &image_chat_usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "imagined_chapter_image", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
+        let _ = record_token_usage(
+            &conn,
+            "imagined_chapter_image",
+            &model_config.dialogue_model,
+            u.prompt_tokens,
+            u.completion_tokens,
+        );
     }
 
     // Save image to disk + world_images.
@@ -524,18 +587,24 @@ pub async fn generate_imagined_chapter_cmd(
         let _ = set_imagined_chapter_image(&conn, &chapter_id, &image_id);
     }
 
-    let _ = app_handle.emit("imagined-chapter-image", ChapterImageEvent {
-        chapter_id: chapter_id.clone(),
-        data_url: data_url.clone(),
-        image_id: image_id.clone(),
-    });
+    let _ = app_handle.emit(
+        "imagined-chapter-image",
+        ChapterImageEvent {
+            chapter_id: chapter_id.clone(),
+            data_url: data_url.clone(),
+            image_id: image_id.clone(),
+        },
+    );
 
-    let _ = app_handle.emit("imagined-chapter-stage", ChapterStageEvent {
-        chapter_id: chapter_id.clone(),
-        phase: "writing",
-        title: Some(invented.title.clone()),
-        tone_hint: Some(invented.tone_hint.clone()),
-    });
+    let _ = app_handle.emit(
+        "imagined-chapter-stage",
+        ChapterStageEvent {
+            chapter_id: chapter_id.clone(),
+            phase: "writing",
+            title: Some(invented.title.clone()),
+            tone_hint: Some(invented.tone_hint.clone()),
+        },
+    );
 
     // ─── Stage 3: stream the chapter from the image ─────────────────────
     let system_prompt = prompts::build_chapter_from_image_system_prompt(
@@ -638,7 +707,8 @@ pub async fn generate_imagined_chapter_cmd(
         &stream_request,
         &app_handle,
         "imagined-chapter-token",
-    ).await?;
+    )
+    .await?;
 
     // Save the final content. Note: NO breadcrumb is inserted here — the
     // chapter starts in the pre-canon state. The breadcrumb (and the
@@ -650,11 +720,14 @@ pub async fn generate_imagined_chapter_cmd(
     }
     let _ = world_day; // silence unused warning when breadcrumb is moved out
 
-    let _ = app_handle.emit("imagined-chapter-done", ChapterDoneEvent {
-        chapter_id: chapter_id.clone(),
-        title: invented.title.clone(),
-        content: chapter_text,
-    });
+    let _ = app_handle.emit(
+        "imagined-chapter-done",
+        ChapterDoneEvent {
+            chapter_id: chapter_id.clone(),
+            title: invented.title.clone(),
+            content: chapter_text,
+        },
+    );
 
     Ok(GenerateImaginedChapterResponse { chapter_id })
 }
@@ -694,18 +767,27 @@ pub fn delete_imagined_chapter_cmd(
 
     if let Some(bc_id) = chapter.breadcrumb_message_id.as_deref() {
         let _ = conn.execute("DELETE FROM messages WHERE message_id = ?1", params![bc_id]);
-        let _ = conn.execute("DELETE FROM group_messages WHERE message_id = ?1", params![bc_id]);
+        let _ = conn.execute(
+            "DELETE FROM group_messages WHERE message_id = ?1",
+            params![bc_id],
+        );
     }
 
     if let Some(img_id) = chapter.image_id.as_deref() {
-        let file_name: Option<String> = conn.query_row(
-            "SELECT file_name FROM world_images WHERE image_id = ?1",
-            params![img_id], |r| r.get::<_, String>(0),
-        ).ok();
+        let file_name: Option<String> = conn
+            .query_row(
+                "SELECT file_name FROM world_images WHERE image_id = ?1",
+                params![img_id],
+                |r| r.get::<_, String>(0),
+            )
+            .ok();
         if let Some(file_name) = file_name {
             let _ = std::fs::remove_file(portraits_dir.0.join(&file_name));
         }
-        let _ = conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![img_id]);
+        let _ = conn.execute(
+            "DELETE FROM world_images WHERE image_id = ?1",
+            params![img_id],
+        );
     }
 
     delete_imagined_chapter(&conn, &chapter_id).map_err(|e| e.to_string())
@@ -755,18 +837,28 @@ pub fn get_imagined_chapter_image_url_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let chapter = get_imagined_chapter(&conn, &chapter_id).map_err(|e| e.to_string())?;
         match chapter.image_id {
-            Some(img_id) => conn.query_row(
-                "SELECT file_name FROM world_images WHERE image_id = ?1",
-                params![img_id], |r| r.get::<_, String>(0),
-            ).ok(),
+            Some(img_id) => conn
+                .query_row(
+                    "SELECT file_name FROM world_images WHERE image_id = ?1",
+                    params![img_id],
+                    |r| r.get::<_, String>(0),
+                )
+                .ok(),
             None => None,
         }
     };
-    let Some(file_name) = file_name else { return Ok(String::new()); };
+    let Some(file_name) = file_name else {
+        return Ok(String::new());
+    };
     let path = portraits_dir.0.join(&file_name);
-    if !path.exists() { return Ok(String::new()); }
+    if !path.exists() {
+        return Ok(String::new());
+    }
     let bytes = std::fs::read(&path).map_err(|e| format!("Failed to read image: {e}"))?;
-    Ok(format!("data:image/png;base64,{}", orchestrator::base64_encode_bytes(&bytes)))
+    Ok(format!(
+        "data:image/png;base64,{}",
+        orchestrator::base64_encode_bytes(&bytes)
+    ))
 }
 
 #[derive(Debug, Serialize)]
@@ -801,11 +893,18 @@ pub fn canonize_imagined_chapter_cmd(
     }
 
     // Insert the breadcrumb row into the right messages table.
-    let is_group: bool = conn.query_row(
-        "SELECT 1 FROM group_chats WHERE thread_id = ?1",
-        params![chapter.thread_id], |_| Ok(true),
-    ).unwrap_or(false);
-    let table = if is_group { "group_messages" } else { "messages" };
+    let is_group: bool = conn
+        .query_row(
+            "SELECT 1 FROM group_chats WHERE thread_id = ?1",
+            params![chapter.thread_id],
+            |_| Ok(true),
+        )
+        .unwrap_or(false);
+    let table = if is_group {
+        "group_messages"
+    } else {
+        "messages"
+    };
     let breadcrumb_id = uuid::Uuid::new_v4().to_string();
     let content = build_imagined_chapter_breadcrumb_content(&chapter);
     let now = Utc::now().to_rfc3339();
@@ -833,10 +932,13 @@ pub fn canonize_imagined_chapter_cmd(
         params![breadcrumb_id, chapter.thread_id, content, now, world_day, world_time],
     ).map_err(|e| format!("Failed to insert breadcrumb: {e}"))?;
 
-    set_imagined_chapter_breadcrumb(&conn, &chapter_id, &breadcrumb_id).map_err(|e| e.to_string())?;
+    set_imagined_chapter_breadcrumb(&conn, &chapter_id, &breadcrumb_id)
+        .map_err(|e| e.to_string())?;
     set_imagined_chapter_canonized(&conn, &chapter_id, true).map_err(|e| e.to_string())?;
 
-    Ok(CanonizeImaginedChapterResponse { breadcrumb_message_id: breadcrumb_id })
+    Ok(CanonizeImaginedChapterResponse {
+        breadcrumb_message_id: breadcrumb_id,
+    })
 }
 
 /// Reverse a chapter's canonization. Flips canonized=false, deletes
@@ -854,7 +956,10 @@ pub fn decanonize_imagined_chapter_cmd(
     if let Some(bc_id) = chapter.breadcrumb_message_id.as_deref() {
         // Try both tables; whichever has it deletes one row.
         let _ = conn.execute("DELETE FROM messages WHERE message_id = ?1", params![bc_id]);
-        let _ = conn.execute("DELETE FROM group_messages WHERE message_id = ?1", params![bc_id]);
+        let _ = conn.execute(
+            "DELETE FROM group_messages WHERE message_id = ?1",
+            params![bc_id],
+        );
     }
     conn.execute(
         "UPDATE imagined_chapters SET canonized = 0, breadcrumb_message_id = NULL WHERE chapter_id = ?1",
@@ -879,14 +984,19 @@ pub fn bulk_decanonize_imagined_chapters_for_thread_cmd(
     thread_id: String,
 ) -> Result<BulkDecanonizeResponse, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    let chapters = list_imagined_chapters_for_thread(&conn, &thread_id)
-        .map_err(|e| e.to_string())?;
+    let chapters =
+        list_imagined_chapters_for_thread(&conn, &thread_id).map_err(|e| e.to_string())?;
     let mut count = 0usize;
     for chapter in chapters {
-        if !chapter.canonized && chapter.breadcrumb_message_id.is_none() { continue; }
+        if !chapter.canonized && chapter.breadcrumb_message_id.is_none() {
+            continue;
+        }
         if let Some(bc_id) = chapter.breadcrumb_message_id.as_deref() {
             let _ = conn.execute("DELETE FROM messages WHERE message_id = ?1", params![bc_id]);
-            let _ = conn.execute("DELETE FROM group_messages WHERE message_id = ?1", params![bc_id]);
+            let _ = conn.execute(
+                "DELETE FROM group_messages WHERE message_id = ?1",
+                params![bc_id],
+            );
         }
         let _ = conn.execute(
             "UPDATE imagined_chapters SET canonized = 0, breadcrumb_message_id = NULL WHERE chapter_id = ?1",
@@ -894,7 +1004,9 @@ pub fn bulk_decanonize_imagined_chapters_for_thread_cmd(
         );
         count += 1;
     }
-    Ok(BulkDecanonizeResponse { decanonized_count: count })
+    Ok(BulkDecanonizeResponse {
+        decanonized_count: count,
+    })
 }
 
 #[cfg(test)]

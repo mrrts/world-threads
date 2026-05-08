@@ -19,10 +19,7 @@ pub fn get_user_profile_cmd(
 }
 
 #[tauri::command]
-pub fn update_user_profile_cmd(
-    db: State<Database>,
-    profile: UserProfile,
-) -> Result<(), String> {
+pub fn update_user_profile_cmd(db: State<Database>, profile: UserProfile) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     upsert_user_profile(&conn, &profile).map_err(|e| e.to_string())
 }
@@ -77,20 +74,30 @@ pub async fn regenerate_user_derivation_cmd(
             carrying.as_deref(),
             seen_as.as_deref(),
         )?;
-        (prompt, model_config.chat_api_base(), model_config.memory_model.clone())
+        (
+            prompt,
+            model_config.chat_api_base(),
+            model_config.memory_model.clone(),
+        )
     };
     let (derivation, summary) = crate::ai::derivation::synthesize_two_output_from_prompt(
-        &base_url,
-        &api_key,
-        &model,
-        prompt,
-    ).await?;
+        &base_url, &api_key, &model, prompt,
+    )
+    .await?;
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        crate::ai::derivation::persist_user_derivation_two_output(&conn, &world_id, &derivation, &summary)
-            .map_err(|e| e.to_string())?;
+        crate::ai::derivation::persist_user_derivation_two_output(
+            &conn,
+            &world_id,
+            &derivation,
+            &summary,
+        )
+        .map_err(|e| e.to_string())?;
     }
-    Ok(UserDerivationResult { derivation, summary })
+    Ok(UserDerivationResult {
+        derivation,
+        summary,
+    })
 }
 
 #[derive(Debug, serde::Deserialize, Default)]
@@ -114,10 +121,12 @@ pub async fn generate_user_avatar_cmd(
         (p, mc)
     };
 
-    let display_name = form_hint.as_ref()
+    let display_name = form_hint
+        .as_ref()
         .and_then(|h| h.display_name.clone())
         .unwrap_or(profile.display_name);
-    let description = form_hint.as_ref()
+    let description = form_hint
+        .as_ref()
         .and_then(|h| h.description.clone())
         .unwrap_or(profile.description);
 
@@ -157,13 +166,15 @@ pub async fn generate_user_avatar_cmd(
     };
 
     let prompt = request.prompt.clone();
-    let response = openai::generate_image_with_base(&mc.openai_api_base(), &api_key, &request).await?;
-    let b64 = response.data.first()
+    let response =
+        openai::generate_image_with_base(&mc.openai_api_base(), &api_key, &request).await?;
+    let b64 = response
+        .data
+        .first()
         .and_then(|d| d.image_b64())
         .ok_or_else(|| "No image data in response".to_string())?;
 
-    let image_bytes = base64_decode(b64)
-        .map_err(|e| format!("Failed to decode image: {e}"))?;
+    let image_bytes = base64_decode(b64).map_err(|e| format!("Failed to decode image: {e}"))?;
 
     let file_name = format!("user_{}.png", uuid::Uuid::new_v4());
     let dir = &portraits_dir.0;
@@ -206,8 +217,7 @@ pub fn upload_user_avatar_cmd(
         &image_data
     };
 
-    let image_bytes = base64_decode(raw)
-        .map_err(|e| format!("Failed to decode image: {e}"))?;
+    let image_bytes = base64_decode(raw).map_err(|e| format!("Failed to decode image: {e}"))?;
 
     let file_name = format!("user_{}.png", uuid::Uuid::new_v4());
     let dir = &portraits_dir.0;
@@ -256,10 +266,11 @@ pub fn list_all_user_avatars_cmd(
     let mut stmt = conn.prepare(
         "SELECT up.world_id, up.avatar_file, w.name FROM user_profiles up JOIN worlds w ON w.world_id = up.world_id WHERE up.avatar_file != ''"
     ).map_err(|e| e.to_string())?;
-    let rows: Vec<(String, String, String)> = stmt.query_map([], |r| {
-        Ok((r.get(0)?, r.get(1)?, r.get(2)?))
-    }).map_err(|e| e.to_string())?
-    .filter_map(|r| r.ok()).collect();
+    let rows: Vec<(String, String, String)> = stmt
+        .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
+        .map_err(|e| e.to_string())?
+        .filter_map(|r| r.ok())
+        .collect();
 
     let mut results = Vec::new();
     for (world_id, avatar_file, world_name) in rows {
@@ -313,8 +324,16 @@ fn base64_encode(bytes: &[u8]) -> String {
         let triple = (b0 << 16) | (b1 << 8) | b2;
         result.push(CHARS[((triple >> 18) & 0x3F) as usize] as char);
         result.push(CHARS[((triple >> 12) & 0x3F) as usize] as char);
-        if chunk.len() > 1 { result.push(CHARS[((triple >> 6) & 0x3F) as usize] as char); } else { result.push('='); }
-        if chunk.len() > 2 { result.push(CHARS[(triple & 0x3F) as usize] as char); } else { result.push('='); }
+        if chunk.len() > 1 {
+            result.push(CHARS[((triple >> 6) & 0x3F) as usize] as char);
+        } else {
+            result.push('=');
+        }
+        if chunk.len() > 2 {
+            result.push(CHARS[(triple & 0x3F) as usize] as char);
+        } else {
+            result.push('=');
+        }
     }
     result
 }
@@ -324,7 +343,10 @@ fn base64_decode(input: &str) -> Result<Vec<u8>, String> {
         let mut table = [255u8; 128];
         let chars = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         let mut i = 0;
-        while i < 64 { table[chars[i] as usize] = i as u8; i += 1; }
+        while i < 64 {
+            table[chars[i] as usize] = i as u8;
+            i += 1;
+        }
         table
     };
     let input = input.as_bytes();
@@ -332,13 +354,23 @@ fn base64_decode(input: &str) -> Result<Vec<u8>, String> {
     let mut buf = 0u32;
     let mut bits = 0;
     for &b in input {
-        if b == b'=' || b == b'\n' || b == b'\r' { continue; }
-        if b >= 128 { return Err("Invalid base64 character".to_string()); }
+        if b == b'=' || b == b'\n' || b == b'\r' {
+            continue;
+        }
+        if b >= 128 {
+            return Err("Invalid base64 character".to_string());
+        }
         let val = DECODE[b as usize];
-        if val == 255 { return Err(format!("Invalid base64 character: {}", b as char)); }
+        if val == 255 {
+            return Err(format!("Invalid base64 character: {}", b as char));
+        }
         buf = (buf << 6) | val as u32;
         bits += 6;
-        if bits >= 8 { bits -= 8; result.push((buf >> bits) as u8); buf &= (1 << bits) - 1; }
+        if bits >= 8 {
+            bits -= 8;
+            result.push((buf >> bits) as u8);
+            buf &= (1 << bits) - 1;
+        }
     }
     Ok(result)
 }

@@ -23,7 +23,13 @@ pub fn upsert_journal_entry(
          ON CONFLICT(character_id, world_day) DO UPDATE SET
            content = excluded.content,
            created_at = excluded.created_at",
-        params![entry.journal_id, entry.character_id, entry.world_day, entry.content, entry.created_at],
+        params![
+            entry.journal_id,
+            entry.character_id,
+            entry.world_day,
+            entry.content,
+            entry.created_at
+        ],
     )?;
     Ok(())
 }
@@ -39,15 +45,17 @@ pub fn list_journal_entries(
          FROM character_journals
          WHERE character_id = ?1
          ORDER BY world_day DESC, created_at DESC
-         LIMIT ?2"
+         LIMIT ?2",
     )?;
-    let rows = stmt.query_map(params![character_id, limit as i64], |r| Ok(JournalEntry {
-        journal_id: r.get(0)?,
-        character_id: r.get(1)?,
-        world_day: r.get(2)?,
-        content: r.get(3)?,
-        created_at: r.get(4)?,
-    }))?;
+    let rows = stmt.query_map(params![character_id, limit as i64], |r| {
+        Ok(JournalEntry {
+            journal_id: r.get(0)?,
+            character_id: r.get(1)?,
+            world_day: r.get(2)?,
+            content: r.get(3)?,
+            created_at: r.get(4)?,
+        })
+    })?;
     rows.collect()
 }
 
@@ -66,15 +74,17 @@ pub fn list_journal_entries_before(
          FROM character_journals
          WHERE character_id = ?1 AND world_day < ?2
          ORDER BY world_day DESC, created_at DESC
-         LIMIT ?3"
+         LIMIT ?3",
     )?;
-    let rows = stmt.query_map(params![character_id, before_world_day, limit as i64], |r| Ok(JournalEntry {
-        journal_id: r.get(0)?,
-        character_id: r.get(1)?,
-        world_day: r.get(2)?,
-        content: r.get(3)?,
-        created_at: r.get(4)?,
-    }))?;
+    let rows = stmt.query_map(params![character_id, before_world_day, limit as i64], |r| {
+        Ok(JournalEntry {
+            journal_id: r.get(0)?,
+            character_id: r.get(1)?,
+            world_day: r.get(2)?,
+            content: r.get(3)?,
+            created_at: r.get(4)?,
+        })
+    })?;
     rows.collect()
 }
 
@@ -89,12 +99,15 @@ pub fn get_journal_entry_for_day(
          FROM character_journals
          WHERE character_id = ?1 AND world_day = ?2",
         params![character_id, world_day],
-        |r| Ok(JournalEntry {
-            journal_id: r.get(0)?,
-            character_id: r.get(1)?,
-            world_day: r.get(2)?,
-            content: r.get(3)?,
-            created_at: r.get(4)?,
-        }),
-    ).ok()
+        |r| {
+            Ok(JournalEntry {
+                journal_id: r.get(0)?,
+                character_id: r.get(1)?,
+                world_day: r.get(2)?,
+                content: r.get(3)?,
+                created_at: r.get(4)?,
+            })
+        },
+    )
+    .ok()
 }

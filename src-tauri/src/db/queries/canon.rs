@@ -67,25 +67,30 @@ pub fn list_kept_for_message(
     let mut stmt = conn.prepare(
         "SELECT kept_id, source_message_id, source_thread_id, source_world_day, source_created_at,
                 subject_type, subject_id, record_type, content, user_note, created_at
-         FROM kept_records WHERE source_message_id = ?1 ORDER BY created_at DESC"
+         FROM kept_records WHERE source_message_id = ?1 ORDER BY created_at DESC",
     )?;
-    let rows = stmt.query_map(params![message_id], |r| Ok(KeptRecord {
-        kept_id: r.get(0)?,
-        source_message_id: r.get(1)?,
-        source_thread_id: r.get(2)?,
-        source_world_day: r.get(3)?,
-        source_created_at: r.get(4)?,
-        subject_type: r.get(5)?,
-        subject_id: r.get(6)?,
-        record_type: r.get(7)?,
-        content: r.get(8)?,
-        user_note: r.get(9)?,
-        created_at: r.get(10)?,
-    }))?;
+    let rows = stmt.query_map(params![message_id], |r| {
+        Ok(KeptRecord {
+            kept_id: r.get(0)?,
+            source_message_id: r.get(1)?,
+            source_thread_id: r.get(2)?,
+            source_world_day: r.get(3)?,
+            source_created_at: r.get(4)?,
+            subject_type: r.get(5)?,
+            subject_id: r.get(6)?,
+            record_type: r.get(7)?,
+            content: r.get(8)?,
+            user_note: r.get(9)?,
+            created_at: r.get(10)?,
+        })
+    })?;
     rows.collect()
 }
 
 pub fn delete_kept_record(conn: &Connection, kept_id: &str) -> Result<(), rusqlite::Error> {
-    conn.execute("DELETE FROM kept_records WHERE kept_id = ?1", params![kept_id])?;
+    conn.execute(
+        "DELETE FROM kept_records WHERE kept_id = ?1",
+        params![kept_id],
+    )?;
     Ok(())
 }

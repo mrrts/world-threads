@@ -49,11 +49,21 @@ pub fn create_quest(conn: &Connection, q: &Quest) -> Result<(), rusqlite::Error>
             origin_kind, origin_ref)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)",
         params![
-            q.quest_id, q.world_id, q.title, q.description, q.notes,
-            q.accepted_at, q.accepted_world_day,
-            q.completed_at, q.completed_world_day, q.completion_note,
-            q.abandoned_at, q.abandoned_world_day, q.abandonment_note,
-            q.origin_kind, q.origin_ref,
+            q.quest_id,
+            q.world_id,
+            q.title,
+            q.description,
+            q.notes,
+            q.accepted_at,
+            q.accepted_world_day,
+            q.completed_at,
+            q.completed_world_day,
+            q.completion_note,
+            q.abandoned_at,
+            q.abandoned_world_day,
+            q.abandonment_note,
+            q.origin_kind,
+            q.origin_ref,
         ],
     )?;
     Ok(())
@@ -187,7 +197,12 @@ pub fn mark_quest_abandoned(
              completed_world_day = NULL,
              completion_note = ''
          WHERE quest_id = ?1",
-        params![quest_id, abandoned_at, abandoned_world_day, abandonment_note],
+        params![
+            quest_id,
+            abandoned_at,
+            abandoned_world_day,
+            abandonment_note
+        ],
     )?;
     Ok(())
 }

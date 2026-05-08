@@ -1,8 +1,8 @@
 use crate::ai::openai::{self, ImageRequest};
 use crate::ai::orchestrator;
+use crate::commands::portrait_cmds::PortraitsDir;
 use crate::db::queries::*;
 use crate::db::Database;
-use crate::commands::portrait_cmds::PortraitsDir;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use std::path::Path;
@@ -27,8 +27,14 @@ fn build_world_image_prompt(world: &World) -> String {
         parts.push(format!("Setting: {desc}"));
     }
 
-    let tags: Vec<String> = world.tone_tags.as_array()
-        .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+    let tags: Vec<String> = world
+        .tone_tags
+        .as_array()
+        .map(|a| {
+            a.iter()
+                .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                .collect()
+        })
         .unwrap_or_default();
     if !tags.is_empty() {
         parts.push(format!("Mood: {}", tags.join(", ")));
@@ -111,10 +117,16 @@ fn base64_decode(input: &str) -> Result<Vec<u8>, String> {
     let mut bits = 0;
 
     for &b in input {
-        if b == b'=' || b == b'\n' || b == b'\r' { continue; }
-        if b >= 128 { return Err("Invalid base64 character".to_string()); }
+        if b == b'=' || b == b'\n' || b == b'\r' {
+            continue;
+        }
+        if b >= 128 {
+            return Err("Invalid base64 character".to_string());
+        }
         let val = DECODE[b as usize];
-        if val == 255 { return Err(format!("Invalid base64 character: {}", b as char)); }
+        if val == 255 {
+            return Err(format!("Invalid base64 character: {}", b as char));
+        }
         buf = (buf << 6) | val as u32;
         bits += 6;
         if bits >= 8 {
@@ -149,13 +161,23 @@ pub async fn generate_world_image_cmd(
     };
 
     if let Some(hint) = form_hint {
-        if let Some(name) = hint.name { world.name = name; }
-        if let Some(desc) = hint.description { world.description = desc; }
-        if let Some(tags) = hint.tone_tags { world.tone_tags = tags; }
+        if let Some(name) = hint.name {
+            world.name = name;
+        }
+        if let Some(desc) = hint.description {
+            world.description = desc;
+        }
+        if let Some(tags) = hint.tone_tags {
+            world.tone_tags = tags;
+        }
     }
 
     let prompt = build_world_image_prompt(&world);
-    log::info!("[WorldImage] Generating for '{}': {:.120}...", world.name, prompt);
+    log::info!(
+        "[WorldImage] Generating for '{}': {:.120}...",
+        world.name,
+        prompt
+    );
 
     let request = ImageRequest {
         model: mc.image_model.clone(),
@@ -167,13 +189,15 @@ pub async fn generate_world_image_cmd(
         output_format: mc.image_output_format(),
     };
 
-    let response = openai::generate_image_with_base(&mc.openai_api_base(), &api_key, &request).await?;
-    let b64 = response.data.first()
+    let response =
+        openai::generate_image_with_base(&mc.openai_api_base(), &api_key, &request).await?;
+    let b64 = response
+        .data
+        .first()
         .and_then(|d| d.image_b64())
         .ok_or_else(|| "No image data in response".to_string())?;
 
-    let image_bytes = base64_decode(b64)
-        .map_err(|e| format!("Failed to decode image: {e}"))?;
+    let image_bytes = base64_decode(b64).map_err(|e| format!("Failed to decode image: {e}"))?;
 
     let image_id = uuid::Uuid::new_v4().to_string();
     let file_name = format!("world_{image_id}.png");
@@ -182,7 +206,11 @@ pub async fn generate_world_image_cmd(
     let file_path = dir.join(&file_name);
     std::fs::write(&file_path, &image_bytes).map_err(|e| format!("Failed to save image: {e}"))?;
 
-    log::info!("[WorldImage] Saved {} ({} bytes)", file_name, image_bytes.len());
+    log::info!(
+        "[WorldImage] Saved {} ({} bytes)",
+        file_name,
+        image_bytes.len()
+    );
 
     let img = WorldImage {
         image_id: image_id.clone(),
@@ -198,7 +226,10 @@ pub async fn generate_world_image_cmd(
 
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = conn.execute("UPDATE world_images SET is_active = 0 WHERE world_id = ?1", rusqlite::params![world_id]);
+        let _ = conn.execute(
+            "UPDATE world_images SET is_active = 0 WHERE world_id = ?1",
+            rusqlite::params![world_id],
+        );
         create_world_image(&conn, &img).map_err(|e| e.to_string())?;
     }
 
@@ -213,7 +244,10 @@ pub fn list_world_images_cmd(
 ) -> Result<Vec<WorldImageInfo>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let images = list_world_images(&conn, &world_id).map_err(|e| e.to_string())?;
-    Ok(images.iter().map(|i| image_to_info(i, &portraits_dir.0)).collect())
+    Ok(images
+        .iter()
+        .map(|i| image_to_info(i, &portraits_dir.0))
+        .collect())
 }
 
 #[tauri::command]
@@ -246,10 +280,7 @@ pub fn get_chat_background_cmd(
 }
 
 #[tauri::command]
-pub fn update_chat_background_cmd(
-    db: State<Database>,
-    bg: ChatBackground,
-) -> Result<(), String> {
+pub fn update_chat_background_cmd(db: State<Database>, bg: ChatBackground) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     upsert_chat_background(&conn, &bg).map_err(|e| e.to_string())
 }
@@ -277,7 +308,11 @@ pub async fn generate_world_image_with_prompt_cmd(
     prompt_parts.push("CRITICAL: The image must contain absolutely no text, no words, no letters, no numbers, no writing, no labels, no titles, no captions, no watermarks, no signatures, no UI elements.".to_string());
 
     let prompt = prompt_parts.join(" ");
-    log::info!("[WorldImage] Custom prompt for '{}': {:.120}...", world_id, prompt);
+    log::info!(
+        "[WorldImage] Custom prompt for '{}': {:.120}...",
+        world_id,
+        prompt
+    );
 
     let request = ImageRequest {
         model: mc.image_model.clone(),
@@ -289,13 +324,15 @@ pub async fn generate_world_image_with_prompt_cmd(
         output_format: mc.image_output_format(),
     };
 
-    let response = openai::generate_image_with_base(&mc.openai_api_base(), &api_key, &request).await?;
-    let b64 = response.data.first()
+    let response =
+        openai::generate_image_with_base(&mc.openai_api_base(), &api_key, &request).await?;
+    let b64 = response
+        .data
+        .first()
         .and_then(|d| d.image_b64())
         .ok_or_else(|| "No image data in response".to_string())?;
 
-    let image_bytes = base64_decode(b64)
-        .map_err(|e| format!("Failed to decode image: {e}"))?;
+    let image_bytes = base64_decode(b64).map_err(|e| format!("Failed to decode image: {e}"))?;
 
     let image_id = uuid::Uuid::new_v4().to_string();
     let file_name = format!("world_{image_id}.png");
@@ -338,8 +375,7 @@ pub fn upload_world_image_cmd(
         &image_data
     };
 
-    let image_bytes = base64_decode(raw)
-        .map_err(|e| format!("Failed to decode image: {e}"))?;
+    let image_bytes = base64_decode(raw).map_err(|e| format!("Failed to decode image: {e}"))?;
 
     let image_id = uuid::Uuid::new_v4().to_string();
     let file_name = format!("world_{image_id}.png");
@@ -413,22 +449,28 @@ pub fn list_world_gallery_cmd(
             "SELECT image_id, file_name, prompt, source, is_active, is_archived, tags, created_at FROM world_images WHERE world_id = ?1 ORDER BY created_at DESC"
         ).map_err(|e| e.to_string())?;
         let wid = world_id.clone();
-        let rows = stmt.query_map(rusqlite::params![world_id], |row| {
-            let src: String = row.get(3)?;
-            let label = if src == "uploaded" { "Uploaded" } else { "Generated" };
-            Ok(GalleryItem {
-                id: row.get(0)?,
-                source_id: wid.clone(),
-                file_name: row.get(1)?,
-                data_url: String::new(),
-                prompt: row.get(2)?,
-                category: "world".to_string(),
-                label: format!("World · {label}"),
-                is_archived: row.get(5)?,
-                tags: parse_tags(&row.get::<_, String>(6)?),
-                created_at: row.get(7)?,
+        let rows = stmt
+            .query_map(rusqlite::params![world_id], |row| {
+                let src: String = row.get(3)?;
+                let label = if src == "uploaded" {
+                    "Uploaded"
+                } else {
+                    "Generated"
+                };
+                Ok(GalleryItem {
+                    id: row.get(0)?,
+                    source_id: wid.clone(),
+                    file_name: row.get(1)?,
+                    data_url: String::new(),
+                    prompt: row.get(2)?,
+                    category: "world".to_string(),
+                    label: format!("World · {label}"),
+                    is_archived: row.get(5)?,
+                    tags: parse_tags(&row.get::<_, String>(6)?),
+                    created_at: row.get(7)?,
+                })
             })
-        }).map_err(|e| e.to_string())?;
+            .map_err(|e| e.to_string())?;
         for r in rows {
             let mut item = r.map_err(|e| e.to_string())?;
             item.data_url = file_to_data_url(dir, &item.file_name);
@@ -444,20 +486,22 @@ pub fn list_world_gallery_cmd(
              WHERE c.world_id = ?1
              ORDER BY p.created_at DESC"
         ).map_err(|e| e.to_string())?;
-        let rows = stmt.query_map(rusqlite::params![world_id], |row| {
-            Ok(GalleryItem {
-                id: row.get(0)?,
-                source_id: row.get(8)?,
-                file_name: row.get(1)?,
-                data_url: String::new(),
-                prompt: row.get(2)?,
-                category: "character".to_string(),
-                label: row.get(7)?,
-                is_archived: row.get(4)?,
-                tags: parse_tags(&row.get::<_, String>(5)?),
-                created_at: row.get(6)?,
+        let rows = stmt
+            .query_map(rusqlite::params![world_id], |row| {
+                Ok(GalleryItem {
+                    id: row.get(0)?,
+                    source_id: row.get(8)?,
+                    file_name: row.get(1)?,
+                    data_url: String::new(),
+                    prompt: row.get(2)?,
+                    category: "character".to_string(),
+                    label: row.get(7)?,
+                    is_archived: row.get(4)?,
+                    tags: parse_tags(&row.get::<_, String>(5)?),
+                    created_at: row.get(6)?,
+                })
             })
-        }).map_err(|e| e.to_string())?;
+            .map_err(|e| e.to_string())?;
         for r in rows {
             let mut item = r.map_err(|e| e.to_string())?;
             item.data_url = file_to_data_url(dir, &item.file_name);
@@ -503,23 +547,33 @@ pub fn list_world_gallery_meta_cmd(
             "SELECT image_id, file_name, prompt, source, is_active, is_archived, tags, created_at FROM world_images WHERE world_id = ?1 ORDER BY created_at DESC"
         ).map_err(|e| e.to_string())?;
         let wid = world_id.clone();
-        let rows = stmt.query_map(rusqlite::params![world_id], |row| {
-            let src: String = row.get(3)?;
-            let label = if src == "uploaded" { "Uploaded" } else { "Generated" };
-            Ok(GalleryItem {
-                id: row.get(0)?,
-                source_id: wid.clone(),
-                file_name: row.get(1)?,
-                data_url: String::new(),
-                prompt: row.get(2)?,
-                category: "world".to_string(),
-                label: format!("World · {label}"),
-                is_archived: row.get(5)?,
-                tags: parse_tags(&row.get::<_, String>(6)?),
-                created_at: row.get(7)?,
+        let rows = stmt
+            .query_map(rusqlite::params![world_id], |row| {
+                let src: String = row.get(3)?;
+                let label = if src == "uploaded" {
+                    "Uploaded"
+                } else {
+                    "Generated"
+                };
+                Ok(GalleryItem {
+                    id: row.get(0)?,
+                    source_id: wid.clone(),
+                    file_name: row.get(1)?,
+                    data_url: String::new(),
+                    prompt: row.get(2)?,
+                    category: "world".to_string(),
+                    label: format!("World · {label}"),
+                    is_archived: row.get(5)?,
+                    tags: parse_tags(&row.get::<_, String>(6)?),
+                    created_at: row.get(7)?,
+                })
             })
-        }).map_err(|e| e.to_string())?;
-        for r in rows { if let Ok(item) = r { items.push(item); } }
+            .map_err(|e| e.to_string())?;
+        for r in rows {
+            if let Ok(item) = r {
+                items.push(item);
+            }
+        }
     }
 
     {
@@ -530,21 +584,27 @@ pub fn list_world_gallery_meta_cmd(
              WHERE c.world_id = ?1
              ORDER BY p.created_at DESC"
         ).map_err(|e| e.to_string())?;
-        let rows = stmt.query_map(rusqlite::params![world_id], |row| {
-            Ok(GalleryItem {
-                id: row.get(0)?,
-                source_id: row.get(8)?,
-                file_name: row.get(1)?,
-                data_url: String::new(),
-                prompt: row.get(2)?,
-                category: "character".to_string(),
-                label: row.get(7)?,
-                is_archived: row.get(4)?,
-                tags: parse_tags(&row.get::<_, String>(5)?),
-                created_at: row.get(6)?,
+        let rows = stmt
+            .query_map(rusqlite::params![world_id], |row| {
+                Ok(GalleryItem {
+                    id: row.get(0)?,
+                    source_id: row.get(8)?,
+                    file_name: row.get(1)?,
+                    data_url: String::new(),
+                    prompt: row.get(2)?,
+                    category: "character".to_string(),
+                    label: row.get(7)?,
+                    is_archived: row.get(4)?,
+                    tags: parse_tags(&row.get::<_, String>(5)?),
+                    created_at: row.get(6)?,
+                })
             })
-        }).map_err(|e| e.to_string())?;
-        for r in rows { if let Ok(item) = r { items.push(item); } }
+            .map_err(|e| e.to_string())?;
+        for r in rows {
+            if let Ok(item) = r {
+                items.push(item);
+            }
+        }
     }
 
     if let Ok(profile) = get_user_profile(&conn, &world_id) {
@@ -586,10 +646,17 @@ pub fn archive_gallery_item_cmd(
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     match category.as_str() {
-        "world" => conn.execute("UPDATE world_images SET is_archived = 1 WHERE image_id = ?1", rusqlite::params![item_id]),
-        "character" => conn.execute("UPDATE character_portraits SET is_archived = 1 WHERE portrait_id = ?1", rusqlite::params![item_id]),
+        "world" => conn.execute(
+            "UPDATE world_images SET is_archived = 1 WHERE image_id = ?1",
+            rusqlite::params![item_id],
+        ),
+        "character" => conn.execute(
+            "UPDATE character_portraits SET is_archived = 1 WHERE portrait_id = ?1",
+            rusqlite::params![item_id],
+        ),
         _ => return Err("Cannot archive this item type".to_string()),
-    }.map_err(|e| e.to_string())?;
+    }
+    .map_err(|e| e.to_string())?;
     Ok(())
 }
 
@@ -601,10 +668,17 @@ pub fn unarchive_gallery_item_cmd(
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     match category.as_str() {
-        "world" => conn.execute("UPDATE world_images SET is_archived = 0 WHERE image_id = ?1", rusqlite::params![item_id]),
-        "character" => conn.execute("UPDATE character_portraits SET is_archived = 0 WHERE portrait_id = ?1", rusqlite::params![item_id]),
+        "world" => conn.execute(
+            "UPDATE world_images SET is_archived = 0 WHERE image_id = ?1",
+            rusqlite::params![item_id],
+        ),
+        "character" => conn.execute(
+            "UPDATE character_portraits SET is_archived = 0 WHERE portrait_id = ?1",
+            rusqlite::params![item_id],
+        ),
         _ => return Err("Cannot unarchive this item type".to_string()),
-    }.map_err(|e| e.to_string())?;
+    }
+    .map_err(|e| e.to_string())?;
     Ok(())
 }
 
@@ -618,10 +692,17 @@ pub fn delete_gallery_item_cmd(
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     match category.as_str() {
-        "world" => conn.execute("DELETE FROM world_images WHERE image_id = ?1", rusqlite::params![item_id]),
-        "character" => conn.execute("DELETE FROM character_portraits WHERE portrait_id = ?1", rusqlite::params![item_id]),
+        "world" => conn.execute(
+            "DELETE FROM world_images WHERE image_id = ?1",
+            rusqlite::params![item_id],
+        ),
+        "character" => conn.execute(
+            "DELETE FROM character_portraits WHERE portrait_id = ?1",
+            rusqlite::params![item_id],
+        ),
         _ => return Err("Cannot delete this item type".to_string()),
-    }.map_err(|e| e.to_string())?;
+    }
+    .map_err(|e| e.to_string())?;
     let path = portraits_dir.0.join(&file_name);
     let _ = std::fs::remove_file(path);
     Ok(())
@@ -642,24 +723,31 @@ pub fn save_crop_cmd(
     let dir = &portraits_dir.0;
     std::fs::create_dir_all(dir).map_err(|e| format!("Failed to create dir: {e}"))?;
 
-    let raw = image_data.find(",").map(|i| &image_data[i + 1..]).unwrap_or(&image_data);
+    let raw = image_data
+        .find(",")
+        .map(|i| &image_data[i + 1..])
+        .unwrap_or(&image_data);
     let bytes = base64_decode(raw).map_err(|e| format!("Failed to decode crop: {e}"))?;
 
     let id = uuid::Uuid::new_v4().to_string();
     let file_name = format!("crop_{id}.png");
-    std::fs::write(dir.join(&file_name), &bytes).map_err(|e| format!("Failed to save crop: {e}"))?;
+    std::fs::write(dir.join(&file_name), &bytes)
+        .map_err(|e| format!("Failed to save crop: {e}"))?;
 
     let now = chrono::Utc::now().to_rfc3339();
-    let tags_json = serde_json::to_string(&vec!["Crop"]).unwrap_or_else(|_| "[\"Crop\"]".to_string());
+    let tags_json =
+        serde_json::to_string(&vec!["Crop"]).unwrap_or_else(|_| "[\"Crop\"]".to_string());
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
 
     let (category, label) = match source_category.as_str() {
         "character" => {
-            let char_name: String = conn.query_row(
-                "SELECT display_name FROM characters WHERE character_id = ?1",
-                rusqlite::params![source_id],
-                |r| r.get(0),
-            ).unwrap_or_else(|_| "Character".to_string());
+            let char_name: String = conn
+                .query_row(
+                    "SELECT display_name FROM characters WHERE character_id = ?1",
+                    rusqlite::params![source_id],
+                    |r| r.get(0),
+                )
+                .unwrap_or_else(|_| "Character".to_string());
             conn.execute(
                 "INSERT INTO character_portraits (portrait_id, character_id, prompt, file_name, is_active, is_archived, tags, created_at) VALUES (?1, ?2, ?3, ?4, 0, 0, ?5, ?6)",
                 rusqlite::params![id, source_id, "Cropped", file_name, tags_json, now],

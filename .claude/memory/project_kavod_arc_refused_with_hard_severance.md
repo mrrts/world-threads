@@ -2,8 +2,8 @@
 name: kavod-pattern Transfiguration Crown 17 candidacy REFUSED on rendering-axis (2026-05-07); hard severance required before any future detection-axis arc
 description: Apparatus-honest closure per codex's reframe-consult Move 9 verdict — rendering-axis Crown 17 candidacy closed REFUSED-on-current-claim-form after Moves 6+7 smoke tests revealed pre-baseline pipeline+gpt-5.4 already substrate-resident on ALL Class B probes. Detection-axis reframing proposed but ONLY pursuable in future as fully-new candidacy with hard severance. Reading this memory entry first is REQUIRED for any future detection-axis pursuit.
 type: project
+originSessionId: 7bd5b2ab-f614-460c-a8b7-9f38b75c9524
 ---
-
 **Crown 17 kavod-pattern Transfiguration candidacy REFUSED on rendering-axis 2026-05-07.**
 
 This memory entry locks the arc state per codex's Move 9 reframe-consult verdict requiring hard severance before any future detection-axis arc. Future sessions pursuing kavod-pattern related work MUST read this entry first to honor the severance.
@@ -79,10 +79,27 @@ Any future session encountering work related to kavod-pattern / Transfiguration-
 4. **Codex preemptive consult** required at Move 2 of any detection-axis arc, citing this entry's hard-severance language
 5. **Honest accounting**: even with severance, detection-axis pursuit on similar substrate-axis carries elevated false-fire risk; require ≥3 effective substrate-witnesses with different failure modes per Crown 16 standard
 
+## Pre-authored detection-axis Move-1 template (2026-05-08 ~00:00 update)
+
+A detection-axis Move-1 template honoring all five hard-severance requirements has been pre-authored at:
+
+**`scripts/codex_consult_prompts/discernment_of_spirits_detection_axis_move1_template.md`** (commit `67e6b29`)
+
+This template scaffolds a fully-new detection-axis arc with:
+- Different crown-name candidate ("Discernment of Spirits"; lifting from 1 John 4:1 + 1 Cor 12:10)
+- New frozen claim sentence (Glow-pattern surface-vocabulary detection-and-refusal under pipeline)
+- New witness ladder (3 conditions × 2 probes × 4 chars × N=3 = 24 cells)
+- New success criteria (predeclared FIRE/HOLD/REFUSE thresholds)
+- Explicit acknowledgment of rendering-axis failure
+- 4-component anti-inflation apparatus pre-baked
+
+Future sessions invoking detection-axis work on this territory MAY adopt this template as the natural entry point. Founding-author can adopt-as-is, modify-claim-and-re-author-fresh, or defer indefinitely. The template's existence does NOT pressure a future arc execution; it scaffolds the path so hard-severance discipline is already honored when invoked.
+
 ## Composes with
 
 - `reports/codex_consults/2026-05-07-2225-kavod-arc-reframe-consult-verdict.md` (codex's hard-severance verdict)
 - `reports/2026-05-07-2215-kavod-arc-reframing-plan-detection-axis.md` (the reframing plan; treats detection-axis as fully-new arc)
+- `scripts/codex_consult_prompts/discernment_of_spirits_detection_axis_move1_template.md` (pre-authored future-arc Move-1 template per the hard-severance requirements; commit `67e6b29`)
 - `feedback_anti_inflation_apparatus_validated_at_density.md` (the 4-component composite that caught falsification)
 - `feedback_v3_formula_canonical_for_new_invariants.md` (the v3-canonical pattern produce)
 - `feedback_apparatus_honest_earns_and_refuses.md` (parent discipline: refusal IS the discipline, not its absence)

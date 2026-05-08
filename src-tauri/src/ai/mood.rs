@@ -16,7 +16,11 @@ pub struct MoodVector {
 
 impl MoodVector {
     pub fn neutral() -> Self {
-        Self { valence: 0.0, energy: 0.0, tension: 0.0 }
+        Self {
+            valence: 0.0,
+            energy: 0.0,
+            tension: 0.0,
+        }
     }
 
     fn clamp(&mut self) {
@@ -28,7 +32,11 @@ impl MoodVector {
 
 impl From<&CharacterMood> for MoodVector {
     fn from(m: &CharacterMood) -> Self {
-        Self { valence: m.valence, energy: m.energy, tension: m.tension }
+        Self {
+            valence: m.valence,
+            energy: m.energy,
+            tension: m.tension,
+        }
     }
 }
 
@@ -41,7 +49,12 @@ pub fn compute_mood_target(
     let mut target = MoodVector::neutral();
 
     // --- World time of day influence ---
-    if let Some(time_of_day) = world.state.get("time").and_then(|t| t.get("time_of_day")).and_then(|v| v.as_str()) {
+    if let Some(time_of_day) = world
+        .state
+        .get("time")
+        .and_then(|t| t.get("time_of_day"))
+        .and_then(|v| v.as_str())
+    {
         match time_of_day.to_uppercase().as_str() {
             "NIGHT" | "LATE_NIGHT" => {
                 target.energy -= 0.3;
@@ -72,7 +85,8 @@ pub fn compute_mood_target(
             } else if t.contains("tense") || t.contains("dark") || t.contains("grim") {
                 target.tension += 0.2;
                 target.valence -= 0.1;
-            } else if t.contains("whimsical") || t.contains("playful") || t.contains("lighthearted") {
+            } else if t.contains("whimsical") || t.contains("playful") || t.contains("lighthearted")
+            {
                 target.valence += 0.15;
                 target.energy += 0.1;
             } else if t.contains("melanchol") || t.contains("sad") || t.contains("somber") {
@@ -101,12 +115,42 @@ pub fn compute_mood_target(
 
     for msg in window {
         let lower = msg.content.to_lowercase();
-        let positive = ["haha", "lol", "love", "happy", "great", "amazing", "beautiful",
-            "thank", "glad", "nice", "funny", "laugh", "joy", "excited", "wonderful"];
-        let negative = ["sad", "angry", "upset", "hurt", "hate", "sorry", "terrible",
-            "awful", "worried", "scared", "afraid", "lonely", "miss you", "crying"];
-        let heavy = ["death", "dying", "grief", "trauma", "abuse", "war", "disease",
-            "hospital", "funeral", "cancer", "suicide", "crisis", "emergency"];
+        let positive = [
+            "haha",
+            "lol",
+            "love",
+            "happy",
+            "great",
+            "amazing",
+            "beautiful",
+            "thank",
+            "glad",
+            "nice",
+            "funny",
+            "laugh",
+            "joy",
+            "excited",
+            "wonderful",
+        ];
+        let negative = [
+            "sad", "angry", "upset", "hurt", "hate", "sorry", "terrible", "awful", "worried",
+            "scared", "afraid", "lonely", "miss you", "crying",
+        ];
+        let heavy = [
+            "death",
+            "dying",
+            "grief",
+            "trauma",
+            "abuse",
+            "war",
+            "disease",
+            "hospital",
+            "funeral",
+            "cancer",
+            "suicide",
+            "crisis",
+            "emergency",
+        ];
 
         pos_count += positive.iter().filter(|w| lower.contains(*w)).count() as i32;
         neg_count += negative.iter().filter(|w| lower.contains(*w)).count() as i32;

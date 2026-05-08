@@ -164,13 +164,16 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     ).unwrap_or(false);
 
     if needs_fts_migration {
-        conn.execute_batch("
+        conn.execute_batch(
+            "
             DROP TABLE IF EXISTS messages_fts;
             DROP TABLE IF EXISTS world_events_fts;
-        ")?;
+        ",
+        )?;
     }
 
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE VIRTUAL TABLE IF NOT EXISTS messages_fts USING fts5(
             message_id UNINDEXED,
             thread_id UNINDEXED,
@@ -184,17 +187,20 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             summary,
             tokenize='porter'
         );
-    ")?;
+    ",
+    )?;
 
     // If we just migrated, backfill FTS from existing data
     if needs_fts_migration {
-        conn.execute_batch("
+        conn.execute_batch(
+            "
             INSERT INTO messages_fts (message_id, thread_id, content)
             SELECT message_id, thread_id, content FROM messages;
 
             INSERT INTO world_events_fts (event_id, world_id, summary)
             SELECT event_id, world_id, summary FROM world_events;
-        ")?;
+        ",
+        )?;
     }
 
     let has_vec: bool = conn
@@ -206,7 +212,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         .unwrap_or(false);
 
     if !has_vec {
-        conn.execute_batch("
+        conn.execute_batch(
+            "
             CREATE VIRTUAL TABLE IF NOT EXISTS vec_chunks USING vec0(
                 embedding float[1536]
             );
@@ -220,7 +227,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
                 content TEXT NOT NULL,
                 created_at TEXT NOT NULL DEFAULT (datetime('now'))
             );
-        ")?;
+        ",
+        )?;
     }
 
     // Add is_archived column to characters if missing (migration for existing DBs)
@@ -233,7 +241,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         .unwrap_or(false);
 
     if !has_archived {
-        conn.execute_batch("ALTER TABLE characters ADD COLUMN is_archived INTEGER NOT NULL DEFAULT 0")?;
+        conn.execute_batch(
+            "ALTER TABLE characters ADD COLUMN is_archived INTEGER NOT NULL DEFAULT 0",
+        )?;
     }
 
     let has_bg_image_id: bool = conn
@@ -245,7 +255,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         .unwrap_or(false);
 
     if !has_bg_image_id {
-        conn.execute_batch("ALTER TABLE chat_backgrounds ADD COLUMN bg_image_id TEXT NOT NULL DEFAULT ''")?;
+        conn.execute_batch(
+            "ALTER TABLE chat_backgrounds ADD COLUMN bg_image_id TEXT NOT NULL DEFAULT ''",
+        )?;
     }
 
     let has_avatar_file: bool = conn
@@ -257,7 +269,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         .unwrap_or(false);
 
     if !has_avatar_file {
-        conn.execute_batch("ALTER TABLE user_profiles ADD COLUMN avatar_file TEXT NOT NULL DEFAULT ''")?;
+        conn.execute_batch(
+            "ALTER TABLE user_profiles ADD COLUMN avatar_file TEXT NOT NULL DEFAULT ''",
+        )?;
     }
 
     // user_profiles.boundaries — added 2026-04-25 so the user-character
@@ -274,7 +288,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         .unwrap_or(false);
 
     if !has_user_boundaries {
-        conn.execute_batch("ALTER TABLE user_profiles ADD COLUMN boundaries TEXT NOT NULL DEFAULT '[]'")?;
+        conn.execute_batch(
+            "ALTER TABLE user_profiles ADD COLUMN boundaries TEXT NOT NULL DEFAULT '[]'",
+        )?;
     }
 
     let has_source: bool = conn
@@ -286,7 +302,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         .unwrap_or(false);
 
     if !has_source {
-        conn.execute_batch("ALTER TABLE world_images ADD COLUMN source TEXT NOT NULL DEFAULT 'generated'")?;
+        conn.execute_batch(
+            "ALTER TABLE world_images ADD COLUMN source TEXT NOT NULL DEFAULT 'generated'",
+        )?;
     }
 
     // Scrub "Studio Ghibli" / "Miyazaki" references from stored prompts
@@ -303,23 +321,31 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
 
     // Gallery archive & tags columns
     let has_wi_archived: bool = conn
-        .query_row("SELECT count(*) > 0 FROM pragma_table_info('world_images') WHERE name = 'is_archived'", [], |r| r.get(0))
+        .query_row(
+            "SELECT count(*) > 0 FROM pragma_table_info('world_images') WHERE name = 'is_archived'",
+            [],
+            |r| r.get(0),
+        )
         .unwrap_or(false);
     if !has_wi_archived {
-        conn.execute_batch("
+        conn.execute_batch(
+            "
             ALTER TABLE world_images ADD COLUMN is_archived INTEGER NOT NULL DEFAULT 0;
             ALTER TABLE world_images ADD COLUMN tags TEXT NOT NULL DEFAULT '[]';
-        ")?;
+        ",
+        )?;
     }
 
     let has_cp_archived: bool = conn
         .query_row("SELECT count(*) > 0 FROM pragma_table_info('character_portraits') WHERE name = 'is_archived'", [], |r| r.get(0))
         .unwrap_or(false);
     if !has_cp_archived {
-        conn.execute_batch("
+        conn.execute_batch(
+            "
             ALTER TABLE character_portraits ADD COLUMN is_archived INTEGER NOT NULL DEFAULT 0;
             ALTER TABLE character_portraits ADD COLUMN tags TEXT NOT NULL DEFAULT '[]';
-        ")?;
+        ",
+        )?;
     }
 
     // Add character_id to chunk_metadata for per-character vector search.
@@ -334,35 +360,46 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
 
     if !has_chunk_char_id {
         // Wipe existing vectors — they'll be regenerated with character_id on next chat
-        conn.execute_batch("
+        conn.execute_batch(
+            "
             DELETE FROM vec_chunks;
             DELETE FROM chunk_metadata;
-        ")?;
+        ",
+        )?;
         conn.execute_batch(
-            "ALTER TABLE chunk_metadata ADD COLUMN character_id TEXT NOT NULL DEFAULT ''"
+            "ALTER TABLE chunk_metadata ADD COLUMN character_id TEXT NOT NULL DEFAULT ''",
         )?;
     }
 
     // Clean up leftover temp tables from prior failed migrations.
     // Only drop if the real table has data (meaning migration was partially successful).
-    conn.execute_batch("DROP TABLE IF EXISTS messages_new;").ok();
-    let msgs_ok: i64 = conn.query_row("SELECT count(*) FROM messages", [], |r| r.get(0)).unwrap_or(0);
+    conn.execute_batch("DROP TABLE IF EXISTS messages_new;")
+        .ok();
+    let msgs_ok: i64 = conn
+        .query_row("SELECT count(*) FROM messages", [], |r| r.get(0))
+        .unwrap_or(0);
     if msgs_ok > 0 {
-        conn.execute_batch("DROP TABLE IF EXISTS messages_migrating;").ok();
+        conn.execute_batch("DROP TABLE IF EXISTS messages_migrating;")
+            .ok();
     }
-    let gmsgs_ok: i64 = conn.query_row("SELECT count(*) FROM group_messages", [], |r| r.get(0)).unwrap_or(0);
+    let gmsgs_ok: i64 = conn
+        .query_row("SELECT count(*) FROM group_messages", [], |r| r.get(0))
+        .unwrap_or(0);
     if gmsgs_ok > 0 {
-        conn.execute_batch("DROP TABLE IF EXISTS group_messages_migrating;").ok();
+        conn.execute_batch("DROP TABLE IF EXISTS group_messages_migrating;")
+            .ok();
     }
 
     // Old role migration removed — now handled by the safe CHECK constraint removal below.
 
     // Fix illustration messages that were stored as JSON {"data_url":"...","caption":"..."}
     // Extract just the data_url value.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         UPDATE messages SET content = json_extract(content, '$.data_url')
         WHERE role = 'illustration' AND content LIKE '{%\"data_url\"%';
-    ")?;
+    ",
+    )?;
 
     // Add video_file column to world_images for illustrations that have been animated
     let has_video_file: bool = conn
@@ -373,7 +410,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         )
         .unwrap_or(false);
     if !has_video_file {
-        conn.execute_batch("ALTER TABLE world_images ADD COLUMN video_file TEXT NOT NULL DEFAULT ''")?;
+        conn.execute_batch(
+            "ALTER TABLE world_images ADD COLUMN video_file TEXT NOT NULL DEFAULT ''",
+        )?;
     }
 
     // Add aspect_ratio column to world_images for layout stability
@@ -385,7 +424,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         )
         .unwrap_or(false);
     if !has_aspect_ratio {
-        conn.execute_batch("ALTER TABLE world_images ADD COLUMN aspect_ratio REAL NOT NULL DEFAULT 0.0")?;
+        conn.execute_batch(
+            "ALTER TABLE world_images ADD COLUMN aspect_ratio REAL NOT NULL DEFAULT 0.0",
+        )?;
     }
 
     // Add sender_character_id column to messages (for group chats)
@@ -397,11 +438,14 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         )
         .unwrap_or(false);
     if !has_sender {
-        conn.execute_batch("ALTER TABLE messages ADD COLUMN sender_character_id TEXT DEFAULT NULL")?;
+        conn.execute_batch(
+            "ALTER TABLE messages ADD COLUMN sender_character_id TEXT DEFAULT NULL",
+        )?;
     }
 
     // Group chats table
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS group_chats (
             group_chat_id TEXT PRIMARY KEY,
             world_id TEXT NOT NULL REFERENCES worlds(world_id) ON DELETE CASCADE,
@@ -411,7 +455,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             created_at TEXT NOT NULL DEFAULT (datetime('now'))
         );
         CREATE INDEX IF NOT EXISTS idx_group_chats_world ON group_chats(world_id);
-    ")?;
+    ",
+    )?;
 
     // Make threads.character_id nullable for group chat threads
     // IMPORTANT: disable FK enforcement during table recreation to prevent cascade deletes
@@ -423,7 +468,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         )
         .unwrap_or(false);
     if threads_has_not_null {
-        conn.execute_batch("
+        conn.execute_batch(
+            "
             PRAGMA foreign_keys = OFF;
             CREATE TABLE threads_new (
                 thread_id TEXT PRIMARY KEY,
@@ -435,7 +481,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             DROP TABLE threads;
             ALTER TABLE threads_new RENAME TO threads;
             PRAGMA foreign_keys = ON;
-        ")?;
+        ",
+        )?;
     }
 
     // Separate group_messages table for group chats
@@ -461,13 +508,20 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
 
     // Migrate any existing group messages from messages table to group_messages
     let has_group_chats: bool = conn
-        .query_row("SELECT count(*) > 0 FROM sqlite_master WHERE type='table' AND name='group_chats'", [], |r| r.get(0))
+        .query_row(
+            "SELECT count(*) > 0 FROM sqlite_master WHERE type='table' AND name='group_chats'",
+            [],
+            |r| r.get(0),
+        )
         .unwrap_or(false);
     if has_group_chats {
-        let migrated: i64 = conn.query_row(
-            "SELECT count(*) FROM messages m JOIN group_chats gc ON gc.thread_id = m.thread_id",
-            [], |r| r.get(0),
-        ).unwrap_or(0);
+        let migrated: i64 = conn
+            .query_row(
+                "SELECT count(*) FROM messages m JOIN group_chats gc ON gc.thread_id = m.thread_id",
+                [],
+                |r| r.get(0),
+            )
+            .unwrap_or(0);
         if migrated > 0 {
             conn.execute_batch("
                 INSERT OR IGNORE INTO group_messages (message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at)
@@ -487,16 +541,22 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     }
 
     // Purge illustration/video content from FTS indexes (base64 data should never be indexed)
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         DELETE FROM messages_fts WHERE message_id IN (
             SELECT message_id FROM messages WHERE role IN ('illustration', 'video')
         );
-    ").ok();
-    conn.execute_batch("
+    ",
+    )
+    .ok();
+    conn.execute_batch(
+        "
         DELETE FROM group_messages_fts WHERE message_id IN (
             SELECT message_id FROM group_messages WHERE role IN ('illustration', 'video')
         );
-    ").ok();
+    ",
+    )
+    .ok();
 
     // Recover any messages stuck in messages_old from a failed migration
     let has_messages_old: bool = conn.prepare("SELECT 1 FROM messages_old LIMIT 0").is_ok();
@@ -507,7 +567,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             DROP TABLE IF EXISTS messages_old;
         ").ok();
     }
-    let has_group_messages_old: bool = conn.prepare("SELECT 1 FROM group_messages_old LIMIT 0").is_ok();
+    let has_group_messages_old: bool = conn
+        .prepare("SELECT 1 FROM group_messages_old LIMIT 0")
+        .is_ok();
     if has_group_messages_old {
         conn.execute_batch("
             INSERT OR IGNORE INTO group_messages (message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at)
@@ -518,12 +580,17 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
 
     // Safely remove CHECK constraint on role column to allow 'context' role.
     // Only proceed if current table still has the CHECK constraint and messages_old doesn't exist.
-    let needs_check_removal: bool = conn.query_row(
-        "SELECT sql LIKE '%CHECK%' FROM sqlite_master WHERE type='table' AND name='messages'",
-        [], |r| r.get(0),
-    ).unwrap_or(false);
+    let needs_check_removal: bool = conn
+        .query_row(
+            "SELECT sql LIKE '%CHECK%' FROM sqlite_master WHERE type='table' AND name='messages'",
+            [],
+            |r| r.get(0),
+        )
+        .unwrap_or(false);
     if needs_check_removal {
-        let msg_count: i64 = conn.query_row("SELECT count(*) FROM messages", [], |r| r.get(0)).unwrap_or(0);
+        let msg_count: i64 = conn
+            .query_row("SELECT count(*) FROM messages", [], |r| r.get(0))
+            .unwrap_or(0);
         // Disable foreign keys for safe table recreation
         conn.execute_batch("PRAGMA foreign_keys=OFF;").ok();
         let result = conn.execute_batch("
@@ -543,21 +610,33 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
                 SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time FROM messages_migrating;
         ");
         if result.is_ok() {
-            let new_count: i64 = conn.query_row("SELECT count(*) FROM messages", [], |r| r.get(0)).unwrap_or(0);
+            let new_count: i64 = conn
+                .query_row("SELECT count(*) FROM messages", [], |r| r.get(0))
+                .unwrap_or(0);
             if new_count >= msg_count {
                 conn.execute_batch("DROP TABLE messages_migrating; CREATE INDEX IF NOT EXISTS idx_messages_thread ON messages(thread_id, created_at);").ok();
             } else {
                 // Rollback: data loss detected
-                conn.execute_batch("DROP TABLE messages; ALTER TABLE messages_migrating RENAME TO messages;").ok();
-                log::warn!("Messages migration rolled back: count mismatch ({} vs {})", new_count, msg_count);
+                conn.execute_batch(
+                    "DROP TABLE messages; ALTER TABLE messages_migrating RENAME TO messages;",
+                )
+                .ok();
+                log::warn!(
+                    "Messages migration rolled back: count mismatch ({} vs {})",
+                    new_count,
+                    msg_count
+                );
             }
         } else {
             // Rename back if migration failed
-            conn.execute_batch("ALTER TABLE messages_migrating RENAME TO messages;").ok();
+            conn.execute_batch("ALTER TABLE messages_migrating RENAME TO messages;")
+                .ok();
         }
 
         // Same for group_messages
-        let gm_count: i64 = conn.query_row("SELECT count(*) FROM group_messages", [], |r| r.get(0)).unwrap_or(0);
+        let gm_count: i64 = conn
+            .query_row("SELECT count(*) FROM group_messages", [], |r| r.get(0))
+            .unwrap_or(0);
         let gresult = conn.execute_batch("
             ALTER TABLE group_messages RENAME TO group_messages_migrating;
             CREATE TABLE group_messages (
@@ -575,46 +654,63 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
                 SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time FROM group_messages_migrating;
         ");
         if gresult.is_ok() {
-            let new_gm_count: i64 = conn.query_row("SELECT count(*) FROM group_messages", [], |r| r.get(0)).unwrap_or(0);
+            let new_gm_count: i64 = conn
+                .query_row("SELECT count(*) FROM group_messages", [], |r| r.get(0))
+                .unwrap_or(0);
             if new_gm_count >= gm_count {
                 conn.execute_batch("DROP TABLE group_messages_migrating; CREATE INDEX IF NOT EXISTS idx_group_messages_thread ON group_messages(thread_id, created_at);").ok();
             } else {
                 conn.execute_batch("DROP TABLE group_messages; ALTER TABLE group_messages_migrating RENAME TO group_messages;").ok();
             }
         } else {
-            conn.execute_batch("ALTER TABLE group_messages_migrating RENAME TO group_messages;").ok();
+            conn.execute_batch("ALTER TABLE group_messages_migrating RENAME TO group_messages;")
+                .ok();
         }
         conn.execute_batch("PRAGMA foreign_keys=ON;").ok();
     }
 
     // Add world_day and world_time columns to messages tables
-    let has_world_day: bool = conn.prepare("SELECT world_day FROM messages LIMIT 0")
+    let has_world_day: bool = conn
+        .prepare("SELECT world_day FROM messages LIMIT 0")
         .is_ok();
     if !has_world_day {
-        conn.execute_batch("
+        conn.execute_batch(
+            "
             ALTER TABLE messages ADD COLUMN world_day INTEGER DEFAULT NULL;
             ALTER TABLE messages ADD COLUMN world_time TEXT DEFAULT NULL;
-        ").ok();
-        conn.execute_batch("
+        ",
+        )
+        .ok();
+        conn.execute_batch(
+            "
             ALTER TABLE group_messages ADD COLUMN world_day INTEGER DEFAULT NULL;
             ALTER TABLE group_messages ADD COLUMN world_time TEXT DEFAULT NULL;
-        ").ok();
+        ",
+        )
+        .ok();
     }
 
     // Addressing: who the speaker is talking to (NULL = unknown; "user" = the
     // human; otherwise a character_id). Additive, nullable — safe on existing
     // rows, which all backfill as NULL.
-    let has_address_to: bool = conn.prepare("SELECT address_to FROM messages LIMIT 0").is_ok();
+    let has_address_to: bool = conn
+        .prepare("SELECT address_to FROM messages LIMIT 0")
+        .is_ok();
     if !has_address_to {
-        conn.execute_batch("ALTER TABLE messages ADD COLUMN address_to TEXT DEFAULT NULL;").ok();
+        conn.execute_batch("ALTER TABLE messages ADD COLUMN address_to TEXT DEFAULT NULL;")
+            .ok();
     }
-    let has_address_to_group: bool = conn.prepare("SELECT address_to FROM group_messages LIMIT 0").is_ok();
+    let has_address_to_group: bool = conn
+        .prepare("SELECT address_to FROM group_messages LIMIT 0")
+        .is_ok();
     if !has_address_to_group {
-        conn.execute_batch("ALTER TABLE group_messages ADD COLUMN address_to TEXT DEFAULT NULL;").ok();
+        conn.execute_batch("ALTER TABLE group_messages ADD COLUMN address_to TEXT DEFAULT NULL;")
+            .ok();
     }
 
     // ── Novel entries table ──────────────────────────────────────────────
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS novel_entries (
             novel_id TEXT PRIMARY KEY,
             thread_id TEXT NOT NULL,
@@ -624,15 +720,20 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             updated_at TEXT NOT NULL DEFAULT (datetime('now')),
             UNIQUE(thread_id, world_day)
         );
-    ")?;
+    ",
+    )?;
 
     // ── Consultant chat tables ──────────────────────────────────────────
 
     // Migration: if old consultant_messages table exists without chat_id, recreate it
-    let old_table_exists: bool = conn.query_row(
-        "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='consultant_messages'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let old_table_exists: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='consultant_messages'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if old_table_exists {
         let has_chat_id: bool = conn.query_row(
             "SELECT COUNT(*) FROM pragma_table_info('consultant_messages') WHERE name = 'chat_id'",
@@ -640,11 +741,16 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         ).unwrap_or(0) > 0;
         if !has_chat_id {
             // Old schema — rename to preserve data, create new table
-            conn.execute("ALTER TABLE consultant_messages RENAME TO consultant_messages_old", []).ok();
+            conn.execute(
+                "ALTER TABLE consultant_messages RENAME TO consultant_messages_old",
+                [],
+            )
+            .ok();
         }
     }
 
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS consultant_chats (
             chat_id TEXT PRIMARY KEY,
             thread_id TEXT NOT NULL,
@@ -661,7 +767,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             created_at TEXT NOT NULL DEFAULT (datetime('now'))
         );
         CREATE INDEX IF NOT EXISTS idx_consultant_messages_chat ON consultant_messages(chat_id);
-    ")?;
+    ",
+    )?;
 
     // Remove location from world state JSON (was causing characters to mention town square)
     conn.execute_batch("
@@ -669,12 +776,20 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     ").ok();
 
     // Add sex column to characters if missing, default to 'male'
-    let has_sex: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'sex'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_sex: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'sex'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_sex {
-        conn.execute("ALTER TABLE characters ADD COLUMN sex TEXT NOT NULL DEFAULT 'male'", []).ok();
+        conn.execute(
+            "ALTER TABLE characters ADD COLUMN sex TEXT NOT NULL DEFAULT 'male'",
+            [],
+        )
+        .ok();
     }
 
     // Add last_seen_message_id to consultant_chats if missing
@@ -683,18 +798,30 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         [], |r| r.get::<_, i64>(0),
     ).unwrap_or(0) > 0;
     if !has_last_seen {
-        conn.execute("ALTER TABLE consultant_chats ADD COLUMN last_seen_message_id TEXT DEFAULT NULL", []).ok();
+        conn.execute(
+            "ALTER TABLE consultant_chats ADD COLUMN last_seen_message_id TEXT DEFAULT NULL",
+            [],
+        )
+        .ok();
     }
 
     // Add mode column to consultant_chats: 'immersive' (default — the
     // in-the-story confidant) vs 'backstage' (fourth-wall stage manager
     // that reads the save file). Existing chats default to immersive.
-    let has_mode: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('consultant_chats') WHERE name = 'mode'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_mode: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('consultant_chats') WHERE name = 'mode'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_mode {
-        conn.execute("ALTER TABLE consultant_chats ADD COLUMN mode TEXT NOT NULL DEFAULT 'immersive'", []).ok();
+        conn.execute(
+            "ALTER TABLE consultant_chats ADD COLUMN mode TEXT NOT NULL DEFAULT 'immersive'",
+            [],
+        )
+        .ok();
     }
 
     // Illustration caption column — stores the human-readable text that
@@ -702,12 +829,20 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // custom_instructions (verbatim) or a "memorable moment" caption that
     // an LLM call picks from recent scene messages when instructions are
     // left blank. Used as alt text + a visible caption in chat views.
-    let has_wi_caption: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('world_images') WHERE name = 'caption'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_wi_caption: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('world_images') WHERE name = 'caption'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_wi_caption {
-        conn.execute("ALTER TABLE world_images ADD COLUMN caption TEXT NOT NULL DEFAULT ''", []).ok();
+        conn.execute(
+            "ALTER TABLE world_images ADD COLUMN caption TEXT NOT NULL DEFAULT ''",
+            [],
+        )
+        .ok();
     }
 
     // Per-chat current location — replaces the global world.state.location
@@ -716,19 +851,35 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // Each individual chat (threads with character_id) and each group_chat
     // can carry its OWN current_location string. Default NULL = "no
     // location set yet"; UI hides the label until set.
-    let has_thread_loc: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('threads') WHERE name = 'current_location'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_thread_loc: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('threads') WHERE name = 'current_location'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_thread_loc {
-        conn.execute("ALTER TABLE threads ADD COLUMN current_location TEXT DEFAULT NULL", []).ok();
+        conn.execute(
+            "ALTER TABLE threads ADD COLUMN current_location TEXT DEFAULT NULL",
+            [],
+        )
+        .ok();
     }
-    let has_gc_loc: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('group_chats') WHERE name = 'current_location'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_gc_loc: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('group_chats') WHERE name = 'current_location'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_gc_loc {
-        conn.execute("ALTER TABLE group_chats ADD COLUMN current_location TEXT DEFAULT NULL", []).ok();
+        conn.execute(
+            "ALTER TABLE group_chats ADD COLUMN current_location TEXT DEFAULT NULL",
+            [],
+        )
+        .ok();
     }
 
     // saved_places — per-world place-name library. Populated when the user
@@ -736,7 +887,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // dropdown populates the input. UNIQUE(world_id, name) prevents dup
     // entries; the modal's "save" checkbox is disabled when input matches
     // an existing place to make the constraint unreachable in normal use.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS saved_places (
             saved_place_id TEXT PRIMARY KEY,
             world_id TEXT NOT NULL REFERENCES worlds(world_id) ON DELETE CASCADE,
@@ -745,19 +897,33 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             UNIQUE(world_id, name)
         );
         CREATE INDEX IF NOT EXISTS idx_saved_places_world ON saved_places(world_id);
-    ").ok();
+    ",
+    )
+    .ok();
 
     // Add last_used_at to saved_places — drives 'most-recently-used on top'
     // ordering in the location modal's dropdown. Backfilled to created_at
     // for existing rows; updated on every set_chat_location_cmd call whose
     // new name matches an existing saved place (case-insensitive).
-    let has_last_used: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('saved_places') WHERE name = 'last_used_at'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_last_used: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('saved_places') WHERE name = 'last_used_at'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_last_used {
-        conn.execute("ALTER TABLE saved_places ADD COLUMN last_used_at TEXT DEFAULT NULL", []).ok();
-        conn.execute("UPDATE saved_places SET last_used_at = created_at WHERE last_used_at IS NULL", []).ok();
+        conn.execute(
+            "ALTER TABLE saved_places ADD COLUMN last_used_at TEXT DEFAULT NULL",
+            [],
+        )
+        .ok();
+        conn.execute(
+            "UPDATE saved_places SET last_used_at = created_at WHERE last_used_at IS NULL",
+            [],
+        )
+        .ok();
     }
 
     // Strip lingering world.state.location.* now that per-chat carries it.
@@ -776,7 +942,11 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // makes the default visible to the LLM even for brand-new chats
     // that have no location_change messages yet.
     conn.execute("UPDATE threads SET current_location = 'Town Square' WHERE current_location IS NULL AND character_id IS NOT NULL", []).ok();
-    conn.execute("UPDATE group_chats SET current_location = 'Town Square' WHERE current_location IS NULL", []).ok();
+    conn.execute(
+        "UPDATE group_chats SET current_location = 'Town Square' WHERE current_location IS NULL",
+        [],
+    )
+    .ok();
 
     // ── Canon entries ─────────────────────────────────────────────────────
     //
@@ -842,20 +1012,24 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     //
     // Rebuild pattern follows CLAUDE.md rules: rename → create → copy →
     // verify count → drop or rollback.
-    let reactions_sql: Option<String> = conn.query_row(
-        "SELECT sql FROM sqlite_master WHERE type='table' AND name='reactions'",
-        [], |r| r.get(0),
-    ).ok();
-    let reactions_needs_rebuild = reactions_sql
-        .as_deref()
-        .map_or(false, |s| s.contains("REFERENCES") || s.contains("messages_old") || s.contains("messages_migrating"));
+    let reactions_sql: Option<String> = conn
+        .query_row(
+            "SELECT sql FROM sqlite_master WHERE type='table' AND name='reactions'",
+            [],
+            |r| r.get(0),
+        )
+        .ok();
+    let reactions_needs_rebuild = reactions_sql.as_deref().map_or(false, |s| {
+        s.contains("REFERENCES") || s.contains("messages_old") || s.contains("messages_migrating")
+    });
 
     if reactions_needs_rebuild {
         let count_before: i64 = conn
             .query_row("SELECT count(*) FROM reactions", [], |r| r.get(0))
             .unwrap_or(0);
         conn.execute_batch("PRAGMA foreign_keys=OFF;").ok();
-        let rebuild = conn.execute_batch("
+        let rebuild = conn.execute_batch(
+            "
             ALTER TABLE reactions RENAME TO reactions_migrating;
             CREATE TABLE reactions (
                 reaction_id TEXT PRIMARY KEY,
@@ -866,7 +1040,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             );
             INSERT INTO reactions (reaction_id, message_id, emoji, reactor, created_at)
                 SELECT reaction_id, message_id, emoji, reactor, created_at FROM reactions_migrating;
-        ");
+        ",
+        );
         match rebuild {
             Ok(()) => {
                 let count_after: i64 = conn
@@ -876,21 +1051,24 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
                     conn.execute_batch(
                         "DROP TABLE reactions_migrating; CREATE INDEX IF NOT EXISTS idx_reactions_message ON reactions(message_id);"
                     ).ok();
-                    log::warn!("reactions table rebuilt: {} rows preserved, FK removed", count_after);
+                    log::warn!(
+                        "reactions table rebuilt: {} rows preserved, FK removed",
+                        count_after
+                    );
                 } else {
                     conn.execute_batch(
                         "DROP TABLE reactions; ALTER TABLE reactions_migrating RENAME TO reactions;"
                     ).ok();
                     log::warn!(
                         "reactions rebuild rolled back: count mismatch ({} vs {})",
-                        count_after, count_before
+                        count_after,
+                        count_before
                     );
                 }
             }
             Err(e) => {
-                conn.execute_batch(
-                    "ALTER TABLE reactions_migrating RENAME TO reactions;"
-                ).ok();
+                conn.execute_batch("ALTER TABLE reactions_migrating RENAME TO reactions;")
+                    .ok();
                 log::warn!("reactions rebuild failed, rolled back: {}", e);
             }
         }
@@ -906,7 +1084,11 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         [], |r| r.get::<_, i64>(0),
     ).unwrap_or(0) > 0;
     if !has_sender_char_on_reactions {
-        conn.execute("ALTER TABLE reactions ADD COLUMN sender_character_id TEXT DEFAULT NULL", []).ok();
+        conn.execute(
+            "ALTER TABLE reactions ADD COLUMN sender_character_id TEXT DEFAULT NULL",
+            [],
+        )
+        .ok();
     }
 
     // ── Mood reduction (per-thread reaction-emoji ring buffer) ─────────────
@@ -914,12 +1096,20 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // Feeds back into the AGENCY section: each reaction pushes its emoji
     // onto a JSON array (most-recent-first, capped) that seeds the next
     // mood-note chain. Additive, nullable, safe on existing rows.
-    let has_mood_reduction: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('threads') WHERE name = 'mood_reduction'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_mood_reduction: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('threads') WHERE name = 'mood_reduction'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_mood_reduction {
-        conn.execute("ALTER TABLE threads ADD COLUMN mood_reduction TEXT NOT NULL DEFAULT '[]'", []).ok();
+        conn.execute(
+            "ALTER TABLE threads ADD COLUMN mood_reduction TEXT NOT NULL DEFAULT '[]'",
+            [],
+        )
+        .ok();
     }
 
     // ── Mood chain persisted per assistant message ────────────────────────
@@ -928,19 +1118,35 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // generated. Enables the measurement loop: join reactions → messages →
     // mood_chain to surface which chains produce positively-reacted replies.
     // Nullable so existing messages pre-dating the feature stay valid.
-    let has_mood_chain_msgs: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('messages') WHERE name = 'mood_chain'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_mood_chain_msgs: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('messages') WHERE name = 'mood_chain'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_mood_chain_msgs {
-        conn.execute("ALTER TABLE messages ADD COLUMN mood_chain TEXT DEFAULT NULL", []).ok();
+        conn.execute(
+            "ALTER TABLE messages ADD COLUMN mood_chain TEXT DEFAULT NULL",
+            [],
+        )
+        .ok();
     }
-    let has_mood_chain_gmsgs: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('group_messages') WHERE name = 'mood_chain'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_mood_chain_gmsgs: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('group_messages') WHERE name = 'mood_chain'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_mood_chain_gmsgs {
-        conn.execute("ALTER TABLE group_messages ADD COLUMN mood_chain TEXT DEFAULT NULL", []).ok();
+        conn.execute(
+            "ALTER TABLE group_messages ADD COLUMN mood_chain TEXT DEFAULT NULL",
+            [],
+        )
+        .ok();
     }
 
     // ── Proactive pings ────────────────────────────────────────────────────
@@ -962,31 +1168,55 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         [], |r| r.get::<_, i64>(0),
     ).unwrap_or(0) > 0;
     if !has_cons_pings {
-        conn.execute("ALTER TABLE threads ADD COLUMN consecutive_proactive_pings INTEGER NOT NULL DEFAULT 0", []).ok();
+        conn.execute(
+            "ALTER TABLE threads ADD COLUMN consecutive_proactive_pings INTEGER NOT NULL DEFAULT 0",
+            [],
+        )
+        .ok();
     }
     let has_last_ping: bool = conn.query_row(
         "SELECT COUNT(*) FROM pragma_table_info('threads') WHERE name = 'last_proactive_ping_at'",
         [], |r| r.get::<_, i64>(0),
     ).unwrap_or(0) > 0;
     if !has_last_ping {
-        conn.execute("ALTER TABLE threads ADD COLUMN last_proactive_ping_at TEXT DEFAULT NULL", []).ok();
+        conn.execute(
+            "ALTER TABLE threads ADD COLUMN last_proactive_ping_at TEXT DEFAULT NULL",
+            [],
+        )
+        .ok();
     }
-    let has_is_proactive: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('messages') WHERE name = 'is_proactive'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_is_proactive: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('messages') WHERE name = 'is_proactive'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_is_proactive {
-        conn.execute("ALTER TABLE messages ADD COLUMN is_proactive INTEGER NOT NULL DEFAULT 0", []).ok();
+        conn.execute(
+            "ALTER TABLE messages ADD COLUMN is_proactive INTEGER NOT NULL DEFAULT 0",
+            [],
+        )
+        .ok();
     }
     // group_messages shares the Message struct and the MSG_COLS constant,
     // so the column must exist on both tables even though proactive pings
     // currently only fire in solo threads. Unused rows stay at default 0.
-    let has_is_proactive_g: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('group_messages') WHERE name = 'is_proactive'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_is_proactive_g: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('group_messages') WHERE name = 'is_proactive'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_is_proactive_g {
-        conn.execute("ALTER TABLE group_messages ADD COLUMN is_proactive INTEGER NOT NULL DEFAULT 0", []).ok();
+        conn.execute(
+            "ALTER TABLE group_messages ADD COLUMN is_proactive INTEGER NOT NULL DEFAULT 0",
+            [],
+        )
+        .ok();
     }
 
     // ── Rename kept_records → kept_records ─────────────────────────────────
@@ -1000,17 +1230,28 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // already exists. On fresh installs the old table never existed, and
     // the initial CREATE statement further up already uses the new name
     // (see below).
-    let has_canon_table: bool = conn.query_row(
-        "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='kept_records'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
-    let has_kept_table: bool = conn.query_row(
-        "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='kept_records'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_canon_table: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='kept_records'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
+    let has_kept_table: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='kept_records'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if has_canon_table && !has_kept_table {
-        let before: i64 = conn.query_row("SELECT COUNT(*) FROM kept_records", [], |r| r.get(0)).unwrap_or(-1);
-        let rename = conn.execute_batch("
+        let before: i64 = conn
+            .query_row("SELECT COUNT(*) FROM kept_records", [], |r| r.get(0))
+            .unwrap_or(-1);
+        let rename = conn.execute_batch(
+            "
             ALTER TABLE kept_records RENAME TO kept_records;
             ALTER TABLE kept_records RENAME COLUMN kept_id TO kept_id;
             ALTER TABLE kept_records RENAME COLUMN record_type TO record_type;
@@ -1018,12 +1259,18 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             DROP INDEX IF EXISTS idx_canon_subject;
             CREATE INDEX IF NOT EXISTS idx_kept_source_message ON kept_records(source_message_id);
             CREATE INDEX IF NOT EXISTS idx_kept_subject ON kept_records(subject_type, subject_id);
-        ");
+        ",
+        );
         match rename {
             Ok(()) => {
-                let after: i64 = conn.query_row("SELECT COUNT(*) FROM kept_records", [], |r| r.get(0)).unwrap_or(-2);
+                let after: i64 = conn
+                    .query_row("SELECT COUNT(*) FROM kept_records", [], |r| r.get(0))
+                    .unwrap_or(-2);
                 if after == before {
-                    log::warn!("kept_records → kept_records rename succeeded: {} rows preserved", after);
+                    log::warn!(
+                        "kept_records → kept_records rename succeeded: {} rows preserved",
+                        after
+                    );
                 } else {
                     log::error!("kept_records rename produced count mismatch: {} vs {} — data may be at risk, investigate immediately", before, after);
                 }
@@ -1051,14 +1298,22 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         [], |r| r.get::<_, i64>(0),
     ).unwrap_or(0) > 0;
     if !has_visual_desc {
-        conn.execute("ALTER TABLE characters ADD COLUMN visual_description TEXT NOT NULL DEFAULT ''", []).ok();
+        conn.execute(
+            "ALTER TABLE characters ADD COLUMN visual_description TEXT NOT NULL DEFAULT ''",
+            [],
+        )
+        .ok();
     }
     let has_visual_desc_src: bool = conn.query_row(
         "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'visual_description_portrait_id'",
         [], |r| r.get::<_, i64>(0),
     ).unwrap_or(0) > 0;
     if !has_visual_desc_src {
-        conn.execute("ALTER TABLE characters ADD COLUMN visual_description_portrait_id TEXT DEFAULT NULL", []).ok();
+        conn.execute(
+            "ALTER TABLE characters ADD COLUMN visual_description_portrait_id TEXT DEFAULT NULL",
+            [],
+        )
+        .ok();
     }
 
     // Inventory: per-character "things still in their keeping" (max 3,
@@ -1066,31 +1321,51 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     //   inventory: JSON array of { name, description } objects.
     //   last_inventory_day: the world_day index (into World.state.time.day_index)
     //     the inventory was last refreshed against. NULL = never seeded.
-    let has_inventory: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'inventory'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_inventory: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'inventory'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_inventory {
-        conn.execute("ALTER TABLE characters ADD COLUMN inventory TEXT NOT NULL DEFAULT '[]'", []).ok();
+        conn.execute(
+            "ALTER TABLE characters ADD COLUMN inventory TEXT NOT NULL DEFAULT '[]'",
+            [],
+        )
+        .ok();
     }
     let has_last_inv_day: bool = conn.query_row(
         "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'last_inventory_day'",
         [], |r| r.get::<_, i64>(0),
     ).unwrap_or(0) > 0;
     if !has_last_inv_day {
-        conn.execute("ALTER TABLE characters ADD COLUMN last_inventory_day INTEGER DEFAULT NULL", []).ok();
+        conn.execute(
+            "ALTER TABLE characters ADD COLUMN last_inventory_day INTEGER DEFAULT NULL",
+            [],
+        )
+        .ok();
     }
 
     // Signature emoji: an optional single emoji the character may
     // occasionally drop into a message when they feel especially
     // themselves in a beat. User-edited from the character settings
     // page. Empty string = disabled (character has no signature).
-    let has_signature_emoji: bool = conn.query_row(
-        "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'signature_emoji'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let has_signature_emoji: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('characters') WHERE name = 'signature_emoji'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !has_signature_emoji {
-        conn.execute("ALTER TABLE characters ADD COLUMN signature_emoji TEXT NOT NULL DEFAULT ''", []).ok();
+        conn.execute(
+            "ALTER TABLE characters ADD COLUMN signature_emoji TEXT NOT NULL DEFAULT ''",
+            [],
+        )
+        .ok();
     }
 
     // ── Per-character action-beat density ─────────────────────────────
@@ -1104,7 +1379,11 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         [], |r| r.get::<_, i64>(0),
     ).unwrap_or(0) > 0;
     if !has_abd {
-        conn.execute("ALTER TABLE characters ADD COLUMN action_beat_density TEXT NOT NULL DEFAULT 'normal'", []).ok();
+        conn.execute(
+            "ALTER TABLE characters ADD COLUMN action_beat_density TEXT NOT NULL DEFAULT 'normal'",
+            [],
+        )
+        .ok();
     }
 
     // One-time clear of existing character inventories so they re-seed
@@ -1113,10 +1392,14 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // before this migration held physical-only items and no kind tag —
     // the next focus refresh on each character will regenerate fresh
     // under the new rules. Gated by a settings marker so it runs once.
-    let already_cleared_inv: bool = conn.query_row(
-        "SELECT COUNT(*) FROM settings WHERE key = 'schema.inventory_cleared_v6'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let already_cleared_inv: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM settings WHERE key = 'schema.inventory_cleared_v6'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !already_cleared_inv {
         let cleared = conn.execute(
             "UPDATE characters SET inventory = '[]', last_inventory_day = NULL WHERE inventory != '[]' OR last_inventory_day IS NOT NULL",
@@ -1136,10 +1419,14 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // enduring features only). Gated by a marker row in `settings` so
     // this runs exactly once per database. New descriptions will land
     // via the backfill sweep the next time the app has an API key.
-    let already_cleared: bool = conn.query_row(
-        "SELECT COUNT(*) FROM settings WHERE key = 'schema.visual_description_cleared_v1'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let already_cleared: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM settings WHERE key = 'schema.visual_description_cleared_v1'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !already_cleared {
         let cleared = conn.execute(
             "UPDATE characters SET visual_description = '', visual_description_portrait_id = NULL WHERE visual_description != '' OR visual_description_portrait_id IS NOT NULL",
@@ -1197,17 +1484,25 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     //   3. INSERT all rows from migrating → new
     //   4. VERIFY row count matches; if not, ROLLBACK (rename back)
     //   5. Only drop the migrating table on verified success
-    let already_migrated: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM settings WHERE key = 'schema.kept_records_check_v2'",
-        [], |r| r.get(0),
-    ).unwrap_or(0);
+    let already_migrated: i64 = conn
+        .query_row(
+            "SELECT COUNT(*) FROM settings WHERE key = 'schema.kept_records_check_v2'",
+            [],
+            |r| r.get(0),
+        )
+        .unwrap_or(0);
     if already_migrated == 0 {
-        let table_exists: i64 = conn.query_row(
-            "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='kept_records'",
-            [], |r| r.get(0),
-        ).unwrap_or(0);
+        let table_exists: i64 = conn
+            .query_row(
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='kept_records'",
+                [],
+                |r| r.get(0),
+            )
+            .unwrap_or(0);
         if table_exists > 0 {
-            let before: i64 = conn.query_row("SELECT COUNT(*) FROM kept_records", [], |r| r.get(0)).unwrap_or(-1);
+            let before: i64 = conn
+                .query_row("SELECT COUNT(*) FROM kept_records", [], |r| r.get(0))
+                .unwrap_or(-1);
             let migrate_result: rusqlite::Result<()> = (|| {
                 conn.execute_batch("PRAGMA foreign_keys=OFF;")?;
                 conn.execute_batch("ALTER TABLE kept_records RENAME TO kept_records_migrating;")?;
@@ -1226,7 +1521,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
                         created_at TEXT NOT NULL DEFAULT (datetime('now'))
                     );
                 ")?;
-                conn.execute_batch("
+                conn.execute_batch(
+                    "
                     INSERT INTO kept_records
                         (kept_id, source_message_id, source_thread_id, source_world_day,
                          source_created_at, subject_type, subject_id, record_type,
@@ -1235,12 +1531,15 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
                            source_created_at, subject_type, subject_id, record_type,
                            content, user_note, created_at
                     FROM kept_records_migrating;
-                ")?;
+                ",
+                )?;
                 Ok(())
             })();
             match migrate_result {
                 Ok(()) => {
-                    let after: i64 = conn.query_row("SELECT COUNT(*) FROM kept_records", [], |r| r.get(0)).unwrap_or(-2);
+                    let after: i64 = conn
+                        .query_row("SELECT COUNT(*) FROM kept_records", [], |r| r.get(0))
+                        .unwrap_or(-2);
                     if after == before {
                         // Verified — safe to drop the old table and mark migrated.
                         conn.execute_batch("
@@ -1253,24 +1552,33 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
                             "INSERT INTO settings (key, value) VALUES ('schema.kept_records_check_v2', ?1)",
                             [chrono::Utc::now().to_rfc3339()],
                         ).ok();
-                        log::warn!("kept_records CHECK broadened to v2: {} rows preserved", after);
+                        log::warn!(
+                            "kept_records CHECK broadened to v2: {} rows preserved",
+                            after
+                        );
                     } else {
                         // Count mismatch — ROLLBACK.
-                        conn.execute_batch("
+                        conn.execute_batch(
+                            "
                             DROP TABLE IF EXISTS kept_records;
                             ALTER TABLE kept_records_migrating RENAME TO kept_records;
                             PRAGMA foreign_keys=ON;
-                        ").ok();
+                        ",
+                        )
+                        .ok();
                         log::error!("kept_records CHECK migration count mismatch ({} vs {}) — rolled back, original table restored. No data lost.", before, after);
                     }
                 }
                 Err(e) => {
                     // Migration failed partway through — restore original.
-                    conn.execute_batch("
+                    conn.execute_batch(
+                        "
                         DROP TABLE IF EXISTS kept_records;
                         ALTER TABLE kept_records_migrating RENAME TO kept_records;
                         PRAGMA foreign_keys=ON;
-                    ").ok();
+                    ",
+                    )
+                    .ok();
                     log::error!("kept_records CHECK migration failed: {}. Table is left in its original state; no data lost.", e);
                 }
             }
@@ -1280,7 +1588,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             conn.execute(
                 "INSERT INTO settings (key, value) VALUES ('schema.kept_records_check_v2', ?1)",
                 [chrono::Utc::now().to_rfc3339()],
-            ).ok();
+            )
+            .ok();
         }
     }
 
@@ -1296,7 +1605,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // Capped at ~50 rows per character via trim-on-insert. The trigger
     // column is diagnostic: "seed" | "refresh" | "moment" | "user_edit".
     // FK cascade on character deletion cleans up automatically.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS character_inventory_snapshots (
             snapshot_id TEXT PRIMARY KEY,
             character_id TEXT NOT NULL REFERENCES characters(character_id) ON DELETE CASCADE,
@@ -1307,7 +1617,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
         CREATE INDEX IF NOT EXISTS idx_inv_snapshots_char_time
             ON character_inventory_snapshots(character_id, created_at DESC);
-    ").ok();
+    ",
+    )
+    .ok();
 
     // ── Inventory update records ──────────────────────────────────────────
     //
@@ -1329,7 +1641,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // character — each message shows the latest update's diff, not a
     // history. No FK on message_id (messages live in two tables);
     // character_id FK cascades cleanup on character deletion.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS inventory_update_records (
             message_id TEXT NOT NULL,
             character_id TEXT NOT NULL REFERENCES characters(character_id) ON DELETE CASCADE,
@@ -1340,7 +1653,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
             PRIMARY KEY (message_id, character_id)
         );
         CREATE INDEX IF NOT EXISTS idx_inv_upd_message ON inventory_update_records(message_id);
-    ").ok();
+    ",
+    )
+    .ok();
 
     // One-shot backfill for inventory_update messages written before the
     // dispatcher started copying world_day / world_time from world state.
@@ -1355,7 +1670,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         [], |r| r.get::<_, i64>(0),
     ).unwrap_or(0) > 0;
     if !inv_wt_backfilled {
-        let patched_solo = conn.execute("
+        let patched_solo = conn
+            .execute(
+                "
             UPDATE messages
             SET world_day = COALESCE(
                     (SELECT m2.world_day FROM messages m2
@@ -1386,8 +1703,13 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
                      ORDER BY m2.created_at ASC LIMIT 1)
                 )
             WHERE role = 'inventory_update' AND (world_day IS NULL OR world_time IS NULL)
-        ", []).unwrap_or(0);
-        let patched_group = conn.execute("
+        ",
+                [],
+            )
+            .unwrap_or(0);
+        let patched_group = conn
+            .execute(
+                "
             UPDATE group_messages
             SET world_day = COALESCE(
                     (SELECT m2.world_day FROM group_messages m2
@@ -1418,7 +1740,10 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
                      ORDER BY m2.created_at ASC LIMIT 1)
                 )
             WHERE role = 'inventory_update' AND (world_day IS NULL OR world_time IS NULL)
-        ", []).unwrap_or(0);
+        ",
+                [],
+            )
+            .unwrap_or(0);
         conn.execute(
             "INSERT OR IGNORE INTO settings (key, value) VALUES ('schema.inventory_update_world_time_backfilled_v1', ?1)",
             [chrono::Utc::now().to_rfc3339()],
@@ -1447,7 +1772,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // UNIQUE(character_id, world_day) — one per day per character; if
     // the user regenerates, ON CONFLICT REPLACE overwrites. FK cascade
     // on character_id cleans up if a character is ever deleted.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS character_journals (
             journal_id TEXT PRIMARY KEY,
             character_id TEXT NOT NULL REFERENCES characters(character_id) ON DELETE CASCADE,
@@ -1458,14 +1784,17 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
         CREATE INDEX IF NOT EXISTS idx_journals_char_day
             ON character_journals(character_id, world_day DESC);
-    ").ok();
+    ",
+    )
+    .ok();
 
     // ── User (player) journals ────────────────────────────────────────────
     //
     // Parallel to character_journals but keyed by world_id — one entry
     // per world per world-day, written as the player-character
     // retrospecting yesterday across every chat they were in.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS user_journals (
             journal_id TEXT PRIMARY KEY,
             world_id TEXT NOT NULL REFERENCES worlds(world_id) ON DELETE CASCADE,
@@ -1476,7 +1805,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
         CREATE INDEX IF NOT EXISTS idx_user_journals_world_day
             ON user_journals(world_id, world_day DESC);
-    ").ok();
+    ",
+    )
+    .ok();
 
     // ── Quests ───────────────────────────────────────────────────────────
     //
@@ -1488,7 +1819,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // completion. Active quests show up in the dialogue-prompt world
     // context so characters know them implicitly; they surface in
     // dialogue only when the moment is right.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS quests (
             quest_id TEXT PRIMARY KEY,
             world_id TEXT NOT NULL REFERENCES worlds(world_id) ON DELETE CASCADE,
@@ -1508,7 +1840,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
         CREATE INDEX IF NOT EXISTS idx_quests_world_active
             ON quests(world_id, completed_at, abandoned_at);
-    ").ok();
+    ",
+    )
+    .ok();
 
     // Non-destructive ADD COLUMN migrations for databases created under
     // an earlier shape of the quests table.
@@ -1520,12 +1854,17 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         ("origin_ref", "TEXT"),
     ];
     for (name, ty) in cols {
-        let has: bool = conn.query_row(
-            "SELECT COUNT(*) FROM pragma_table_info('quests') WHERE name = ?1",
-            rusqlite::params![name], |r| r.get::<_, i64>(0),
-        ).unwrap_or(0) > 0;
+        let has: bool = conn
+            .query_row(
+                "SELECT COUNT(*) FROM pragma_table_info('quests') WHERE name = ?1",
+                rusqlite::params![name],
+                |r| r.get::<_, i64>(0),
+            )
+            .unwrap_or(0)
+            > 0;
         if !has {
-            conn.execute(&format!("ALTER TABLE quests ADD COLUMN {name} {ty}"), []).ok();
+            conn.execute(&format!("ALTER TABLE quests ADD COLUMN {name} {ty}"), [])
+                .ok();
         }
     }
 
@@ -1533,16 +1872,23 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // re-generates under the new world-day-bounded logic (history feed
     // strictly today's messages; prior entries strictly before today).
     // Gated by a settings marker so this runs exactly once per database.
-    let already_wiped_journals: bool = conn.query_row(
-        "SELECT COUNT(*) FROM settings WHERE key = 'schema.journals_cleared_v1'",
-        [], |r| r.get::<_, i64>(0),
-    ).unwrap_or(0) > 0;
+    let already_wiped_journals: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM settings WHERE key = 'schema.journals_cleared_v1'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
     if !already_wiped_journals {
-        let wiped = conn.execute("DELETE FROM character_journals", []).unwrap_or(0);
+        let wiped = conn
+            .execute("DELETE FROM character_journals", [])
+            .unwrap_or(0);
         conn.execute(
             "INSERT OR IGNORE INTO settings (key, value) VALUES ('schema.journals_cleared_v1', ?1)",
             [chrono::Utc::now().to_rfc3339()],
-        ).ok();
+        )
+        .ok();
         if wiped > 0 {
             log::warn!("[Schema] cleared {wiped} journal entries for regeneration under bounded-history logic");
         }
@@ -1561,7 +1907,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // UNIQUE(world_id, world_day) — one per day per world; regenerate
     // via ON CONFLICT REPLACE. Domains stored as JSON so the axis list
     // can evolve without schema churn.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS daily_readings (
             reading_id TEXT PRIMARY KEY,
             world_id TEXT NOT NULL REFERENCES worlds(world_id) ON DELETE CASCADE,
@@ -1573,7 +1920,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
         CREATE INDEX IF NOT EXISTS idx_daily_readings_world_day
             ON daily_readings(world_id, world_day DESC);
-    ").ok();
+    ",
+    )
+    .ok();
 
     // ── Meanwhile events ─────────────────────────────────────────────────
     //
@@ -1588,7 +1937,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // belonging to one character at a specific day + time-of-day.
     // Shown in the sidebar's World State area as a short scrollable
     // feed.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS meanwhile_events (
             event_id TEXT PRIMARY KEY,
             world_id TEXT NOT NULL REFERENCES worlds(world_id) ON DELETE CASCADE,
@@ -1600,7 +1950,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
         CREATE INDEX IF NOT EXISTS idx_meanwhile_world_time
             ON meanwhile_events(world_id, created_at DESC);
-    ").ok();
+    ",
+    )
+    .ok();
 
     // imagined_chapters — novel chapters of moments that DIDN'T happen
     // in chat but are plausible-in-world / in-character. The "Imagined
@@ -1620,7 +1972,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // references world_images.image_id so the illustration lives
     // alongside the rest of the gallery and gets the same storage +
     // backup treatment.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS imagined_chapters (
             chapter_id TEXT PRIMARY KEY,
             thread_id TEXT NOT NULL,
@@ -1635,7 +1988,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
         CREATE INDEX IF NOT EXISTS idx_imagined_chapters_thread
             ON imagined_chapters(thread_id, created_at DESC);
-    ").ok();
+    ",
+    )
+    .ok();
 
     // breadcrumb_message_id — links a chapter to the role='imagined_chapter'
     // row inserted into the chat transcript when the chapter was saved.
@@ -1648,7 +2003,10 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         [], |_| Ok(true),
     ).unwrap_or(false);
     if !column_exists {
-        let _ = conn.execute("ALTER TABLE imagined_chapters ADD COLUMN breadcrumb_message_id TEXT", []);
+        let _ = conn.execute(
+            "ALTER TABLE imagined_chapters ADD COLUMN breadcrumb_message_id TEXT",
+            [],
+        );
     }
 
     // canonized — chapters now exist in TWO states: pre-canon (just an
@@ -1661,23 +2019,31 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // Backfill: any pre-existing chapter that has a breadcrumb_message_id
     // is treated as canonized (matches current observable state — the
     // breadcrumbs are already in the chat). New rows default to 0.
-    let canonized_col_exists: bool = conn.query_row(
-        "SELECT 1 FROM pragma_table_info('imagined_chapters') WHERE name = 'canonized'",
-        [], |_| Ok(true),
-    ).unwrap_or(false);
+    let canonized_col_exists: bool = conn
+        .query_row(
+            "SELECT 1 FROM pragma_table_info('imagined_chapters') WHERE name = 'canonized'",
+            [],
+            |_| Ok(true),
+        )
+        .unwrap_or(false);
     if !canonized_col_exists {
-        let _ = conn.execute("ALTER TABLE imagined_chapters ADD COLUMN canonized INTEGER NOT NULL DEFAULT 0", []);
+        let _ = conn.execute(
+            "ALTER TABLE imagined_chapters ADD COLUMN canonized INTEGER NOT NULL DEFAULT 0",
+            [],
+        );
         let _ = conn.execute(
             "UPDATE imagined_chapters SET canonized = 1 WHERE breadcrumb_message_id IS NOT NULL",
             [],
         );
     }
 
-    let scene_location_col_exists: bool = conn.query_row(
-        "SELECT 1 FROM pragma_table_info('imagined_chapters') WHERE name = 'scene_location'",
-        [],
-        |_| Ok(true),
-    ).unwrap_or(false);
+    let scene_location_col_exists: bool = conn
+        .query_row(
+            "SELECT 1 FROM pragma_table_info('imagined_chapters') WHERE name = 'scene_location'",
+            [],
+            |_| Ok(true),
+        )
+        .unwrap_or(false);
     if !scene_location_col_exists {
         conn.execute(
             "ALTER TABLE imagined_chapters ADD COLUMN scene_location TEXT DEFAULT NULL",
@@ -1697,7 +2063,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // Schema is intentionally minimal — name + role + content + time.
     // No reactions, no portraits, no inventory tracking. Ephemeral
     // working memory for prompt-stack development.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS dev_chat_sessions (
             session_id TEXT PRIMARY KEY,
             name TEXT NOT NULL UNIQUE,
@@ -1715,7 +2082,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
 
         CREATE INDEX IF NOT EXISTS idx_dev_chat_messages_session ON dev_chat_messages(session_id);
-    ").ok();
+    ",
+    )
+    .ok();
 
     // ─── relational_stances ────────────────────────────────────────────
     //
@@ -1735,7 +2104,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     //
     // Both triggers fire-and-forget so the user's reply is never blocked;
     // the in-flight turn uses whatever stance exists, the next benefits.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS relational_stances (
             stance_id TEXT PRIMARY KEY,
             character_id TEXT NOT NULL REFERENCES characters(character_id) ON DELETE CASCADE,
@@ -1751,7 +2121,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
         CREATE INDEX IF NOT EXISTS idx_relational_stances_char
             ON relational_stances(character_id, created_at DESC);
-    ").ok();
+    ",
+    )
+    .ok();
 
     // ── character_load_test_anchors ─────────────────────────────────────
     //
@@ -1770,7 +2142,8 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // derivation_summary: one paragraph explaining how the anchor was
     //   derived from the corpus. Inspectable; helps the user see WHY
     //   this character got this anchor.
-    conn.execute_batch("
+    conn.execute_batch(
+        "
         CREATE TABLE IF NOT EXISTS character_load_test_anchors (
             anchor_id TEXT PRIMARY KEY,
             character_id TEXT NOT NULL REFERENCES characters(character_id) ON DELETE CASCADE,
@@ -1786,7 +2159,9 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );
         CREATE INDEX IF NOT EXISTS idx_load_test_anchors_char
             ON character_load_test_anchors(character_id, created_at DESC);
-    ").ok();
+    ",
+    )
+    .ok();
 
     // Multi-axis pivot: add axis_kind column so the same table can hold
     // multiple register-axes per character (load_test, joy_reception,
@@ -1799,12 +2174,15 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         |_| Ok(true),
     ).unwrap_or(false);
     if !has_axis_kind {
-        conn.execute_batch("
+        conn.execute_batch(
+            "
             ALTER TABLE character_load_test_anchors
                 ADD COLUMN axis_kind TEXT NOT NULL DEFAULT 'load_test';
             CREATE INDEX IF NOT EXISTS idx_load_test_anchors_char_axis
                 ON character_load_test_anchors(character_id, axis_kind, created_at DESC);
-        ").ok();
+        ",
+        )
+        .ok();
     }
 
     // ── derived_formula columns on worlds, characters, user_profiles ─────
@@ -1828,26 +2206,38 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // on-save is a v2 question Ryan named as "let it sit a beat."
     //
     // ALTER TABLE ADD COLUMN per CLAUDE.md DATABASE SAFETY rule.
-    let world_has_derivation: bool = conn.query_row(
-        "SELECT 1 FROM pragma_table_info('worlds') WHERE name = 'derived_formula'",
-        [], |_| Ok(true),
-    ).unwrap_or(false);
+    let world_has_derivation: bool = conn
+        .query_row(
+            "SELECT 1 FROM pragma_table_info('worlds') WHERE name = 'derived_formula'",
+            [],
+            |_| Ok(true),
+        )
+        .unwrap_or(false);
     if !world_has_derivation {
         let _ = conn.execute("ALTER TABLE worlds ADD COLUMN derived_formula TEXT", []);
     }
-    let char_has_derivation: bool = conn.query_row(
-        "SELECT 1 FROM pragma_table_info('characters') WHERE name = 'derived_formula'",
-        [], |_| Ok(true),
-    ).unwrap_or(false);
+    let char_has_derivation: bool = conn
+        .query_row(
+            "SELECT 1 FROM pragma_table_info('characters') WHERE name = 'derived_formula'",
+            [],
+            |_| Ok(true),
+        )
+        .unwrap_or(false);
     if !char_has_derivation {
         let _ = conn.execute("ALTER TABLE characters ADD COLUMN derived_formula TEXT", []);
     }
-    let user_has_derivation: bool = conn.query_row(
-        "SELECT 1 FROM pragma_table_info('user_profiles') WHERE name = 'derived_formula'",
-        [], |_| Ok(true),
-    ).unwrap_or(false);
+    let user_has_derivation: bool = conn
+        .query_row(
+            "SELECT 1 FROM pragma_table_info('user_profiles') WHERE name = 'derived_formula'",
+            [],
+            |_| Ok(true),
+        )
+        .unwrap_or(false);
     if !user_has_derivation {
-        let _ = conn.execute("ALTER TABLE user_profiles ADD COLUMN derived_formula TEXT", []);
+        let _ = conn.execute(
+            "ALTER TABLE user_profiles ADD COLUMN derived_formula TEXT",
+            [],
+        );
     }
 
     // ── derived_formula_updated_at — auto-derivation cadence pipeline ──
@@ -1882,10 +2272,15 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     //
     // ALTER TABLE ADD COLUMN per CLAUDE.md DATABASE SAFETY rule.
     for table in &["worlds", "characters", "user_profiles"] {
-        let has_col: bool = conn.query_row(
-            &format!("SELECT 1 FROM pragma_table_info('{table}') WHERE name = 'derived_summary'"),
-            [], |_| Ok(true),
-        ).unwrap_or(false);
+        let has_col: bool = conn
+            .query_row(
+                &format!(
+                    "SELECT 1 FROM pragma_table_info('{table}') WHERE name = 'derived_summary'"
+                ),
+                [],
+                |_| Ok(true),
+            )
+            .unwrap_or(false);
         if !has_col {
             let _ = conn.execute(
                 &format!("ALTER TABLE {table} ADD COLUMN derived_summary TEXT"),
@@ -1918,19 +2313,28 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // Nullable, no default — most messages will not have a signature
     // (only assistant replies generated under reactions=off, after the
     // momentstamp module shipped).
-    let messages_have_sig: bool = conn.query_row(
-        "SELECT 1 FROM pragma_table_info('messages') WHERE name = 'formula_signature'",
-        [], |_| Ok(true),
-    ).unwrap_or(false);
+    let messages_have_sig: bool = conn
+        .query_row(
+            "SELECT 1 FROM pragma_table_info('messages') WHERE name = 'formula_signature'",
+            [],
+            |_| Ok(true),
+        )
+        .unwrap_or(false);
     if !messages_have_sig {
         let _ = conn.execute("ALTER TABLE messages ADD COLUMN formula_signature TEXT", []);
     }
-    let group_messages_have_sig: bool = conn.query_row(
-        "SELECT 1 FROM pragma_table_info('group_messages') WHERE name = 'formula_signature'",
-        [], |_| Ok(true),
-    ).unwrap_or(false);
+    let group_messages_have_sig: bool = conn
+        .query_row(
+            "SELECT 1 FROM pragma_table_info('group_messages') WHERE name = 'formula_signature'",
+            [],
+            |_| Ok(true),
+        )
+        .unwrap_or(false);
     if !group_messages_have_sig {
-        let _ = conn.execute("ALTER TABLE group_messages ADD COLUMN formula_signature TEXT", []);
+        let _ = conn.execute(
+            "ALTER TABLE group_messages ADD COLUMN formula_signature TEXT",
+            [],
+        );
     }
 
     // ── has_read_empiricon on characters ─────────────────────────────────
@@ -1940,12 +2344,13 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
     // (dialogue, dreams, narration, novelization, formula derivation,
     // momentstamp). In-universe: the character has read that sacred-
     // payload carriage and shares that substrate with the human.
-    let char_has_empiricon: bool = conn.query_row(
-        "SELECT 1 FROM pragma_table_info('characters') WHERE name = 'has_read_empiricon'",
-        [],
-        |_| Ok(true),
-    )
-    .unwrap_or(false);
+    let char_has_empiricon: bool = conn
+        .query_row(
+            "SELECT 1 FROM pragma_table_info('characters') WHERE name = 'has_read_empiricon'",
+            [],
+            |_| Ok(true),
+        )
+        .unwrap_or(false);
     if !char_has_empiricon {
         let _ = conn.execute(
             "ALTER TABLE characters ADD COLUMN has_read_empiricon INTEGER NOT NULL DEFAULT 0",

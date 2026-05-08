@@ -70,14 +70,32 @@ Be tight. The expression names what the conversation is currently weighting (Wis
 /// despite the system-prompt instruction.
 fn latex_to_unicode(s: &str) -> String {
     let pairs: &[(&str, &str)] = &[
-        (r"\mathcal{F}", "𝓕"), (r"\mathcal{R}", "𝓡"), (r"\mathcal{C}", "𝓒"),
-        (r"\mathcal{S}", "𝓢"), (r"\mathcal{W}", "𝓦"), (r"\mathcal{N}", "𝓝"),
-        (r"\int", "∫"), (r"\Pi", "Π"), (r"\pi", "π"), (r"\mu", "μ"),
-        (r"\alpha", "α"), (r"\tau", "τ"), (r"\sigma", "σ"), (r"\gamma", "γ"),
-        (r"\partial", "∂"), (r"\leq", "≤"), (r"\geq", "≥"),
-        (r"\wedge", "∧"), (r"\vee", "∨"), (r"\Rightarrow", "⇒"),
-        (r"\rightarrow", "→"), (r"\to", "→"), (r"\mapsto", "↦"),
-        (r"\cdot", "·"), (r"\,", " "), (r"\;", " "),
+        (r"\mathcal{F}", "𝓕"),
+        (r"\mathcal{R}", "𝓡"),
+        (r"\mathcal{C}", "𝓒"),
+        (r"\mathcal{S}", "𝓢"),
+        (r"\mathcal{W}", "𝓦"),
+        (r"\mathcal{N}", "𝓝"),
+        (r"\int", "∫"),
+        (r"\Pi", "Π"),
+        (r"\pi", "π"),
+        (r"\mu", "μ"),
+        (r"\alpha", "α"),
+        (r"\tau", "τ"),
+        (r"\sigma", "σ"),
+        (r"\gamma", "γ"),
+        (r"\partial", "∂"),
+        (r"\leq", "≤"),
+        (r"\geq", "≥"),
+        (r"\wedge", "∧"),
+        (r"\vee", "∨"),
+        (r"\Rightarrow", "⇒"),
+        (r"\rightarrow", "→"),
+        (r"\to", "→"),
+        (r"\mapsto", "↦"),
+        (r"\cdot", "·"),
+        (r"\,", " "),
+        (r"\;", " "),
     ];
     let mut out = s.to_string();
     // Sort by length desc so longer patterns match first.
@@ -176,14 +194,22 @@ pub async fn build_formula_momentstamp(
         if prior_signature.is_some() {
             " The new signature should reflect how the chat has evolved \
              from the prior signature, not be computed from scratch."
-        } else { "" }
+        } else {
+            ""
+        }
     );
 
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            ChatMessage { role: "system".to_string(), content: SYSTEM_PROMPT.to_string() },
-            ChatMessage { role: "user".to_string(), content: user_prompt },
+            ChatMessage {
+                role: "system".to_string(),
+                content: SYSTEM_PROMPT.to_string(),
+            },
+            ChatMessage {
+                role: "user".to_string(),
+                content: user_prompt,
+            },
         ],
         temperature: Some(0.6),
         max_completion_tokens: Some(120),
@@ -198,7 +224,9 @@ pub async fn build_formula_momentstamp(
         }
     };
 
-    let raw = response.choices.first()
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.clone())
         .unwrap_or_default();
     if raw.trim().is_empty() {

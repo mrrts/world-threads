@@ -72,8 +72,14 @@ pub fn get_latest_backup_cmd(db_path: State<'_, DbPath>) -> Result<Option<Backup
 
 #[tauri::command]
 pub fn list_backups_cmd(db_path: State<'_, DbPath>) -> Result<Vec<BackupInfo>, String> {
-    let backup_dir = db_path.0.parent().unwrap_or(std::path::Path::new(".")).join("backups");
-    if !backup_dir.exists() { return Ok(vec![]); }
+    let backup_dir = db_path
+        .0
+        .parent()
+        .unwrap_or(std::path::Path::new("."))
+        .join("backups");
+    if !backup_dir.exists() {
+        return Ok(vec![]);
+    }
 
     let db_name = db_path.0.file_name().unwrap_or_default().to_string_lossy();
     let prefix = format!("{}_", db_name);
@@ -90,19 +96,35 @@ pub fn list_backups_cmd(db_path: State<'_, DbPath>) -> Result<Vec<BackupInfo>, S
     backups.sort_by_key(|e| e.file_name());
     backups.reverse();
 
-    Ok(backups.into_iter().map(|entry| {
-        let file_name = entry.file_name().to_string_lossy().to_string();
-        let timestamp = file_name
-            .strip_prefix(&prefix)
-            .and_then(|s| s.strip_suffix(".bak"))
-            .map(|ts| {
-                if ts.len() == 15 {
-                    format!("{}-{}-{} {}:{}:{}", &ts[0..4], &ts[4..6], &ts[6..8], &ts[9..11], &ts[11..13], &ts[13..15])
-                } else { ts.to_string() }
-            })
-            .unwrap_or_default();
-        BackupInfo { file_name, timestamp }
-    }).collect())
+    Ok(backups
+        .into_iter()
+        .map(|entry| {
+            let file_name = entry.file_name().to_string_lossy().to_string();
+            let timestamp = file_name
+                .strip_prefix(&prefix)
+                .and_then(|s| s.strip_suffix(".bak"))
+                .map(|ts| {
+                    if ts.len() == 15 {
+                        format!(
+                            "{}-{}-{} {}:{}:{}",
+                            &ts[0..4],
+                            &ts[4..6],
+                            &ts[6..8],
+                            &ts[9..11],
+                            &ts[11..13],
+                            &ts[13..15]
+                        )
+                    } else {
+                        ts.to_string()
+                    }
+                })
+                .unwrap_or_default();
+            BackupInfo {
+                file_name,
+                timestamp,
+            }
+        })
+        .collect())
 }
 
 #[tauri::command]
@@ -129,7 +151,8 @@ pub fn restore_backup_cmd(
     }
 
     // Copy the backup over the current database
-    std::fs::copy(&backup_path, &db_path.0).map_err(|e| format!("Failed to restore backup: {e}"))?;
+    std::fs::copy(&backup_path, &db_path.0)
+        .map_err(|e| format!("Failed to restore backup: {e}"))?;
 
     // Also restore WAL file if a backup exists, otherwise remove the current WAL
     let backup_wal = backup_path.with_extension("bak-wal");

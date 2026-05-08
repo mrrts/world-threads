@@ -101,17 +101,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     });
 
     let backend = if args.anthropic {
-        let api_key = resolve_anthropic_api_key(args.api_key.as_deref()).ok_or(
-            "No Anthropic API key resolved (flag / ANTHROPIC_API_KEY / keychain)",
-        )?;
+        let api_key = resolve_anthropic_api_key(args.api_key.as_deref())
+            .ok_or("No Anthropic API key resolved (flag / ANTHROPIC_API_KEY / keychain)")?;
         WitnessChatBackend::Anthropic {
             base_url: base_url.clone(),
             api_key,
         }
     } else {
-        let api_key = resolve_openai_api_key(args.api_key.as_deref()).ok_or(
-            "No OpenAI API key resolved (flag / OPENAI_API_KEY / keychain)",
-        )?;
+        let api_key = resolve_openai_api_key(args.api_key.as_deref())
+            .ok_or("No OpenAI API key resolved (flag / OPENAI_API_KEY / keychain)")?;
         WitnessChatBackend::OpenAiCompat {
             base_url: base_url.clone(),
             api_key,

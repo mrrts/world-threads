@@ -12,7 +12,10 @@ pub struct MeanwhileEvent {
     pub created_at: String,
 }
 
-pub fn create_meanwhile_event(conn: &Connection, e: &MeanwhileEvent) -> Result<(), rusqlite::Error> {
+pub fn create_meanwhile_event(
+    conn: &Connection,
+    e: &MeanwhileEvent,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "INSERT INTO meanwhile_events (event_id, world_id, character_id, world_day, time_of_day, summary, created_at)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
@@ -62,7 +65,8 @@ pub fn latest_meanwhile_for_character(
             summary: r.get(5)?,
             created_at: r.get(6)?,
         })
-    }).ok()
+    })
+    .ok()
 }
 
 pub fn list_meanwhile_events(
@@ -79,17 +83,19 @@ pub fn list_meanwhile_events(
          LEFT JOIN characters c ON c.character_id = m.character_id
          WHERE m.world_id = ?1
          ORDER BY m.created_at DESC
-         LIMIT ?2"
+         LIMIT ?2",
     )?;
-    let rows = stmt.query_map(params![world_id, limit as i64], |r| Ok(MeanwhileEventWithName {
-        event_id: r.get(0)?,
-        character_id: r.get(1)?,
-        character_name: r.get(2)?,
-        avatar_color: r.get(3)?,
-        world_day: r.get(4)?,
-        time_of_day: r.get(5)?,
-        summary: r.get(6)?,
-        created_at: r.get(7)?,
-    }))?;
+    let rows = stmt.query_map(params![world_id, limit as i64], |r| {
+        Ok(MeanwhileEventWithName {
+            event_id: r.get(0)?,
+            character_id: r.get(1)?,
+            character_name: r.get(2)?,
+            avatar_color: r.get(3)?,
+            world_day: r.get(4)?,
+            time_of_day: r.get(5)?,
+            summary: r.get(6)?,
+            created_at: r.get(7)?,
+        })
+    })?;
     rows.collect()
 }

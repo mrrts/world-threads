@@ -4,11 +4,15 @@ use crate::db::Database;
 use tauri::State;
 
 fn current_world_day_and_time(world: &World) -> (i64, String) {
-    let day = world.state.get("time")
+    let day = world
+        .state
+        .get("time")
         .and_then(|t| t.get("day_index"))
         .and_then(|v| v.as_i64())
         .unwrap_or(0);
-    let time = world.state.get("time")
+    let time = world
+        .state
+        .get("time")
         .and_then(|t| t.get("time_of_day"))
         .and_then(|v| v.as_str())
         .unwrap_or("")
@@ -34,48 +38,101 @@ pub async fn generate_daily_reading_cmd(
         let world = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
         let (wd, _) = current_world_day_and_time(&world);
         let user_name = get_user_profile(&conn, &world_id)
-            .ok().map(|p| p.display_name).unwrap_or_else(|| "the human".to_string());
+            .ok()
+            .map(|p| p.display_name)
+            .unwrap_or_else(|| "the human".to_string());
         let characters = list_characters(&conn, &world_id).map_err(|e| e.to_string())?;
         let model_config = orchestrator::load_model_config(&conn);
         let messages = gather_world_messages_for_world_day(&conn, &world_id, &user_name, wd);
-        let yesterday = if wd > 0 { get_daily_reading_for_day(&conn, &world_id, wd - 1) } else { None };
-        (world, wd, user_name, characters, model_config, messages, yesterday)
+        let yesterday = if wd > 0 {
+            get_daily_reading_for_day(&conn, &world_id, wd - 1)
+        } else {
+            None
+        };
+        (
+            world,
+            wd,
+            user_name,
+            characters,
+            model_config,
+            messages,
+            yesterday,
+        )
     };
     let _ = user_name;
 
     // Character summaries — display_name + identity + a condensed
     // inventory line (first two item names of each kind).
-    let characters_summary = characters.iter().map(|c| {
-        let inv_names: Vec<String> = c.inventory.as_array()
-            .map(|a| a.iter().filter_map(|v| v.get("name").and_then(|n| n.as_str()).map(String::from)).take(4).collect())
-            .unwrap_or_default();
-        let inv_line = if inv_names.is_empty() { String::new() } else { format!(" (carrying: {})", inv_names.join(", ")) };
-        let id = if c.identity.is_empty() { String::new() } else { format!(" — {}", c.identity.chars().take(140).collect::<String>()) };
-        format!("  - {}{}{}", c.display_name, id, inv_line)
-    }).collect::<Vec<_>>().join("\n");
+    let characters_summary = characters
+        .iter()
+        .map(|c| {
+            let inv_names: Vec<String> = c
+                .inventory
+                .as_array()
+                .map(|a| {
+                    a.iter()
+                        .filter_map(|v| v.get("name").and_then(|n| n.as_str()).map(String::from))
+                        .take(4)
+                        .collect()
+                })
+                .unwrap_or_default();
+            let inv_line = if inv_names.is_empty() {
+                String::new()
+            } else {
+                format!(" (carrying: {})", inv_names.join(", "))
+            };
+            let id = if c.identity.is_empty() {
+                String::new()
+            } else {
+                format!(" — {}", c.identity.chars().take(140).collect::<String>())
+            };
+            format!("  - {}{}{}", c.display_name, id, inv_line)
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
 
-    let day_messages_rendered = day_messages.iter()
+    let day_messages_rendered = day_messages
+        .iter()
         .map(|(speaker, content, _)| {
             let clipped: String = content.chars().take(280).collect();
             format!("{speaker}: {clipped}")
         })
-        .collect::<Vec<_>>().join("\n");
+        .collect::<Vec<_>>()
+        .join("\n");
 
     let base = model_config.chat_api_base();
     let (domains, complication, draft_usage, crit_usage) =
         orchestrator::generate_daily_reading_with_critique(
-            &base, &api_key, &model_config.memory_model,
-            &world, world_day, &characters_summary, &day_messages_rendered,
+            &base,
+            &api_key,
+            &model_config.memory_model,
+            &world,
+            world_day,
+            &characters_summary,
+            &day_messages_rendered,
             yesterday.as_ref(),
-        ).await?;
+        )
+        .await?;
 
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         if let Some(u) = &draft_usage {
-            let _ = record_token_usage(&conn, "daily_reading", &model_config.memory_model, u.prompt_tokens, u.completion_tokens);
+            let _ = record_token_usage(
+                &conn,
+                "daily_reading",
+                &model_config.memory_model,
+                u.prompt_tokens,
+                u.completion_tokens,
+            );
         }
         if let Some(u) = &crit_usage {
-            let _ = record_token_usage(&conn, "daily_reading", &model_config.memory_model, u.prompt_tokens, u.completion_tokens);
+            let _ = record_token_usage(
+                &conn,
+                "daily_reading",
+                &model_config.memory_model,
+                u.prompt_tokens,
+                u.completion_tokens,
+            );
         }
     }
 
@@ -118,16 +175,28 @@ pub async fn maybe_generate_daily_reading_cmd(
         get_daily_reading_for_day(&conn, &world_id, wd)
     };
     if let Some(r) = existing {
-        return Ok(MaybeDailyReadingResult { reading: Some(r), refreshed: false });
+        return Ok(MaybeDailyReadingResult {
+            reading: Some(r),
+            refreshed: false,
+        });
     }
     if api_key.trim().is_empty() {
-        return Ok(MaybeDailyReadingResult { reading: None, refreshed: false });
+        return Ok(MaybeDailyReadingResult {
+            reading: None,
+            refreshed: false,
+        });
     }
     match generate_daily_reading_cmd(db, api_key, world_id).await {
-        Ok(r) => Ok(MaybeDailyReadingResult { reading: Some(r), refreshed: true }),
+        Ok(r) => Ok(MaybeDailyReadingResult {
+            reading: Some(r),
+            refreshed: true,
+        }),
         Err(e) => {
             log::warn!("[DailyReading] auto-generation failed (non-fatal): {e}");
-            Ok(MaybeDailyReadingResult { reading: None, refreshed: false })
+            Ok(MaybeDailyReadingResult {
+                reading: None,
+                refreshed: false,
+            })
         }
     }
 }
@@ -139,8 +208,7 @@ pub fn list_daily_readings_cmd(
     limit: Option<usize>,
 ) -> Result<Vec<DailyReading>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    list_daily_readings(&conn, &world_id, limit.unwrap_or(30))
-        .map_err(|e| e.to_string())
+    list_daily_readings(&conn, &world_id, limit.unwrap_or(30)).map_err(|e| e.to_string())
 }
 
 /// Fetch the most-recent reading (for today if present, else yesterday's).
@@ -151,5 +219,8 @@ pub fn get_latest_daily_reading_cmd(
     world_id: String,
 ) -> Result<Option<DailyReading>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    Ok(list_daily_readings(&conn, &world_id, 1).unwrap_or_default().into_iter().next())
+    Ok(list_daily_readings(&conn, &world_id, 1)
+        .unwrap_or_default()
+        .into_iter()
+        .next())
 }

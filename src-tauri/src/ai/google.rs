@@ -128,7 +128,9 @@ pub async fn start_veo_generation(
             duration_seconds,
             aspect_ratio: aspect_ratio.map(|s| s.to_string()),
             person_generation: None,
-            negative_prompt: if is_lite { None } else {
+            negative_prompt: if is_lite {
+                None
+            } else {
                 Some("text, words, letters, watermark, UI, blurry, distorted faces, cartoon, anime, painterly, flat colors, cel shading".to_string())
             },
             generate_audio,
@@ -144,20 +146,18 @@ pub async fn start_veo_generation(
     ));
 
     let client = Client::new();
-    let resp = client
-        .post(&url)
-        .json(&request)
-        .send()
-        .await
-        .map_err(|e| {
-            log_debug(&format!("VEO NETWORK ERROR: {e}"));
-            format!("Network error: {e}")
-        })?;
+    let resp = client.post(&url).json(&request).send().await.map_err(|e| {
+        log_debug(&format!("VEO NETWORK ERROR: {e}"));
+        format!("Network error: {e}")
+    })?;
 
     let status = resp.status();
     let body = resp.text().await.map_err(|e| format!("Read error: {e}"))?;
 
-    log_debug(&format!("VEO START RESPONSE status={status} body_len={}", body.len()));
+    log_debug(&format!(
+        "VEO START RESPONSE status={status} body_len={}",
+        body.len()
+    ));
 
     if !status.is_success() {
         log_debug(&format!("VEO START ERROR: {body}"));
@@ -166,18 +166,28 @@ pub async fn start_veo_generation(
         }
         // Try to extract a readable error message
         if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&body) {
-            if let Some(msg) = parsed.get("error").and_then(|e| e.get("message")).and_then(|m| m.as_str()) {
+            if let Some(msg) = parsed
+                .get("error")
+                .and_then(|e| e.get("message"))
+                .and_then(|m| m.as_str())
+            {
                 return Err(format!("Veo error: {msg}"));
             }
         }
-        return Err(format!("Veo API error ({}): {}", status, &body[..body.len().min(500)]));
+        return Err(format!(
+            "Veo API error ({}): {}",
+            status,
+            &body[..body.len().min(500)]
+        ));
     }
 
-    let op: VeoOperationResponse =
-        serde_json::from_str(&body).map_err(|e| {
-            log_debug(&format!("VEO PARSE ERROR: {e}\nBody: {}", &body[..body.len().min(500)]));
-            format!("Failed to parse Veo response: {e}")
-        })?;
+    let op: VeoOperationResponse = serde_json::from_str(&body).map_err(|e| {
+        log_debug(&format!(
+            "VEO PARSE ERROR: {e}\nBody: {}",
+            &body[..body.len().min(500)]
+        ));
+        format!("Failed to parse Veo response: {e}")
+    })?;
 
     // If the operation completed immediately
     if op.done.unwrap_or(false) {
@@ -216,11 +226,21 @@ pub async fn poll_veo_until_done(api_key: &str, operation_name: &str) -> Result<
         })?;
 
         let status = resp.status();
-        let body = resp.text().await.map_err(|e| format!("Poll read error: {e}"))?;
+        let body = resp
+            .text()
+            .await
+            .map_err(|e| format!("Poll read error: {e}"))?;
 
         if !status.is_success() {
-            log_debug(&format!("VEO POLL ERROR status={status}: {}", &body[..body.len().min(500)]));
-            return Err(format!("Veo poll error ({}): {}", status, &body[..body.len().min(500)]));
+            log_debug(&format!(
+                "VEO POLL ERROR status={status}: {}",
+                &body[..body.len().min(500)]
+            ));
+            return Err(format!(
+                "Veo poll error ({}): {}",
+                status,
+                &body[..body.len().min(500)]
+            ));
         }
 
         let op: VeoOperationResponse = serde_json::from_str(&body).map_err(|e| {
@@ -238,7 +258,10 @@ pub async fn poll_veo_until_done(api_key: &str, operation_name: &str) -> Result<
         }
 
         if op.done.unwrap_or(false) {
-            log_debug(&format!("VEO DONE RESPONSE BODY: {}", &body[..body.len().min(2000)]));
+            log_debug(&format!(
+                "VEO DONE RESPONSE BODY: {}",
+                &body[..body.len().min(2000)]
+            ));
             let video_uri = op
                 .response
                 .and_then(|r| r.generate_video_response)
@@ -246,7 +269,12 @@ pub async fn poll_veo_until_done(api_key: &str, operation_name: &str) -> Result<
                 .and_then(|mut s| s.pop())
                 .and_then(|s| s.video)
                 .and_then(|v| v.uri)
-                .ok_or_else(|| format!("Veo completed but no video URI found. Response: {}", &body[..body.len().min(500)]))?;
+                .ok_or_else(|| {
+                    format!(
+                        "Veo completed but no video URI found. Response: {}",
+                        &body[..body.len().min(500)]
+                    )
+                })?;
 
             log_debug(&format!("VEO DONE uri_len={}", video_uri.len()));
             return Ok(video_uri);
@@ -279,11 +307,21 @@ pub async fn download_video(url: &str, api_key: &str) -> Result<Vec<u8>, String>
     let status = resp.status();
     if !status.is_success() {
         let body = resp.text().await.unwrap_or_default();
-        log_debug(&format!("VEO DOWNLOAD FAIL status={status}: {}", &body[..body.len().min(500)]));
-        return Err(format!("Download failed ({}): {}", status, &body[..body.len().min(200)]));
+        log_debug(&format!(
+            "VEO DOWNLOAD FAIL status={status}: {}",
+            &body[..body.len().min(500)]
+        ));
+        return Err(format!(
+            "Download failed ({}): {}",
+            status,
+            &body[..body.len().min(200)]
+        ));
     }
 
-    let bytes = resp.bytes().await.map_err(|e| format!("Download read error: {e}"))?;
+    let bytes = resp
+        .bytes()
+        .await
+        .map_err(|e| format!("Download read error: {e}"))?;
     log_debug(&format!("VEO DOWNLOAD OK {} bytes", bytes.len()));
     Ok(bytes.to_vec())
 }

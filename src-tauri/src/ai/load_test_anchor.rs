@@ -23,8 +23,8 @@
 
 use crate::ai::openai::{self, ChatMessage, ChatRequest};
 use crate::db::queries::*;
-use std::sync::{Arc, Mutex};
 use rusqlite::Connection;
+use std::sync::{Arc, Mutex};
 use uuid::Uuid;
 
 /// Definition of one register-axis the synthesizer should produce.
@@ -75,10 +75,18 @@ pub const REGISTER_AXES: &[AxisDef] = &[
 fn synthesis_system_prompt(character_name: &str, has_prior_axes: bool) -> String {
     let prior_context = if has_prior_axes {
         "\n\nThe character has PRIOR axes on file. They are included in the user message below as CONTEXT, along with the character's structured identity description.\n\nFor each axis, the right outcome is one of these three (in order of frequency):\n  1. KEEP UNCHANGED. If the prior anchor still matches what you observe in the recent corpus AND the character description, return the same anchor_label and the same anchor_body verbatim. This is a valid and often the correct result. Don't churn an anchor that's still right.\n  2. REFINE THE BODY. If the prior label still names the right dimension but a specific quote, image, or nuance from the recent corpus or character description would sharpen the body's writing, keep the label and tweak the body. Look actively for these refinement opportunities — they're how the anchor stays alive to the character's evolution.\n  3. UPDATE THE LABEL TOO. Only if the corpus has clearly shifted (character has grown, the anchor has sharpened in a new direction, a different dimension has come into focus) AND the shift is unambiguous. Continuity matters; don't churn the labels on small sample variation.\n\nYour job: actively look for nuance to extract from the corpus + character description, not reflexively conserve. But also not reflexively change for the sake of having something to say. Truth-tracking the character is what the anchor is for."
-    } else { "" };
+    } else {
+        ""
+    };
 
-    let axes_descriptions = REGISTER_AXES.iter()
-        .map(|a| format!("  - **{}** (axis_kind = `{}`): {}", a.display_name, a.kind, a.axis_description))
+    let axes_descriptions = REGISTER_AXES
+        .iter()
+        .map(|a| {
+            format!(
+                "  - **{}** (axis_kind = `{}`): {}",
+                a.display_name, a.kind, a.axis_description
+            )
+        })
         .collect::<Vec<_>>()
         .join("\n\n");
 
@@ -179,11 +187,7 @@ fn synthesis_user_prompt(
 /// character's register across all the surfaces they actually speak
 /// on; group-heavy characters (Aaron, Steven) have little or no solo
 /// corpus.
-fn collect_recent_excerpts(
-    conn: &Connection,
-    character_id: &str,
-    limit: i64,
-) -> Vec<String> {
+fn collect_recent_excerpts(conn: &Connection, character_id: &str, limit: i64) -> Vec<String> {
     // UNION ALL across solo and group surfaces, chronological, role-
     // filtered at SQL. For solo messages, the reply IS the character;
     // for group messages, only include rows where this character is
@@ -263,16 +267,19 @@ pub async fn refresh_load_test_anchor(
         let character = get_character(&conn, &character_id)
             .map_err(|e| format!("character not found: {}", e))?;
         let recent_excerpts = collect_recent_excerpts(&conn, &character_id, 30);
-        let prior_axes = latest_axes_for_character(&conn, &character_id)
-            .map_err(|e| e.to_string())?;
-        let world_day_now: Option<i64> = conn.query_row(
-            "SELECT m.world_day FROM messages m
+        let prior_axes =
+            latest_axes_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
+        let world_day_now: Option<i64> = conn
+            .query_row(
+                "SELECT m.world_day FROM messages m
              JOIN threads t ON t.thread_id = m.thread_id
              WHERE t.character_id = ?1 AND m.world_day IS NOT NULL
              ORDER BY m.created_at DESC LIMIT 1",
-            rusqlite::params![character_id],
-            |r| r.get::<_, Option<i64>>(0),
-        ).ok().flatten();
+                rusqlite::params![character_id],
+                |r| r.get::<_, Option<i64>>(0),
+            )
+            .ok()
+            .flatten();
         (character, recent_excerpts, prior_axes, world_day_now)
     };
 
@@ -295,8 +302,14 @@ pub async fn refresh_load_test_anchor(
     let request = ChatRequest {
         model: model.clone(),
         messages: vec![
-            ChatMessage { role: "system".to_string(), content: system },
-            ChatMessage { role: "user".to_string(), content: user_msg },
+            ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            ChatMessage {
+                role: "user".to_string(),
+                content: user_msg,
+            },
         ],
         temperature: Some(0.4),
         // Budget: ~400 tokens per axis × N axes + buffer.
@@ -305,20 +318,24 @@ pub async fn refresh_load_test_anchor(
             format_type: "json_object".to_string(),
         }),
     };
-    let resp = openai::chat_completion_with_base(&base_url, &api_key, &request).await
+    let resp = openai::chat_completion_with_base(&base_url, &api_key, &request)
+        .await
         .map_err(|e| format!("axis synthesis call failed: {}", e))?;
-    let raw = resp.choices.first()
+    let raw = resp
+        .choices
+        .first()
         .map(|c| c.message.content.clone())
         .ok_or_else(|| "axis synthesis returned no choices".to_string())?;
     let usage = resp.usage.unwrap_or(openai::Usage {
-        prompt_tokens: 0, completion_tokens: 0, total_tokens: 0,
+        prompt_tokens: 0,
+        completion_tokens: 0,
+        total_tokens: 0,
     });
 
     // Parse the multi-axis JSON: top-level object with one nested
     // object per axis_kind.
-    let parsed: std::collections::HashMap<String, SynthesizedAxis> =
-        serde_json::from_str(&raw)
-            .map_err(|e| format!("axis synthesis JSON parse error: {} (body: {})", e, raw))?;
+    let parsed: std::collections::HashMap<String, SynthesizedAxis> = serde_json::from_str(&raw)
+        .map_err(|e| format!("axis synthesis JSON parse error: {} (body: {})", e, raw))?;
 
     // ─── Persist all axes in one transaction ──────────────────────────
     let world_id = character.world_id.clone();
@@ -330,12 +347,18 @@ pub async fn refresh_load_test_anchor(
             let synth = match parsed.get(axis_def.kind) {
                 Some(s) => s,
                 None => {
-                    log::warn!("[axes] synthesis response missing axis_kind={}; skipping", axis_def.kind);
+                    log::warn!(
+                        "[axes] synthesis response missing axis_kind={}; skipping",
+                        axis_def.kind
+                    );
                     continue;
                 }
             };
             if synth.anchor_label.trim().is_empty() || synth.anchor_body.trim().is_empty() {
-                log::warn!("[axes] empty label/body for axis_kind={}; skipping", axis_def.kind);
+                log::warn!(
+                    "[axes] empty label/body for axis_kind={}; skipping",
+                    axis_def.kind
+                );
                 continue;
             }
             let row = LoadTestAnchor {
@@ -359,7 +382,11 @@ pub async fn refresh_load_test_anchor(
     if inserted == 0 {
         return Err("axis synthesis produced no usable axes".to_string());
     }
-    Ok((inserted, usage.prompt_tokens as i64, usage.completion_tokens as i64))
+    Ok((
+        inserted,
+        usage.prompt_tokens as i64,
+        usage.completion_tokens as i64,
+    ))
 }
 
 /// Fire-and-forget convenience wrapper for trigger sites. Intended for
@@ -378,8 +405,15 @@ pub fn spawn_anchor_refresh(
     tauri::async_runtime::spawn(async move {
         let cid_for_log = character_id.clone();
         match refresh_load_test_anchor(
-            conn_arc, base_url, api_key, model, character_id, refresh_trigger,
-        ).await {
+            conn_arc,
+            base_url,
+            api_key,
+            model,
+            character_id,
+            refresh_trigger,
+        )
+        .await
+        {
             Ok((n, _in, _out)) => log::info!("[axes] refreshed {} axes for {}", n, cid_for_log),
             Err(e) => log::warn!("[axes] refresh failed for {}: {}", cid_for_log, e),
         }

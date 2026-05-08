@@ -95,13 +95,17 @@ pub fn record_chat_settings_change_cmd(
     let world_id: Option<String> = if is_group {
         conn.query_row(
             "SELECT world_id FROM group_chats WHERE thread_id = ?1",
-            rusqlite::params![thread_id], |r| r.get(0),
-        ).ok()
+            rusqlite::params![thread_id],
+            |r| r.get(0),
+        )
+        .ok()
     } else {
         conn.query_row(
             "SELECT world_id FROM threads WHERE thread_id = ?1",
-            rusqlite::params![thread_id], |r| r.get(0),
-        ).ok()
+            rusqlite::params![thread_id],
+            |r| r.get(0),
+        )
+        .ok()
     };
     let (world_day, world_time) = match world_id.and_then(|wid| get_world(&conn, &wid).ok()) {
         Some(w) => chat_cmds::world_time_fields(&w),
@@ -237,7 +241,8 @@ pub fn get_budget_mode_cmd(db: State<Database>) -> Result<bool, String> {
 #[tauri::command]
 pub fn set_budget_mode_cmd(db: State<Database>, enabled: bool) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    set_setting(&conn, "budget_mode", if enabled { "true" } else { "false" }).map_err(|e| e.to_string())
+    set_setting(&conn, "budget_mode", if enabled { "true" } else { "false" })
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]

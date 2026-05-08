@@ -1,4 +1,7 @@
-use crate::ai::{openai::{self, StreamingRequest}, orchestrator};
+use crate::ai::{
+    openai::{self, StreamingRequest},
+    orchestrator,
+};
 use crate::db::queries::*;
 use crate::db::Database;
 use serde::Serialize;
@@ -16,10 +19,7 @@ pub fn get_memory_artifacts_cmd(
 }
 
 #[tauri::command]
-pub fn get_thread_summary_cmd(
-    db: State<Database>,
-    character_id: String,
-) -> Result<String, String> {
+pub fn get_thread_summary_cmd(db: State<Database>, character_id: String) -> Result<String, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
     Ok(get_thread_summary(&conn, &thread.thread_id))
@@ -68,7 +68,11 @@ pub async fn backfill_embeddings_cmd(
     };
     if model_config.is_local() {
         log::info!("[Backfill] Skipping — LM Studio mode has no embedding endpoint");
-        return Ok(BackfillSummary { embedded: 0, skipped: 0, errors: 0 });
+        return Ok(BackfillSummary {
+            embedded: 0,
+            skipped: 0,
+            errors: 0,
+        });
     }
 
     // ── Gather existing coverage so we can skip already-embedded rows.
@@ -76,9 +80,13 @@ pub async fn backfill_embeddings_cmd(
     // transform into HashSet/HashMap after the lock drops.
     let existing_vec: Vec<(String, String)> = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let mut stmt = conn.prepare("SELECT source_id, character_id FROM chunk_metadata WHERE source_type = 'message'")
+        let mut stmt = conn
+            .prepare(
+                "SELECT source_id, character_id FROM chunk_metadata WHERE source_type = 'message'",
+            )
             .map_err(|e| e.to_string())?;
-        let iter = stmt.query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)))
+        let iter = stmt
+            .query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)))
             .map_err(|e| e.to_string())?;
         iter.filter_map(|r| r.ok()).collect()
     };
@@ -87,29 +95,41 @@ pub async fn backfill_embeddings_cmd(
     // Per-world user name cache (for "{user}: {content}" formatting).
     let user_name_vec: Vec<(String, String)> = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let mut stmt = conn.prepare("SELECT world_id, display_name FROM user_profiles")
+        let mut stmt = conn
+            .prepare("SELECT world_id, display_name FROM user_profiles")
             .map_err(|e| e.to_string())?;
-        let iter = stmt.query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)))
+        let iter = stmt
+            .query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)))
             .map_err(|e| e.to_string())?;
         iter.filter_map(|r| r.ok()).collect()
     };
     let user_name_by_world: HashMap<String, String> = user_name_vec.into_iter().collect();
     let user_name_for = |world_id: &str| -> String {
-        user_name_by_world.get(world_id).cloned().unwrap_or_else(|| "the human".to_string())
+        user_name_by_world
+            .get(world_id)
+            .cloned()
+            .unwrap_or_else(|| "the human".to_string())
     };
 
     // Character display-names by id (for formatting speaker prefixes).
     let character_names_vec: Vec<(String, String)> = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let mut stmt = conn.prepare("SELECT character_id, display_name FROM characters")
+        let mut stmt = conn
+            .prepare("SELECT character_id, display_name FROM characters")
             .map_err(|e| e.to_string())?;
-        let iter = stmt.query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)))
+        let iter = stmt
+            .query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)))
             .map_err(|e| e.to_string())?;
         iter.filter_map(|r| r.ok()).collect()
     };
     let character_names: HashMap<String, String> = character_names_vec.into_iter().collect();
 
-    let format_content = |role: &str, content: &str, sender_id: Option<&str>, world_id: &str, thread_character_id: Option<&str>| -> String {
+    let format_content = |role: &str,
+                          content: &str,
+                          sender_id: Option<&str>,
+                          world_id: &str,
+                          thread_character_id: Option<&str>|
+     -> String {
         let speaker = match role {
             "user" => user_name_for(world_id),
             "assistant" => sender_id
@@ -141,21 +161,31 @@ pub async fn backfill_embeddings_cmd(
                AND m.role IN ('user', 'assistant', 'narrative', 'dream')
                AND m.content != ''"
         ).map_err(|e| e.to_string())?;
-        let rows = stmt.query_map([], |r| Ok((
-            r.get::<_, String>(0)?,
-            r.get::<_, String>(1)?,
-            r.get::<_, String>(2)?,
-            r.get::<_, Option<String>>(3)?,
-            r.get::<_, String>(4)?,
-            r.get::<_, String>(5)?,
-        ))).map_err(|e| e.to_string())?;
+        let rows = stmt
+            .query_map([], |r| {
+                Ok((
+                    r.get::<_, String>(0)?,
+                    r.get::<_, String>(1)?,
+                    r.get::<_, String>(2)?,
+                    r.get::<_, Option<String>>(3)?,
+                    r.get::<_, String>(4)?,
+                    r.get::<_, String>(5)?,
+                ))
+            })
+            .map_err(|e| e.to_string())?;
         for row in rows.filter_map(|r| r.ok()) {
             let (message_id, role, content, sender_id, character_id, world_id) = row;
             if existing.contains(&(message_id.clone(), character_id.clone())) {
                 skipped += 1;
                 continue;
             }
-            let formatted = format_content(&role, &content, sender_id.as_deref(), &world_id, Some(&character_id));
+            let formatted = format_content(
+                &role,
+                &content,
+                sender_id.as_deref(),
+                &world_id,
+                Some(&character_id),
+            );
             work.push(BackfillItem {
                 chunk_id: message_id.clone(),
                 source_id: message_id,
@@ -176,18 +206,24 @@ pub async fn backfill_embeddings_cmd(
              WHERE gm.role IN ('user', 'assistant', 'narrative', 'dream')
                AND gm.content != ''"
         ).map_err(|e| e.to_string())?;
-        let rows = stmt.query_map([], |r| Ok((
-            r.get::<_, String>(0)?,
-            r.get::<_, String>(1)?,
-            r.get::<_, String>(2)?,
-            r.get::<_, Option<String>>(3)?,
-            r.get::<_, String>(4)?,
-            r.get::<_, String>(5)?,
-        ))).map_err(|e| e.to_string())?;
+        let rows = stmt
+            .query_map([], |r| {
+                Ok((
+                    r.get::<_, String>(0)?,
+                    r.get::<_, String>(1)?,
+                    r.get::<_, String>(2)?,
+                    r.get::<_, Option<String>>(3)?,
+                    r.get::<_, String>(4)?,
+                    r.get::<_, String>(5)?,
+                ))
+            })
+            .map_err(|e| e.to_string())?;
         for row in rows.filter_map(|r| r.ok()) {
             let (message_id, role, content, sender_id, ids_json, world_id) = row;
             let members: Vec<String> = serde_json::from_str(&ids_json).unwrap_or_default();
-            if members.is_empty() { continue; }
+            if members.is_empty() {
+                continue;
+            }
             let formatted = format_content(&role, &content, sender_id.as_deref(), &world_id, None);
             for member_id in &members {
                 if existing.contains(&(message_id.clone(), member_id.clone())) {
@@ -207,19 +243,32 @@ pub async fn backfill_embeddings_cmd(
 
     if work.is_empty() {
         log::info!("[Backfill] Nothing to do — {skipped} already covered");
-        return Ok(BackfillSummary { embedded: 0, skipped, errors: 0 });
+        return Ok(BackfillSummary {
+            embedded: 0,
+            skipped,
+            errors: 0,
+        });
     }
 
-    log::info!("[Backfill] {} items to embed ({skipped} already covered)", work.len());
+    log::info!(
+        "[Backfill] {} items to embed ({skipped} already covered)",
+        work.len()
+    );
 
     // ── Dedupe by content so identical text (e.g. the user's line across
     // all group members) only costs one embedding API call.
     let mut by_content: HashMap<String, Vec<BackfillItem>> = HashMap::new();
     for item in work {
-        by_content.entry(item.formatted_content.clone()).or_default().push(item);
+        by_content
+            .entry(item.formatted_content.clone())
+            .or_default()
+            .push(item);
     }
     let unique_contents: Vec<String> = by_content.keys().cloned().collect();
-    log::info!("[Backfill] {} unique texts after dedupe", unique_contents.len());
+    log::info!(
+        "[Backfill] {} unique texts after dedupe",
+        unique_contents.len()
+    );
 
     // ── Batch-embed + store.
     let mut embedded: usize = 0;
@@ -233,15 +282,27 @@ pub async fn backfill_embeddings_cmd(
             &api_key,
             &model_config.embedding_model,
             contents.clone(),
-        ).await {
+        )
+        .await
+        {
             Ok((embeddings, tokens)) => {
                 if embeddings.len() != contents.len() {
-                    log::warn!("[Backfill] Embedding count mismatch: got {}, expected {}", embeddings.len(), contents.len());
+                    log::warn!(
+                        "[Backfill] Embedding count mismatch: got {}, expected {}",
+                        embeddings.len(),
+                        contents.len()
+                    );
                 }
                 // Record token usage once per batch.
                 {
                     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                    let _ = record_token_usage(&conn, "embedding", &model_config.embedding_model, tokens, 0);
+                    let _ = record_token_usage(
+                        &conn,
+                        "embedding",
+                        &model_config.embedding_model,
+                        tokens,
+                        0,
+                    );
                 }
                 let conn = db.conn.lock().map_err(|e| e.to_string())?;
                 for (content, embedding) in contents.iter().zip(embeddings.iter()) {
@@ -259,7 +320,10 @@ pub async fn backfill_embeddings_cmd(
                         ) {
                             Ok(_) => embedded += 1,
                             Err(e) => {
-                                log::warn!("[Backfill] Failed to store chunk {}: {e}", item.chunk_id);
+                                log::warn!(
+                                    "[Backfill] Failed to store chunk {}: {e}",
+                                    item.chunk_id
+                                );
                                 errors += 1;
                             }
                         }
@@ -278,7 +342,11 @@ pub async fn backfill_embeddings_cmd(
     }
 
     log::warn!("[Backfill] Done — embedded={embedded} skipped={skipped} errors={errors}");
-    Ok(BackfillSummary { embedded, skipped, errors })
+    Ok(BackfillSummary {
+        embedded,
+        skipped,
+        errors,
+    })
 }
 
 /// Map a summary mode (short / medium / auto) to a length directive that
@@ -320,7 +388,9 @@ pub async fn generate_chat_summary_cmd(
         let model_config = orchestrator::load_model_config(&conn);
         let recent_msgs = list_messages(&conn, &thread.thread_id, 50).map_err(|e| e.to_string())?;
         let user_name = get_user_profile(&conn, &character.world_id)
-            .ok().map(|p| p.display_name).unwrap_or_else(|| "the protagonist".to_string());
+            .ok()
+            .map(|p| p.display_name)
+            .unwrap_or_else(|| "the protagonist".to_string());
         (character, recent_msgs, model_config, user_name)
     };
 
@@ -328,7 +398,8 @@ pub async fn generate_chat_summary_cmd(
         return Ok("No conversation yet.".to_string());
     }
 
-    let conversation: Vec<String> = recent_msgs.iter()
+    let conversation: Vec<String> = recent_msgs
+        .iter()
         .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update")
         .map(|m| format!("[{}] {}", m.role, m.content))
         .collect();
@@ -362,8 +433,13 @@ pub async fn generate_chat_summary_cmd(
     };
 
     openai::chat_completion_stream(
-        &model_config.chat_api_base(), &api_key, &request, &app_handle, "summary-token",
-    ).await
+        &model_config.chat_api_base(),
+        &api_key,
+        &request,
+        &app_handle,
+        "summary-token",
+    )
+    .await
 }
 
 /// Generate a fresh on-demand summary for a group chat thread.
@@ -379,14 +455,24 @@ pub async fn generate_group_chat_summary_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
         let model_config = orchestrator::load_model_config(&conn);
-        let recent_msgs = list_group_messages(&conn, &gc.thread_id, 50).map_err(|e| e.to_string())?;
+        let recent_msgs =
+            list_group_messages(&conn, &gc.thread_id, 50).map_err(|e| e.to_string())?;
         let user_name = get_user_profile(&conn, &gc.world_id)
-            .ok().map(|p| p.display_name).unwrap_or_else(|| "the protagonist".to_string());
+            .ok()
+            .map(|p| p.display_name)
+            .unwrap_or_else(|| "the protagonist".to_string());
 
-        let char_ids: Vec<String> = gc.character_ids.as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+        let char_ids: Vec<String> = gc
+            .character_ids
+            .as_array()
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect()
+            })
             .unwrap_or_default();
-        let characters: Vec<Character> = char_ids.iter()
+        let characters: Vec<Character> = char_ids
+            .iter()
             .filter_map(|id| get_character(&conn, id).ok())
             .collect();
 
@@ -399,14 +485,21 @@ pub async fn generate_group_chat_summary_cmd(
 
     let char_names: Vec<String> = characters.iter().map(|c| c.display_name.clone()).collect();
 
-    let conversation: Vec<String> = recent_msgs.iter()
+    let conversation: Vec<String> = recent_msgs
+        .iter()
         .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update")
         .map(|m| {
-            let speaker = if m.role == "user" { "User".to_string() }
-                else if let Some(sid) = &m.sender_character_id {
-                    characters.iter().find(|c| &c.character_id == sid)
-                        .map(|c| c.display_name.clone()).unwrap_or_else(|| m.role.clone())
-                } else { m.role.clone() };
+            let speaker = if m.role == "user" {
+                "User".to_string()
+            } else if let Some(sid) = &m.sender_character_id {
+                characters
+                    .iter()
+                    .find(|c| &c.character_id == sid)
+                    .map(|c| c.display_name.clone())
+                    .unwrap_or_else(|| m.role.clone())
+            } else {
+                m.role.clone()
+            };
             format!("[{}] {}", speaker, m.content)
         })
         .collect();
@@ -438,6 +531,11 @@ pub async fn generate_group_chat_summary_cmd(
     };
 
     openai::chat_completion_stream(
-        &model_config.chat_api_base(), &api_key, &request, &app_handle, "summary-token",
-    ).await
+        &model_config.chat_api_base(),
+        &api_key,
+        &request,
+        &app_handle,
+        "summary-token",
+    )
+    .await
 }

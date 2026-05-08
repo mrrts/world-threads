@@ -1,5 +1,5 @@
-pub mod schema;
 pub mod queries;
+pub mod schema;
 
 use rusqlite::ffi::sqlite3_auto_extension;
 use rusqlite::Connection;
@@ -32,7 +32,9 @@ impl Database {
         conn.pragma_update(None, "foreign_keys", "ON")?;
 
         schema::run_migrations(&conn)?;
-        Ok(Database { conn: Arc::new(Mutex::new(conn)) })
+        Ok(Database {
+            conn: Arc::new(Mutex::new(conn)),
+        })
     }
 
     /// Create a rolling backup of the database. Keeps the 5 most recent backups.

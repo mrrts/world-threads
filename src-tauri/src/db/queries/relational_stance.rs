@@ -28,10 +28,17 @@ pub fn insert_relational_stance(
             refresh_trigger, model_used, created_at
         ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
         params![
-            s.stance_id, s.character_id, s.world_id, s.stance_text,
-            s.world_day_at_generation, s.source_kept_record_count,
-            s.source_journal_count, s.source_message_count,
-            s.refresh_trigger, s.model_used, s.created_at,
+            s.stance_id,
+            s.character_id,
+            s.world_id,
+            s.stance_text,
+            s.world_day_at_generation,
+            s.source_kept_record_count,
+            s.source_journal_count,
+            s.source_message_count,
+            s.refresh_trigger,
+            s.model_used,
+            s.created_at,
         ],
     )?;
     Ok(())

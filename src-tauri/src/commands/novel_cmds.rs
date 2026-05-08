@@ -64,7 +64,9 @@ fn format_line(m: &Message, user_name: &str, character_names: &HashMap<String, S
         "user" => user_name.to_string(),
         "narrative" => "[Narrative]".to_string(),
         "context" => "[Context]".to_string(),
-        "assistant" => m.sender_character_id.as_ref()
+        "assistant" => m
+            .sender_character_id
+            .as_ref()
             .and_then(|id| character_names.get(id))
             .cloned()
             .unwrap_or_else(|| "Character".to_string()),
@@ -86,10 +88,17 @@ fn group_into_sections(
     let mut cur_lines: Vec<String> = Vec::new();
 
     for m in messages {
-        let formatted = m.world_time.as_deref().map(format_time_of_day).unwrap_or_default();
+        let formatted = m
+            .world_time
+            .as_deref()
+            .map(format_time_of_day)
+            .unwrap_or_default();
         if !formatted.is_empty() && !cur_label.is_empty() && formatted != cur_label {
             // Time rolled over — close off the current section.
-            sections.push(Section { label: std::mem::take(&mut cur_label), lines: std::mem::take(&mut cur_lines) });
+            sections.push(Section {
+                label: std::mem::take(&mut cur_label),
+                lines: std::mem::take(&mut cur_lines),
+            });
         }
         if cur_label.is_empty() && !formatted.is_empty() {
             cur_label = formatted;
@@ -97,7 +106,10 @@ fn group_into_sections(
         cur_lines.push(format_line(m, user_name, character_names));
     }
     if !cur_lines.is_empty() {
-        sections.push(Section { label: cur_label, lines: cur_lines });
+        sections.push(Section {
+            label: cur_label,
+            lines: cur_lines,
+        });
     }
     sections
 }
@@ -139,7 +151,9 @@ async fn extract_beats(
 ) -> Result<Vec<String>, String> {
     let budget = model_config.safe_local_prompt_budget() as usize;
     // Reserve space for system prompt + up to 1500 tokens of beat output.
-    let chunk_budget = budget.saturating_sub(approx_tokens(BEATS_SYSTEM) + 1_600).max(2_000);
+    let chunk_budget = budget
+        .saturating_sub(approx_tokens(BEATS_SYSTEM) + 1_600)
+        .max(2_000);
 
     let mut chunks: Vec<Vec<String>> = Vec::new();
     let mut current: Vec<String> = Vec::new();
@@ -176,7 +190,10 @@ async fn extract_beats(
         let streaming_req = StreamingRequest {
             model: model_config.dialogue_model.clone(),
             messages: vec![
-                openai::ChatMessage { role: "system".to_string(), content: BEATS_SYSTEM.to_string() },
+                openai::ChatMessage {
+                    role: "system".to_string(),
+                    content: BEATS_SYSTEM.to_string(),
+                },
                 user_msg,
             ],
             temperature: Some(0.5),
@@ -184,11 +201,16 @@ async fn extract_beats(
             stream: true,
         };
         let beats_text = openai::chat_completion_stream_silent(
-            &model_config.chat_api_base(), api_key, &streaming_req,
-        ).await?;
+            &model_config.chat_api_base(),
+            api_key,
+            &streaming_req,
+        )
+        .await?;
         for line in beats_text.lines() {
             let trimmed = line.trim();
-            if trimmed.is_empty() { continue; }
+            if trimmed.is_empty() {
+                continue;
+            }
             let cleaned = trimmed
                 .trim_start_matches("- ")
                 .trim_start_matches("* ")
@@ -199,12 +221,15 @@ async fn extract_beats(
             }
         }
         if !silent {
-            let _ = app_handle.emit("novel-phase", serde_json::json!({
-                "phase": "beats",
-                "section": label,
-                "chunks_total": chunks.len(),
-                "chunk_index": i + 1,
-            }));
+            let _ = app_handle.emit(
+                "novel-phase",
+                serde_json::json!({
+                    "phase": "beats",
+                    "section": label,
+                    "chunks_total": chunks.len(),
+                    "chunk_index": i + 1,
+                }),
+            );
         }
     }
     Ok(all_beats)
@@ -244,7 +269,12 @@ async fn stream_section(
     let section_name = if section.label.is_empty() {
         format!("Section {} of {}", section_index + 1, total_sections)
     } else {
-        format!("{} section ({} of {})", section.label, section_index + 1, total_sections)
+        format!(
+            "{} section ({} of {})",
+            section.label,
+            section_index + 1,
+            total_sections
+        )
     };
     let weight_line = format!(
         "- This section should run roughly {target_words} words — give or take. Use that as a guide to pacing and how much weight this part of the day deserves, not a strict limit."
@@ -270,14 +300,27 @@ async fn stream_section(
         )
     } else {
         if !silent {
-            let _ = app_handle.emit("novel-phase", serde_json::json!({
-                "phase": "beats",
-                "section": section.label,
-            }));
+            let _ = app_handle.emit(
+                "novel-phase",
+                serde_json::json!({
+                    "phase": "beats",
+                    "section": section.label,
+                }),
+            );
         }
-        let beats = extract_beats(app_handle, model_config, api_key, &section.lines, &section.label, world_day, silent).await?;
+        let beats = extract_beats(
+            app_handle,
+            model_config,
+            api_key,
+            &section.lines,
+            &section.label,
+            world_day,
+            silent,
+        )
+        .await?;
         let beat_count = beats.len();
-        let beats_joined = beats.iter()
+        let beats_joined = beats
+            .iter()
             .enumerate()
             .map(|(i, b)| format!("{}. {}", i + 1, b))
             .collect::<Vec<_>>()
@@ -304,30 +347,45 @@ async fn stream_section(
     };
 
     if !silent {
-        let _ = app_handle.emit("novel-phase", serde_json::json!({
-            "phase": "section",
-            "section": section.label,
-            "section_index": section_index,
-            "total_sections": total_sections,
-        }));
+        let _ = app_handle.emit(
+            "novel-phase",
+            serde_json::json!({
+                "phase": "section",
+                "section": section.label,
+                "section_index": section_index,
+                "total_sections": total_sections,
+            }),
+        );
     }
 
     let request = StreamingRequest {
         model: model_config.dialogue_model.clone(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: base_system.to_string() },
-            openai::ChatMessage { role: "user".to_string(), content: user_content },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: base_system.to_string(),
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user_content,
+            },
         ],
         temperature: Some(0.95),
         max_completion_tokens: Some(4_096),
         stream: true,
     };
     let raw = if silent {
-        openai::chat_completion_stream_silent(&model_config.chat_api_base(), api_key, &request).await?
+        openai::chat_completion_stream_silent(&model_config.chat_api_base(), api_key, &request)
+            .await?
     } else {
         openai::chat_completion_stream(
-            &model_config.chat_api_base(), api_key, &request, app_handle, "novel-token",
-        ).await?
+            &model_config.chat_api_base(),
+            api_key,
+            &request,
+            app_handle,
+            "novel-token",
+        )
+        .await?
     };
     // Same tail cleanup we use for chat replies — a section that runs out of
     // completion tokens mid-sentence or leaves a dangling quote/paren/asterisk
@@ -337,7 +395,11 @@ async fn stream_section(
     // clean. When the saved entry reloads after onNovelChange(), the view
     // updates to the cleaned version automatically.
     let trimmed = orchestrator::trim_to_last_complete_sentence(&raw);
-    let base = if trimmed.is_empty() { raw.as_str() } else { trimmed.as_str() };
+    let base = if trimmed.is_empty() {
+        raw.as_str()
+    } else {
+        trimmed.as_str()
+    };
     Ok(orchestrator::balance_trailing_openers(base))
 }
 
@@ -376,8 +438,14 @@ pub async fn generate_novel_entry_cmd(
             get_all_messages(&conn, &thread_id).map_err(|e| e.to_string())?
         };
 
-        let day_msgs: Vec<Message> = all_msgs.into_iter()
-            .filter(|m| m.world_day == Some(world_day) && m.role != "illustration" && m.role != "video" && m.role != "inventory_update")
+        let day_msgs: Vec<Message> = all_msgs
+            .into_iter()
+            .filter(|m| {
+                m.world_day == Some(world_day)
+                    && m.role != "illustration"
+                    && m.role != "video"
+                    && m.role != "inventory_update"
+            })
             .collect();
 
         if day_msgs.is_empty() {
@@ -385,23 +453,37 @@ pub async fn generate_novel_entry_cmd(
         }
 
         // Get world from thread
-        let world_id: String = conn.query_row(
-            "SELECT world_id FROM threads WHERE thread_id = ?1",
-            rusqlite::params![thread_id], |r| r.get(0),
-        ).map_err(|e| e.to_string())?;
+        let world_id: String = conn
+            .query_row(
+                "SELECT world_id FROM threads WHERE thread_id = ?1",
+                rusqlite::params![thread_id],
+                |r| r.get(0),
+            )
+            .map_err(|e| e.to_string())?;
         let world = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
 
         let user_name = get_user_profile(&conn, &world_id)
-            .ok().map(|p| p.display_name).unwrap_or_else(|| "the protagonist".to_string());
+            .ok()
+            .map(|p| p.display_name)
+            .unwrap_or_else(|| "the protagonist".to_string());
 
         let characters = list_characters(&conn, &world_id).unwrap_or_default();
-        let char_names: std::collections::HashMap<String, String> = characters.iter()
+        let char_names: std::collections::HashMap<String, String> = characters
+            .iter()
             .map(|c| (c.character_id.clone(), c.display_name.clone()))
             .collect();
 
         let user_profile = get_user_profile(&conn, &world_id).ok();
 
-        (day_msgs, world, characters, char_names, user_name, user_profile, model_config)
+        (
+            day_msgs,
+            world,
+            characters,
+            char_names,
+            user_name,
+            user_profile,
+            model_config,
+        )
     };
 
     // Group messages into sections by world_time (Morning, Afternoon,
@@ -419,33 +501,49 @@ pub async fn generate_novel_entry_cmd(
             conversation.push(format!("[It is now {}.]", s.label));
             last_label = s.label.clone();
         }
-        for line in &s.lines { conversation.push(line.clone()); }
+        for line in &s.lines {
+            conversation.push(line.clone());
+        }
     }
 
     // Build rich character descriptions
-    let char_descriptions: Vec<String> = characters.iter().map(|c| {
-        let mut desc = format!("- {}", c.display_name);
-        if !c.identity.is_empty() {
-            desc.push_str(&format!(": {}", c.identity));
-        }
-        let voice_rules = crate::ai::prompts::json_array_to_strings(&c.voice_rules);
-        if !voice_rules.is_empty() {
-            desc.push_str(&format!("\n  Voice: {}", voice_rules.join("; ")));
-        }
-        if let Some(block) = crate::ai::prompts::empiricon_reader_substrate(c) {
-            desc.push_str("\n\n");
-            desc.push_str(&block);
-        }
-        desc
-    }).collect();
+    let char_descriptions: Vec<String> = characters
+        .iter()
+        .map(|c| {
+            let mut desc = format!("- {}", c.display_name);
+            if !c.identity.is_empty() {
+                desc.push_str(&format!(": {}", c.identity));
+            }
+            let voice_rules = crate::ai::prompts::json_array_to_strings(&c.voice_rules);
+            if !voice_rules.is_empty() {
+                desc.push_str(&format!("\n  Voice: {}", voice_rules.join("; ")));
+            }
+            if let Some(block) = crate::ai::prompts::empiricon_reader_substrate(c) {
+                desc.push_str("\n\n");
+                desc.push_str(&block);
+            }
+            desc
+        })
+        .collect();
 
-    let user_desc = user_profile.as_ref().map(|p| {
-        let mut d = format!("- {} (the protagonist, written in second person — \"you\")", p.display_name);
-        if !p.description.is_empty() {
-            d.push_str(&format!(": {}", p.description));
-        }
-        d
-    }).unwrap_or_else(|| format!("- {} (the protagonist, written in second person — \"you\")", user_name));
+    let user_desc = user_profile
+        .as_ref()
+        .map(|p| {
+            let mut d = format!(
+                "- {} (the protagonist, written in second person — \"you\")",
+                p.display_name
+            );
+            if !p.description.is_empty() {
+                d.push_str(&format!(": {}", p.description));
+            }
+            d
+        })
+        .unwrap_or_else(|| {
+            format!(
+                "- {} (the protagonist, written in second person — \"you\")",
+                user_name
+            )
+        });
 
     let system_prompt = format!(
         r#"You are a gifted literary novelist. Your task is to transform a day's conversation and narrative beats into a vivid, immersive chapter of a novel.
@@ -471,7 +569,11 @@ INSTRUCTIONS:
 - Vary sentence length aggressively to keep the second-person present from feeling monotonous. Use sentence fragments. Let some paragraphs breathe.
 - The chapter should be substantial — aim for 1500-3000 words.
 - Do NOT include chapter titles, headers, or meta-commentary. Just the prose."#,
-        world_desc = if world.description.is_empty() { "A richly detailed world." } else { &world.description },
+        world_desc = if world.description.is_empty() {
+            "A richly detailed world."
+        } else {
+            &world.description
+        },
         user_desc = user_desc,
         char_list = char_descriptions.join("\n"),
     );
@@ -515,8 +617,13 @@ INSTRUCTIONS:
         };
 
         return openai::chat_completion_stream(
-            &model_config.chat_api_base(), &api_key, &request, &app_handle, "novel-token",
-        ).await;
+            &model_config.chat_api_base(),
+            &api_key,
+            &request,
+            &app_handle,
+            "novel-token",
+        )
+        .await;
     }
 
     // ── Sectioned generation ─────────────────────────────────────────────
@@ -529,7 +636,8 @@ INSTRUCTIONS:
     // each section's token share of the day and tell the model, in words,
     // roughly how much prose that deserves. Total chapter target scales a
     // bit with day length but is clamped to [1500, 5000] words.
-    let section_content_tokens: Vec<usize> = sections.iter()
+    let section_content_tokens: Vec<usize> = sections
+        .iter()
         .map(|s| approx_tokens(&s.lines.join("\n")))
         .collect();
     let total_content_tokens: usize = section_content_tokens.iter().sum();
@@ -555,7 +663,8 @@ INSTRUCTIONS:
             world_day,
             target_words,
             false, // silent = false — foreground, emit events to UI
-        ).await?;
+        )
+        .await?;
         full_chapter.push_str(&section_text);
 
         if i + 1 < total {
@@ -579,7 +688,8 @@ pub fn save_novel_entry_cmd(
 
     // Check if one exists already
     let existing = get_novel_entry(&conn, &thread_id, world_day);
-    let novel_id = existing.map(|e| e.novel_id)
+    let novel_id = existing
+        .map(|e| e.novel_id)
         .unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
 
     let entry = NovelEntry {
@@ -632,7 +742,9 @@ pub fn delete_novel_entry_cmd(
 /// Return every (thread_id, world_day, is_group) triple that has at least
 /// one message but no novel_entries row yet. Deterministic order (by
 /// thread, then day).
-fn list_unnovelized_days(conn: &rusqlite::Connection) -> Result<Vec<(String, i64, bool)>, rusqlite::Error> {
+fn list_unnovelized_days(
+    conn: &rusqlite::Connection,
+) -> Result<Vec<(String, i64, bool)>, rusqlite::Error> {
     let mut out = Vec::new();
 
     let mut stmt = conn.prepare(
@@ -640,20 +752,28 @@ fn list_unnovelized_days(conn: &rusqlite::Connection) -> Result<Vec<(String, i64
          FROM messages m
          LEFT JOIN novel_entries n ON n.thread_id = m.thread_id AND n.world_day = m.world_day
          WHERE m.world_day IS NOT NULL AND n.novel_id IS NULL
-         ORDER BY m.thread_id, m.world_day"
+         ORDER BY m.thread_id, m.world_day",
     )?;
-    let rows = stmt.query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, i64>(1)?, false)))?;
-    for r in rows.flatten() { out.push(r); }
+    let rows = stmt.query_map([], |row| {
+        Ok((row.get::<_, String>(0)?, row.get::<_, i64>(1)?, false))
+    })?;
+    for r in rows.flatten() {
+        out.push(r);
+    }
 
     let mut stmt = conn.prepare(
         "SELECT DISTINCT gm.thread_id, gm.world_day
          FROM group_messages gm
          LEFT JOIN novel_entries n ON n.thread_id = gm.thread_id AND n.world_day = gm.world_day
          WHERE gm.world_day IS NOT NULL AND n.novel_id IS NULL
-         ORDER BY gm.thread_id, gm.world_day"
+         ORDER BY gm.thread_id, gm.world_day",
     )?;
-    let rows = stmt.query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, i64>(1)?, true)))?;
-    for r in rows.flatten() { out.push(r); }
+    let rows = stmt.query_map([], |row| {
+        Ok((row.get::<_, String>(0)?, row.get::<_, i64>(1)?, true))
+    })?;
+    for r in rows.flatten() {
+        out.push(r);
+    }
 
     Ok(out)
 }
@@ -679,53 +799,95 @@ async fn run_day_novel_silent(
         } else {
             get_all_messages(&conn, thread_id).map_err(|e| e.to_string())?
         };
-        let day_msgs: Vec<Message> = all_msgs.into_iter()
-            .filter(|m| m.world_day == Some(world_day) && m.role != "illustration" && m.role != "video" && m.role != "inventory_update")
+        let day_msgs: Vec<Message> = all_msgs
+            .into_iter()
+            .filter(|m| {
+                m.world_day == Some(world_day)
+                    && m.role != "illustration"
+                    && m.role != "video"
+                    && m.role != "inventory_update"
+            })
             .collect();
-        if day_msgs.is_empty() { return Err("No messages for this day.".to_string()); }
-        let world_id: String = conn.query_row(
-            "SELECT world_id FROM threads WHERE thread_id = ?1",
-            rusqlite::params![thread_id], |r| r.get(0),
-        ).or_else(|_| conn.query_row(
-            "SELECT world_id FROM group_chats WHERE thread_id = ?1",
-            rusqlite::params![thread_id], |r| r.get(0),
-        )).map_err(|e| e.to_string())?;
+        if day_msgs.is_empty() {
+            return Err("No messages for this day.".to_string());
+        }
+        let world_id: String = conn
+            .query_row(
+                "SELECT world_id FROM threads WHERE thread_id = ?1",
+                rusqlite::params![thread_id],
+                |r| r.get(0),
+            )
+            .or_else(|_| {
+                conn.query_row(
+                    "SELECT world_id FROM group_chats WHERE thread_id = ?1",
+                    rusqlite::params![thread_id],
+                    |r| r.get(0),
+                )
+            })
+            .map_err(|e| e.to_string())?;
         let world = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
         let user_name = get_user_profile(&conn, &world_id)
-            .ok().map(|p| p.display_name).unwrap_or_else(|| "the protagonist".to_string());
+            .ok()
+            .map(|p| p.display_name)
+            .unwrap_or_else(|| "the protagonist".to_string());
         let characters = list_characters(&conn, &world_id).unwrap_or_default();
-        let char_names: HashMap<String, String> = characters.iter()
+        let char_names: HashMap<String, String> = characters
+            .iter()
             .map(|c| (c.character_id.clone(), c.display_name.clone()))
             .collect();
         let user_profile = get_user_profile(&conn, &world_id).ok();
-        (day_msgs, world, characters, char_names, user_name, user_profile, model_config)
+        (
+            day_msgs,
+            world,
+            characters,
+            char_names,
+            user_name,
+            user_profile,
+            model_config,
+        )
     };
 
     let sections = group_into_sections(&messages, &user_name, &character_names);
-    if sections.is_empty() { return Err("No content to novelize.".to_string()); }
+    if sections.is_empty() {
+        return Err("No content to novelize.".to_string());
+    }
 
-    let char_descriptions: Vec<String> = characters.iter().map(|c| {
-        let mut desc = format!("- {}", c.display_name);
-        if !c.identity.is_empty() {
-            desc.push_str(&format!(": {}", c.identity));
-        }
-        let voice_rules = crate::ai::prompts::json_array_to_strings(&c.voice_rules);
-        if !voice_rules.is_empty() {
-            desc.push_str(&format!("\n  Voice: {}", voice_rules.join("; ")));
-        }
-        if let Some(block) = crate::ai::prompts::empiricon_reader_substrate(c) {
-            desc.push_str("\n\n");
-            desc.push_str(&block);
-        }
-        desc
-    }).collect();
-    let user_desc = user_profile.as_ref().map(|p| {
-        let mut d = format!("- {} (the protagonist, written in second person — \"you\")", p.display_name);
-        if !p.description.is_empty() {
-            d.push_str(&format!(": {}", p.description));
-        }
-        d
-    }).unwrap_or_else(|| format!("- {} (the protagonist, written in second person — \"you\")", user_name));
+    let char_descriptions: Vec<String> = characters
+        .iter()
+        .map(|c| {
+            let mut desc = format!("- {}", c.display_name);
+            if !c.identity.is_empty() {
+                desc.push_str(&format!(": {}", c.identity));
+            }
+            let voice_rules = crate::ai::prompts::json_array_to_strings(&c.voice_rules);
+            if !voice_rules.is_empty() {
+                desc.push_str(&format!("\n  Voice: {}", voice_rules.join("; ")));
+            }
+            if let Some(block) = crate::ai::prompts::empiricon_reader_substrate(c) {
+                desc.push_str("\n\n");
+                desc.push_str(&block);
+            }
+            desc
+        })
+        .collect();
+    let user_desc = user_profile
+        .as_ref()
+        .map(|p| {
+            let mut d = format!(
+                "- {} (the protagonist, written in second person — \"you\")",
+                p.display_name
+            );
+            if !p.description.is_empty() {
+                d.push_str(&format!(": {}", p.description));
+            }
+            d
+        })
+        .unwrap_or_else(|| {
+            format!(
+                "- {} (the protagonist, written in second person — \"you\")",
+                user_name
+            )
+        });
     let system_prompt = format!(
         r#"You are a gifted literary novelist. Your task is to transform a day's conversation and narrative beats into a vivid, immersive chapter of a novel.
 
@@ -746,12 +908,17 @@ INSTRUCTIONS:
 - Include all the key beats from the conversation but enhance them with novelistic craft.
 - Make it feel like one vivid, cohesive chapter — not a transcript.
 - Do NOT include chapter titles, headers, or meta-commentary. Just the prose."#,
-        world_desc = if world.description.is_empty() { "A richly detailed world." } else { &world.description },
+        world_desc = if world.description.is_empty() {
+            "A richly detailed world."
+        } else {
+            &world.description
+        },
         user_desc = user_desc,
         char_list = char_descriptions.join("\n"),
     );
 
-    let section_content_tokens: Vec<usize> = sections.iter()
+    let section_content_tokens: Vec<usize> = sections
+        .iter()
         .map(|s| approx_tokens(&s.lines.join("\n")))
         .collect();
     let total_content_tokens: usize = section_content_tokens.iter().sum();
@@ -766,10 +933,18 @@ INSTRUCTIONS:
         };
         let target_words = ((ratio * total_chapter_words as f64).round() as usize).max(150);
         let section_text = stream_section(
-            app_handle, &model_config, api_key, &system_prompt,
-            section, i, total, world_day, target_words,
+            app_handle,
+            &model_config,
+            api_key,
+            &system_prompt,
+            section,
+            i,
+            total,
+            world_day,
+            target_words,
             true, // silent
-        ).await?;
+        )
+        .await?;
         full_chapter.push_str(&section_text);
         if i + 1 < total {
             full_chapter.push_str(SECTION_DIVIDER);
@@ -791,7 +966,9 @@ pub async fn run_background_novelization_cmd(
     // Abort any prior handle before launching a new sweep.
     {
         let mut guard = bg.0.lock().await;
-        if let Some(h) = guard.take() { h.abort(); }
+        if let Some(h) = guard.take() {
+            h.abort();
+        }
     }
 
     let db_state = app_handle.state::<Database>();
@@ -807,17 +984,25 @@ pub async fn run_background_novelization_cmd(
         let conn = db_state.conn.lock().map_err(|e| e.to_string())?;
         list_unnovelized_days(&conn).map_err(|e| e.to_string())?
     };
-    if todo.is_empty() { return Ok(()); }
+    if todo.is_empty() {
+        return Ok(());
+    }
 
     let ah = app_handle.clone();
-    let _ = ah.emit("bg-novelize", serde_json::json!({ "status": "started", "pending": todo.len() }));
+    let _ = ah.emit(
+        "bg-novelize",
+        serde_json::json!({ "status": "started", "pending": todo.len() }),
+    );
     let handle = tokio::spawn(async move {
         for (thread_id, world_day, is_group) in todo {
-            let _ = ah.emit("bg-novelize", serde_json::json!({
-                "status": "working",
-                "thread_id": thread_id,
-                "world_day": world_day,
-            }));
+            let _ = ah.emit(
+                "bg-novelize",
+                serde_json::json!({
+                    "status": "working",
+                    "thread_id": thread_id,
+                    "world_day": world_day,
+                }),
+            );
             match run_day_novel_silent(&ah, &api_key, &thread_id, world_day, is_group).await {
                 Ok(content) => {
                     let db = ah.state::<Database>();
@@ -833,19 +1018,25 @@ pub async fn run_background_novelization_cmd(
                     if let Ok(conn) = db.conn.lock() {
                         let _ = upsert_novel_entry(&conn, &entry);
                     }
-                    let _ = ah.emit("bg-novelize", serde_json::json!({
-                        "status": "saved",
-                        "thread_id": thread_id,
-                        "world_day": world_day,
-                    }));
+                    let _ = ah.emit(
+                        "bg-novelize",
+                        serde_json::json!({
+                            "status": "saved",
+                            "thread_id": thread_id,
+                            "world_day": world_day,
+                        }),
+                    );
                 }
                 Err(e) => {
-                    let _ = ah.emit("bg-novelize", serde_json::json!({
-                        "status": "error",
-                        "thread_id": thread_id,
-                        "world_day": world_day,
-                        "error": e,
-                    }));
+                    let _ = ah.emit(
+                        "bg-novelize",
+                        serde_json::json!({
+                            "status": "error",
+                            "thread_id": thread_id,
+                            "world_day": world_day,
+                            "error": e,
+                        }),
+                    );
                 }
             }
         }

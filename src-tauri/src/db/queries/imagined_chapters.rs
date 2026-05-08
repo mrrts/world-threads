@@ -148,27 +148,26 @@ pub fn list_imagined_chapters_for_thread(
          FROM imagined_chapters WHERE thread_id = ?1
          ORDER BY created_at DESC"
     )?;
-    let rows = stmt.query_map(params![thread_id], |r| Ok(ImaginedChapter {
-        chapter_id: r.get(0)?,
-        thread_id: r.get(1)?,
-        world_day: r.get(2)?,
-        title: r.get(3)?,
-        seed_hint: r.get(4)?,
-        scene_location: r.get(5)?,
-        scene_description: r.get(6)?,
-        image_id: r.get(7)?,
-        content: r.get(8)?,
-        created_at: r.get(9)?,
-        breadcrumb_message_id: r.get(10)?,
-        canonized: r.get::<_, i32>(11)? != 0,
-    }))?;
+    let rows = stmt.query_map(params![thread_id], |r| {
+        Ok(ImaginedChapter {
+            chapter_id: r.get(0)?,
+            thread_id: r.get(1)?,
+            world_day: r.get(2)?,
+            title: r.get(3)?,
+            seed_hint: r.get(4)?,
+            scene_location: r.get(5)?,
+            scene_description: r.get(6)?,
+            image_id: r.get(7)?,
+            content: r.get(8)?,
+            created_at: r.get(9)?,
+            breadcrumb_message_id: r.get(10)?,
+            canonized: r.get::<_, i32>(11)? != 0,
+        })
+    })?;
     rows.collect()
 }
 
-pub fn delete_imagined_chapter(
-    conn: &Connection,
-    chapter_id: &str,
-) -> Result<(), rusqlite::Error> {
+pub fn delete_imagined_chapter(conn: &Connection, chapter_id: &str) -> Result<(), rusqlite::Error> {
     conn.execute(
         "DELETE FROM imagined_chapters WHERE chapter_id = ?1",
         params![chapter_id],

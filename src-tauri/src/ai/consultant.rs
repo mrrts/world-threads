@@ -116,62 +116,112 @@ pub fn build_consultant_system_prompt(
     // context but NOT injected at the dialogue prompt-stack layer.
     // When present, they let Backstage answer shape-questions through
     // the formula's per-entity derivation rather than guessing.
-    let (world, characters, recent_msgs, user_profile, thread_id, model_config, world_derivation, character_derivations) = {
-        let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let model_config = orchestrator::load_model_config(&conn);
+    let (
+        world,
+        characters,
+        recent_msgs,
+        user_profile,
+        thread_id,
+        model_config,
+        world_derivation,
+        character_derivations,
+    ) =
+        {
+            let conn = db.conn.lock().map_err(|e| e.to_string())?;
+            let model_config = orchestrator::load_model_config(&conn);
 
-        if is_group {
-            let gc = get_group_chat(&conn, group_chat_id.unwrap())
-                .map_err(|e| e.to_string())?;
-            let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
-            let recent_msgs = list_group_messages(&conn, &gc.thread_id, 30)
-                .map_err(|e| e.to_string())?;
-            let user_profile = get_user_profile(&conn, &gc.world_id).ok();
-            let char_ids: Vec<String> = gc.character_ids.as_array()
-                .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
-                .unwrap_or_default();
-            let characters: Vec<Character> = char_ids.iter()
-                .filter_map(|id| get_character(&conn, id).ok())
-                .collect();
-            // Read documentary derivations alongside.
-            let world_derivation: Option<String> = conn.query_row(
-                "SELECT derived_formula FROM worlds WHERE world_id = ?1",
-                rusqlite::params![world.world_id], |r| r.get(0),
-            ).ok().flatten();
-            let character_derivations: Vec<(String, String)> = characters.iter()
-                .filter_map(|c| {
-                    let d: Option<String> = conn.query_row(
+            if is_group {
+                let gc =
+                    get_group_chat(&conn, group_chat_id.unwrap()).map_err(|e| e.to_string())?;
+                let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
+                let recent_msgs =
+                    list_group_messages(&conn, &gc.thread_id, 30).map_err(|e| e.to_string())?;
+                let user_profile = get_user_profile(&conn, &gc.world_id).ok();
+                let char_ids: Vec<String> = gc
+                    .character_ids
+                    .as_array()
+                    .map(|a| {
+                        a.iter()
+                            .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                            .collect()
+                    })
+                    .unwrap_or_default();
+                let characters: Vec<Character> = char_ids
+                    .iter()
+                    .filter_map(|id| get_character(&conn, id).ok())
+                    .collect();
+                // Read documentary derivations alongside.
+                let world_derivation: Option<String> = conn
+                    .query_row(
+                        "SELECT derived_formula FROM worlds WHERE world_id = ?1",
+                        rusqlite::params![world.world_id],
+                        |r| r.get(0),
+                    )
+                    .ok()
+                    .flatten();
+                let character_derivations: Vec<(String, String)> =
+                    characters
+                        .iter()
+                        .filter_map(|c| {
+                            let d: Option<String> = conn.query_row(
                         "SELECT derived_formula FROM characters WHERE character_id = ?1",
                         rusqlite::params![c.character_id], |r| r.get(0),
                     ).ok().flatten();
-                    d.map(|text| (c.display_name.clone(), text))
-                })
-                .collect();
-            (world, characters, recent_msgs, user_profile, gc.thread_id, model_config, world_derivation, character_derivations)
-        } else {
-            let char_id = character_id.ok_or("No character specified")?;
-            let character = get_character(&conn, char_id).map_err(|e| e.to_string())?;
-            let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
-            let thread = get_thread_for_character(&conn, char_id).map_err(|e| e.to_string())?;
-            let recent_msgs = list_messages(&conn, &thread.thread_id, 30)
-                .map_err(|e| e.to_string())?;
-            let user_profile = get_user_profile(&conn, &character.world_id).ok();
-            let world_derivation: Option<String> = conn.query_row(
-                "SELECT derived_formula FROM worlds WHERE world_id = ?1",
-                rusqlite::params![world.world_id], |r| r.get(0),
-            ).ok().flatten();
-            let character_derivation: Option<String> = conn.query_row(
-                "SELECT derived_formula FROM characters WHERE character_id = ?1",
-                rusqlite::params![char_id], |r| r.get(0),
-            ).ok().flatten();
-            let character_derivations: Vec<(String, String)> = character_derivation
-                .map(|t| vec![(character.display_name.clone(), t)])
-                .unwrap_or_default();
-            (world, vec![character], recent_msgs, user_profile, thread.thread_id, model_config, world_derivation, character_derivations)
-        }
-    };
+                            d.map(|text| (c.display_name.clone(), text))
+                        })
+                        .collect();
+                (
+                    world,
+                    characters,
+                    recent_msgs,
+                    user_profile,
+                    gc.thread_id,
+                    model_config,
+                    world_derivation,
+                    character_derivations,
+                )
+            } else {
+                let char_id = character_id.ok_or("No character specified")?;
+                let character = get_character(&conn, char_id).map_err(|e| e.to_string())?;
+                let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
+                let thread = get_thread_for_character(&conn, char_id).map_err(|e| e.to_string())?;
+                let recent_msgs =
+                    list_messages(&conn, &thread.thread_id, 30).map_err(|e| e.to_string())?;
+                let user_profile = get_user_profile(&conn, &character.world_id).ok();
+                let world_derivation: Option<String> = conn
+                    .query_row(
+                        "SELECT derived_formula FROM worlds WHERE world_id = ?1",
+                        rusqlite::params![world.world_id],
+                        |r| r.get(0),
+                    )
+                    .ok()
+                    .flatten();
+                let character_derivation: Option<String> = conn
+                    .query_row(
+                        "SELECT derived_formula FROM characters WHERE character_id = ?1",
+                        rusqlite::params![char_id],
+                        |r| r.get(0),
+                    )
+                    .ok()
+                    .flatten();
+                let character_derivations: Vec<(String, String)> = character_derivation
+                    .map(|t| vec![(character.display_name.clone(), t)])
+                    .unwrap_or_default();
+                (
+                    world,
+                    vec![character],
+                    recent_msgs,
+                    user_profile,
+                    thread.thread_id,
+                    model_config,
+                    world_derivation,
+                    character_derivations,
+                )
+            }
+        };
 
-    let user_name = user_profile.as_ref()
+    let user_name = user_profile
+        .as_ref()
         .map(|p| p.display_name.clone())
         .unwrap_or_else(|| "the user".to_string());
 
@@ -181,12 +231,17 @@ pub fn build_consultant_system_prompt(
     let (thread_summary, kept_records) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let summary = get_thread_summary(&conn, &thread_id);
-        let mut subj_ids: Vec<(String, String)> = characters.iter()
+        let mut subj_ids: Vec<(String, String)> = characters
+            .iter()
             .map(|c| ("character".to_string(), c.character_id.clone()))
             .collect();
         subj_ids.push(("user".to_string(), world.world_id.clone()));
         subj_ids.push(("world".to_string(), world.world_id.clone()));
-        let placeholders = subj_ids.iter().map(|_| "(?,?)").collect::<Vec<_>>().join(",");
+        let placeholders = subj_ids
+            .iter()
+            .map(|_| "(?,?)")
+            .collect::<Vec<_>>()
+            .join(",");
         let sql = format!(
             "SELECT subject_type, subject_id, record_type, content, source_world_day, created_at
              FROM kept_records
@@ -195,19 +250,29 @@ pub fn build_consultant_system_prompt(
         );
         let mut kept: Vec<(String, String, String, String, Option<i64>, String)> = Vec::new();
         if let Ok(mut stmt) = conn.prepare(&sql) {
-            let flat: Vec<Box<dyn rusqlite::ToSql>> = subj_ids.iter()
-                .flat_map(|(t, i)| [Box::new(t.clone()) as Box<dyn rusqlite::ToSql>, Box::new(i.clone())])
+            let flat: Vec<Box<dyn rusqlite::ToSql>> = subj_ids
+                .iter()
+                .flat_map(|(t, i)| {
+                    [
+                        Box::new(t.clone()) as Box<dyn rusqlite::ToSql>,
+                        Box::new(i.clone()),
+                    ]
+                })
                 .collect();
             let refs: Vec<&dyn rusqlite::ToSql> = flat.iter().map(|b| b.as_ref()).collect();
-            if let Ok(rows) = stmt.query_map(&refs[..], |r| Ok((
-                r.get::<_, String>(0)?,
-                r.get::<_, String>(1)?,
-                r.get::<_, String>(2)?,
-                r.get::<_, String>(3)?,
-                r.get::<_, Option<i64>>(4)?,
-                r.get::<_, String>(5)?,
-            ))) {
-                for row in rows.flatten() { kept.push(row); }
+            if let Ok(rows) = stmt.query_map(&refs[..], |r| {
+                Ok((
+                    r.get::<_, String>(0)?,
+                    r.get::<_, String>(1)?,
+                    r.get::<_, String>(2)?,
+                    r.get::<_, String>(3)?,
+                    r.get::<_, Option<i64>>(4)?,
+                    r.get::<_, String>(5)?,
+                ))
+            }) {
+                for row in rows.flatten() {
+                    kept.push(row);
+                }
             }
         }
         (summary, kept)
@@ -217,42 +282,52 @@ pub fn build_consultant_system_prompt(
     // current state (mood / goals / open loops) + inventory + signature
     // emoji. Skips visual description, voice rules, and boundaries —
     // those are about performing the character, not understanding them.
-    let char_descriptions: Vec<String> = characters.iter().map(|c| {
-        let mut lines: Vec<String> = Vec::new();
-        lines.push(format!("### {}  (character_id: {})", c.display_name, c.character_id));
-        if !c.identity.is_empty() {
-            lines.push(c.identity.clone());
-        }
-        if !c.signature_emoji.trim().is_empty() {
-            lines.push(format!("Signature emoji: {}", c.signature_emoji.trim()));
-        }
-        let backstory = prompts::json_array_to_strings(&c.backstory_facts);
-        if !backstory.is_empty() {
-            let block = backstory.iter().map(|b| format!("  - {b}")).collect::<Vec<_>>().join("\n");
-            lines.push(format!("Backstory:\n{block}"));
-        }
-        if let Some(rel_obj) = c.relationships.as_object() {
-            if !rel_obj.is_empty() {
-                lines.push(format!(
-                    "Relationships:\n{}",
-                    serde_json::to_string_pretty(&c.relationships).unwrap_or_default()
-                ));
+    let char_descriptions: Vec<String> = characters
+        .iter()
+        .map(|c| {
+            let mut lines: Vec<String> = Vec::new();
+            lines.push(format!(
+                "### {}  (character_id: {})",
+                c.display_name, c.character_id
+            ));
+            if !c.identity.is_empty() {
+                lines.push(c.identity.clone());
             }
-        }
-        if let Some(state_obj) = c.state.as_object() {
-            if !state_obj.is_empty() {
-                lines.push(format!(
-                    "Current state (mood, goals, open loops):\n{}",
-                    serde_json::to_string_pretty(&c.state).unwrap_or_default()
-                ));
+            if !c.signature_emoji.trim().is_empty() {
+                lines.push(format!("Signature emoji: {}", c.signature_emoji.trim()));
             }
-        }
-        let inv_block = prompts::render_inventory_block(&c.display_name, &c.inventory);
-        if !inv_block.is_empty() {
-            lines.push(inv_block);
-        }
-        lines.join("\n\n")
-    }).collect();
+            let backstory = prompts::json_array_to_strings(&c.backstory_facts);
+            if !backstory.is_empty() {
+                let block = backstory
+                    .iter()
+                    .map(|b| format!("  - {b}"))
+                    .collect::<Vec<_>>()
+                    .join("\n");
+                lines.push(format!("Backstory:\n{block}"));
+            }
+            if let Some(rel_obj) = c.relationships.as_object() {
+                if !rel_obj.is_empty() {
+                    lines.push(format!(
+                        "Relationships:\n{}",
+                        serde_json::to_string_pretty(&c.relationships).unwrap_or_default()
+                    ));
+                }
+            }
+            if let Some(state_obj) = c.state.as_object() {
+                if !state_obj.is_empty() {
+                    lines.push(format!(
+                        "Current state (mood, goals, open loops):\n{}",
+                        serde_json::to_string_pretty(&c.state).unwrap_or_default()
+                    ));
+                }
+            }
+            let inv_block = prompts::render_inventory_block(&c.display_name, &c.inventory);
+            if !inv_block.is_empty() {
+                lines.push(inv_block);
+            }
+            lines.join("\n\n")
+        })
+        .collect();
 
     // World block: description + invariants + current state.
     let world_desc_rich = {
@@ -264,15 +339,24 @@ pub fn build_consultant_system_prompt(
         }
         let invariants = prompts::json_array_to_strings(&world.invariants);
         if !invariants.is_empty() {
-            let block = invariants.iter().map(|i| format!("  - {i}")).collect::<Vec<_>>().join("\n");
+            let block = invariants
+                .iter()
+                .map(|i| format!("  - {i}"))
+                .collect::<Vec<_>>()
+                .join("\n");
             parts.push(format!("World rules:\n{block}"));
         }
         if let Some(state_obj) = world.state.as_object() {
             let mut state_lines: Vec<String> = Vec::new();
             if let Some(time) = state_obj.get("time") {
                 let day = time.get("day_index").and_then(|v| v.as_i64()).unwrap_or(0);
-                let tod = time.get("time_of_day").and_then(|v| v.as_str()).unwrap_or("");
-                if !tod.is_empty() { state_lines.push(format!("Day {day}, {tod}")); }
+                let tod = time
+                    .get("time_of_day")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("");
+                if !tod.is_empty() {
+                    state_lines.push(format!("Day {day}, {tod}"));
+                }
             }
             if let Some(weather_key) = state_obj.get("weather").and_then(|v| v.as_str()) {
                 if let Some((emoji, label)) = prompts::weather_meta(weather_key) {
@@ -280,22 +364,33 @@ pub fn build_consultant_system_prompt(
                 }
             }
             if let Some(arcs) = state_obj.get("global_arcs").and_then(|v| v.as_array()) {
-                let arc_lines: Vec<String> = arcs.iter().filter_map(|a| {
-                    let id = a.get("arc_id").and_then(|v| v.as_str())?;
-                    let status = a.get("status").and_then(|v| v.as_str()).unwrap_or("");
-                    let notes = a.get("notes").and_then(|v| v.as_str()).unwrap_or("");
-                    Some(format!("  - {id} ({status}): {notes}"))
-                }).collect();
+                let arc_lines: Vec<String> = arcs
+                    .iter()
+                    .filter_map(|a| {
+                        let id = a.get("arc_id").and_then(|v| v.as_str())?;
+                        let status = a.get("status").and_then(|v| v.as_str()).unwrap_or("");
+                        let notes = a.get("notes").and_then(|v| v.as_str()).unwrap_or("");
+                        Some(format!("  - {id} ({status}): {notes}"))
+                    })
+                    .collect();
                 if !arc_lines.is_empty() {
                     state_lines.push(format!("Ongoing arcs:\n{}", arc_lines.join("\n")));
                 }
             }
             if let Some(facts) = state_obj.get("facts").and_then(|v| v.as_array()) {
-                let fact_lines: Vec<String> = facts.iter().filter_map(|f| {
-                    f.get("text").and_then(|v| v.as_str()).map(|t| format!("  - {t}"))
-                }).collect();
+                let fact_lines: Vec<String> = facts
+                    .iter()
+                    .filter_map(|f| {
+                        f.get("text")
+                            .and_then(|v| v.as_str())
+                            .map(|t| format!("  - {t}"))
+                    })
+                    .collect();
                 if !fact_lines.is_empty() {
-                    state_lines.push(format!("Established world facts:\n{}", fact_lines.join("\n")));
+                    state_lines.push(format!(
+                        "Established world facts:\n{}",
+                        fact_lines.join("\n")
+                    ));
                 }
             }
             if !state_lines.is_empty() {
@@ -313,7 +408,11 @@ pub fn build_consultant_system_prompt(
             }
             let facts = prompts::json_array_to_strings(&p.facts);
             if !facts.is_empty() {
-                let block = facts.iter().map(|f| format!("  - {f}")).collect::<Vec<_>>().join("\n");
+                let block = facts
+                    .iter()
+                    .map(|f| format!("  - {f}"))
+                    .collect::<Vec<_>>()
+                    .join("\n");
                 lines.push(format!("Known facts about {user_name}:\n{block}"));
             }
         }
@@ -323,42 +422,55 @@ pub fn build_consultant_system_prompt(
     let summary_block = if thread_summary.is_empty() {
         String::new()
     } else {
-        format!("\n\nTHREAD SUMMARY (longer-arc memory, periodically regenerated):\n{thread_summary}")
+        format!(
+            "\n\nTHREAD SUMMARY (longer-arc memory, periodically regenerated):\n{thread_summary}"
+        )
     };
 
     let kept_block = if kept_records.is_empty() {
         String::new()
     } else {
-        let char_name_by_id: std::collections::HashMap<&str, &str> = characters.iter()
+        let char_name_by_id: std::collections::HashMap<&str, &str> = characters
+            .iter()
             .map(|c| (c.character_id.as_str(), c.display_name.as_str()))
             .collect();
-        let lines: Vec<String> = kept_records.iter().map(|(subject_type, subject_id, record_type, content, world_day, _created_at)| {
-            let subject_label = match subject_type.as_str() {
-                "character" => char_name_by_id.get(subject_id.as_str()).copied().unwrap_or("(unknown)").to_string(),
-                "user" => format!("{} (you)", user_name),
-                "world" => "the world".to_string(),
-                "relationship" => format!("relationship {subject_id}"),
-                other => other.to_string(),
-            };
-            let day_tag = world_day.map(|d| format!(" [Day {d}]")).unwrap_or_default();
-            format!("- [{subject_label} · {record_type}]{day_tag} {content}")
-        }).collect();
+        let lines: Vec<String> = kept_records
+            .iter()
+            .map(
+                |(subject_type, subject_id, record_type, content, world_day, _created_at)| {
+                    let subject_label = match subject_type.as_str() {
+                        "character" => char_name_by_id
+                            .get(subject_id.as_str())
+                            .copied()
+                            .unwrap_or("(unknown)")
+                            .to_string(),
+                        "user" => format!("{} (you)", user_name),
+                        "world" => "the world".to_string(),
+                        "relationship" => format!("relationship {subject_id}"),
+                        other => other.to_string(),
+                    };
+                    let day_tag = world_day.map(|d| format!(" [Day {d}]")).unwrap_or_default();
+                    format!("- [{subject_label} · {record_type}]{day_tag} {content}")
+                },
+            )
+            .collect();
         format!("\n\nKEPT RECORDS (moments {user_name} has canonized as settled truth about this world / these people — read these as weighted heavier than any single scene below):\n{}", lines.join("\n"))
     };
 
-    let conversation: Vec<String> = recent_msgs.iter()
+    let conversation: Vec<String> = recent_msgs
+        .iter()
         .filter(|m| m.role != "illustration" && m.role != "video" && m.role != "inventory_update")
         .map(|m| {
             let speaker = match m.role.as_str() {
                 "user" => user_name.clone(),
                 "narrative" => "[Narrative]".to_string(),
                 "context" => "[Context]".to_string(),
-                "assistant" => {
-                    m.sender_character_id.as_ref()
-                        .and_then(|id| characters.iter().find(|c| c.character_id == *id))
-                        .map(|c| c.display_name.clone())
-                        .unwrap_or_else(|| "Character".to_string())
-                }
+                "assistant" => m
+                    .sender_character_id
+                    .as_ref()
+                    .and_then(|id| characters.iter().find(|c| c.character_id == *id))
+                    .map(|c| c.display_name.clone())
+                    .unwrap_or_else(|| "Character".to_string()),
                 _ => m.role.clone(),
             };
             format!("{}: {}", speaker, m.content)
@@ -371,102 +483,156 @@ pub fn build_consultant_system_prompt(
     // register-axes block (backstage-formatted: full derivation visible,
     // craft-vocabulary explicit). The immersive variant of the axes
     // block is built separately below in Lock 3b.
-    let (world_cast_block, meanwhile_block, user_journal_block, active_quests_block, axes_block) = if chat_mode == "backstage" {
-        let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let all_chars = list_characters(&conn, &world.world_id).unwrap_or_default();
-        let thread_ids: std::collections::HashSet<String> = characters.iter()
-            .map(|c| c.character_id.clone()).collect();
-        let cast_lines: Vec<String> = all_chars.iter()
-            .filter(|c| !thread_ids.contains(&c.character_id) && !c.is_archived)
-            .map(|c| {
-                let one_liner = c.identity.lines().next().unwrap_or("").trim();
-                let tag = if one_liner.is_empty() { String::new() } else { format!(" — {one_liner}") };
-                // Per-character Formula derivation, when populated, gets a
-                // separate indented line so the consultant sees each cast
-                // member's tuning-frame alongside their identity. Tuning
-                // before vocabulary, mirroring the dialogue layered
-                // substrate.
-                let deriv = c.derived_formula.as_deref()
-                    .filter(|s| !s.trim().is_empty())
-                    .map(|d| format!("\n      ⟨𝓕-derivation⟩ {}", d.replace('\n', " ")))
-                    .unwrap_or_default();
-                format!("  - {} (character_id: {}){}{}", c.display_name, c.character_id, tag, deriv)
-            })
-            .collect();
-        let cast_block = if cast_lines.is_empty() {
-            String::new()
-        } else {
-            format!("\n\nOTHER CHARACTERS IN THIS WORLD (not in the current chat — but {user_name} could start a chat with any of them):\n{}", cast_lines.join("\n"))
-        };
+    let (world_cast_block, meanwhile_block, user_journal_block, active_quests_block, axes_block) =
+        if chat_mode == "backstage" {
+            let conn = db.conn.lock().map_err(|e| e.to_string())?;
+            let all_chars = list_characters(&conn, &world.world_id).unwrap_or_default();
+            let thread_ids: std::collections::HashSet<String> =
+                characters.iter().map(|c| c.character_id.clone()).collect();
+            let cast_lines: Vec<String> = all_chars
+                .iter()
+                .filter(|c| !thread_ids.contains(&c.character_id) && !c.is_archived)
+                .map(|c| {
+                    let one_liner = c.identity.lines().next().unwrap_or("").trim();
+                    let tag = if one_liner.is_empty() {
+                        String::new()
+                    } else {
+                        format!(" — {one_liner}")
+                    };
+                    // Per-character Formula derivation, when populated, gets a
+                    // separate indented line so the consultant sees each cast
+                    // member's tuning-frame alongside their identity. Tuning
+                    // before vocabulary, mirroring the dialogue layered
+                    // substrate.
+                    let deriv = c
+                        .derived_formula
+                        .as_deref()
+                        .filter(|s| !s.trim().is_empty())
+                        .map(|d| format!("\n      ⟨𝓕-derivation⟩ {}", d.replace('\n', " ")))
+                        .unwrap_or_default();
+                    format!(
+                        "  - {} (character_id: {}){}{}",
+                        c.display_name, c.character_id, tag, deriv
+                    )
+                })
+                .collect();
+            let cast_block = if cast_lines.is_empty() {
+                String::new()
+            } else {
+                format!("\n\nOTHER CHARACTERS IN THIS WORLD (not in the current chat — but {user_name} could start a chat with any of them):\n{}", cast_lines.join("\n"))
+            };
 
-        let events = list_meanwhile_events(&conn, &world.world_id, 8).unwrap_or_default();
-        let mw_block = if events.is_empty() {
-            String::new()
-        } else {
-            let lines: Vec<String> = events.iter().rev().map(|e| {
-                format!("  - Day {} · {} · {}: {}", e.world_day, e.time_of_day.to_lowercase(), e.character_name, e.summary.trim())
-            }).collect();
-            format!("\n\nRECENT OFF-SCREEN BEATS (meanwhile events — things happening in the world while {user_name} was elsewhere):\n{}", lines.join("\n"))
-        };
+            let events = list_meanwhile_events(&conn, &world.world_id, 8).unwrap_or_default();
+            let mw_block = if events.is_empty() {
+                String::new()
+            } else {
+                let lines: Vec<String> = events
+                    .iter()
+                    .rev()
+                    .map(|e| {
+                        format!(
+                            "  - Day {} · {} · {}: {}",
+                            e.world_day,
+                            e.time_of_day.to_lowercase(),
+                            e.character_name,
+                            e.summary.trim()
+                        )
+                    })
+                    .collect();
+                format!("\n\nRECENT OFF-SCREEN BEATS (meanwhile events — things happening in the world while {user_name} was elsewhere):\n{}", lines.join("\n"))
+            };
 
-        let uj = list_user_journal_entries(&conn, &world.world_id, 2).unwrap_or_default();
-        let uj_block = if uj.is_empty() {
-            String::new()
-        } else {
-            let lines: Vec<String> = uj.iter().rev().map(|e| {
-                format!("Day {}:\n{}", e.world_day, e.content.trim())
-            }).collect();
-            format!("\n\n{user_name}'S MOST RECENT JOURNAL ENTRIES (their own voice, reflecting on closed days):\n{}", lines.join("\n\n"))
-        };
+            let uj = list_user_journal_entries(&conn, &world.world_id, 2).unwrap_or_default();
+            let uj_block = if uj.is_empty() {
+                String::new()
+            } else {
+                let lines: Vec<String> = uj
+                    .iter()
+                    .rev()
+                    .map(|e| format!("Day {}:\n{}", e.world_day, e.content.trim()))
+                    .collect();
+                format!("\n\n{user_name}'S MOST RECENT JOURNAL ENTRIES (their own voice, reflecting on closed days):\n{}", lines.join("\n\n"))
+            };
 
-        let active_q = list_active_quests(&conn, &world.world_id).unwrap_or_default();
-        let aq_block = if active_q.is_empty() {
-            String::new()
-        } else {
-            let lines: Vec<String> = active_q.iter().map(|q| {
-                let day = q.accepted_world_day.map(|d| format!("Day {d}")).unwrap_or_else(|| "—".to_string());
-                let notes = if q.notes.trim().is_empty() { String::new() } else { format!("\n     (notes: {})", q.notes.trim()) };
-                format!("  - [{day}] {} — {}{notes}", q.title.trim(), q.description.trim())
-            }).collect();
-            format!("\n\nACTIVE QUESTS (pursuits {user_name} has already accepted — do NOT propose duplicates of these):\n{}", lines.join("\n"))
-        };
+            let active_q = list_active_quests(&conn, &world.world_id).unwrap_or_default();
+            let aq_block = if active_q.is_empty() {
+                String::new()
+            } else {
+                let lines: Vec<String> = active_q
+                    .iter()
+                    .map(|q| {
+                        let day = q
+                            .accepted_world_day
+                            .map(|d| format!("Day {d}"))
+                            .unwrap_or_else(|| "—".to_string());
+                        let notes = if q.notes.trim().is_empty() {
+                            String::new()
+                        } else {
+                            format!("\n     (notes: {})", q.notes.trim())
+                        };
+                        format!(
+                            "  - [{day}] {} — {}{notes}",
+                            q.title.trim(),
+                            q.description.trim()
+                        )
+                    })
+                    .collect();
+                format!("\n\nACTIVE QUESTS (pursuits {user_name} has already accepted — do NOT propose duplicates of these):\n{}", lines.join("\n"))
+            };
 
-        // Per-character register axes — the architecture-level "what
-        // does this character load-test?" plus any future axes
-        // (joy_reception, grief, etc.) the synthesizer has produced.
-        // Pulled for every character in the current chat so the user
-        // can analyze the hidden spine of who they're talking with.
-        let mut axis_lines: Vec<String> = Vec::new();
-        for c in characters.iter() {
-            let axes = latest_axes_for_character(&conn, &c.character_id).unwrap_or_default();
-            if axes.is_empty() { continue; }
-            axis_lines.push(format!("**{}** (character_id: {}):", c.display_name, c.character_id));
-            for a in &axes {
+            // Per-character register axes — the architecture-level "what
+            // does this character load-test?" plus any future axes
+            // (joy_reception, grief, etc.) the synthesizer has produced.
+            // Pulled for every character in the current chat so the user
+            // can analyze the hidden spine of who they're talking with.
+            let mut axis_lines: Vec<String> = Vec::new();
+            for c in characters.iter() {
+                let axes = latest_axes_for_character(&conn, &c.character_id).unwrap_or_default();
+                if axes.is_empty() {
+                    continue;
+                }
                 axis_lines.push(format!(
+                    "**{}** (character_id: {}):",
+                    c.display_name, c.character_id
+                ));
+                for a in &axes {
+                    axis_lines.push(format!(
                     "  - axis_kind=`{}`, label=**{}** (synthesized {}, source_msgs={}, model={})",
                     a.axis_kind, a.anchor_label, &a.created_at[..10.min(a.created_at.len())],
                     a.source_message_count, a.model_used,
                 ));
-                axis_lines.push(format!("    body: {}", a.anchor_body.trim().replace("\n", "\n    ")));
-                if !a.derivation_summary.trim().is_empty() {
-                    axis_lines.push(format!("    derivation: {}", a.derivation_summary.trim().replace("\n", "\n    ")));
+                    axis_lines.push(format!(
+                        "    body: {}",
+                        a.anchor_body.trim().replace("\n", "\n    ")
+                    ));
+                    if !a.derivation_summary.trim().is_empty() {
+                        axis_lines.push(format!(
+                            "    derivation: {}",
+                            a.derivation_summary.trim().replace("\n", "\n    ")
+                        ));
+                    }
+                    axis_lines.push(String::new());
                 }
-                axis_lines.push(String::new());
             }
-        }
-        let ax_block = if axis_lines.is_empty() {
-            String::new()
-        } else {
-            format!(
+            let ax_block = if axis_lines.is_empty() {
+                String::new()
+            } else {
+                format!(
                 "\n\nREGISTER AXES — the hidden spine of these characters (synthesized periodically by the LLM from each character's corpus + identity; injected into their dialogue system prompt as ambient architecture; normally invisible to {user_name}, available HERE for craft analysis):\n\n{}",
                 axis_lines.join("\n"),
             )
-        };
+            };
 
-        (cast_block, mw_block, uj_block, aq_block, ax_block)
-    } else {
-        (String::new(), String::new(), String::new(), String::new(), String::new())
-    };
+            (cast_block, mw_block, uj_block, aq_block, ax_block)
+        } else {
+            (
+                String::new(),
+                String::new(),
+                String::new(),
+                String::new(),
+                String::new(),
+            )
+        };
 
     // ─── Lock 3b (immersive only): per-character axes — but framed as
     // ABSORBED knowledge, not as analysis. The immersive Consultant
@@ -484,7 +650,9 @@ pub fn build_consultant_system_prompt(
         let mut lines: Vec<String> = Vec::new();
         for c in characters.iter() {
             let axes = latest_axes_for_character(&conn, &c.character_id).unwrap_or_default();
-            if axes.is_empty() { continue; }
+            if axes.is_empty() {
+                continue;
+            }
             lines.push(format!("On {}:", c.display_name));
             for a in &axes {
                 // Only the body (no derivation, no metadata, no axis_kind).
@@ -756,7 +924,10 @@ One last thing: {mission_chooser_instruction}"#,
             empiricon_report_block = empiricon_report_block,
             atlas_lens_block = atlas_lens_block,
             world_id = world.world_id,
-            example_char_id = characters.first().map(|c| c.character_id.as_str()).unwrap_or("character-id-from-above"),
+            example_char_id = characters
+                .first()
+                .map(|c| c.character_id.as_str())
+                .unwrap_or("character-id-from-above"),
             mission_chooser_instruction = MISSION_CHOOSER_INSTRUCTION,
         )
     } else {
@@ -849,7 +1020,10 @@ Rules:
             summary_block = summary_block,
             immersive_axes_block = immersive_axes_block,
             world_id = world.world_id,
-            example_char_id = characters.first().map(|c| c.character_id.as_str()).unwrap_or("character-id-from-above"),
+            example_char_id = characters
+                .first()
+                .map(|c| c.character_id.as_str())
+                .unwrap_or("character-id-from-above"),
             mission_chooser_instruction = MISSION_CHOOSER_INSTRUCTION,
         )
     };

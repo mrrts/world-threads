@@ -118,7 +118,7 @@ Closing artifact:
 
 1. **Final log entry** with run-totals (iterations completed, total cost, time elapsed, sentence on whether the run hit the genius bar consistently or had dry stretches)
 2. **One-sentence closing reflection in chat** (per AGENTS.md "Nudge the action forward after a closing beat" — name what landed; one forward-pointing seed; nothing more)
-3. **AskUserQuestion chooser** per project law (the every-turn-AskUserQuestion Stop hook is compile-enforced; the closing reflection does NOT replace the chooser — both must ship). Prefer a context-real branch set drawn from the run's discoveries. Default shape:
+3. **AskUserQuestion chooser** per project law (the every-turn-AskUserQuestion Stop hook is compile-enforced; the closing reflection does NOT replace the chooser — both must ship). Treat the chooser as the Codex UI contract: end with exactly four numbered next moves, not a prose tail. Prefer a context-real branch set drawn from the run's discoveries. Default shape:
 
    1. the real next move on the work the discovery most naturally opens
    2. a materially different branch

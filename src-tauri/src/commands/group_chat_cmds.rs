@@ -29,7 +29,9 @@ pub fn detect_direct_address(content: &str, characters: &[Character]) -> Vec<Str
     let mut matched: Vec<String> = Vec::new();
     for ch in characters {
         let name = ch.display_name.to_lowercase();
-        if name.is_empty() { continue; }
+        if name.is_empty() {
+            continue;
+        }
 
         // Action-beat address: look for the patterns inside asterisk
         // pairs. We scan substring presence rather than parsing — close
@@ -59,7 +61,9 @@ pub fn detect_direct_address(content: &str, characters: &[Character]) -> Vec<Str
             let after_beat: &str = if trimmed.starts_with('*') {
                 if let Some(end) = trimmed[1..].find('*') {
                     trimmed[(end + 2)..].trim_start()
-                } else { trimmed }
+                } else {
+                    trimmed
+                }
             } else {
                 trimmed
             };
@@ -67,12 +71,22 @@ pub fn detect_direct_address(content: &str, characters: &[Character]) -> Vec<Str
                 let rest = &after_beat[name.len()..];
                 // Next char must be vocative punctuation or end-of-string.
                 let next = rest.chars().next();
-                matches!(next, None | Some(',') | Some('.') | Some('?') | Some('!') | Some(':') | Some('—') | Some('–') | Some(';'))
-                    // Or "Aaron " but only if followed by NOTHING else
-                    // that turns it into a subject. We skip this: naked
-                    // "Aaron look at this" doesn't count as vocative
-                    // without a comma, because it's ambiguous with
-                    // subject usage.
+                matches!(
+                    next,
+                    None | Some(',')
+                        | Some('.')
+                        | Some('?')
+                        | Some('!')
+                        | Some(':')
+                        | Some('—')
+                        | Some('–')
+                        | Some(';')
+                )
+                // Or "Aaron " but only if followed by NOTHING else
+                // that turns it into a subject. We skip this: naked
+                // "Aaron look at this" doesn't count as vocative
+                // without a comma, because it's ambiguous with
+                // subject usage.
             } else {
                 false
             }
@@ -111,7 +125,8 @@ pub fn consecutive_run_by_recent_speaker(
     recent_context: &[Message],
     characters: &[Character],
 ) -> Option<(String, usize)> {
-    let assistant_speakers: Vec<&str> = recent_context.iter()
+    let assistant_speakers: Vec<&str> = recent_context
+        .iter()
         .rev()
         .filter(|m| m.role == "assistant")
         .filter_map(|m| m.sender_character_id.as_deref())
@@ -119,9 +134,14 @@ pub fn consecutive_run_by_recent_speaker(
     let most_recent = assistant_speakers.first()?;
     let mut count = 0;
     for s in &assistant_speakers {
-        if s == most_recent { count += 1; } else { break; }
+        if s == most_recent {
+            count += 1;
+        } else {
+            break;
+        }
     }
-    let name = characters.iter()
+    let name = characters
+        .iter()
         .find(|c| &c.character_id == most_recent)
         .map(|c| c.display_name.clone())
         .unwrap_or_else(|| "Character".to_string());
@@ -137,9 +157,15 @@ async fn llm_pick_responders(
     user_name: &str,
 ) -> Result<Vec<String>, String> {
     llm_pick_responders_with_overrides(
-        api_key, model_config, content, characters, recent_context, user_name,
+        api_key,
+        model_config,
+        content,
+        characters,
+        recent_context,
+        user_name,
         /* omit_continuity_note = */ false,
-    ).await
+    )
+    .await
 }
 
 /// Same as `llm_pick_responders` but with a flag to suppress the
@@ -156,7 +182,8 @@ pub async fn llm_pick_responders_with_overrides(
     user_name: &str,
     omit_continuity_note: bool,
 ) -> Result<Vec<String>, String> {
-    let cast: String = characters.iter()
+    let cast: String = characters
+        .iter()
         .map(|c| {
             let id_line = format!("- id=\"{}\" name=\"{}\"", c.character_id, c.display_name);
             let ident = if c.identity.is_empty() {
@@ -170,14 +197,24 @@ pub async fn llm_pick_responders_with_overrides(
         .collect::<Vec<_>>()
         .join("\n");
 
-    let scene: String = recent_context.iter()
-        .rev().take(4).rev()
+    let scene: String = recent_context
+        .iter()
+        .rev()
+        .take(4)
+        .rev()
         .filter(|m| m.role == "user" || m.role == "assistant" || m.role == "narrative")
         .map(|m| {
             let speaker = match m.role.as_str() {
                 "user" => user_name.to_string(),
-                "assistant" => m.sender_character_id.as_ref()
-                    .and_then(|id| characters.iter().find(|c| &c.character_id == id).map(|c| c.display_name.clone()))
+                "assistant" => m
+                    .sender_character_id
+                    .as_ref()
+                    .and_then(|id| {
+                        characters
+                            .iter()
+                            .find(|c| &c.character_id == id)
+                            .map(|c| c.display_name.clone())
+                    })
                     .unwrap_or_else(|| "Character".to_string()),
                 "narrative" => "Narrator".to_string(),
                 _ => "Someone".to_string(),
@@ -234,8 +271,14 @@ Output: raw JSON array of character ids, e.g. ["char_abc"] or ["char_abc","char_
     let request = crate::ai::openai::ChatRequest {
         model: model_config.memory_model.clone(),
         messages: vec![
-            crate::ai::openai::ChatMessage { role: "system".to_string(), content: system },
-            crate::ai::openai::ChatMessage { role: "user".to_string(), content: user },
+            crate::ai::openai::ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            crate::ai::openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.3),
         max_completion_tokens: Some(80),
@@ -243,16 +286,25 @@ Output: raw JSON array of character ids, e.g. ["char_abc"] or ["char_abc","char_
     };
 
     let response = crate::ai::openai::chat_completion_with_base(
-        &model_config.chat_api_base(), api_key, &request
-    ).await?;
-    let raw = response.choices.first()
+        &model_config.chat_api_base(),
+        api_key,
+        &request,
+    )
+    .await?;
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
 
     // Tolerate markdown code fences / surrounding text by extracting the
     // first `[...]` substring.
     let body = if let (Some(start), Some(end)) = (raw.find('['), raw.rfind(']')) {
-        if end > start { &raw[start..=end] } else { raw.as_str() }
+        if end > start {
+            &raw[start..=end]
+        } else {
+            raw.as_str()
+        }
     } else {
         raw.as_str()
     };
@@ -317,17 +369,29 @@ pub async fn llm_pick_addressee(
     user_name: &str,
     context_limit: usize,
 ) -> AddresseePick {
-    if characters.is_empty() { return AddresseePick::Ambiguous; }
+    if characters.is_empty() {
+        return AddresseePick::Ambiguous;
+    }
 
     // Render the last few non-system messages as speaker-labeled lines.
-    let scene: Vec<String> = recent_context.iter()
-        .rev().take(context_limit).rev()
+    let scene: Vec<String> = recent_context
+        .iter()
+        .rev()
+        .take(context_limit)
+        .rev()
         .filter(|m| m.role == "user" || m.role == "assistant" || m.role == "narrative")
         .map(|m| {
             let speaker = match m.role.as_str() {
                 "user" => user_name.to_string(),
-                "assistant" => m.sender_character_id.as_deref()
-                    .and_then(|id| characters.iter().find(|c| &c.character_id == id).map(|c| c.display_name.clone()))
+                "assistant" => m
+                    .sender_character_id
+                    .as_deref()
+                    .and_then(|id| {
+                        characters
+                            .iter()
+                            .find(|c| &c.character_id == id)
+                            .map(|c| c.display_name.clone())
+                    })
                     .unwrap_or_else(|| "Character".to_string()),
                 "narrative" => "Narrator".to_string(),
                 _ => "Someone".to_string(),
@@ -336,8 +400,16 @@ pub async fn llm_pick_addressee(
             format!("{speaker}: {clipped}")
         })
         .collect();
-    let scene_block = if scene.is_empty() { "(no prior messages)".to_string() } else { scene.join("\n") };
-    let names_list = characters.iter().map(|c| c.display_name.as_str()).collect::<Vec<_>>().join(" | ");
+    let scene_block = if scene.is_empty() {
+        "(no prior messages)".to_string()
+    } else {
+        scene.join("\n")
+    };
+    let names_list = characters
+        .iter()
+        .map(|c| c.display_name.as_str())
+        .collect::<Vec<_>>()
+        .join(" | ");
 
     let system = r#"This is an easy question — answer it quickly.
 
@@ -380,8 +452,14 @@ Output RULES (strict):
     let request = crate::ai::openai::ChatRequest {
         model: model_config.memory_model.clone(),
         messages: vec![
-            crate::ai::openai::ChatMessage { role: "system".to_string(), content: system },
-            crate::ai::openai::ChatMessage { role: "user".to_string(), content: user },
+            crate::ai::openai::ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            crate::ai::openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.0),
         max_completion_tokens: Some(30),
@@ -389,15 +467,21 @@ Output RULES (strict):
     };
 
     let response = match crate::ai::openai::chat_completion_with_base(
-        &model_config.chat_api_base(), api_key, &request,
-    ).await {
+        &model_config.chat_api_base(),
+        api_key,
+        &request,
+    )
+    .await
+    {
         Ok(r) => r,
         Err(e) => {
             log::warn!("[GroupPick/Addressee] LLM call failed: {e}");
             return AddresseePick::Ambiguous;
         }
     };
-    let raw = response.choices.first()
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
     if raw.is_empty() {
@@ -407,7 +491,8 @@ Output RULES (strict):
     log::info!("[GroupPick/Addressee] raw LLM response: {raw:?}");
 
     // Normalize: strip quotes / punctuation, compare case-insensitively.
-    let cleaned = raw.trim_matches(|c: char| c.is_ascii_punctuation() || c.is_whitespace())
+    let cleaned = raw
+        .trim_matches(|c: char| c.is_ascii_punctuation() || c.is_whitespace())
         .to_string();
     let cleaned_lower = cleaned.to_lowercase();
 
@@ -415,7 +500,10 @@ Output RULES (strict):
     // "everyone." The system prompt specifically asks for ALL/BOTH/EVERYONE
     // in this case. Caller decides how to dispatch (group_chat picks
     // randomly; inventory falls back to most-recent).
-    if matches!(cleaned_lower.as_str(), "all" | "both" | "everyone" | "y'all" | "yall") {
+    if matches!(
+        cleaned_lower.as_str(),
+        "all" | "both" | "everyone" | "y'all" | "yall"
+    ) {
         log::info!("[GroupPick/Addressee] LLM said collective ({cleaned_lower:?}) — Collective");
         return AddresseePick::Collective;
     }
@@ -431,12 +519,16 @@ Output RULES (strict):
     // match; fall back to a character whose display name appears as a
     // substring of the model's output (handles "Darren." / "Darren ")
     // and vice versa (handles models that over-qualify with a title).
-    let by_exact = characters.iter()
+    let by_exact = characters
+        .iter()
         .find(|c| c.display_name.to_lowercase() == cleaned_lower);
-    if let Some(c) = by_exact { return AddresseePick::Solo(c.character_id.clone()); }
-    let by_contains = characters.iter()
-        .find(|c| cleaned_lower.contains(&c.display_name.to_lowercase())
-            || c.display_name.to_lowercase().contains(&cleaned_lower));
+    if let Some(c) = by_exact {
+        return AddresseePick::Solo(c.character_id.clone());
+    }
+    let by_contains = characters.iter().find(|c| {
+        cleaned_lower.contains(&c.display_name.to_lowercase())
+            || c.display_name.to_lowercase().contains(&cleaned_lower)
+    });
     match by_contains {
         Some(c) => AddresseePick::Solo(c.character_id.clone()),
         None => {
@@ -522,9 +614,10 @@ pub fn create_group_chat_cmd(
     sorted_ids.sort();
 
     // Build display name from character names
-    let names: Vec<String> = sorted_ids.iter().filter_map(|id| {
-        get_character(&conn, id).ok().map(|c| c.display_name)
-    }).collect();
+    let names: Vec<String> = sorted_ids
+        .iter()
+        .filter_map(|id| get_character(&conn, id).ok().map(|c| c.display_name))
+        .collect();
     let display_name = match names.len() {
         2 => format!("{} and {}", names[0], names[1]),
         3 => format!("{}, {}, and {}", names[0], names[1], names[2]),
@@ -554,10 +647,7 @@ pub fn list_group_chats_cmd(
 }
 
 #[tauri::command]
-pub fn delete_group_chat_cmd(
-    db: State<Database>,
-    group_chat_id: String,
-) -> Result<(), String> {
+pub fn delete_group_chat_cmd(db: State<Database>, group_chat_id: String) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
     delete_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())
 }
@@ -579,11 +669,13 @@ pub fn clear_group_chat_history_cmd(
     } else {
         "SELECT message_id FROM group_messages WHERE thread_id = ?1"
     };
-    let msg_ids: Vec<String> = conn.prepare(deletable_sql)
+    let msg_ids: Vec<String> = conn
+        .prepare(deletable_sql)
         .map_err(|e| e.to_string())?
         .query_map(params![gc.thread_id], |row| row.get(0))
         .map_err(|e| e.to_string())?
-        .filter_map(|r| r.ok()).collect();
+        .filter_map(|r| r.ok())
+        .collect();
 
     // Illustrations (only clean up when not keeping media)
     let mut illustration_files: Vec<String> = Vec::new();
@@ -595,11 +687,18 @@ pub fn clear_group_chat_history_cmd(
             .map_err(|e| e.to_string())?
             .filter_map(|r| r.ok()).collect();
         for illus_id in &illus_ids {
-            let file_name: Option<String> = conn.query_row(
-                "SELECT file_name FROM world_images WHERE image_id = ?1",
-                params![illus_id], |r| r.get(0),
-            ).ok();
-            conn.execute("DELETE FROM world_images WHERE image_id = ?1", params![illus_id]).ok();
+            let file_name: Option<String> = conn
+                .query_row(
+                    "SELECT file_name FROM world_images WHERE image_id = ?1",
+                    params![illus_id],
+                    |r| r.get(0),
+                )
+                .ok();
+            conn.execute(
+                "DELETE FROM world_images WHERE image_id = ?1",
+                params![illus_id],
+            )
+            .ok();
             if let Some(f) = file_name {
                 illustration_files.push(f);
             }
@@ -607,21 +706,41 @@ pub fn clear_group_chat_history_cmd(
     }
 
     // FTS — group_messages_fts is only populated for text messages, safe to blanket-delete.
-    conn.execute("DELETE FROM group_messages_fts WHERE thread_id = ?1", params![gc.thread_id]).ok();
+    conn.execute(
+        "DELETE FROM group_messages_fts WHERE thread_id = ?1",
+        params![gc.thread_id],
+    )
+    .ok();
 
     if keep_media {
         conn.execute(
             "DELETE FROM group_messages WHERE thread_id = ?1 AND role != 'illustration'",
             params![gc.thread_id],
-        ).map_err(|e| e.to_string())?;
+        )
+        .map_err(|e| e.to_string())?;
     } else {
-        conn.execute("DELETE FROM group_messages WHERE thread_id = ?1", params![gc.thread_id])
-            .map_err(|e| e.to_string())?;
-        conn.execute("DELETE FROM novel_entries WHERE thread_id = ?1", params![gc.thread_id]).ok();
+        conn.execute(
+            "DELETE FROM group_messages WHERE thread_id = ?1",
+            params![gc.thread_id],
+        )
+        .map_err(|e| e.to_string())?;
+        conn.execute(
+            "DELETE FROM novel_entries WHERE thread_id = ?1",
+            params![gc.thread_id],
+        )
+        .ok();
     }
 
-    conn.execute("DELETE FROM memory_artifacts WHERE subject_id = ?1", params![gc.thread_id]).ok();
-    conn.execute("DELETE FROM message_count_tracker WHERE thread_id = ?1", params![gc.thread_id]).ok();
+    conn.execute(
+        "DELETE FROM memory_artifacts WHERE subject_id = ?1",
+        params![gc.thread_id],
+    )
+    .ok();
+    conn.execute(
+        "DELETE FROM message_count_tracker WHERE thread_id = ?1",
+        params![gc.thread_id],
+    )
+    .ok();
 
     for msg_id in &msg_ids {
         crate::commands::audio_cmds::delete_audio_for_message(&audio_dir.0, msg_id);
@@ -673,12 +792,13 @@ pub fn save_group_user_message_cmd(
         tokens_estimate: 0,
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
-        world_day: wd, world_time: wt,
-            address_to: None,
+        world_day: wd,
+        world_time: wt,
+        address_to: None,
         mood_chain: None,
         is_proactive: false,
         formula_signature: None,
-        };
+    };
     create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
     Ok(msg)
 }
@@ -718,10 +838,17 @@ pub async fn pick_group_responders_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
 
-        let char_ids: Vec<String> = gc.character_ids.as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+        let char_ids: Vec<String> = gc
+            .character_ids
+            .as_array()
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect()
+            })
             .unwrap_or_default();
-        let characters: Vec<Character> = char_ids.iter()
+        let characters: Vec<Character> = char_ids
+            .iter()
             .filter_map(|id| get_character(&conn, id).ok())
             .collect();
 
@@ -730,7 +857,8 @@ pub async fn pick_group_responders_cmd(
         let recent = list_group_messages(&conn, &gc.thread_id, 6).unwrap_or_default();
 
         let mut model_config = orchestrator::load_model_config(&conn);
-        model_config.apply_provider_override(&conn, &format!("provider_override.{}", group_chat_id));
+        model_config
+            .apply_provider_override(&conn, &format!("provider_override.{}", group_chat_id));
         let user_name = get_user_profile(&conn, &gc.world_id)
             .ok()
             .map(|p| p.display_name)
@@ -774,9 +902,15 @@ pub async fn pick_group_responders_cmd(
     //     most-recently-active speaker (the user was probably still
     //     continuing that thread even if it didn't read that way).
     let pick = llm_pick_addressee(
-        &api_key, &model_config, &content, &ctx_for_pick,
-        &characters, &user_name, 4,
-    ).await;
+        &api_key,
+        &model_config,
+        &content,
+        &ctx_for_pick,
+        &characters,
+        &user_name,
+        4,
+    )
+    .await;
 
     match pick {
         AddresseePick::Solo(addressee_id) => {
@@ -792,7 +926,9 @@ pub async fn pick_group_responders_cmd(
             let random_id = characters[idx].character_id.clone();
             log::info!(
                 "[GroupPick] LLM said collective — random pick: {} ({}/{} chars)",
-                random_id, idx + 1, characters.len(),
+                random_id,
+                idx + 1,
+                characters.len(),
             );
             Ok(vec![random_id])
         }
@@ -801,7 +937,8 @@ pub async fn pick_group_responders_cmd(
             // exactly ONE character speaks: pick the most-recently-active
             // character in the thread. If nobody has spoken yet, default
             // to the first group member.
-            let fallback_id: Option<String> = recent_msgs.iter()
+            let fallback_id: Option<String> = recent_msgs
+                .iter()
                 .rev()
                 .filter_map(|m| m.sender_character_id.as_deref())
                 .find(|id| characters.iter().any(|c| c.character_id == *id))
@@ -810,7 +947,10 @@ pub async fn pick_group_responders_cmd(
 
             match fallback_id {
                 Some(id) => {
-                    log::info!("[GroupPick] LLM returned NONE — fallback to most-recent speaker {}", id);
+                    log::info!(
+                        "[GroupPick] LLM returned NONE — fallback to most-recent speaker {}",
+                        id
+                    );
                     Ok(vec![id])
                 }
                 None => {
@@ -835,13 +975,21 @@ pub async fn send_group_message_cmd(
         let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
         let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
         let mut model_config = orchestrator::load_model_config(&conn);
-        model_config.apply_provider_override(&conn, &format!("provider_override.{}", group_chat_id));
+        model_config
+            .apply_provider_override(&conn, &format!("provider_override.{}", group_chat_id));
         let user_profile = get_user_profile(&conn, &gc.world_id).ok();
 
-        let char_ids: Vec<String> = gc.character_ids.as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+        let char_ids: Vec<String> = gc
+            .character_ids
+            .as_array()
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect()
+            })
             .unwrap_or_default();
-        let characters: Vec<Character> = char_ids.iter()
+        let characters: Vec<Character> = char_ids
+            .iter()
             .filter_map(|id| get_character(&conn, id).ok())
             .collect();
 
@@ -855,11 +1003,12 @@ pub async fn send_group_message_cmd(
             tokens_estimate: (content.len() as i64) / 4,
             sender_character_id: None,
             created_at: Utc::now().to_rfc3339(),
-            world_day: wd, world_time: wt.clone(),
+            world_day: wd,
+            world_time: wt.clone(),
             address_to: None,
-        mood_chain: None,
-        is_proactive: false,
-        formula_signature: None,
+            mood_chain: None,
+            is_proactive: false,
+            formula_signature: None,
         };
         create_group_message(&conn, &user_msg).map_err(|e| e.to_string())?;
 
@@ -869,7 +1018,8 @@ pub async fn send_group_message_cmd(
     let (wd, wt) = chat_cmds::world_time_fields(&world);
 
     // Build character name map for message formatting
-    let character_names: HashMap<String, String> = characters.iter()
+    let character_names: HashMap<String, String> = characters
+        .iter()
         .map(|c| (c.character_id.clone(), c.display_name.clone()))
         .collect();
 
@@ -880,14 +1030,22 @@ pub async fn send_group_message_cmd(
     // the vector so we can reuse it as the query in per-character
     // retrieval below without re-embedding.
     let member_ids: Vec<String> = characters.iter().map(|c| c.character_id.clone()).collect();
-    let user_name = user_profile.as_ref().map(|p| p.display_name.as_str()).unwrap_or("the human");
+    let user_name = user_profile
+        .as_ref()
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("the human");
     let user_chunk_text = format!("{user_name}: {}", content);
     let query_embedding: Option<Vec<f32>> = if !model_config.is_local() {
         chat_cmds::embed_and_store_for_members(
-            &db, &api_key, &model_config,
-            &world.world_id, &member_ids,
-            &user_msg.message_id, &user_chunk_text,
-        ).await
+            &db,
+            &api_key,
+            &model_config,
+            &world.world_id,
+            &member_ids,
+            &user_msg.message_id,
+            &user_chunk_text,
+        )
+        .await
     } else {
         None
     };
@@ -902,7 +1060,8 @@ pub async fn send_group_message_cmd(
         let r = get_thread_mood_reduction(&conn, &gc.thread_id);
         // Last 4 messages before the user's brand-new one.
         let all = list_group_messages(&conn, &gc.thread_id, 5).unwrap_or_default();
-        let ctx: Vec<Message> = all.into_iter()
+        let ctx: Vec<Message> = all
+            .into_iter()
             .filter(|m| m.message_id != user_msg.message_id)
             .collect();
         // Per-chat reactions setting (group-scoped). Three modes:
@@ -910,8 +1069,11 @@ pub async fn send_group_message_cmd(
         // the full rationale; same parsing helper used here.
         let reactions_mode = crate::commands::reactions_helpers::parse_reactions_mode(
             get_setting(&conn, &format!("reactions_enabled.{}", gc.group_chat_id))
-                .ok().flatten().as_deref()
-        ).to_string();
+                .ok()
+                .flatten()
+                .as_deref(),
+        )
+        .to_string();
         (r, ctx, reactions_mode)
     };
     // Skip launching the reaction LLM call entirely when reactions are
@@ -928,9 +1090,15 @@ pub async fn send_group_message_cmd(
         let reaction_mode_clone = reactions_mode.clone();
         Some(tokio::spawn(async move {
             orchestrator::pick_character_reaction_via_llm(
-                &reaction_base, &reaction_api_key, &reaction_model,
-                &reaction_content, &reaction_reduction, &reaction_ctx, &reaction_mode_clone,
-            ).await
+                &reaction_base,
+                &reaction_api_key,
+                &reaction_model,
+                &reaction_content,
+                &reaction_reduction,
+                &reaction_ctx,
+                &reaction_mode_clone,
+            )
+            .await
         }))
     } else {
         None
@@ -948,7 +1116,10 @@ pub async fn send_group_message_cmd(
     //    respond in what order.
     // 3. All-respond fallback — if the LLM call fails or returns no
     //    valid ids, everyone speaks in stored character_ids order.
-    let user_name_for_pick = user_profile.as_ref().map(|p| p.display_name.as_str()).unwrap_or("the human");
+    let user_name_for_pick = user_profile
+        .as_ref()
+        .map(|p| p.display_name.as_str())
+        .unwrap_or("the human");
     let addressed = detect_direct_address(&content, &characters);
     let responder_ids: Vec<String> = if addressed.len() == 1 {
         log::info!("[GroupTurn] direct-address matched: {:?}", addressed);
@@ -961,9 +1132,19 @@ pub async fn send_group_message_cmd(
             all.retain(|m| m.message_id != user_msg.message_id);
             all
         };
-        match llm_pick_responders(&api_key, &model_config, &content, &characters, &ctx_for_pick, user_name_for_pick).await {
+        match llm_pick_responders(
+            &api_key,
+            &model_config,
+            &content,
+            &characters,
+            &ctx_for_pick,
+            user_name_for_pick,
+        )
+        .await
+        {
             Ok(picks) => {
-                let valid: Vec<String> = picks.into_iter()
+                let valid: Vec<String> = picks
+                    .into_iter()
                     .filter(|id| characters.iter().any(|c| &c.character_id == id))
                     .collect();
                 if valid.is_empty() {
@@ -980,7 +1161,8 @@ pub async fn send_group_message_cmd(
             }
         }
     };
-    let responders: Vec<Character> = responder_ids.iter()
+    let responders: Vec<Character> = responder_ids
+        .iter()
         .filter_map(|id| characters.iter().find(|c| &c.character_id == id).cloned())
         .collect();
 
@@ -993,7 +1175,8 @@ pub async fn send_group_message_cmd(
 
     for (_i, character) in responders.iter().enumerate() {
         // Build group context (other characters, excluding the one responding)
-        let other_chars: Vec<OtherCharacter> = characters.iter()
+        let other_chars: Vec<OtherCharacter> = characters
+            .iter()
             .filter(|c| c.character_id != character.character_id)
             .map(|c| OtherCharacter {
                 character_id: c.character_id.clone(),
@@ -1002,11 +1185,16 @@ pub async fn send_group_message_cmd(
                 sex: c.sex.clone(),
                 voice_rules: crate::ai::prompts::json_array_to_strings(&c.voice_rules),
                 visual_description: c.visual_description.clone(),
-                inventory_block: crate::ai::prompts::render_inventory_block(&c.display_name, &c.inventory),
+                inventory_block: crate::ai::prompts::render_inventory_block(
+                    &c.display_name,
+                    &c.inventory,
+                ),
                 derived_formula: c.derived_formula.clone(),
             })
             .collect();
-        let group_context = GroupContext { other_characters: other_chars };
+        let group_context = GroupContext {
+            other_characters: other_chars,
+        };
 
         // Load settings scoped to the group chat
         let (response_length, narration_tone, leader) = {
@@ -1018,17 +1206,28 @@ pub async fn send_group_message_cmd(
             // no token cap in the orchestrator, which is exactly the "group
             // chats drift long" failure mode users report.
             let rl = get_setting(&conn, &format!("response_length.{}", gc.group_chat_id))
-                .ok().flatten()
+                .ok()
+                .flatten()
                 .or_else(|| Some("Short".to_string()));
-            let nt = get_setting(&conn, &format!("narration_tone.{}", gc.group_chat_id)).ok().flatten();
-            let leader = get_setting(&conn, &format!("leader.{}", gc.group_chat_id)).ok().flatten();
+            let nt = get_setting(&conn, &format!("narration_tone.{}", gc.group_chat_id))
+                .ok()
+                .flatten();
+            let leader = get_setting(&conn, &format!("leader.{}", gc.group_chat_id))
+                .ok()
+                .flatten();
             (rl, nt, leader)
         };
 
         // Re-fetch recent messages (includes previous characters' responses)
         let recent_msgs = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            list_group_messages_within_budget(&conn, &gc.thread_id, model_config.safe_history_budget() as i64, 30).map_err(|e| e.to_string())?
+            list_group_messages_within_budget(
+                &conn,
+                &gc.thread_id,
+                model_config.safe_history_budget() as i64,
+                30,
+            )
+            .map_err(|e| e.to_string())?
         };
 
         // Get thread summary for retrieval context
@@ -1045,7 +1244,8 @@ pub async fn send_group_message_cmd(
         // that the conversation history may have drifted a speaker or two.
         // Reinforces the "# THE TURN" section of the system prompt at the
         // moment it matters most — right before generation.
-        let user_name = user_profile.as_ref()
+        let user_name = user_profile
+            .as_ref()
             .map(|p| p.display_name.as_str())
             .unwrap_or("the human");
         let mut dialogue_msgs = recent_msgs.clone();
@@ -1085,9 +1285,9 @@ pub async fn send_group_message_cmd(
             world_day: None,
             world_time: None,
             address_to: None,
-        mood_chain: None,
-        is_proactive: false,
-        formula_signature: None,
+            mood_chain: None,
+            is_proactive: false,
+            formula_signature: None,
         });
 
         // Generate response — load mood_reduction + pick chain for AGENCY.
@@ -1102,11 +1302,16 @@ pub async fn send_group_message_cmd(
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
             list_kept_message_ids_for_thread(&conn, &gc.thread_id).unwrap_or_default()
         };
-        let illustration_captions = crate::commands::chat_cmds::collect_illustration_captions(&db, &dialogue_msgs);
-        let reactions_by_msg = crate::commands::chat_cmds::collect_reactions_by_message(&db, &dialogue_msgs);
+        let illustration_captions =
+            crate::commands::chat_cmds::collect_illustration_captions(&db, &dialogue_msgs);
+        let reactions_by_msg =
+            crate::commands::chat_cmds::collect_reactions_by_message(&db, &dialogue_msgs);
         let mut retrieved = retrieved.clone();
         if let Some(ct) = crate::commands::chat_cmds::build_cross_thread_snippet(
-            &db, &character.character_id, &gc.thread_id, user_profile.as_ref(),
+            &db,
+            &character.character_id,
+            &gc.thread_id,
+            user_profile.as_ref(),
         ) {
             retrieved.push(ct);
         }
@@ -1116,14 +1321,19 @@ pub async fn send_group_message_cmd(
         // surface long-tail recall the recent window can't cover.
         if let Some(emb) = query_embedding.as_ref() {
             let mems = crate::commands::chat_cmds::vector_search_memories(
-                &db, &world.world_id, &character.character_id, emb, 4,
+                &db,
+                &world.world_id,
+                &character.character_id,
+                emb,
+                4,
             );
             retrieved.extend(mems);
         }
         let send_history = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
             get_setting(&conn, &format!("send_history.{}", gc.group_chat_id))
-                .ok().flatten()
+                .ok()
+                .flatten()
                 .map(|v| v != "off" && v != "false")
                 .unwrap_or(true)
         };
@@ -1133,7 +1343,10 @@ pub async fn send_group_message_cmd(
         };
         let latest_reading = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            list_daily_readings(&conn, &world.world_id, 1).unwrap_or_default().into_iter().next()
+            list_daily_readings(&conn, &world.world_id, 1)
+                .unwrap_or_default()
+                .into_iter()
+                .next()
         };
         let latest_meanwhile = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -1152,8 +1365,8 @@ pub async fn send_group_message_cmd(
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
             combined_axes_block(&conn, &character.character_id)
         };
-        let current_world_day_for_stance: Option<i64> = dialogue_msgs.iter().rev()
-            .find_map(|m| m.world_day);
+        let current_world_day_for_stance: Option<i64> =
+            dialogue_msgs.iter().rev().find_map(|m| m.world_day);
         let stance_needs_refresh = match (latest_stance.as_ref(), current_world_day_for_stance) {
             (None, _) => true,
             (Some(s), Some(today)) => s.world_day_at_generation.map(|d| today > d).unwrap_or(true),
@@ -1174,10 +1387,15 @@ pub async fn send_group_message_cmd(
         // Build a Formula momentstamp when reactions are off, with
         // stateful chain (read prior signature from latest assistant
         // message in this group chat).
-        let (formula_momentstamp_text, formula_momentstamp_signature): (Option<String>, Option<String>) = if reactions_mode == "off" {
+        let (formula_momentstamp_text, formula_momentstamp_signature): (
+            Option<String>,
+            Option<String>,
+        ) = if reactions_mode == "off" {
             let prior_sig: Option<String> = {
                 let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                crate::db::queries::latest_formula_signature_group(&conn, &gc.thread_id).ok().flatten()
+                crate::db::queries::latest_formula_signature_group(&conn, &gc.thread_id)
+                    .ok()
+                    .flatten()
             };
             match crate::ai::momentstamp::build_formula_momentstamp(
                 &model_config.chat_api_base(),
@@ -1186,7 +1404,11 @@ pub async fn send_group_message_cmd(
                 &dialogue_msgs,
                 prior_sig.as_deref(),
                 Some(character),
-            ).await.ok().flatten() {
+            )
+            .await
+            .ok()
+            .flatten()
+            {
                 Some(r) => (Some(r.block), Some(r.signature)),
                 None => (None, None),
             }
@@ -1196,16 +1418,34 @@ pub async fn send_group_message_cmd(
 
         let (current_loc, location_pair) = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            let cl = get_group_chat_location(&conn, &gc.group_chat_id).ok().flatten();
-            let lp = orchestrator::resolve_location_derivation_pair(&conn, &world.world_id, cl.as_deref(), &dialogue_msgs);
+            let cl = get_group_chat_location(&conn, &gc.group_chat_id)
+                .ok()
+                .flatten();
+            let lp = orchestrator::resolve_location_derivation_pair(
+                &conn,
+                &world.world_id,
+                cl.as_deref(),
+                &dialogue_msgs,
+            );
             (cl, lp)
         };
-        let location_arg: Option<(&str, &str)> = location_pair.as_ref().map(|(n, d)| (n.as_str(), d.as_str()));
+        let location_arg: Option<(&str, &str)> = location_pair
+            .as_ref()
+            .map(|(n, d)| (n.as_str(), d.as_str()));
         let (raw_reply, usage) = orchestrator::run_dialogue_with_base(
-            &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
-            if !model_config.is_local() { Some(&model_config.memory_model) } else { None },
+            &model_config.chat_api_base(),
+            &api_key,
+            &model_config.dialogue_model,
+            if !model_config.is_local() {
+                Some(&model_config.memory_model)
+            } else {
+                None
+            },
             send_history,
-            &world, character, &dialogue_msgs, &retrieved,
+            &world,
+            character,
+            &dialogue_msgs,
+            &retrieved,
             user_profile.as_ref(),
             None, // no mood directive for group chats (keep it simpler)
             response_length.as_deref(),
@@ -1225,16 +1465,20 @@ pub async fn send_group_message_cmd(
             active_quests.as_slice(),
             stance_text.as_deref(),
             anchor_text.as_deref(),
-        current_loc.as_deref(),
-        formula_momentstamp_text.as_deref(),
-        location_arg,
-        ).await?;
+            current_loc.as_deref(),
+            formula_momentstamp_text.as_deref(),
+            location_arg,
+        )
+        .await?;
 
         // Strip own prefix and truncate any other-character dialogue
-        let other_names: Vec<&str> = characters.iter()
+        let other_names: Vec<&str> = characters
+            .iter()
             .filter(|c| c.character_id != character.character_id)
-            .map(|c| c.display_name.as_str()).collect();
-        let mut reply_text = strip_character_prefix(&raw_reply, &character.display_name, &other_names);
+            .map(|c| c.display_name.as_str())
+            .collect();
+        let mut reply_text =
+            strip_character_prefix(&raw_reply, &character.display_name, &other_names);
         let mut usage = usage;
 
         // Conscience Pass: grade against the five invariants and
@@ -1243,19 +1487,32 @@ pub async fn send_group_message_cmd(
         let conscience_enabled = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
             get_setting(&conn, "conscience_pass_enabled")
-                .ok().flatten()
+                .ok()
+                .flatten()
                 .map(|v| v != "off" && v != "false")
                 .unwrap_or(true)
         };
         if conscience_enabled {
             match crate::ai::conscience::grade_reply(
-                &model_config.chat_api_base(), &api_key, &model_config.memory_model,
-                character, &content, &reply_text,
-            ).await {
+                &model_config.chat_api_base(),
+                &api_key,
+                &model_config.memory_model,
+                character,
+                &content,
+                &reply_text,
+            )
+            .await
+            {
                 Ok(verdict) => {
                     if let Some(u) = &verdict.usage {
                         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                        let _ = record_token_usage(&conn, "conscience", &model_config.memory_model, u.prompt_tokens, u.completion_tokens);
+                        let _ = record_token_usage(
+                            &conn,
+                            "conscience",
+                            &model_config.memory_model,
+                            u.prompt_tokens,
+                            u.completion_tokens,
+                        );
                     }
                     if !verdict.passed {
                         log::warn!(
@@ -1265,10 +1522,19 @@ pub async fn send_group_message_cmd(
                         );
                         if let Some(note) = crate::ai::conscience::build_correction_note(&verdict) {
                             match orchestrator::run_dialogue_with_base(
-                                &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
-                                if !model_config.is_local() { Some(&model_config.memory_model) } else { None },
+                                &model_config.chat_api_base(),
+                                &api_key,
+                                &model_config.dialogue_model,
+                                if !model_config.is_local() {
+                                    Some(&model_config.memory_model)
+                                } else {
+                                    None
+                                },
                                 send_history,
-                                &world, character, &dialogue_msgs, &retrieved,
+                                &world,
+                                character,
+                                &dialogue_msgs,
+                                &retrieved,
                                 user_profile.as_ref(),
                                 None,
                                 response_length.as_deref(),
@@ -1288,13 +1554,22 @@ pub async fn send_group_message_cmd(
                                 active_quests.as_slice(),
                                 stance_text.as_deref(),
                                 anchor_text.as_deref(),
-                            current_loc.as_deref(),
-                            formula_momentstamp_text.as_deref(),
-                            location_arg,
-                            ).await {
+                                current_loc.as_deref(),
+                                formula_momentstamp_text.as_deref(),
+                                location_arg,
+                            )
+                            .await
+                            {
                                 Ok((corrected_raw, corrected_usage)) => {
-                                    log::info!("[Conscience] {} (group) reply corrected after drift", character.display_name);
-                                    reply_text = strip_character_prefix(&corrected_raw, &character.display_name, &other_names);
+                                    log::info!(
+                                        "[Conscience] {} (group) reply corrected after drift",
+                                        character.display_name
+                                    );
+                                    reply_text = strip_character_prefix(
+                                        &corrected_raw,
+                                        &character.display_name,
+                                        &other_names,
+                                    );
                                     usage = corrected_usage;
                                 }
                                 Err(e) => {
@@ -1303,7 +1578,10 @@ pub async fn send_group_message_cmd(
                             }
                         }
                     } else {
-                        log::info!("[Conscience] {} (group) draft passed", character.display_name);
+                        log::info!(
+                            "[Conscience] {} (group) draft passed",
+                            character.display_name
+                        );
                     }
                 }
                 Err(e) => {
@@ -1314,7 +1592,13 @@ pub async fn send_group_message_cmd(
 
         if let Some(u) = &usage {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            let _ = record_token_usage(&conn, "group_dialogue", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
+            let _ = record_token_usage(
+                &conn,
+                "group_dialogue",
+                &model_config.dialogue_model,
+                u.prompt_tokens,
+                u.completion_tokens,
+            );
         }
 
         // Save response — in auto-respond chain triggered by a user message,
@@ -1328,7 +1612,8 @@ pub async fn send_group_message_cmd(
             tokens_estimate: tokens as i64,
             sender_character_id: Some(character.character_id.clone()),
             created_at: Utc::now().to_rfc3339(),
-            world_day: wd, world_time: wt.clone(),
+            world_day: wd,
+            world_time: wt.clone(),
             address_to: Some("user".to_string()),
             mood_chain: mood_chain_json.clone(),
             is_proactive: false,
@@ -1345,10 +1630,15 @@ pub async fn send_group_message_cmd(
         if !model_config.is_local() {
             let reply_chunk_text = format!("{}: {}", character.display_name, response_msg.content);
             let _ = crate::commands::chat_cmds::embed_and_store_for_members(
-                &db, &api_key, &model_config,
-                &world.world_id, &member_ids,
-                &response_msg.message_id, &reply_chunk_text,
-            ).await;
+                &db,
+                &api_key,
+                &model_config,
+                &world.world_id,
+                &member_ids,
+                &response_msg.message_id,
+                &reply_chunk_text,
+            )
+            .await;
         }
 
         prior_speakers_this_turn.push(character.display_name.clone());
@@ -1376,12 +1666,7 @@ pub async fn send_group_message_cmd(
             // Batch flow (unused by current frontend but kept for completeness) —
             // attribute to None since we don't know which specific character
             // produced the single reaction here.
-            let _ = chat_cmds::emit_character_reaction(
-                &db,
-                &user_msg.message_id,
-                &emoji,
-                None,
-            );
+            let _ = chat_cmds::emit_character_reaction(&db, &user_msg.message_id, &emoji, None);
         }
     }
 
@@ -1391,7 +1676,9 @@ pub async fn send_group_message_cmd(
     // maybe_refresh_after_turn handles duplicate user/world calls.
     let group_loc_for_refresh = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        get_group_chat_location(&conn, &gc.group_chat_id).ok().flatten()
+        get_group_chat_location(&conn, &gc.group_chat_id)
+            .ok()
+            .flatten()
     };
     for resp in &responses {
         crate::ai::derivation::maybe_refresh_after_turn(
@@ -1402,7 +1689,8 @@ pub async fn send_group_message_cmd(
             world.world_id.clone(),
             resp.sender_character_id.clone(),
             group_loc_for_refresh.clone(),
-        ).await;
+        )
+        .await;
     }
     // If no responders (silent turn), still refresh user + world via
     // a single character_id=None call.
@@ -1415,7 +1703,8 @@ pub async fn send_group_message_cmd(
             world.world_id.clone(),
             None,
             group_loc_for_refresh.clone(),
-        ).await;
+        )
+        .await;
     }
 
     Ok(SendGroupMessageResult {
@@ -1439,24 +1728,34 @@ pub async fn prompt_group_character_cmd(
         let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
         let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
         let mut model_config = orchestrator::load_model_config(&conn);
-        model_config.apply_provider_override(&conn, &format!("provider_override.{}", group_chat_id));
+        model_config
+            .apply_provider_override(&conn, &format!("provider_override.{}", group_chat_id));
         let user_profile = get_user_profile(&conn, &gc.world_id).ok();
 
-        let char_ids: Vec<String> = gc.character_ids.as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+        let char_ids: Vec<String> = gc
+            .character_ids
+            .as_array()
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect()
+            })
             .unwrap_or_default();
-        let characters: Vec<Character> = char_ids.iter()
+        let characters: Vec<Character> = char_ids
+            .iter()
             .filter_map(|id| get_character(&conn, id).ok())
             .collect();
 
         (gc, world, character, characters, model_config, user_profile)
     };
 
-    let character_names: HashMap<String, String> = characters.iter()
+    let character_names: HashMap<String, String> = characters
+        .iter()
         .map(|c| (c.character_id.clone(), c.display_name.clone()))
         .collect();
 
-    let other_chars: Vec<OtherCharacter> = characters.iter()
+    let other_chars: Vec<OtherCharacter> = characters
+        .iter()
         .filter(|c| c.character_id != character_id)
         .map(|c| OtherCharacter {
             character_id: c.character_id.clone(),
@@ -1465,15 +1764,26 @@ pub async fn prompt_group_character_cmd(
             sex: c.sex.clone(),
             voice_rules: crate::ai::prompts::json_array_to_strings(&c.voice_rules),
             visual_description: c.visual_description.clone(),
-            inventory_block: crate::ai::prompts::render_inventory_block(&c.display_name, &c.inventory),
+            inventory_block: crate::ai::prompts::render_inventory_block(
+                &c.display_name,
+                &c.inventory,
+            ),
             derived_formula: c.derived_formula.clone(),
         })
         .collect();
-    let group_context = GroupContext { other_characters: other_chars };
+    let group_context = GroupContext {
+        other_characters: other_chars,
+    };
 
     let recent_msgs = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        list_group_messages_within_budget(&conn, &gc.thread_id, model_config.safe_history_budget() as i64, 30).map_err(|e| e.to_string())?
+        list_group_messages_within_budget(
+            &conn,
+            &gc.thread_id,
+            model_config.safe_history_budget() as i64,
+            30,
+        )
+        .map_err(|e| e.to_string())?
     };
 
     let mut retrieved: Vec<String> = Vec::new();
@@ -1490,20 +1800,29 @@ pub async fn prompt_group_character_cmd(
     let (response_length, narration_tone, leader, reactions_mode) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let rl = get_setting(&conn, &format!("response_length.{}", gc.group_chat_id))
-            .ok().flatten()
+            .ok()
+            .flatten()
             .or_else(|| Some("Short".to_string()));
-        let nt = get_setting(&conn, &format!("narration_tone.{}", gc.group_chat_id)).ok().flatten();
-        let leader = get_setting(&conn, &format!("leader.{}", gc.group_chat_id)).ok().flatten();
+        let nt = get_setting(&conn, &format!("narration_tone.{}", gc.group_chat_id))
+            .ok()
+            .flatten();
+        let leader = get_setting(&conn, &format!("leader.{}", gc.group_chat_id))
+            .ok()
+            .flatten();
         let reactions_mode = crate::commands::reactions_helpers::parse_reactions_mode(
             get_setting(&conn, &format!("reactions_enabled.{}", gc.group_chat_id))
-                .ok().flatten().as_deref()
-        ).to_string();
+                .ok()
+                .flatten()
+                .as_deref(),
+        )
+        .to_string();
         (rl, nt, leader, reactions_mode)
     };
 
     // Add a nudge directing who the character should address
     let mut dialogue_msgs = recent_msgs.clone();
-    let user_name = user_profile.as_ref()
+    let user_name = user_profile
+        .as_ref()
         .map(|p| p.display_name.as_str())
         .unwrap_or("the human");
     let length_tail = length_reminder_for_turn(response_length.as_deref());
@@ -1523,12 +1842,13 @@ pub async fn prompt_group_character_cmd(
         tokens_estimate: 0,
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
-            world_day: None, world_time: None,
-            address_to: None,
+        world_day: None,
+        world_time: None,
+        address_to: None,
         mood_chain: None,
         is_proactive: false,
         formula_signature: None,
-        });
+    });
 
     let mood_reduction2 = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -1542,24 +1862,36 @@ pub async fn prompt_group_character_cmd(
     // character is felt-responding to. In auto-respond chains where this
     // character is the 2nd or 3rd to go, that message is still the
     // triggering user turn, not the intermediate assistant messages.
-    let (reaction_target_id, reaction_user_content): (Option<String>, String) = recent_msgs.iter()
+    let (reaction_target_id, reaction_user_content): (Option<String>, String) = recent_msgs
+        .iter()
         .rev()
         .find(|m| m.role == "user")
         .map(|m| (Some(m.message_id.clone()), m.content.clone()))
         .unwrap_or_else(|| (None, String::new()));
-    let reaction_context: Vec<Message> = recent_msgs.iter()
-        .rev().skip(1).take(4).rev().cloned().collect();
+    let reaction_context: Vec<Message> = recent_msgs
+        .iter()
+        .rev()
+        .skip(1)
+        .take(4)
+        .rev()
+        .cloned()
+        .collect();
 
     let base = model_config.chat_api_base();
     let kept_ids: Vec<String> = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         list_kept_message_ids_for_thread(&conn, &gc.thread_id).unwrap_or_default()
     };
-    let illustration_captions = crate::commands::chat_cmds::collect_illustration_captions(&db, &dialogue_msgs);
-    let reactions_by_msg = crate::commands::chat_cmds::collect_reactions_by_message(&db, &dialogue_msgs);
+    let illustration_captions =
+        crate::commands::chat_cmds::collect_illustration_captions(&db, &dialogue_msgs);
+    let reactions_by_msg =
+        crate::commands::chat_cmds::collect_reactions_by_message(&db, &dialogue_msgs);
     let mut retrieved = retrieved;
     if let Some(ct) = crate::commands::chat_cmds::build_cross_thread_snippet(
-        &db, &character.character_id, &gc.thread_id, user_profile.as_ref(),
+        &db,
+        &character.character_id,
+        &gc.thread_id,
+        user_profile.as_ref(),
     ) {
         retrieved.push(ct);
     }
@@ -1568,25 +1900,40 @@ pub async fn prompt_group_character_cmd(
     // their solo chat + all groups they're in because we store group
     // chunks under each member's character_id.
     let member_ids: Vec<String> = characters.iter().map(|c| c.character_id.clone()).collect();
-    let query_embedding: Option<Vec<f32>> = if !model_config.is_local() && !reaction_user_content.is_empty() {
-        orchestrator::generate_embeddings_with_base(
-            &model_config.openai_api_base(), &api_key,
-            &model_config.embedding_model, vec![reaction_user_content.clone()],
-        ).await.ok().and_then(|(v, tokens)| {
-            let _ = db.conn.lock().ok().map(|conn| record_token_usage(&conn, "embedding", &model_config.embedding_model, tokens, 0));
-            v.into_iter().next()
-        })
-    } else { None };
+    let query_embedding: Option<Vec<f32>> =
+        if !model_config.is_local() && !reaction_user_content.is_empty() {
+            orchestrator::generate_embeddings_with_base(
+                &model_config.openai_api_base(),
+                &api_key,
+                &model_config.embedding_model,
+                vec![reaction_user_content.clone()],
+            )
+            .await
+            .ok()
+            .and_then(|(v, tokens)| {
+                let _ = db.conn.lock().ok().map(|conn| {
+                    record_token_usage(&conn, "embedding", &model_config.embedding_model, tokens, 0)
+                });
+                v.into_iter().next()
+            })
+        } else {
+            None
+        };
     if let Some(emb) = query_embedding.as_ref() {
         let mems = crate::commands::chat_cmds::vector_search_memories(
-            &db, &world.world_id, &character.character_id, emb, 4,
+            &db,
+            &world.world_id,
+            &character.character_id,
+            emb,
+            4,
         );
         retrieved.extend(mems);
     }
     let send_history = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         get_setting(&conn, &format!("send_history.{}", gc.group_chat_id))
-            .ok().flatten()
+            .ok()
+            .flatten()
             .map(|v| v != "off" && v != "false")
             .unwrap_or(true)
     };
@@ -1596,7 +1943,10 @@ pub async fn prompt_group_character_cmd(
     };
     let latest_reading = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        list_daily_readings(&conn, &world.world_id, 1).unwrap_or_default().into_iter().next()
+        list_daily_readings(&conn, &world.world_id, 1)
+            .unwrap_or_default()
+            .into_iter()
+            .next()
     };
     let latest_meanwhile = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
@@ -1615,8 +1965,8 @@ pub async fn prompt_group_character_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         combined_axes_block(&conn, &character.character_id)
     };
-    let current_world_day_for_stance: Option<i64> = dialogue_msgs.iter().rev()
-        .find_map(|m| m.world_day);
+    let current_world_day_for_stance: Option<i64> =
+        dialogue_msgs.iter().rev().find_map(|m| m.world_day);
     let stance_needs_refresh = match (latest_stance.as_ref(), current_world_day_for_stance) {
         (None, _) => true,
         (Some(s), Some(today)) => s.world_day_at_generation.map(|d| today > d).unwrap_or(true),
@@ -1635,10 +1985,15 @@ pub async fn prompt_group_character_cmd(
 
     // Reactions=off depth-signal reward (group surface, flow 2).
     // Stateful chain via prior signature.
-    let (formula_momentstamp_text2, formula_momentstamp_signature2): (Option<String>, Option<String>) = if reactions_mode == "off" {
+    let (formula_momentstamp_text2, formula_momentstamp_signature2): (
+        Option<String>,
+        Option<String>,
+    ) = if reactions_mode == "off" {
         let prior_sig: Option<String> = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            crate::db::queries::latest_formula_signature_group(&conn, &gc.thread_id).ok().flatten()
+            crate::db::queries::latest_formula_signature_group(&conn, &gc.thread_id)
+                .ok()
+                .flatten()
         };
         match crate::ai::momentstamp::build_formula_momentstamp(
             &base,
@@ -1647,7 +2002,11 @@ pub async fn prompt_group_character_cmd(
             &dialogue_msgs,
             prior_sig.as_deref(),
             Some(&character),
-        ).await.ok().flatten() {
+        )
+        .await
+        .ok()
+        .flatten()
+        {
             Some(r) => (Some(r.block), Some(r.signature)),
             None => (None, None),
         }
@@ -1657,16 +2016,34 @@ pub async fn prompt_group_character_cmd(
 
     let (current_loc, location_pair) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let cl = get_group_chat_location(&conn, &group_chat_id).ok().flatten();
-        let lp = orchestrator::resolve_location_derivation_pair(&conn, &world.world_id, cl.as_deref(), &dialogue_msgs);
+        let cl = get_group_chat_location(&conn, &group_chat_id)
+            .ok()
+            .flatten();
+        let lp = orchestrator::resolve_location_derivation_pair(
+            &conn,
+            &world.world_id,
+            cl.as_deref(),
+            &dialogue_msgs,
+        );
         (cl, lp)
     };
-    let location_arg: Option<(&str, &str)> = location_pair.as_ref().map(|(n, d)| (n.as_str(), d.as_str()));
+    let location_arg: Option<(&str, &str)> = location_pair
+        .as_ref()
+        .map(|(n, d)| (n.as_str(), d.as_str()));
     let dialogue_fut = orchestrator::run_dialogue_with_base(
-        &base, &api_key, &model_config.dialogue_model,
-        if !model_config.is_local() { Some(&model_config.memory_model) } else { None },
+        &base,
+        &api_key,
+        &model_config.dialogue_model,
+        if !model_config.is_local() {
+            Some(&model_config.memory_model)
+        } else {
+            None
+        },
         send_history,
-        &world, &character, &dialogue_msgs, &retrieved,
+        &world,
+        &character,
+        &dialogue_msgs,
+        &retrieved,
         user_profile.as_ref(),
         None,
         response_length.as_deref(),
@@ -1686,14 +2063,19 @@ pub async fn prompt_group_character_cmd(
         active_quests.as_slice(),
         stance_text.as_deref(),
         anchor_text.as_deref(),
-    current_loc.as_deref(),
-    formula_momentstamp_text2.as_deref(),
-    location_arg,
+        current_loc.as_deref(),
+        formula_momentstamp_text2.as_deref(),
+        location_arg,
     );
     let (dialogue_res, reaction_res) = if reactions_mode != "off" {
         let reaction_fut = orchestrator::pick_character_reaction_via_llm(
-            &base, &api_key, &model_config.dialogue_model,
-            &reaction_user_content, &mood_reduction2, &reaction_context, &reactions_mode,
+            &base,
+            &api_key,
+            &model_config.dialogue_model,
+            &reaction_user_content,
+            &mood_reduction2,
+            &reaction_context,
+            &reactions_mode,
         );
         tokio::join!(dialogue_fut, reaction_fut)
     } else {
@@ -1701,9 +2083,11 @@ pub async fn prompt_group_character_cmd(
     };
     let (raw_reply, usage) = dialogue_res?;
 
-    let other_names: Vec<&str> = characters.iter()
+    let other_names: Vec<&str> = characters
+        .iter()
         .filter(|c| c.character_id != character.character_id)
-        .map(|c| c.display_name.as_str()).collect();
+        .map(|c| c.display_name.as_str())
+        .collect();
     let mut reply_text = strip_character_prefix(&raw_reply, &character.display_name, &other_names);
     let mut usage = usage;
 
@@ -1711,22 +2095,39 @@ pub async fn prompt_group_character_cmd(
     let conscience_enabled = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         get_setting(&conn, "conscience_pass_enabled")
-            .ok().flatten()
+            .ok()
+            .flatten()
             .map(|v| v == "true" || v == "on")
             .unwrap_or(false)
     };
     if conscience_enabled {
         match crate::ai::conscience::grade_reply(
-            &base, &api_key, &model_config.memory_model,
-            &character, &reaction_user_content, &reply_text,
-        ).await {
+            &base,
+            &api_key,
+            &model_config.memory_model,
+            &character,
+            &reaction_user_content,
+            &reply_text,
+        )
+        .await
+        {
             Ok(verdict) => {
                 if let Some(u) = &verdict.usage {
                     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-                    let _ = record_token_usage(&conn, "conscience", &model_config.memory_model, u.prompt_tokens, u.completion_tokens);
+                    let _ = record_token_usage(
+                        &conn,
+                        "conscience",
+                        &model_config.memory_model,
+                        u.prompt_tokens,
+                        u.completion_tokens,
+                    );
                 }
                 if !verdict.passed {
-                    log::warn!("[Conscience] {} (group-prompt) draft flagged: {:?}", character.display_name, verdict.failures);
+                    log::warn!(
+                        "[Conscience] {} (group-prompt) draft flagged: {:?}",
+                        character.display_name,
+                        verdict.failures
+                    );
                     if let Some(note) = crate::ai::conscience::build_correction_note(&verdict) {
                         match orchestrator::run_dialogue_with_base(
                             &base, &api_key, &model_config.dialogue_model,
@@ -1765,7 +2166,10 @@ pub async fn prompt_group_character_cmd(
                         }
                     }
                 } else {
-                    log::info!("[Conscience] {} (group-prompt) draft passed", character.display_name);
+                    log::info!(
+                        "[Conscience] {} (group-prompt) draft passed",
+                        character.display_name
+                    );
                 }
             }
             Err(e) => log::warn!("[Conscience] grader unavailable: {e}"),
@@ -1774,7 +2178,13 @@ pub async fn prompt_group_character_cmd(
 
     if let Some(u) = &usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "group_dialogue", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
+        let _ = record_token_usage(
+            &conn,
+            "group_dialogue",
+            &model_config.dialogue_model,
+            u.prompt_tokens,
+            u.completion_tokens,
+        );
     }
 
     let tokens = usage.as_ref().map(|u| u.total_tokens).unwrap_or(0);
@@ -1786,11 +2196,18 @@ pub async fn prompt_group_character_cmd(
     let canonical_address: Option<String> = match address_to.as_deref() {
         None | Some("") => Some("user".to_string()),
         Some(name) => {
-            if user_profile.as_ref().map(|p| p.display_name.eq_ignore_ascii_case(name)).unwrap_or(false) {
+            if user_profile
+                .as_ref()
+                .map(|p| p.display_name.eq_ignore_ascii_case(name))
+                .unwrap_or(false)
+            {
                 Some("user".to_string())
             } else {
-                characters.iter()
-                    .find(|c| c.character_id != character_id && c.display_name.eq_ignore_ascii_case(name))
+                characters
+                    .iter()
+                    .find(|c| {
+                        c.character_id != character_id && c.display_name.eq_ignore_ascii_case(name)
+                    })
                     .map(|c| c.character_id.clone())
                     .or_else(|| Some("user".to_string()))
             }
@@ -1805,7 +2222,8 @@ pub async fn prompt_group_character_cmd(
         tokens_estimate: tokens as i64,
         sender_character_id: Some(character_id),
         created_at: Utc::now().to_rfc3339(),
-        world_day: wd_p, world_time: wt_p,
+        world_day: wd_p,
+        world_time: wt_p,
         address_to: canonical_address,
         mood_chain: mood_chain_json2.clone(),
         is_proactive: false,
@@ -1821,10 +2239,15 @@ pub async fn prompt_group_character_cmd(
     if !model_config.is_local() {
         let reply_chunk_text = format!("{}: {}", character.display_name, msg.content);
         let _ = crate::commands::chat_cmds::embed_and_store_for_members(
-            &db, &api_key, &model_config,
-            &world.world_id, &member_ids,
-            &msg.message_id, &reply_chunk_text,
-        ).await;
+            &db,
+            &api_key,
+            &model_config,
+            &world.world_id,
+            &member_ids,
+            &msg.message_id,
+            &reply_chunk_text,
+        )
+        .await;
     }
 
     // Emit the character's reaction on the triggering user message.
@@ -1835,7 +2258,12 @@ pub async fn prompt_group_character_cmd(
     let ai_reactions: Vec<Reaction> = match (reactions_mode.as_str(), reaction_target_id) {
         ("off", _) | (_, None) => Vec::new(),
         ("occasional", Some(target_id)) => match reaction_res {
-            Ok(Some(emoji)) => chat_cmds::emit_character_reaction(&db, &target_id, &emoji, Some(&character.character_id)),
+            Ok(Some(emoji)) => chat_cmds::emit_character_reaction(
+                &db,
+                &target_id,
+                &emoji,
+                Some(&character.character_id),
+            ),
             _ => Vec::new(),
         },
         (_ /* always */, Some(target_id)) => {
@@ -1843,7 +2271,12 @@ pub async fn prompt_group_character_cmd(
                 Ok(Some(emoji)) => emoji,
                 _ => prompts::pick_character_reaction_emoji(&mood_chain2),
             };
-            chat_cmds::emit_character_reaction(&db, &target_id, &reaction_emoji, Some(&character.character_id))
+            chat_cmds::emit_character_reaction(
+                &db,
+                &target_id,
+                &reaction_emoji,
+                Some(&character.character_id),
+            )
         }
     };
 
@@ -1870,20 +2303,44 @@ pub async fn generate_group_illustration_cmd(
         let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
         let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
         let mut model_config = orchestrator::load_model_config(&conn);
-        model_config.apply_provider_override(&conn, &format!("provider_override.{}", group_chat_id));
-        let recent_msgs = list_group_messages_within_budget(&conn, &gc.thread_id, model_config.safe_history_budget() as i64, 30).map_err(|e| e.to_string())?;
+        model_config
+            .apply_provider_override(&conn, &format!("provider_override.{}", group_chat_id));
+        let recent_msgs = list_group_messages_within_budget(
+            &conn,
+            &gc.thread_id,
+            model_config.safe_history_budget() as i64,
+            30,
+        )
+        .map_err(|e| e.to_string())?;
         let user_profile = get_user_profile(&conn, &gc.world_id).ok();
 
-        let char_ids: Vec<String> = gc.character_ids.as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+        let char_ids: Vec<String> = gc
+            .character_ids
+            .as_array()
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect()
+            })
             .unwrap_or_default();
-        let characters: Vec<Character> = char_ids.iter()
+        let characters: Vec<Character> = char_ids
+            .iter()
             .filter_map(|id| get_character(&conn, id).ok())
             .collect();
 
-        let current_loc = get_group_chat_location(&conn, &group_chat_id).ok().flatten();
+        let current_loc = get_group_chat_location(&conn, &group_chat_id)
+            .ok()
+            .flatten();
 
-        (world, characters, gc, recent_msgs, model_config, user_profile, current_loc)
+        (
+            world,
+            characters,
+            gc,
+            recent_msgs,
+            model_config,
+            user_profile,
+            current_loc,
+        )
     };
 
     let dir = &portraits_dir.0;
@@ -1919,17 +2376,26 @@ pub async fn generate_group_illustration_cmd(
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         if let Ok(file_name) = conn.query_row(
             "SELECT file_name FROM world_images WHERE image_id = ?1",
-            params![prev_id], |r| r.get::<_, String>(0),
+            params![prev_id],
+            |r| r.get::<_, String>(0),
         ) {
             let path = dir.join(&file_name);
             if path.exists() {
                 if let Ok(bytes) = std::fs::read(&path) {
                     reference_images.push(bytes);
                     true
-                } else { false }
-            } else { false }
-        } else { false }
-    } else { false };
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        } else {
+            false
+        }
+    } else {
+        false
+    };
 
     let tier = quality_tier.as_deref().unwrap_or("high");
     let (img_size, img_quality) = match tier {
@@ -1940,20 +2406,28 @@ pub async fn generate_group_illustration_cmd(
 
     // Use first character as the "primary" for the orchestrator, and pass the
     // rest as additional_cast so the scene director knows the full cast.
-    let primary_character = characters.first()
+    let primary_character = characters
+        .first()
         .ok_or_else(|| "No characters in group chat".to_string())?;
-    let additional_cast_vec: Vec<&Character> = characters.iter()
+    let additional_cast_vec: Vec<&Character> = characters
+        .iter()
         .filter(|c| c.character_id != primary_character.character_id)
         .collect();
-    let additional_cast_opt: Option<&[&Character]> = if additional_cast_vec.is_empty() { None } else { Some(&additional_cast_vec) };
-    let names_map: std::collections::HashMap<String, String> = characters.iter()
+    let additional_cast_opt: Option<&[&Character]> = if additional_cast_vec.is_empty() {
+        None
+    } else {
+        Some(&additional_cast_vec)
+    };
+    let names_map: std::collections::HashMap<String, String> = characters
+        .iter()
         .map(|c| (c.character_id.clone(), c.display_name.clone()))
         .collect();
 
     // Resolve instructions: if the user left them blank, ask the model to
     // pick a memorable moment from recent messages. That sentence then
     // becomes both the illustration directive and the stored caption/alt.
-    let user_display_name = user_profile.as_ref()
+    let user_display_name = user_profile
+        .as_ref()
         .map(|p| p.display_name.as_str())
         .unwrap_or("The human");
     let resolved_instructions: Option<String> = match custom_instructions.as_deref() {
@@ -1965,35 +2439,49 @@ pub async fn generate_group_illustration_cmd(
                 &model_config.dialogue_model,
                 &recent_msgs,
                 user_display_name,
-            ).await {
+            )
+            .await
+            {
                 Ok(moment) => Some(moment),
                 Err(e) => {
-                    log::warn!("[GroupIllustration] memorable-moment pick failed: {e}; proceeding without");
+                    log::warn!(
+                        "[GroupIllustration] memorable-moment pick failed: {e}; proceeding without"
+                    );
                     None
                 }
             }
         }
     };
 
-    let (scene_description, image_bytes, chat_usage) = orchestrator::generate_illustration_with_base(
-        &model_config.chat_api_base(),
-        &model_config.openai_api_base(),
-        &api_key,
-        &model_config.dialogue_model,
-        &model_config.image_model,
-        img_quality,
-        img_size,
-        model_config.image_output_format().as_deref(),
-        &world, primary_character, additional_cast_opt, &recent_msgs,
-        user_profile.as_ref(),
-        &reference_images,
-        resolved_instructions.as_deref(),
-        has_previous,
-        include_scene_summary.unwrap_or(true),
-        Some(&characters.iter().map(|c| c.display_name.clone()).collect::<Vec<_>>()),
-        Some(&names_map),
-        current_loc.as_deref(),
-    ).await?;
+    let (scene_description, image_bytes, chat_usage) =
+        orchestrator::generate_illustration_with_base(
+            &model_config.chat_api_base(),
+            &model_config.openai_api_base(),
+            &api_key,
+            &model_config.dialogue_model,
+            &model_config.image_model,
+            img_quality,
+            img_size,
+            model_config.image_output_format().as_deref(),
+            &world,
+            primary_character,
+            additional_cast_opt,
+            &recent_msgs,
+            user_profile.as_ref(),
+            &reference_images,
+            resolved_instructions.as_deref(),
+            has_previous,
+            include_scene_summary.unwrap_or(true),
+            Some(
+                &characters
+                    .iter()
+                    .map(|c| c.display_name.clone())
+                    .collect::<Vec<_>>(),
+            ),
+            Some(&names_map),
+            current_loc.as_deref(),
+        )
+        .await?;
     // Caption: user's instructions verbatim when provided; otherwise
     // derive from scene_description so the caption reflects what was
     // actually painted. See illustration_cmds.rs for full rationale.
@@ -2005,7 +2493,9 @@ pub async fn generate_group_illustration_cmd(
                 &api_key,
                 &model_config.dialogue_model,
                 &scene_description,
-            ).await {
+            )
+            .await
+            {
                 Ok(c) => c,
                 Err(e) => {
                     log::warn!("[Illustration] caption derivation failed: {e}; falling back to memorable-moment");
@@ -2017,7 +2507,13 @@ pub async fn generate_group_illustration_cmd(
 
     if let Some(u) = &chat_usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "illustration", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
+        let _ = record_token_usage(
+            &conn,
+            "illustration",
+            &model_config.dialogue_model,
+            u.prompt_tokens,
+            u.completion_tokens,
+        );
     }
 
     let aspect = chat_cmds::png_aspect_ratio(&image_bytes);
@@ -2055,11 +2551,12 @@ pub async fn generate_group_illustration_cmd(
             tokens_estimate: 0,
             sender_character_id: None,
             created_at: now,
-            world_day: wd, world_time: wt,
+            world_day: wd,
+            world_time: wt,
             address_to: None,
-        mood_chain: None,
-        is_proactive: false,
-        formula_signature: None,
+            mood_chain: None,
+            is_proactive: false,
+            formula_signature: None,
         };
         create_group_message(&conn, &msg).map_err(|e| e.to_string())?;
     }
@@ -2097,33 +2594,59 @@ pub async fn generate_group_narrative_cmd(
         let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
         let world = get_world(&conn, &gc.world_id).map_err(|e| e.to_string())?;
         let model_config = orchestrator::load_model_config(&conn);
-        let recent_msgs = list_group_messages_within_budget(&conn, &gc.thread_id, model_config.safe_history_budget() as i64, 30).map_err(|e| e.to_string())?;
+        let recent_msgs = list_group_messages_within_budget(
+            &conn,
+            &gc.thread_id,
+            model_config.safe_history_budget() as i64,
+            30,
+        )
+        .map_err(|e| e.to_string())?;
         let user_profile = get_user_profile(&conn, &gc.world_id).ok();
 
-        let char_ids: Vec<String> = gc.character_ids.as_array()
-            .map(|a| a.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+        let char_ids: Vec<String> = gc
+            .character_ids
+            .as_array()
+            .map(|a| {
+                a.iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect()
+            })
             .unwrap_or_default();
-        let characters: Vec<Character> = char_ids.iter()
+        let characters: Vec<Character> = char_ids
+            .iter()
             .filter_map(|id| get_character(&conn, id).ok())
             .collect();
 
-        (world, characters, gc, recent_msgs, model_config, user_profile)
+        (
+            world,
+            characters,
+            gc,
+            recent_msgs,
+            model_config,
+            user_profile,
+        )
     };
 
-    let primary_character = characters.first()
+    let primary_character = characters
+        .first()
         .ok_or_else(|| "No characters in group chat".to_string())?;
 
     // Load narration settings scoped to the group chat
     let (narration_tone, narration_instructions) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let tone = get_setting(&conn, &format!("narration_tone.{}", group_chat_id))
-            .ok().flatten();
+            .ok()
+            .flatten();
         let instructions = get_setting(&conn, &format!("narration_instructions.{}", group_chat_id))
-            .ok().flatten();
+            .ok()
+            .flatten();
         (tone, instructions)
     };
 
-    let prev_is_narrative = recent_msgs.last().map(|m| m.role == "narrative").unwrap_or(false);
+    let prev_is_narrative = recent_msgs
+        .last()
+        .map(|m| m.role == "narrative")
+        .unwrap_or(false);
     let continuation_prefix = if prev_is_narrative {
         Some("IMPORTANT: The previous message in the conversation is also a narrative beat. Do NOT revise or repeat it. Write a CONTINUATION that advances to the NEXT story beat — new action, new moment, new tension. Pick up where the previous narrative left off and move the story forward.".to_string())
     } else {
@@ -2134,33 +2657,59 @@ pub async fn generate_group_narrative_cmd(
         continuation_prefix.as_deref(),
         narration_instructions.as_deref().filter(|s| !s.is_empty()),
         custom_instructions.as_deref().filter(|s| !s.is_empty()),
-    ].into_iter().flatten().collect();
-    let merged_instructions = if all_instructions.is_empty() { None } else { Some(all_instructions.join("\n")) };
+    ]
+    .into_iter()
+    .flatten()
+    .collect();
+    let merged_instructions = if all_instructions.is_empty() {
+        None
+    } else {
+        Some(all_instructions.join("\n"))
+    };
 
-    let additional_cast: Vec<&Character> = characters.iter()
+    let additional_cast: Vec<&Character> = characters
+        .iter()
         .filter(|c| c.character_id != primary_character.character_id)
         .collect();
-    let illustration_captions = crate::commands::chat_cmds::collect_illustration_captions(&db, &recent_msgs);
+    let illustration_captions =
+        crate::commands::chat_cmds::collect_illustration_captions(&db, &recent_msgs);
     let current_loc = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        get_group_chat_location(&conn, &group_chat_id).ok().flatten()
+        get_group_chat_location(&conn, &group_chat_id)
+            .ok()
+            .flatten()
     };
     let (narrative_text, usage) = orchestrator::run_narrative_with_base(
-        &model_config.chat_api_base(), &api_key, &model_config.dialogue_model,
-        &world, primary_character,
-        if additional_cast.is_empty() { None } else { Some(&additional_cast) },
-        &recent_msgs, &[],
+        &model_config.chat_api_base(),
+        &api_key,
+        &model_config.dialogue_model,
+        &world,
+        primary_character,
+        if additional_cast.is_empty() {
+            None
+        } else {
+            Some(&additional_cast)
+        },
+        &recent_msgs,
+        &[],
         user_profile.as_ref(),
         None,
         narration_tone.as_deref(),
         merged_instructions.as_deref(),
         &illustration_captions,
         current_loc.as_deref(),
-    ).await?;
+    )
+    .await?;
 
     if let Some(u) = &usage {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = record_token_usage(&conn, "narrative", &model_config.dialogue_model, u.prompt_tokens, u.completion_tokens);
+        let _ = record_token_usage(
+            &conn,
+            "narrative",
+            &model_config.dialogue_model,
+            u.prompt_tokens,
+            u.completion_tokens,
+        );
     }
 
     let (wd, wt) = chat_cmds::world_time_fields(&world);
@@ -2172,12 +2721,13 @@ pub async fn generate_group_narrative_cmd(
         tokens_estimate: usage.as_ref().map(|u| u.total_tokens as i64).unwrap_or(0),
         sender_character_id: None,
         created_at: Utc::now().to_rfc3339(),
-        world_day: wd, world_time: wt,
-            address_to: None,
+        world_day: wd,
+        world_time: wt,
+        address_to: None,
         mood_chain: None,
         is_proactive: false,
         formula_signature: None,
-        };
+    };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         create_group_message(&conn, &narrative_msg).map_err(|e| e.to_string())?;
@@ -2205,7 +2755,11 @@ fn strip_character_prefix(text: &str, character_name: &str, other_names: &[&str]
     // Truncate at any point where another character's dialogue begins
     let mut result = cleaned.to_string();
     for name in other_names {
-        for pattern in [format!("\n[{}]:", name), format!("\n[{}] :", name), format!("\n{}:", name)] {
+        for pattern in [
+            format!("\n[{}]:", name),
+            format!("\n[{}] :", name),
+            format!("\n{}:", name),
+        ] {
             if let Some(pos) = result.find(&pattern) {
                 result.truncate(pos);
             }

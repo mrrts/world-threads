@@ -29,15 +29,23 @@ pub fn create_world_image(conn: &Connection, img: &WorldImage) -> Result<(), rus
     Ok(())
 }
 
-pub fn list_world_images(conn: &Connection, world_id: &str) -> Result<Vec<WorldImage>, rusqlite::Error> {
+pub fn list_world_images(
+    conn: &Connection,
+    world_id: &str,
+) -> Result<Vec<WorldImage>, rusqlite::Error> {
     let mut stmt = conn.prepare(
         "SELECT image_id, world_id, prompt, file_name, is_active, source, created_at, aspect_ratio, caption FROM world_images WHERE world_id = ?1 ORDER BY created_at DESC"
     )?;
     let rows = stmt.query_map(params![world_id], |row| {
         Ok(WorldImage {
-            image_id: row.get(0)?, world_id: row.get(1)?, prompt: row.get(2)?,
-            file_name: row.get(3)?, is_active: row.get(4)?, source: row.get(5)?,
-            created_at: row.get(6)?, aspect_ratio: row.get(7)?,
+            image_id: row.get(0)?,
+            world_id: row.get(1)?,
+            prompt: row.get(2)?,
+            file_name: row.get(3)?,
+            is_active: row.get(4)?,
+            source: row.get(5)?,
+            created_at: row.get(6)?,
+            aspect_ratio: row.get(7)?,
             caption: row.get(8).unwrap_or_default(),
         })
     })?;
@@ -77,26 +85,39 @@ pub fn fetch_illustration_captions(
         "SELECT image_id, caption FROM world_images WHERE image_id IN ({}) AND caption != ''",
         placeholders.join(", ")
     );
-    let Ok(mut stmt) = conn.prepare(&sql) else { return out; };
-    let params_vec: Vec<&dyn rusqlite::types::ToSql> = message_ids.iter()
+    let Ok(mut stmt) = conn.prepare(&sql) else {
+        return out;
+    };
+    let params_vec: Vec<&dyn rusqlite::types::ToSql> = message_ids
+        .iter()
         .map(|id| id as &dyn rusqlite::types::ToSql)
         .collect();
     let Ok(rows) = stmt.query_map(params_vec.as_slice(), |row| {
         Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
-    }) else { return out; };
+    }) else {
+        return out;
+    };
     for r in rows.flatten() {
         out.insert(r.0, r.1);
     }
     out
 }
 
-
-pub fn set_active_world_image(conn: &Connection, world_id: &str, image_id: &str) -> Result<(), rusqlite::Error> {
-    conn.execute("UPDATE world_images SET is_active = 0 WHERE world_id = ?1", params![world_id])?;
-    conn.execute("UPDATE world_images SET is_active = 1 WHERE image_id = ?1", params![image_id])?;
+pub fn set_active_world_image(
+    conn: &Connection,
+    world_id: &str,
+    image_id: &str,
+) -> Result<(), rusqlite::Error> {
+    conn.execute(
+        "UPDATE world_images SET is_active = 0 WHERE world_id = ?1",
+        params![world_id],
+    )?;
+    conn.execute(
+        "UPDATE world_images SET is_active = 1 WHERE image_id = ?1",
+        params![image_id],
+    )?;
     Ok(())
 }
-
 
 // ─── Chat Backgrounds ────────────────────────────────────────────────────────
 
@@ -121,7 +142,10 @@ pub fn get_chat_background(conn: &Connection, character_id: &str) -> Option<Chat
     ).ok()
 }
 
-pub fn upsert_chat_background(conn: &Connection, bg: &ChatBackground) -> Result<(), rusqlite::Error> {
+pub fn upsert_chat_background(
+    conn: &Connection,
+    bg: &ChatBackground,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "INSERT INTO chat_backgrounds (character_id, bg_type, bg_color, bg_image_id, bg_blur, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, datetime('now'))
          ON CONFLICT(character_id) DO UPDATE SET bg_type=?2, bg_color=?3, bg_image_id=?4, bg_blur=?5, updated_at=datetime('now')",
@@ -129,5 +153,3 @@ pub fn upsert_chat_background(conn: &Connection, bg: &ChatBackground) -> Result<
     )?;
     Ok(())
 }
-
-

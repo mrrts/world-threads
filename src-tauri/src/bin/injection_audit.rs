@@ -5,7 +5,6 @@ use app_lib::ai::openai::{
 };
 
 fn main() {
-
     for enabled in [false, true] {
         unsafe {
             std::env::set_var(
@@ -40,12 +39,12 @@ fn main() {
         println!("chat_stream_silent_audit mission={m} custodiem={c} ryan={r}");
 
         let mut vision_messages = vec![VisionMessage {
-                role: "user".to_string(),
-                content: vec![VisionContent {
-                    content_type: "text".to_string(),
-                    text: Some("Describe this image.".to_string()),
-                    image_url: None,
-                }],
+            role: "user".to_string(),
+            content: vec![VisionContent {
+                content_type: "text".to_string(),
+                text: Some("Describe this image.".to_string()),
+                image_url: None,
+            }],
         }];
         let (m, c, r) = audit_injection_state_vision(&mut vision_messages);
         println!("vision_audit mission={m} custodiem={c} ryan={r}");

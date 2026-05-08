@@ -32,10 +32,18 @@ pub struct ModelConfig {
     pub dialogue_model_frontier: String,
 }
 
-fn default_provider() -> String { "openai".to_string() }
-fn default_lmstudio_url() -> String { "http://127.0.0.1:1234".to_string() }
-fn default_lmstudio_context_tokens() -> u32 { 40_000 }
-fn default_dialogue_frontier() -> String { "gpt-4o".to_string() }
+fn default_provider() -> String {
+    "openai".to_string()
+}
+fn default_lmstudio_url() -> String {
+    "http://127.0.0.1:1234".to_string()
+}
+fn default_lmstudio_context_tokens() -> u32 {
+    40_000
+}
+fn default_dialogue_frontier() -> String {
+    "gpt-4o".to_string()
+}
 
 impl Default for ModelConfig {
     fn default() -> Self {
@@ -72,7 +80,8 @@ impl ModelConfig {
     /// touching any other config.
     pub fn safe_history_budget(&self) -> u32 {
         const RESERVED_HEADROOM: u32 = 8_000;
-        self.safe_local_prompt_budget().saturating_sub(RESERVED_HEADROOM)
+        self.safe_local_prompt_budget()
+            .saturating_sub(RESERVED_HEADROOM)
     }
 }
 
@@ -105,7 +114,9 @@ impl ModelConfig {
     /// only in scope for this ModelConfig instance — it does NOT modify
     /// saved settings.
     pub fn apply_provider_override(&mut self, conn: &Connection, override_key: &str) {
-        let Some(ov) = get_setting(conn, override_key).ok().flatten() else { return; };
+        let Some(ov) = get_setting(conn, override_key).ok().flatten() else {
+            return;
+        };
         match ov.as_str() {
             "openai" => {
                 self.ai_provider = "openai".to_string();
@@ -138,12 +149,20 @@ impl ModelConfig {
 
     /// The response_format field for the image request (dall-e models).
     pub fn image_response_format(&self) -> Option<String> {
-        if self.image_model.starts_with("gpt-image") { None } else { Some("b64_json".to_string()) }
+        if self.image_model.starts_with("gpt-image") {
+            None
+        } else {
+            Some("b64_json".to_string())
+        }
     }
 
     /// The output_format field for the image request (gpt-image models).
     pub fn image_output_format(&self) -> Option<String> {
-        if self.image_model.starts_with("gpt-image") { Some("png".to_string()) } else { None }
+        if self.image_model.starts_with("gpt-image") {
+            Some("png".to_string())
+        } else {
+            None
+        }
     }
 
     /// Landscape image size appropriate for the configured image model.
@@ -193,8 +212,16 @@ pub fn save_model_config(conn: &Connection, config: &ModelConfig) -> Result<(), 
     set_setting(conn, "model.vision", &config.vision_model)?;
     set_setting(conn, "ai_provider", &config.ai_provider)?;
     set_setting(conn, "lmstudio_url", &config.lmstudio_url)?;
-    set_setting(conn, "lmstudio_context_tokens", &config.lmstudio_context_tokens.to_string())?;
-    set_setting(conn, "model.dialogue_frontier", &config.dialogue_model_frontier)?;
+    set_setting(
+        conn,
+        "lmstudio_context_tokens",
+        &config.lmstudio_context_tokens.to_string(),
+    )?;
+    set_setting(
+        conn,
+        "model.dialogue_frontier",
+        &config.dialogue_model_frontier,
+    )?;
     Ok(())
 }
 
@@ -274,8 +301,10 @@ pub async fn run_dialogue_with_base(
     // having to reset the thread.
     let empty_snippets: Vec<String> = Vec::new();
     let empty_kept: Vec<String> = Vec::new();
-    let empty_captions: std::collections::HashMap<String, String> = std::collections::HashMap::new();
-    let empty_reactions: std::collections::HashMap<String, Vec<crate::db::queries::Reaction>> = std::collections::HashMap::new();
+    let empty_captions: std::collections::HashMap<String, String> =
+        std::collections::HashMap::new();
+    let empty_reactions: std::collections::HashMap<String, Vec<crate::db::queries::Reaction>> =
+        std::collections::HashMap::new();
     let tail_slice: Vec<Message>;
     let effective_msgs: &[Message] = if send_history {
         recent_messages
@@ -285,10 +314,22 @@ pub async fn run_dialogue_with_base(
     } else {
         &[]
     };
-    let effective_snippets: &[String] = if send_history { retrieved_snippets } else { &empty_snippets };
+    let effective_snippets: &[String] = if send_history {
+        retrieved_snippets
+    } else {
+        &empty_snippets
+    };
     let effective_kept: &[String] = if send_history { kept_ids } else { &empty_kept };
-    let effective_captions = if send_history { illustration_captions } else { &empty_captions };
-    let effective_reactions = if send_history { reactions_by_msg } else { &empty_reactions };
+    let effective_captions = if send_history {
+        illustration_captions
+    } else {
+        &empty_captions
+    };
+    let effective_reactions = if send_history {
+        reactions_by_msg
+    } else {
+        &empty_reactions
+    };
     let user_display_name = user_profile.map(|p| p.display_name.as_str());
 
     // Derive a voice-mirror from this character's own recent messages
@@ -302,7 +343,25 @@ pub async fn run_dialogue_with_base(
         group_context.is_some(),
         6,
     );
-    let mut system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, recent_journals, latest_reading, &own_voice_samples, latest_meanwhile, active_quests, relational_stance, load_test_anchor);
+    let mut system = prompts::build_dialogue_system_prompt(
+        world,
+        character,
+        user_profile,
+        mood_directive,
+        response_length,
+        group_context,
+        tone,
+        local_model,
+        mood_chain,
+        leader,
+        recent_journals,
+        latest_reading,
+        &own_voice_samples,
+        latest_meanwhile,
+        active_quests,
+        relational_stance,
+        load_test_anchor,
+    );
     // Formula momentstamp (reactions=off "depth signal" reward): when the
     // caller pre-built a chat-state signature derived from 𝓕 := (𝓡, 𝓒),
     // prepend it at the HEAD of the system prompt so the conditioning
@@ -318,7 +377,8 @@ pub async fn run_dialogue_with_base(
     // WORLDTHREADS_NO_FORMULA / WORLDTHREADS_NO_RYAN_FORMULA env hooks.
     if let Some(stamp) = formula_momentstamp {
         let suppress_lead = std::env::var("WORLDTHREADS_NO_MOMENTSTAMP_LEAD")
-            .map(|v| v == "1").unwrap_or(false);
+            .map(|v| v == "1")
+            .unwrap_or(false);
         if !suppress_lead {
             let mut prefixed = String::with_capacity(stamp.len() + system.len() + 4);
             prefixed.push_str(stamp);
@@ -372,7 +432,10 @@ pub async fn run_dialogue_with_base(
             .find(|m| {
                 m.role == "assistant"
                     && m.sender_character_id.as_deref() == Some(character.character_id.as_str())
-                    && m.formula_signature.as_deref().map(|s| !s.trim().is_empty()).unwrap_or(false)
+                    && m.formula_signature
+                        .as_deref()
+                        .map(|s| !s.trim().is_empty())
+                        .unwrap_or(false)
             })
             .and_then(|m| m.formula_signature.as_deref());
         // User-side relational anchor: the per-world user_profile's
@@ -383,7 +446,9 @@ pub async fn run_dialogue_with_base(
             .and_then(|p| p.derived_formula.as_deref())
             .map(|s| s.trim())
             .filter(|s| !s.is_empty());
-        if let Some(block) = prompts::wrap_character_formula_invariant_full(deriv, user_deriv, latest_stamp) {
+        if let Some(block) =
+            prompts::wrap_character_formula_invariant_full(deriv, user_deriv, latest_stamp)
+        {
             elevated_parts.push(block);
         }
     }
@@ -404,7 +469,17 @@ pub async fn run_dialogue_with_base(
         system.push_str("\n\n");
         system.push_str(note);
     }
-    let messages = prompts::build_dialogue_messages(&system, effective_msgs, effective_snippets, character_names, effective_kept, effective_captions, effective_reactions, user_display_name, current_location_override);
+    let messages = prompts::build_dialogue_messages(
+        &system,
+        effective_msgs,
+        effective_snippets,
+        character_names,
+        effective_kept,
+        effective_captions,
+        effective_reactions,
+        user_display_name,
+        current_location_override,
+    );
 
     // Unsent-draft pre-pass — DISABLED 2026-04-20. The extra call produced
     // an undercurrent-carrying reply, but even casual greetings ended up
@@ -449,7 +524,9 @@ pub async fn run_dialogue_with_base(
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let choice = response.choices.first()
+    let choice = response
+        .choices
+        .first()
         .ok_or_else(|| "No response from model".to_string())?;
     let raw = choice.message.content.clone();
 
@@ -474,35 +551,41 @@ pub fn strip_asterisk_wrapped_quotes(s: &str) -> String {
             // into the next action block.
             let left_ok = i == 0 || bytes[i - 1].is_ascii_whitespace();
             if left_ok {
-            // Look ahead: optional whitespace, then a `"`, then find the
-            // closing `"`, then optional whitespace, then `*`. If the whole
-            // run matches, emit just the quoted substring.
-            let mut j = i + 1;
-            while j < bytes.len() && (bytes[j] == b' ' || bytes[j] == b'\t') { j += 1; }
-            if j < bytes.len() && bytes[j] == b'"' {
-                let q_start = j;
-                let mut k = j + 1;
-                while k < bytes.len() && bytes[k] != b'"' && bytes[k] != b'\n' { k += 1; }
-                if k < bytes.len() && bytes[k] == b'"' {
-                    let q_end = k + 1;
-                    let mut m = q_end;
-                    while m < bytes.len() && (bytes[m] == b' ' || bytes[m] == b'\t') { m += 1; }
-                    if m < bytes.len() && bytes[m] == b'*' {
-                        // Require right flanking boundary for the closing `*`
-                        // to mirror frontend behavior and avoid spanning across
-                        // neighboring emphasized runs.
-                        let right_ok = m + 1 == bytes.len()
-                            || bytes[m + 1].is_ascii_whitespace()
-                            || matches!(bytes[m + 1], b'.' | b',' | b'!' | b'?' | b';' | b':');
-                        if right_ok {
-                            // Matched: emit just the quote (lossless of its own content).
-                            out.push_str(&s[q_start..q_end]);
-                            i = m + 1;
-                            continue;
+                // Look ahead: optional whitespace, then a `"`, then find the
+                // closing `"`, then optional whitespace, then `*`. If the whole
+                // run matches, emit just the quoted substring.
+                let mut j = i + 1;
+                while j < bytes.len() && (bytes[j] == b' ' || bytes[j] == b'\t') {
+                    j += 1;
+                }
+                if j < bytes.len() && bytes[j] == b'"' {
+                    let q_start = j;
+                    let mut k = j + 1;
+                    while k < bytes.len() && bytes[k] != b'"' && bytes[k] != b'\n' {
+                        k += 1;
+                    }
+                    if k < bytes.len() && bytes[k] == b'"' {
+                        let q_end = k + 1;
+                        let mut m = q_end;
+                        while m < bytes.len() && (bytes[m] == b' ' || bytes[m] == b'\t') {
+                            m += 1;
+                        }
+                        if m < bytes.len() && bytes[m] == b'*' {
+                            // Require right flanking boundary for the closing `*`
+                            // to mirror frontend behavior and avoid spanning across
+                            // neighboring emphasized runs.
+                            let right_ok = m + 1 == bytes.len()
+                                || bytes[m + 1].is_ascii_whitespace()
+                                || matches!(bytes[m + 1], b'.' | b',' | b'!' | b'?' | b';' | b':');
+                            if right_ok {
+                                // Matched: emit just the quote (lossless of its own content).
+                                out.push_str(&s[q_start..q_end]);
+                                i = m + 1;
+                                continue;
+                            }
                         }
                     }
                 }
-            }
             }
         }
         // No match — copy the byte (safe: we never split a UTF-8 codepoint
@@ -516,14 +599,24 @@ pub fn strip_asterisk_wrapped_quotes(s: &str) -> String {
 
 fn next_char_end(s: &str, start: usize) -> usize {
     let bytes = s.as_bytes();
-    if start >= bytes.len() { return start; }
+    if start >= bytes.len() {
+        return start;
+    }
     // UTF-8 continuation byte count from the leading byte.
     let b = bytes[start];
-    let len = if b < 0x80 { 1 }
-              else if b < 0xC0 { 1 }  // isolated continuation — shouldn't happen; skip one
-              else if b < 0xE0 { 2 }
-              else if b < 0xF0 { 3 }
-              else { 4 };
+    let len = if b < 0x80 {
+        1
+    } else if b < 0xC0 {
+        1
+    }
+    // isolated continuation — shouldn't happen; skip one
+    else if b < 0xE0 {
+        2
+    } else if b < 0xF0 {
+        3
+    } else {
+        4
+    };
     (start + len).min(bytes.len())
 }
 
@@ -536,7 +629,10 @@ mod tests {
     #[test]
     fn strips_bare_asterisk_wrapped_quote() {
         let input = r#"* "That makes sense." *"#;
-        assert_eq!(strip_asterisk_wrapped_quotes(input), r#""That makes sense.""#);
+        assert_eq!(
+            strip_asterisk_wrapped_quotes(input),
+            r#""That makes sense.""#
+        );
     }
 
     #[test]
@@ -818,12 +914,16 @@ mod tests {
 /// in that case.
 pub fn trim_to_last_complete_sentence(s: &str) -> String {
     let trimmed = s.trim_end();
-    if trimmed.is_empty() { return String::new(); }
+    if trimmed.is_empty() {
+        return String::new();
+    }
 
     let chars: Vec<(usize, char)> = trimmed.char_indices().collect();
     for i in (0..chars.len()).rev() {
         let (byte_idx, c) = chars[i];
-        if !matches!(c, '.' | '!' | '?' | '…') { continue; }
+        if !matches!(c, '.' | '!' | '?' | '…') {
+            continue;
+        }
         let mut end = byte_idx + c.len_utf8();
         // Pull in trailing closing punctuation that belongs to this sentence
         // (closing quotes, brackets, markdown-italics asterisks).
@@ -855,7 +955,11 @@ pub fn balance_trailing_openers(s: &str) -> String {
         match c {
             '*' => stars += 1,
             '(' => paren_depth += 1,
-            ')' => { if paren_depth > 0 { paren_depth -= 1; } }
+            ')' => {
+                if paren_depth > 0 {
+                    paren_depth -= 1;
+                }
+            }
             '"' => dquotes += 1,
             _ => {}
         }
@@ -867,8 +971,12 @@ pub fn balance_trailing_openers(s: &str) -> String {
         out.push(')');
         paren_depth -= 1;
     }
-    if stars % 2 == 1 { out.push('*'); }
-    if dquotes % 2 == 1 { out.push('"'); }
+    if stars % 2 == 1 {
+        out.push('*');
+    }
+    if dquotes % 2 == 1 {
+        out.push('"');
+    }
     out
 }
 
@@ -923,13 +1031,19 @@ fn build_narrative_messages(
             continue;
         }
         if m.role == "illustration" {
-            let caption = illustration_captions.get(&m.message_id).map(|s| s.as_str()).unwrap_or("");
+            let caption = illustration_captions
+                .get(&m.message_id)
+                .map(|s| s.as_str())
+                .unwrap_or("");
             let content = if caption.is_empty() {
                 "[Illustration shown at this moment.]".to_string()
             } else {
                 format!("[Illustration shown — {caption}]")
             };
-            msgs.push(openai::ChatMessage { role: "system".to_string(), content });
+            msgs.push(openai::ChatMessage {
+                role: "system".to_string(),
+                content,
+            });
             continue;
         }
         if m.role == "inventory_update" {
@@ -942,13 +1056,19 @@ fn build_narrative_messages(
         }
         if let Some(ref wt) = m.world_time {
             if last_time.as_deref() != Some(wt) {
-                let formatted = wt.split(' ').map(|w| {
-                    let mut c = w.chars();
-                    match c.next() {
-                        Some(first) => first.to_uppercase().to_string() + &c.as_str().to_lowercase(),
-                        None => String::new(),
-                    }
-                }).collect::<Vec<_>>().join(" ");
+                let formatted = wt
+                    .split(' ')
+                    .map(|w| {
+                        let mut c = w.chars();
+                        match c.next() {
+                            Some(first) => {
+                                first.to_uppercase().to_string() + &c.as_str().to_lowercase()
+                            }
+                            None => String::new(),
+                        }
+                    })
+                    .collect::<Vec<_>>()
+                    .join(" ");
                 msgs.push(openai::ChatMessage {
                     role: "system".to_string(),
                     content: format!("[It is now {formatted}.]"),
@@ -976,7 +1096,9 @@ fn build_narrative_messages(
         });
     }
 
-    if let Some(loc) = prompts::effective_current_location(current_location_override, recent_messages) {
+    if let Some(loc) =
+        prompts::effective_current_location(current_location_override, recent_messages)
+    {
         msgs.push(openai::ChatMessage {
             role: "system".to_string(),
             content: format!("[SCENE LOCATION RIGHT NOW — AUTHORITATIVE: {loc}. The beat is happening here. Chat history above may show vivid detail about previous locations — that belongs to past scenes; this beat is grounded in {loc}.]"),
@@ -1054,12 +1176,8 @@ fn build_proactive_ping_runtime_messages(
     load_test_anchor: Option<&str>,
     current_location_override: Option<&str>,
 ) -> Vec<openai::ChatMessage> {
-    let own_voice_samples = prompts::pick_own_voice_samples(
-        &character.character_id,
-        recent_messages,
-        false,
-        6,
-    );
+    let own_voice_samples =
+        prompts::pick_own_voice_samples(&character.character_id, recent_messages, false, 6);
     let system = prompts::build_proactive_ping_system_prompt(
         world,
         character,
@@ -1159,13 +1277,19 @@ pub async fn run_proactive_ping_with_base(
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let choice = response.choices.first()
+    let choice = response
+        .choices
+        .first()
         .ok_or_else(|| "No response from model".to_string())?;
     let raw = choice.message.content.clone();
 
     let reply = if choice.finish_reason.as_deref() == Some("length") {
         let trimmed = trim_to_last_complete_sentence(&raw);
-        let base = if trimmed.is_empty() { raw.as_str() } else { trimmed.as_str() };
+        let base = if trimmed.is_empty() {
+            raw.as_str()
+        } else {
+            trimmed.as_str()
+        };
         balance_trailing_openers(base)
     } else {
         raw
@@ -1251,7 +1375,9 @@ Rules:
     };
 
     let response = openai::vision_completion_with_base(openai_base_url, api_key, &request).await?;
-    let text = response.choices.first()
+    let text = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
     if text.is_empty() {
@@ -1303,7 +1429,11 @@ pub async fn run_dream_with_base(
     illustration_captions: &std::collections::HashMap<String, String>,
 ) -> Result<(String, Option<openai::Usage>), String> {
     let system = prompts::build_dream_system_prompt(
-        world, character, user_profile, mood_directive, mood_chain,
+        world,
+        character,
+        user_profile,
+        mood_directive,
+        mood_chain,
     );
     let messages = prompts::build_dream_messages(&system, recent_messages, illustration_captions);
 
@@ -1320,13 +1450,19 @@ pub async fn run_dream_with_base(
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let choice = response.choices.first()
+    let choice = response
+        .choices
+        .first()
         .ok_or_else(|| "No response from model".to_string())?;
     let raw = choice.message.content.clone();
 
     let reply = if choice.finish_reason.as_deref() == Some("length") {
         let trimmed = trim_to_last_complete_sentence(&raw);
-        let base = if trimmed.is_empty() { raw.as_str() } else { trimmed.as_str() };
+        let base = if trimmed.is_empty() {
+            raw.as_str()
+        } else {
+            trimmed.as_str()
+        };
         balance_trailing_openers(base)
     } else {
         raw
@@ -1368,7 +1504,25 @@ pub async fn run_dialogue_streaming(
     // function is a transient pre-generate preview rather than the full
     // shipping dialogue path. If it is ever reactivated as more than a
     // preview, parity-review it against run_dialogue_with_base first.
-    let system = prompts::build_dialogue_system_prompt(world, character, user_profile, mood_directive, response_length, group_context, tone, local_model, mood_chain, leader, &[], None, &[], None, &[], None, None);
+    let system = prompts::build_dialogue_system_prompt(
+        world,
+        character,
+        user_profile,
+        mood_directive,
+        response_length,
+        group_context,
+        tone,
+        local_model,
+        mood_chain,
+        leader,
+        &[],
+        None,
+        &[],
+        None,
+        &[],
+        None,
+        None,
+    );
     let user_display_name = user_profile.map(|p| p.display_name.as_str());
     let messages = build_dialogue_streaming_messages(
         &system,
@@ -1419,7 +1573,15 @@ pub async fn run_narrative_streaming(
     event_name: &str,
     current_location_override: Option<&str>,
 ) -> Result<String, String> {
-    let system = prompts::build_narrative_system_prompt(world, character, additional_cast, user_profile, mood_directive, narration_tone, narration_instructions);
+    let system = prompts::build_narrative_system_prompt(
+        world,
+        character,
+        additional_cast,
+        user_profile,
+        mood_directive,
+        narration_tone,
+        narration_instructions,
+    );
     let mut msgs = build_narrative_messages(
         &system,
         recent_messages,
@@ -1437,7 +1599,10 @@ pub async fn run_narrative_streaming(
     } else {
         "Write a narrative beat for this moment.".to_string()
     };
-    msgs.push(openai::ChatMessage { role: "user".to_string(), content: user_prompt });
+    msgs.push(openai::ChatMessage {
+        role: "user".to_string(),
+        content: user_prompt,
+    });
 
     let request = openai::StreamingRequest {
         model: model.to_string(),
@@ -1485,8 +1650,7 @@ pub async fn run_memory_update_with_base(
     thread_summary: &str,
     recent_messages: &[Message],
 ) -> Result<(serde_json::Value, Option<openai::Usage>), String> {
-    let messages =
-        prompts::build_memory_update_prompt(character, thread_summary, recent_messages);
+    let messages = prompts::build_memory_update_prompt(character, thread_summary, recent_messages);
 
     let is_openai = base_url.contains("openai.com");
     let request = ChatRequest {
@@ -1495,7 +1659,9 @@ pub async fn run_memory_update_with_base(
         temperature: Some(0.3),
         max_completion_tokens: Some(600),
         response_format: if is_openai {
-            Some(ResponseFormat { format_type: "json_object".to_string() })
+            Some(ResponseFormat {
+                format_type: "json_object".to_string(),
+            })
         } else {
             None
         },
@@ -1508,12 +1674,13 @@ pub async fn run_memory_update_with_base(
         .map(|c| c.message.content.clone())
         .ok_or_else(|| "No response from model".to_string())?;
 
-    let val: serde_json::Value = serde_json::from_str::<serde_json::Value>(&raw)
-        .or_else(|_| {
-            extract_json_object(&raw)
-                .ok_or_else(|| format!("No JSON found in memory response.\nRaw: {raw}"))
-                .and_then(|s| serde_json::from_str(s).map_err(|e| format!("Failed to parse memory update: {e}")))
-        })?;
+    let val: serde_json::Value = serde_json::from_str::<serde_json::Value>(&raw).or_else(|_| {
+        extract_json_object(&raw)
+            .ok_or_else(|| format!("No JSON found in memory response.\nRaw: {raw}"))
+            .and_then(|s| {
+                serde_json::from_str(s).map_err(|e| format!("Failed to parse memory update: {e}"))
+            })
+    })?;
     Ok((val, response.usage))
 }
 
@@ -1562,7 +1729,9 @@ pub const INVENTORY_MAX_ITEMS: usize = 10;
 pub const INVENTORY_KIND_PHYSICAL: &str = "physical";
 pub const INVENTORY_KIND_INTERIOR: &str = "interior";
 
-fn default_inventory_kind() -> String { INVENTORY_KIND_PHYSICAL.to_string() }
+fn default_inventory_kind() -> String {
+    INVENTORY_KIND_PHYSICAL.to_string()
+}
 
 /// One inventory item as the LLM produces and the DB stores. Matches
 /// the TS-side shape in frontend/src/lib/tauri.ts. `kind` defaults to
@@ -1664,12 +1833,18 @@ RULES FOR CHANGES ACROSS DAYS:
 }
 
 fn render_history_for_inventory(history: &[crate::db::queries::ConversationLine]) -> String {
-    history.iter()
+    history
+        .iter()
         .map(|line| {
             let clipped: String = line.content.chars().take(280).collect();
             match line.formula_signature.as_deref() {
                 Some(sig) if !sig.trim().is_empty() => {
-                    format!("[⟨momentstamp: {}⟩] {}: {}", sig.trim(), line.speaker, clipped)
+                    format!(
+                        "[⟨momentstamp: {}⟩] {}: {}",
+                        sig.trim(),
+                        line.speaker,
+                        clipped
+                    )
                 }
                 _ => format!("{}: {}", line.speaker, clipped),
             }
@@ -1685,7 +1860,11 @@ fn render_history_for_inventory(history: &[crate::db::queries::ConversationLine]
 /// then interiors — which keeps the strip/prompt rendering consistent.
 fn parse_inventory_json(raw: &str) -> Vec<InventoryItem> {
     let body = if let (Some(start), Some(end)) = (raw.find('['), raw.rfind(']')) {
-        if end > start { &raw[start..=end] } else { raw }
+        if end > start {
+            &raw[start..=end]
+        } else {
+            raw
+        }
     } else {
         raw
     };
@@ -1703,7 +1882,9 @@ fn parse_inventory_json(raw: &str) -> Vec<InventoryItem> {
     }
     let mut out = phys;
     out.extend(inter);
-    if out.len() > INVENTORY_MAX_ITEMS { out.truncate(INVENTORY_MAX_ITEMS); }
+    if out.len() > INVENTORY_MAX_ITEMS {
+        out.truncate(INVENTORY_MAX_ITEMS);
+    }
     out
 }
 
@@ -1730,8 +1911,14 @@ pub async fn seed_character_inventory(
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: inventory_system_prompt(character_name) },
-            openai::ChatMessage { role: "user".to_string(), content: user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: inventory_system_prompt(character_name),
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.7),
         max_completion_tokens: None,
@@ -1739,7 +1926,9 @@ pub async fn seed_character_inventory(
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let raw = response.choices.first()
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.clone())
         .unwrap_or_default();
     Ok(parse_inventory_json(&raw))
@@ -1776,8 +1965,14 @@ pub async fn refresh_character_inventory(
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: inventory_system_prompt(character_name) },
-            openai::ChatMessage { role: "user".to_string(), content: user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: inventory_system_prompt(character_name),
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.6),
         max_completion_tokens: None,
@@ -1785,7 +1980,9 @@ pub async fn refresh_character_inventory(
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let raw = response.choices.first()
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.clone())
         .unwrap_or_default();
     Ok(parse_inventory_json(&raw))
@@ -1873,8 +2070,14 @@ pub async fn inventory_update_from_moment(
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: inventory_system_prompt(character_name) },
-            openai::ChatMessage { role: "user".to_string(), content: user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: inventory_system_prompt(character_name),
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.6),
         max_completion_tokens: None,
@@ -1882,7 +2085,9 @@ pub async fn inventory_update_from_moment(
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let raw = response.choices.first()
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.clone())
         .unwrap_or_default();
     Ok(parse_inventory_json(&raw))
@@ -1917,7 +2122,8 @@ pub async fn generate_character_journal(
     let inv_block = if prior_inventory.is_empty() {
         "(empty)".to_string()
     } else {
-        prior_inventory.iter()
+        prior_inventory
+            .iter()
             .map(|i| format!("  - [{}] {} — {}", i.kind, i.name, i.description))
             .collect::<Vec<_>>()
             .join("\n")
@@ -1925,14 +2131,19 @@ pub async fn generate_character_journal(
     let prior_block = if prior_entries.is_empty() {
         "(none — this is your first entry)".to_string()
     } else {
-        prior_entries.iter().rev()
+        prior_entries
+            .iter()
+            .rev()
             .map(|e| format!("Day {}: {}", e.world_day, e.content.trim()))
             .collect::<Vec<_>>()
             .join("\n\n")
     };
     let history_block = render_history_for_inventory(history);
-    let sig_line = if signature_emoji.trim().is_empty() { String::new() }
-        else { format!("\nYour signature emoji (use sparingly if at all — a journal entry is rarely the place): {}", signature_emoji.trim()) };
+    let sig_line = if signature_emoji.trim().is_empty() {
+        String::new()
+    } else {
+        format!("\nYour signature emoji (use sparingly if at all — a journal entry is rarely the place): {}", signature_emoji.trim())
+    };
 
     let system = format!(
         r#"You are {name}, writing a short private journal entry for Day {day} of your life.
@@ -2016,7 +2227,11 @@ These are echoes of the craft-note stack the dialogue prompts use, recalibrated 
 - Does it sound like {name} actually writes — or like a thoughtful narrator? Trust the plainer voice."#,
         name = character_name,
         day = world_day,
-        ident = if character_identity.is_empty() { "(no identity written)" } else { character_identity },
+        ident = if character_identity.is_empty() {
+            "(no identity written)"
+        } else {
+            character_identity
+        },
         sig = sig_line,
         inv = inv_block,
         prior = prior_block,
@@ -2031,8 +2246,14 @@ These are echoes of the craft-note stack the dialogue prompts use, recalibrated 
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: system },
-            openai::ChatMessage { role: "user".to_string(), content: user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.85),
         max_completion_tokens: Some(450),
@@ -2040,10 +2261,14 @@ These are echoes of the craft-note stack the dialogue prompts use, recalibrated 
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let raw = response.choices.first()
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
-    if raw.is_empty() { return Err("empty journal response".to_string()); }
+    if raw.is_empty() {
+        return Err("empty journal response".to_string());
+    }
     Ok(raw)
 }
 
@@ -2079,17 +2304,24 @@ pub async fn generate_user_journal(
     let facts_block = if user_facts.is_empty() {
         "(none written)".to_string()
     } else {
-        user_facts.iter().map(|f| format!("  - {}", f)).collect::<Vec<_>>().join("\n")
+        user_facts
+            .iter()
+            .map(|f| format!("  - {}", f))
+            .collect::<Vec<_>>()
+            .join("\n")
     };
     let prior_block = if prior_entries.is_empty() {
         "(none — this is your first entry)".to_string()
     } else {
-        prior_entries.iter().rev()
+        prior_entries
+            .iter()
+            .rev()
             .map(|e| format!("Day {}: {}", e.world_day, e.content.trim()))
             .collect::<Vec<_>>()
             .join("\n\n")
     };
-    let history_block: String = history.iter()
+    let history_block: String = history
+        .iter()
         .map(|(speaker, content, _)| {
             let clipped: String = content.chars().take(280).collect();
             format!("{}: {}", speaker, clipped)
@@ -2097,8 +2329,16 @@ pub async fn generate_user_journal(
         .collect::<Vec<_>>()
         .join("\n");
 
-    let name = if user_display_name.trim().is_empty() { "I" } else { user_display_name };
-    let ident = if user_description.trim().is_empty() { "(no self-description written)" } else { user_description };
+    let name = if user_display_name.trim().is_empty() {
+        "I"
+    } else {
+        user_display_name
+    };
+    let ident = if user_description.trim().is_empty() {
+        "(no self-description written)"
+    } else {
+        user_description
+    };
 
     let system = format!(
         r#"You are {name}, writing a private journal entry for Day {day} of your life — yesterday, now closed. This is YOUR handwriting. No one else reads this. It is the one place the day is named in your own head.
@@ -2198,8 +2438,14 @@ Speak as {name}, not as a writer pretending to be {name}. If you're terse, write
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: system },
-            openai::ChatMessage { role: "user".to_string(), content: user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.85),
         max_completion_tokens: Some(750),
@@ -2207,10 +2453,14 @@ Speak as {name}, not as a writer pretending to be {name}. If you're terse, write
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let raw = response.choices.first()
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
-    if raw.is_empty() { return Err("empty user journal response".to_string()); }
+    if raw.is_empty() {
+        return Err("empty user journal response".to_string());
+    }
     Ok(raw)
 }
 
@@ -2232,13 +2482,16 @@ pub async fn generate_meanwhile_event(
     let inv_block = if prior_inventory.is_empty() {
         "(empty)".to_string()
     } else {
-        prior_inventory.iter()
+        prior_inventory
+            .iter()
             .map(|i| format!("  - [{}] {}", i.kind, i.name))
             .collect::<Vec<_>>()
             .join("\n")
     };
     let history_block = render_history_for_inventory(recent_history);
-    let weather_line = weather_label.map(|w| format!("Weather: {w}\n")).unwrap_or_default();
+    let weather_line = weather_label
+        .map(|w| format!("Weather: {w}\n"))
+        .unwrap_or_default();
 
     let system = format!(
         r#"You write ONE small line of texture — what {name} was doing when no one was watching, in the {time} window of Day {day}. Not plot. Not stakes. Not dialogue. Not a scene. Just a small concrete thing a specific person like {name} would actually be doing in this hour of this kind of day.
@@ -2264,19 +2517,37 @@ Recent context (the conversations you've been in — for texture, not for recapp
         name = character_name,
         time = time_of_day,
         day = world_day,
-        ident = if character_identity.is_empty() { "(no identity written)" } else { character_identity },
+        ident = if character_identity.is_empty() {
+            "(no identity written)"
+        } else {
+            character_identity
+        },
         inv = inv_block,
         weather = weather_line,
-        hist = if history_block.is_empty() { "(no recent chat history)".to_string() } else { history_block },
+        hist = if history_block.is_empty() {
+            "(no recent chat history)".to_string()
+        } else {
+            history_block
+        },
     );
 
-    let user = format!("Write the one small thing {name} was doing this {time}.", name = character_name, time = time_of_day);
+    let user = format!(
+        "Write the one small thing {name} was doing this {time}.",
+        name = character_name,
+        time = time_of_day
+    );
 
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: system },
-            openai::ChatMessage { role: "user".to_string(), content: user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.9),
         max_completion_tokens: Some(100),
@@ -2284,10 +2555,14 @@ Recent context (the conversations you've been in — for texture, not for recapp
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let raw = response.choices.first()
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().trim_matches('"').to_string())
         .unwrap_or_default();
-    if raw.is_empty() { return Err("empty meanwhile response".to_string()); }
+    if raw.is_empty() {
+        return Err("empty meanwhile response".to_string());
+    }
     Ok(raw)
 }
 
@@ -2316,10 +2591,20 @@ pub async fn generate_daily_reading_with_critique(
     characters_summary: &str,
     day_messages_rendered: &str,
     yesterday_reading: Option<&crate::db::queries::DailyReading>,
-) -> Result<(Vec<crate::db::queries::ReadingDomain>, String, Option<openai::Usage>, Option<openai::Usage>), String> {
-    let domain_block: String = DAILY_READING_DOMAINS.iter()
+) -> Result<
+    (
+        Vec<crate::db::queries::ReadingDomain>,
+        String,
+        Option<openai::Usage>,
+        Option<openai::Usage>,
+    ),
+    String,
+> {
+    let domain_block: String = DAILY_READING_DOMAINS
+        .iter()
         .map(|(name, def)| format!("  - {name}: {def}"))
-        .collect::<Vec<_>>().join("\n");
+        .collect::<Vec<_>>()
+        .join("\n");
     let domain_names: Vec<&str> = DAILY_READING_DOMAINS.iter().map(|(n, _)| *n).collect();
 
     let yesterday_block = yesterday_reading.map(|r| {
@@ -2331,12 +2616,22 @@ pub async fn generate_daily_reading_with_critique(
     }).unwrap_or_else(|| "(no prior reading)".to_string());
 
     let world_block = {
-        let mut parts = vec![
-            format!("World: {}", if world.description.is_empty() { "(no description)" } else { &world.description })
-        ];
+        let mut parts = vec![format!(
+            "World: {}",
+            if world.description.is_empty() {
+                "(no description)"
+            } else {
+                &world.description
+            }
+        )];
         if let Some(time) = world.state.get("time") {
-            let tod = time.get("time_of_day").and_then(|v| v.as_str()).unwrap_or("");
-            if !tod.is_empty() { parts.push(format!("End of day: {tod}")); }
+            let tod = time
+                .get("time_of_day")
+                .and_then(|v| v.as_str())
+                .unwrap_or("");
+            if !tod.is_empty() {
+                parts.push(format!("End of day: {tod}"));
+            }
         }
         if let Some(w) = world.state.get("weather").and_then(|v| v.as_str()) {
             if let Some((emoji, label)) = crate::ai::prompts::weather_meta(w) {
@@ -2392,16 +2687,28 @@ Do not hedge or explain. Output ONLY the JSON object."#,
     let draft_req = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: draft_system.clone() },
-            openai::ChatMessage { role: "user".to_string(), content: draft_user.clone() },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: draft_system.clone(),
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: draft_user.clone(),
+            },
         ],
         temperature: Some(0.5),
         max_completion_tokens: Some(800),
-        response_format: Some(openai::ResponseFormat { format_type: "json_object".to_string() }),
+        response_format: Some(openai::ResponseFormat {
+            format_type: "json_object".to_string(),
+        }),
     };
     let draft_resp = openai::chat_completion_with_base(base_url, api_key, &draft_req).await?;
     let draft_usage = draft_resp.usage.clone();
-    let draft_raw = draft_resp.choices.first().map(|c| c.message.content.clone()).unwrap_or_default();
+    let draft_raw = draft_resp
+        .choices
+        .first()
+        .map(|c| c.message.content.clone())
+        .unwrap_or_default();
 
     // ── PASS 2: SELF-CRITIQUE + REFINE ─────────────────────────────────
     let critique_system = format!(
@@ -2437,16 +2744,28 @@ Output ONLY the JSON object. No preamble."#,
     let crit_req = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: critique_system },
-            openai::ChatMessage { role: "user".to_string(), content: critique_user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: critique_system,
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: critique_user,
+            },
         ],
         temperature: Some(0.4),
         max_completion_tokens: Some(800),
-        response_format: Some(openai::ResponseFormat { format_type: "json_object".to_string() }),
+        response_format: Some(openai::ResponseFormat {
+            format_type: "json_object".to_string(),
+        }),
     };
     let crit_resp = openai::chat_completion_with_base(base_url, api_key, &crit_req).await?;
     let crit_usage = crit_resp.usage.clone();
-    let refined_raw = crit_resp.choices.first().map(|c| c.message.content.clone()).unwrap_or_default();
+    let refined_raw = crit_resp
+        .choices
+        .first()
+        .map(|c| c.message.content.clone())
+        .unwrap_or_default();
 
     // Parse refined; fall back to draft on parse error.
     #[derive(serde::Deserialize)]
@@ -2462,23 +2781,35 @@ Output ONLY the JSON object. No preamble."#,
     // Normalize: clamp percents to [0,100], trim phrases, ensure every
     // required domain is present (fill missing with a blank-ish placeholder
     // at 50 so the UI never renders a broken row).
-    let by_name: std::collections::HashMap<String, crate::db::queries::ReadingDomain> =
-        parsed.domains.into_iter()
-            .map(|mut d| {
-                d.percent = d.percent.clamp(0, 100);
-                d.phrase = d.phrase.trim().to_string();
-                (d.name.clone(), d)
-            })
-            .collect();
-    let domains_out: Vec<crate::db::queries::ReadingDomain> = domain_names.iter().map(|n| {
-        by_name.get(*n).cloned().unwrap_or_else(|| crate::db::queries::ReadingDomain {
-            name: (*n).to_string(),
-            percent: 50,
-            phrase: "(no reading)".to_string(),
+    let by_name: std::collections::HashMap<String, crate::db::queries::ReadingDomain> = parsed
+        .domains
+        .into_iter()
+        .map(|mut d| {
+            d.percent = d.percent.clamp(0, 100);
+            d.phrase = d.phrase.trim().to_string();
+            (d.name.clone(), d)
         })
-    }).collect();
+        .collect();
+    let domains_out: Vec<crate::db::queries::ReadingDomain> = domain_names
+        .iter()
+        .map(|n| {
+            by_name
+                .get(*n)
+                .cloned()
+                .unwrap_or_else(|| crate::db::queries::ReadingDomain {
+                    name: (*n).to_string(),
+                    percent: 50,
+                    phrase: "(no reading)".to_string(),
+                })
+        })
+        .collect();
 
-    Ok((domains_out, parsed.complication.trim().to_string(), draft_usage, crit_usage))
+    Ok((
+        domains_out,
+        parsed.complication.trim().to_string(),
+        draft_usage,
+        crit_usage,
+    ))
 }
 
 pub async fn derive_caption_from_scene(
@@ -2501,15 +2832,23 @@ Rules:
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: system },
-            openai::ChatMessage { role: "user".to_string(), content: user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.4),
         max_completion_tokens: Some(80),
         response_format: None,
     };
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let text = response.choices.first()
+    let text = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
     if text.is_empty() {
@@ -2527,8 +2866,11 @@ pub async fn pick_memorable_moment_caption(
 ) -> Result<String, String> {
     // Render the last ~8 messages as a compact scene snippet for the model
     // to pick a moment from.
-    let scene: Vec<String> = recent_messages.iter()
-        .rev().take(8).rev()
+    let scene: Vec<String> = recent_messages
+        .iter()
+        .rev()
+        .take(8)
+        .rev()
         .filter(|m| m.role == "user" || m.role == "assistant" || m.role == "narrative")
         .map(|m| {
             let role = match m.role.as_str() {
@@ -2553,13 +2895,22 @@ Rules:
 - Prefer visual detail, body, light, gesture. Avoid abstractions.
 - 15-30 words."#.to_string();
 
-    let user = format!("Recent scene:\n\n{}\n\nThe memorable moment:", scene.join("\n\n"));
+    let user = format!(
+        "Recent scene:\n\n{}\n\nThe memorable moment:",
+        scene.join("\n\n")
+    );
 
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: system },
-            openai::ChatMessage { role: "user".to_string(), content: user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.8),
         max_completion_tokens: Some(120),
@@ -2567,7 +2918,9 @@ Rules:
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let text = response.choices.first()
+    let text = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
 
@@ -2579,7 +2932,6 @@ Rules:
     let text = text.trim_matches('"').trim_matches('\'').trim().to_string();
     Ok(text)
 }
-
 
 /// Two-pass character generation: before producing the visible reply,
 /// produce the "thing the character almost said but chose not to" — the
@@ -2610,8 +2962,11 @@ pub async fn pick_unsent_draft(
 ) -> Option<String> {
     // Compact recent scene — last ~3 message lines for context. Skip
     // non-textual.
-    let scene: Vec<String> = recent_scene.iter()
-        .rev().take(3).rev()
+    let scene: Vec<String> = recent_scene
+        .iter()
+        .rev()
+        .take(3)
+        .rev()
         .filter(|m| m.role == "user" || m.role == "assistant" || m.role == "narrative")
         .map(|m| {
             let speaker = match m.role.as_str() {
@@ -2624,7 +2979,11 @@ pub async fn pick_unsent_draft(
             format!("{speaker}: {clipped}")
         })
         .collect();
-    let scene_block = if scene.is_empty() { String::new() } else { format!("\n\nRecent scene:\n{}", scene.join("\n")) };
+    let scene_block = if scene.is_empty() {
+        String::new()
+    } else {
+        format!("\n\nRecent scene:\n{}", scene.join("\n"))
+    };
     let identity_block = if character_identity.is_empty() {
         String::new()
     } else {
@@ -2656,17 +3015,27 @@ Rules:
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: system },
-            openai::ChatMessage { role: "user".to_string(), content: user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.95),
         max_completion_tokens: Some(80),
         response_format: None,
     };
 
-    let response = openai::chat_completion_with_base(base_url, api_key, &request).await.ok()?;
+    let response = openai::chat_completion_with_base(base_url, api_key, &request)
+        .await
+        .ok()?;
     let raw = response.choices.first()?.message.content.trim().to_string();
-    if raw.is_empty() { return None; }
+    if raw.is_empty() {
+        return None;
+    }
     // Strip enclosing quotes the model might add.
     let cleaned = raw.trim_matches('"').trim_matches('\'').trim().to_string();
     // Empty-signal: character has nothing under the surface right now.
@@ -2731,18 +3100,28 @@ pub async fn pick_character_reaction_via_llm(
     // "role: content" lines. Each content clipped to ~240 chars so the
     // prompt stays short.
     let scene = {
-        let tail: Vec<String> = recent_context.iter()
+        let tail: Vec<String> = recent_context
+            .iter()
             .rev()
             .take(4)
             .rev()
             .map(|m| {
                 let clipped: String = m.content.chars().take(240).collect();
-                let role = if m.role == "user" { "USER" } else { "CHARACTER" };
+                let role = if m.role == "user" {
+                    "USER"
+                } else {
+                    "CHARACTER"
+                };
                 format!("{role}: {clipped}")
             })
             .collect();
-        if tail.is_empty() { String::new() } else {
-            format!("\n\nImmediate scene (most recent last):\n{}", tail.join("\n"))
+        if tail.is_empty() {
+            String::new()
+        } else {
+            format!(
+                "\n\nImmediate scene (most recent last):\n{}",
+                tail.join("\n")
+            )
         }
     };
 
@@ -2792,12 +3171,20 @@ Guidelines (tendencies, not walls — the goal is the truest single-emoji read o
 - MATCH THE REGISTER. Light moment → light feeling. Reverent moment → quiet feeling. Heavy moment → held feeling.{scene}{atmosphere}{occasional_calibration}"#,
         occasional_calibration = if mode == "occasional" {
             "\n\n# OCCASIONAL-MODE BUDGET\nThis chat is in OCCASIONAL reactions mode. Real text-message texture: most messages get NO reaction; only ~1-in-4 do. Look at the immediate scene above — count how many of the last few exchanges already received a reaction. If reactions are already firing on most of them, this one almost certainly should NOT. Reserve reactions for moments that genuinely catch the character — a real beat of feeling, not a filler-reaction on every message.\n\nIf this moment doesn't earn a reaction, output a single em-dash and nothing else: —\n\nOtherwise output the single best emoji per the guidelines above. The em-dash IS valid output here; do not force an emoji onto a moment that doesn't carry one."
-        } else { "" }
+        } else {
+            ""
+        }
     );
 
     let messages = vec![
-        openai::ChatMessage { role: "system".to_string(), content: system },
-        openai::ChatMessage { role: "user".to_string(), content: user_message.to_string() },
+        openai::ChatMessage {
+            role: "system".to_string(),
+            content: system,
+        },
+        openai::ChatMessage {
+            role: "user".to_string(),
+            content: user_message.to_string(),
+        },
     ];
 
     let request = ChatRequest {
@@ -2809,7 +3196,9 @@ Guidelines (tendencies, not walls — the goal is the truest single-emoji read o
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let raw = response.choices.first()
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
 
@@ -2817,15 +3206,19 @@ Guidelines (tendencies, not walls — the goal is the truest single-emoji read o
     // hyphen — any of these from "occasional" mode means "this moment
     // doesn't fit a reaction"). Strip whitespace + quotes; if what's
     // left is a dash-class char, the LLM intentionally skipped.
-    let pre_filter: String = raw.chars()
+    let pre_filter: String = raw
+        .chars()
         .filter(|c| !c.is_whitespace() && !matches!(c, '"' | '\''))
         .collect();
     if pre_filter == "—" || pre_filter == "–" || pre_filter == "-" {
         return Ok(None);
     }
 
-    let cleaned: String = raw.chars()
-        .filter(|c| !c.is_whitespace() && !matches!(c, '"' | '\'' | '.' | ',' | '!' | '?' | ':' | ';'))
+    let cleaned: String = raw
+        .chars()
+        .filter(|c| {
+            !c.is_whitespace() && !matches!(c, '"' | '\'' | '.' | ',' | '!' | '?' | ':' | ';')
+        })
         .take(8)
         .collect();
 
@@ -2858,11 +3251,16 @@ pub async fn generate_canon_weave_description(
     source_message: &Message,
     source_speaker_label: &str,
 ) -> Result<(String, Option<openai::Usage>), String> {
-    let rendered_context: Vec<String> = context_messages.iter()
+    let rendered_context: Vec<String> = context_messages
+        .iter()
         .map(|m| {
-            let role = if m.message_id == source_message.message_id { "★ SOURCE" }
-                else if m.role == "user" { "USER" }
-                else { "CHARACTER" };
+            let role = if m.message_id == source_message.message_id {
+                "★ SOURCE"
+            } else if m.role == "user" {
+                "USER"
+            } else {
+                "CHARACTER"
+            };
             let clipped: String = m.content.chars().take(600).collect();
             format!("[{role}] {clipped}")
         })
@@ -2932,8 +3330,14 @@ Return ONLY the revised description prose. No preamble, no quotes, no commentary
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: system },
-            openai::ChatMessage { role: "user".to_string(), content: user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.5),
         // No output cap. The weave returns the FULL revised description
@@ -2947,7 +3351,9 @@ Return ONLY the revised description prose. No preamble, no quotes, no commentary
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
     let usage = response.usage;
-    let text = response.choices.first()
+    let text = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
 
@@ -3031,7 +3437,9 @@ pub struct ProposedCanonUpdate {
     pub justification: String,
 }
 
-fn default_add_action() -> String { "add".to_string() }
+fn default_add_action() -> String {
+    "add".to_string()
+}
 
 /// Classify a moment into 1 or 2 proposed canonization updates.
 ///
@@ -3058,11 +3466,16 @@ pub async fn propose_canonization_updates(
         return Err("no canonization subjects provided".to_string());
     }
 
-    let rendered_context: Vec<String> = context_messages.iter()
+    let rendered_context: Vec<String> = context_messages
+        .iter()
         .map(|m| {
-            let role = if m.message_id == source_message.message_id { "★ SOURCE" }
-                else if m.role == "user" { "USER" }
-                else { "CHARACTER" };
+            let role = if m.message_id == source_message.message_id {
+                "★ SOURCE"
+            } else if m.role == "user" {
+                "USER"
+            } else {
+                "CHARACTER"
+            };
             let clipped: String = m.content.chars().take(600).collect();
             format!("[{role}] {clipped}")
         })
@@ -3286,8 +3699,14 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: system },
-            openai::ChatMessage { role: "user".to_string(), content: user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.5),
         // No output cap. description_weave returns the FULL revised
@@ -3297,18 +3716,24 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#
         // model write what the integration actually requires; the
         // finish_reason check below still catches genuine overruns.
         max_completion_tokens: None,
-        response_format: Some(openai::ResponseFormat { format_type: "json_object".to_string() }),
+        response_format: Some(openai::ResponseFormat {
+            format_type: "json_object".to_string(),
+        }),
     };
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
     let usage = response.usage;
-    let choice = response.choices.first()
+    let choice = response
+        .choices
+        .first()
         .ok_or_else(|| "empty canonization response".to_string())?;
     if choice.finish_reason.as_deref() == Some("length") {
         return Err("canonization response was cut off by the model's output cap — the revised description ran longer than the budget. Try canonizing again, or shorten the existing character description first.".to_string());
     }
     let text = choice.message.content.trim().to_string();
-    if text.is_empty() { return Err("empty canonization response".to_string()); }
+    if text.is_empty() {
+        return Err("empty canonization response".to_string());
+    }
 
     #[derive(serde::Deserialize)]
     struct RawOut {
@@ -3343,7 +3768,13 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#
     // weight/register cue for the classifier, not a kind restriction.
     // A boundary or known_fact can be heavy (load-bearing to who the
     // subject IS) or light (a specific detail worth carrying).
-    let valid_kinds = ["description_weave", "voice_rule", "boundary", "known_fact", "open_loop"];
+    let valid_kinds = [
+        "description_weave",
+        "voice_rule",
+        "boundary",
+        "known_fact",
+        "open_loop",
+    ];
     let valid_actions = ["add", "update", "remove"];
     let mut out: Vec<ProposedCanonUpdate> = Vec::new();
     for (i, u) in parsed.updates.into_iter().take(2).enumerate() {
@@ -3355,10 +3786,16 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#
         // redundant given a unique id. Try the strict match first, then
         // fall back to id-only — the worst case is no match at all, which
         // still surfaces as the same error.
-        let subject = subjects.iter()
+        let subject = subjects
+            .iter()
             .find(|s| s.subject_type == u.subject_type && s.subject_id == u.subject_id)
             .or_else(|| subjects.iter().find(|s| s.subject_id == u.subject_id))
-            .ok_or_else(|| format!("update {} references unknown subject ({}/{})", i, u.subject_type, u.subject_id))?;
+            .ok_or_else(|| {
+                format!(
+                    "update {} references unknown subject ({}/{})",
+                    i, u.subject_type, u.subject_id
+                )
+            })?;
         if !valid_kinds.contains(&u.kind.as_str()) {
             return Err(format!("update {} has unknown kind: {}", i, u.kind));
         }
@@ -3374,8 +3811,14 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#
         }
         // target_existing_text sanity: required for update/remove on list
         // kinds; null for add/weave.
-        let target = u.target_existing_text.map(|s| s.trim().to_string()).filter(|s| !s.is_empty());
-        if u.kind != "description_weave" && (action == "update" || action == "remove") && target.is_none() {
+        let target = u
+            .target_existing_text
+            .map(|s| s.trim().to_string())
+            .filter(|s| !s.is_empty());
+        if u.kind != "description_weave"
+            && (action == "update" || action == "remove")
+            && target.is_none()
+        {
             return Err(format!(
                 "update {}: action={} on {} requires target_existing_text",
                 i, action, u.kind
@@ -3406,9 +3849,9 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#
                 _ => &[],
             };
             let target_text = target.as_deref().unwrap_or("");
-            let matches = current_list.iter().any(|item| {
-                item.trim().eq_ignore_ascii_case(target_text)
-            });
+            let matches = current_list
+                .iter()
+                .any(|item| item.trim().eq_ignore_ascii_case(target_text));
             if !matches {
                 if action == "remove" {
                     // Remove of a non-existent item — silently drop.
@@ -3454,16 +3897,24 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#
     // classifier's new_content on any failure (the proposal still
     // ships; the user can edit before committing).
     for p in out.iter_mut() {
-        if p.kind != "description_weave" { continue; }
-        let Some(subject) = subjects.iter().find(|s| s.subject_id == p.subject_id) else { continue; };
+        if p.kind != "description_weave" {
+            continue;
+        }
+        let Some(subject) = subjects.iter().find(|s| s.subject_id == p.subject_id) else {
+            continue;
+        };
         match generate_canon_weave_description(
-            base_url, api_key, model,
+            base_url,
+            api_key,
+            model,
             &subject.subject_label,
             &subject.current_description,
             context_messages,
             source_message,
             source_speaker_label,
-        ).await {
+        )
+        .await
+        {
             Ok((rewoven, _u)) if !rewoven.trim().is_empty() => {
                 p.new_content = rewoven;
             }
@@ -3477,16 +3928,34 @@ Return ONLY the JSON object. No markdown, no preamble, no commentary."#
     // pass makes that true even on multi-item outputs where the
     // classifier drops a field.
     for p in out.iter_mut() {
-        if !p.justification.trim().is_empty() { continue; }
-        match fill_canon_justification(base_url, api_key, model, source_message, source_speaker_label, p).await {
-            Ok(j) if !j.trim().is_empty() => { p.justification = j; }
+        if !p.justification.trim().is_empty() {
+            continue;
+        }
+        match fill_canon_justification(
+            base_url,
+            api_key,
+            model,
+            source_message,
+            source_speaker_label,
+            p,
+        )
+        .await
+        {
+            Ok(j) if !j.trim().is_empty() => {
+                p.justification = j;
+            }
             _ => {
                 // Last-ditch fallback — at least the UI has SOMETHING.
                 // Shouldn't normally reach this: the fill_in call's
                 // prompt is minimal and the model rarely returns empty.
                 p.justification = format!(
                     "{} {} for {}.",
-                    match p.action.as_str() { "add" => "Adds", "update" => "Refines", "remove" => "Removes", _ => "Updates" },
+                    match p.action.as_str() {
+                        "add" => "Adds",
+                        "update" => "Refines",
+                        "remove" => "Removes",
+                        _ => "Updates",
+                    },
                     match p.kind.as_str() {
                         "description_weave" => "the description",
                         "voice_rule" => "a voice rule",
@@ -3547,18 +4016,28 @@ async fn fill_canon_justification(
     let request = ChatRequest {
         model: model.to_string(),
         messages: vec![
-            openai::ChatMessage { role: "system".to_string(), content: system },
-            openai::ChatMessage { role: "user".to_string(), content: user },
+            openai::ChatMessage {
+                role: "system".to_string(),
+                content: system,
+            },
+            openai::ChatMessage {
+                role: "user".to_string(),
+                content: user,
+            },
         ],
         temperature: Some(0.4),
         max_completion_tokens: Some(80),
         response_format: None,
     };
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let text = response.choices.first()
+    let text = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().trim_matches('"').to_string())
         .unwrap_or_default();
-    if text.is_empty() { return Err("empty justification fill-in response".to_string()); }
+    if text.is_empty() {
+        return Err("empty justification fill-in response".to_string());
+    }
     Ok(text)
 }
 
@@ -3584,16 +4063,30 @@ RULES:
 - Respond with ONLY the emoji character (e.g. ❤️ or 😂) or the word NONE if no reaction.
 - Never explain your choice. Just the emoji or NONE."#,
         name = character.display_name,
-        identity = if character.identity.is_empty() { "a complex character".to_string() } else { character.identity.clone() },
+        identity = if character.identity.is_empty() {
+            "a complex character".to_string()
+        } else {
+            character.identity.clone()
+        },
     );
 
     let messages = vec![
-        openai::ChatMessage { role: "system".to_string(), content: system },
-        openai::ChatMessage { role: "user".to_string(), content: user_message.to_string() },
-        openai::ChatMessage { role: "assistant".to_string(), content: assistant_reply.to_string() },
+        openai::ChatMessage {
+            role: "system".to_string(),
+            content: system,
+        },
         openai::ChatMessage {
             role: "user".to_string(),
-            content: "React to the user's message above with a single emoji, or say NONE.".to_string(),
+            content: user_message.to_string(),
+        },
+        openai::ChatMessage {
+            role: "assistant".to_string(),
+            content: assistant_reply.to_string(),
+        },
+        openai::ChatMessage {
+            role: "user".to_string(),
+            content: "React to the user's message above with a single emoji, or say NONE."
+                .to_string(),
         },
     ];
 
@@ -3607,7 +4100,9 @@ RULES:
 
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
     let usage = response.usage;
-    let raw = response.choices.first()
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
 
@@ -3639,7 +4134,15 @@ pub async fn run_narrative_with_base(
     illustration_captions: &std::collections::HashMap<String, String>,
     current_location_override: Option<&str>,
 ) -> Result<(String, Option<openai::Usage>), String> {
-    let system = prompts::build_narrative_system_prompt(world, character, additional_cast, user_profile, mood_directive, narration_tone, narration_instructions);
+    let system = prompts::build_narrative_system_prompt(
+        world,
+        character,
+        additional_cast,
+        user_profile,
+        mood_directive,
+        narration_tone,
+        narration_instructions,
+    );
     let mut msgs = build_narrative_messages(
         &system,
         recent_messages,
@@ -3725,14 +4228,19 @@ pub async fn generate_illustration_with_base(
             response_format: None,
         };
 
-        let scene_response = openai::chat_completion_with_base(base_url, api_key, &scene_request).await?;
+        let scene_response =
+            openai::chat_completion_with_base(base_url, api_key, &scene_request).await?;
         let desc = scene_response
             .choices
             .first()
             .map(|c| c.message.content.clone())
             .ok_or_else(|| "No scene description from model".to_string())?;
 
-        log::info!("[Illustration] Scene description ({} chars): {:.200}", desc.len(), desc);
+        log::info!(
+            "[Illustration] Scene description ({} chars): {:.200}",
+            desc.len(),
+            desc
+        );
         (desc, scene_response.usage)
     } else {
         log::info!("[Illustration] Skipping scene summary (user opted out)");
@@ -3768,7 +4276,9 @@ pub async fn generate_illustration_with_base(
     // history detail about a prior location (e.g., a character who
     // disagreed with the user about where they were); the image must
     // be placed at the AUTHORITATIVE location regardless.
-    if let Some(loc) = prompts::effective_current_location(current_location_override, recent_messages) {
+    if let Some(loc) =
+        prompts::effective_current_location(current_location_override, recent_messages)
+    {
         prompt_parts.push(format!(
             "PRIMARY DIRECTIVE — SETTING: This illustration takes place at {loc}, ONLY at {loc}. Render the background, environment, and surroundings as {loc}. Ignore any descriptions of other locations (town squares, fountains, public benches, market stalls, etc.) that may appear in the SCENE text below — those describe past moments and are NOT where this illustration is set. The setting of this image is {loc}; depict {loc}."
         ));
@@ -3844,13 +4354,20 @@ pub async fn generate_illustration_with_base(
     let prompt = prompt_parts.join(" ");
 
     let image_response = openai::generate_image_edit_with_base(
-        openai_base_url, api_key, image_model,
-        &prompt, reference_images,
-        image_size, image_quality,
+        openai_base_url,
+        api_key,
+        image_model,
+        &prompt,
+        reference_images,
+        image_size,
+        image_quality,
         image_output_format,
-    ).await?;
+    )
+    .await?;
 
-    let b64 = image_response.data.first()
+    let b64 = image_response
+        .data
+        .first()
         .and_then(|d| d.image_b64())
         .ok_or_else(|| "No image data in response".to_string())?;
 
@@ -3883,9 +4400,17 @@ pub fn openai_base64_decode_pub(input: &str) -> Result<Vec<u8>, String> {
     let mut buf = 0u32;
     let mut bits = 0u32;
     for &b in input.as_bytes() {
-        if b == b'\n' || b == b'\r' || b == b' ' { continue; }
-        let val = if (b as usize) < 128 { DECODE[b as usize] } else { 255 };
-        if val == 255 { return Err(format!("Invalid base64 character: {}", b as char)); }
+        if b == b'\n' || b == b'\r' || b == b' ' {
+            continue;
+        }
+        let val = if (b as usize) < 128 {
+            DECODE[b as usize]
+        } else {
+            255
+        };
+        if val == 255 {
+            return Err(format!("Invalid base64 character: {}", b as char));
+        }
         buf = (buf << 6) | val as u32;
         bits += 6;
         if bits >= 8 {
@@ -3936,8 +4461,17 @@ pub async fn invent_scene_for_chapter(
     depth: Option<&str>,
 ) -> Result<(InventedScene, Option<openai::Usage>), String> {
     let messages = prompts::build_scene_invention_prompt(
-        world, cast, user_profile, recent_kept_facts, cast_recent_journals,
-        recent_history, seed_hint, scene_location, tone, previous_chapter, depth,
+        world,
+        cast,
+        user_profile,
+        recent_kept_facts,
+        cast_recent_journals,
+        recent_history,
+        seed_hint,
+        scene_location,
+        tone,
+        previous_chapter,
+        depth,
     );
     let request = ChatRequest {
         model: model.to_string(),
@@ -3949,7 +4483,9 @@ pub async fn invent_scene_for_chapter(
         response_format: None,
     };
     let response = openai::chat_completion_with_base(base_url, api_key, &request).await?;
-    let raw = response.choices.first()
+    let raw = response
+        .choices
+        .first()
         .map(|c| c.message.content.trim().to_string())
         .unwrap_or_default();
     if raw.is_empty() {
@@ -3957,7 +4493,11 @@ pub async fn invent_scene_for_chapter(
     }
     // Tolerate code fences if the model wraps them despite the prompt.
     let body = if let (Some(start), Some(end)) = (raw.find('{'), raw.rfind('}')) {
-        if end > start { &raw[start..=end] } else { raw.as_str() }
+        if end > start {
+            &raw[start..=end]
+        } else {
+            raw.as_str()
+        }
     } else {
         raw.as_str()
     };

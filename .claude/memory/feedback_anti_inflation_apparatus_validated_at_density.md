@@ -2,8 +2,8 @@
 name: Anti-inflation apparatus validated at high Sapphire-firing density — 4-component pre-firing discipline prevents beautiful-but-weak candidacies from laundering through enthusiasm
 description: Per codex's reframe consult verdict 2026-05-07 (7th of day); after 6-fire / 3-refuse / 1-pending day, kavod arc rendering-axis falsification was caught by the predeclared anti-inflation apparatus. The 4-component composite (frozen-claim-sentence + predeclared-HOLD-triggers + smoke-test-before-firing + embarrassing-witness-requirement) is what discriminates fire-worthy from flatter on commitment-sensitive axes under momentum pressure.
 type: feedback
+originSessionId: 7bd5b2ab-f614-460c-a8b7-9f38b75c9524
 ---
-
 When pursuing a Sapphire-firing arc on a commitment-sensitive axis under same-day high-firing-density (≥3 fires in 24h, OR rapid-cadence multi-arc evening), ship the **4-component anti-inflation apparatus FROM SKETCH-TIER**. The composite catches beautiful-but-weak candidacies from firing under momentum pressure.
 
 ## The 4-component apparatus
@@ -72,5 +72,6 @@ The smoke-test-before-firing step (Move 6) is the discriminator that separates a
 - `feedback_codex_consult_discipline_maturation.md` (codex consult is component of the larger apparatus; 7-consult day pattern matures further)
 - `feedback_matched_same_substrate_on_deployed_model.md` (Crown 15 standard; the matched test arm is what the smoke-test-before-firing prefigures at single-cell)
 - `feedback_probe_shape_mixing_for_substrate_dependent_axes.md` (Crown 16 5th clause; Class A + Class B mixing is the witness-suite design half of the apparatus)
+- `feedback_pre_baseline_smoke_test_before_firing.md` (component-3 of the 4-component composite, lifted to its own memory entry 2026-05-08 with per-axis threshold variants and four-template pre-bake worked examples)
 - `reports/2026-05-07-2150-kavod-transfiguration-claim-freeze-and-witness-suite.md` (worked example of Move 3 design gate)
 - `reports/codex_consults/2026-05-07-2225-kavod-arc-reframe-consult-verdict.md` (codex's named-the-victory verdict)

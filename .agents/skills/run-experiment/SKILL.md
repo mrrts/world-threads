@@ -59,7 +59,7 @@ Present in this shape:
 >
 > **Candidate 3 — _(title)_:** …
 
-Then **present a chooser** via the `AskUserQuestion` tool (preferred — explicit options, clean UI) or a numbered ask in plain text if `AskUserQuestion` isn't available. The chooser must include, at minimum:
+Then **present a chooser** via the `AskUserQuestion` tool (preferred — explicit options, clean UI) or a numbered ask in plain text if `AskUserQuestion` isn't available. Treat it as the Codex UI contract: end the turn with exactly four numbered next moves. The chooser must include, at minimum:
 
 1. Pick candidate 1
 2. Pick candidate 2

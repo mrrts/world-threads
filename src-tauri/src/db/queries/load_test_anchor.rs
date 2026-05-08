@@ -46,10 +46,18 @@ pub fn insert_load_test_anchor(
             refresh_trigger, model_used, created_at
         ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
         params![
-            a.anchor_id, a.character_id, a.world_id, a.axis_kind,
-            a.anchor_label, a.anchor_body,
-            a.derivation_summary, a.world_day_at_generation, a.source_message_count,
-            a.refresh_trigger, a.model_used, a.created_at,
+            a.anchor_id,
+            a.character_id,
+            a.world_id,
+            a.axis_kind,
+            a.anchor_label,
+            a.anchor_body,
+            a.derivation_summary,
+            a.world_day_at_generation,
+            a.source_message_count,
+            a.refresh_trigger,
+            a.model_used,
+            a.created_at,
         ],
     )?;
     Ok(())
@@ -159,16 +167,20 @@ fn row_to_anchor(r: &rusqlite::Row) -> Result<LoadTestAnchor, rusqlite::Error> {
 /// Returns None if the character has no axes synthesized yet. This is
 /// what call-sites should use to feed `load_test_anchor: Option<&str>`
 /// into prompts::build_dialogue_system_prompt.
-pub fn combined_axes_block(
-    conn: &Connection,
-    character_id: &str,
-) -> Option<String> {
+pub fn combined_axes_block(conn: &Connection, character_id: &str) -> Option<String> {
     let axes = latest_axes_for_character(conn, character_id).ok()?;
-    if axes.is_empty() { return None; }
-    let combined = axes.iter()
+    if axes.is_empty() {
+        return None;
+    }
+    let combined = axes
+        .iter()
         .map(|a| a.anchor_body.trim().to_string())
         .filter(|b| !b.is_empty())
         .collect::<Vec<_>>()
         .join("\n\n");
-    if combined.is_empty() { None } else { Some(combined) }
+    if combined.is_empty() {
+        None
+    } else {
+        Some(combined)
+    }
 }

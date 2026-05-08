@@ -36,7 +36,10 @@ pub fn get_novel_entry(conn: &Connection, thread_id: &str, world_day: i64) -> Op
     ).ok()
 }
 
-pub fn list_novel_entries(conn: &Connection, thread_id: &str) -> Result<Vec<NovelEntry>, rusqlite::Error> {
+pub fn list_novel_entries(
+    conn: &Connection,
+    thread_id: &str,
+) -> Result<Vec<NovelEntry>, rusqlite::Error> {
     let mut stmt = conn.prepare(
         "SELECT novel_id, thread_id, world_day, content, created_at, updated_at FROM novel_entries WHERE thread_id = ?1 ORDER BY world_day ASC"
     )?;
@@ -53,7 +56,11 @@ pub fn list_novel_entries(conn: &Connection, thread_id: &str) -> Result<Vec<Nove
     rows.collect()
 }
 
-pub fn delete_novel_entry(conn: &Connection, thread_id: &str, world_day: i64) -> Result<(), rusqlite::Error> {
+pub fn delete_novel_entry(
+    conn: &Connection,
+    thread_id: &str,
+    world_day: i64,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "DELETE FROM novel_entries WHERE thread_id = ?1 AND world_day = ?2",
         params![thread_id, world_day],

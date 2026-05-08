@@ -40,29 +40,45 @@ pub async fn generate_video_cmd(
         )).map_err(|_| "Illustration not found".to_string())?;
 
         // Get world from thread
-        let world_id: String = conn.query_row(
-            "SELECT world_id FROM threads WHERE thread_id = ?1",
-            params![thread_id], |r| r.get(0),
-        ).map_err(|e| e.to_string())?;
+        let world_id: String = conn
+            .query_row(
+                "SELECT world_id FROM threads WHERE thread_id = ?1",
+                params![thread_id],
+                |r| r.get(0),
+            )
+            .map_err(|e| e.to_string())?;
         let world = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
 
         let character = if is_group {
             // Dummy character for animation prompt
             let chars_in_world = list_characters(&conn, &world_id).unwrap_or_default();
-            chars_in_world.into_iter().next().unwrap_or_else(|| Character {
-                character_id: String::new(), world_id: world_id.clone(), display_name: String::new(),
-                identity: String::new(), voice_rules: serde_json::json!([]),
-                boundaries: serde_json::json!([]), backstory_facts: serde_json::json!([]),
-                relationships: serde_json::json!({}), state: serde_json::json!({}),
-                avatar_color: String::new(), sex: "male".to_string(), is_archived: false,
-                created_at: String::new(), updated_at: String::new(),
-                visual_description: String::new(), visual_description_portrait_id: None,
-                inventory: serde_json::Value::Array(vec![]), last_inventory_day: None,
-                signature_emoji: String::new(),
-            action_beat_density: "normal".to_string(),
-            derived_formula: None,
-            has_read_empiricon: false,
-            })
+            chars_in_world
+                .into_iter()
+                .next()
+                .unwrap_or_else(|| Character {
+                    character_id: String::new(),
+                    world_id: world_id.clone(),
+                    display_name: String::new(),
+                    identity: String::new(),
+                    voice_rules: serde_json::json!([]),
+                    boundaries: serde_json::json!([]),
+                    backstory_facts: serde_json::json!([]),
+                    relationships: serde_json::json!({}),
+                    state: serde_json::json!({}),
+                    avatar_color: String::new(),
+                    sex: "male".to_string(),
+                    is_archived: false,
+                    created_at: String::new(),
+                    updated_at: String::new(),
+                    visual_description: String::new(),
+                    visual_description_portrait_id: None,
+                    inventory: serde_json::Value::Array(vec![]),
+                    last_inventory_day: None,
+                    signature_emoji: String::new(),
+                    action_beat_density: "normal".to_string(),
+                    derived_formula: None,
+                    has_read_empiricon: false,
+                })
         } else {
             get_character(&conn, &character_id).map_err(|e| e.to_string())?
         };
@@ -70,26 +86,37 @@ pub async fn generate_video_cmd(
         let user_profile = get_user_profile(&conn, &world_id).ok();
 
         // Get messages up to the illustration's creation time
-        let msg_table = if is_group { "group_messages" } else { "messages" };
+        let msg_table = if is_group {
+            "group_messages"
+        } else {
+            "messages"
+        };
         let sql = format!(
             "SELECT message_id, thread_id, role, content, tokens_estimate, sender_character_id, created_at, world_day, world_time FROM {} WHERE thread_id = ?1 AND created_at <= ?2
              ORDER BY created_at DESC LIMIT 30", msg_table
         );
         let mut stmt = conn.prepare(&sql).map_err(|e| e.to_string())?;
-        let mut recent_msgs: Vec<Message> = stmt.query_map(params![thread_id, illus_created_at], |row| {
-            Ok(Message {
-                message_id: row.get(0)?, thread_id: row.get(1)?, role: row.get(2)?,
-                content: row.get(3)?, tokens_estimate: row.get(4)?,
-                sender_character_id: row.get(5)?, created_at: row.get(6)?,
-                world_day: row.get(7).ok(), world_time: row.get(8).ok(),
-            address_to: None,
-        mood_chain: None,
-        is_proactive: false,
-        formula_signature: None,
-        })
-        }).map_err(|e| e.to_string())?
-        .filter_map(|r| r.ok())
-        .collect();
+        let mut recent_msgs: Vec<Message> = stmt
+            .query_map(params![thread_id, illus_created_at], |row| {
+                Ok(Message {
+                    message_id: row.get(0)?,
+                    thread_id: row.get(1)?,
+                    role: row.get(2)?,
+                    content: row.get(3)?,
+                    tokens_estimate: row.get(4)?,
+                    sender_character_id: row.get(5)?,
+                    created_at: row.get(6)?,
+                    world_day: row.get(7).ok(),
+                    world_time: row.get(8).ok(),
+                    address_to: None,
+                    mood_chain: None,
+                    is_proactive: false,
+                    formula_signature: None,
+                })
+            })
+            .map_err(|e| e.to_string())?
+            .filter_map(|r| r.ok())
+            .collect();
         recent_msgs.reverse();
 
         let current_loc = if is_group {
@@ -98,7 +125,15 @@ pub async fn generate_video_cmd(
             get_thread_location(&conn, &thread_id).ok().flatten()
         };
 
-        (world, character, recent_msgs, model_config, user_profile, file_name, current_loc)
+        (
+            world,
+            character,
+            recent_msgs,
+            model_config,
+            user_profile,
+            file_name,
+            current_loc,
+        )
     };
 
     let dir = &portraits_dir.0;
@@ -118,7 +153,8 @@ pub async fn generate_video_cmd(
             user_profile.as_ref(),
             &recent_msgs,
             current_loc.as_deref(),
-        ).await?
+        )
+        .await?
     } else {
         "Bring this illustration to life with natural, subtle motion.".to_string()
     };
@@ -129,7 +165,8 @@ pub async fn generate_video_cmd(
     }
 
     // Build the full Veo prompt: style directive + animation direction + character context
-    let user_name = user_profile.as_ref()
+    let user_name = user_profile
+        .as_ref()
         .map(|p| p.display_name.as_str())
         .unwrap_or("the human");
 
@@ -162,9 +199,20 @@ pub async fn generate_video_cmd(
     let mut operation = None;
     for (i, model) in models.iter().enumerate() {
         match google::start_veo_generation(
-            &google_api_key, model, Some(&image_b64), &veo_prompt, dur, Some("16:9"), audio,
-        ).await {
-            Ok(op) => { operation = Some(op); break; }
+            &google_api_key,
+            model,
+            Some(&image_b64),
+            &veo_prompt,
+            dur,
+            Some("16:9"),
+            audio,
+        )
+        .await
+        {
+            Ok(op) => {
+                operation = Some(op);
+                break;
+            }
             Err(e) if e == "RATE_LIMITED" => {
                 if i < models.len() - 1 {
                     log::info!("[Video] {} rate limited, trying {}", model, models[i + 1]);
@@ -196,7 +244,8 @@ pub async fn generate_video_cmd(
         conn.execute(
             "UPDATE world_images SET video_file = ?1 WHERE image_id = ?2",
             params![video_file, illustration_message_id],
-        ).map_err(|e| e.to_string())?;
+        )
+        .map_err(|e| e.to_string())?;
     }
 
     Ok(video_file)
@@ -223,10 +272,13 @@ pub fn remove_video_cmd(
     illustration_message_id: String,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    let video_file: String = conn.query_row(
-        "SELECT COALESCE(video_file, '') FROM world_images WHERE image_id = ?1",
-        params![illustration_message_id], |r| r.get(0),
-    ).unwrap_or_default();
+    let video_file: String = conn
+        .query_row(
+            "SELECT COALESCE(video_file, '') FROM world_images WHERE image_id = ?1",
+            params![illustration_message_id],
+            |r| r.get(0),
+        )
+        .unwrap_or_default();
     if !video_file.is_empty() {
         let path = portraits_dir.0.join(&video_file);
         if path.exists() {
@@ -235,7 +287,8 @@ pub fn remove_video_cmd(
         conn.execute(
             "UPDATE world_images SET video_file = '' WHERE image_id = ?1",
             params![illustration_message_id],
-        ).map_err(|e| e.to_string())?;
+        )
+        .map_err(|e| e.to_string())?;
     }
     Ok(())
 }
@@ -267,7 +320,8 @@ pub fn upload_video_cmd(
     conn.execute(
         "UPDATE world_images SET video_file = ?1 WHERE image_id = ?2",
         params![video_file, illustration_message_id],
-    ).map_err(|e| e.to_string())?;
+    )
+    .map_err(|e| e.to_string())?;
 
     Ok(video_file)
 }
@@ -279,10 +333,13 @@ pub fn get_video_file_cmd(
     illustration_message_id: String,
 ) -> Result<Option<String>, String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    let video_file: String = conn.query_row(
-        "SELECT COALESCE(video_file, '') FROM world_images WHERE image_id = ?1",
-        params![illustration_message_id], |r| r.get(0),
-    ).unwrap_or_default();
+    let video_file: String = conn
+        .query_row(
+            "SELECT COALESCE(video_file, '') FROM world_images WHERE image_id = ?1",
+            params![illustration_message_id],
+            |r| r.get(0),
+        )
+        .unwrap_or_default();
     if video_file.is_empty() {
         Ok(None)
     } else {
@@ -320,10 +377,11 @@ async fn generate_animation_prompt(
         max_completion_tokens: Some(200),
         response_format: None,
     };
-    let response = openai::chat_completion_with_base(
-        &model_config.chat_api_base(), api_key, &request,
-    ).await?;
-    let prompt = response.choices.first()
+    let response =
+        openai::chat_completion_with_base(&model_config.chat_api_base(), api_key, &request).await?;
+    let prompt = response
+        .choices
+        .first()
         .map(|c| c.message.content.clone())
         .ok_or_else(|| "No animation prompt from model".to_string())?;
     Ok(prompt)

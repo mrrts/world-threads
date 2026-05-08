@@ -67,14 +67,18 @@ impl BuildSubstrate {
         match self {
             BuildSubstrate::AnimationPrompt => "build_animation_prompt",
             BuildSubstrate::CanonizationInputs => "build_canonization_inputs",
-            BuildSubstrate::ChapterFromImageSystemPrompt => "build_chapter_from_image_system_prompt",
+            BuildSubstrate::ChapterFromImageSystemPrompt => {
+                "build_chapter_from_image_system_prompt"
+            }
             BuildSubstrate::CharacterDerivePrompt => "build_character_prompt",
             BuildSubstrate::ConsultantSystemPrompt => "build_consultant_system_prompt",
             BuildSubstrate::CorrectionNote => "build_correction_note",
             BuildSubstrate::CrossThreadSnippet => "build_cross_thread_snippet",
             BuildSubstrate::DialogueMessages => "build_dialogue_messages",
             BuildSubstrate::DialogueSystemPrompt => "build_dialogue_system_prompt",
-            BuildSubstrate::DialogueSystemPromptWithOverrides => "build_dialogue_system_prompt_with_overrides",
+            BuildSubstrate::DialogueSystemPromptWithOverrides => {
+                "build_dialogue_system_prompt_with_overrides"
+            }
             BuildSubstrate::DreamMessages => "build_dream_messages",
             BuildSubstrate::DreamSystemPrompt => "build_dream_system_prompt",
             BuildSubstrate::LocationDerivePrompt => "build_location_prompt",
@@ -85,7 +89,9 @@ impl BuildSubstrate {
             BuildSubstrate::SceneDescriptionPrompt => "build_scene_description_prompt",
             BuildSubstrate::SceneInventionPrompt => "build_scene_invention_prompt",
             BuildSubstrate::UserInWorldDerivePrompt => "build_user_in_world_prompt_owned",
-            BuildSubstrate::UserInWorldDerivePromptWithChoices => "build_user_in_world_prompt_with_choices",
+            BuildSubstrate::UserInWorldDerivePromptWithChoices => {
+                "build_user_in_world_prompt_with_choices"
+            }
             BuildSubstrate::WorldDerivePrompt => "build_world_prompt",
         }
     }
@@ -109,7 +115,8 @@ impl BuildSubstrate {
         match self {
             BuildSubstrate::CanonizationInputs => "canonization (classifier / propose pipeline)",
             BuildSubstrate::CrossThreadSnippet => "cross-thread continuity (dialogue context pack)",
-            BuildSubstrate::DialogueSystemPrompt | BuildSubstrate::DialogueSystemPromptWithOverrides => {
+            BuildSubstrate::DialogueSystemPrompt
+            | BuildSubstrate::DialogueSystemPromptWithOverrides => {
                 "dialogue system (solo/group dispatch)"
             }
             BuildSubstrate::DialogueMessages => "dialogue messages",
@@ -119,17 +126,20 @@ impl BuildSubstrate {
             BuildSubstrate::DreamMessages => "dream messages",
             BuildSubstrate::MemoryUpdatePrompt => "memory tier",
             BuildSubstrate::NarrativeSystemPrompt => "immersive narrative",
-            BuildSubstrate::SceneDescriptionPrompt | BuildSubstrate::SceneInventionPrompt => "novel / scene tools",
+            BuildSubstrate::SceneDescriptionPrompt | BuildSubstrate::SceneInventionPrompt => {
+                "novel / scene tools"
+            }
             BuildSubstrate::AnimationPrompt => "animation beat",
             BuildSubstrate::ChapterFromImageSystemPrompt => "imagined chapter",
-            BuildSubstrate::CharacterDerivePrompt | BuildSubstrate::WorldDerivePrompt | BuildSubstrate::LocationDerivePrompt => {
-                "derivation (worldcli / UI)"
-            }
-            BuildSubstrate::UserInWorldDerivePrompt | BuildSubstrate::UserInWorldDerivePromptWithChoices => {
-                "user Me-character derivation"
-            }
+            BuildSubstrate::CharacterDerivePrompt
+            | BuildSubstrate::WorldDerivePrompt
+            | BuildSubstrate::LocationDerivePrompt => "derivation (worldcli / UI)",
+            BuildSubstrate::UserInWorldDerivePrompt
+            | BuildSubstrate::UserInWorldDerivePromptWithChoices => "user Me-character derivation",
             BuildSubstrate::ConsultantSystemPrompt => "backstage consultant",
-            BuildSubstrate::CorrectionNote => "conscience (non-LLM string; registry for completeness)",
+            BuildSubstrate::CorrectionNote => {
+                "conscience (non-LLM string; registry for completeness)"
+            }
         }
     }
 
@@ -176,10 +186,13 @@ impl BuildSubstrate {
             | BuildSubstrate::DialogueSystemPromptWithOverrides
             | BuildSubstrate::ProactivePingSystemPrompt
             | BuildSubstrate::DreamSystemPrompt
-            | BuildSubstrate::NarrativeSystemPrompt => "UserProfile + hidden-motive steer where shipped",
+            | BuildSubstrate::NarrativeSystemPrompt => {
+                "UserProfile + hidden-motive steer where shipped"
+            }
             BuildSubstrate::MemoryUpdatePrompt => "conversation text only",
             BuildSubstrate::ConsultantSystemPrompt => "thread + character context",
-            BuildSubstrate::UserInWorldDerivePrompt | BuildSubstrate::UserInWorldDerivePromptWithChoices => {
+            BuildSubstrate::UserInWorldDerivePrompt
+            | BuildSubstrate::UserInWorldDerivePromptWithChoices => {
                 "Me-character fields + wizard choices"
             }
             BuildSubstrate::CharacterDerivePrompt => "character record",
@@ -204,7 +217,8 @@ impl BuildSubstrate {
             BuildSubstrate::CrossThreadSnippet => {
                 "same retrieval shape wherever cross-thread continuity is injected"
             }
-            BuildSubstrate::DialogueSystemPrompt | BuildSubstrate::DialogueSystemPromptWithOverrides => {
+            BuildSubstrate::DialogueSystemPrompt
+            | BuildSubstrate::DialogueSystemPromptWithOverrides => {
                 "solo ↔ group via overrides; ChatView ↔ GroupChatView app parity"
             }
             BuildSubstrate::ProactivePingSystemPrompt => "wraps solo dialogue builder + ping block",
@@ -223,7 +237,8 @@ impl BuildSubstrate {
             BuildSubstrate::CrossThreadSnippet => {
                 "list_cross_thread_recent_for_character + PICKING UP WHERE YOU LEFT OFF header"
             }
-            BuildSubstrate::DialogueSystemPrompt | BuildSubstrate::DialogueSystemPromptWithOverrides => {
+            BuildSubstrate::DialogueSystemPrompt
+            | BuildSubstrate::DialogueSystemPromptWithOverrides => {
                 "FUNDAMENTAL_SYSTEM_PREAMBLE + FORMAT_SECTION + fence stack"
             }
             BuildSubstrate::DreamSystemPrompt => "dream_preamble + dream_craft_block",
@@ -231,10 +246,11 @@ impl BuildSubstrate {
             BuildSubstrate::ProactivePingSystemPrompt => "solo stack + proactive_ping_block",
             BuildSubstrate::MemoryUpdatePrompt => "memory schema + conversation",
             BuildSubstrate::ConsultantSystemPrompt => "consultant preamble + thread pack",
-            BuildSubstrate::CharacterDerivePrompt | BuildSubstrate::WorldDerivePrompt | BuildSubstrate::LocationDerivePrompt => "derivation templates",
-            BuildSubstrate::UserInWorldDerivePrompt | BuildSubstrate::UserInWorldDerivePromptWithChoices => {
-                "user derivation headers"
-            }
+            BuildSubstrate::CharacterDerivePrompt
+            | BuildSubstrate::WorldDerivePrompt
+            | BuildSubstrate::LocationDerivePrompt => "derivation templates",
+            BuildSubstrate::UserInWorldDerivePrompt
+            | BuildSubstrate::UserInWorldDerivePromptWithChoices => "user derivation headers",
             BuildSubstrate::SceneDescriptionPrompt
             | BuildSubstrate::SceneInventionPrompt
             | BuildSubstrate::AnimationPrompt
@@ -254,7 +270,8 @@ impl BuildSubstrate {
             BuildSubstrate::CrossThreadSnippet => {
                 "manual / retrieval bite-tests when cross-thread window changes"
             }
-            BuildSubstrate::DialogueSystemPrompt | BuildSubstrate::DialogueSystemPromptWithOverrides => {
+            BuildSubstrate::DialogueSystemPrompt
+            | BuildSubstrate::DialogueSystemPromptWithOverrides => {
                 "const_contains invariants + craft registry tests + hidden_motive guards"
             }
             BuildSubstrate::DreamSystemPrompt | BuildSubstrate::NarrativeSystemPrompt => {
@@ -267,10 +284,7 @@ impl BuildSubstrate {
 
 fn has_explicit_automation(enforcement: &str) -> bool {
     let e = enforcement.to_ascii_lowercase();
-    e.contains("test")
-        || e.contains("guard")
-        || e.contains("audit")
-        || e.contains("invariant")
+    e.contains("test") || e.contains("guard") || e.contains("audit") || e.contains("invariant")
 }
 
 fn is_manual_heavy(enforcement: &str) -> bool {
@@ -547,7 +561,9 @@ mod tests {
     fn backstage_lens_marks_technical_mode_as_opt_in() {
         let lens = format_backstage_lens();
         assert!(
-            lens.contains("only surface technical labels if the user explicitly asks for internals"),
+            lens.contains(
+                "only surface technical labels if the user explicitly asks for internals"
+            ),
             "lens should enforce technical opt-in wording"
         );
         assert!(

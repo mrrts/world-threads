@@ -60,7 +60,8 @@ pub fn get_daily_reading_for_day(
                 created_at: r.get(5)?,
             })
         },
-    ).ok()
+    )
+    .ok()
 }
 
 pub fn list_daily_readings(
@@ -73,7 +74,7 @@ pub fn list_daily_readings(
          FROM daily_readings
          WHERE world_id = ?1
          ORDER BY world_day DESC, created_at DESC
-         LIMIT ?2"
+         LIMIT ?2",
     )?;
     let rows = stmt.query_map(params![world_id, limit as i64], |r| {
         let domains_json: String = r.get(3)?;
@@ -102,13 +103,15 @@ pub fn gather_world_messages_for_world_day(
 ) -> Vec<(String, String, String)> {
     // (speaker, content, created_at)
     let mut names: std::collections::HashMap<String, String> = std::collections::HashMap::new();
-    if let Ok(mut stmt) = conn.prepare(
-        "SELECT character_id, display_name FROM characters WHERE world_id = ?1"
-    ) {
+    if let Ok(mut stmt) =
+        conn.prepare("SELECT character_id, display_name FROM characters WHERE world_id = ?1")
+    {
         if let Ok(rows) = stmt.query_map(params![world_id], |r| {
             Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?))
         }) {
-            for row in rows.flatten() { names.insert(row.0, row.1); }
+            for row in rows.flatten() {
+                names.insert(row.0, row.1);
+            }
         }
     }
 
@@ -139,7 +142,9 @@ pub fn gather_world_messages_for_world_day(
                     "dream" => "Dream".to_string(),
                     _ => {
                         let id = sender_id.or(thread_char_id);
-                        id.as_deref().and_then(|i| names.get(i).cloned()).unwrap_or_else(|| "Character".to_string())
+                        id.as_deref()
+                            .and_then(|i| names.get(i).cloned())
+                            .unwrap_or_else(|| "Character".to_string())
                     }
                 };
                 all.push((speaker, content, created_at));
@@ -168,7 +173,10 @@ pub fn gather_world_messages_for_world_day(
                 let speaker = match role.as_str() {
                     "user" => user_display_name.to_string(),
                     "narrative" => "Narrator".to_string(),
-                    _ => sender_id.as_deref().and_then(|i| names.get(i).cloned()).unwrap_or_else(|| "Character".to_string()),
+                    _ => sender_id
+                        .as_deref()
+                        .and_then(|i| names.get(i).cloned())
+                        .unwrap_or_else(|| "Character".to_string()),
                 };
                 all.push((speaker, content, created_at));
             }

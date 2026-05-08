@@ -16,7 +16,10 @@ pub struct MemoryArtifact {
     pub updated_at: String,
 }
 
-pub fn upsert_memory_artifact(conn: &Connection, a: &MemoryArtifact) -> Result<(), rusqlite::Error> {
+pub fn upsert_memory_artifact(
+    conn: &Connection,
+    a: &MemoryArtifact,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "INSERT INTO memory_artifacts (artifact_id, artifact_type, subject_id, world_id, content, sources, created_at, updated_at)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
@@ -27,17 +30,25 @@ pub fn upsert_memory_artifact(conn: &Connection, a: &MemoryArtifact) -> Result<(
     Ok(())
 }
 
-pub fn get_memory_artifacts(conn: &Connection, subject_id: &str, artifact_type: &str) -> Result<Vec<MemoryArtifact>, rusqlite::Error> {
+pub fn get_memory_artifacts(
+    conn: &Connection,
+    subject_id: &str,
+    artifact_type: &str,
+) -> Result<Vec<MemoryArtifact>, rusqlite::Error> {
     let mut stmt = conn.prepare(
         "SELECT artifact_id, artifact_type, subject_id, world_id, content, sources, created_at, updated_at
          FROM memory_artifacts WHERE subject_id = ?1 AND artifact_type = ?2 ORDER BY updated_at DESC"
     )?;
     let rows = stmt.query_map(params![subject_id, artifact_type], |row| {
         Ok(MemoryArtifact {
-            artifact_id: row.get(0)?, artifact_type: row.get(1)?, subject_id: row.get(2)?,
-            world_id: row.get(3)?, content: row.get(4)?,
+            artifact_id: row.get(0)?,
+            artifact_type: row.get(1)?,
+            subject_id: row.get(2)?,
+            world_id: row.get(3)?,
+            content: row.get(4)?,
             sources: serde_json::from_str(&row.get::<_, String>(5)?).unwrap_or_default(),
-            created_at: row.get(6)?, updated_at: row.get(7)?,
+            created_at: row.get(6)?,
+            updated_at: row.get(7)?,
         })
     })?;
     rows.collect()
@@ -51,20 +62,36 @@ pub fn get_thread_summary(conn: &Connection, thread_id: &str) -> String {
         .unwrap_or_default()
 }
 
-
 // ─── Vector Search ──────────────────────────────────────────────────────────
 
-pub fn insert_vector_chunk(conn: &Connection, chunk_id: &str, source_type: &str, source_id: &str, world_id: &str, character_id: &str, content: &str, embedding: &[f32]) -> Result<(), rusqlite::Error> {
+pub fn insert_vector_chunk(
+    conn: &Connection,
+    chunk_id: &str,
+    source_type: &str,
+    source_id: &str,
+    world_id: &str,
+    character_id: &str,
+    content: &str,
+    embedding: &[f32],
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "INSERT OR IGNORE INTO chunk_metadata (chunk_id, source_type, source_id, world_id, character_id, content) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
         params![chunk_id, source_type, source_id, world_id, character_id, content],
     )?;
     let rowid: i64 = conn.query_row(
-        "SELECT rowid FROM chunk_metadata WHERE chunk_id = ?1", params![chunk_id], |r| r.get(0)
+        "SELECT rowid FROM chunk_metadata WHERE chunk_id = ?1",
+        params![chunk_id],
+        |r| r.get(0),
     )?;
     conn.execute(
         "INSERT OR REPLACE INTO vec_chunks (rowid, embedding) VALUES (?1, ?2)",
-        params![rowid, embedding.iter().flat_map(|f| f.to_le_bytes()).collect::<Vec<u8>>()],
+        params![
+            rowid,
+            embedding
+                .iter()
+                .flat_map(|f| f.to_le_bytes())
+                .collect::<Vec<u8>>()
+        ],
     )?;
     Ok(())
 }
@@ -81,7 +108,13 @@ pub struct VectorHit {
     pub created_at: String,
 }
 
-pub fn search_vectors(conn: &Connection, world_id: &str, character_id: &str, embedding: &[f32], limit: i64) -> Result<Vec<VectorHit>, rusqlite::Error> {
+pub fn search_vectors(
+    conn: &Connection,
+    world_id: &str,
+    character_id: &str,
+    embedding: &[f32],
+    limit: i64,
+) -> Result<Vec<VectorHit>, rusqlite::Error> {
     let blob: Vec<u8> = embedding.iter().flat_map(|f| f.to_le_bytes()).collect();
     let mut stmt = conn.prepare(
         "SELECT cm.content, v.distance, cm.created_at
@@ -90,7 +123,7 @@ pub fn search_vectors(conn: &Connection, world_id: &str, character_id: &str, emb
          WHERE v.embedding MATCH ?1 AND k = ?2
            AND cm.world_id = ?3
            AND cm.character_id = ?4
-         ORDER BY v.distance"
+         ORDER BY v.distance",
     )?;
     let rows = stmt.query_map(params![blob, limit, world_id, character_id], |row| {
         Ok(VectorHit {
@@ -101,5 +134,3 @@ pub fn search_vectors(conn: &Connection, world_id: &str, character_id: &str, emb
     })?;
     rows.collect()
 }
-
-
