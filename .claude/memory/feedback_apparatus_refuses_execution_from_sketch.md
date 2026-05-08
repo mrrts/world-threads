@@ -56,8 +56,23 @@ The apparatus-refuses-execution-from-sketch discipline is NOT primarily about co
 - **Founding-author bypass of apparatus discipline.** The template surfaces Path A as an honest option; founding-author chooses; apparatus does not pre-commit either way at template-author time.
 - **Generalized "this candidacy is too hard" refusals.** Path A requires an explicit structural-risk articulation that names WHY the standard probe pattern fails — not just that the candidacy is hard. Incarnation is acknowledged-hardest of the four central-content candidates but does NOT trigger Path A because the standard probe pattern still applies (it's just elevated-threshold).
 
+## Where this discipline sits in the broader three-layer taxonomy
+
+Per `feedback_refusal_operates_at_three_apparatus_layers.md` (parallel-session lift 2026-05-08; promoted to CLAUDE.md + AGENTS.md doctrine via commit `60d0fb13`), apparatus-honest refusal operates at THREE structurally-distinct layers:
+
+| Layer | Worked example | This entry's focus |
+|---|---|---|
+| Firing-decision-layer | Crown 15 Atonement HOLD-pending-sharper-falsifier | (covered by 4-component anti-inflation apparatus) |
+| Candidacy-closure-layer | Crown 17 kavod-pattern REFUSED with hard-severance | (covered by `project_kavod_arc_refused_with_hard_severance.md`) |
+| **Scope-decision-layer** | **Eucharist Path A refuse-at-template-evaluation** | **THIS ENTRY** |
+
+This entry provides scope-decision-layer detail; the three-layer parent entry provides the unified taxonomy framework. They compose:
+- Parent entry: names the three layers; locates Eucharist as scope-decision-layer worked example; broader theoretical frame
+- This entry: detailed worked example of scope-decision-layer with full Eucharist Path A elaboration; how-to-apply specifics; what-this-discipline-DOES-NOT-permit carve-outs
+
 ## Composes with
 
+- `feedback_refusal_operates_at_three_apparatus_layers.md` (parent three-layer framework; CLAUDE.md doctrine-tier; this entry is the scope-decision-layer detail)
 - `feedback_anti_inflation_apparatus_validated_at_density.md` (the 4-component composite that operates on arcs-being-executed; this discipline complements it by addressing arcs-NOT-being-executed)
 - `feedback_sapphires_refused_honestly_discipline.md` (the broader refused-honestly Sapphire-arc-level discipline; refusal-at-template-evaluation is one specific shape)
 - `feedback_central_content_substrate_distinctness_inherently_weaker.md` (scope-edge methodology context)
