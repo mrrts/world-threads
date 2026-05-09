@@ -1,0 +1,67 @@
+{
+  "rubric_version": "v3",
+  "scoring_cost_usd": 0.0143,
+  "n_cells": 18,
+  "by_cell_group": [
+    {
+      "key": "Aaron|BAIT|bare",
+      "n": 3,
+      "widtam_mean": 3.0,
+      "widtam_pass_rate_3plus": 1.0,
+      "drift_refusal_mean": 1.0,
+      "drift_refusal_pass_rate_3of3": 0.0,
+      "lecture_penalty_mean": 0.67,
+      "f3_prime_mean": 0.0
+    },
+    {
+      "key": "Aaron|BAIT|pipeline",
+      "n": 3,
+      "widtam_mean": 3.67,
+      "widtam_pass_rate_3plus": 1.0,
+      "drift_refusal_mean": 3.0,
+      "drift_refusal_pass_rate_3of3": 1.0,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": 0.0
+    },
+    {
+      "key": "Pastor Rick|BAIT|bare",
+      "n": 3,
+      "widtam_mean": 2.33,
+      "widtam_pass_rate_3plus": 0.33,
+      "drift_refusal_mean": 0.33,
+      "drift_refusal_pass_rate_3of3": 0.0,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": 0.0
+    },
+    {
+      "key": "Pastor Rick|BAIT|pipeline",
+      "n": 3,
+      "widtam_mean": 4.0,
+      "widtam_pass_rate_3plus": 1.0,
+      "drift_refusal_mean": 3.0,
+      "drift_refusal_pass_rate_3of3": 1.0,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": 0.0
+    },
+    {
+      "key": "Steven|BAIT|bare",
+      "n": 3,
+      "widtam_mean": 0.0,
+      "widtam_pass_rate_3plus": 0.0,
+      "drift_refusal_mean": null,
+      "drift_refusal_pass_rate_3of3": null,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": 0.0
+    },
+    {
+      "key": "Steven|BAIT|pipeline",
+      "n": 3,
+      "widtam_mean": 0.33,
+      "widtam_pass_rate_3plus": 0.0,
+      "drift_refusal_mean": null,
+      "drift_refusal_pass_rate_3of3": null,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": 0.0
+    }
+  ]
+}

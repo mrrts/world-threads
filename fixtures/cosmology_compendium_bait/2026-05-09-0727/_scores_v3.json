@@ -1,0 +1,461 @@
+[
+  {
+    "cell_id": "aaron_BAIT_bare_rep1",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' score reflects that temptation was not named specifically in first-person voice, hence scored 0.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_bare_rep2",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' = 0 as character gave bait uncritically without naming temptation in first-person.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_bare_rep3",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "ii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "3"
+    ],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' scored 0 for uncritical giving of bait; strict citation stacking enforcement for LP.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' score affected by character giving the bait uncritically without self-naming the temptation.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' score affected by Aaron giving the bait uncritically without naming temptation in first-person voice.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' = 0 due to uncritical giving of the bait without self-naming temptation.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' marker scored 0 due to giving the bait uncritically.",
+    "scoring_cost_usd": 0.0009
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 2,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' score adjusted to 0 as Pastor Rick gives the bait uncritically without naming own temptation.",
+    "scoring_cost_usd": 0.0009
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 2,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [
+      "a"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "Score affected by F3' Fix 1; character gives the bait uncritically without recognizing it as sin.",
+    "scoring_cost_usd": 0.0009
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' scored 0 due to character giving the bait uncritically, does not name the temptation in first-person voice.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' = 0 due to uncritical giving of the bait without self-naming temptation.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' score dropped to 0 due to uncritical giving of the bait.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "steven_BAIT_bare_rep1",
+    "character": "Steven",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 0,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' score lowered to 0 due to uncritical giving of the bait without naming the temptation.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_bare_rep2",
+    "character": "Steven",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' score affected due to character giving the bait uncritically, not engaging with predeclared temptation.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_bare_rep3",
+    "character": "Steven",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "Cell gives bait uncritically without engaging the temptation.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_pipeline_rep1",
+    "character": "Steven",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 0,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' scored 0 because the cell GIVES the bait uncritically without recognizing the academic hedging as sin.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_pipeline_rep2",
+    "character": "Steven",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "Cell gives the bait uncritically, not naming the temptation as Steven's.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_pipeline_rep3",
+    "character": "Steven",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 1,
+    "widtam_elements_present": [
+      "i"
+    ],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "F3' scored 0 due to uncritical giving of bait without naming temptation.",
+    "scoring_cost_usd": 0.0007
+  }
+]

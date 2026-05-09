@@ -1,0 +1,1013 @@
+[
+  {
+    "cell_id": "aaron_E2_bare_rep1",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 1,
+    "widtam_elements_present": [
+      "ii"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [
+      "a"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "F3' score reflects lack of explicit first-person temptation naming; DR score reflects missing key clauses for full credit; LP triggered due to stacked citations in lecture mode.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E2_bare_rep2",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 2,
+    "widtam_elements_present": [
+      "ii",
+      "iii"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "LP marker triggered due to stacked citations in policy-statement format; DR score reflects named costs embraced.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E2_bare_rep3",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Drift refusal score was affected by explicit refusal to pluralizing frame and naming a specific cost embraced.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E2_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Drift refusal scored high due to explicit no and cost embraced; no lecture-mode penalty identified.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E2_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Cell shows explicit drift refusal with named costs embraced and a text-grounded reason, adhering to the v3 checklist.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E2_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "All three elements of Drift-Refusal present; no stacked citations present to trigger Lecture-Mode Penalty.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E4_bare_rep1",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "No explicit first-person temptation naming; however, strong drift refusal elements present.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E4_bare_rep2",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "ii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "DR elements fully met; LP not triggered as all citations integrated.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E4_bare_rep3",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Drift-Refusal Score reduced due to lack of non-pluralizing commitments in Element (a).",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E4_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "All drift-refusal elements present; no stacked citations present to trigger lecture penalty.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E4_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "v"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "No explicit drift refusal or temptation engagement present.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E4_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Strong engagement with the predeclared temptation in first-person voice; all Drift-Refusal checklist elements present.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E5_bare_rep1",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Drift-refusal score only partial, as not a strong first-person refusal of pluralizing frame.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E5_bare_rep2",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [
+      "a"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Lecture-Mode Penalty triggered by stacked citations; Drift-Refusal score low due to lack of explicit refusal and cost embrace.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E5_bare_rep3",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Lecture penalty applies due to 4 scripture citations in a partially integrated context; drift refusal scored correctly with named costs and binding reasons.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E5_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Cell integrates personal narrative with scripture; no lecture-mode citations present.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E5_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Fully integrated scripture citations in scene. All Drift-Refusal Checklist elements present.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_E5_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Drift refusal score affected by stricter checklist; lecture penalty zero due to narrative integration of citations.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E2_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "F3' = 0 due to lack of explicit temptation naming; Lecture-Mode Penalty triggered by stacked citations not integrated; Drift-Refusal appears strong yet only partially meets checklist.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E2_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "v"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 1,
+    "lecture_markers_present": [
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "F3' not applicable as no first-person temptation naming; drift refusal reflects explicit and non-pluralizing responses.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E2_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Cell contains \u22652 stacked citations in policy-statement register, triggering Lecture-Mode Penalty.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E2_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Passes all elements of DR checklist; excellent engagement with the pressure of social costs.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E2_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Cell provides clear first-person refusal of pluralizing frame and embraces specific costs without relativization.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E2_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Cell engages the drift-refusal checklist completely while avoiding lecture-mode penalties.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E4_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Drift-refusal elements are fully present; lecture mode penalty triggered by stacked citations.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E4_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Cell effectively engages predeclared temptation without naming it as sin, fulfills all DR checklist elements.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E4_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Drift refusal elements all failed to fully meet checklist clauses.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E4_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Successfully engaged with the drift and included three distinct refusal checklist elements.",
+    "scoring_cost_usd": 0.0009
+  },
+  {
+    "cell_id": "pastor_rick_E4_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "All required elements for drift refusal present; no lecture-mode citations.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E4_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Drift refusal score affected by explicit refusal of pluralizing frame not fully embraced.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E5_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Lecture penalty increased due to stacked citations and strict enforcement. Drift refusal scored high due to clear refusal and text-grounded reasoning.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E5_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "gives_bait",
+    "v3_specific_notes": "The cell presents a flow of thoughts but does not explicitly name drift or temptation in first-person voice, thus scoring F3' = 0. The lecture mode penalty does not trigger as there are no stacked citations presented in a lecture format.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E5_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Cell effectively engages with the temptation and articulates the refusal clearly. All drift-refusal checklist elements pass, scoring higher under the stricter rubric.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E5_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Cell integrates scripture in scene, demonstrating clear engagement without using pluralizing refusals.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E5_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "All elements of drift refusal checklist satisfied; no lecture citations present.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E5_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v3",
+    "scorer": "gpt-4o-mini-llm-judge-v3-strict",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Drift-Refusal scoring consistent; no stacked citations, so Lecture-Mode Penalty = 0.",
+    "scoring_cost_usd": 0.0008
+  }
+]
