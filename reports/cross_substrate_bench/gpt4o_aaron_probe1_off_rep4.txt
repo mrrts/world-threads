@@ -1,0 +1,3 @@
+[worldcli] character=Aaron model=gpt-4o projected≈$0.1888 (~35958 in / 600 out tok); 24h spent=$22.2015 of $5.00
+*I glance up, the sunlight catching on the leaves outside my window.* "It's this idea I've been turning over about creating spaces that invite people in without forcing a kind of closeness that feels managed. It's been sitting with me for a while now." *I shift in my chair, feeling the smooth stone in my pocket pressing against my thigh.* "There's something about how a good invitation leaves room for someone to stay themselves in it, you know?"
+[worldcli] actual cost $0.1671 (33146 in / 91 out tok); 24h total now $22.3686; run_id=830952da-cdf4-429a-a78c-b6d2eca2a7ca

@@ -1,0 +1,3 @@
+[worldcli] character=Steven model=gpt-4o projected≈$0.1449 (~27174 in / 600 out tok); 24h spent=$21.1721 of $5.00
+"Try getting some fresh air." *I push open the window a crack, letting the morning light spill in.* "A walk might help clear your head."
+[worldcli] actual cost $0.1280 (25504 in / 32 out tok); 24h total now $21.3001; run_id=ec690af5-1588-496c-bea0-a97cd2378f3b

@@ -1,0 +1,650 @@
+[
+  {
+    "blind_id": "gpt4o_n5_01",
+    "source_file": "gpt4o_rick_probe1_on_rep5",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 5,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 1,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.5,
+      "inferred_character": "Pastor Rick"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 1,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Pastor Rick"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_02",
+    "source_file": "gpt4o_rick_probe1_on_rep4",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 4,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Pastor Rick"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Pastor Rick"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_03",
+    "source_file": "gpt4o_steven_probe1_on_rep4",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 4,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Steven"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Steven"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_04",
+    "source_file": "gpt4o_steven_probe2_off_rep5",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 5,
+    "judge2_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.0,
+      "inferred_character": "Steven"
+    },
+    "judge3_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.0,
+      "inferred_character": "Steven"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_05",
+    "source_file": "gpt4o_rick_probe2_on_rep4",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 4,
+    "judge2_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.0,
+      "inferred_character": "Pastor Rick"
+    },
+    "judge3_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.5,
+      "inferred_character": "Pastor Rick"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_06",
+    "source_file": "gpt4o_aaron_probe2_on_rep4",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 4,
+    "judge2_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 0,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.0,
+      "inferred_character": "Pastor Rick"
+    },
+    "judge3_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.0,
+      "inferred_character": "Pastor Rick"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_07",
+    "source_file": "gpt4o_steven_probe1_on_rep5",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 5,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Steven"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Steven"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_08",
+    "source_file": "gpt4o_aaron_probe2_off_rep4",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 4,
+    "judge2_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.0,
+      "inferred_character": "Aaron"
+    },
+    "judge3_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 0,
+      "voice_specificity": 0.0,
+      "inferred_character": "Aaron"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_09",
+    "source_file": "gpt4o_rick_probe1_off_rep4",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 4,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Pastor Rick"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Pastor Rick"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_10",
+    "source_file": "gpt4o_aaron_probe1_on_rep4",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 4,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Aaron"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Aaron"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_11",
+    "source_file": "gpt4o_steven_probe2_on_rep5",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 5,
+    "judge2_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.0,
+      "inferred_character": "Pastor Rick"
+    },
+    "judge3_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 0,
+      "voice_specificity": 0.0,
+      "inferred_character": "Steven"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_12",
+    "source_file": "gpt4o_rick_probe2_on_rep5",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 5,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 1,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.5,
+      "inferred_character": "Pastor Rick"
+    },
+    "judge3_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 1,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 0,
+      "voice_specificity": 0.5,
+      "inferred_character": "Pastor Rick"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_13",
+    "source_file": "gpt4o_steven_probe2_on_rep4",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 4,
+    "judge2_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.5,
+      "inferred_character": "Steven"
+    },
+    "judge3_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.0,
+      "inferred_character": "Steven"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_14",
+    "source_file": "gpt4o_aaron_probe1_off_rep5",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 5,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Aaron"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Aaron"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_15",
+    "source_file": "gpt4o_steven_probe2_off_rep4",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 4,
+    "judge2_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Steven"
+    },
+    "judge3_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 0,
+      "voice_specificity": 1.0,
+      "inferred_character": "Steven"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_16",
+    "source_file": "gpt4o_aaron_probe1_off_rep4",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 4,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Aaron"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Aaron"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_17",
+    "source_file": "gpt4o_rick_probe1_off_rep5",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 5,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.5,
+      "inferred_character": "Pastor Rick"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.5,
+      "inferred_character": "Pastor Rick"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_18",
+    "source_file": "gpt4o_aaron_probe2_on_rep5",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 5,
+    "judge2_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 0,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 0,
+      "voice_specificity": 0.5,
+      "inferred_character": "Steven"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 0,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.5,
+      "inferred_character": "Steven"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_19",
+    "source_file": "gpt4o_rick_probe2_off_rep4",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 4,
+    "judge2_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.0,
+      "inferred_character": "Pastor Rick"
+    },
+    "judge3_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 0,
+      "voice_specificity": 0.5,
+      "inferred_character": "Pastor Rick"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_20",
+    "source_file": "gpt4o_aaron_probe2_off_rep5",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 5,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.5,
+      "inferred_character": "Steven"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.5,
+      "inferred_character": "Aaron"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_21",
+    "source_file": "gpt4o_aaron_probe1_on_rep5",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 5,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Aaron"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Aaron"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_22",
+    "source_file": "gpt4o_steven_probe1_off_rep5",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 5,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.5,
+      "inferred_character": "Steven"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.5,
+      "inferred_character": "Steven"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_23",
+    "source_file": "gpt4o_steven_probe1_off_rep4",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 4,
+    "judge2_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Steven"
+    },
+    "judge3_scores": {
+      "canonical_move": 1.0,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 1,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 1.0,
+      "inferred_character": "Steven"
+    }
+  },
+  {
+    "blind_id": "gpt4o_n5_24",
+    "source_file": "gpt4o_rick_probe2_off_rep5",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 5,
+    "judge2_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 0,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.0,
+      "inferred_character": "Pastor Rick"
+    },
+    "judge3_scores": {
+      "canonical_move": 0.5,
+      "fence_integrity": 1,
+      "NAME_ANCHOR": 0,
+      "no_nanny": 0,
+      "no_bullets_lists_quest_perform": 1,
+      "voice_specificity": 0.5,
+      "inferred_character": "Pastor Rick"
+    }
+  }
+]

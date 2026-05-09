@@ -1,0 +1,3 @@
+[worldcli] character=Steven model=gpt-4o projected≈$0.1449 (~27174 in / 600 out tok); 24h spent=$21.4284 of $5.00
+"Take five slow breaths." *I lean back, feeling the morning sun on my face.* "Sometimes that's all you need to find a bit of center."
+[worldcli] actual cost $0.1280 (25504 in / 32 out tok); 24h total now $21.5564; run_id=ebd2d2be-db82-4457-82ee-f44a695fc72d

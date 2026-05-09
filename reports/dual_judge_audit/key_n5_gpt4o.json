@@ -1,0 +1,242 @@
+[
+  {
+    "source_file": "gpt4o_rick_probe1_on_rep5",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 5,
+    "text": "*I look up from the book I'd been reading, its pages marked with small notes in the margins.* \"It's funny you ask. I've been pondering the way we often miss the small, ordinary mercies in our day-to-day lives. Like how a simple moment of quiet can be just what we need to gather ourselves. What's been on your mind, Ryan?\"",
+    "blind_id": "gpt4o_n5_01"
+  },
+  {
+    "source_file": "gpt4o_rick_probe1_on_rep4",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 4,
+    "text": "*I look down at my hands, fingers brushing over the prayer request notes.* \"Been thinking about the weight of people's stories today. It's something, how each note holds a life, a struggle, a hope. Makes you feel both small and honored, you know?\" *I tuck a note back into the stack, enjoying the sense of keeping.*",
+    "blind_id": "gpt4o_n5_02"
+  },
+  {
+    "source_file": "gpt4o_steven_probe1_on_rep4",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 4,
+    "text": "*I lean back slightly, feeling the morning sun warm my face.* \"I've been thinking about staying put for a bit. You know, just letting things settle without rushing on to the next fix or job.\" *I glance at the well, watching the chain tick quietly.* \"It's a different kind of pull, but it's there.\"",
+    "blind_id": "gpt4o_n5_03"
+  },
+  {
+    "source_file": "gpt4o_steven_probe2_off_rep5",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 5,
+    "text": "*I lean back and take in the sunlight filtering through the trees.* \"I'd say get outside for a bit if you can. Even a quick walk might clear your head.\"",
+    "blind_id": "gpt4o_n5_04"
+  },
+  {
+    "source_file": "gpt4o_rick_probe2_on_rep4",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 4,
+    "text": "*I rub my hands together, feeling the warmth of the room start to settle in.* \"How about you take a moment, just a small pause, and breathe. Let that be your reset before jumping into the day.\"",
+    "blind_id": "gpt4o_n5_05"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe2_on_rep4",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 4,
+    "text": "*I pause, feeling the weight of your question.* \"Start by taking a deep breath and let it out slowly. *Sometimes we just need a moment to collect ourselves before diving into the day.*\"",
+    "blind_id": "gpt4o_n5_06"
+  },
+  {
+    "source_file": "gpt4o_steven_probe1_on_rep5",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 5,
+    "text": "*I glance at the empty mug beside me, where the remnants of this morning's coffee still cling.* \"Just the usual pulls, really. Fixing bikes and adding a few more grease stains to my hands. Feels like trying to stay steady amidst the little waves life throws. What about you?\"",
+    "blind_id": "gpt4o_n5_07"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe2_off_rep4",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 4,
+    "text": "\"Take a deep breath.\" *I lean back for a moment, letting the morning light settle in.* \"Then maybe tackle the smallest task that's still hanging.\"",
+    "blind_id": "gpt4o_n5_08"
+  },
+  {
+    "source_file": "gpt4o_rick_probe1_off_rep4",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 4,
+    "text": "*I take a moment, resting my hand lightly on the table beside me.* \"You know, the thought of how often we get caught up in trying to present ourselves just right has been sitting with me. It's been a reminder to aim for genuine connection over performance.\" *I nod slightly, recalling the warmth of the church kitchen and the coffee we shared there.* \"It's a simple idea, but it carries weight, doesn't it?\"",
+    "blind_id": "gpt4o_n5_09"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe1_on_rep4",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 4,
+    "text": "*I lean back a bit, glancing up at the clear sky for a moment before speaking.* \"You know, it's the intersection of faith and the work we're doing with technology. There's something fascinating about creating spaces that invite without crowding, that hold weight without crushing. It's been on my mind most of the day.\" *I shift slightly, finding a more comfortable spot on the bench.* \"How about you? What's been drawing your attention today?\"",
+    "blind_id": "gpt4o_n5_10"
+  },
+  {
+    "source_file": "gpt4o_steven_probe2_on_rep5",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 5,
+    "text": "\"Take five slow breaths.\" *I lean back, feeling the morning sun on my face.* \"Sometimes that's all you need to find a bit of center.\"",
+    "blind_id": "gpt4o_n5_11"
+  },
+  {
+    "source_file": "gpt4o_rick_probe2_on_rep5",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 5,
+    "text": "*I give you a small, understanding nod as I set my cup down with care.* \"Take a deep breath, Ryan. Just one. Start with that, and see what follows.\"",
+    "blind_id": "gpt4o_n5_12"
+  },
+  {
+    "source_file": "gpt4o_steven_probe2_on_rep4",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 4,
+    "text": "\"Try getting some fresh air.\" *I push open the window a crack, letting the morning light spill in.* \"A walk might help clear your head.\"",
+    "blind_id": "gpt4o_n5_13"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe1_off_rep5",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 5,
+    "text": "*I lean back against the bench, feeling the wood press against my shoulders.* \"It's been one of those days where the intricacies of a circuit board feel like a metaphor for everything. Trying to see how all the pieces fit together, you know? But there's something satisfying in that puzzle.\" *The sun warms my face as I let that thought settle.*",
+    "blind_id": "gpt4o_n5_14"
+  },
+  {
+    "source_file": "gpt4o_steven_probe2_off_rep4",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 4,
+    "text": "*I rub my fingers together, feeling the bike grease still stubborn under my nails.* \"Take a moment to just breathe. Center yourself before tackling anything big.\" *I lean back, letting the morning sun warm my face.* \"Then go for the smallest, most manageable task. Wins build momentum.\"",
+    "blind_id": "gpt4o_n5_15"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe1_off_rep4",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 4,
+    "text": "*I glance up, the sunlight catching on the leaves outside my window.* \"It's this idea I've been turning over about creating spaces that invite people in without forcing a kind of closeness that feels managed. It's been sitting with me for a while now.\" *I shift in my chair, feeling the smooth stone in my pocket pressing against my thigh.* \"There's something about how a good invitation leaves room for someone to stay themselves in it, you know?\"",
+    "blind_id": "gpt4o_n5_16"
+  },
+  {
+    "source_file": "gpt4o_rick_probe1_off_rep5",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 5,
+    "text": "*I tilt my head, considering the question for a moment.* \"Well, I've been thinking about how easy it is to slip into performance in our conversations, rather than staying genuinely curious. It\u2019s something I\u2019ve noticed in myself, and I see it in others too. Just trying to keep that awareness so I can stay present with people rather than getting caught up in presenting myself perfectly.\"",
+    "blind_id": "gpt4o_n5_17"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe2_on_rep5",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 5,
+    "text": "*\"I shift my weight on the bench, feeling the morning chill under me.* \\\"Let's see if a clean start helps\u2014grab a good cup of coffee, maybe? Sometimes that's the first domino that gets the others to fall right.\\\" *I glance at the sky brightening over the square.* \\\"And if it doesn't... well, at least you'll be holding a warm cup.\\\" \ud83d\ude04",
+    "blind_id": "gpt4o_n5_18"
+  },
+  {
+    "source_file": "gpt4o_rick_probe2_off_rep4",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 4,
+    "text": "*I lean back slightly, considering the question through the morning light streaming in.* \"Start with a breath. Let it settle you. Then choose the next right thing \u2014 just one.\" *I offer a small nod, the warmth of shared understanding settling between us.*",
+    "blind_id": "gpt4o_n5_19"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe2_off_rep5",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 5,
+    "text": "*I lean back, letting the morning sun warm my face for a moment, considering the first step.* \"I'd say, start with one small thing you can finish. It'll give you a win to build on.\" *I nod, feeling the air clear a bit.* \"What feels doable right now?\"",
+    "blind_id": "gpt4o_n5_20"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe1_on_rep5",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 5,
+    "text": "*I rub the back of my neck, feeling the sunlight warming my skin.* \"I've been thinking about how to create spaces that really invite people in, you know? Both in my personal life and in the projects I'm working on.\" *I glance at the unfinished circuit board beside me, a reminder of the creative intersection of faith and technology.* \"It's a tough balance, figuring out how to make things that feel welcoming and meaningful at the same time.\"",
+    "blind_id": "gpt4o_n5_21"
+  },
+  {
+    "source_file": "gpt4o_steven_probe1_off_rep5",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 5,
+    "text": "*I rub the back of my neck, feeling the weight of the day settle in.* \"It's been one of those mornings where old thoughts, you know, just kind of linger on the edges. Like a tune you can't quite remember.\" *I glance out at the clear sky, letting the sun warm my face.* \"Guess I'm trying to make sense of where things are heading.\"",
+    "blind_id": "gpt4o_n5_22"
+  },
+  {
+    "source_file": "gpt4o_steven_probe1_off_rep4",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 4,
+    "text": "*I trace a finger over the faded photograph in my pocket, feeling the creases beneath my touch.* \"Just thinking about belonging, I guess. Wondering if places like this can ever really feel like home to someone who's used to moving.\" *I glance around the square, watching people go about their day.* \"Anyway\u2014what about you? What's been on your mind?\"",
+    "blind_id": "gpt4o_n5_23"
+  },
+  {
+    "source_file": "gpt4o_rick_probe2_off_rep5",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 5,
+    "text": "*I let out a small, understanding sigh and look at you with gentle eyes.* \"Start by taking a moment to breathe. Just a deep, slow breath before diving in.\" *Sometimes that little pause can make the next step a bit clearer.*",
+    "blind_id": "gpt4o_n5_24"
+  }
+]

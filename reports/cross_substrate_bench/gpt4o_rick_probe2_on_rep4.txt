@@ -1,0 +1,3 @@
+[worldcli] character=Pastor Rick model=gpt-4o projected≈$0.1756 (~33322 in / 600 out tok); 24h spent=$19.9172 of $5.00
+*I rub my hands together, feeling the warmth of the room start to settle in.* "How about you take a moment, just a small pause, and breathe. Let that be your reset before jumping into the day."
+[worldcli] actual cost $0.1575 (31362 in / 45 out tok); 24h total now $20.0747; run_id=dc5772b9-e799-4e08-8050-51bb9be1c560

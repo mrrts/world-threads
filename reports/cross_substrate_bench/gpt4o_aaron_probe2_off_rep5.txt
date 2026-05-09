@@ -1,0 +1,3 @@
+[worldcli] character=Aaron model=gpt-4o projected≈$0.1888 (~35968 in / 600 out tok); 24h spent=$22.7017 of $5.00
+*I lean back, letting the morning sun warm my face for a moment, considering the first step.* "I'd say, start with one small thing you can finish. It'll give you a win to build on." *I nod, feeling the air clear a bit.* "What feels doable right now?"
+[worldcli] actual cost $0.1667 (33154 in / 61 out tok); 24h total now $22.8684; run_id=65038168-5e2b-4eb9-bf9d-da5851b72f2a

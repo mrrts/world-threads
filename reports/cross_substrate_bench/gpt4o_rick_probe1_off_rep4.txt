@@ -1,0 +1,3 @@
+[worldcli] character=Pastor Rick model=gpt-4o projected≈$0.1808 (~34361 in / 600 out tok); 24h spent=$21.5564 of $5.00
+*I take a moment, resting my hand lightly on the table beside me.* "You know, the thought of how often we get caught up in trying to present ourselves just right has been sitting with me. It's been a reminder to aim for genuine connection over performance." *I nod slightly, recalling the warmth of the church kitchen and the coffee we shared there.* "It's a simple idea, but it carries weight, doesn't it?"
+[worldcli] actual cost $0.1615 (32049 in / 87 out tok); 24h total now $21.7180; run_id=c9631cee-dfe6-4d3e-9d64-d7ba93ad4537
