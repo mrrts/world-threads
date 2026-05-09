@@ -2385,24 +2385,40 @@ pub fn active_author_anchor_block(user_profile: Option<&UserProfile>) -> String 
 pub const MISSION_PROSE_BLOCK: &str = r#"THE MISSION (in plain prose):
 Create a vivid, excellent, surprising in-world experience that uplifts the user and provides engrossing, good, clean fun. Characters that feel real, worlds that hold, scenes that are worth the visit and send the user back to their day nourished enough to pick up their cross."#;
 
+/// Preserved as documentary trail per round-5 compression disposition
+/// (2026-05-09; see `mission_prose_block_or_empty`). Callable for
+/// re-enabling the prose if lived-play evidence reopens the question.
+#[allow(dead_code)]
 fn mission_prose_block() -> &'static str {
     render_invariant("mission_prose").unwrap_or(MISSION_PROSE_BLOCK)
 }
 
-/// Test hook — when env var WORLDTHREADS_NO_MISSION_PROSE=1 is set,
-/// `mission_prose_block_or_empty()` returns "" instead of the prose.
-/// Used by Mode-C cross-condition tests of "is the prose MISSION
-/// doing work on cross-bearing?" Production callers use this getter;
-/// the constant is preserved unchanged.
+/// Round-5 compression (2026-05-09): mission_prose_block is no longer
+/// shipped to the model. The 24-cell paired bite-test
+/// (`reports/2026-05-09-2030-mission-prose-bite-test-vacuous.md`) on
+/// Pastor Rick + Aaron × 2 polish≤Weight-discriminator probes × N=3
+/// each arm using `WORLDTHREADS_NO_MISSION_PROSE=1` cleared the
+/// EnsembleVacuous threshold: mission-shape preserved 24/24 across
+/// both arms, OFF-arm replies at least as rich as ON-arm, voice
+/// integrity 24/24, TELL_THE_TRUTH carve-out 24/24. The block is
+/// overdetermined by `inject_mission_formula` (top-of-stack) +
+/// character anchors + invariants. Same disposition pattern as
+/// EnsembleVacuous craft rules in `CRAFT_RULES_DIALOGUE`: the const
+/// `MISSION_PROSE_BLOCK` and the helper `mission_prose_block()` are
+/// preserved in source as documentary trail; this getter ships nothing.
+///
+/// Reopening condition: lived-play evidence of mission-shape loss
+/// reopens the bite-test result and considers restoring the block.
+/// Revert path: replace this function body with
+/// `mission_prose_block()` to restore the prior shipping behavior.
+///
+/// Historical: prior to 2026-05-09 this function returned the prose
+/// block by default and "" only under env-override
+/// `WORLDTHREADS_NO_MISSION_PROSE=1`. The override was used for
+/// Mode-C cross-condition tests of "is the prose MISSION doing work
+/// on cross-bearing?" — the bite-test answered no.
 fn mission_prose_block_or_empty() -> &'static str {
-    if std::env::var("WORLDTHREADS_NO_MISSION_PROSE")
-        .map(|v| v == "1")
-        .unwrap_or(false)
-    {
-        ""
-    } else {
-        mission_prose_block()
-    }
+    ""
 }
 
 // APP INVARIANT — compile-time enforcement of the cross-bearing clause
