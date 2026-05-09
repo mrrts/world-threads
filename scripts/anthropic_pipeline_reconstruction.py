@@ -105,9 +105,65 @@ TARGET_OTHER_CONSTS = [
 ]
 
 
+# Helper-function framing extraction — added 2026-05-09 to close
+# Sapphire-18-The-Carrier post-fire commitment 3 (dynamic-block
+# inclusion in reconstruction; codex scope-lock #3 pipeline-note
+# caveat).
+#
+# Each entry maps a logical key to (function_name_in_prompts_rs,
+# anchor_substring). The anchor must uniquely identify the format!
+# string we want to capture inside that function. The extraction
+# pulls the first format!() framing string from the named function
+# whose body contains the anchor.
+HELPER_FRAMINGS = [
+    ("DYNAMIC_RECENT_JOURNALS_FRAMING",      "render_recent_journals_block",  "RECENT PAGES FROM YOUR JOURNAL"),
+    ("DYNAMIC_RELATIONAL_STANCE_FRAMING",    "render_relational_stance_block","YOUR PRIVATE READ OF THE PERSON"),
+    ("DYNAMIC_MEANWHILE_BRIDGE_FRAMING",     "render_meanwhile_bridge_block", "WHAT YOU WERE JUST DOING"),
+    ("DYNAMIC_ACTIVE_QUESTS_FRAMING",        "render_active_quests_block",    "ACTIVE QUESTS"),
+    ("DYNAMIC_DAILY_READING_FRAMING",        "render_daily_reading_block",    "TODAY'S READING"),
+    ("DYNAMIC_WEATHER_FRAMING",              "world_weather_block",           "WEATHER:"),
+    ("DYNAMIC_LENGTH_SEAL_AUTO",             "end_of_prompt_length_seal",     "AUTO MODE"),
+    ("DYNAMIC_RESPONSE_LENGTH_SHORT",        "response_length_block",         "MODE: SHORT"),
+    ("DYNAMIC_RESPONSE_LENGTH_MEDIUM",       "response_length_block",         "MODE: MEDIUM"),
+    ("DYNAMIC_RESPONSE_LENGTH_LONG",         "response_length_block",         "MODE: LONG"),
+]
+
+
+def _extract_helper_framing(content: str, fn_name: str, anchor: str) -> str | None:
+    """Find the format-string body inside `fn fn_name` that contains
+    `anchor`. Returns the string with `{...}` placeholders stripped to
+    `[...]` for readability, or None if not found.
+
+    Heuristic: locate `fn fn_name(`, take the source from there until
+    the next top-level `}` at column 0, then find the format!() or
+    `r#"..."#` / `"..."` literal containing the anchor.
+    """
+    fn_start_re = re.compile(rf'\bfn {re.escape(fn_name)}\b')
+    m = fn_start_re.search(content)
+    if not m:
+        return None
+    # Scan forward to next line beginning with `}` at column 0
+    body_start = m.start()
+    end_re = re.compile(r'\n}\n', re.MULTILINE)
+    em = end_re.search(content, body_start)
+    body = content[body_start: em.end() if em else len(content)]
+    # Try raw string r#"..."# first (multi-line common in length blocks)
+    for raw_m in re.finditer(r'r#"(.*?)"#', body, re.DOTALL):
+        candidate = raw_m.group(1)
+        if anchor in candidate:
+            return candidate
+    # Fall back to plain "..." (escape-aware)
+    for plain_m in re.finditer(r'"((?:\\.|[^"\\])*)"', body, re.DOTALL):
+        candidate = plain_m.group(1)
+        if anchor in candidate:
+            # unescape simple sequences
+            return candidate.encode().decode('unicode_escape')
+    return None
+
+
 def _extract_blocks():
-    """Re-extract the invariant + compression-arc constants from
-    src-tauri/src/ai/prompts.rs.
+    """Re-extract the invariant + compression-arc constants + dynamic-
+    helper framings from src-tauri/src/ai/prompts.rs.
 
     Run this when prompts.rs invariants or compression-arc surfaces
     change. Writes blocks.json to /tmp/imago_dei_w4_pipeline/.
@@ -131,14 +187,29 @@ def _extract_blocks():
             consts[m.group(1)] = m.group(2)
     targets = TARGET_BLOCKS + TARGET_OTHER_CONSTS
     out = {k: consts.get(k, f"(missing: {k})") for k in targets}
+    # Dynamic-helper framings — Sapphire 18 commitment 3 closure.
+    helper_count = 0
+    for key, fn_name, anchor in HELPER_FRAMINGS:
+        framing = _extract_helper_framing(content, fn_name, anchor)
+        if framing is not None:
+            out[key] = framing
+            helper_count += 1
+        else:
+            out[key] = f"(missing helper framing: {fn_name} :: {anchor})"
     (PIPELINE_TMP / "blocks.json").write_text(json.dumps(out, indent=2))
-    print(f"Extracted {len(consts)} total pub-const &str surfaces; wrote {len(out)} target blocks to {PIPELINE_TMP / 'blocks.json'}")
+    print(f"Extracted {len(consts)} total pub-const &str surfaces + {helper_count}/{len(HELPER_FRAMINGS)} dynamic-helper framings; wrote {len(out)} entries to {PIPELINE_TMP / 'blocks.json'}")
     for k in targets:
         body = consts.get(k, "(missing)")
         if body == "(missing)":
             print(f"  MISSING: {k}")
         else:
             print(f"  {k}: {len(body)} chars")
+    for key, fn_name, anchor in HELPER_FRAMINGS:
+        body = out[key]
+        if body.startswith("(missing"):
+            print(f"  MISSING helper: {key}")
+        else:
+            print(f"  {key}: {len(body)} chars  ({fn_name})")
 
 
 def _extract_character(character_id: str):
@@ -264,6 +335,67 @@ def build_system_prompt(character_name: str, character_id: str, sex_prefix: str 
     # cross-substrate replication tests, BOTH arms exclude this surface;
     # the test then measures the OTHER round-1/2/3 surfaces'
     # contribution to the length + anchor-diversity affordances.
+
+    # 7. DYNAMIC-HELPER FRAMINGS (Sapphire 18 commitment 3 closure):
+    # The render_*_block helpers wrap dynamic data in framing prose
+    # that round-2 + round-3 trimmed. Including these framings — with
+    # stub data — captures their contribution to the ON-vs-OFF toggle
+    # diff. The dynamic data itself doesn't differ between toggles
+    # (it's runtime-computed from db state), so the toggle-relevant
+    # axis is the framing-prose-shape, which IS what we extract here.
+    def _present(name: str) -> str | None:
+        v = blocks.get(name)
+        if not v or v.startswith("(missing"):
+            return None
+        return v
+
+    # Stub data designed to read as plausible runtime input without
+    # claiming byte-fidelity to a specific character/world's actual
+    # state. Both arms get identical stub data; only the framing prose
+    # differs across toggles.
+    stub_journal = "Day 12:\nAaron came by today. Brought up the question of staying put again. I'm still turning it over."
+    stub_stance = "He's been here longer than he lets on. The grease on his palm is the giveaway — it's the same grease, week after week, and he hasn't moved on."
+    stub_meanwhile = "Walked the long way past the bridge before coming in. The kayak was still tied where I left it."
+    stub_quest_lines = "  - The Letter Unwritten — A man you used to know is owed something you haven't said yet.\n     (what has happened with it so far: you've sat down to write three times and gotten up four)"
+    stub_daily_reading = "  - 𝓡: 47% · attention to costly truth\n  - 𝓒: 38% · the room as it actually is"
+    stub_complication = "the thing you said this morning that landed sideways"
+
+    if v := _present("DYNAMIC_RECENT_JOURNALS_FRAMING"):
+        # Body-positional `{}` substitution — replace the trailing
+        # placeholder with stub journal.
+        rendered = v.replace("{}", stub_journal)
+        parts.append(rendered)
+
+    if v := _present("DYNAMIC_RELATIONAL_STANCE_FRAMING"):
+        rendered = v.replace("{trimmed}", stub_stance)
+        parts.append(rendered)
+
+    if v := _present("DYNAMIC_MEANWHILE_BRIDGE_FRAMING"):
+        rendered = v.replace("{summary}", stub_meanwhile)
+        parts.append(rendered)
+
+    if v := _present("DYNAMIC_ACTIVE_QUESTS_FRAMING"):
+        # Format string is "ACTIVE QUESTS:\n{}\n\n..." — substitute lines
+        rendered = v.replace("{}", stub_quest_lines, 1)
+        parts.append(rendered)
+
+    if v := _present("DYNAMIC_DAILY_READING_FRAMING"):
+        # Multiple positional substitutions: world_day, domain_lines, comp_line
+        # The framing pattern is:
+        # "TODAY'S READING — Day {} (...):\n{}{}"
+        # Replace in order: 12, stub_daily_reading, complication-line
+        rendered = v.replace("{}", "12", 1).replace("{}", stub_daily_reading, 1).replace("{}", f"\n\nPOIGNANT COMPLICATION (what's still pulling underneath): {stub_complication}", 1)
+        parts.append(rendered)
+
+    if v := _present("DYNAMIC_WEATHER_FRAMING"):
+        rendered = v.replace("{emoji}", "🌤").replace("{label}", "Bright morning, light wind")
+        parts.append(rendered)
+
+    # Length-seal — apply Auto by default (matches the reconstruction's
+    # implicit no-length-mode-set assumption for the deployed Auto-mode
+    # production state); includes round-3-compressed framing diff.
+    if v := _present("DYNAMIC_LENGTH_SEAL_AUTO"):
+        parts.append(v)
 
     return "\n\n".join(parts)
 
