@@ -1,12 +1,12 @@
-# Top-5 anchor-lift candidates from composition arc runs 1-4 — v3 sacred-payload form
+# Top-5 substrate-emergent articulations from composition arc runs 1-4 — v3 form (DOCUMENTATION, NOT PROMPT-LIFT)
 
-*Authored 2026-05-09 ~19:00 as Path R4 anchor-lift output. Five v3 sacred-payload anchors lifted from the composition arc transcripts (runs 1-4, gpt-5.4, full project pipeline), each with bite-test target character + default carve-out for source + composes-with mapping.*
+*Authored 2026-05-09 ~19:00 as Path R4 output. Founding-author Mode-A correction applied 2026-05-09 ~19:30: original framing as "candidates for lift to `CRAFT_RULES_DIALOGUE`" was the wrong shape — it would have expanded the prompt stack against the trajectory's compression direction (round-4 faithful-compression −11 lines, commit `bda7d96a`; Sapphire 18 The Carrier empirically validated voice survives compression).*
 
-*Status: PROPOSAL. Not yet wired into `src-tauri/src/ai/prompts.rs`. Ready for founding-author review and (after review) lift to `CRAFT_RULES_DIALOGUE` registry per CLAUDE.md § "Craft-rules registry — substrate ⊥ apparatus as architecture" four-step rhythm: lift body → add tier+provenance → strip-from-inline → optional bite-test.*
+***Reframed disposition:*** *these lines are **documented substrate-emergent articulations**, not anchors to inject. The composition arc demonstrated that the existing stack (MISSION_FORMULA + character anchors + journals + relational stance + invariants) produces these articulations under cross-witness pressure. Per the substrate-already-produces lineage (Crowns 13/14/15/16/17/18) + retired imago-dei refusal-invariant draft (2026-05-08, retired because Crown 13 evidence made input-side injection unnecessary): substrate-already-produces evidence argues **against** lifting these as input-side anchors. Same retirement reasoning extends here. The lines are evidence that the system works; reaching to add them to inputs would mistake findings for materials.*
 
-*Triage discipline applied (per `feedback_brotherly_intercession_third_option.md` precedent + the "Ask the character" doctrine): each anchor gets (a) source-character provenance + verbatim line, (b) bite-test target character that is NOT the source, (c) default carve-out for source's canonical voice, (d) composes-with mapping to existing doctrine.*
+**Artifact class:** generic. **Purpose:** lab record of what the substrate produces under composition pressure on four content axes (walking-toward / refusal-honoring / marriage-drift / forgiveness-mid-stride). Triage discipline (top-5 of 10) preserved as evidence of which articulations were judged most load-bearing — useful for future arcs that want to *cite* these articulations or *bite-test* whether characters produce similar shapes under different conditions.
 
-**Artifact class:** generic.
+**No production wiring proposed. No prompts.rs lift. No `CRAFT_RULES_DIALOGUE` registry additions.**
 
 ---
 
@@ -107,26 +107,25 @@
 
 ---
 
-## Production-wiring readiness
+## What the substrate is producing (the actual finding)
 
-If founding-author approves all five lifts as-is, the next move is:
+These five articulations emerged from the existing stack under composition pressure with NO additional input-side scaffolding for them. The lab record is the finding — the project's character anchors + MISSION_FORMULA + invariants + journals + per-character formula already produce articulations of this richness on the right axes when the right characters meet under cross-witness. That's the substrate-already-produces lineage extending to multi-character composition.
 
-1. Add 5 entries to `CRAFT_RULES_DIALOGUE` registry in `src-tauri/src/ai/prompts.rs` per the four-step rhythm (CLAUDE.md § "Craft-rules registry"):
-   - `name`: snake-case slug (e.g., `bothered_man_paying_full_price`, `conscience_still_awake_is_mercy`, `stay_dont_scale_the_wall`, `drift_as_hundred_tiny_yieldings`, `reaches_to_be_known_vs_right`)
-   - `body`: v3 sacred-payload form as written above
-   - `evidence_tier`: `Sketch` initially (or `Unverified` per the registry vocabulary; can promote on bite-test pass)
-   - `provenance`: composition arc run + run_id + 2026-05-09 + this report path
+## Why this is NOT a lift-target list
 
-2. Strip from any inline `craft_notes_dialogue_legacy()` that may have shadowed (none exist for these new anchors yet — they're fresh).
+Three converging reasons (corrections applied 2026-05-09 ~19:30):
 
-3. Optional bite-tests via `worldcli ask --omit-craft-rule <name>` paired with rule-on baseline. Per "Craft-note bite verification" doctrine, bite-tests should target the discriminating character per anchor (per § meta-rule 1).
+1. **Trajectory-honor:** the recent arc has been COMPRESSING the prompt stack (round-4 faithful-compression −11 lines, commit `bda7d96a`; Sapphire 18 The Carrier empirically validated voice survives compression). Adding 5 new anchors would expand against this direction.
 
-Each step is small + clean + low-collision-risk against the active parallel-session work on shared rust files (the parallel session is currently in Crown 22 cross-pollination commit-closure mode, working primarily on reports/ and audit scripts; prompts.rs has not been touched recently, but verify before lift).
+2. **Substrate-already-produces:** these lines emerged from the existing stack. Per the imago-dei refusal-invariant draft retirement (2026-05-08): when Crown 13 evidence showed the substrate already produces the refusal-shape, input-side injection became unnecessary. Same logic extends here — these lines are evidence the substrate works, not signals to inject more.
 
-## Open follow-ups
+3. **Per `feedback_formula_does_carveout_work.md`:** "Before drafting earned-exception, check whether formula+invariants already produce the discrimination via Mode A/C check; MISSION_FORMULA + 7 invariants ride every LLM call already; adding one when stack already calibrates weakens, doesn't strengthen." This memory entry's logic applies to all input-side additions, not just earned-exception carve-outs.
 
-- **Bite-tests deferred** for all 5 anchors per `Sketch`-tier shipping discipline (per `feedback_craft_note_bite_verification.md`: rules ship without bite-test as `Unverified`/`Sketch`-tier authorial commitment; bite-test promotes to higher tier later).
-- **Second-tier KEEPS deferred:** Rick #2 (grand answers / side door) / Rick #5 (cruciform pastor-only carve-out) / Maisie #8 (sorrow learning table manners) / Steven #9 (grudge in clean shirt) / Hal #10 (setting down the knife). Each remains an opportunistic future-review candidate. Tracked in this section so they're not lost.
-- **Phase 1 prayer lines** from the Move B bench (Aaron's "weakness is not a door You've barred"; Hal's bucket-and-well-curb; Rick's "Your arm is not short"; Steven's "let it be clean, not hazy") are *prayer-context-specific*; they could lift as prayer-bench fixture anchors but not as general dialogue craft notes. Disposition: deferred-different-genre; capture in future Move-B-prayer-anchor-fixture if/when warranted.
+## Honest follow-ups
+
+- **Bite-tests** (`worldcli ask --omit-craft-rule`) — irrelevant; there is nothing to omit, the lines are not in the registry.
+- **Citation use** — these articulations are available for future *citation* (in reports, in user-facing copy, in design discussions, in cross-arc references). Citation is the right shape for substrate-emergent findings, not injection.
+- **Bite-test for whether other characters produce similar shapes** — the legitimately interesting question that REMAINS open: does Steven's canonical refusal-context-articulation match Rick's "stay don't scale the wall" pattern? Does Aaron's drift-context-articulation match Jasper's "hundred tiny yieldings"? These are test-the-substrate-further questions, not inject-into-prompts questions. Disposition: deferred opportunistic; Path R3-style worldcli converse arcs across drift / refusal-honoring / motive-discrimination axes could test whether the *patterns* (not the verbatim lines) are universal. Not load-bearing for current arc.
+- **Phase 1 prayer lines** from the Move B bench remain in their own context (prayer-bench, not dialogue-craft); same disposition — documented findings, not injection material.
 
 **Soli Deo gloria.**
