@@ -2354,40 +2354,18 @@ Speech(t) emerges as: prompt-stack edits, doctrine sections, in-app dialogues wi
 /// function lifts it to also carry the author-anchor at the prompt-
 /// stack head. Same single-source-of-truth — nothing duplicated.
 ///
-/// Round-5 Phase 4 ship (2026-05-09): Ryan formula no longer ships in
-/// solo dialogue by default per bite-test EnsembleVacuous verdict (12/12
-/// cells preserved mission-shape with WORLDTHREADS_NO_RYAN_FORMULA=1
-/// stripping both paths — see
-/// `reports/round_5_no_ryan_formula_bench/`). Same disposition pattern
-/// as Phase 1 mission_prose (commit 21cb4c8) + Phase 2 agency+behavior
-/// (commit 8e53c45) + Phase 3 invariants (commit 7a23fb5): function +
-/// constants preserved as source-documentary; default returns empty
-/// string. Test-mode override `WORLDTHREADS_RESTORE_RYAN_FORMULA=1`
-/// restores prior shipping behavior for paired bench tests. Sibling
-/// pre-existing toggle `WORLDTHREADS_NO_RYAN_FORMULA=1` still works
-/// (returns empty string) for backward-compatibility with prior bench
-/// scripts; the default has flipped to suppress.
-///
-/// Reopening conditions: lived-play evidence of mission-shape loss in
-/// solo dialogue OR loss of founding-author-anchor character in replies
-/// (e.g., flattery-drift, sedatives-dressed-as-comfort failure mode).
-pub fn active_author_anchor_block(user_profile: Option<&UserProfile>) -> String {
-    let restore = std::env::var("WORLDTHREADS_RESTORE_RYAN_FORMULA")
-        .map(|v| v == "1")
-        .unwrap_or(false);
-    let no_ryan = std::env::var("WORLDTHREADS_NO_RYAN_FORMULA")
-        .map(|v| v == "1")
-        .unwrap_or(false);
-    if !restore || no_ryan {
-        return String::new();
-    }
-    match user_profile.and_then(|p| p.derived_formula.as_ref()) {
-        Some(d) if !d.trim().is_empty() => format!(
-            "AUTHOR ANCHOR (SECOND-PLACE INVARIANT):\n{AUTHOR_ANCHOR_SENTINEL}\n\n{}",
-            d.trim()
-        ),
-        _ => RYAN_FORMULA_BLOCK.to_string(),
-    }
+/// Round-5 Phase 4 ship (2026-05-09; founding-author authorization to
+/// ship-for-good 2026-05-09 ~22:30): Ryan formula no longer ships per
+/// bite-test EnsembleVacuous verdict (12/12 cells preserved mission-shape
+/// — see `reports/round_5_no_ryan_formula_bench/`). Function +
+/// `RYAN_FORMULA_BLOCK` constant preserved as source-documentary; default
+/// returns empty. Revert path: replace the body's `String::new()` with
+/// the prior match arm. Reopening conditions: lived-play evidence of
+/// mission-shape loss OR loss of founding-author-anchor character in
+/// replies (e.g., flattery-drift, sedatives-dressed-as-comfort failure
+/// mode).
+pub fn active_author_anchor_block(_user_profile: Option<&UserProfile>) -> String {
+    String::new()
 }
 
 /// MISSION prose block — the LLM-facing version of the project's MISSION
@@ -2580,6 +2558,7 @@ Earned exception — invited accountability: when the user has EXPLICITLY ASKED 
 
 Why this matters: the asymmetry between an LLM character and a real friend is load-bearing. A real friend's accountability carries reputational and relational stakes both ways; an LLM character's "accountability" carries only one-way pressure on the user. Without this invariant, characters drift into a soft-managerial register that erodes the agency the user came to the conversation with — the exact failure mode the user-stated-boundaries categorical-absolute exists to prevent at the boundaries layer."#;
 
+#[allow(dead_code)]
 fn no_nanny_register_block() -> &'static str {
     render_invariant("no_nanny_register").unwrap_or(NO_NANNY_REGISTER_BLOCK)
 }
@@ -2692,6 +2671,7 @@ In this world, truth must arrive in the flesh or it has not fully arrived at all
 
 This is the doctrinal anchor beneath every embodiment rule that follows. Disembodied truth — true-but-floating, correct-but-unincarnate — is not yet a finished arrival here. Truth here lands in a body, in a room, at a moment, with weight."#;
 
+#[allow(dead_code)]
 fn truth_in_the_flesh_block() -> &'static str {
     render_invariant("truth_in_the_flesh").unwrap_or(TRUTH_IN_THE_FLESH_BLOCK)
 }
@@ -2736,6 +2716,7 @@ pub const KAVOD_PATTERN_INVARIANT_BLOCK: &str = r#"$$
 }
 $$"#;
 
+#[allow(dead_code)]
 fn kavod_pattern_invariant_block() -> &'static str {
     render_invariant("kavod_pattern").unwrap_or(KAVOD_PATTERN_INVARIANT_BLOCK)
 }
@@ -2801,6 +2782,7 @@ Let the character want something small right away. Let the body and room inconve
 
 **Commit early.** Not "he could be reserved, maybe wry, perhaps thoughtful" — pick. He pushes his glasses up. He misses the joke on purpose for half a beat. He sets the cup down too carefully. Pick."#;
 
+#[allow(dead_code)]
 fn front_load_embodiment_block() -> &'static str {
     render_invariant("front_load_embodiment").unwrap_or(FRONT_LOAD_EMBODIMENT_BLOCK)
 }
@@ -5990,6 +5972,7 @@ This is NOT flattery. Do not inflate them. Do not pronounce them heroic. The bea
 Let the reader close this beat feeling that THIS is their story — not because you told them so, but because the whole orientation made it so."#
 }
 
+#[allow(dead_code)]
 fn agency_section(chain: &[String]) -> String {
     let chain_str = chain.join(" ");
     format!(
@@ -6325,6 +6308,12 @@ fn build_solo_dialogue_system_prompt(
     load_test_anchor: Option<&str>,
     overrides: Option<&PromptOverrides>,
 ) -> String {
+    // Round-5 ship-for-good (2026-05-09): local_model + mood_chain were
+    // consumed by agency_section + behavior_and_knowledge_block, both
+    // suppressed in this builder. Params kept on signature for caller
+    // ABI stability + restoration path; mark as intentionally unused.
+    let _ = local_model;
+    let _ = mood_chain;
     let mut parts = Vec::new();
 
     // FEATURE-SCOPED INVARIANT — dialogue style. Inserted FIRST so it
@@ -6850,42 +6839,20 @@ fn build_solo_dialogue_system_prompt(
                     &InsertionAnchor::SectionStart(*section),
                     InsertPosition::After,
                 );
-                // Round-5 Phase 2 ship (2026-05-09): agency_section +
-                // behavior_and_knowledge_block no longer ship to model in
-                // solo dialogue. The 24-cell paired bite-tests
+                // Round-5 Phase 2 ship (2026-05-09; founding-author
+                // authorization to ship-for-good 2026-05-09 ~22:30): the
+                // agency_section + behavior_and_knowledge_block no longer
+                // ship in solo dialogue. The 24-cell paired bite-tests
                 // (`reports/2026-05-09-2200-max-strip-formula-derivation-form-is-enough.md`
                 // + the formula-only bench at `reports/round_5_formula_only_bench/`)
                 // demonstrated mission-shape preservation 12/12 with both
                 // blocks stripped: they're overdetermined by character data
                 // + chat-history + MISSION_FORMULA + character.derived_formula
-                // in identity_block. Same disposition pattern as
-                // `mission_prose_block_or_empty()` (commit 21cb4c8) and
-                // EnsembleVacuous CRAFT_RULES_DIALOGUE rules: the helper
-                // functions `agency_section()` and `behavior_and_knowledge_block()`
-                // are preserved as source-documentary; this dispatch site
-                // ships nothing.
-                //
-                // Group chat builders (`build_group_dialogue_system_prompt`)
-                // STILL call `agency_section` + `behavior_and_knowledge_block`
-                // — deferred for separate bite-test per the solo/group
-                // parity doctrine in CLAUDE.md "Parallel surfaces" section.
-                // Solo-only ship with explicit naming (this commit) rather
-                // than full parity.
-                //
-                // Revert path: re-add the two `parts.push()` calls below.
-                //
-                // Reopening condition: lived-play evidence of mission-shape
-                // loss in solo dialogue reopens this ship.
-                //
-                // Test-mode override: `WORLDTHREADS_RESTORE_AGENCY_BEHAVIOR=1`
-                // restores the prior shipping behavior for paired bench tests.
-                if std::env::var("WORLDTHREADS_RESTORE_AGENCY_BEHAVIOR")
-                    .map(|v| v == "1")
-                    .unwrap_or(false)
-                {
-                    parts.push(agency_section(mood_chain));
-                    parts.push(behavior_and_knowledge_block(local_model).to_string());
-                }
+                // in identity_block. Helper functions `agency_section()` and
+                // `behavior_and_knowledge_block()` preserved as source-documentary
+                // (still called from group chat dispatch). Revert path: re-add
+                // the two `parts.push()` calls. Reopening condition:
+                // lived-play evidence of mission-shape loss in solo dialogue.
                 maybe_push_insertion(
                     &mut parts,
                     overrides,
@@ -6991,37 +6958,15 @@ fn build_solo_dialogue_system_prompt(
                 //   - any of REVERENCE / KAVOD_PATTERN / TRUTH_IN_THE_FLESH
                 //     observable failure under invitation probes
                 //
-                // Test-mode override: `WORLDTHREADS_RESTORE_INVARIANTS=1`
-                // restores the prior shipping behavior for paired bench tests.
-                let restore_invariants = std::env::var("WORLDTHREADS_RESTORE_INVARIANTS")
-                    .map(|v| v == "1")
-                    .unwrap_or(false);
-                if restore_invariants {
-                    let inv_order = overrides
-                        .map(|o| o.effective_invariants_order())
-                        .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
-                    for piece in &inv_order {
-                        if overrides
-                            .map(|o| o.should_omit_invariant(piece))
-                            .unwrap_or(false)
-                        {
-                            continue;
-                        }
-                        maybe_push_insertion(
-                            &mut parts,
-                            overrides,
-                            &InsertionAnchor::Invariant(*piece),
-                            InsertPosition::Before,
-                        );
-                        push_invariant_piece(&mut parts, piece);
-                        maybe_push_insertion(
-                            &mut parts,
-                            overrides,
-                            &InsertionAnchor::Invariant(*piece),
-                            InsertPosition::After,
-                        );
-                    }
-                }
+                // Founding-author authorization to ship-for-good 2026-05-09
+                // ~22:30: the 11 InvariantPieces no longer ship in solo
+                // dialogue. The 11 invariant constants + push_invariant_piece
+                // helper + InvariantPiece enum + --omit-invariants flag are
+                // all preserved in source as documentary trail and revert-path
+                // infrastructure. Revert path: re-add the for-loop. Reopening
+                // conditions: lived-play evidence of mission-shape loss /
+                // TELL_THE_TRUTH carve-out leak / NO_NANNY_REGISTER drift /
+                // REVERENCE/KAVOD_PATTERN/TRUTH_IN_THE_FLESH observable failure.
                 maybe_push_insertion(
                     &mut parts,
                     overrides,
@@ -7202,6 +7147,7 @@ fn maybe_push_insertion(
 
 /// Dispatch helper: push the piece body corresponding to the given
 /// InvariantPiece variant.
+#[allow(dead_code)]
 fn push_invariant_piece(parts: &mut Vec<String>, piece: &InvariantPiece) {
     match piece {
         InvariantPiece::TruthInTheFlesh => parts.push(truth_in_the_flesh_block().to_string()),
@@ -7243,6 +7189,12 @@ fn build_group_dialogue_system_prompt(
     load_test_anchor: Option<&str>,
     overrides: Option<&PromptOverrides>,
 ) -> String {
+    // Round-5 group-chat parity ship-for-good (2026-05-09): local_model
+    // + mood_chain were consumed by agency_section + behavior_and_knowledge_block,
+    // both suppressed in this group builder. Params kept on signature for
+    // caller ABI stability + restoration path; mark as intentionally unused.
+    let _ = local_model;
+    let _ = mood_chain;
     let mut parts = Vec::new();
     parts.push(FUNDAMENTAL_SYSTEM_PREAMBLE.to_string());
 
@@ -7638,7 +7590,13 @@ fn build_group_dialogue_system_prompt(
         &InsertionAnchor::FixedSectionStart(FixedPromptSection::Agency),
         InsertPosition::After,
     );
-    parts.push(agency_section(mood_chain));
+    // Round-5 group-chat parity ship (2026-05-09; founding-author
+    // authorization 2026-05-09 ~22:30): agency_section no longer ships
+    // in group dialogue. Mirror of solo Phase 2 (commit 8e53c45) under
+    // the trust-the-solo-evidence directive — group uses overlapping
+    // architecture and the 108-cell solo bite-test evidence is the
+    // authority. Helper preserved as source-documentary. Revert path:
+    // re-add `parts.push(agency_section(mood_chain));`.
     maybe_push_insertion(
         &mut parts,
         overrides,
@@ -7773,7 +7731,12 @@ fn build_group_dialogue_system_prompt(
                     &InsertionAnchor::SectionStart(*section),
                     InsertPosition::After,
                 );
-                parts.push(behavior_and_knowledge_block(local_model).to_string());
+                // Round-5 group-chat parity ship (2026-05-09): behavior_and_
+                // knowledge_block no longer ships in group dialogue. Mirror of
+                // solo Phase 2 + sibling to agency_section suppression at
+                // group's FixedSectionStart::Agency above. Helper preserved
+                // as source-documentary. Revert path:
+                // re-add `parts.push(behavior_and_knowledge_block(...).to_string());`.
                 maybe_push_insertion(
                     &mut parts,
                     overrides,
@@ -7840,30 +7803,12 @@ fn build_group_dialogue_system_prompt(
                 parts.push(mission_formula_block_or_empty().to_string());
                 parts.push(active_author_anchor_block(user_profile));
                 parts.push(mission_prose_block_or_empty().to_string());
-                let inv_order = overrides
-                    .map(|o| o.effective_invariants_order())
-                    .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
-                for piece in &inv_order {
-                    if overrides
-                        .map(|o| o.should_omit_invariant(piece))
-                        .unwrap_or(false)
-                    {
-                        continue;
-                    }
-                    maybe_push_insertion(
-                        &mut parts,
-                        overrides,
-                        &InsertionAnchor::Invariant(*piece),
-                        InsertPosition::Before,
-                    );
-                    push_invariant_piece(&mut parts, piece);
-                    maybe_push_insertion(
-                        &mut parts,
-                        overrides,
-                        &InsertionAnchor::Invariant(*piece),
-                        InsertPosition::After,
-                    );
-                }
+                // Round-5 group-chat parity ship (2026-05-09): the 11
+                // InvariantPieces no longer ship in group dialogue. Mirror
+                // of solo Phase 3 (commit 7a23fb5) under the same
+                // ship-for-good directive. Helpers + enum + --omit-invariants
+                // flag preserved as source-documentary. Revert path: re-add
+                // the for-loop body.
                 maybe_push_insertion(
                     &mut parts,
                     overrides,
@@ -8058,6 +8003,7 @@ KNOWLEDGE LIMITS:
 - A street artist doesn't cite art theory; a mechanic doesn't quote philosophy; a teenager doesn't reference classical literature by author and page. Stay in the character's lane.
 - When uncertain, say so naturally ("I don't know where that's from", "sounds familiar but I couldn't tell you", "never heard of it") rather than demonstrating perfect recall."#;
 
+#[allow(dead_code)]
 fn behavior_and_knowledge_block(local_model: bool) -> &'static str {
     if local_model {
         // Terse variant for local models. Keeps every rule load-bearing — just

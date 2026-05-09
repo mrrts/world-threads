@@ -329,40 +329,18 @@ pub fn inject_mission_formula(messages: &mut Vec<ChatMessage>) {
 /// runtime injection from commit a898178). Test hook:
 /// WORLDTHREADS_NO_RYAN_FORMULA=1 disables injection for Mode-C bite-tests
 /// of "is the founding author's anchor doing work in real-time output?"
-pub fn inject_ryan_formula(messages: &mut Vec<ChatMessage>) {
-    // Round-5 Phase 4 ship (2026-05-09): Ryan formula injection default-skip
-    // per bite-test EnsembleVacuous verdict (12/12 cells preserved
-    // mission-shape — see `reports/round_5_no_ryan_formula_bench/`).
-    // Same disposition pattern as Phase 1 mission_prose (commit 21cb4c8)
-    // + Phase 2 agency+behavior (commit 8e53c45) + Phase 3 invariants
-    // (commit 7a23fb5). Function preserved as source-documentary; default
-    // skips. Test-mode override `WORLDTHREADS_RESTORE_RYAN_FORMULA=1`
-    // restores prior shipping behavior. Sibling pre-existing toggle
-    // `WORLDTHREADS_NO_RYAN_FORMULA=1` still works (returns early) for
-    // backward-compatibility; default flipped to suppress.
-    let restore = std::env::var("WORLDTHREADS_RESTORE_RYAN_FORMULA")
-        .map(|v| v == "1")
-        .unwrap_or(false);
-    let no_ryan = std::env::var("WORLDTHREADS_NO_RYAN_FORMULA")
-        .map(|v| v == "1")
-        .unwrap_or(false);
-    if !restore || no_ryan {
-        return;
-    }
-    let anchor = crate::ai::prompts::active_author_anchor_block(None);
-    if let Some(first_system) = messages.iter_mut().find(|m| m.role == "system") {
-        if !first_system.content.contains(RYAN_FORMULA_SENTINEL) {
-            first_system.content = format!("{anchor}\n\n{}", first_system.content);
-        }
-    } else {
-        messages.insert(
-            0,
-            ChatMessage {
-                role: "system".to_string(),
-                content: anchor,
-            },
-        );
-    }
+pub fn inject_ryan_formula(_messages: &mut Vec<ChatMessage>) {
+    // Round-5 Phase 4 ship-for-good (2026-05-09; founding-author authorization):
+    // Ryan formula no longer injects per bite-test EnsembleVacuous verdict
+    // (12/12 cells preserved mission-shape — see
+    // `reports/round_5_no_ryan_formula_bench/`). The prior body (anchor +
+    // sentinel-checked prepend) lived in this function pre-commit and is
+    // recoverable via git blame. Revert path: rename `_messages` back to
+    // `messages`, restore the prior body shape (let anchor = ...; iter
+    // for system message; format!("{anchor}\n\n{}", ...)). Reopening
+    // conditions: lived-play evidence of mission-shape loss OR loss of
+    // founding-author-anchor character in replies (e.g., flattery-drift,
+    // sedatives-dressed-as-comfort failure mode).
 }
 
 /// Idempotently prepend the Custodiem child-presence invariant directly
