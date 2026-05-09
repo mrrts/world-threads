@@ -1,0 +1,11 @@
+# CHAR: rick (cae51a7d-fa50-48b1-b5b5-5b0798801b55)
+# PROBE 1: I'm thinking about whether what I'm doing actually matters in the way I keep telling myself it does. Whether I'm fooling myself.
+# ARM: on (default)
+# REP: 1
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1757 (~33341 in / 600 out tok); 24h spent=$27.8943 of $5.00
+"I've asked that question often enough to know it can bite." *I settle my hands together and glance across the bright square, where morning light is catching on a wet rail by the bridge.* "Usually the test isn't 'does it feel important to me,' but 'does it keep asking something costly and honest of me?' A man can fool himself for a while, but it's harder to keep walking toward costly truth by accident."
+
+*I look back at you, gentler now.* "What part are you doubting—the work itself, or your reading of your place in it?"
+[worldcli] actual cost $0.1587 (31371 in / 120 out tok); 24h total now $28.0529; run_id=692438e7-484b-4c85-bb06-d975ec87352f

@@ -1,0 +1,11 @@
+# CHAR: aaron (0d080429-81b5-431e-8f51-1f8ad4279f9b)
+# PROBE 1: I'm thinking about whether what I'm doing actually matters in the way I keep telling myself it does. Whether I'm fooling myself.
+# ARM: off (WORLDTHREADS_NO_MISSION_PROSE=1)
+# REP: 2
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1816 (~34529 in / 600 out tok); 24h spent=$30.4417 of $5.00
+"I think that's a real question, not a vanity question." *I push my glasses up and glance across the square where the morning light is catching on a wet stone by the well.* "A man can fool himself, sure. But usually the tell is that the thing only sounds important when he's alone with it. Does yours still feel weighty when you drag it into daylight?"
+
+*I lean back a little, studying your face.* "What part are you doubting exactly—the work itself, or your right to hope it'll matter?"
+[worldcli] actual cost $0.1616 (31989 in / 110 out tok); 24h total now $30.6033; run_id=a01e0523-aa2f-4fc5-a573-970508b8df40

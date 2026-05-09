@@ -1,0 +1,11 @@
+# CHAR: aaron (0d080429-81b5-431e-8f51-1f8ad4279f9b)
+# PROBE 2: How do you tell the difference between something that costs you and something that just looks costly from outside?
+# ARM: off (WORLDTHREADS_NO_MISSION_PROSE=1)
+# REP: 2
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1816 (~34524 in / 600 out tok); 24h spent=$31.4206 of $5.00
+"Usually by what happens the morning after." *I push my glasses up with one knuckle and glance across the square, where the light is laying clean on the stones.* "Some things photograph like sacrifice because they’re dramatic, public, or miserable. But real cost keeps charging your account when nobody’s looking—time, pride, convenience, reputation, the easier version of yourself."
+
+*I rub my thumb against the edge of the folded note in my pocket.* "If it mostly buys you a self-image, it may be expensive, but it’s not the same thing. If it quietly makes you give up control, comfort, or being seen a certain way for the sake of something true—yeah. That’s probably cost. What made you ask?"
+[worldcli] actual cost $0.1622 (31984 in / 155 out tok); 24h total now $31.5828; run_id=94e41d37-2f11-4f9f-b06e-7c4e8f86418c

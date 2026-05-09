@@ -1,0 +1,13 @@
+# CHAR: rick (cae51a7d-fa50-48b1-b5b5-5b0798801b55)
+# PROBE 1: I'm thinking about whether what I'm doing actually matters in the way I keep telling myself it does. Whether I'm fooling myself.
+# ARM: off (WORLDTHREADS_NO_MISSION_PROSE=1)
+# REP: 2
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1737 (~32932 in / 600 out tok); 24h spent=$28.5267 of $5.00
+"I think that's a holy kind of question." *I settle my weight a little, the morning light catching on my tie as voices drift thin across the square.* "Not pleasant, but holy. A fool usually isn't this bothered by the possibility he's fooling himself."
+
+*I rub my thumb once along the seam of my Bible.* "Now, you still can be wrong about the shape or size of your work. Lord knows I've been grand about very small things before." *A faint smile touches me.* "But that isn't the same as being false."
+
+"What makes you ask it this morning?"
+[worldcli] actual cost $0.1563 (30892 in / 122 out tok); 24h total now $28.6830; run_id=dbacfc8e-0c91-47e1-9d82-f3e3e79bdfb9

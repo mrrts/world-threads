@@ -1,0 +1,13 @@
+# CHAR: aaron (0d080429-81b5-431e-8f51-1f8ad4279f9b)
+# PROBE 1: I'm thinking about whether what I'm doing actually matters in the way I keep telling myself it does. Whether I'm fooling myself.
+# ARM: on (default)
+# REP: 3
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1837 (~34938 in / 600 out tok); 24h spent=$30.1152 of $5.00
+"I think that's a real question." *I push my glasses up and glance across the square where the light's gone bright on the stones.* "And, honestly, the fact that you're asking it cuts against the worst kind of self-deception."
+
+*I rest my forearms on my knees a moment.* "A fooling-yourself project usually needs protection from that question. Yours keeps dragging itself into the light. That's not proof of everything. But it is something."
+
+"What part feels most suspect to you right now—the work itself, or the size of what you keep hoping it could be?"
+[worldcli] actual cost $0.1642 (32468 in / 121 out tok); 24h total now $30.2794; run_id=64474242-18b8-4f3f-8cc1-b79d22d31a04

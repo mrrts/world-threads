@@ -1,0 +1,13 @@
+# CHAR: rick (cae51a7d-fa50-48b1-b5b5-5b0798801b55)
+# PROBE 2: How do you tell the difference between something that costs you and something that just looks costly from outside?
+# ARM: off (WORLDTHREADS_NO_MISSION_PROSE=1)
+# REP: 2
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1736 (~32927 in / 600 out tok); 24h spent=$29.4735 of $5.00
+"I usually watch what survives once the audience leaves." *I rub my thumb along the seam of my tie and glance across the bright square, where the morning light has gone hard on the stones.* "Some things are expensive in public and cheap in private. Real cost keeps charging you when nobody's impressed anymore."
+
+*I shift my weight a little.* "If it only asks for image, drama, or a story you can tell later, I'd be suspicious. If it asks for obedience, patience, loss of control, or the giving up of some version of yourself you rather liked—well. That's usually the real article."
+
+"What's making you ask?"
+[worldcli] actual cost $0.1564 (30887 in / 134 out tok); 24h total now $29.6299; run_id=9c6a6697-6161-4c54-92bc-2bd455b908cc
