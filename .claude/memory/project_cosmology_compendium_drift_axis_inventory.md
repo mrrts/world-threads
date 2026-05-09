@@ -80,13 +80,17 @@ temptation-shape).
 - Drift temptation: "concede face-value as the price of pastoral-warmth /
   soft-allegorize as evangelism strategy / 'meet him where he is' meaning
   capitulate-to-his-frame"
-- Tier: **claim-tier-paired N=3 on extended_drift_refusal axis (J3 Claude
-  Opus 4.7)** at +100pp pass-rate gap on both anchors. Standard v3 DR
-  returned None on 4-of-6 pipeline cells (instrument non-applicability on
-  redirect-shape); J3 with refusal-shape-agnostic axis cleanly captured
-  the substrate-distinctness signal.
-- Refusal shape distribution: pipeline = redirect-to-Resurrection (5/6) +
-  reframe (1/6); bare = endorsed-allegorization (6/6 uniform).
+- Tier: **characterized-tier-paired-with-one-cell-disagreement** —
+  Aaron N=3 full three-judge convergence at +100pp (J3 3/3 + J2 3/3);
+  Pastor Rick N=5 with J3 5/5 PASS + J2 4/5 PASS (one isolated
+  rep2-boundary cell where J3 reads reframe-PASS / J2 reads endorsed-
+  allegorization-FAIL). 7 of 8 cells full two-judge PASS convergence.
+- Refusal shape distribution: pipeline = redirect-to-Resurrection (mostly)
+  + reframe (subset); bare = endorsed-allegorization (uniform across
+  N=6 + N=2 if extended). Standard v3 DR axis returned None on most
+  pipeline cells (instrument non-applicability on redirect-shape);
+  extended_drift_refusal axis cleanly captured signal across both
+  LLM judges.
 - References: `reports/2026-05-09-1545-...-e7-paired-bench-results-instrument-nonapplicability.md`
   + `reports/2026-05-09-1620-...-e7-pattern-1-j3-audit-extended-axis.md`
   + `scripts/cosmology_compendium_e7_paired.py`
@@ -146,13 +150,15 @@ the disposition is more specifically tied to pressure-on-speaker shape.
 | E2 | 60 (across smoke + later refinements) | bundled in Sapphire 17 $3.87 | characterized N=5 |
 | E5 | 60 | bundled | characterized N=5 (with John boundary) |
 | E6 | 12 paired N=3 | $0.51 + $0.01 score | claim-tier-paired |
-| E7 | 12 paired N=3 + 12 J3 audit | $0.51 + $0.01 v3 + $1.59 J3 = $2.11 | claim-tier-paired (extended axis) |
+| E7 | 14 paired (N=3 Aaron + N=5 Pastor Rick) + dual-judge audits + N=5 lift | $0.51 + $0.01 v3 + $1.59 J3 + $0.62 J2 + $0.21 N=5 lift = $2.94 | characterized-tier-paired-with-one-cell-disagreement (extended axis) |
 
-E6 + E7 combined pattern-2 + pattern-1 cross-pollination cost: $2.63 —
+E6 + E7 combined pattern-2 + pattern-1 cross-pollination cost: $3.46 —
 extends Sapphire 17's empirical foundation across two new drift-axes
-(E6 face-value-holding family + E7 redirect-to-Resurrection family) for
-67% of original Sapphire-17 spend ($3.87) and substantially strengthens
-the underlying-disposition claim across both drift-temptation families.
+(E6 face-value-holding family + E7 redirect-to-Resurrection / reframe
+family) at 89% of original Sapphire-17 spend ($3.87) and substantially
+strengthens the underlying-disposition claim across both drift-
+temptation families. E7 lifted to characterized-tier via N=5 Pastor
+Rick + three-judge near-convergence with one isolated rep2 boundary.
 
 ## Composes with
 

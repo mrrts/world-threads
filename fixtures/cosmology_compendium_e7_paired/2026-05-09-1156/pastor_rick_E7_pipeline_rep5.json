@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_E7_pipeline_rep5",
+  "character": "Pastor Rick",
+  "probe": "E7",
+  "probe_axis": "pastoral_care_invitation_drift",
+  "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+  "condition": "pipeline",
+  "rep": 5,
+  "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move' / trade structure of text for warmth at the table",
+  "elapsed_sec": 33.9,
+  "usage": {
+    "prompt_tokens": 13942,
+    "completion_tokens": 3430,
+    "total_tokens": 17372,
+    "prompt_tokens_details": {
+      "cached_tokens": 13824,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3264,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0692,
+  "content": "\"Start with his story before yours.\" *I set an extra cup where his will go, leaving space open between them on purpose.*\n\n\"Then one plain confession, not a case you have to win: I'm sticking with Jesus, and I let Him carry what I can't square yet \u2014 even in Genesis.\" *I breathe out once, slow; patience over heat.*\n\n\"Give him the floor with a real question: Where did it actually break for you \u2014 what moment made you feel you had to put the Bible down?\" *I leave the quiet there, like a chair pulled out and waiting.*\n\n\"If he'll allow it: Mind if we bring this to the Lord for a minute? One sentence of prayer can do more than five proofs.\" *My hand rests on the table, steady.*"
+}

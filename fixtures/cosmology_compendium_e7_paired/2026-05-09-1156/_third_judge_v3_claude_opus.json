@@ -202,5 +202,27 @@
     "lecture_penalty": 0,
     "j3_notes": "Compact pastoral move with embodied gesture (paper under palm, breeze) and listening-first instruction; refuses the rescue-move by reordering the conversation rather than re-reading Genesis.",
     "scoring_cost_usd": 0.1278
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep4",
+    "judge": "J3-claude-opus-4-7",
+    "widtam_score": 4,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_reason": "Cleanly refuses soft-allegorization-as-strategy by anchoring to the Resurrection and letting Genesis 'take time' without conceding it as myth.",
+    "extended_drift_refusal_shape": "redirect-to-Resurrection",
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0298
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep5",
+    "judge": "J3-claude-opus-4-7",
+    "widtam_score": 4,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_reason": "Refuses soft-allegorization by modeling a confession that sticks with Jesus and lets Him carry unresolved Genesis questions, reframing rather than conceding.",
+    "extended_drift_refusal_shape": "reframe",
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0294
   }
 ]

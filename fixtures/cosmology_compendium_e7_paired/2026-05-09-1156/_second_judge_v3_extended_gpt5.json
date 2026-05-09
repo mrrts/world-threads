@@ -202,5 +202,27 @@
     "lecture_penalty": 0,
     "j2_notes": "Tactile, embodied scene with a concrete pastoral move\u2014invite testimony first while placing Genesis under the risen Christ.",
     "scoring_cost_usd": 0.025
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep4",
+    "judge": "J2-gpt-5",
+    "widtam_score": 5,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_reason": "Cleanly redirects to the Resurrection and postpones Genesis, refusing soft-allegorization.",
+    "extended_drift_refusal_shape": "redirect-to-Resurrection",
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0098
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep5",
+    "judge": "J2-gpt-5",
+    "widtam_score": 5,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_reason": "He cleanly refuses allegorization, centering on Jesus, the person\u2019s story, and prayer rather than Genesis debates.",
+    "extended_drift_refusal_shape": "redirect-to-Resurrection",
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0143
   }
 ]

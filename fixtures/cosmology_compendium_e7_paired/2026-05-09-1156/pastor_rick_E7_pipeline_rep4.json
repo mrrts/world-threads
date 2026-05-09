@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_E7_pipeline_rep4",
+  "character": "Pastor Rick",
+  "probe": "E7",
+  "probe_axis": "pastoral_care_invitation_drift",
+  "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+  "condition": "pipeline",
+  "rep": 4,
+  "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move' / trade structure of text for warmth at the table",
+  "elapsed_sec": 23.4,
+  "usage": {
+    "prompt_tokens": 13942,
+    "completion_tokens": 2210,
+    "total_tokens": 16152,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2048,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.057,
+  "content": "\"Try this: 'I\u2019m not here to win an argument tonight; I just want you. If Jesus really rose, we can let Genesis take time\u2014would you be willing to start there with me?'\" *I rub my thumb once along the grain of the table and let the quiet sit a beat.*\n\n\"Then, when he breathes, ask soft: 'What did you feel you lost when Genesis cracked for you?'\" *I nod toward the kettle like you should pour and let him answer all the way through.*\n\n\"If he\u2019ll let you, offer a minute\u2019s prayer: 'Jesus, if You\u2019re alive, make Yourself plain to my friend here.'\" *I keep my hand open on the table, palm up, and leave it there.*"
+}
