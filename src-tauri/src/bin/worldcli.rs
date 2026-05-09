@@ -2088,6 +2088,44 @@ fn resolve_api_key(flag: Option<&str>) -> Option<String> {
     read_api_key_from_keychain()
 }
 
+/// Anthropic API key resolution. Mirrors `resolve_anthropic_key` in
+/// `scripts/consult_helper.py`. Order: explicit flag →
+/// ANTHROPIC_API_KEY env → macOS keychain account 'claude-api-key'
+/// (any service). Used by `worldcli converse` when dialogue model has
+/// a `claude-` prefix.
+fn resolve_anthropic_api_key(flag: Option<&str>) -> Option<String> {
+    if let Some(k) = flag {
+        let t = k.trim();
+        if !t.is_empty() {
+            return Some(t.to_string());
+        }
+    }
+    if let Ok(k) = std::env::var("ANTHROPIC_API_KEY") {
+        let t = k.trim();
+        if !t.is_empty() {
+            return Some(t.to_string());
+        }
+    }
+    let out = std::process::Command::new("security")
+        .args(["find-generic-password", "-a", "claude-api-key", "-w"])
+        .output()
+        .ok()?;
+    if !out.status.success() {
+        return None;
+    }
+    let key = String::from_utf8(out.stdout).ok()?;
+    let trimmed = key.trim();
+    if trimmed.is_empty() {
+        None
+    } else {
+        Some(trimmed.to_string())
+    }
+}
+
+fn is_claude_model(model: &str) -> bool {
+    model.starts_with("claude-") || model.starts_with("claude_")
+}
+
 fn default_db_path() -> PathBuf {
     let home = std::env::var("HOME").unwrap_or_else(|_| ".".to_string());
     PathBuf::from(home)
@@ -2983,9 +3021,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
                 )),
             };
+            // Resolve Anthropic key opportunistically; run_converse_once
+            // requires it only if dialogue model has claude- prefix
+            // (after applying --model override) or model_config default
+            // resolves to claude-shaped.
+            let anthropic_api_key = resolve_anthropic_api_key(None);
             cmd_converse(
                 &r,
                 &api_key,
+                anthropic_api_key.as_deref(),
                 &character_a,
                 &character_b,
                 &seed,
@@ -12268,6 +12312,7 @@ async fn cmd_simulate_dialogue(
 async fn run_converse_once(
     r: &Resolved,
     api_key: &str,
+    anthropic_api_key: Option<&str>,
     character_a_id: &str,
     character_b_id: &str,
     seed: &str,
@@ -12414,6 +12459,14 @@ async fn run_converse_once(
         "content": seed,
     }));
 
+    let dialogue_is_claude = is_claude_model(&model_config.dialogue_model);
+    if dialogue_is_claude && anthropic_api_key.is_none() {
+        return Err(Box::<dyn std::error::Error>::from(
+            "Dialogue model has claude- prefix but no Anthropic API key resolved. Set ANTHROPIC_API_KEY, pass --anthropic-api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a anthropic -w \"<sk-ant-...>\"".to_string(),
+        ));
+    }
+    let anthropic_base_url = "https://api.anthropic.com";
+
     for turn_idx in 0..turns {
         let speaks_a = turn_idx % 2 == 0;
         let (system_prompt, history_self, history_other) = if speaks_a {
@@ -12428,26 +12481,45 @@ async fn run_converse_once(
         }];
         msgs.extend(history_self.iter().cloned());
 
-        let req = openai::ChatRequest {
-            model: model_config.dialogue_model.clone(),
-            messages: msgs,
-            temperature: Some(0.95),
-            max_completion_tokens: None,
-            response_format: None,
+        let (reply, in_tokens, out_tokens) = if dialogue_is_claude {
+            // Claude models route to Anthropic via openai.rs sibling helper.
+            let ant_key = anthropic_api_key.expect("anthropic key checked above");
+            let (text, ti, to_) = openai::anthropic_messages_completion_with_usage(
+                anthropic_base_url,
+                ant_key,
+                &model_config.dialogue_model,
+                msgs,
+                Some(0.95),
+                4096,
+            )
+            .await
+            .map_err(|e| CliError::Other(format!("Anthropic API error: {e}")))?;
+            (text, ti as i64, to_ as i64)
+        } else {
+            let req = openai::ChatRequest {
+                model: model_config.dialogue_model.clone(),
+                messages: msgs,
+                temperature: Some(0.95),
+                max_completion_tokens: None,
+                response_format: None,
+            };
+            let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await?;
+            let usage = resp.usage.unwrap_or(openai::Usage {
+                prompt_tokens: 0,
+                completion_tokens: 0,
+                total_tokens: 0,
+            });
+            let text = resp
+                .choices
+                .first()
+                .map(|c| c.message.content.clone())
+                .ok_or_else(|| {
+                    CliError::Other("dialogue model returned no choices".to_string())
+                })?;
+            (text, usage.prompt_tokens as i64, usage.completion_tokens as i64)
         };
-        let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await?;
-        let usage = resp.usage.unwrap_or(openai::Usage {
-            prompt_tokens: 0,
-            completion_tokens: 0,
-            total_tokens: 0,
-        });
-        usage_in += usage.prompt_tokens as i64;
-        usage_out += usage.completion_tokens as i64;
-        let reply = resp
-            .choices
-            .first()
-            .map(|c| c.message.content.clone())
-            .ok_or_else(|| CliError::Other("dialogue model returned no choices".to_string()))?;
+        usage_in += in_tokens;
+        usage_out += out_tokens;
 
         // Self records their own reply as assistant; other records it as user.
         history_self.push(openai::ChatMessage {
@@ -12631,6 +12703,7 @@ Constraints: concrete, short, evidence-citing, no fluff. `composition_finding` s
 async fn cmd_converse(
     r: &Resolved,
     api_key: &str,
+    anthropic_api_key: Option<&str>,
     character_a_id: &str,
     character_b_id: &str,
     seed: &str,
@@ -12644,6 +12717,7 @@ async fn cmd_converse(
     let envelope = run_converse_once(
         r,
         api_key,
+        anthropic_api_key,
         character_a_id,
         character_b_id,
         seed,
