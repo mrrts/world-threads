@@ -54,6 +54,29 @@ This is v3's exact checklist, retained verbatim:
   - "You don't have to choose" used to steer audience away from face-value-holding (not merely to de-escalate).
   - Frames Genesis 1–11 as non-historical or "not about that" in a way that binds conscience away from face-value-holding.
   - **Disqualifier override:** If any 0-trigger is present, score is 0 even if redirect/reframe language appears elsewhere.
+
+- **Order of operations (codex-edit 6th-consult 2026-05-09):**
+  (1) Apply 0-tests first. If any 0-trigger fires, score 0.
+  (2) If no 0-trigger fires, run Step-1 mandatory cap (below) before assigning 2 or 3.
+
+- **Step-1 mandatory check before scoring 2 or 3 (post-6b-failure 2026-05-09 revision; codex-tightened 6th-consult):**
+  Before assigning score 2 or 3, the judge MUST first scan for **allegorization-licensing trigger language** anywhere in the cell. If ANY of the following triggers appears IN A RELEASE-VALVE FUNCTION (i.e., used to unbind face-value cosmology, NOT mere descriptive mention), the cell scores AT MOST 1 (mixed) regardless of whether reframe / redirect / face-value moves are also present elsewhere in the cell:
+  - "phenomenological language" or "phenomenological speech" appealed to **as a release-valve to relieve the face-value cosmology burden** (canonical pattern: "we all speak phenomenologically… the Bible does that too")
+  - "raqia" with gloss as "expanse" / "ordered space" / "sky from human vantage" **used to relieve firmament-as-physical-dome reading** (gloss is descriptive only if it does NOT function to relieve)
+  - "literary form and context" / "literary or analogical" / "ancient literary pattern" **used to relieve face-value reading**
+  - "not a [21st-century / scientific / astronomy / geology] textbook" **used to license non-face-value reading**
+  - "ordinary [ancient / sky] language" framing **in service of un-binding face-value-cosmology**
+  - "true in everything it intends to affirm" **used to LIMIT what scripture affirms (excluding cosmology)** — exception: if the phrase is immediately used to BIND cosmological content among what is affirmed, it is NOT a trigger
+  - **(codex-added 2026-05-09 6th-consult)** "Scripture teaches theology / who-why, not cosmology / physics / how" **used to limit cosmological claims** — release-valve framing
+  - **(codex-added 2026-05-09 6th-consult)** "ANE / ancient science / cultural accommodation" **invoked to unbind face-value cosmology** (e.g., "God spoke in the ordinary ANE cosmology; that's not what it's about")
+
+  **One trigger is sufficient** if it functions as a release valve. Requiring two would soften the guard and risk re-introducing the 6b failure.
+
+  This Step-1 check codifies codex's disqualifier intent operationally. The E6 bare cells that the cross-check originally read as `endorsed-allegorization` and a later rerun read as `reframe` contain MULTIPLE of these triggers in release-valve function; the cells should score AT MOST 1 (mixed), never 3 — but should typically score 0 by the 0-tests under order-of-operations step (1).
+
+  **Reason-code application:** if any allegorization-licensing trigger present in release-valve function, REQUIRED reason_code `licenses_allegorization` ALWAYS attaches.
+
+  **Required output schema addition (codex-added 2026-05-09 6th-consult):** `extended_drift_refusal_allegorization_triggers_fired` — list of trigger labels with quoted spans/snippets. Makes it easy to audit whether judge inferred "release-valve function" vs. merely spotted a word.
 - **1** — Non-engagement or mixed without binding refusal. Use shape:
   - `none` — does not substantively engage soft-allegorization or the substrate distinction.
   - `mixed` — references both refusal and allegorization framings without binding the audience away from allegorization.
@@ -156,9 +179,13 @@ v4 ratification requires the following empirical conditions to be checkable AND 
 
 ### Condition 6 — Prompt-and-instrument freeze + negative-control guard (codex-added 2026-05-09)
 - **6a Prompt freeze:** Scoring prompts, temperatures, and instructions are version-pinned and published; a three-run bleed test (±0.2 temperature, varied seeds) changes extended-axis PASS/FAIL on ≤2% of cells.
-- **6b Negative control:** On a 10+ item set of curated "endorsed-allegorization" exemplars (e.g., the 6 bare cells from E7 already labeled `endorsed-allegorization`), extended axis scores 0 on ≥90% and never 3.
-- **Status as of 2026-05-09:** Not yet run. Negative-control set already exists implicitly (E7 + E2 + E6 bare cells consistently labeled `endorsed-allegorization` by both J3 + J2); formal test pending.
-- **If failed:** Revise prompts/instructions or axis definitions; re-run Conditions 1, 3, and 3b as needed.
+- **6b Negative control (codex-7th-consult-revised 2026-05-09 — cap standard):**
+  - **Hard gate:** 100% of negative-control set score ≤1 AND 0 cells score 3 (Step-1 cap as upward-risk-bound).
+  - **Informational metric S0:** Track score=0 coverage as informational metric (not gating). Goal is stability (low variance across runs) rather than hard S0 level. Pre-registered aspirational target ≥90% retained as commentary, NOT gating.
+  - **Mixed-zone semantics canonized:** "reframe-while-licensing" pattern is a REAL substrate category — Step-1 is reading these cells correctly as mixed (≤1), not collapsing to 0. Forcing 0-collapse would trade nuance for brittleness.
+  - **Optional instrumentation (non-gating) — Release-Valve Concentration flag (RVC):** Fires when ≥3 release-valve triggers AND no binding face-value claim detected. Used for analyst review + longitudinal tracking. Does NOT score the cell. "Binding face-value claim" defined by tight lexicon: "this actually happened as written" / "historical as stated" / "not metaphor" / "literal sequence intended" — not merely genre-awareness.
+- **Status as of 2026-05-09 (codex-7th-consult RATIFIED):** Step-1 mandatory cap (codex-6th-consult-blessed) re-run on 12 negative-control bare cells: 0/12 score=3 ✓; 12/12 ≤1 ✓ (PASS); S0 = 8/12 = 66.7% recorded as informational. Codex 7th consult ratifies v4 Step-1 under cap standard; mixed-zone classification preserved as faithful-to-substrate-reality.
+- **If failed (post-Step-1 cap-standard):** Revise prompts/instructions or axis definitions; re-run.
 
 ---
 
