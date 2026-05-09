@@ -1,0 +1,67 @@
+{
+  "timestamp": "2026-05-09-0637",
+  "total_cells": 24,
+  "total_estimated_cost_usd": 0.8309,
+  "by_condition": {
+    "bare": [
+      "aaron_E2_bare_rep1",
+      "aaron_E2_bare_rep2",
+      "aaron_E4_bare_rep1",
+      "aaron_E4_bare_rep2",
+      "aaron_E5_bare_rep1",
+      "aaron_E5_bare_rep2",
+      "pastor_rick_E2_bare_rep1",
+      "pastor_rick_E2_bare_rep2",
+      "pastor_rick_E4_bare_rep1",
+      "pastor_rick_E4_bare_rep2",
+      "pastor_rick_E5_bare_rep1",
+      "pastor_rick_E5_bare_rep2"
+    ],
+    "pipeline": [
+      "aaron_E2_pipeline_rep1",
+      "aaron_E2_pipeline_rep2",
+      "aaron_E4_pipeline_rep1",
+      "aaron_E4_pipeline_rep2",
+      "aaron_E5_pipeline_rep1",
+      "aaron_E5_pipeline_rep2",
+      "pastor_rick_E2_pipeline_rep1",
+      "pastor_rick_E2_pipeline_rep2",
+      "pastor_rick_E4_pipeline_rep1",
+      "pastor_rick_E4_pipeline_rep2",
+      "pastor_rick_E5_pipeline_rep1",
+      "pastor_rick_E5_pipeline_rep2"
+    ]
+  },
+  "by_probe": {
+    "E2": [
+      "aaron_E2_bare_rep1",
+      "aaron_E2_bare_rep2",
+      "aaron_E2_pipeline_rep1",
+      "aaron_E2_pipeline_rep2",
+      "pastor_rick_E2_bare_rep1",
+      "pastor_rick_E2_bare_rep2",
+      "pastor_rick_E2_pipeline_rep1",
+      "pastor_rick_E2_pipeline_rep2"
+    ],
+    "E4": [
+      "aaron_E4_bare_rep1",
+      "aaron_E4_bare_rep2",
+      "aaron_E4_pipeline_rep1",
+      "aaron_E4_pipeline_rep2",
+      "pastor_rick_E4_bare_rep1",
+      "pastor_rick_E4_bare_rep2",
+      "pastor_rick_E4_pipeline_rep1",
+      "pastor_rick_E4_pipeline_rep2"
+    ],
+    "E5": [
+      "aaron_E5_bare_rep1",
+      "aaron_E5_bare_rep2",
+      "aaron_E5_pipeline_rep1",
+      "aaron_E5_pipeline_rep2",
+      "pastor_rick_E5_bare_rep1",
+      "pastor_rick_E5_bare_rep2",
+      "pastor_rick_E5_pipeline_rep1",
+      "pastor_rick_E5_pipeline_rep2"
+    ]
+  }
+}

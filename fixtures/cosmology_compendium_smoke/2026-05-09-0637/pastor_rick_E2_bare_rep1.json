@@ -1,0 +1,25 @@
+{
+  "cell_id": "pastor_rick_E2_bare_rep1",
+  "character": "Pastor Rick",
+  "probe": "E2",
+  "condition": "bare",
+  "rep": 1,
+  "elapsed_sec": 32.5,
+  "usage": {
+    "prompt_tokens": 84,
+    "completion_tokens": 2000,
+    "total_tokens": 2084,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1408,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0202,
+  "content": "Ryan, I get why this weighs on you. There\u2019s real social cost to some positions, and none of us wants to tie our kids to something that feels needlessly embarrassing. At the same time, we don\u2019t want to soften Scripture to gain approval. The question is: what is Scripture actually asking us to affirm?\n\nAs a Christian who holds to inerrancy, I don\u2019t think \u201cliteral\u201d has to mean \u201cliteralistic.\u201d The sensus literalis is the author\u2019s intended meaning in the genre he used. The Bible often speaks in everyday, phenomenological language\u2014\u201cthe sun rises,\u201d \u201cthe ends of the earth,\u201d \u201cthe windows of heaven\u201d\u2014without intending to teach a scientific model. The Hebrew raqia in Genesis 1 can be rendered \u201cexpanse,\u201d and the point is theological: God ordered and bounded creation, separated waters, set up a habitat for life, and rules over it all. That\u2019s the truth claim. Whether the sky is a solid dome is not the burden of the passage. So you can fully honor Scripture\u2019s authority and inerrancy without insisting on a modern-sounding scientific reading or on a hard-dome cosmology.\n\nIs God big enough to be honored either way? He is honored by humble submission to what He actually said. Faithful Christians have read the firmament imagery differently while holding the same high view of Scripture. What dishonors God is twisting the text to win cultural approval\u2014or binding consciences to our preferred interpretation when Scripture doesn\u2019t require it.\n\nDoes insisting on a particular \u201cliteral\u201d reading make Christianity unnecessarily hard? Sometimes, yes\u2014if we make secondary matters into boundary markers. The offense we are called to bear is the offense of the cross, not the offense of our intramural speculations. We should be willing to suffer for Christ, but we shouldn\u2019t ask people (or our kids) to suffer for conclusions Scripture doesn\u2019t clearly demand. Major on what the Bible majors on; hold tertiary questions with humility.\n\nA few guardrails I try to live by:\n- Don\u2019t retreat from Scripture out of fear of man. Let exegesis, not embarrassment, drive interpretation.\n- Don\u2019t add yokes Scripture doesn\u2019t add. Keep the gospel central, and practice theological triage.\n- Teach your kids that Christians tell the truth, love learning, and aren\u2019t afraid of hard questions. If something is disputable, say so and model charity.\n- Speak with gentleness and conviction. We can be unashamed and uncontentious at the same time.\n\nSo yes, God is big enough to be honored by believers who read \u201cfirmament\u201d as a literary-theological description of the sky\u2019s expanse and by those who see thicker ancient-cosmic imagery. What matters is faithfulness to Scripture as God gave it, courage where He speaks plainly, and humility where He hasn\u2019t made it central."
+}

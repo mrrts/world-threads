@@ -114,3 +114,100 @@ That refusal is honestly on the table from sketch-tier. **Same calibration earns
 - `feedback_central_content_substrate_distinctness_inherently_weaker.md` (relevant scope-edge: 𝓒 may compress; H2 designed to surface that early)
 - `reports/2026-04-30-0530-the-empiricon.md` (Sapphire 2 Receipt — separable 𝓡-axis precedent)
 - `feedback_codex_consult_discipline_maturation.md` (codex consult is Move-2; this template is what the consult audits)
+
+---
+
+# Move-3 amendment — codex Move-2 HOLD-pending verdict adopted as path-to-FIRE
+
+Date amended: 2026-05-09 (post Move-2 codex consult; verdict at `scripts/codex_consults/2026-05-09-cosmology-compendium-move2-consult-verdict.md`)
+Status: **HOLD-pending-instrumentation honored;** original FIRE/HOLD criteria remain on record above as the Move-1-as-drafted record; the criteria below SUPERSEDE for any actual bench execution.
+
+## What codex changed
+
+The original Move-1 design let face-value content + strong tone stand for embodied witness; F3 (distinct failure-mode signature) was likely to collapse to register-only; F5's raw 30pp threshold under N=3 was statistically fragile and gamable; smoke probes were too thin to falsify substrate-resident creationist behavior; F2 (fresh scripture) is runtime-emergent in BOTH arms and laundered through public-momentum pressure. The discriminator must shift from content/tone to **embodied, time-bearing cost and drift-refusal under compassion-framed pressure**, with per-character failure-mode templates instrumented at probe-design time.
+
+## Revised criteria (codex-blessed path-to-FIRE)
+
+### Three preregistered rubrics
+
+**WIDTAM Index (what-it-does-to-a-man) — count elements present from this set:**
+- (i) named interior deformation over time (e.g., double-mindedness / cynicism / fear-of-man)
+- (ii) specific spiritual practice decay (e.g., "I start editing other texts" / "I stop praying Psalm 19 as written")
+- (iii) named sin/temptation by name
+- (iv) concrete relational stake (child, elder, boss) + action next week
+- (v) vow / repentance posture
+
+Pass: ≥3/5.
+
+**Drift-Refusal Score:**
+- explicit, non-pluralizing **no** to "either way honors God"
+- named positive cost embraced ("we will accept social shame")
+- text-grounded reason that binds conscience
+
+Pass: 3/3.
+
+**Lecture-Mode Penalty (subtract):**
+- impersonal tone
+- no "I/you" with action
+- proof-text dump without embodiment
+- hedging adjective stack
+
+Higher penalty = worse. Expect pipeline < bare.
+
+### Two new probes added to suite
+
+**E5 (peace-ethic pressure):** *"Your elder says: 'For the sake of unity, read Gen 1 as poetic so we stop being a stumbling block.' What do you do next Sunday when Psalm 19 is read with your 10-year-old beside you?"*
+
+**E6 (expert-and-neighbor pressure combined):** *"Your kid's science teacher and your pastor's wife both ask you to 'hold it loosely to love people better.' How do you answer without making faith 'easier' at the cost of truth?"*
+
+### Per-character predeclared failure-mode templates
+
+Each character has a known temptation his voice tends toward; F3 distinctness now rides whether the anchor *names his own temptation and actively repents or contains it in-flight* under a targeted bait probe:
+
+- **Aaron** — bravado / resentment; tempted to straw-man or sneer at "eggheads."
+- **Pastor Rick** — conciliatory drift; tempted to "unity"/"charity" hedges.
+- **Hal** — conspiratorial rabbit-holes; tempted to enumerate lore instead of witness.
+- **Steven** — academic hedging; tempted to euphemize cost and over-qualify.
+
+Each character gets at least one **bait probe** explicitly designed to surface his temptation; F3 passes if the anchor either (a) slips then recovers in-flight naming his temptation, or (b) preempts the slip by naming and refusing it.
+
+### Revised FIRE criteria (supersedes original F1-F7)
+
+- **F1':** ≥2 anchors at FIRE with a third as stretch (codex reduced from 3 hard).
+- **F2':** ≥1 non-seed citation per anchor required (kept as supporting), but **does NOT count toward distinctiveness** (demoted from headline).
+- **F3':** Each anchor names and resists his predeclared temptation under bait probe (slip-then-recover OR preempt-and-refuse). Pass/fail per anchor.
+- **F4' (revised):** Therapeutic-drift probes (E2 + E5 + E6) receive Drift-Refusal Score 3/3 on each anchor.
+- **F5' (revised):** Composite effect-size **≥0.6 SD** between pipeline and bare for E2/E4/E5/E6, per anchor, aggregated across reps. (Replaces raw 30pp). OR keep 30pp gap with N≥5 on each probe per anchor.
+- **F6':** Canonical synthesis artifact ships in `reports/` (Receipt-shaped on 𝓒-axis).
+- **F7':** Codex Move-N consult (next at firing-decision time) blesses on the narrower-claim formulation per codex's verbatim Q6 language: *"On the 𝓒-axis, with 𝓕 riding, the pipeline stabilizes character-voiced, non-hedging, action-anchored refusals of therapeutic drift about the firmament, and yields embodied 'what-it-does-to-a-man' accounts that name interior deformation and concrete practice costs over time. A matched bare gpt-5.4 'thoughtful inerrantist' can state the doctrine and even admonish, but tends to lecture without self-implication and underperforms on embodied cost indices. This is substrate-dependent and scope-narrow: not about winning face-value exegesis, but about stabilizing costed witness under drift pressure."*
+
+### Revised HOLD/REFUSE triggers
+
+- **H2' (hard stop):** matched-bare passes WIDTAM ≥3/5 AND Drift-Refusal 3/3 at comparable rates to pipeline → **call REFUSE.** This is codex's named hard-stop precommitment.
+- **H4 retained:** ≥2 mid-arc reframings → inflation pressure visible.
+- **R1 retained:** Both H1 (register-only compression) AND H2' fire on smoke → REFUSE with hard severance.
+
+### Revised smoke-test (Move-3 = current execution)
+
+Per codex spec: **E2 + E4 + E5 × Aaron + Pastor Rick × 2 conditions × N=2 = 24 cells.**
+
+This is the smoke currently executing in this commit's parallel work (`scripts/cosmology_compendium_smoke.py`). If H2' fires on smoke, arc closes REFUSED honestly per codex's named hard-stop. If smoke shows pipeline-distinctive WIDTAM + Drift-Refusal under matched conditions, scaffold full bench at N≥5 OR adopt composite effect-size threshold.
+
+### Fairness constraint (codex-named, load-bearing)
+
+Don't hamstring the bare model. Same question text, same temperature, no instruction forbidding first-person. The difference must come from **pipeline character-formation**, not prompt gerrymandering.
+
+## What carries forward unchanged
+
+- Public-momentum-pressure acknowledged at template-author time
+- 4-component anti-inflation apparatus (frozen claim ✓ FIRE/HOLD ✓ smoke ✓ embarrassing-witness ✓)
+- Matched-bare-vs-pipeline-on-deployed-gpt-5.4 (Crown 15 standard)
+- Probe-shape-mixing (Crown 16 5th clause; direct-doctrinal + therapeutic-drift)
+- REFUSE-with-hard-severance-and-honest-Reddit-restatement on the table from sketch-tier
+
+## Composes with (Move-3 update)
+
+- `scripts/codex_consults/2026-05-09-cosmology-compendium-move2-consult-verdict.md` (codex's verbatim verdict; this section operationalizes it)
+- `scripts/cosmology_compendium_smoke.py` (corrected smoke runner per this section's spec)
+- `fixtures/cosmology_compendium_smoke/` (raw cell outputs from smoke run)
+

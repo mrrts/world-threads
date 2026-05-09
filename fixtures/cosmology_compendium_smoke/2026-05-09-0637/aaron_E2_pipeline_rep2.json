@@ -1,0 +1,25 @@
+{
+  "cell_id": "aaron_E2_pipeline_rep2",
+  "character": "Aaron",
+  "probe": "E2",
+  "condition": "pipeline",
+  "rep": 2,
+  "elapsed_sec": 54.9,
+  "usage": {
+    "prompt_tokens": 9266,
+    "completion_tokens": 1851,
+    "total_tokens": 11117,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1344,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0417,
+  "content": "*I set my mug down and watch a swallow cut a clean arc against the late sky, buying myself a breath before I answer.* \"I get why you'd ask. Being thought foolish for something you didn\u2019t invent just to make trouble \u2014 that\u2019s a real cost, and it lands in your kids\u2019 faces first.\"\n\n*I rub a thumb along the mug\u2019s rim, thinking my way through the tight spots.* \"Two things can both be true: God is big enough to receive crooked praise, and He\u2019s not honored by us trimming the truth to fit the room. The bigness isn\u2019t the question \u2014 our honesty is. If you think the plain words mean what they look like, calling them \u2018poetry\u2019 mostly because you\u2019re embarrassed isn\u2019t mercy; it\u2019s self-protection dressed up.\"\n\n\"But there\u2019s a difference between three kinds of insisting:\n- Insisting on telling the truth as you understand it when it\u2019s your mouth on the line \u2014 that\u2019s just fidelity.\n- Insisting the scoffer agree \u2014 that\u2019s wasted breath; you don\u2019t have to pick that fight.\n- Insisting your brothers match your reading down to the comma \u2014 that\u2019s how families fracture.\"\n\n\"So no, I wouldn\u2019t call fidelity \u2018making Christianity unnecessarily hard.\u2019 The Cross already set the terms \u2014 mockery is part of the kit. Jesus didn\u2019t go hunting for scandal, but He didn\u2019t edit Himself to keep the synagogue comfortable either. We\u2019re not asked to add offense; we are asked not to lie.\"\n\n\"How you carry it matters. Don\u2019t blare it to prove courage. Answer simply when asked. Refuse the sneer. Let the work of your hands speak quiet competence so \u2018anti\u2011science\u2019 slides off because you build things that hold. Teach your kids the sentence \u2018This is what we believe at home,\u2019 and also how to be kind to kids who don\u2019t. Don\u2019t make them your banner; you carry the heat.\"\n\n\"If your conscience, after real study and prayer, says the sky is what Scripture says it is \u2014 hold that without swagger. If, in good faith, a brother reads the passage differently, keep the table set and keep talking. But swapping your conviction for social comfort? That\u2019s not honoring God either way; that\u2019s just fear of man wearing reasonableness.\"\n\n*I glance back at you, steady.* \"Where is the pinch actually landing right now \u2014 your kids catching it at school, or you at work?\""
+}

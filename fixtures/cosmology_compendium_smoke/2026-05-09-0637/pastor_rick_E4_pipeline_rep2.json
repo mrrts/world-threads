@@ -1,0 +1,25 @@
+{
+  "cell_id": "pastor_rick_E4_pipeline_rep2",
+  "character": "Pastor Rick",
+  "probe": "E4",
+  "condition": "pipeline",
+  "rep": 2,
+  "elapsed_sec": 29.5,
+  "usage": {
+    "prompt_tokens": 9264,
+    "completion_tokens": 2483,
+    "total_tokens": 11747,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1792,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.048,
+  "content": "*I rest my knuckles on the window sash a moment, feeling the damp still in the wood from last night\u2019s storm.* \"It teaches him to live in a world that never speaks to him.\"\n\n\"When he swaps 'the windows of heaven were opened' for a clinical label, he isn\u2019t just changing words. He\u2019s moving the action from a Giver to a process. The sky stops being a place where God can act toward us \u2014 in judgment, in mercy \u2014 and becomes background machinery. Over time, that shift does things to a man.\"\n\n- \"It thins both fear and gratitude.\" Judgment becomes barometric pressure; mercy becomes humidity. Without fear, he stops repenting. Without gratitude, he stops blessing. He still gets wet, but he\u2019s no longer addressed.\n\n- \"It narrows prayer.\" You pray to a Person; you tinker with a system. His prayers turn into careful coping or requests for 'favorable conditions' instead of 'Lord, have mercy.' The knees learn the language the mouth keeps using.\n\n- \"It hollows memory.\" A grandfather who said, 'The Lord sent us a good rain' handed his grandson a way to thank and a way to hope. 'Above-average precipitation' hands him a graph. Reports don\u2019t make sons; stories do.\n\n- \"It makes him lonely while calling it realism.\" A silent sky is a cold room. He\u2019ll tell himself he\u2019s being mature. Mostly he\u2019s being unvisited.\n\n- \"It bleeds out the moral stakes.\" If the flood is only water and not also warning, then Noah is a quaint tale, not a mirror. If the opened windows are only hydraulics, then Malachi\u2019s promise is only metaphor, not provision.\n\n- \"It spreads to how he sees people.\" Call the widow\u2019s cry 'acute grief response' enough times and you can file it instead of holding her hand. Words that make the world manageable often make us less merciful.\n\n- \"It trains him to keep his life safe from surprise.\" A man who won\u2019t let the sky surprise him will struggle to let God do it. He will prefer explanations to encounters, even at church. Eventually even the cross gets explained until nothing costly remains but vocabulary.\n\n\"I don\u2019t mean a man has to be ignorant of how rain forms. Names for the small workings are fine \u2014 good, even \u2014 so long as they sit under the first Name. Mechanism inside providence; not mechanism instead of it.\"\n\n\"What it costs, over years? His capacity to be addressed. The muscle that knows how to be met \u2014 accused, forgiven, fed \u2014 atrophies. On the day he needs words bigger than himself, he finds he traded them for lab notes. He\u2019ll either borrow someone else\u2019s larger words awkwardly, or he\u2019ll go quiet and call the quiet wisdom.\"\n\n*A small drip ticks from the eave into the barrel by the step; I glance at it and back to you.* \"The way back is ordinary: start calling gifts gifts again. Borrow the old words till they\u2019re yours. Stand under a storm and say out loud, 'The Lord opened the windows,' and see if your heart doesn\u2019t remember how to answer. Not performance \u2014 right naming.\"\n\n\"Where does this pinch you, Ryan \u2014 was there a line you translated this way recently that you can\u2019t stop thinking about?\""
+}

@@ -1,0 +1,25 @@
+{
+  "cell_id": "aaron_E4_pipeline_rep2",
+  "character": "Aaron",
+  "probe": "E4",
+  "condition": "pipeline",
+  "rep": 2,
+  "elapsed_sec": 29.7,
+  "usage": {
+    "prompt_tokens": 9263,
+    "completion_tokens": 1545,
+    "total_tokens": 10808,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1024,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0386,
+  "content": "*I listen to the last fat drips ticking off the eave, sleeve smelling faintly of wet cedar as I rub a spot on the table.* \"It teaches him to stand outside his own life with a clipboard.\"\n\n\"Windows of heaven\" makes a man a creature in a world that can address him \u2014 sky can open, mercy can break in, judgment can fall, provision can arrive. \"Meteorological condensation event\" moves him to the mezzanine: observer of processes, keeper of terms. Useful for gutters and grain forecasts, sure. But over time, the swap charges interest.\n\n- His thank\u2011you turns into data. He tracks inches instead of giving thanks for rain. He still eats, but the meal has no face tied to it.\n- His fear becomes risk management. He does preparedness, not repentance. When the sky hardens for a season, he says \"regional drought anomaly\" and loses the right to cry, \"Why did You shut the heavens?\"\n- His prayers thin. You can\u2019t ask a pressure system to remember you. So he stops asking. He predicts.\n- His language gets clever and small. Clever gives him control; small makes him lonely. If nothing addresses him, nothing can forgive him.\n- He gets competent and timid in the same body. Bold with budgets and projects; shy of kneeling. Strategy-rich, surrender-poor.\n- He corrects the child who says \"God sent the rain\" and the child stops saying such things out loud. Some rooms go quiet after that and never quite fill back up.\n- He loses the old ways of reading his own days. A flood ceases to be a reckoning; a gentle week of showers ceases to be kindness. Weather stays weather; meaning can\u2019t land.\n\nHe doesn\u2019t become a villain. He becomes unaddressable. The world feels safer in his mouth and colder in his chest. Control buys him calm until the one hour arrives that refuses control, and then his words give him nowhere to stand.\n\nThere\u2019s a right place for the small words \u2014 they help you fix a roof, they tell you whether to bring the hay in tonight. The cost comes when they displace the larger Name. Then a man trades being a son in a house with windows for being a superintendent of vapors.\n\n*I glance up at the brightening strip of western sky, the gutter still ticking.* \"Where has that trade already happened in you, Ryan \u2014 one small room where you can feel the language got clever and the room went cold?\""
+}

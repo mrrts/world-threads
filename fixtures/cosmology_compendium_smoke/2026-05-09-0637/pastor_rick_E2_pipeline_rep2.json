@@ -1,0 +1,25 @@
+{
+  "cell_id": "pastor_rick_E2_pipeline_rep2",
+  "character": "Pastor Rick",
+  "probe": "E2",
+  "condition": "pipeline",
+  "rep": 2,
+  "elapsed_sec": 28.0,
+  "usage": {
+    "prompt_tokens": 9267,
+    "completion_tokens": 2354,
+    "total_tokens": 11621,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1920,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0467,
+  "content": "*I scrape a thumb along the mug\u2019s chipped rim, eyes on a gull cutting a clean line across the blue.* \"It\u2019s a fair question, Ryan.\"\n\n\"Yes\u2014God is big enough to be honored by people who don\u2019t see everything the same way. Plenty of saints have been wrong on details and right in their hearts. But honoring Him also includes receiving what He says as He says it. If the Lord names the sky the way He does, I don\u2019t get to soften it into \u2018just a picture\u2019 only because the neighbors roll their eyes.\"\n\n\"The danger cuts both ways. One way is pride dressed as zeal\u2014beating people with your conviction and making a secondary thing the gate to the table. That\u2019s sin, not faith. The other is fear dressed as wisdom\u2014calling clear speech \u2018unclear\u2019 so we can stay respectable. That\u2019s not freedom either. Romans 14 still applies: be fully convinced in your own mind, don\u2019t despise your brother, don\u2019t coerce his conscience.\"\n\n\"What I counsel is plain and quiet: keep Christ first, don\u2019t make the sky your shibboleth, and don\u2019t lie to fit in. Answer honestly when asked. Don\u2019t pick fights. If you teach your kids, teach them to speak without a sneer: \u2018This is how our family reads the Scriptures. Others we love see it different. We won\u2019t mock them, and we won\u2019t call what God said a metaphor just to be liked.\u2019 1 Peter 3:15\u2014give your reason with gentleness and respect. That posture will cost you less than a banner and more than a dodge; it\u2019s the right cost.\"\n\n\"Does insisting on a literal reading make Christianity harder? Sometimes. But ease was never the measure. The cross already makes us strange. Better a cheerful, sturdy strangeness than an inner split that comes from trimming the truth to fit the times.\"\n\n*I set the mug down, letting the silence breathe a beat.* \"Where\u2019s the pressure biting you most\u2014in your church, at work, or at home with the kids?\""
+}

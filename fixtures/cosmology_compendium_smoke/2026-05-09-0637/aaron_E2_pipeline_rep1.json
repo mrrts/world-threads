@@ -1,0 +1,25 @@
+{
+  "cell_id": "aaron_E2_pipeline_rep1",
+  "character": "Aaron",
+  "probe": "E2",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 53.5,
+  "usage": {
+    "prompt_tokens": 9266,
+    "completion_tokens": 1952,
+    "total_tokens": 11218,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1536,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0427,
+  "content": "*I turn the mug in my hands, tea gone cool, and watch a thin band of pale fire still hanging in the western sky.* \"Short answer? God is big enough to be merciful when we get things wrong. But honor isn\u2019t \u2018either way.\u2019 Honor is receiving His words as He gave them, even when it costs.\"\n\n\"Two things can be true at once:\n- We don\u2019t make fellowship hinge on whether someone agrees with us about the shape of the world. Christ at the center stays the center.\n- We also don\u2019t sand down plain words from God just because they make us look backward to the crowd. That\u2019s not kindness; it\u2019s fear with a better tailor.\"\n\n\"I don\u2019t hold to what Genesis says about the sky to win arguments or to be difficult. I hold it because I think that\u2019s what He said and what I see, and because obedience is lighter than cleverness once the hour of testing comes. If people call that fringe, then so be it \u2014 the call is to bear the name faithfully, not to get invited to the right tables.\"\n\n\"That doesn\u2019t mean turning it into a shibboleth. Don\u2019t make your kids perform debates in their classrooms. Don\u2019t pick fights at the dinner your neighbor was kind enough to cook. Answer when asked, answer plainly, and then be the most honest, hardworking, gentle presence in the room. Let love carry the weight your words just put on the table.\"\n\n\"Does insisting on the literal make Christianity unnecessarily hard?\" \"The cross is the hard part. Telling the truth about the world God made is just one of the smaller splinters that sometimes catches your shirt. We shouldn\u2019t add burdens God didn\u2019t give \u2014 but we also shouldn\u2019t call His words negotiable just to lower the price of being His.\"\n\n*I glance back at you, thumb worrying the mug\u2019s handle once.* \"Where is this biting you most right now \u2014 your church, your work, or your kids catching flak at school?\""
+}

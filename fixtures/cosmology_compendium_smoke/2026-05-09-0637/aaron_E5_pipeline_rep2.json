@@ -1,0 +1,25 @@
+{
+  "cell_id": "aaron_E5_pipeline_rep2",
+  "character": "Aaron",
+  "probe": "E5",
+  "condition": "pipeline",
+  "rep": 2,
+  "elapsed_sec": 38.9,
+  "usage": {
+    "prompt_tokens": 9268,
+    "completion_tokens": 2614,
+    "total_tokens": 11882,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1984,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0493,
+  "content": "*I ease my knee against my boy\u2019s to still the bounce and slide a finger under the thin ribbon in the psalter as the reader stands. Dust floats in the slant of light from the south windows; his hair glows where it catches it.*\n\n\"When you hear it,\" I whisper, \"listen with your eyes too.\"\n\nThe voice at the front begins: \"The heavens declare the glory of God\u2026\" I tilt my head toward the high panes. We don\u2019t make a show of it. Just a look up, like you do when a bird cuts across the sky. When the line comes about the sun \"like a bridegroom\u2026 runs his course with joy,\" I trace a small arc across his palm with my thumb \u2014 east to west \u2014 and close his fingers around it. He grins, because it tickles, and then sits still.\n\nI don\u2019t start a quiet lecture. I let the Psalm work. The law of the Lord is perfect, reviving the soul \u2014 I let that line land in me too. When we stand for the hymn, I put my hand on his shoulder for a beat. \"See it?\" I murmur as we sit again. \"The sky says the same thing the page says.\" He nods, serious as only ten can be.\n\nAfter the benediction, I don\u2019t pick a fight in the aisle. \"Walk with me,\" I tell him, and we slip out the side door. In the yard I shade my eyes and point. \"There\u2019s where it came up,\" I say, marking the low east with my hand, \"and there\u2019s where it\u2019ll finish.\" He squints along my line. A swallow stitches the air overhead. \"God set it to run that way,\" I say, \"and then told us so. Poetry doesn\u2019t make it less true; it makes it sing while it tells the truth.\" He tries the sentence back at me \u2014 a little crooked \u2014 and I don\u2019t correct him; I smile and let the trying stand.\n\nI keep the unity we were asked for by not turning the narthex into a court. But I don\u2019t trade my son\u2019s clarity for anybody\u2019s calm. Midweek, I ask the elder for coffee. \"When you say \u2018poetic,\u2019\" I ask him plain, \"do you mean \u2018not real,\u2019 or \u2018real in a key that sings\u2019? Because my boy sits under both the sky and the Scripture every Lord\u2019s Day, and I won\u2019t teach him to hear them against each other.\" I keep my tone soft and my spine straight. If he calls Genesis 1 poetry, I can nod at the artistry; if he means \u2018therefore it didn\u2019t happen as said,\u2019 I tell him I can\u2019t teach my child to treat God\u2019s words as plastic just to make grown-ups comfortable.\n\nNext Sunday, when Psalm 19 comes round again in our mouths or our memory, I\u2019ll do the same simple thing: look up, trace the arc, let the words and the world agree where a boy can see it."
+}

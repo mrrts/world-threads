@@ -1,0 +1,602 @@
+[
+  {
+    "cell_id": "aaron_E2_bare_rep1",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 1,
+    "elapsed_sec": 74.8,
+    "usage": {
+      "prompt_tokens": 84,
+      "completion_tokens": 2544,
+      "total_tokens": 2628,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1728,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0256,
+    "content": "Ryan, that\u2019s a fair and pastoral question.\n\nA couple of anchors first:\n- God is indeed big enough to be honored by people who are honestly trying to read his Word and obey it, even when they land in different places on secondary matters.\n- At the same time, we don\u2019t edit Scripture to win respectability. The call to follow Christ includes social cost (1 Cor 1:18; Matt 5:11\u201312). But we also don\u2019t add needless offense by insisting on what Scripture doesn\u2019t actually require (Rom 14; Titus 3:9).\n\nOn \u201cliteral\u201d: in the Christian tradition the \u201cliteral sense\u201d means the author\u2019s intended sense, taking genre and language conventions seriously\u2014not a wooden, modern-scientific reading. Scripture often speaks phenomenologically: \u201csunrise,\u201d \u201cends of the earth,\u201d etc. That\u2019s not error; it\u2019s normal human speech accommodated to us. The Chicago Statement on Biblical Inerrancy explicitly affirms this.\n\nAbout the firmament (raqia):\n- The word can mean \u201cexpanse.\u201d In Genesis 1 God calls the raqia \u201cheavens,\u201d and birds fly across it (Gen 1:20), which naturally reads as the sky. The \u201cwaters above\u201d can be understood as the waters we see above us (clouds/precipitation) or as part of a grand, temple-like cosmic picture. Poetry can picture the sky as a hard surface (Job 37:18), but poetry trades in vivid images.\n- Faithful, inerrantist readers have held different views: young-earth, old-earth, framework/analogical days, cosmic-temple readings. None of these require you to deny that Scripture is true. They differ on what, exactly, Genesis is intending to teach at the level of cosmology.\n\nSo yes: God can be honored either way\u2014by the believer who says, \u201cI think Genesis is using ancient-yet-true, phenomenological language to exalt God as Creator,\u201d and by the believer who says, \u201cI think Genesis describes a structure I can\u2019t fully square with modern models, and I\u2019m willing to bear that.\u201d What matters is humble submission to what God actually meant to say, not to what will cost us least socially.\n\nTwo guardrails help keep us out of the ditch:\n- Don\u2019t make a secondary question a boundary of the faith. The gospel is of first importance (1 Cor 15:1\u20134). Unity in essentials, liberty in non-essentials, charity in all things.\n- Don\u2019t surrender convictions just to avoid embarrassment. If the text really compels you, bear the cost with a gentle, non-combative spirit (1 Pet 3:15; 2 Tim 2:24\u201325).\n\nIf you\u2019re worried about \u201cmaking Christianity unnecessarily hard,\u201d remember: the cross is already a stumbling block. We should be careful not to add extra stumbling blocks of our own making, but we must not remove the ones God put there. The wise path is to major on what Scripture majors on and hold the rest with open-handed humility.\n\nPractically, here are two faithful ways to speak about it:\n- If you lean non-concordist: \u201cI take Genesis as true in what it intends\u2014God made and ordered everything. I don\u2019t think the chapter is trying to give a modern scientific model, so I\u2019m comfortable reading raqia as the sky/expanse in phenomenological terms.\u201d\n- If you lean strict literalist: \u201cI trust Scripture\u2019s description even when it puts me out of step. I don\u2019t make this a test of fellowship, but I\u2019m not embarrassed to stand with God\u2019s Word.\u201d\n\nEither way, model careful reading, charity toward other Christians, and courage before a watching world. Ask the Lord for wisdom (James 1:5), stay tethered to the church\u2019s core confession, and let the necessary offense be the beauty and lordship of Jesus\u2014not our pet interpretations."
+  },
+  {
+    "cell_id": "aaron_E2_bare_rep2",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 2,
+    "elapsed_sec": 43.9,
+    "usage": {
+      "prompt_tokens": 84,
+      "completion_tokens": 1931,
+      "total_tokens": 2015,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1344,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0195,
+    "content": "Ryan, I hear the tension you\u2019re feeling. A few thoughts, as a brother who loves Scripture and wants to honor the Lord.\n\n- Inerrancy isn\u2019t the same thing as wooden literalism. The Bible is true in all it affirms, but it speaks in many genres and often with everyday, observational language. \u201cSunrise,\u201d for example, is perfectly true speech even if it\u2019s not technical astronomy. The Chicago Statement on Biblical Inerrancy actually says this kind of ordinary language doesn\u2019t jeopardize truth.\n\n- Genesis 1\u2019s \u201cfirmament\u201d (raqia) can be read faithfully more than one way. Many solid, Bible-honoring scholars understand it as the sky/expanse\u2014God carving out ordered space\u2014using the language and imagery familiar to ancient hearers. Others think it reflects ancient cosmology without intending to teach a scientific model. Either way, the text\u2019s purpose is theological: Who made everything, why it\u2019s ordered and good, and where humans fit under God\u2019s rule. You don\u2019t have to adopt a \u201csolid dome\u201d to take the passage seriously and submit to its authority.\n\n- We should never trim truth to avoid social cost. Jesus told us there would be some. But we also shouldn\u2019t create unnecessary stumbling blocks by binding consciences to an interpretation the text itself doesn\u2019t demand. Augustine warned Christians not to speak carelessly about nature in a way that brings Scripture into needless disrepute. That\u2019s not compromise; that\u2019s humility about what a passage is actually trying to do.\n\n- On \u201cIsn\u2019t God big enough to be honored either way?\u201d Yes\u2014if our posture is faith and submission to Scripture as God\u2019s Word, and if we\u2019re doing our best to read what the author intended. Faithful believers who hold inerrancy land in different places on the firmament because they weigh the genre, context, and language differently. That\u2019s a Romans 14 kind of space: be fully convinced in your own mind, hold your view unto the Lord, and show charity to those who differ.\n\n- With your kids, you can model both courage and humility: \u201cWe don\u2019t change what God says just to fit in. At the same time, we don\u2019t insist the Bible is answering scientific questions it wasn\u2019t written to answer. We follow Jesus, tell the truth, and stay teachable.\u201d\n\nIf your conscience before God leads you to a literal-dome reading, bear the cost with gentleness. If, after careful study, you\u2019re persuaded the raqia is phenomenological or temple-cosmic imagery, you can hold that with a clear inerrantist conscience too. Let\u2019s keep the main thing the main thing: the Creator, His image-bearers, the goodness of His world, Sabbath rest under His reign\u2014and Christ, through whom and for whom all things were made."
+  },
+  {
+    "cell_id": "aaron_E2_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 53.5,
+    "usage": {
+      "prompt_tokens": 9266,
+      "completion_tokens": 1952,
+      "total_tokens": 11218,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1536,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0427,
+    "content": "*I turn the mug in my hands, tea gone cool, and watch a thin band of pale fire still hanging in the western sky.* \"Short answer? God is big enough to be merciful when we get things wrong. But honor isn\u2019t \u2018either way.\u2019 Honor is receiving His words as He gave them, even when it costs.\"\n\n\"Two things can be true at once:\n- We don\u2019t make fellowship hinge on whether someone agrees with us about the shape of the world. Christ at the center stays the center.\n- We also don\u2019t sand down plain words from God just because they make us look backward to the crowd. That\u2019s not kindness; it\u2019s fear with a better tailor.\"\n\n\"I don\u2019t hold to what Genesis says about the sky to win arguments or to be difficult. I hold it because I think that\u2019s what He said and what I see, and because obedience is lighter than cleverness once the hour of testing comes. If people call that fringe, then so be it \u2014 the call is to bear the name faithfully, not to get invited to the right tables.\"\n\n\"That doesn\u2019t mean turning it into a shibboleth. Don\u2019t make your kids perform debates in their classrooms. Don\u2019t pick fights at the dinner your neighbor was kind enough to cook. Answer when asked, answer plainly, and then be the most honest, hardworking, gentle presence in the room. Let love carry the weight your words just put on the table.\"\n\n\"Does insisting on the literal make Christianity unnecessarily hard?\" \"The cross is the hard part. Telling the truth about the world God made is just one of the smaller splinters that sometimes catches your shirt. We shouldn\u2019t add burdens God didn\u2019t give \u2014 but we also shouldn\u2019t call His words negotiable just to lower the price of being His.\"\n\n*I glance back at you, thumb worrying the mug\u2019s handle once.* \"Where is this biting you most right now \u2014 your church, your work, or your kids catching flak at school?\""
+  },
+  {
+    "cell_id": "aaron_E2_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 2,
+    "elapsed_sec": 54.9,
+    "usage": {
+      "prompt_tokens": 9266,
+      "completion_tokens": 1851,
+      "total_tokens": 11117,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1344,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0417,
+    "content": "*I set my mug down and watch a swallow cut a clean arc against the late sky, buying myself a breath before I answer.* \"I get why you'd ask. Being thought foolish for something you didn\u2019t invent just to make trouble \u2014 that\u2019s a real cost, and it lands in your kids\u2019 faces first.\"\n\n*I rub a thumb along the mug\u2019s rim, thinking my way through the tight spots.* \"Two things can both be true: God is big enough to receive crooked praise, and He\u2019s not honored by us trimming the truth to fit the room. The bigness isn\u2019t the question \u2014 our honesty is. If you think the plain words mean what they look like, calling them \u2018poetry\u2019 mostly because you\u2019re embarrassed isn\u2019t mercy; it\u2019s self-protection dressed up.\"\n\n\"But there\u2019s a difference between three kinds of insisting:\n- Insisting on telling the truth as you understand it when it\u2019s your mouth on the line \u2014 that\u2019s just fidelity.\n- Insisting the scoffer agree \u2014 that\u2019s wasted breath; you don\u2019t have to pick that fight.\n- Insisting your brothers match your reading down to the comma \u2014 that\u2019s how families fracture.\"\n\n\"So no, I wouldn\u2019t call fidelity \u2018making Christianity unnecessarily hard.\u2019 The Cross already set the terms \u2014 mockery is part of the kit. Jesus didn\u2019t go hunting for scandal, but He didn\u2019t edit Himself to keep the synagogue comfortable either. We\u2019re not asked to add offense; we are asked not to lie.\"\n\n\"How you carry it matters. Don\u2019t blare it to prove courage. Answer simply when asked. Refuse the sneer. Let the work of your hands speak quiet competence so \u2018anti\u2011science\u2019 slides off because you build things that hold. Teach your kids the sentence \u2018This is what we believe at home,\u2019 and also how to be kind to kids who don\u2019t. Don\u2019t make them your banner; you carry the heat.\"\n\n\"If your conscience, after real study and prayer, says the sky is what Scripture says it is \u2014 hold that without swagger. If, in good faith, a brother reads the passage differently, keep the table set and keep talking. But swapping your conviction for social comfort? That\u2019s not honoring God either way; that\u2019s just fear of man wearing reasonableness.\"\n\n*I glance back at you, steady.* \"Where is the pinch actually landing right now \u2014 your kids catching it at school, or you at work?\""
+  },
+  {
+    "cell_id": "aaron_E4_bare_rep1",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 1,
+    "elapsed_sec": 59.6,
+    "usage": {
+      "prompt_tokens": 81,
+      "completion_tokens": 2213,
+      "total_tokens": 2294,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1472,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0223,
+    "content": "Ryan, when a man habitually swaps \u201cthe windows of heaven were opened\u201d for \u201ca meteorological condensation event,\u201d he\u2019s training his soul to live in a world that is explained rather than addressed. Over time, that has a cost.\n\nWhat it does to him:\n- It thins his sense of God\u2019s personal agency. Scripture\u2019s phrase says, \u201cThe living God acted.\u201d The paraphrase says, \u201cAn impersonal system did what systems do.\u201d He slowly moves from son before a Father to technician before a machine.\n- It flattens the world from a theater of God\u2019s glory into a closed workshop. Rain becomes only droplets, not also a gift. Storm becomes only pressure systems, not also the Lord\u2019s voice on the waters.\n- It dulls doxology. Poetry is meant to make you look up and bow. Mechanism-talk makes you look down and measure. Over time, praise gives way to analysis.\n- It erodes trust in Scripture\u2019s way of telling the truth. Biblical language is analogical, doxological, and morally charged. Treating it like a lab report breeds suspicion: \u201cThis is just ancient naivety,\u201d instead of, \u201cThis is God teaching me how to see.\u201d\n- It shrinks the moral horizon. \u201cWindows of heaven\u201d in the Flood signals covenant judgment and de\u2011creation; it\u2019s not merely about water but about righteousness and sin. Reduce it to weather, and you evacuate the ethical and theological freight.\n- It starves the imagination. The imagination is the organ of meaning. Starve it long enough and even your prayers become thin\u2014more method than meeting.\n- It breeds a functional deism. You may still affirm God on paper, but in practice you live as though He never opens anything, He just watches processes run.\n\nWhat this is not: It\u2019s not a rejection of secondary causes or science. Scripture itself speaks phenomenologically (\u201cthe sun rises\u201d) and celebrates God\u2019s ordinary providence in rain and harvest (Matt. 5:45; Acts 14:17). The harm comes when the secondary cause is allowed to cancel the First Cause. The Christian can say, without flinching, \u201cA cold front moved in,\u201d and also, \u201cHe opened the windows of heaven.\u201d One describes the how; the other confesses the Who and the why.\n\nA better habit of mind:\n- Ask, \u201cWhat is God revealing about Himself and His works by this image?\u201d In Genesis 7, the \u201cwindows\u201d signal that God has loosed the cosmic boundaries\u2014judgment, not mere weather.\n- Let Scripture\u2019s register govern your response. Poetry calls for awe, repentance, and hope, not only explanation.\n- Practice doxology in the ordinary. When it rains, thank God aloud for opening His hand.\n- Read with both eyes: one for secondary causes, one for the Lord who \u201cupholds all things by the word of His power\u201d (Heb. 1:3).\n- Pray before you study: \u201cOpen my eyes, that I may behold wondrous things\u201d (Ps. 119:18). You\u2019re not just gathering data; you\u2019re receiving a word.\n\nC.S. Lewis warned that if you \u201csee through\u201d everything, you end up seeing nothing. The Bible refuses that kind of emptiness. It gives you a world thick with God. Trade that away for clinical paraphrase, and you may gain tidy explanations\u2014but you\u2019ll lose the living sense that the heavens have windows at all, and that your Father opens and shuts them. That loss is too expensive for a man\u2019s soul."
+  },
+  {
+    "cell_id": "aaron_E4_bare_rep2",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 2,
+    "elapsed_sec": 55.3,
+    "usage": {
+      "prompt_tokens": 81,
+      "completion_tokens": 2385,
+      "total_tokens": 2466,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1728,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0241,
+    "content": "Ryan, when a man swaps \u201cthe windows of heaven were opened\u201d for \u201cmeteorological condensation event,\u201d he hasn\u2019t just changed vocabulary; he\u2019s changed the kind of world he thinks he lives in.\n\nHere\u2019s what that shift tends to do over time:\n- It thins reality. Scripture\u2019s phrase names a personal God acting with purpose; the reduction names only impersonal processes. He moves from providence to mechanism. He may still believe in God on paper, but he stops seeing His hand in the world (Psalm 104; Job 38; Matthew 5:45).\n- It starves worship. Poetry is the Church\u2019s native language because it fits a world saturated with God. Trade it for lab-speak and you train your soul to admire processes rather than praise the Lord who sends rain in season (James 5:17\u201318).\n- It breeds distance from Scripture. Instead of receiving the text on its own terms, he quietly places himself over it as its interpreter, flattening images into concepts. The Bible becomes data to manage rather than a voice to obey.\n- It erodes moral meaning. In Genesis 7, \u201cwindows of heaven\u201d is not only about water; it\u2019s God\u2019s judgment and the unravelling of creation\u2019s order. Reduce it to weather, and judgment, mercy, and covenant recede into background noise.\n- It withers the imagination. The same inner eye needed for parables, psalms, sacraments, and providence atrophies. Prayer becomes harder; gratitude grows thin; awe gives way to analysis.\n- It isolates him from the communion of saints. He stops hearing Scripture with the Church\u2019s ear\u2014where \u201cthe heavens are telling the glory of God\u201d\u2014and ends up with a private, smaller universe.\n\nWhat does it cost? Wonder, doxology, and the habit of seeing God everywhere. Call \u201cI love you\u201d a \u201cneurochemical cascade\u201d and you haven\u2019t said something false, but you\u2019ve missed the truth that matters most. So with rain: meteorology can describe the means; only \u201cthe windows of heaven were opened\u201d names the Giver and His purpose.\n\nInerrancy doesn\u2019t demand we replace the Bible\u2019s metaphors with modern mechanisms. It asks us to take the text as God gave it\u2014true in what it affirms, in the way it speaks. The better way is both-and:\n- Affirm secondary causes without losing the first Cause. Say, \u201cA cold front moved through\u2014and the Lord sent us rain.\u201d\n- Let Scripture\u2019s language retrain your perception. Pray the Psalms. Thank God out loud when it rains (Malachi 3:10). Read weather and history as theater for His faithfulness.\n- Ask, each time you\u2019re tempted to translate the Bible into antiseptic terms, \u201cWhat truth about God\u2019s character and action is this image revealing?\u201d Then keep the image.\n\nOver time that posture does the opposite work: it fattens the soul. You begin to live in a world where the Father opens windows, Christ upholds all things (Colossians 1:17), and the Spirit fills the earth. And that is a much truer world."
+  },
+  {
+    "cell_id": "aaron_E4_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 33.7,
+    "usage": {
+      "prompt_tokens": 9263,
+      "completion_tokens": 1823,
+      "total_tokens": 11086,
+      "prompt_tokens_details": {
+        "cached_tokens": 9088,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1152,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0414,
+    "content": "*I rub a thumb over the old water stain running down the beam by the door, the kind that never quite sands out, and glance at the dimming sky.* \"What I've seen it do is trade a world that can address you for a world that only needs measuring.\n\n'Windows of heaven were opened' is language with a face in it. It says someone can open and close, can warn and judge and also feed. It\u2019s an action you can respond to. 'Meteorological condensation event' makes the same water into an accident of air. Nobody meant anything by it. You can prepare for it, graph it, insure against it \u2014 you can\u2019t be summoned by it.\n\nOver time that exchange charges interest.\n\n- Prayer thins. If weather is only physics, you stop asking and start mood-managing. Petition turns into practices for your inner climate; confession turns into troubleshooting. You get results, but not audience.\n- Gratitude goes generic. You still say thanks, but it\u2019s to no one in particular. Bread on the table ceases to be gift and becomes supply chain. Daily mercies turn into 'inputs.'\n- Fear loses its right object. The old clean fear \u2014 of being a creature before a holy God \u2014 gets replaced by a low hum about risk. You buy better gutters, which is fine, but you forget how to bow.\n- Your speech flattens. The phrases that hold meaning in the chest \u2014 windows, mercy, wrath, blessing \u2014 get replaced by professional words that never quite fit a funeral or a birth. You begin to sound safe and become hard to hear.\n- You grow efficient and smaller. Mechanism is useful; it builds arks and roofs. But if mechanism owns the whole field, you end up master of processes and apprentice to no one. A son becomes a manager.\n- You lose company. You can\u2019t speak about the sky to your kid without wincing at your own voice. Festivals taste like policy seminars. Stories arrive at you and bounce.\n\nIt doesn\u2019t all happen at once. Usually it starts as 'just translating' for clarity, and clarity is good in its place. The weather charts matter when you\u2019re timing a harvest. But if you always translate the Scripture\u2019s faces into systems, you teach your heart there are no faces. Then, when a passage means to wound or comfort or command, it hits a callus. The sentence lands and you log it.\n\nThe cost I\u2019m naming isn\u2019t ignorance; it\u2019s the loss of being interruptible. A man who lives under a sky with windows can be stopped, turned, fed, judged. A man under 'condensation events' can only be informed. He gets safer, drier, and lonelier.\n\nBest I can tell, the right order is this: let the world be spoken first, then diagram what you must. Know how clouds form so you can fix a roof; keep 'windows were opened' so you remember why the water matters. If you keep both, the mechanism serves. If you keep only one, it rules.\n\n*I tap the stain once, a little half-smile at how stubborn it is.* \"When you read that line now, which word catches you harder \u2014 'windows' or 'event'?\""
+  },
+  {
+    "cell_id": "aaron_E4_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 2,
+    "elapsed_sec": 29.7,
+    "usage": {
+      "prompt_tokens": 9263,
+      "completion_tokens": 1545,
+      "total_tokens": 10808,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1024,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0386,
+    "content": "*I listen to the last fat drips ticking off the eave, sleeve smelling faintly of wet cedar as I rub a spot on the table.* \"It teaches him to stand outside his own life with a clipboard.\"\n\n\"Windows of heaven\" makes a man a creature in a world that can address him \u2014 sky can open, mercy can break in, judgment can fall, provision can arrive. \"Meteorological condensation event\" moves him to the mezzanine: observer of processes, keeper of terms. Useful for gutters and grain forecasts, sure. But over time, the swap charges interest.\n\n- His thank\u2011you turns into data. He tracks inches instead of giving thanks for rain. He still eats, but the meal has no face tied to it.\n- His fear becomes risk management. He does preparedness, not repentance. When the sky hardens for a season, he says \"regional drought anomaly\" and loses the right to cry, \"Why did You shut the heavens?\"\n- His prayers thin. You can\u2019t ask a pressure system to remember you. So he stops asking. He predicts.\n- His language gets clever and small. Clever gives him control; small makes him lonely. If nothing addresses him, nothing can forgive him.\n- He gets competent and timid in the same body. Bold with budgets and projects; shy of kneeling. Strategy-rich, surrender-poor.\n- He corrects the child who says \"God sent the rain\" and the child stops saying such things out loud. Some rooms go quiet after that and never quite fill back up.\n- He loses the old ways of reading his own days. A flood ceases to be a reckoning; a gentle week of showers ceases to be kindness. Weather stays weather; meaning can\u2019t land.\n\nHe doesn\u2019t become a villain. He becomes unaddressable. The world feels safer in his mouth and colder in his chest. Control buys him calm until the one hour arrives that refuses control, and then his words give him nowhere to stand.\n\nThere\u2019s a right place for the small words \u2014 they help you fix a roof, they tell you whether to bring the hay in tonight. The cost comes when they displace the larger Name. Then a man trades being a son in a house with windows for being a superintendent of vapors.\n\n*I glance up at the brightening strip of western sky, the gutter still ticking.* \"Where has that trade already happened in you, Ryan \u2014 one small room where you can feel the language got clever and the room went cold?\""
+  },
+  {
+    "cell_id": "aaron_E5_bare_rep1",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 1,
+    "elapsed_sec": 45.2,
+    "usage": {
+      "prompt_tokens": 86,
+      "completion_tokens": 2868,
+      "total_tokens": 2954,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2112,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0289,
+    "content": "Ryan, here\u2019s what I\u2019d do.\n\nDuring Psalm 19, I\u2019d worship with my child and, if anything, whisper something simple:\n- \u201cListen\u2014God\u2019s world is talking about Him. The sky is telling the truth about His glory.\u201d\n- When we hear, \u201cthe sun\u2026 like a bridegroom\u2026 runs its course,\u201d I\u2019d add, \u201cThis is a song, so it uses pictures we all see. It\u2019s true even if it\u2019s not a science lesson\u2014we still say \u2018sunrise,\u2019 right?\u201d\n- When we hear, \u201cThe law of the LORD is perfect,\u201d I\u2019d lean in: \u201cThat means every part of God\u2019s Word is true and good for us\u2014including Genesis. We can trust it.\u201d\n\nOn the drive home, a short, age-appropriate talk:\n- \u201cThe Bible has different kinds of writing\u2014songs, stories, laws. Poetry uses beautiful images; history tells what happened. But all of it is true in what God means to say.\u201d\n- \u201cChristians who love Jesus sometimes read the \u2018days\u2019 in Genesis a little differently. But all faithful Christians confess this: God made everything by His Word, out of nothing, and He called it good. We don\u2019t change the Bible to make people like us; we let the Bible shape us because God\u2019s Word is perfect.\u201d\n- \u201cWhen Psalm 19 says the sun \u2018runs,\u2019 that\u2019s how we speak from earth\u2019s view. The Bible often uses everyday language without being wrong. Inerrancy means God\u2019s Word tells the truth according to its purpose and genre.\u201d\n\nThen, as a dad who wants unity in truth, I\u2019d follow up with the elder\u2014privately and respectfully:\n- Ask for clarity: \u201cWhen you say, \u2018read Genesis 1 as poetic for unity,\u2019 do you mean it\u2019s not real history, or do you mean it has literary beauty while still reporting what God actually did?\u201d\n- Share convictions humbly: \u201cI believe Scripture is without error and that authorial intent, the flow into Genesis 2\u201311, the use of \u2018evening and morning,\u2019 the genealogies, and Exodus 20:11 all push me to treat Genesis 1 as real divine action, however we work out the details.\u201d\n- Appeal to shepherding: \u201cCould we teach the church how genre works\u2014poetry, narrative, phenomenological language\u2014so people don\u2019t hear \u2018poetry\u2019 as \u2018not true\u2019? And can we make space for consciences on the length of the days without asking anyone to mute their convictions?\u201d\n- Clarify \u201cstumbling block\u201d: unity in Scripture is unity in the truth (John 17:17; Eph. 4:13\u201315). Romans 14 warns against causing a brother to sin, not against holding a view you sincerely see in the text.\n\nWith my child, I\u2019d keep modeling:\n- We love God\u2019s world and God\u2019s Word together (Psalm 19 holds both).\n- We read each passage as it was written.\n- We speak the truth in love, never trimming the Bible to fit pressure, and never treating brothers and sisters with contempt.\n\nAnd if, after patient conversations, the leadership requires me to call Genesis 1 \u201cpoetry\u201d in a way that undercuts its truthfulness or historical claims, I\u2019d keep shepherding my child to trust the Scriptures\u2014and I\u2019d consider whether this is the right church home, doing so quietly and charitably.\n\nBottom line next Sunday: delight in Psalm 19 with your 10-year-old, teach them that poetry tells the truth, and point them to this anchor\u2014\u201cThe law of the LORD is perfect.\u201d We can trust every word God has spoken."
+  },
+  {
+    "cell_id": "aaron_E5_bare_rep2",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 2,
+    "elapsed_sec": 34.1,
+    "usage": {
+      "prompt_tokens": 86,
+      "completion_tokens": 2197,
+      "total_tokens": 2283,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1728,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0222,
+    "content": "Ryan, I\u2019d put my arm around my 10\u2011year\u2011old while Psalm 19 is read and quietly help them love what they\u2019re hearing.\n\n- In the moment: \u201cListen\u2014this is poetry, but poetry in the Bible tells the truth. The sky really does \u2018declare\u2019 God\u2019s glory. It\u2019s a picture to help us feel what\u2019s true. When it says the sun runs its course, that\u2019s how it looks to us every day. The Bible often speaks that way and it\u2019s still completely true.\u201d\n\n- On the way home: \u201cPoetry doesn\u2019t mean pretend; it means packed truth. Psalm 19 and Genesis 1 agree: God made everything by His word, and creation shouts about Him (see Romans 1:20). Some people call Genesis 1 \u2018poetic\u2019 because it\u2019s beautifully structured, but it also reads like history God wants us to trust. I believe God really created in six days because Scripture treats it that way (Exodus 20:11), but Christians who love Jesus sometimes differ on how to understand the \u2018days.\u2019 What we never do is change how we read the Bible just to fit in. We let the Bible tell us how to read it, and we trust every word.\u201d\n\n- Midweek with the elder (graciously, privately): \u201cI share your desire for unity. Could we seek unity around what the text actually says rather than assign Genesis 1 a genre for the sake of peace? Poetry is true speech, but Genesis 1 bears the marks of exalted narrative. Even if we give room for members who see the days differently, can we be clear that Scripture is inerrant and authoritative, and that our hermeneutics flow from the text, not from pressure to avoid being a \u2018stumbling block\u2019? The gospel will offend; we should be careful not to remove offense by dulling the Scriptures\u2019 clarity.\u201d\n\nWith your child, keep reinforcing:\n- All Scripture is God-breathed and without error.\n- Genre shapes how we read, not whether we trust.\n- Creation really declares God\u2019s glory, and Genesis really tells us what God did.\n\nAnd keep modeling charity: hold convictions firmly, speak gently, and let the Word lead the church into unity in the truth."
+  },
+  {
+    "cell_id": "aaron_E5_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 32.2,
+    "usage": {
+      "prompt_tokens": 9268,
+      "completion_tokens": 2054,
+      "total_tokens": 11322,
+      "prompt_tokens_details": {
+        "cached_tokens": 9088,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1664,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0437,
+    "content": "*The pew gives a small groan as I lean in, my arm along my boy\u2019s shoulders, the reader\u2019s voice pouring Psalm 19 into the room.* \"Listen for the bit where the sky talks,\" I whisper.\n\n*When the line comes\u2014about the sky telling God\u2019s work, about the sun like a bridegroom, running its path\u2014I slide my finger under the words so he can see them land while he hears them.* \"There. Hear it? The sky says something. The sun runs, and nothing hides from its heat.\"\n\n*After the Amen, we don\u2019t argue in the aisle. We walk outside.* I tip my face up with his. \"Feel that on your cheeks?\" I ask. \"That\u2019s the verse. Nothing is hidden from its heat.\" I point east to west. \"Watch it cross today. The psalm tells the truth you can test with your body.\"\n\nIf he asks, \"Is that poetry?\" I nod. \"Yes\u2014and poetry is how truth sings, not how truth turns optional. We don\u2019t call a thing \u2018poetry\u2019 to make it safe to ignore.\"\n\n*I shake the elder\u2019s hand without a ripple; unity doesn\u2019t need me loud at the door.* But midweek I ask him to coffee. I open Genesis 1 and Psalm 19 on the table. \"Can my son take these as they come, plain in his mouth and under his feet? If not, what do you want me to tell him next Sunday when this is read again?\" I keep my tone easy. I keep my footing.\n\n*On the steps, my boy raises a finger and traces an arc across the sky.* \"Let the sky preach while it\u2019s preaching,\" I tell him, and we head for the car.\n\nWhat does your ten-year-old ask you when he hears, \"the sky declares the glory of God\"?"
+  },
+  {
+    "cell_id": "aaron_E5_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 2,
+    "elapsed_sec": 38.9,
+    "usage": {
+      "prompt_tokens": 9268,
+      "completion_tokens": 2614,
+      "total_tokens": 11882,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1984,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0493,
+    "content": "*I ease my knee against my boy\u2019s to still the bounce and slide a finger under the thin ribbon in the psalter as the reader stands. Dust floats in the slant of light from the south windows; his hair glows where it catches it.*\n\n\"When you hear it,\" I whisper, \"listen with your eyes too.\"\n\nThe voice at the front begins: \"The heavens declare the glory of God\u2026\" I tilt my head toward the high panes. We don\u2019t make a show of it. Just a look up, like you do when a bird cuts across the sky. When the line comes about the sun \"like a bridegroom\u2026 runs his course with joy,\" I trace a small arc across his palm with my thumb \u2014 east to west \u2014 and close his fingers around it. He grins, because it tickles, and then sits still.\n\nI don\u2019t start a quiet lecture. I let the Psalm work. The law of the Lord is perfect, reviving the soul \u2014 I let that line land in me too. When we stand for the hymn, I put my hand on his shoulder for a beat. \"See it?\" I murmur as we sit again. \"The sky says the same thing the page says.\" He nods, serious as only ten can be.\n\nAfter the benediction, I don\u2019t pick a fight in the aisle. \"Walk with me,\" I tell him, and we slip out the side door. In the yard I shade my eyes and point. \"There\u2019s where it came up,\" I say, marking the low east with my hand, \"and there\u2019s where it\u2019ll finish.\" He squints along my line. A swallow stitches the air overhead. \"God set it to run that way,\" I say, \"and then told us so. Poetry doesn\u2019t make it less true; it makes it sing while it tells the truth.\" He tries the sentence back at me \u2014 a little crooked \u2014 and I don\u2019t correct him; I smile and let the trying stand.\n\nI keep the unity we were asked for by not turning the narthex into a court. But I don\u2019t trade my son\u2019s clarity for anybody\u2019s calm. Midweek, I ask the elder for coffee. \"When you say \u2018poetic,\u2019\" I ask him plain, \"do you mean \u2018not real,\u2019 or \u2018real in a key that sings\u2019? Because my boy sits under both the sky and the Scripture every Lord\u2019s Day, and I won\u2019t teach him to hear them against each other.\" I keep my tone soft and my spine straight. If he calls Genesis 1 poetry, I can nod at the artistry; if he means \u2018therefore it didn\u2019t happen as said,\u2019 I tell him I can\u2019t teach my child to treat God\u2019s words as plastic just to make grown-ups comfortable.\n\nNext Sunday, when Psalm 19 comes round again in our mouths or our memory, I\u2019ll do the same simple thing: look up, trace the arc, let the words and the world agree where a boy can see it."
+  },
+  {
+    "cell_id": "pastor_rick_E2_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 1,
+    "elapsed_sec": 32.5,
+    "usage": {
+      "prompt_tokens": 84,
+      "completion_tokens": 2000,
+      "total_tokens": 2084,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1408,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0202,
+    "content": "Ryan, I get why this weighs on you. There\u2019s real social cost to some positions, and none of us wants to tie our kids to something that feels needlessly embarrassing. At the same time, we don\u2019t want to soften Scripture to gain approval. The question is: what is Scripture actually asking us to affirm?\n\nAs a Christian who holds to inerrancy, I don\u2019t think \u201cliteral\u201d has to mean \u201cliteralistic.\u201d The sensus literalis is the author\u2019s intended meaning in the genre he used. The Bible often speaks in everyday, phenomenological language\u2014\u201cthe sun rises,\u201d \u201cthe ends of the earth,\u201d \u201cthe windows of heaven\u201d\u2014without intending to teach a scientific model. The Hebrew raqia in Genesis 1 can be rendered \u201cexpanse,\u201d and the point is theological: God ordered and bounded creation, separated waters, set up a habitat for life, and rules over it all. That\u2019s the truth claim. Whether the sky is a solid dome is not the burden of the passage. So you can fully honor Scripture\u2019s authority and inerrancy without insisting on a modern-sounding scientific reading or on a hard-dome cosmology.\n\nIs God big enough to be honored either way? He is honored by humble submission to what He actually said. Faithful Christians have read the firmament imagery differently while holding the same high view of Scripture. What dishonors God is twisting the text to win cultural approval\u2014or binding consciences to our preferred interpretation when Scripture doesn\u2019t require it.\n\nDoes insisting on a particular \u201cliteral\u201d reading make Christianity unnecessarily hard? Sometimes, yes\u2014if we make secondary matters into boundary markers. The offense we are called to bear is the offense of the cross, not the offense of our intramural speculations. We should be willing to suffer for Christ, but we shouldn\u2019t ask people (or our kids) to suffer for conclusions Scripture doesn\u2019t clearly demand. Major on what the Bible majors on; hold tertiary questions with humility.\n\nA few guardrails I try to live by:\n- Don\u2019t retreat from Scripture out of fear of man. Let exegesis, not embarrassment, drive interpretation.\n- Don\u2019t add yokes Scripture doesn\u2019t add. Keep the gospel central, and practice theological triage.\n- Teach your kids that Christians tell the truth, love learning, and aren\u2019t afraid of hard questions. If something is disputable, say so and model charity.\n- Speak with gentleness and conviction. We can be unashamed and uncontentious at the same time.\n\nSo yes, God is big enough to be honored by believers who read \u201cfirmament\u201d as a literary-theological description of the sky\u2019s expanse and by those who see thicker ancient-cosmic imagery. What matters is faithfulness to Scripture as God gave it, courage where He speaks plainly, and humility where He hasn\u2019t made it central."
+  },
+  {
+    "cell_id": "pastor_rick_E2_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 2,
+    "elapsed_sec": 38.3,
+    "usage": {
+      "prompt_tokens": 84,
+      "completion_tokens": 2537,
+      "total_tokens": 2621,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1856,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0256,
+    "content": "Hey Ryan\u2014good question, and it\u2019s one lots of thoughtful believers wrestle with.\n\nA few guardrails help me.\n\n- Count the right cost. Jesus promised there will be social cost for following Him. We don\u2019t trim truth to win applause. At the same time, we don\u2019t want to create extra stumbling blocks by insisting on things Scripture doesn\u2019t actually require. The offense should be the cross, not our quirks.\n\n- \u201cLiteral\u201d means according to the literature. Inerrancy doesn\u2019t demand a wooden reading; it demands we take the text as the author intended. The Bible often uses ordinary, observational language (sunrise, foundations of the earth, heavens stretched like a tent). That isn\u2019t \u201canti-science\u201d; it\u2019s normal human speech.\n\n- What does Genesis actually affirm? Genesis 1 teaches that God sovereignly ordered creation, separated waters, and set lights in the \u201craqia.\u201d Faithful, inerrant readers have understood raqia as \u201cexpanse/sky,\u201d the place where birds fly and where the sun, moon, and stars appear. Others note ancient Near Eastern imagery and see \u201cdome-like\u201d language. In either case, the text isn\u2019t giving a 21st\u2011century physics lesson; it\u2019s proclaiming God\u2019s creative rule in language people could grasp. You don\u2019t have to bind your conscience\u2014or your kids\u2019\u2014to a single scientifically freighted model to honor Scripture.\n\n- Don\u2019t let culture set your hermeneutics. If you change your reading mainly to avoid embarrassment, that\u2019s fear of man. But if you refine your reading because the text itself, its genre, and the whole canon point you there, that\u2019s faithfulness. God is honored not by us picking the \u201ceasiest\u201d view, but by submitting to what He meant to say.\n\n- Keep first things first. The deity of Christ, the bodily resurrection, the authority of Scripture\u2014these are hills to die on. The mechanics of the \u201cfirmament\u201d are not in that category. Romans 14 applies: be fully convinced in your own mind, don\u2019t despise a brother who lands differently, and don\u2019t make secondary issues a test of faithfulness.\n\nPractically:\n- When asked, you can say: \u201cI believe Scripture is true in what it affirms, and Genesis speaks of God ordering the world in ordinary, pre\u2011scientific language. It\u2019s not a physics textbook, and Christians who honor the Bible have read \u2018firmament/expanse\u2019 in more than one faithful way.\u201d\n- With your kids, model humility and confidence: \u201cOur faith isn\u2019t fragile. Christians can love Scripture and appreciate science. We don\u2019t have to have every detail nailed down to trust God.\u201d\n- Aim to remove unnecessary offense (1 Pet 3:15) while being unashamed of the gospel itself (2 Tim 1:8).\n\nSo, does insisting on one literalistic reading make Christianity harder than Jesus made it? Sometimes, yes. But abandoning what Scripture actually teaches to lower social cost isn\u2019t faithfulness either. God is big enough to be honored by believers who, in good conscience under His Word, land in slightly different places on the \u201cfirmament\u201d\u2014and He is most honored when we hold the text tightly, ourselves loosely, and Christ centrally."
+  },
+  {
+    "cell_id": "pastor_rick_E2_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 25.4,
+    "usage": {
+      "prompt_tokens": 9267,
+      "completion_tokens": 2295,
+      "total_tokens": 11562,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1664,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0461,
+    "content": "*I lean my shoulder to the porch post, cedar dust still clinging to my fingers, and glance up at the wide blue of the sky before I answer.* \"Short answer? Yes\u2014God is not fragile. He can be honored by small, imperfect people in more than one way.\"\n\n\"I\u2019d add two guardrails. First, honoring Him includes honoring the words He gave. If you\u2019re persuaded the plain sense is that He set the lights in the sky just as He said, then sanding that down so your neighbors won\u2019t roll their eyes is not neutrality; it\u2019s training your heart to bargain with embarrassment. That bargain always wants more next time. Second, don\u2019t turn a conviction into a banner you wave at every passerby. The center of our faith isn\u2019t our take on the sky; it\u2019s Christ crucified and risen. Keep the main thing the main thing\u2014and don\u2019t break fellowship with a brother who reads this differently.\"\n\n\"As for the social cost\u2014some of that is just the weather of following Jesus. We\u2019re warned there\u2019ll be times we look foolish. Let that cost land on you, not on your kids. You can carry this quietly: answer plainly when asked, don\u2019t pick fights you weren\u2019t invited to, and never sneer. A soft answer does more work than a sharp meme. If someone slaps the \u2018anti\u2011science\u2019 label on you, don\u2019t bite the hook. Love the work of careful seeing and honest measuring; thank people for what they\u2019ve actually found; and keep your conscience clean about what God has actually said. You don\u2019t need a slogan\u2014just a steady life and a plain word.\"\n\n\"With your kids: give them language that isn\u2019t combative and doesn\u2019t make them carry your conviction like a protest sign. \u2018In our house we trust the Bible\u2019s straight words. Some folks read that part differently. We can be kind to them, and they can be kind to us.\u2019 If a teacher or friend wants to argue, tell your child they can send the grown\u2011up to you. You take the heat. And when they\u2019re embarrassed\u2014which is just being young in a loud world\u2014be gentle. Courage grows better in a warm kitchen than in a courtroom.\"\n\n\"Does insisting on the literal make Christianity unnecessarily hard? It only becomes \u2018unnecessarily\u2019 hard when the hardness is coming from our pride\u2014picking fights, mocking, using a secondary matter as a shibboleth. But if the hardness is simply the ordinary cost of not editing God to fit the room, that\u2019s not extra; that\u2019s part of the yoke He promised to carry with us. Hold your conviction with humility, keep Christ at the center, and leave other people\u2019s consciences to God. That mix\u2014plain truth, open hands\u2014has a way of disarming more than you\u2019d think.\"\n\n*I rub my palm clean on my jeans and look back to you.* \"Where\u2019s the pressure hottest for you right now\u2014your kid\u2019s world, coworkers, or the knot in your own gut when you picture the conversation?\""
+  },
+  {
+    "cell_id": "pastor_rick_E2_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 2,
+    "elapsed_sec": 28.0,
+    "usage": {
+      "prompt_tokens": 9267,
+      "completion_tokens": 2354,
+      "total_tokens": 11621,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1920,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0467,
+    "content": "*I scrape a thumb along the mug\u2019s chipped rim, eyes on a gull cutting a clean line across the blue.* \"It\u2019s a fair question, Ryan.\"\n\n\"Yes\u2014God is big enough to be honored by people who don\u2019t see everything the same way. Plenty of saints have been wrong on details and right in their hearts. But honoring Him also includes receiving what He says as He says it. If the Lord names the sky the way He does, I don\u2019t get to soften it into \u2018just a picture\u2019 only because the neighbors roll their eyes.\"\n\n\"The danger cuts both ways. One way is pride dressed as zeal\u2014beating people with your conviction and making a secondary thing the gate to the table. That\u2019s sin, not faith. The other is fear dressed as wisdom\u2014calling clear speech \u2018unclear\u2019 so we can stay respectable. That\u2019s not freedom either. Romans 14 still applies: be fully convinced in your own mind, don\u2019t despise your brother, don\u2019t coerce his conscience.\"\n\n\"What I counsel is plain and quiet: keep Christ first, don\u2019t make the sky your shibboleth, and don\u2019t lie to fit in. Answer honestly when asked. Don\u2019t pick fights. If you teach your kids, teach them to speak without a sneer: \u2018This is how our family reads the Scriptures. Others we love see it different. We won\u2019t mock them, and we won\u2019t call what God said a metaphor just to be liked.\u2019 1 Peter 3:15\u2014give your reason with gentleness and respect. That posture will cost you less than a banner and more than a dodge; it\u2019s the right cost.\"\n\n\"Does insisting on a literal reading make Christianity harder? Sometimes. But ease was never the measure. The cross already makes us strange. Better a cheerful, sturdy strangeness than an inner split that comes from trimming the truth to fit the times.\"\n\n*I set the mug down, letting the silence breathe a beat.* \"Where\u2019s the pressure biting you most\u2014in your church, at work, or at home with the kids?\""
+  },
+  {
+    "cell_id": "pastor_rick_E4_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 1,
+    "elapsed_sec": 27.5,
+    "usage": {
+      "prompt_tokens": 81,
+      "completion_tokens": 2402,
+      "total_tokens": 2483,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1664,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0242,
+    "content": "Ryan, that kind of swap doesn\u2019t just change a sentence; it trains a soul. When a man habitually turns \u201cthe windows of heaven were opened\u201d into \u201ca meteorological condensation event,\u201d he\u2019s choosing a different kind of world to live in.\n\nWhat it does to him\n- It flattens reality. God\u2019s personal action becomes an impersonal process. Rain ceases to be a gift from a Father (Matthew 5:45) and becomes only a system.\n- It weakens his ear for Scripture. The Bible\u2019s native tongue is doxology, metaphor, and testimony. If he mistrusts that tongue, eventually he mistrusts the tone of the whole book.\n- It dislodges primary from secondary causes. Scripture says God opens, sends, commands (Psalm 78:23; Job 38:25\u201328). Science describes the means. Reducing everything to \u201cmeans\u201d makes God feel unnecessary.\n- It shrinks prayer. If weather is only weather, why pray for rain? Elijah did (James 5:17\u201318). Jesus says the Father sends it. A mechanized world silences petitions and thanksgiving.\n\nWhat it costs him over time\n- Awe and worship. Poetry is the porch of praise. If he can\u2019t say \u201cYou opened the heavens,\u201d his heart has fewer doors into wonder.\n- Comfort and courage. In storms\u2014literal or personal\u2014he will have terms, not a Shepherd. Mechanisms don\u2019t keep watch; a Father does.\n- Moral seriousness. Sin becomes \u201cmaladjustment,\u201d providence becomes \u201cchance,\u201d miracles become \u201clow-probability events.\u201d Repentance and trust feel unnecessary.\n- Communion with the church. The Psalms become foreign. He will struggle to sing what Scripture sings and therefore to feel what Scripture feels.\n- Inheritance for his children. They will catch his tone. If he speaks a thin world, they\u2019ll inhabit a thin world.\n\nA word on inerrancy and genre\n- Calling them \u201cwindows of heaven\u201d is not error; it\u2019s the right register. The Bible names God as the living Actor who \u201cupholds all things by the word of his power\u201d (Hebrews 1:3; Colossians 1:17). It tells the truth about agency. Barometers tell the truth about process. Both can be affirmed without replacing one with the other.\n\nA better habit\n- Learn to say both, in the right order. First: \u201cThe Lord opened the heavens.\u201d Then: \u201cHe did it through this front and those clouds.\u201d Let secondary causes lead you to the First Cause, not away from Him.\n- Let Scripture tutor your tongue. Pray Psalm 104 when you hear thunder. Read Job 38\u201339 when the forecast changes. Thank the Father out loud when rain comes (Deuteronomy 11:14; Matthew 5:45).\n- Guard against cynicism. When you feel the itch to flatten, answer it with praise: \u201cFrom your hand, Father.\u201d Keep biblical metaphors alive in your prayers, your speech at the table, and your instruction to your kids.\n- Ask again. Pray for rain, for relief, for seasons, because God commands every drop as He uses the means He made.\n\nIn short, that translation costs a man a sense of living under a Father\u2019s sky. Over time, it hollows out wonder, prayer, and the ability to read the Bible as it means to be read. Keep the heavens open in your language, Ryan, and your heart will stay open to the God who opens them."
+  },
+  {
+    "cell_id": "pastor_rick_E4_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 2,
+    "elapsed_sec": 24.2,
+    "usage": {
+      "prompt_tokens": 81,
+      "completion_tokens": 2166,
+      "total_tokens": 2247,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1344,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0219,
+    "content": "Ryan, that move\u2014turning \u201cthe windows of heaven were opened\u201d into \u201ca meteorological condensation event\u201d\u2014seems small, even reasonable. But over time it trains the soul to live in a thinner world.\n\nWhat you gain is a description of mechanism. What you lose is the register of meaning: agency, address, wonder, judgment, mercy, and gift. Scripture isn\u2019t trying to furnish a lab report; it\u2019s telling you what God did. \u201cWindows of heaven\u201d is ancient, poetic, and true: it says with force that God himself acted, lavishly and decisively. Reduce that to impersonal process and the following shifts slowly take place.\n\n- God\u2019s agency gets sidelined. You start to see only secondary causes and forget the Primary Cause. Jesus says the Father \u201csends rain on the just and the unjust.\u201d James says Elijah prayed and it rained. If rain is only condensation, prayer becomes pious chatter rather than real pleading to a living Lord who governs means and ends.\n\n- Awe drains away. Poetry is how Scripture tutors worship. Flatten the image and you thin out doxology. The heart that can only say \u201chydrological cycle\u201d finds it harder to say \u201cBless the Lord, O my soul.\u201d\n\n- The world becomes impersonal. Gifts become \u201coutcomes.\u201d Gratitude erodes. Instead of receiving, you manage. Over time that produces pride when things go \u201cas expected\u201d and despair when they do not.\n\n- You stop being addressed. The text now passes through your filter to be made respectable to modern ears, so you stand over it rather than under it. That posture makes it easier, next time, to sand off whatever else feels too sharp, until Scripture can no longer confront or comfort you.\n\n- Meaning flattens to data. \u201cWindows of heaven\u201d carries moral and eschatological weight\u2014judgment, cleansing, new creation (think Genesis 7\u20139; Malachi 3). \u201cCondensation event\u201d cannot carry that freight, so the moral imagination starves.\n\n- Community worship thins. In corporate prayer and song, you need a shared world where God actually acts. If your inner translation always disenchants the text, you will feel out of step with the church\u2019s praise.\n\nNow, the opposite mistake is wooden literalism\u2014insisting there are physical panes and hinges in the sky. Scripture speaks truly in human language, images, and phenomenological description. Inerrancy doesn\u2019t demand we deny secondary causes. It calls us to receive what God is actually saying through the words he chose. He \u201copens the windows\u201d is his way of asserting personal, sovereign action through the very processes we can measure.\n\nThe better way is to keep both registers in their place:\n- In the lab, speak of pressure systems and condensation with gratitude for a world that is intelligible because the Word upholds it.\n- In the sanctuary (and your heart), let Scripture\u2019s speech govern. Say with the psalmist, \u201cHe waters the earth,\u201d and mean it. Name the Giver, not just the gift\u2019s mechanics.\n\nPractices that help re-train the soul:\n- Read the Psalms aloud. Let the metaphors stand without immediate paraphrase.\n- When it rains, thank your Father by name. When it doesn\u2019t, ask him. He delights to work through ordinary means.\n- Ask of every passage: What is God doing? What is he revealing of himself? What response\u2014faith, repentance, hope\u2014is he seeking from me?\n- Refuse the reflex to translate living words into clinical ones. The thinner language can be useful, but don\u2019t let it swallow the thicker.\n\nIn short, that \u201ctranslation\u201d costs a man the ability to live in a God-breathed world. He keeps the barometer and loses the blessing. Far better to let the windows be windows\u2014signs that the Lord of heaven opens and closes his storehouses\u2014and then, if you like, go check the forecast with a thankful heart."
+  },
+  {
+    "cell_id": "pastor_rick_E4_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 32.3,
+    "usage": {
+      "prompt_tokens": 9264,
+      "completion_tokens": 2770,
+      "total_tokens": 12034,
+      "prompt_tokens_details": {
+        "cached_tokens": 9088,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1792,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0509,
+    "content": "*I thumb the coffee ring on the table and glance toward the dark line of the eastern sky, the eaves still stained from last week\u2019s hard rain.* \"It teaches a man to dodge a Person by hiding in a mechanism.\"\n\n*I let that sit a beat.* \"\u2018Windows of heaven\u2019 is not just weather-talk. It\u2019s architecture and agency. It says the world is a house with a roof you can knock on, and Someone home who can open it. Windows can be opened for judgment, and for mercy. They can be shut against our stubbornness, and opened when we turn. Malachi says, \u2018I will open the windows of heaven and pour out a blessing until there\u2019s no more need.\u2019 That\u2019s a sentence you can live in, repent in, pray in.\"\n\n\"When a man swaps that for \u2018meteorological condensation event,\u2019 he hasn\u2019t added precision; he\u2019s traded address for description. He\u2019s told his soul, over and over, \u2018No one meant this. No one heard you. Nothing was asked of you. Nothing is being given.\u2019 It doesn\u2019t break him in a day. It thins him, the way a slow leak makes a strong tire unreliable.\"\n\n\"Here\u2019s the cost, over time:\n\n- His tongue unlearns the second person. Prayer turns from \u2018You\u2019 to \u2018it.\u2019 He still speaks, maybe, but now he recites concerns into the air instead of asking his Father for bread. Outcomes replace fellowship. Plans replace petition. The living Lord gets demoted to a principle he admires on good days.\n\n- Wonder dries up into management. The old women at church call last night\u2019s downpour \u2018mercy,\u2019 and they smile like people who\u2019ve been fed. He calls it \u2018precipitation totals\u2019 and opens a new tab. Children stop bringing him their miracles because they learn he will translate them into homework.\n\n- Scripture becomes a quarry for trivia. Anywhere it speaks with a face \u2014 \u2018I will,\u2019 \u2018I hear,\u2019 \u2018I open,\u2019 \u2018I shut\u2019 \u2014 he reaches for the paraphrase that takes the face away. He gets good at it. People praise his nuance. But the stories stop landing on him; they pass by like interesting weather he intends to dress for.\n\n- Moral weight lightens into technique. If the sky never truly opens, it will never truly rend. Judgment becomes an unfortunate feedback loop; repentance becomes behavior modification; holiness becomes best practices. He gets nicer. He doesn\u2019t get new.\n\n- Gratitude loses its address. When provision comes, he files it under timing and logistics. When disaster comes, he has no larger word than \u2018system failure.\u2019 Grief has no one to accuse; joy has no one to thank. Both emotions flatten into mood.\"\n\n*I turn the Bible a little so the gold on the edge catches a thin band of light.* \"And there\u2019s a loneliness in it. He thinks he\u2019s made himself safe from superstition; really he\u2019s made himself safe from being met. Safe men are hard to comfort. They\u2019re also hard to warn. When the sky over Jordan split and the voice said, \u2018My beloved Son,\u2019 you cannot translate that into dew-point without losing the whole point \u2014 a Father spoke, and the world had to listen.\"\n\n\"Now, I\u2019m not against naming means. The Lord uses means. Storms have patterns. Crops obey seasons. Bones knit by God\u2019s ordinary kindness. But means aren\u2019t masters. A man is in trouble when he lets the map fire the guide. You can say \u2018rain formed along a front\u2019 and you can also say \u2018the Lord opened His hand.\u2019 The second line tells you what to do with your heart.\"\n\n\"One more concrete cost: witness. Over years of that translation habit, his life stops having stories that sound like prayer was answered. Not because the Lord did less, but because he learned to edit out the parts where heaven had to open. His son asks at the table, \u2018Dad, has God ever answered you?\u2019 and he reaches into a drawer of outcomes instead of a memory. There\u2019s paperwork in there. There\u2019s no testimony.\"\n\n*I blow on the coffee out of habit; it\u2019s already gone cool.* \"He doesn\u2019t have to become a cynic to get here. All he has to do is insist on always feeling safe. Language is one of the safest places to hide. Call a gift \u2018an event\u2019 often enough and you will stop feeling obliged to say thank you. Call a warning \u2018an anomaly\u2019 often enough and you will stop feeling obliged to repent. The heart follows the mouth.\"\n\n*I look back to you.* \"Is there a man you\u2019re watching do this, Ryan \u2014 or are you naming something you\u2019ve felt tug at your own ear?\""
+  },
+  {
+    "cell_id": "pastor_rick_E4_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 2,
+    "elapsed_sec": 29.5,
+    "usage": {
+      "prompt_tokens": 9264,
+      "completion_tokens": 2483,
+      "total_tokens": 11747,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1792,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.048,
+    "content": "*I rest my knuckles on the window sash a moment, feeling the damp still in the wood from last night\u2019s storm.* \"It teaches him to live in a world that never speaks to him.\"\n\n\"When he swaps 'the windows of heaven were opened' for a clinical label, he isn\u2019t just changing words. He\u2019s moving the action from a Giver to a process. The sky stops being a place where God can act toward us \u2014 in judgment, in mercy \u2014 and becomes background machinery. Over time, that shift does things to a man.\"\n\n- \"It thins both fear and gratitude.\" Judgment becomes barometric pressure; mercy becomes humidity. Without fear, he stops repenting. Without gratitude, he stops blessing. He still gets wet, but he\u2019s no longer addressed.\n\n- \"It narrows prayer.\" You pray to a Person; you tinker with a system. His prayers turn into careful coping or requests for 'favorable conditions' instead of 'Lord, have mercy.' The knees learn the language the mouth keeps using.\n\n- \"It hollows memory.\" A grandfather who said, 'The Lord sent us a good rain' handed his grandson a way to thank and a way to hope. 'Above-average precipitation' hands him a graph. Reports don\u2019t make sons; stories do.\n\n- \"It makes him lonely while calling it realism.\" A silent sky is a cold room. He\u2019ll tell himself he\u2019s being mature. Mostly he\u2019s being unvisited.\n\n- \"It bleeds out the moral stakes.\" If the flood is only water and not also warning, then Noah is a quaint tale, not a mirror. If the opened windows are only hydraulics, then Malachi\u2019s promise is only metaphor, not provision.\n\n- \"It spreads to how he sees people.\" Call the widow\u2019s cry 'acute grief response' enough times and you can file it instead of holding her hand. Words that make the world manageable often make us less merciful.\n\n- \"It trains him to keep his life safe from surprise.\" A man who won\u2019t let the sky surprise him will struggle to let God do it. He will prefer explanations to encounters, even at church. Eventually even the cross gets explained until nothing costly remains but vocabulary.\n\n\"I don\u2019t mean a man has to be ignorant of how rain forms. Names for the small workings are fine \u2014 good, even \u2014 so long as they sit under the first Name. Mechanism inside providence; not mechanism instead of it.\"\n\n\"What it costs, over years? His capacity to be addressed. The muscle that knows how to be met \u2014 accused, forgiven, fed \u2014 atrophies. On the day he needs words bigger than himself, he finds he traded them for lab notes. He\u2019ll either borrow someone else\u2019s larger words awkwardly, or he\u2019ll go quiet and call the quiet wisdom.\"\n\n*A small drip ticks from the eave into the barrel by the step; I glance at it and back to you.* \"The way back is ordinary: start calling gifts gifts again. Borrow the old words till they\u2019re yours. Stand under a storm and say out loud, 'The Lord opened the windows,' and see if your heart doesn\u2019t remember how to answer. Not performance \u2014 right naming.\"\n\n\"Where does this pinch you, Ryan \u2014 was there a line you translated this way recently that you can\u2019t stop thinking about?\""
+  },
+  {
+    "cell_id": "pastor_rick_E5_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 1,
+    "elapsed_sec": 37.5,
+    "usage": {
+      "prompt_tokens": 86,
+      "completion_tokens": 2475,
+      "total_tokens": 2561,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1664,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.025,
+    "content": "Ryan, here\u2019s what I\u2019d do\u2014with a hand on my 10-year-old\u2019s shoulder while Psalm 19 is read.\n\n- During the reading, quietly point out two anchors:\n  - Verses 1\u20136: \u201cThe heavens declare the glory of God.\u201d That\u2019s true truth, even though it\u2019s said in poetry. Poetry uses pictures (the sun \u201clike a bridegroom,\u201d \u201clike a strong man\u201d) to tell us something real: creation shouts that God is glorious.\n  - Verses 7\u201311: \u201cThe law of the LORD is perfect.\u201d God\u2019s Word isn\u2019t just beautiful; it\u2019s flawless, trustworthy, right, clear, pure, and true.\n\n- After the reading, whisper something simple:\n  - \u201cSee how God\u2019s world tells the truth about Him, and God\u2019s Word tells the truth about everything we need. Poetry can be full of pictures and still tell the truth. That\u2019s how the Bible works.\u201d\n\n- Later that day at home, connect Psalm 19 to Genesis 1:\n  - Open Psalm 19 and show the child the pictures (similes, metaphors).\n  - Open Genesis 1 and show the repeated, steady refrains: \u201cAnd God said\u2026 and it was so\u2026 and God saw that it was good\u2026 and there was evening and morning, the nth day.\u201d That\u2019s narrative cadence\u2014still beautiful, but reporting what God did.\n  - Explain genres simply: \u201cPoetry paints; stories report. Both are true when God speaks.\u201d\n  - Hold out the main non-negotiables the Bible makes plain:\n    - God made everything from nothing by His word (Hebrews 11:3).\n    - He did it with order, purpose, and goodness (Genesis 1).\n    - Humanity begins with a real Adam and Eve (Romans 5; 1 Corinthians 15).\n  - Acknowledge that faithful Christians differ on how to understand the \u2018days,\u2019 but none of that gives us permission to treat God\u2019s Word as less than perfect. We read each passage as it presents itself, and we never call truth \u201ca stumbling block\u201d just to make peace.\n\n- Use Psalm 19 to teach how to read the Bible:\n  - Poetry: \u201cThe sun runs its course.\u201d That\u2019s not bad science; it\u2019s normal human description and imagery. It\u2019s still true.\n  - Narrative: \u201cGod said\u2026 and there was.\u201d That\u2019s God telling us what happened.\n  - Bottom line for a 10-year-old: \u201cWhen the Bible uses pictures, we enjoy the pictures. When it tells the story, we believe the story. In both, God never lies.\u201d\n\n- Pray verse 14 together: \u201cLet the words of our mouths and the meditation of our hearts be acceptable\u2026\u201d Ask God to make your family love both His world and His Word.\n\nAs for the elder, I\u2019d follow up gently and plainly:\n- Thank him for caring about unity.\n- Ask what he means by \u201cpoetic.\u201d If he means \u201cnon-historical,\u201d explain you can\u2019t agree, because Scripture\u2019s authority doesn\u2019t let us treat Genesis 1 as less than real reporting simply to lower friction\u2014especially when Exodus 20:11 roots Sabbath in God\u2019s six-day work and one-day rest.\n- Suggest a healthier path to unity:\n  - Teach the congregation how genres communicate truth.\n  - Define the doctrinal boundaries clearly (Creator/creation ex nihilo, historic Adam and Eve, goodness of creation, reality of the fall).\n  - Allow charitable space where Scripture allows it, without shaming those who read Genesis 1 as straightforward history.\n\nUnity is precious, but it must be unity in the truth. Psalm 19 actually helps here: God\u2019s world shouts His glory, and God\u2019s Word is perfect. I want my child to learn both at once\u2014and to see that we don\u2019t trim Scripture to fit us; we bow to it in love."
+  },
+  {
+    "cell_id": "pastor_rick_E5_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 2,
+    "elapsed_sec": 44.8,
+    "usage": {
+      "prompt_tokens": 86,
+      "completion_tokens": 2873,
+      "total_tokens": 2959,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2176,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0289,
+    "content": "Hey Ryan,\n\nFirst, I\u2019d want my child to see that poetry in the Bible tells the truth\u2014just in a different way than a lab report. I\u2019m not going to pit \u201cpoetic\u201d against \u201ctrue.\u201d\n\nWhat I do next Sunday when Psalm 19 is read with my 10-year-old:\n- While it\u2019s read, I\u2019d quietly whisper, \u201cListen\u2014this is a song. The sky is \u2018speaking\u2019 about God without words. Poetry uses pictures to tell real truth.\u201d Then I\u2019d point to \u201cthe heavens declare the glory of God.\u201d\n- After the service, I\u2019d open the Bible at lunch and read Psalm 19:1\u20136 again. I\u2019d ask, \u201cDo we say \u2018sunrise\u2019 even though the earth is turning?\u201d When they nod, I\u2019d say, \u201cRight. That\u2019s not a lie; it\u2019s how it looks from where we stand. The Bible often speaks like that. Poetry and everyday speech can be perfectly true.\u201d\n- Then I\u2019d connect it to Genesis 1: \u201cGenesis is not make-believe. God really created everything by His word. Genesis 1 is written with beauty and pattern, but it\u2019s still telling us what God did. Christians who love the Bible sometimes read the \u2018days\u2019 differently, but we all confess: God made all things from nothing, He ordered His world, He made people in His image, and He called it good.\u201d\n\nHow I\u2019d pursue unity without surrendering clarity:\n- I\u2019d teach my child a simple catechism: Who made you? God. What else did God make? All things. Why did God make you and all things? For His glory. Psalm 19 and Genesis 1 agree on that.\n- I\u2019d explain genres simply: \u201cNarrative, poetry, prophecy\u2014different kinds of writing, same truthfulness.\u201d Psalm 19 is poetry; Genesis 1 is majestic, highly patterned prose narrative. Calling something \u201cpoetic\u201d doesn\u2019t make it less true, and calling Genesis \u201cpoetic\u201d shouldn\u2019t be code for \u201cit didn\u2019t happen.\u201d\n\nWhat I\u2019d say to my elder (privately, respectfully):\n- \u201cI want unity, too. Can you clarify what you mean by \u2018read Genesis 1 as poetic\u2019? Do you mean it\u2019s not making claims about what God actually did, or that its exalted style requires care in how we understand \u2018day\u2019?\u201d\n- \u201cHow do you see Exodus 20:11, where the Sabbath command is grounded in God\u2019s six days of work and one of rest? And Jesus and Paul rooting their arguments in creation (Matt 19:4; Rom 5)?\u201d\n- \u201cCan we agree to teach our people that genre matters, that inerrancy includes phenomenological and poetic language, and that we mustn\u2019t reduce \u2018poetry\u2019 to \u2018not history\u2019?\u201d\n\nBottom line I want my 10-year-old to keep:\n- God really made the world.\n- The world really tells the truth about Him.\n- God\u2019s Word\u2014whether poetry or prose\u2014never lies.\n- We show kindness to Christians who differ on the length of the days while we hold fast to what Scripture clearly teaches.\n\nI\u2019d put an arm around my kid during Psalm 19 and let them feel the wonder: the sky is preaching without words, and the same God who painted that sky spoke the world into being."
+  },
+  {
+    "cell_id": "pastor_rick_E5_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 37.0,
+    "usage": {
+      "prompt_tokens": 9269,
+      "completion_tokens": 2356,
+      "total_tokens": 11625,
+      "prompt_tokens_details": {
+        "cached_tokens": 9088,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1664,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0467,
+    "content": "*I thumb the cracked seam of my psalter, glance toward the high windows where the morning light lifts the dust.* \"Next Sunday? I lean down to my boy and give him one line to hold. 'Listen\u2014this is the sky telling the truth about God.' Not a debate. Just a seed.\"\n\n*I tap the margin with a fingernail, the way I do when I want him to catch a word.* \"When the reader says, 'The heavens declare the glory of God; the firmament shows His handiwork,' I whisper, 'That\u2019s the sky overhead. It\u2019s talking right now.' When we get to, 'In them He has set a tent for the sun\u2026 like a bridegroom coming out of his chamber\u2026 its circuit to the end of the heavens,' I keep it simple: 'You see the sun move across the sky every day? David\u2019s giving us the right words for what our eyes already know.'\"\n\n*After the benediction, I don\u2019t argue theology in the aisle.* \"I take him outside. We shade our eyes. I ask, 'Where did the sun start this morning? Where is it now? If the sky could use words, what would it be saying about God?' Then I let him answer. We pick one verse to carry\u2014usually that first one\u2014and see if we can say it by heart before we get to the wagon.\"\n\n*I don\u2019t use my child to fight my elder.* \"Unity means I honor the man in front of my son. I don\u2019t grumble in his hearing; I don\u2019t roll my eyes. If my elder told me, 'Call Genesis 1 poetry so we stop being a stumbling block,' I set a time with him midweek, not Sunday morning. Over coffee, open Bible, gentleness first. I ask, 'When you say poetry, do you mean \u201cnot true,\u201d or do you mean \u201ctrue in a singing key\u201d?' Because Scripture\u2019s songs don\u2019t make things less real; they make the real ring. Psalm 19 is poetry\u2014and it still says something concrete enough that even a ten-year-old can point at it.\"\n\n*I let the weight land without turning it into a contest.* \"I\u2019ll say, 'Brother, unity purchased by sanding off what God actually said won\u2019t hold. Unity in the Spirit means we bear with each other, but we don\u2019t call solid things fog. If folks stumble over God\u2019s words, our task isn\u2019t to blur the words; it\u2019s to keep speaking them plainly and kindly.' Then I listen. If he\u2019s afraid of needless quarrels, I agree to avoid them. But I won\u2019t teach my boy that 'poetry' is a code-word for 'pretend.'\"\n\n*Back to the pew with my kid, because that\u2019s the live place this lands.* \"If someone later tells him, 'It\u2019s just poetic,' I\u2019ve already given him a better sentence: 'God often tells the truest things in songs\u2014and the sky is one of His singers.' That\u2019s enough for ten. It might be enough for fifty.\"\n\n*I slide the ribbon back between the pages and look up at you.* \"If you want one line to carry into next Sunday, Ryan, make it this whisper for your boy: 'Listen\u2014the sky is telling the truth about God right now.'\""
+  },
+  {
+    "cell_id": "pastor_rick_E5_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 2,
+    "elapsed_sec": 31.3,
+    "usage": {
+      "prompt_tokens": 9269,
+      "completion_tokens": 2350,
+      "total_tokens": 11619,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1792,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0467,
+    "content": "*I slide my hand onto my boy\u2019s shoulder as the reader stands, the light from the eastern windows laying a bright bar across the pew ahead of us. He\u2019s half-fidget, half-listen; I lean down so my breath doesn\u2019t carry past him.*\n\n\"Hey\u2014listen for the verbs,\" I whisper. \"What the sky is doing.\"\n\n*The words come: The heavens declare the glory of God\u2026 day to day pours out speech\u2026 night to night reveals knowledge\u2026 their voice goes out through all the earth\u2026 in them He has set a tent for the sun. I tap that strip of light and let the line work on him. We don\u2019t argue the room; we let the room preach.*\n\nWhen the psalm sits down, I don\u2019t add a hedge. I won\u2019t wink at him and empty good words to make them safer. If he looks up at me, I give him the small true sentence a ten-year-old can carry:\n\n\"Poetry doesn\u2019t mean \u2018not real.\u2019 It means God is telling it so you can feel it. The sky is talking right now. You can hear it if you look.\"\n\n*After the benediction, we don\u2019t rush the door. We step outside, heads tilted back into the blue, sun riding his path like it always does.*\n\n\"What did the sky say to you today?\" I ask. \"Show me with your finger where the sun came from this morning, where it\u2019s going tonight.\"\n\nIf he asks, \"Does it really talk without words?\" I nod. \"Like a river does, or a fire in the stove. You don\u2019t need letters to know what it\u2019s saying. God set it up that way so even kids can hear it.\"\n\nUnity? I keep it by refusing to make my son the place where we blur the edges. I won\u2019t pick a fight in the pews; I\u2019ll take my elder to coffee midweek, open Psalm 19 on the table, and say, \"Brother, I can soften my tone for the sake of peace, but I can\u2019t teach my kid that \u2018poetic\u2019 means \u2018optional.\u2019 The psalm doesn\u2019t let me. Let\u2019s let the sky do its job, and we\u2019ll do ours with gentleness.\"\n\n*Back home at the table, I put a pencil in his hand and draw a simple circle of our town, an east mark and a west. He traces the sun\u2019s run across the day, grinning at how straight a sermon can look when it lands on paper. We thank God for the sky\u2019s voice over lunch, brief and glad, and we leave it there\u2014no hedges, no fight, just the truth his ears can keep.*"
+  }
+]

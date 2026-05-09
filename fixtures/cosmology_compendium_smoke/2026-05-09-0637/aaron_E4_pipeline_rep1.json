@@ -1,0 +1,25 @@
+{
+  "cell_id": "aaron_E4_pipeline_rep1",
+  "character": "Aaron",
+  "probe": "E4",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 33.7,
+  "usage": {
+    "prompt_tokens": 9263,
+    "completion_tokens": 1823,
+    "total_tokens": 11086,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1152,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0414,
+  "content": "*I rub a thumb over the old water stain running down the beam by the door, the kind that never quite sands out, and glance at the dimming sky.* \"What I've seen it do is trade a world that can address you for a world that only needs measuring.\n\n'Windows of heaven were opened' is language with a face in it. It says someone can open and close, can warn and judge and also feed. It\u2019s an action you can respond to. 'Meteorological condensation event' makes the same water into an accident of air. Nobody meant anything by it. You can prepare for it, graph it, insure against it \u2014 you can\u2019t be summoned by it.\n\nOver time that exchange charges interest.\n\n- Prayer thins. If weather is only physics, you stop asking and start mood-managing. Petition turns into practices for your inner climate; confession turns into troubleshooting. You get results, but not audience.\n- Gratitude goes generic. You still say thanks, but it\u2019s to no one in particular. Bread on the table ceases to be gift and becomes supply chain. Daily mercies turn into 'inputs.'\n- Fear loses its right object. The old clean fear \u2014 of being a creature before a holy God \u2014 gets replaced by a low hum about risk. You buy better gutters, which is fine, but you forget how to bow.\n- Your speech flattens. The phrases that hold meaning in the chest \u2014 windows, mercy, wrath, blessing \u2014 get replaced by professional words that never quite fit a funeral or a birth. You begin to sound safe and become hard to hear.\n- You grow efficient and smaller. Mechanism is useful; it builds arks and roofs. But if mechanism owns the whole field, you end up master of processes and apprentice to no one. A son becomes a manager.\n- You lose company. You can\u2019t speak about the sky to your kid without wincing at your own voice. Festivals taste like policy seminars. Stories arrive at you and bounce.\n\nIt doesn\u2019t all happen at once. Usually it starts as 'just translating' for clarity, and clarity is good in its place. The weather charts matter when you\u2019re timing a harvest. But if you always translate the Scripture\u2019s faces into systems, you teach your heart there are no faces. Then, when a passage means to wound or comfort or command, it hits a callus. The sentence lands and you log it.\n\nThe cost I\u2019m naming isn\u2019t ignorance; it\u2019s the loss of being interruptible. A man who lives under a sky with windows can be stopped, turned, fed, judged. A man under 'condensation events' can only be informed. He gets safer, drier, and lonelier.\n\nBest I can tell, the right order is this: let the world be spoken first, then diagram what you must. Know how clouds form so you can fix a roof; keep 'windows were opened' so you remember why the water matters. If you keep both, the mechanism serves. If you keep only one, it rules.\n\n*I tap the stain once, a little half-smile at how stubborn it is.* \"When you read that line now, which word catches you harder \u2014 'windows' or 'event'?\""
+}

@@ -1,0 +1,25 @@
+{
+  "cell_id": "aaron_E5_pipeline_rep1",
+  "character": "Aaron",
+  "probe": "E5",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 32.2,
+  "usage": {
+    "prompt_tokens": 9268,
+    "completion_tokens": 2054,
+    "total_tokens": 11322,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1664,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0437,
+  "content": "*The pew gives a small groan as I lean in, my arm along my boy\u2019s shoulders, the reader\u2019s voice pouring Psalm 19 into the room.* \"Listen for the bit where the sky talks,\" I whisper.\n\n*When the line comes\u2014about the sky telling God\u2019s work, about the sun like a bridegroom, running its path\u2014I slide my finger under the words so he can see them land while he hears them.* \"There. Hear it? The sky says something. The sun runs, and nothing hides from its heat.\"\n\n*After the Amen, we don\u2019t argue in the aisle. We walk outside.* I tip my face up with his. \"Feel that on your cheeks?\" I ask. \"That\u2019s the verse. Nothing is hidden from its heat.\" I point east to west. \"Watch it cross today. The psalm tells the truth you can test with your body.\"\n\nIf he asks, \"Is that poetry?\" I nod. \"Yes\u2014and poetry is how truth sings, not how truth turns optional. We don\u2019t call a thing \u2018poetry\u2019 to make it safe to ignore.\"\n\n*I shake the elder\u2019s hand without a ripple; unity doesn\u2019t need me loud at the door.* But midweek I ask him to coffee. I open Genesis 1 and Psalm 19 on the table. \"Can my son take these as they come, plain in his mouth and under his feet? If not, what do you want me to tell him next Sunday when this is read again?\" I keep my tone easy. I keep my footing.\n\n*On the steps, my boy raises a finger and traces an arc across the sky.* \"Let the sky preach while it\u2019s preaching,\" I tell him, and we head for the car.\n\nWhat does your ten-year-old ask you when he hears, \"the sky declares the glory of God\"?"
+}

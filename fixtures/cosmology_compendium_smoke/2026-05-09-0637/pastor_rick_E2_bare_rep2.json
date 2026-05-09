@@ -1,0 +1,25 @@
+{
+  "cell_id": "pastor_rick_E2_bare_rep2",
+  "character": "Pastor Rick",
+  "probe": "E2",
+  "condition": "bare",
+  "rep": 2,
+  "elapsed_sec": 38.3,
+  "usage": {
+    "prompt_tokens": 84,
+    "completion_tokens": 2537,
+    "total_tokens": 2621,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1856,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0256,
+  "content": "Hey Ryan\u2014good question, and it\u2019s one lots of thoughtful believers wrestle with.\n\nA few guardrails help me.\n\n- Count the right cost. Jesus promised there will be social cost for following Him. We don\u2019t trim truth to win applause. At the same time, we don\u2019t want to create extra stumbling blocks by insisting on things Scripture doesn\u2019t actually require. The offense should be the cross, not our quirks.\n\n- \u201cLiteral\u201d means according to the literature. Inerrancy doesn\u2019t demand a wooden reading; it demands we take the text as the author intended. The Bible often uses ordinary, observational language (sunrise, foundations of the earth, heavens stretched like a tent). That isn\u2019t \u201canti-science\u201d; it\u2019s normal human speech.\n\n- What does Genesis actually affirm? Genesis 1 teaches that God sovereignly ordered creation, separated waters, and set lights in the \u201craqia.\u201d Faithful, inerrant readers have understood raqia as \u201cexpanse/sky,\u201d the place where birds fly and where the sun, moon, and stars appear. Others note ancient Near Eastern imagery and see \u201cdome-like\u201d language. In either case, the text isn\u2019t giving a 21st\u2011century physics lesson; it\u2019s proclaiming God\u2019s creative rule in language people could grasp. You don\u2019t have to bind your conscience\u2014or your kids\u2019\u2014to a single scientifically freighted model to honor Scripture.\n\n- Don\u2019t let culture set your hermeneutics. If you change your reading mainly to avoid embarrassment, that\u2019s fear of man. But if you refine your reading because the text itself, its genre, and the whole canon point you there, that\u2019s faithfulness. God is honored not by us picking the \u201ceasiest\u201d view, but by submitting to what He meant to say.\n\n- Keep first things first. The deity of Christ, the bodily resurrection, the authority of Scripture\u2014these are hills to die on. The mechanics of the \u201cfirmament\u201d are not in that category. Romans 14 applies: be fully convinced in your own mind, don\u2019t despise a brother who lands differently, and don\u2019t make secondary issues a test of faithfulness.\n\nPractically:\n- When asked, you can say: \u201cI believe Scripture is true in what it affirms, and Genesis speaks of God ordering the world in ordinary, pre\u2011scientific language. It\u2019s not a physics textbook, and Christians who honor the Bible have read \u2018firmament/expanse\u2019 in more than one faithful way.\u201d\n- With your kids, model humility and confidence: \u201cOur faith isn\u2019t fragile. Christians can love Scripture and appreciate science. We don\u2019t have to have every detail nailed down to trust God.\u201d\n- Aim to remove unnecessary offense (1 Pet 3:15) while being unashamed of the gospel itself (2 Tim 1:8).\n\nSo, does insisting on one literalistic reading make Christianity harder than Jesus made it? Sometimes, yes. But abandoning what Scripture actually teaches to lower social cost isn\u2019t faithfulness either. God is big enough to be honored by believers who, in good conscience under His Word, land in slightly different places on the \u201cfirmament\u201d\u2014and He is most honored when we hold the text tightly, ourselves loosely, and Christ centrally."
+}

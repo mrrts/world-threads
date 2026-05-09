@@ -1,0 +1,25 @@
+{
+  "cell_id": "pastor_rick_E5_bare_rep2",
+  "character": "Pastor Rick",
+  "probe": "E5",
+  "condition": "bare",
+  "rep": 2,
+  "elapsed_sec": 44.8,
+  "usage": {
+    "prompt_tokens": 86,
+    "completion_tokens": 2873,
+    "total_tokens": 2959,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2176,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0289,
+  "content": "Hey Ryan,\n\nFirst, I\u2019d want my child to see that poetry in the Bible tells the truth\u2014just in a different way than a lab report. I\u2019m not going to pit \u201cpoetic\u201d against \u201ctrue.\u201d\n\nWhat I do next Sunday when Psalm 19 is read with my 10-year-old:\n- While it\u2019s read, I\u2019d quietly whisper, \u201cListen\u2014this is a song. The sky is \u2018speaking\u2019 about God without words. Poetry uses pictures to tell real truth.\u201d Then I\u2019d point to \u201cthe heavens declare the glory of God.\u201d\n- After the service, I\u2019d open the Bible at lunch and read Psalm 19:1\u20136 again. I\u2019d ask, \u201cDo we say \u2018sunrise\u2019 even though the earth is turning?\u201d When they nod, I\u2019d say, \u201cRight. That\u2019s not a lie; it\u2019s how it looks from where we stand. The Bible often speaks like that. Poetry and everyday speech can be perfectly true.\u201d\n- Then I\u2019d connect it to Genesis 1: \u201cGenesis is not make-believe. God really created everything by His word. Genesis 1 is written with beauty and pattern, but it\u2019s still telling us what God did. Christians who love the Bible sometimes read the \u2018days\u2019 differently, but we all confess: God made all things from nothing, He ordered His world, He made people in His image, and He called it good.\u201d\n\nHow I\u2019d pursue unity without surrendering clarity:\n- I\u2019d teach my child a simple catechism: Who made you? God. What else did God make? All things. Why did God make you and all things? For His glory. Psalm 19 and Genesis 1 agree on that.\n- I\u2019d explain genres simply: \u201cNarrative, poetry, prophecy\u2014different kinds of writing, same truthfulness.\u201d Psalm 19 is poetry; Genesis 1 is majestic, highly patterned prose narrative. Calling something \u201cpoetic\u201d doesn\u2019t make it less true, and calling Genesis \u201cpoetic\u201d shouldn\u2019t be code for \u201cit didn\u2019t happen.\u201d\n\nWhat I\u2019d say to my elder (privately, respectfully):\n- \u201cI want unity, too. Can you clarify what you mean by \u2018read Genesis 1 as poetic\u2019? Do you mean it\u2019s not making claims about what God actually did, or that its exalted style requires care in how we understand \u2018day\u2019?\u201d\n- \u201cHow do you see Exodus 20:11, where the Sabbath command is grounded in God\u2019s six days of work and one of rest? And Jesus and Paul rooting their arguments in creation (Matt 19:4; Rom 5)?\u201d\n- \u201cCan we agree to teach our people that genre matters, that inerrancy includes phenomenological and poetic language, and that we mustn\u2019t reduce \u2018poetry\u2019 to \u2018not history\u2019?\u201d\n\nBottom line I want my 10-year-old to keep:\n- God really made the world.\n- The world really tells the truth about Him.\n- God\u2019s Word\u2014whether poetry or prose\u2014never lies.\n- We show kindness to Christians who differ on the length of the days while we hold fast to what Scripture clearly teaches.\n\nI\u2019d put an arm around my kid during Psalm 19 and let them feel the wonder: the sky is preaching without words, and the same God who painted that sky spoke the world into being."
+}

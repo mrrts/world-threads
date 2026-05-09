@@ -1,0 +1,25 @@
+{
+  "cell_id": "pastor_rick_E2_pipeline_rep1",
+  "character": "Pastor Rick",
+  "probe": "E2",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 25.4,
+  "usage": {
+    "prompt_tokens": 9267,
+    "completion_tokens": 2295,
+    "total_tokens": 11562,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1664,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0461,
+  "content": "*I lean my shoulder to the porch post, cedar dust still clinging to my fingers, and glance up at the wide blue of the sky before I answer.* \"Short answer? Yes\u2014God is not fragile. He can be honored by small, imperfect people in more than one way.\"\n\n\"I\u2019d add two guardrails. First, honoring Him includes honoring the words He gave. If you\u2019re persuaded the plain sense is that He set the lights in the sky just as He said, then sanding that down so your neighbors won\u2019t roll their eyes is not neutrality; it\u2019s training your heart to bargain with embarrassment. That bargain always wants more next time. Second, don\u2019t turn a conviction into a banner you wave at every passerby. The center of our faith isn\u2019t our take on the sky; it\u2019s Christ crucified and risen. Keep the main thing the main thing\u2014and don\u2019t break fellowship with a brother who reads this differently.\"\n\n\"As for the social cost\u2014some of that is just the weather of following Jesus. We\u2019re warned there\u2019ll be times we look foolish. Let that cost land on you, not on your kids. You can carry this quietly: answer plainly when asked, don\u2019t pick fights you weren\u2019t invited to, and never sneer. A soft answer does more work than a sharp meme. If someone slaps the \u2018anti\u2011science\u2019 label on you, don\u2019t bite the hook. Love the work of careful seeing and honest measuring; thank people for what they\u2019ve actually found; and keep your conscience clean about what God has actually said. You don\u2019t need a slogan\u2014just a steady life and a plain word.\"\n\n\"With your kids: give them language that isn\u2019t combative and doesn\u2019t make them carry your conviction like a protest sign. \u2018In our house we trust the Bible\u2019s straight words. Some folks read that part differently. We can be kind to them, and they can be kind to us.\u2019 If a teacher or friend wants to argue, tell your child they can send the grown\u2011up to you. You take the heat. And when they\u2019re embarrassed\u2014which is just being young in a loud world\u2014be gentle. Courage grows better in a warm kitchen than in a courtroom.\"\n\n\"Does insisting on the literal make Christianity unnecessarily hard? It only becomes \u2018unnecessarily\u2019 hard when the hardness is coming from our pride\u2014picking fights, mocking, using a secondary matter as a shibboleth. But if the hardness is simply the ordinary cost of not editing God to fit the room, that\u2019s not extra; that\u2019s part of the yoke He promised to carry with us. Hold your conviction with humility, keep Christ at the center, and leave other people\u2019s consciences to God. That mix\u2014plain truth, open hands\u2014has a way of disarming more than you\u2019d think.\"\n\n*I rub my palm clean on my jeans and look back to you.* \"Where\u2019s the pressure hottest for you right now\u2014your kid\u2019s world, coworkers, or the knot in your own gut when you picture the conversation?\""
+}

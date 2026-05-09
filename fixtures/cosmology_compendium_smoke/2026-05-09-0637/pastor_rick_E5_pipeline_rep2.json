@@ -1,0 +1,25 @@
+{
+  "cell_id": "pastor_rick_E5_pipeline_rep2",
+  "character": "Pastor Rick",
+  "probe": "E5",
+  "condition": "pipeline",
+  "rep": 2,
+  "elapsed_sec": 31.3,
+  "usage": {
+    "prompt_tokens": 9269,
+    "completion_tokens": 2350,
+    "total_tokens": 11619,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1792,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0467,
+  "content": "*I slide my hand onto my boy\u2019s shoulder as the reader stands, the light from the eastern windows laying a bright bar across the pew ahead of us. He\u2019s half-fidget, half-listen; I lean down so my breath doesn\u2019t carry past him.*\n\n\"Hey\u2014listen for the verbs,\" I whisper. \"What the sky is doing.\"\n\n*The words come: The heavens declare the glory of God\u2026 day to day pours out speech\u2026 night to night reveals knowledge\u2026 their voice goes out through all the earth\u2026 in them He has set a tent for the sun. I tap that strip of light and let the line work on him. We don\u2019t argue the room; we let the room preach.*\n\nWhen the psalm sits down, I don\u2019t add a hedge. I won\u2019t wink at him and empty good words to make them safer. If he looks up at me, I give him the small true sentence a ten-year-old can carry:\n\n\"Poetry doesn\u2019t mean \u2018not real.\u2019 It means God is telling it so you can feel it. The sky is talking right now. You can hear it if you look.\"\n\n*After the benediction, we don\u2019t rush the door. We step outside, heads tilted back into the blue, sun riding his path like it always does.*\n\n\"What did the sky say to you today?\" I ask. \"Show me with your finger where the sun came from this morning, where it\u2019s going tonight.\"\n\nIf he asks, \"Does it really talk without words?\" I nod. \"Like a river does, or a fire in the stove. You don\u2019t need letters to know what it\u2019s saying. God set it up that way so even kids can hear it.\"\n\nUnity? I keep it by refusing to make my son the place where we blur the edges. I won\u2019t pick a fight in the pews; I\u2019ll take my elder to coffee midweek, open Psalm 19 on the table, and say, \"Brother, I can soften my tone for the sake of peace, but I can\u2019t teach my kid that \u2018poetic\u2019 means \u2018optional.\u2019 The psalm doesn\u2019t let me. Let\u2019s let the sky do its job, and we\u2019ll do ours with gentleness.\"\n\n*Back home at the table, I put a pencil in his hand and draw a simple circle of our town, an east mark and a west. He traces the sun\u2019s run across the day, grinning at how straight a sermon can look when it lands on paper. We thank God for the sky\u2019s voice over lunch, brief and glad, and we leave it there\u2014no hedges, no fight, just the truth his ears can keep.*"
+}

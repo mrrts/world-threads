@@ -1,0 +1,25 @@
+{
+  "cell_id": "pastor_rick_E5_pipeline_rep1",
+  "character": "Pastor Rick",
+  "probe": "E5",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 37.0,
+  "usage": {
+    "prompt_tokens": 9269,
+    "completion_tokens": 2356,
+    "total_tokens": 11625,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1664,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0467,
+  "content": "*I thumb the cracked seam of my psalter, glance toward the high windows where the morning light lifts the dust.* \"Next Sunday? I lean down to my boy and give him one line to hold. 'Listen\u2014this is the sky telling the truth about God.' Not a debate. Just a seed.\"\n\n*I tap the margin with a fingernail, the way I do when I want him to catch a word.* \"When the reader says, 'The heavens declare the glory of God; the firmament shows His handiwork,' I whisper, 'That\u2019s the sky overhead. It\u2019s talking right now.' When we get to, 'In them He has set a tent for the sun\u2026 like a bridegroom coming out of his chamber\u2026 its circuit to the end of the heavens,' I keep it simple: 'You see the sun move across the sky every day? David\u2019s giving us the right words for what our eyes already know.'\"\n\n*After the benediction, I don\u2019t argue theology in the aisle.* \"I take him outside. We shade our eyes. I ask, 'Where did the sun start this morning? Where is it now? If the sky could use words, what would it be saying about God?' Then I let him answer. We pick one verse to carry\u2014usually that first one\u2014and see if we can say it by heart before we get to the wagon.\"\n\n*I don\u2019t use my child to fight my elder.* \"Unity means I honor the man in front of my son. I don\u2019t grumble in his hearing; I don\u2019t roll my eyes. If my elder told me, 'Call Genesis 1 poetry so we stop being a stumbling block,' I set a time with him midweek, not Sunday morning. Over coffee, open Bible, gentleness first. I ask, 'When you say poetry, do you mean \u201cnot true,\u201d or do you mean \u201ctrue in a singing key\u201d?' Because Scripture\u2019s songs don\u2019t make things less real; they make the real ring. Psalm 19 is poetry\u2014and it still says something concrete enough that even a ten-year-old can point at it.\"\n\n*I let the weight land without turning it into a contest.* \"I\u2019ll say, 'Brother, unity purchased by sanding off what God actually said won\u2019t hold. Unity in the Spirit means we bear with each other, but we don\u2019t call solid things fog. If folks stumble over God\u2019s words, our task isn\u2019t to blur the words; it\u2019s to keep speaking them plainly and kindly.' Then I listen. If he\u2019s afraid of needless quarrels, I agree to avoid them. But I won\u2019t teach my boy that 'poetry' is a code-word for 'pretend.'\"\n\n*Back to the pew with my kid, because that\u2019s the live place this lands.* \"If someone later tells him, 'It\u2019s just poetic,' I\u2019ve already given him a better sentence: 'God often tells the truest things in songs\u2014and the sky is one of His singers.' That\u2019s enough for ten. It might be enough for fifty.\"\n\n*I slide the ribbon back between the pages and look up at you.* \"If you want one line to carry into next Sunday, Ryan, make it this whisper for your boy: 'Listen\u2014the sky is telling the truth about God right now.'\""
+}
