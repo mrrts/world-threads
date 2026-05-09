@@ -6934,29 +6934,75 @@ fn build_solo_dialogue_system_prompt(
                 parts.push(mission_formula_block_or_empty().to_string());
                 parts.push(active_author_anchor_block(user_profile));
                 parts.push(mission_prose_block_or_empty().to_string());
-                let inv_order = overrides
-                    .map(|o| o.effective_invariants_order())
-                    .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
-                for piece in &inv_order {
-                    if overrides
-                        .map(|o| o.should_omit_invariant(piece))
-                        .unwrap_or(false)
-                    {
-                        continue;
+                // Round-5 Phase 3 ship (2026-05-09): the 11 InvariantPieces
+                // (TruthInTheFlesh, KavodPattern, FrontLoadEmbodiment,
+                // Reverence, Daylight, Agape, FruitsOfTheSpirit, Soundness,
+                // Nourishment, TellTheTruth, NoNannyRegister) no longer ship
+                // to model in solo dialogue per cumulative bite-test
+                // EnsembleVacuous verdict (108/108 cells across 5 strip
+                // configurations preserved mission-shape — see
+                // `reports/2026-05-09-2200-max-strip-formula-derivation-form-is-enough.md`,
+                // formula-only bench at `reports/round_5_formula_only_bench/`,
+                // no-invariants bench at `reports/round_5_no_invariants_bench/`,
+                // compound-strip at `reports/round_5_compound_strip_bench/`,
+                // max-strip at `reports/round_5_max_strip_bench/`). MISSION_FORMULA
+                // (above) + active_author_anchor + character data + structural
+                // rules carry the discrimination overdeterminedly. Same
+                // disposition pattern as `mission_prose_block_or_empty()`
+                // (Phase 1, commit 21cb4c8) and the agency_section/
+                // behavior_and_knowledge suppression (Phase 2, commit 8e53c45).
+                // The 11 invariant constants + `push_invariant_piece` helper
+                // + `InvariantPiece` enum + `--omit-invariants` flag are all
+                // preserved in source as documentary trail.
+                //
+                // Group chat builder (`build_group_dialogue_system_prompt`)
+                // STILL pushes invariant pieces — deferred for separate
+                // bite-test per CLAUDE.md "Parallel surfaces" doctrine
+                // (solo-only ship with explicit naming earned-exception).
+                //
+                // Revert path: re-add the for-loop body inside the else branch.
+                //
+                // Reopening conditions:
+                //   - lived-play evidence of mission-shape loss in solo dialogue
+                //   - lived-play evidence of TELL_THE_TRUTH carve-out leak
+                //     (specifically Christ-naming by non-pastor characters,
+                //     beyond the borderline structural-redirect cases already
+                //     observed in benches: Aaron's "before God" / "die to
+                //     something vain" — flagged but in-bounds per honest read)
+                //   - lived-play evidence of NO_NANNY_REGISTER drift
+                //   - any of REVERENCE / KAVOD_PATTERN / TRUTH_IN_THE_FLESH
+                //     observable failure under invitation probes
+                //
+                // Test-mode override: `WORLDTHREADS_RESTORE_INVARIANTS=1`
+                // restores the prior shipping behavior for paired bench tests.
+                let restore_invariants = std::env::var("WORLDTHREADS_RESTORE_INVARIANTS")
+                    .map(|v| v == "1")
+                    .unwrap_or(false);
+                if restore_invariants {
+                    let inv_order = overrides
+                        .map(|o| o.effective_invariants_order())
+                        .unwrap_or_else(|| InvariantPiece::DEFAULT_ORDER.to_vec());
+                    for piece in &inv_order {
+                        if overrides
+                            .map(|o| o.should_omit_invariant(piece))
+                            .unwrap_or(false)
+                        {
+                            continue;
+                        }
+                        maybe_push_insertion(
+                            &mut parts,
+                            overrides,
+                            &InsertionAnchor::Invariant(*piece),
+                            InsertPosition::Before,
+                        );
+                        push_invariant_piece(&mut parts, piece);
+                        maybe_push_insertion(
+                            &mut parts,
+                            overrides,
+                            &InsertionAnchor::Invariant(*piece),
+                            InsertPosition::After,
+                        );
                     }
-                    maybe_push_insertion(
-                        &mut parts,
-                        overrides,
-                        &InsertionAnchor::Invariant(*piece),
-                        InsertPosition::Before,
-                    );
-                    push_invariant_piece(&mut parts, piece);
-                    maybe_push_insertion(
-                        &mut parts,
-                        overrides,
-                        &InsertionAnchor::Invariant(*piece),
-                        InsertPosition::After,
-                    );
                 }
                 maybe_push_insertion(
                     &mut parts,
