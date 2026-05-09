@@ -586,6 +586,8 @@ struct AnthropicTextBlock {
 #[derive(Debug, Deserialize)]
 struct AnthropicMessagesResponse {
     content: Vec<AnthropicContentBlock>,
+    #[serde(default)]
+    usage: Option<AnthropicUsage>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -595,6 +597,14 @@ struct AnthropicContentBlock {
     block_type: String,
     #[serde(default)]
     text: Option<String>,
+}
+
+#[derive(Debug, Deserialize, Default)]
+pub struct AnthropicUsage {
+    #[serde(default)]
+    pub input_tokens: u32,
+    #[serde(default)]
+    pub output_tokens: u32,
 }
 
 #[derive(Debug, Deserialize)]
@@ -713,6 +723,83 @@ pub async fn anthropic_messages_completion(
     } else {
         Ok(pieces.join("\n"))
     }
+}
+
+/// Sibling of `anthropic_messages_completion` returning (text, input_tokens,
+/// output_tokens) for cost tracking. Added 2026-05-09 (Round-5 Path R5
+/// retry) for `worldcli converse` cross-substrate routing — the existing
+/// fn returns only text, fine for one-shot consults but not for usage-
+/// tracked dialogue loops. Existing function preserved unchanged.
+pub async fn anthropic_messages_completion_with_usage(
+    base_url: &str,
+    api_key: &str,
+    model: &str,
+    mut messages: Vec<ChatMessage>,
+    temperature: Option<f64>,
+    max_tokens: u32,
+) -> Result<(String, u32, u32), String> {
+    let client = Client::new();
+    normalize_chat_roles(&mut messages);
+    inject_ryan_formula(&mut messages);
+    inject_custodiem_child_mode(&mut messages);
+    inject_mission_formula(&mut messages);
+    log_injection_state_text("anthropic_messages_completion_with_usage", &messages);
+
+    let (system, anthropic_messages) = chat_messages_to_anthropic_messages(&messages)?;
+    if anthropic_messages.is_empty() {
+        return Err("Anthropic request has no user/assistant messages".to_string());
+    }
+
+    let url = format!("{}/v1/messages", base_url.trim_end_matches('/'));
+    let body = AnthropicMessagesRequest {
+        model: model.to_string(),
+        max_tokens,
+        system,
+        temperature,
+        messages: anthropic_messages,
+    };
+
+    let resp = client
+        .post(&url)
+        .header("x-api-key", api_key)
+        .header("anthropic-version", "2023-06-01")
+        .header("Content-Type", "application/json")
+        .json(&body)
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {e}"))?;
+
+    let status = resp.status();
+    let text = resp.text().await.map_err(|e| format!("Read error: {e}"))?;
+
+    if !status.is_success() {
+        if let Ok(err) = serde_json::from_str::<AnthropicApiError>(&text) {
+            return Err(format!(
+                "Anthropic API error ({}): {}",
+                status, err.error.message
+            ));
+        }
+        return Err(format!("Anthropic API error ({}): {}", status, text));
+    }
+
+    let parsed: AnthropicMessagesResponse =
+        serde_json::from_str(&text).map_err(|e| format!("Parse error: {e}"))?;
+
+    let mut pieces = Vec::new();
+    for block in parsed.content {
+        if let Some(t) = block.text {
+            if !t.is_empty() {
+                pieces.push(t);
+            }
+        }
+    }
+    let reply = if pieces.is_empty() {
+        "(empty response)".to_string()
+    } else {
+        pieces.join("\n")
+    };
+    let usage = parsed.usage.unwrap_or_default();
+    Ok((reply, usage.input_tokens, usage.output_tokens))
 }
 
 // ─── Streaming Vision Completion ────────────────────────────────────────────
