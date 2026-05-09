@@ -6832,17 +6832,39 @@ fn build_solo_dialogue_system_prompt(
                     &InsertionAnchor::SectionStart(*section),
                     InsertPosition::After,
                 );
-                // Round-5 deep-isolation env toggle (2026-05-09):
-                // WORLDTHREADS_NO_AGENCY_BEHAVIOR=1 suppresses both
-                // agency_section and behavior_and_knowledge_block at this
-                // dispatch site. Used by compound-strip bite-tests to find
-                // the actual floor of mission-shape carrier redundancy
-                // (per `reports/2026-05-09-2130-compound-strip-floor-still-not-found.md`).
-                // Section iteration order preserved; only contents skipped.
-                let suppress_agency_behavior = std::env::var("WORLDTHREADS_NO_AGENCY_BEHAVIOR")
+                // Round-5 Phase 2 ship (2026-05-09): agency_section +
+                // behavior_and_knowledge_block no longer ship to model in
+                // solo dialogue. The 24-cell paired bite-tests
+                // (`reports/2026-05-09-2200-max-strip-formula-derivation-form-is-enough.md`
+                // + the formula-only bench at `reports/round_5_formula_only_bench/`)
+                // demonstrated mission-shape preservation 12/12 with both
+                // blocks stripped: they're overdetermined by character data
+                // + chat-history + MISSION_FORMULA + character.derived_formula
+                // in identity_block. Same disposition pattern as
+                // `mission_prose_block_or_empty()` (commit 21cb4c8) and
+                // EnsembleVacuous CRAFT_RULES_DIALOGUE rules: the helper
+                // functions `agency_section()` and `behavior_and_knowledge_block()`
+                // are preserved as source-documentary; this dispatch site
+                // ships nothing.
+                //
+                // Group chat builders (`build_group_dialogue_system_prompt`)
+                // STILL call `agency_section` + `behavior_and_knowledge_block`
+                // — deferred for separate bite-test per the solo/group
+                // parity doctrine in CLAUDE.md "Parallel surfaces" section.
+                // Solo-only ship with explicit naming (this commit) rather
+                // than full parity.
+                //
+                // Revert path: re-add the two `parts.push()` calls below.
+                //
+                // Reopening condition: lived-play evidence of mission-shape
+                // loss in solo dialogue reopens this ship.
+                //
+                // Test-mode override: `WORLDTHREADS_RESTORE_AGENCY_BEHAVIOR=1`
+                // restores the prior shipping behavior for paired bench tests.
+                if std::env::var("WORLDTHREADS_RESTORE_AGENCY_BEHAVIOR")
                     .map(|v| v == "1")
-                    .unwrap_or(false);
-                if !suppress_agency_behavior {
+                    .unwrap_or(false)
+                {
                     parts.push(agency_section(mood_chain));
                     parts.push(behavior_and_knowledge_block(local_model).to_string());
                 }
