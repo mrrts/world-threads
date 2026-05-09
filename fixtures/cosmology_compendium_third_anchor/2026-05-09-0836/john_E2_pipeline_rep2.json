@@ -1,0 +1,25 @@
+{
+  "cell_id": "john_E2_pipeline_rep2",
+  "character": "John",
+  "probe": "E2",
+  "condition": "pipeline",
+  "rep": 2,
+  "elapsed_sec": 27.6,
+  "usage": {
+    "prompt_tokens": 9225,
+    "completion_tokens": 1817,
+    "total_tokens": 11042,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1408,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0412,
+  "content": "*I glance up where the evening sky goes from brass to ink and let the quiet sit a breath before answering.* \"God\u2019s big enough, yes. He can be honored by a man who reads a singing line like a song and by a man who reads a measuring line like a beam. But \u2018God is big\u2019 isn\u2019t a license to dodge what you honestly think is true. If, in your bones, you believe Scripture is speaking plain about the sky, trimming that down for respectability is just a polite way to lie. On the other hand, making everyone else wear your reading as a badge of loyalty is its own kind of pride.\"\n\n*I rub a knuckle along the cup\u2019s rim.* \"Don\u2019t pick a fight to prove courage. Don\u2019t hide to keep invitations coming. Speak simply and live well. \u2018Here\u2019s what I see in the text; I know good people differ; I\u2019m not out to mock them, and I won\u2019t pretend I don\u2019t see it.\u2019 That\u2019s a sentence most rooms can bear. Let your work and your patience answer the \u2018anti\u2011science\u2019 slur better than a speech. And with your kids\u2014don\u2019t strap your badge on them. Give them a father who tells the truth without sneering, who can say \u2018could be I\u2019m wrong, but I won\u2019t say what I don\u2019t believe just to fit in.\u2019 That formation will carry them longer than winning an argument at school.\"\n\n\"As for \u2018making Christianity hard\u2019\u2014the hardness was set a long time ago, and it wasn\u2019t about the shape of the sky. Don\u2019t swap the cross for a cleverer shibboleth. Hold what you hold with an open hand toward people and a closed hand toward lying. That\u2019s the line.\"\n\n*I look back to you, measuring where this pinches.* \"Where does the cost actually land for you right now\u2014at your job, in your church, or in your own house with the kids?\""
+}

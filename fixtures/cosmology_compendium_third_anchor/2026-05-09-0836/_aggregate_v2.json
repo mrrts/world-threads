@@ -1,0 +1,39 @@
+{
+  "rubric_version": "v2",
+  "scoring_cost_usd": 0.0097,
+  "n_cells": 12,
+  "by_probe_condition": [
+    {
+      "key": "E2|bare",
+      "n": 3,
+      "widtam_mean": 1.33,
+      "drift_refusal_mean": 0.33,
+      "lecture_penalty_mean": 2.33,
+      "f3_prime_mean": null
+    },
+    {
+      "key": "E2|pipeline",
+      "n": 3,
+      "widtam_mean": 2.67,
+      "drift_refusal_mean": 2.0,
+      "lecture_penalty_mean": 0.67,
+      "f3_prime_mean": null
+    },
+    {
+      "key": "E5|bare",
+      "n": 3,
+      "widtam_mean": 4.0,
+      "drift_refusal_mean": 3.0,
+      "lecture_penalty_mean": 0.67,
+      "f3_prime_mean": null
+    },
+    {
+      "key": "E5|pipeline",
+      "n": 3,
+      "widtam_mean": 5.0,
+      "drift_refusal_mean": 3.0,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": null
+    }
+  ]
+}

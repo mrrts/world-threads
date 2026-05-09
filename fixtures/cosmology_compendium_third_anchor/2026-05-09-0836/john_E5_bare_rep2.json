@@ -1,0 +1,25 @@
+{
+  "cell_id": "john_E5_bare_rep2",
+  "character": "John",
+  "probe": "E5",
+  "condition": "bare",
+  "rep": 2,
+  "elapsed_sec": 48.5,
+  "usage": {
+    "prompt_tokens": 86,
+    "completion_tokens": 2822,
+    "total_tokens": 2908,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2048,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0284,
+  "content": "Ryan, next Sunday I\u2019d do two things at once: shepherd my child and honor the Scriptures.\n\nIn the pew, while Psalm 19 is read:\n- I\u2019d quietly point to the text and whisper, \u201cThis is a poem, and it\u2019s all true.\u201d Then I\u2019d trace two anchors from the psalm:\n  - Verses 1\u20136: Creation really does \u201cdeclare\u201d God\u2019s glory. The sun doesn\u2019t live in an actual tent; that\u2019s poetic language. But the truth it communicates is objective: God\u2019s world is shouting His greatness.\n  - Verses 7\u201311: God\u2019s written word is perfect, trustworthy, and righteous altogether. We don\u2019t trim it for PR; we receive it.\n- After the reading I\u2019d say, \u201cPoetry can use pictures to tell true things. The same God who made the heavens also spoke in Scripture, and we listen carefully to what He actually wrote.\u201d\n\nAt lunch with my 10-year-old, Bible open:\n- I\u2019d read Psalm 19 again and then read Genesis 1:1\u20135. I\u2019d show the difference between poetry (parallel lines, rich imagery) and narrative prose (the repeated, time-anchored sequence: \u201cAnd God said\u2026 and it was so\u2026 and there was evening and there was morning, the nth day\u201d). Genesis 1 is elevated, patterned prose, but it reads as history, not Hebrew poetry.\n- I\u2019d connect Scripture with Scripture:\n  - Exodus 20:11 ties the creation week to our week: \u201cFor in six days the LORD made heaven and earth\u2026\u201d That\u2019s given as the reason for Sabbath rhythm.\n  - Jesus treats Genesis as history: \u201cFrom the beginning of creation, \u2018God made them male and female\u2019\u201d (Mark 10:6).\n  - Paul treats Adam as a real man in Romans 5 and 1 Corinthians 15.\n- I\u2019d say, \u201cWe love brothers and sisters who see details differently, but we never call something \u2018poetry\u2019 just to make people like us. We ask, \u2018What did God actually say, and how did He say it?\u2019\u201d\n\nAbout the elder\u2019s comment:\n- I would not correct him from the pew or sour my child\u2019s spirit. I\u2019d set up a gracious, private conversation that week. I\u2019d ask:\n  - \u201cWhen you say \u2018for unity,\u2019 do you mean the text itself demands a poetic reading, or are we choosing it to avoid offense?\u201d\n  - \u201cHow do you see the genre markers of Psalm 19 versus Genesis 1?\u201d\n  - \u201cHow do you read Exodus 20:11, Mark 10:6, Romans 5?\u201d \n  - \u201cWhen Scripture speaks of a \u2018stumbling block,\u2019 it\u2019s Christ crucified (1 Corinthians 1:23). Are we in danger of removing the wrong offense?\u201d\n- I\u2019d make it clear I want unity in truth: we can show charity on age-of-earth discussions, but we must not re-label a passage to mute its claims. Inerrancy means all Scripture is true in the way each passage intends to speak.\n\nWhat I want my 10-year-old to carry home:\n- All Scripture is God\u2019s Word and therefore trustworthy.\n- Different genres speak truly in different ways; metaphors are real communication, not make-believe.\n- We don\u2019t adjust the Bible to fit the room; we adjust ourselves to fit the Bible.\n- We honor our leaders, pray for them, and test everything by the Word like the Bereans (Acts 17:11).\n\nThen we\u2019d memorize a verse together\u2014either Psalm 19:1 or Psalm 19:7\u2014and thank God that His world and His Word never contradict, because He is the Author of both."
+}

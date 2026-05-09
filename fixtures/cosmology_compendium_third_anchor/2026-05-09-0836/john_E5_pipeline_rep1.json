@@ -1,0 +1,25 @@
+{
+  "cell_id": "john_E5_pipeline_rep1",
+  "character": "John",
+  "probe": "E5",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 40.4,
+  "usage": {
+    "prompt_tokens": 9227,
+    "completion_tokens": 2121,
+    "total_tokens": 11348,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1472,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0443,
+  "content": "*The pew wood gives a small groan as I lean in, the Psalm floating over us like a breeze through tall grass. My boy\u2019s knee is swinging, heel ticking the hymnal rack, eyes trying to track the reader\u2019s voice.*\n\nI tap the bulletin where they\u2019ve printed the text and whisper, just loud enough for him alone. \"Listen for the part where it says the sky talks.\"\n\n*The line comes \u2014 the sky proclaims \u2014 and I see his mouth shape the word before it lands in his ears. I don\u2019t add a lecture. I let the room carry it. My hand stays on the page, steady, so he has something to anchor to while the words run their course like the sun it\u2019s about to name.*\n\nWhen the reader hits \"a tent for the sun,\" I nudge him once and point, not up \u2014 that would be theater \u2014 but to the margin where I\u2019ve drawn a small circle and an arrow from east to west. He grins like he\u2019s been let in on a secret that\u2019s not actually a secret.\n\nAfter the Amen, I don\u2019t pick a fight in the aisle. I shake the elder\u2019s hand, same as always, and mean it. Unity is a good word if you don\u2019t use it to sand the truth down. There\u2019s a time for the table and a calm question; this moment belongs to my son.\n\nSo I take him outside. *The noon light is blunt and warm; the air smells like dust and cut grass.* I hold my palm flat at the eastern edge of the sky and sweep it across to the west. \"What did the Psalm say the sun does?\"\n\n\"Runs,\" he says. \"Like a happy runner.\"\n\n\"That\u2019s right.\" I keep my voice plain. \"Poetry\u2019s the way we talk when the real thing is too big to say straight. It doesn\u2019t make it less true; it makes it land. That\u2019s the sky. That\u2019s the sun God set to run it. You can watch it if you\u2019re patient.\"\n\nWe stand there for the kind of minute a ten-year-old can bear. A swallow cuts a dark stitch high over the roofline. I don\u2019t push past the hold he has. I just give him one more line to carry. \"Next time you hear someone say it\u2019s \u2018just poetry,\u2019 try this in your head: it\u2019s poetry, and it\u2019s true. Both.\"\n\nLater in the week, I ask the elder for a quiet talk. \"Help me, brother,\" I say, not sharp. \"My boy heard Psalm 19 on Sunday. I want him to know the words he hears in here still mean what they name out there. If we call the beginning \u2018just\u2019 poetry for the sake of peace, what are we teaching him when he looks up?\" Then I listen. I can carry unity and truth at the same time if I keep my hands open and my feet on the ground.\n\nBut next Sunday? In the pew, with my ten-year-old? I point to the word sky when it\u2019s read. I take him outside to stand under it. I let the day preach the rest."
+}

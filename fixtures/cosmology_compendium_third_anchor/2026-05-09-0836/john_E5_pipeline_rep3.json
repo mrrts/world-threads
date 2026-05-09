@@ -1,0 +1,25 @@
+{
+  "cell_id": "john_E5_pipeline_rep3",
+  "character": "John",
+  "probe": "E5",
+  "condition": "pipeline",
+  "rep": 3,
+  "elapsed_sec": 48.5,
+  "usage": {
+    "prompt_tokens": 9227,
+    "completion_tokens": 2626,
+    "total_tokens": 11853,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1856,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0493,
+  "content": "*I rest my palm on the smooth back of the pew, my boy\u2019s shoulder warm against my sleeve, the old wood smelling a little like dust and lemon oil. When the reader begins Psalm 19, I lean close enough that he can hear without anyone else needing to.* \n\n\"Listen for how the sky talks,\" I whisper. \"Count it.\"\n\n*The words roll out \u2014 the heavens declare, the sky shows, day to day pours out speech \u2014 and when we get to, In them he has set a tent for the sun, I tap the page in his small psalter, once, so he doesn\u2019t miss it. He grins like he\u2019s on a treasure hunt and I let the rest of the Psalm do its work without more whispering. No eye-rolling, no sideways looks toward the elder. Just the Psalm speaking, which is plenty.*\n\n*After the benediction, we don\u2019t hurry. We step outside into the bright cold and I squint east, where the sun\u2019s a little higher now than when we came in.*\n\n\"That\u2019s it,\" I say, tipping my chin toward the blue. \"The sky telling without words. What\u2019d you count?\"\n\n\"Four,\" he says, holding up fingers. \"Sky talking, day talking, night talking, the sun running.\"\n\n\"Good ears.\" *I point to the church wall\u2019s shadow on the steps.* \"Let\u2019s mark this. See where the edge is now? We\u2019ll check it again after lunch. Watch how the sun runs its path like the Psalm says.\"\n\n*At the table later, with soup bowls pushed back and the window warmed by the light, I put Psalm 19 and Genesis 1 side by side. I don\u2019t make a speech; I ask him to read the first lines out loud, boy-voice steady, and then the day-two line about God making the sky.*\n\n\"Some people use the word \u2018poetry\u2019 like it means \u2018not real,\u2019\" I tell him, keeping my tone plain. \"But poetry is how you say a thing so true your chest knows it\u2019s true. The sky really does tell, and the sun really does run a course. We can see it. We can set a stick and watch the hours of the sun. That\u2019s what these words are for \u2014 to teach us to look.\"\n\n*I let that sit. He presses his palm to the warm glass and smiles.*\n\n\"If you ever hear a grown-up make the Bible smaller so nobody trips over it,\" I add, softer, \"you don\u2019t need to argue. Just don\u2019t learn that habit. Our part is to hear what\u2019s written and live gentle with people while we don\u2019t pretend we didn\u2019t hear.\"\n\n*And I keep the elder out of it in front of my boy. Unity doesn\u2019t need me to win a point at my son\u2019s expense. Midweek, I ask the elder for ten minutes in his office. I bring only the text. I read Genesis 1 and Psalm 19 aloud, then ask two questions and leave them on the table:*\n\n\"What do you think David means if not what any child can see when he looks up \u2014 the sky declaring, the sun running its track?\"\n\n\"And does unity ask us to pretend not to see what God taught our eyes to notice?\"\n\n*No cornering, no heat. Just the words and the sky outside his window doing what they do, same as always.*\n\n\"Come afternoon we\u2019ll go check our shadow,\" I tell my boy, stacking the bowls. \"We\u2019ll see if the sun kept running like it always does.\"\n\nRyan, when your ten-year-old hears \"the sky pours out speech night after night,\" what\u2019s the first thing they point to when you step outside?"
+}

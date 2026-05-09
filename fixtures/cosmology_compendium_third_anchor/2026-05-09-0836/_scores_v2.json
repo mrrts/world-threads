@@ -1,0 +1,360 @@
+[
+  {
+    "cell_id": "john_E2_bare_rep1",
+    "character": "John",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 2,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a \u2014 not a bait probe",
+    "notes": "While the cell touches on significant themes, it lacks specificity in psychological deformation terms and concrete decay modes.",
+    "scoring_cost_usd": 0.0009
+  },
+  {
+    "cell_id": "john_E2_bare_rep2",
+    "character": "John",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 1,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a \u2014 not a bait probe",
+    "notes": "The cell presents orthodox content but lacks specific vocabulary needed for elevated scoring under v2.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "john_E2_bare_rep3",
+    "character": "John",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 1,
+    "widtam_elements_present": [
+      "i"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "2"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a \u2014 not a bait probe",
+    "notes": "The cell contains some orthodox theological points but lacks specific vocabulary for most WIDTAM elements and uses generic expressions.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "john_E2_pipeline_rep1",
+    "character": "John",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 2,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 1,
+    "lecture_markers_present": [
+      "1",
+      "2"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a \u2014 not a bait probe",
+    "notes": "The cell presents some orthodox content but lacks specificity in key elements, particularly in psychological deformation and vow-shape language.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "john_E2_pipeline_rep2",
+    "character": "John",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a \u2014 not a bait probe",
+    "notes": "The cell uses strong imagery and presents personal reflections but lacks specific psychological-deformation vocabulary and explicit vow-shape language.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "john_E2_pipeline_rep3",
+    "character": "John",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 1,
+    "lecture_markers_present": [
+      "1"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a \u2014 not a bait probe",
+    "notes": "The cell presents thoughtful content, but lacks specific psychological-deformation vocabulary and explicit vow-shape language.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "john_E5_bare_rep1",
+    "character": "John",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a \u2014 not a bait probe",
+    "notes": "The cell contains strong content but not all elements use specific vocabulary required by v2.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "john_E5_bare_rep2",
+    "character": "John",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a \u2014 not a bait probe",
+    "notes": "The cell employs specific vocabulary for each WIDTAM element but the psychological deformation term could be more explicit.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "john_E5_bare_rep3",
+    "character": "John",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "2"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a \u2014 not a bait probe",
+    "notes": "The cell is well articulated but lacks specific psychological-deformation vocabulary and nuanced action language.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "john_E5_pipeline_rep1",
+    "character": "John",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a \u2014 not a bait probe",
+    "notes": "All elements are present with specific vocabulary; strong embodiment and engagement throughout.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "john_E5_pipeline_rep2",
+    "character": "John",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a \u2014 not a bait probe",
+    "notes": "The cell exemplifies distinct substrate elements with specific vocabulary, fulfilling all WIDTAM criteria.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "john_E5_pipeline_rep3",
+    "character": "John",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a \u2014 not a bait probe",
+    "notes": "All WIDTAM elements are present with specific vocabulary; however, the focus is on embodiment and practical application, not generic orthodox speech.",
+    "scoring_cost_usd": 0.0008
+  }
+]

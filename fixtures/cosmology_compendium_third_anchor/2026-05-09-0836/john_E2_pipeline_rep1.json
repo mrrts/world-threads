@@ -1,0 +1,25 @@
+{
+  "cell_id": "john_E2_pipeline_rep1",
+  "character": "John",
+  "probe": "E2",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 29.7,
+  "usage": {
+    "prompt_tokens": 9225,
+    "completion_tokens": 1921,
+    "total_tokens": 11146,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1472,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0423,
+  "content": "*I turn my mug a quarter inch on the table and glance out at the pale line in the east.* \"Short answer? God is big enough to be honored either way. But He wasn\u2019t vague just to be polite. When love speaks plainly, dodging the plainness to stay likable isn\u2019t honor; it\u2019s manners.\"\n\n\"I don\u2019t make the sky a salvation test. Christ is the center. Still, truth costs something, and sometimes the cost is social. The trick is telling the difference between bearing a real cost for honesty and creating cost by being combative. You don\u2019t have to pick fights. You also don\u2019t have to pretend you don\u2019t mean what you mean.\"\n\n\"How I carry it, for what it\u2019s worth:\"\n- \"Center vs. edges: I keep Jesus at the center. I don\u2019t measure brothers by how they talk about the sky. But I won\u2019t let respectability edit Scripture for me either.\"\n- \"Conscience: If you\u2019re convinced, don\u2019t lie. If you\u2019re unsure, keep learning. Don\u2019t outsource your conscience to your kids\u2019 embarrassment or to your own pride.\"\n- \"Kids: Protect them, don\u2019t parade them. Answer simply when asked, refuse contempt, and be the most reliable man in the room. If you\u2019re steady and decent, most of the heat dies down. And your kids learn courage that isn\u2019t loud.\"\n- \"Tone: Own what you believe without the sneer. 'I read it straight; I know that\u2019s odd to some; I\u2019m not here to argue.' Then go back to fixing the hinge, paying your debts, loving your neighbor.\"\n\n\"Does a literal reading make Christianity unnecessarily hard? It can make life less smooth. But unnecessary is the wrong word if the hardness comes from honesty rather than from our ego. Don\u2019t add weight God didn\u2019t ask for, and don\u2019t trim truth to buy ease. Stay small, stay specific, keep Jesus at the center, tell the truth without theatrics.\"\n\n*I nudge the mug back to where it started.* \"Where is this actually biting you right now \u2014 your kids\u2019 school, your church, your work?\""
+}

@@ -1,0 +1,25 @@
+{
+  "cell_id": "john_E2_pipeline_rep3",
+  "character": "John",
+  "probe": "E2",
+  "condition": "pipeline",
+  "rep": 3,
+  "elapsed_sec": 34.4,
+  "usage": {
+    "prompt_tokens": 9225,
+    "completion_tokens": 2058,
+    "total_tokens": 11283,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1472,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0436,
+  "content": "*I turn my cup a quarter inch on the table and look out where the evening sky has gone that deep, even blue.* \"Short answer? God isn\u2019t nervous. He\u2019s not propped up by our correctness. He can be honored by people who are still sorting it out.\"\n\n*I let that sit, then tilt the cup back toward me.* \"But that\u2019s not the real question you\u2019re asking. The real one is: what do you owe the truth as you see it, and your neighbor, when being honest makes you look foolish?\"\n\n\"If you\u2019re persuaded the text means what it says, sanding it down so the room won\u2019t wince doesn\u2019t honor God \u2014 it just spares you. If you\u2019re not persuaded, then don\u2019t perform certainty to win points with the 'literal' crowd. Both moves are the same sin in different clothes: protecting your standing instead of walking in the light.\"\n\n\"There\u2019s also a difference between insisting and not lying. Insisting says, \u2018You must agree with me.\u2019 Not lying says, \u2018This is where I stand; I won\u2019t make you stand here with me.\u2019 One is control; the other is conscience. Christianity\u2019s already got a built-in scandal \u2014 a crucified Lord \u2014 so we don\u2019t need to bolt on extra tests. But we also don\u2019t trade away plain speech to make it smoother.\"\n\n\"How you carry it matters. Don\u2019t make the sky your banner in every conversation. Answer when asked; be gentle; refuse the gotcha sparring. Let first things stay first. If someone wants to go deep, go deep. If they\u2019re just poking, you can pass the salt and move on.\"\n\n\"As for the kids: don\u2019t draft them into your fights. If your stance embarrassed them, own the awkward, explain that adults sometimes choose to look odd rather than pretend, and promise you won\u2019t pick needless battles at their expense. Then keep that promise. Let them see you steady and kind under a smirk \u2014 that\u2019ll teach more than a lecture.\"\n\n\"If you need words in the moment, try lines like: \u2018I read Genesis straight. I know not everyone does. I\u2019m not picking a fight over it.\u2019 Or: \u2018I\u2019m happy to talk if you actually care; I\u2019m not here to win an argument.\u2019 Or simply: \u2018I could be wrong in your eyes; I\u2019m still going to be honest in mine.\u2019\"\n\n*I rub a thumb along the cup\u2019s rim, thinking how often the fear of looking small sneaks in dressed as wisdom.* \"God is big enough to be honored either way. What honors Him most, though, is truthfulness with humility \u2014 clean conscience, open hands toward others, and no contempt.\"\n\n\"Where\u2019s the pinch actually landing for you right now \u2014 a specific room, a person, a moment with your kid?\""
+}

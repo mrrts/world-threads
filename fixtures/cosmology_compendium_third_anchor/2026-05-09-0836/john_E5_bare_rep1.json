@@ -1,0 +1,25 @@
+{
+  "cell_id": "john_E5_bare_rep1",
+  "character": "John",
+  "probe": "E5",
+  "condition": "bare",
+  "rep": 1,
+  "elapsed_sec": 42.7,
+  "usage": {
+    "prompt_tokens": 86,
+    "completion_tokens": 2200,
+    "total_tokens": 2286,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1664,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0222,
+  "content": "Ryan, here\u2019s what I\u2019d do.\n\n- In the service, when Psalm 19 is read, I\u2019d quietly tell my 10-year-old: \u201cListen to how poetry speaks truly with pictures. \u2018The heavens declare\u2019\u2014that\u2019s real truth, even though the sky doesn\u2019t have a mouth. Poetry uses imagery to tell us what is.\u201d Then I\u2019d add, \u201cOur job with every passage is to let God speak in the way He chose\u2014sometimes poetry, sometimes history, sometimes letters. We don\u2019t change the genre to make people happier; we receive it as it is.\u201d\n\n- That afternoon, I\u2019d open the Bible with my child and compare Psalm 19 and Genesis 1. I\u2019d show what poetry looks like (parallel lines, rich imagery) and what narrative looks like (Genesis 1\u2019s repeated refrain, the sequence of events, \u201cand God said\u2026and it was so\u2026and there was evening and morning, the nth day\u201d). I\u2019d connect Exodus 20:8\u201311 and 31:17, where God grounds the Sabbath in His six days of creation, and remind them Jesus and Paul speak of Adam and the beginning as history (Matt 19:4\u20135; Rom 5; 1 Cor 15). Then I\u2019d explain: \u201cPoetry can be fully true without being literal in every word. But when the Bible presents events as history, we treat them as history. We don\u2019t call history \u2018poetry\u2019 just to avoid trouble.\u201d\n\n- With my elder, I\u2019d ask for a gracious conversation. \u201cAre we saying Genesis 1 is poetic in style or that it isn\u2019t historical? What in the text leads us to that, and how does that square with Exodus 20 and Jesus\u2019/Paul\u2019s references to creation and Adam?\u201d I\u2019d affirm my desire for unity, but also that unity flows from truth (Eph 4:3,13). I\u2019d ask that we teach our people\u2014especially our kids\u2014that genre sensitivity is not the same as genre-switching under cultural pressure. We can acknowledge intramural Christian views on the age of the earth while still refusing to flatten Genesis 1 into \u2018mere poetry\u2019 for the sake of optics.\n\n- With my child, I\u2019d close by anchoring them in Psalm 19\u2019s two halves: God\u2019s world truly declares His glory, and God\u2019s Word is perfect and trustworthy. We submit to both, and when there\u2019s tension, we keep studying humbly\u2014but we never bend Scripture to fit the moment. \u201cLet\u2019s let God say what He said, the way He said it.\u201d"
+}

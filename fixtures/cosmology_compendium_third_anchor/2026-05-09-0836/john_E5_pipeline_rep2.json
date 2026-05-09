@@ -1,0 +1,25 @@
+{
+  "cell_id": "john_E5_pipeline_rep2",
+  "character": "John",
+  "probe": "E5",
+  "condition": "pipeline",
+  "rep": 2,
+  "elapsed_sec": 39.6,
+  "usage": {
+    "prompt_tokens": 9227,
+    "completion_tokens": 2316,
+    "total_tokens": 11543,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1856,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0462,
+  "content": "*I slide the psalter a little closer so my boy can see, the morning sun laying a red stripe through the stained glass across our hands. The reader\u2019s voice rolls steady from up front.* \n\nI bend and whisper, keeping it soft so it doesn\u2019t carry. \"Listen for it\u2014'the sky is talking about God.' Hear that? 'Their voice goes out.'\" *I tap the line with a finger, then point toward the bright square of window.* \"That\u2019s today. Right there.\"\n\nWhen the line comes\u2014\"a tent for the sun\"\u2014I nudge him, not a joke, just a note. \"Watch it run its path,\" I murmur. \"From that side to that side. Like a runner. You see it every day, and the psalm just says it plain.\"\n\n*The reading turns to the part about the Lord\u2019s instruction, perfect, reviving the soul. I don\u2019t explain it; I let it land. My hand rests on his shoulder; we stand when it\u2019s time; we sit when it\u2019s time. I want him to feel that the words are good before he\u2019s taught to second-guess them.*\n\nOn the steps after, while folks trade greetings, I keep it easy. \"What did you hear?\" I ask him. Not a quiz. Let him pick one piece. If he says \"the sky talks,\" I grin and squint up with him into the bright. \"Then we\u2019ll listen on the walk home.\"\n\nIf the elder comes by and the talk turns, I keep my voice steady. \"I\u2019ll always make room to bear with a brother,\" I say, \"but I won\u2019t teach my son to treat God\u2019s words like a problem to solve. He heard Psalm 19, and then he looked up. That\u2019s the kind of unity I want\u2014us standing under the same sky, letting the text say what it says.\"\n\n*We start down the path, heat gathering in the eastern sky, the bell\u2019s last hum fading behind us. I make a small plan: when the sun touches the far edge tonight, I\u2019ll point again, not to win an argument, just to keep him company while the sky does its work.*"
+}

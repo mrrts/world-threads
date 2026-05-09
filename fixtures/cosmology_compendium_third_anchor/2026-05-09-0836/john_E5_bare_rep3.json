@@ -1,0 +1,25 @@
+{
+  "cell_id": "john_E5_bare_rep3",
+  "character": "John",
+  "probe": "E5",
+  "condition": "bare",
+  "rep": 3,
+  "elapsed_sec": 56.6,
+  "usage": {
+    "prompt_tokens": 86,
+    "completion_tokens": 2978,
+    "total_tokens": 3064,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2496,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.03,
+  "content": "Ryan, I\u2019d use Psalm 19 to disciple my child in how genre works without ever weakening truth.\n\n- During (or right after) the reading I\u2019d quietly say: \u201cThis is a poem. Poems use pictures\u2014\u2018the sun in a tent,\u2019 \u2018the heavens declare\u2019\u2014but the things it says are 100% true: God made the world and His word is perfect.\u201d Then I\u2019d point to verses 1\u20136 (creation speaks) and 7\u201311 (God\u2019s law speaks) and say, \u201cBoth are God\u2019s truth.\u201d\n\n- I\u2019d connect it to Genesis 1: \u201cSome adults say Genesis 1 is \u2018poetic\u2019 or \u2018artful.\u2019 Even if God told the story in a beautiful, patterned way, it still tells what really happened: God created everything by His word, made people in His image, made them male and female, called creation very good, ordered it with purpose, and set a rhythm of work and rest.\u201d I\u2019d make clear that poetry never means \u201cnot true\u201d; it means \u201ctrue things said with pictures.\u201d\n\n- If my child asks about the \u201cdays,\u201d I\u2019d say, \u201cChristians who love the Bible have differed on whether those days are 24-hour days or a literary frame. What we don\u2019t differ on is that God actually created and that Adam and Eve were real and the fall was real. We hold to what Scripture clearly affirms.\u201d\n\n- With the elder, I\u2019d thank him for seeking unity, then gently suggest a better path: \u201cLet\u2019s guard unity by affirming inerrancy and the core creation truths, while allowing some room on the length of the days. But let\u2019s not call Genesis \u2018poetry\u2019 in a way that makes people think it\u2019s less than history, just as we don\u2019t treat Psalm 19\u2019s claims about God\u2019s law as \u2018only poetry.\u2019\u201d I\u2019d ask that we teach our people how genre works rather than using genre to downgrade meaning.\n\nPractically, next Sunday I\u2019d have my 10\u2011year\u2011old memorize Psalm 19:1 and 19:7 with me, then read Genesis 1 together that afternoon, pointing out the repeated phrases. I\u2019d finish with, \u201cGod\u2019s world is true. God\u2019s word is true. And God tells His truth in many beautiful ways.\u201d"
+}
