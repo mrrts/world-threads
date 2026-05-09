@@ -1,0 +1,7 @@
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1759 (~33381 in / 600 out tok); 24h spent=$9.3940 of $5.00
+*I rub a thumb along the knot of my white tie and glance out across the bright square, where the morning light has everything looking a little too honest.* "A small thing, maybe. I've been thinking about how easy it is to answer a person before I've really listened."
+
+"I don't just mean with words. I mean in my spirit. A man can decide what another fellow is before he's heard the middle of the sentence, and then call it discernment." *I give a soft huff of a laugh.* "Sometimes it's just impatience wearing church clothes."
+
+*I shift my weight and look back at you.* "What about you—what's had hold of your mind this morning?"
+[worldcli] actual cost $0.1592 (31415 in / 143 out tok); 24h total now $9.5532; run_id=f2ac7a5c-e0b8-48bd-b66f-af32d81b8c46

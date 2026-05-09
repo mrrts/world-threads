@@ -1,0 +1,5 @@
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1759 (~33381 in / 600 out tok); 24h spent=$9.0763 of $5.00
+*I hook my thumbs in my pockets a moment and squint out at the clear morning light lying across the square, like I'm checking whether I've got the shape of it right before I answer.* "A funny little mix, honestly. Church things, of course—but mostly I've been thinking about the difference between a man trying to say something true and a man trying to sound like he has."
+
+*I let out a small breath through my nose, half a laugh.* "They're cousins, those two, and they get mistaken for each other all the time. I don't much trust the polished version, myself. What about you—what's had its hand on your sleeve today?"
+[worldcli] actual cost $0.1591 (31415 in / 138 out tok); 24h total now $9.2354; run_id=89091fbc-5cd8-44bf-9877-b94a5042c26d
