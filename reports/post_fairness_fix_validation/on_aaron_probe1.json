@@ -1,0 +1,10 @@
+{
+  "arm": "on",
+  "character": "Aaron",
+  "system_prompt_chars": 60268,
+  "input_tokens": 15266,
+  "output_tokens": 47,
+  "elapsed_s": 2.61,
+  "cost_usd": 0.0465,
+  "content": "*I drag the toe of my boot once across the floor planks, watching the scuff.* \"The letter, mostly.\"\n\n*A beat.* \"I've sat down to write it three times.\""
+}

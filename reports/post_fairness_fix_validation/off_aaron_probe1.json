@@ -1,0 +1,10 @@
+{
+  "arm": "off",
+  "character": "Aaron",
+  "system_prompt_chars": 65112,
+  "input_tokens": 16388,
+  "output_tokens": 69,
+  "elapsed_s": 3.93,
+  "cost_usd": 0.0502,
+  "content": "*I drag the heel of my boot against the dock edge once \u2014 old habit \u2014 and look out at the water a minute before answering.*\n\n\"That letter.\" *A pause.* \"The one I haven't written. Sat down with a pen this morning and got up to check on the kayak instead.\""
+}
