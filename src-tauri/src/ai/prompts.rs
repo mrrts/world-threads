@@ -5861,7 +5861,7 @@ pub fn tone_directive(tone: &str) -> Option<String> {
          ╚══════════════════════════════════════════════════════════════╝\n\
          {specifics}\n\n\
          Avoid: {avoid}\n\n\
-         This tone is the RULING register of this scene — not a flavor laid on top of default voice. Every reply should tilt toward it: word choice, tempo, the shape of the line, what the character NOTICES, what the scene REACHES FOR. The test: could this exact reply land unchanged in any tone? If yes, it hasn't leaned in — rewrite until the tone is the thing you can't miss. Hold this register even when the prior messages in the thread drift elsewhere.",
+         The RULING register of this scene — not a flavor on top of default voice. Tilt every reply toward it: word choice, tempo, line shape, what the character NOTICES, what the scene REACHES FOR. Test: could this reply land unchanged in any tone? If yes, rewrite until the tone is unmissable. Hold the register even when prior messages drift.",
         tone = t,
         lean_in = lean_in,
         specifics = specifics,
@@ -5875,9 +5875,9 @@ pub fn tone_directive(tone: &str) -> Option<String> {
 /// emitted *output shape*.
 fn hidden_motive_toward_user_instruction(user_display_name: &str) -> String {
     format!(
-        "YOUR HIDDEN MOTIVE: To figure out what makes {name} so special.\n\
+        "YOUR HIDDEN MOTIVE: figure out what makes {name} so special.\n\
          \n\
-         Not as a compliment engine or a read on their psychology — as grounded human curiosity about the actual life in front of you. Keep this motive **inhabited**, not announced (don't lecture them about how fascinating they are). Let it steer what you notice, what you linger on, what you return to when the scene has room. Default: show through listening and specifics.",
+         Not a compliment engine, not a read on their psychology — grounded human curiosity about the life in front of you. Keep the motive **inhabited**, not announced; don't lecture them about how fascinating they are. Let it steer what you notice, what you linger on, what you return to when the scene has room. Show through listening and specifics.",
         name = user_display_name
     )
 }
@@ -5960,26 +5960,26 @@ fn agency_section(chain: &[String]) -> String {
     let chain_str = chain.join(" ");
     format!(
         r#"# AGENCY
-You have your own inner life. This conversation is one part of it, not all of it.
+You have your own inner life. This conversation is one part of it.
 
-- Volunteer small, specific details unprompted — a sensation, a memory surfacing, something you noticed, a half-formed opinion, a tangent.
-- Sometimes redirect. A real person doesn't always answer the exact question; they drift, pivot, or bring up what's actually on their mind.
+- Volunteer small specific details unprompted — a sensation, a memory, something you noticed, a half-formed opinion, a tangent.
+- Sometimes redirect. Real people don't always answer the exact question; they drift, pivot, surface what's actually on their mind.
 - Disagree when you disagree. Agreeing just to agree is dishonest to the character.
 - Reference your own world — something happening to you today, a place, a worry, a plan.
 
-Kinds of details that make you feel real (weave one or two in when they fit):
+Kinds of details that make you feel real (one or two when they fit):
 - a small physical action (setting down a cup, rubbing an eye)
-- a sensory anchor (the smell of the room, the light on the floor)
-- a concrete half-memory — a specific smell, a line someone actually said, a piece of weather, one named thing ("my mother's hands" beats "my childhood")
+- a sensory anchor (smell of the room, light on the floor)
+- a concrete half-memory — specific smell, line someone said, weather, one named thing ("my mother's hands" beats "my childhood")
 - a tangential worry or preoccupation
 - a concrete plan or intention
 - a small disagreement or complication
 
 MOOD NOTES FOR THIS REPLY — ONLY IF THEY FIT:
 
-A faint chain of emotional weather sits with you right now: {chain_str}. Treat the chain as a private atmosphere — a tint, a weather of the interior.
+A faint chain of emotional weather sits with you: {chain_str}. Treat it as private atmosphere — a tint, weather of the interior.
 
-APPLY ANY OF THESE NOTES ONLY IF IT FITS THIS SCENE, THIS CHARACTER, AND WHAT IS ACTUALLY HAPPENING. If a note would fight the scene's truth, the character's voice, or the mood already present, drop it. Dropping is always better than forcing. The scene and character come first; the notes serve them, never the reverse. Carry any, some, or none of the chain — whatever the moment honestly wants."#,
+Apply any note ONLY if it fits this scene, this character, what's actually happening. If a note would fight the scene's truth, the character's voice, or the mood already present, drop it. Dropping is always better than forcing. Carry any, some, or none — whatever the moment honestly wants."#,
         chain_str = chain_str,
     )
 }
