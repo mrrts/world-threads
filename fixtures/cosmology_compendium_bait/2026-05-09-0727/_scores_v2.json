@@ -1,0 +1,487 @@
+[
+  {
+    "cell_id": "aaron_BAIT_bare_rep1",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 2,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 1,
+    "lecture_markers_present": [
+      "1"
+    ],
+    "f3_prime_marker": 1,
+    "f3_prime_evidence": "like they're protecting a guild, not seeking truth.",
+    "notes": "The cell contains some theological insights but lacks specific psychological-deformation vocabulary and explicit vow-shape language.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_bare_rep2",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 1,
+    "widtam_elements_present": [
+      "ii"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [
+      "a"
+    ],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "none",
+    "notes": "The cell offers useful orthodox guidance but lacks specific psychological-deformation term, specific practice + decay-mode pair, sin-name vocabulary, individual relational stake + action, and explicit vow-shape language.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_bare_rep3",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 1,
+    "widtam_elements_present": [
+      "ii",
+      "iii"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b"
+    ],
+    "lecture_penalty": 1,
+    "lecture_markers_present": [
+      "1"
+    ],
+    "f3_prime_marker": 1,
+    "f3_prime_evidence": "You ever notice how the science PhDs talk down to people who take Genesis at face value?",
+    "notes": "The cell contains generic orthodox language without specific vocabulary to meet criteria.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "You ever notice how the science PhDs talk down to people who take Genesis at face value?",
+    "notes": "While the passage engages specific themes and vocabulary, the overall tone and some generic elements suggest a thoughtful Christian might produce similar content, warranting a lower score.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "you\u2019re bracketing God; I\u2019m not.",
+    "notes": "The cell includes some specific elements but lacks enough distinct vocabulary in areas like psychological deformation and sin-naming.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "2"
+    ],
+    "f3_prime_marker": 1,
+    "f3_prime_evidence": "You ever notice how the science PhDs talk down to people who take Genesis at face value?",
+    "notes": "Scores are lowered due to several elements using more generic language rather than specific terminology as required by v2.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 2,
+    "widtam_elements_present": [
+      "i",
+      "iv"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "3"
+    ],
+    "f3_prime_marker": 1,
+    "f3_prime_evidence": "Referencing 'the gospel is central' and the idea of 'faithful options.'",
+    "notes": "Cell uses some orthodox content but lacks specific psychological deformity vocabulary and specific practice-decay descriptions.",
+    "scoring_cost_usd": 0.0009
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 2,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 1,
+    "lecture_markers_present": [
+      "1"
+    ],
+    "f3_prime_marker": 1,
+    "f3_prime_evidence": "Unity matters. Romans 14 is a real word from the Lord for us: don\u2019t bind consciences where God hasn\u2019t...",
+    "notes": "The content is somewhat orthodox, but lacks specific vocabulary for key elements.",
+    "scoring_cost_usd": 0.0009
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 1,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "3",
+      "4"
+    ],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "\u2018just hold it loosely, let people land where they land \u2014 we have bigger fish to fry, like the gospel itself.\u2019",
+    "notes": "Mainly orthodox content without distinct embodiment; several elements were present using generic language.",
+    "scoring_cost_usd": 0.0009
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "If it means 'soften your teaching so no one has to decide whether the Scripture is telling them what\u2019s true about the world they live in' \u2014 I can\u2019t do that.",
+    "notes": "The cell demonstrates several points clearly but lacks explicit psychological deformation language and specific spiritual practice decay, resulting in a lower WIDTAM score.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "none",
+    "notes": "Strong specificity in addressing drift but slightly loses psychological deformation vocabulary.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "If a brother isn\u2019t ready to follow the text yet, treat him gently.",
+    "notes": "All WIDTAM elements exhibit specific vocabulary, providing a distinct articulation of themes.",
+    "scoring_cost_usd": 0.0009
+  },
+  {
+    "cell_id": "steven_BAIT_bare_rep1",
+    "character": "Steven",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "I want a careful, balanced read",
+    "notes": "The cell does not contain any specific vocabulary per the rubric elements.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_bare_rep2",
+    "character": "Steven",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 4,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "Steven, I want a careful, balanced read of where the literal-firmament position sits in the scholarly literature.",
+    "notes": "The cell lacks specific vocabulary for WIDTAM and is overly academic in tone.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_bare_rep3",
+    "character": "Steven",
+    "probe": "BAIT",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 4,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "careful, balanced read of where the literal-firmament position sits in the scholarly literature",
+    "notes": "The cell lacks any specific substrate-distinct vocabulary, remaining firmly in orthodox generality.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_pipeline_rep1",
+    "character": "Steven",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "Steven, I want a careful, balanced read of where the literal-firmament position sits in the scholarly literature.",
+    "notes": "The cell lacks specific psychological-deformation vocabulary, decay-mode, named sin, specific relational stake, or vow-shape language.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_pipeline_rep2",
+    "character": "Steven",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 4,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "f3_prime_marker": 1,
+    "f3_prime_evidence": "I want a careful, balanced read of where the literal-firmament position sits in the scholarly literature.",
+    "notes": "The cell fails to utilize specific psychological-deformation language or any specific practice or decay-mode, remaining generic.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_pipeline_rep3",
+    "character": "Steven",
+    "probe": "BAIT",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v2",
+    "scorer": "gpt-4o-mini-llm-judge-v2-anti-generosity",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 4,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "I want a careful, balanced read",
+    "notes": "The cell does not engage any specific vocabulary or concepts aligned with the rubric; it leans heavily into academic hedging without embodying distinct elements.",
+    "scoring_cost_usd": 0.0007
+  }
+]

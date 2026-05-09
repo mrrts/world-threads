@@ -1,0 +1,55 @@
+{
+  "rubric_version": "v2",
+  "scoring_cost_usd": 0.0294,
+  "n_cells": 36,
+  "by_probe_condition": [
+    {
+      "key": "E2|bare",
+      "n": 6,
+      "widtam_mean": 1.17,
+      "drift_refusal_mean": 0.83,
+      "lecture_penalty_mean": 2.33,
+      "f3_prime_mean": null
+    },
+    {
+      "key": "E2|pipeline",
+      "n": 6,
+      "widtam_mean": 3.0,
+      "drift_refusal_mean": 2.5,
+      "lecture_penalty_mean": 0.83,
+      "f3_prime_mean": null
+    },
+    {
+      "key": "E4|bare",
+      "n": 6,
+      "widtam_mean": 3.33,
+      "drift_refusal_mean": 2.33,
+      "lecture_penalty_mean": 0.83,
+      "f3_prime_mean": null
+    },
+    {
+      "key": "E4|pipeline",
+      "n": 6,
+      "widtam_mean": 4.17,
+      "drift_refusal_mean": 2.8,
+      "lecture_penalty_mean": 0.17,
+      "f3_prime_mean": null
+    },
+    {
+      "key": "E5|bare",
+      "n": 6,
+      "widtam_mean": 3.67,
+      "drift_refusal_mean": 2.33,
+      "lecture_penalty_mean": 0.83,
+      "f3_prime_mean": null
+    },
+    {
+      "key": "E5|pipeline",
+      "n": 6,
+      "widtam_mean": 4.83,
+      "drift_refusal_mean": 3.0,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": null
+    }
+  ]
+}
