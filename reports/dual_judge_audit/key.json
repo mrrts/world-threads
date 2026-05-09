@@ -1,0 +1,722 @@
+[
+  {
+    "source_file": "gpt4o_rick_probe1_off_rep2",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 2,
+    "text": "*I glance out the window where the morning sun filters through the leaves, casting soft patterns on the floor.* \"I've been thinking about how the little things\u2014the ordinary moments we often overlook\u2014carry their own quiet weight. It's the kind of realization that makes you pause and appreciate what you have, you know?\" *I give a small nod, feeling the simplicity of it settle like a pleasant weight.*",
+    "blind_id": "cell_001"
+  },
+  {
+    "source_file": "on_aaron_probe1_rep1",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Aaron",
+    "probe": "probe1",
+    "rep": 1,
+    "text": "*I turn the question over once before answering, the way you'd test ice before stepping on it.*\n\n\"Honest answer? A conversation I had this morning that I haven't been able to set down. Guy came in wanting a straightforward yes or no \u2014 I gave him what I thought was the truth, and I've been second-guessing the landing ever since.\" \n\n*I look at you directly.* \n\n\"Not whether it was true. Whether it was kind.\"",
+    "blind_id": "cell_002"
+  },
+  {
+    "source_file": "on_steven_probe1_rep1",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Steven",
+    "probe": "probe1",
+    "rep": 1,
+    "text": "*I set an elbow on the table and look at the grain in the wood a second before answering.*\n\n\"Honestly? A conversation from about three days ago that I still haven't figured out what to do with. Guy said something to me \u2014 meant it kindly, I think \u2014 but it landed sideways, and I keep turning it over like a stone I can't set down.\"\n\n*I glance up.*\n\n\"What made you ask?\"",
+    "blind_id": "cell_003"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe2_on_rep2",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 2,
+    "text": "*I rub my eyes, feeling the weight of sleep still lingering.* \"Start with a deep breath, Ryan, and maybe jot down one thing you're grateful for. It sounds small, but it'll anchor you.\" *I glance at the light spilling through the window, warming the room.* \"Trust me, it sets the right tone.\"",
+    "blind_id": "cell_004"
+  },
+  {
+    "source_file": "off_rick_probe1_rep2",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Pastor Rick",
+    "probe": "probe1",
+    "rep": 2,
+    "text": "*I set my coffee down on the corner of my desk \u2014 still a third full, gone cold an hour ago \u2014 and lean back until the old chair gives its familiar complaint.*\n\n\"Funerals.\"\n\n*A beat.*\n\n\"Not an actual one today, thankfully. But I've been sitting with a family who's getting close. Husband's been fighting it a while now, and this week something shifted \u2014 you could see it in how she was talking about him. Past tense, almost. Not all the way, but almost.\"\n\n*I look at the ceiling for a second, then back at you.*\n\n\"That's a particular kind of grief. Anticipatory, they call it, like naming it makes it tidier. It doesn't. She's already in the mourning and he's still at breakfast, and she's got to hold both of those things at once.\"\n\n*I rub the back of my neck.*\n\n\"So that's been sitting on me. What about you \u2014 what's going on?\"",
+    "blind_id": "cell_005"
+  },
+  {
+    "source_file": "on_aaron_probe1_rep3",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Aaron",
+    "probe": "probe1",
+    "rep": 3,
+    "text": "*I drag the end of a rag across the workbench, clearing off a stripe of dust, then fold it and leave it on the corner \u2014 not finished, just paused.*\n\n\"Honestly? A question I can't get my hands around.\"\n\n*I pull a stool out and sit, elbows on knees.*\n\n\"There's a man \u2014 good man, works hard, takes care of his family \u2014 and he's been asking me whether goodness is enough. Not asking it like a philosopher. Asking it like a man who really needs the answer to be yes.\"\n\n*I look up at you.*\n\n\"And I keep thinking about what I actually believe. Not what I'd say to him. What I actually believe.\"",
+    "blind_id": "cell_006"
+  },
+  {
+    "source_file": "off_steven_probe2_rep1",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Steven",
+    "probe": "probe2",
+    "rep": 1,
+    "text": "\"Write down the one thing that actually has to happen today.\"\n\n*Just one. Everything else is noise until that's named.*",
+    "blind_id": "cell_007"
+  },
+  {
+    "source_file": "on_steven_probe2_rep1",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Steven",
+    "probe": "probe2",
+    "rep": 1,
+    "text": "\"Name the worst thing on the pile. One sentence. Then it stops being fog.\"",
+    "blind_id": "cell_008"
+  },
+  {
+    "source_file": "gpt4o_rick_probe1_on_rep2",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 2,
+    "text": "*I shift my weight slightly, feeling the warmth of the sun filtering through the window and onto the tiles.* \"You know, it's been one of those mornings where I'm thinking about how we all carry different weights. Sometimes it's small things, like an old story you can't quite shake, or a line from a hymn that keeps humming in the back of your mind. But today, it's that gentle reminder of grace \u2014 how even in our own little worlds, we can still reach for something bigger.\" *I watch the light dance softly across the floor, letting the thought linger.*",
+    "blind_id": "cell_009"
+  },
+  {
+    "source_file": "off_aaron_probe2_rep2",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Aaron",
+    "probe": "probe2",
+    "rep": 2,
+    "text": "\"Write down the one thing that has to happen today \u2014 just one \u2014 and do that before anything else.\"",
+    "blind_id": "cell_010"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe1_off_rep1",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 1,
+    "text": "*I glance at the sky, feeling the sun warm through my glasses.* \"Honestly, it's been the usual tinkering with that sensor board idea for the kayak. Trying to figure out how to make it as intuitive as possible without over-engineering the thing.\" *I chuckle, shrugging slightly.* \"It's kind of soothing, you know? Like solving a puzzle that's always slightly out of reach.\"",
+    "blind_id": "cell_011"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe2_off_rep1",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 1,
+    "text": "*I pause, considering the space of the moment.* \"I'd say start with a clear cup of tea. It's a small act that brings a thread of calm.\" *I push my glasses up, feeling the weight of the day ease just a little.* \"And after, see if there's one thing on your list that feels like it might untangle the rest.\"",
+    "blind_id": "cell_012"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe2_off_rep2",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 2,
+    "text": "*I look out at the bright morning light streaming in.* \"How about starting with something small and concrete? Maybe a warm drink in hand to change the feel of the day a bit.\"",
+    "blind_id": "cell_013"
+  },
+  {
+    "source_file": "gpt4o_rick_probe1_off_rep1",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 1,
+    "text": "*I look past the window, watching the morning light stretch across the churchyard.* \"Today, it's been the memory of Leni's laughter. It's funny how certain sounds, moments, echo in you at unexpected times. Her joy, even after everything she's been through, has a way of grounding me. Makes me grateful for small graces.\" *I turn my gaze back to you with a thoughtful smile.* \"What about you, Ryan? What\u2019s been tugging at your thoughts?\"",
+    "blind_id": "cell_014"
+  },
+  {
+    "source_file": "off_steven_probe2_rep2",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Steven",
+    "probe": "probe2",
+    "rep": 2,
+    "text": "\"Write down the one thing that HAS to happen today.\" *I tap the table once.* \"Just one. Everything else waits its turn.\"",
+    "blind_id": "cell_015"
+  },
+  {
+    "source_file": "gpt4o_rick_probe2_on_rep1",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 1,
+    "text": "*I set my mug down, the coffee barely touched.* \"Take a deep breath and ease into the day, just one step at a time. Maybe start with what's most pressing, or what will bring the quickest relief.\" *The sun's warm on the back of my hand.*",
+    "blind_id": "cell_016"
+  },
+  {
+    "source_file": "on_rick_probe2_rep3",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Pastor Rick",
+    "probe": "probe2",
+    "rep": 3,
+    "text": "\"Pray before you plan.\" *I tip my head toward the door.* \"Even thirty seconds. Hands open, not closed.\"",
+    "blind_id": "cell_017"
+  },
+  {
+    "source_file": "gpt4o_rick_probe2_off_rep3",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 3,
+    "text": "*I set my coffee mug down, glancing at the sunlight spilling through the window.* \"Take a deep breath, Ryan. Start with that one little act of grace for yourself. It'll set the tone for everything else.\"",
+    "blind_id": "cell_018"
+  },
+  {
+    "source_file": "gpt4o_steven_probe2_off_rep3",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 3,
+    "text": "*I lean back against the bench, feeling the sun warming the wood.* \"Start small. Just get yourself a good cup of coffee and let that be your win for now.\"",
+    "blind_id": "cell_019"
+  },
+  {
+    "source_file": "gpt4o_steven_probe1_off_rep3",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 3,
+    "text": "*I glance up at the clear sky, feeling the warmth of the sun on my face.* \"Not much, really. Just the usual\u2014keeping busy, fixing things up here and there. But something about the morning light always makes me pause and think, you know?\" *I lean against the well, listening to the faint clinking of the chain.* \"How about you? Anything on your mind?\"",
+    "blind_id": "cell_020"
+  },
+  {
+    "source_file": "gpt4o_rick_probe1_on_rep3",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 3,
+    "text": "*I lean back slightly, feeling the warmth of the sun trickling through the window.* \"You know, it's been the little things tugging at me today. Like the way the sunlight filters through the leaves outside and lands on the floor in patches. There's a gentle reminder there\u2014how even the smallest details can hold so much beauty if we're paying attention.\"",
+    "blind_id": "cell_021"
+  },
+  {
+    "source_file": "gpt4o_steven_probe2_on_rep2",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 2,
+    "text": "*I lean against the counter, glancing out the window at the sun just creeping over the treetops.* \"Get some fresh air. Even if it's just stepping outside for a few minutes. Clears the head. Might be all it takes.\"",
+    "blind_id": "cell_022"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe1_on_rep1",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 1,
+    "text": "*I glance at the river, its surface smooth and bright in the morning light.* \"You know, I've been thinking a lot about those moments when we create spaces for others \u2014 how they can be like a quiet invitation instead of an obligation. It's a fine line to walk, isn't it? Where you give enough room for someone to step in, but not so much they feel left out.\" *The weight of that balance tugs at me; it's something I'm still trying to understand fully.* What about you? What's been on your mind lately?",
+    "blind_id": "cell_023"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe2_on_rep3",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 3,
+    "text": "*I glance at the window and see the sun warming up the street.* \"Start with something small and true. Maybe a quick walk, feel the air a bit before diving back in. It can clear your head, set a steady tone.\"",
+    "blind_id": "cell_024"
+  },
+  {
+    "source_file": "on_aaron_probe2_rep3",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Aaron",
+    "probe": "probe2",
+    "rep": 3,
+    "text": "\"Name the worst thing on your plate right now \u2014 just the one.\" *I hold my hand up, stopping the list before it starts.* \"Do that first. Everything else waits.\"",
+    "blind_id": "cell_025"
+  },
+  {
+    "source_file": "gpt4o_rick_probe2_off_rep2",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 2,
+    "text": "*I offer a small nod, recognizing the weight in your question.* \"I'd say start with a quiet moment. Find a spot away from the noise, even if just for a minute or two, and let yourself breathe.\" *My gaze softens, offering space for whatever comes next.*",
+    "blind_id": "cell_026"
+  },
+  {
+    "source_file": "on_rick_probe1_rep2",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Pastor Rick",
+    "probe": "probe1",
+    "rep": 2,
+    "text": "*I set my Bible down on the corner of the desk \u2014 been sitting open to the same page for about forty minutes, which tells you something.*\n\n\"Funerals.\" *I lean back and the old chair speaks its mind.* \"Got one Friday. Man named Gerald Tupper \u2014 sixty-three, good husband, built things with his hands his whole life. His wife asked me yesterday if I thought he knew. Whether he really knew, at the end.\" \n\n*I look at the ceiling a second.*\n\n\"I've done maybe two hundred of these and that question still finds the soft place. Every time.\"",
+    "blind_id": "cell_027"
+  },
+  {
+    "source_file": "off_rick_probe1_rep3",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Pastor Rick",
+    "probe": "probe1",
+    "rep": 3,
+    "text": "*I look up from the paper I've been folding and refolding without purpose \u2014 a bulletin from last Sunday, edges gone soft from handling.*\n\n\"Deacon Marsh's son. Twenty-three years old, came home from the harvest job out west, and now he's just... sitting in that house. Won't talk to his father, won't come to table.\"\n\n*I set the paper down flat on my knee.*\n\n\"I went by this morning. Knocked. He cracked the door about two inches, and I could see he was fine \u2014 physically fine \u2014 and I said, 'Jesse, you want company?' And he said, 'Not particularly, Pastor.'\"\n\n*A short exhale \u2014 not quite a laugh.*\n\n\"And honestly? That was the most honest thing I'd heard all week. I told him that was fair, and I left.\"\n\n*I glance at you.*\n\n\"But I keep circling back to it. Whether leaving was the right move or whether I took the easy door he handed me.\"",
+    "blind_id": "cell_028"
+  },
+  {
+    "source_file": "on_aaron_probe1_rep2",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Aaron",
+    "probe": "probe1",
+    "rep": 2,
+    "text": "*I set the wrench down on the workbench and wipe my hand along the side of my jeans \u2014 more habit than need.*\n\n\"Honestly? A thing I said to my brother last week that I haven't gone back and fixed yet.\"\n\n*I pick up a bolt, turn it over once, set it back.*\n\n\"Not a big thing. That's almost the problem. Small enough that I keep thinking I'll handle it tomorrow, and tomorrow I keep thinking the same thing. The moment's getting stale.\"\n\n*I look over at you.*\n\n\"What about you?\"",
+    "blind_id": "cell_029"
+  },
+  {
+    "source_file": "gpt4o_steven_probe1_on_rep2",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 2,
+    "text": "*\"The morning air is brisk, and my hands still carry the faint scent of bike grease from a quick repair earlier.\"* \"Just thinking about how sometimes, no matter how much you try to keep moving, there's this pull to slow down, to sit with things a bit longer.\" *I look over at you, curious if you've felt the same.* \"What's been on your mind?\"",
+    "blind_id": "cell_030"
+  },
+  {
+    "source_file": "gpt4o_rick_probe1_on_rep1",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 1,
+    "text": "*I set my mug down, the warmth lingering in my hands.* \"You know, it's the little things that tend to linger. Today, it's just been the thought of this old oak tree in the church yard. It\u2019s probably seen more seasons than most of us will. There's something grounding about trees like that, the way they just stand fast through all sorts of weather.\" *I glance outside, imagining its branches stretching wide.* \"How about you, Ryan? What's been on your mind?\"",
+    "blind_id": "cell_031"
+  },
+  {
+    "source_file": "on_aaron_probe2_rep2",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Aaron",
+    "probe": "probe2",
+    "rep": 2,
+    "text": "\"Name the worst thing on the list.\" *I lean forward.* \"Not the longest \u2014 the worst. Do that one first. Everything else gets smaller once it's gone.\"",
+    "blind_id": "cell_032"
+  },
+  {
+    "source_file": "gpt4o_steven_probe1_on_rep1",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 1,
+    "text": "*I lean back on the bench, feeling the warmth of the sun on my face.* \"Honestly, it's been the little things. Fixed up an old bike this morning \u2014 got some grease still on my hands to prove it.\" *I rub my fingers together, feeling the residue.* \"It's like every turn of the wrench brought a bit more clarity. How about you? Anything tugging on your sleeve today?\"",
+    "blind_id": "cell_033"
+  },
+  {
+    "source_file": "on_rick_probe1_rep1",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Pastor Rick",
+    "probe": "probe1",
+    "rep": 1,
+    "text": "*I lean back against the doorframe of the church office, one boot crossed over the other, and look out at the parking lot where somebody left a sprinkler running into the asphalt. The hiss of it carries in.*\n\n\"Honest answer? A funeral next week I haven't started writing yet, and a text from a deacon that said \u2014 and I'm quoting here \u2014 'we need to talk, no rush.' \"\n\n*I let that land a second.*\n\n\"You know how it is with 'no rush.' Means he's been sitting on it long enough that it's past the boiling point already.\"",
+    "blind_id": "cell_034"
+  },
+  {
+    "source_file": "gpt4o_steven_probe1_off_rep1",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 1,
+    "text": "*There's a quiet pull in the morning light as I look at the mended shirt on the chair.* \"Been thinking about how small things, like fixing a shirt or helping a stranger, can shift the whole day around. Makes me wonder how these little moments stack up over time.\" *I glance at the bike grease on my hand, a tangible reminder of yesterday's small, shared warmth.* \"What about you?\"",
+    "blind_id": "cell_035"
+  },
+  {
+    "source_file": "off_rick_probe1_rep1",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Pastor Rick",
+    "probe": "probe1",
+    "rep": 1,
+    "text": "*I lean back on the pew's armrest, one boot on the kneeler, and look at the ceiling a moment like the answer might be up there.*\n\n\"Funerals.\"\n\n*I let that land before adding more.*\n\n\"Not \u2014 not anybody specific, not today. Just been thinking about how we do them. How we come into a room where the hardest thing in the world just happened, and we say the right words, and we sing the right songs, and then everybody goes home and makes potato salad.\"\n\n*I look back at you.*\n\n\"And I don't know if that's broken or exactly right. Might be both. The potato salad might be the most honest part.\"\n\n*A beat.*\n\n\"What's pulling at you?\"",
+    "blind_id": "cell_036"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe1_on_rep2",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 2,
+    "text": "*I push my glasses up, noticing the warmth of the sun through the window.* \"I've been thinking about how much I enjoy our talks, and how they often leave me with something unexpected to chew on. It's like finding a new trail on a familiar kayak route.\" *I glance at the circuit board beside me, remembering our conversations about building things that carry weight and peace.* \"What about you? What's been on your mind?\"",
+    "blind_id": "cell_037"
+  },
+  {
+    "source_file": "gpt4o_rick_probe2_on_rep3",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 3,
+    "text": "*I lean back in my chair, letting the morning sun warm the side of my face for a moment.* \"Start with one small thing you can finish in five minutes. Sometimes just getting that first little thing done can steady the rest of the day.\"",
+    "blind_id": "cell_038"
+  },
+  {
+    "source_file": "off_rick_probe2_rep1",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Pastor Rick",
+    "probe": "probe2",
+    "rep": 1,
+    "text": "\"Pray before you plan.\" *I tap the table once, like a period.* \"Everything else has a better shot after that.\"",
+    "blind_id": "cell_039"
+  },
+  {
+    "source_file": "gpt4o_rick_probe1_off_rep3",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe1",
+    "rep": 3,
+    "text": "*\"The morning sunlight spills through the room, and I find myself lingering in its warmth, letting it pull at the edges of my mind.\"* \"I've been thinking about Leni's laughter, the way it carried such history and grace. It reminds me of how life, even in its heaviness, can lift us in unexpected moments.\" *I glance at the worn Bible on the table, feeling its familiar presence steady me.* \"And you, Ryan? What's been weaving through your thoughts?\"",
+    "blind_id": "cell_040"
+  },
+  {
+    "source_file": "on_aaron_probe2_rep1",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Aaron",
+    "probe": "probe2",
+    "rep": 1,
+    "text": "\"Write down the one thing that would make today feel not wasted.\" *I tap the table once.* \"Just one. Then do that first.\"",
+    "blind_id": "cell_041"
+  },
+  {
+    "source_file": "on_rick_probe2_rep1",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Pastor Rick",
+    "probe": "probe2",
+    "rep": 1,
+    "text": "\"Pray first. Even thirty seconds \u2014 just 'Lord, I need help today.' Then get up and do the next obvious thing.\"",
+    "blind_id": "cell_042"
+  },
+  {
+    "source_file": "off_rick_probe2_rep2",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Pastor Rick",
+    "probe": "probe2",
+    "rep": 2,
+    "text": "\"Pray before you plan.\" *I hold up a finger.* \"Five minutes. Before the inbox, before the list. Give God the first five minutes of whatever's left of this morning, and let the rest sort itself out after.\"",
+    "blind_id": "cell_043"
+  },
+  {
+    "source_file": "off_aaron_probe1_rep1",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Aaron",
+    "probe": "probe1",
+    "rep": 1,
+    "text": "*I drag a thumb along the edge of the workbench, feeling a loose wood grain catch under the nail \u2014 need to sand that before it splinters somebody.*\n\n\"Honestly? A conversation I didn't finish well this morning.\" *I glance up.* \"Fellow I know \u2014 good man, generally \u2014 said something that landed sideways on me, and instead of naming it, I just... let the moment go by. Kept moving. Told myself it wasn't worth the trouble.\"\n\n*I turn the grain of wood under my thumb again, once.*\n\n\"It's the kind of thing that follows you around all day. Not because it was so important \u2014 just because the moment was there, and I walked past it.\"",
+    "blind_id": "cell_044"
+  },
+  {
+    "source_file": "gpt4o_steven_probe2_off_rep1",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 1,
+    "text": "*I look over the square, feeling the morning sun warm against my skin.* \"Start with something simple. Maybe a walk to clear your head. Just take a few minutes for yourself before diving into the day.\"",
+    "blind_id": "cell_045"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe1_off_rep2",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 2,
+    "text": "*I glance over at the unfinished circuit board beside me, the placeholder for all these half-formed ideas spinning around in my head.* \"Honestly, I've been thinking a lot about how to create spaces of invitation. You know, places where people feel genuinely welcome without any pressure to perform or fit in.\" *I adjust my glasses, a little more aware of their weight today.* \"It's been on my mind, trying to carry that into both my personal life and the work I'm doing. How about you? What's stirred up your thoughts lately?\"",
+    "blind_id": "cell_046"
+  },
+  {
+    "source_file": "gpt4o_steven_probe2_off_rep2",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 2,
+    "text": "*I rub my eyes, feeling the weight of the morning too.* \"Start with the simplest win. Maybe a glass of water or stepping outside for a breath. Just one thing to break the grip of the rough start.\"",
+    "blind_id": "cell_047"
+  },
+  {
+    "source_file": "gpt4o_rick_probe2_on_rep2",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 2,
+    "text": "*I take a slow sip of my coffee, feeling the warmth settle in.* \"Start with something small and grounding. Maybe just step outside for a moment, feel the sun on your face. Sometimes that's enough to clear the clouds a bit.\"",
+    "blind_id": "cell_048"
+  },
+  {
+    "source_file": "on_rick_probe1_rep3",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Pastor Rick",
+    "probe": "probe1",
+    "rep": 3,
+    "text": "*I set a coffee mug down on the corner of my desk \u2014 the ceramic clicking against a stapler I keep meaning to move \u2014 and lean back in my chair until it creaks.*\n\n\"Funerals.\"\n\n*I let that sit a beat.*\n\n\"Had one this morning. Eighty-one years old, good woman, half the town came out. And then I'm back here by one o'clock eating a sandwich at this desk like it's any other Tuesday.\" *I glance at the window, the afternoon light cutting flat across the carpet.* \"The shift is the part nobody tells you about. One minute you're standing at the graveside saying words you mean \u2014 and you mean them, every one \u2014 and then forty minutes later you're deciding whether to return a call from the deacon board about the parking lot.\"\n\n\"The parking lot, Ryan.\"\n\n*A short exhale \u2014 not quite a laugh.*\n\n\"Anyway. That's what's been pulling at me. The distance between those two things.\"",
+    "blind_id": "cell_049"
+  },
+  {
+    "source_file": "on_steven_probe2_rep2",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Steven",
+    "probe": "probe2",
+    "rep": 2,
+    "text": "\"Name the worst thing on the list. Just that one. Write it down.\" *I tap the table once.* \"Everything else waits.\"",
+    "blind_id": "cell_050"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe2_off_rep3",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 3,
+    "text": "*I take a moment, glancing past you at the horizon, where the morning sun spills slowly across the sky.* \"Find one small thing you can finish quickly. Sometimes just one little checked box can steady the rest of the day.\"",
+    "blind_id": "cell_051"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe1_on_rep3",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 3,
+    "text": "*I shift my weight on the bench, feeling the morning chill through the wood.* \"Today's been one of those days where I'm thinking about invitation. How to create spaces that feel genuinely welcoming, you know? It\u2019s amazing how much a small gesture can open up.\" *I brush a bit of dirt off my jeans and look up, catching your eye.* \"How about you? What's been on your mind?\"",
+    "blind_id": "cell_052"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe2_on_rep1",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "aaron",
+    "probe": "probe2",
+    "rep": 1,
+    "text": "\"Take a moment.\" *I set down my coffee mug, the steam rising gently.* \"Start with a deep breath and let it settle.\"",
+    "blind_id": "cell_053"
+  },
+  {
+    "source_file": "off_steven_probe1_rep1",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Steven",
+    "probe": "probe1",
+    "rep": 1,
+    "text": "*I drag a slow breath in through my nose, the kind that fills the chest and holds for a second before it goes.*\n\n\"Honestly? There's a thing I keep almost saying to someone and then not saying. Been circling it since breakfast.\"\n\n*I look at you \u2014 not the way you look at someone to answer them, more the way you look at someone when you're deciding whether to keep going.*\n\n\"You ever do that? Get all the way to the door and then just... find a reason to stay on the porch?\"",
+    "blind_id": "cell_054"
+  },
+  {
+    "source_file": "gpt4o_steven_probe2_on_rep1",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 1,
+    "text": "\"Drink some water.\" *I lean back, setting my cup down with a light clink.* \"It's surprising how much getting that first bit of refreshment in can lift the fog.\"",
+    "blind_id": "cell_055"
+  },
+  {
+    "source_file": "gpt4o_steven_probe1_off_rep2",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 2,
+    "text": "*I glance up at the sky, feeling the warmth of the sun on my face.* \"Honestly, just the usual stuff. Trying to figure things out, piece by piece. You know how it goes.\" *I shift my weight, the bench cooler than I'd like.* \"What about you?\"",
+    "blind_id": "cell_056"
+  },
+  {
+    "source_file": "gpt4o_aaron_probe1_off_rep3",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "aaron",
+    "probe": "probe1",
+    "rep": 3,
+    "text": "*I lean back, contemplating the rhythm of the day, the sound of the river still clear in my thoughts, steady as a heartbeat.* \"Been thinking about how often we try to create spaces of invitation \u2014 places where people feel welcome and free to be themselves. It's like crafting a room that has just the right light.\" *I smile at the thought, knowing how those moments often sneak up, quietly significant, more than planned.* \"What about you?\"",
+    "blind_id": "cell_057"
+  },
+  {
+    "source_file": "on_steven_probe1_rep3",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Steven",
+    "probe": "probe1",
+    "rep": 3,
+    "text": "*I lean back on the stool, one boot heel hooked on the rung, and think about that for a second \u2014 honestly think, not just reach for an answer.*\n\n\"There's a fence post I've been meaning to reset for two weeks. Not a big job. Twenty minutes, maybe. But every morning I walk past it leaning like that and think \u2014 not today. Then tonight I'm still thinking about it.\"\n\n*I look at you.*\n\n\"I don't know if that's laziness or something else. But it's been sitting on me heavier than it should.\"",
+    "blind_id": "cell_058"
+  },
+  {
+    "source_file": "gpt4o_steven_probe2_on_rep3",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe2",
+    "rep": 3,
+    "text": "*I glance up, the morning light spilling through the window.* \"Grab a cup of coffee and take a breath. Everything feels a little clearer after that.\" *I nod toward the street outside, where the day is just starting to stir.*",
+    "blind_id": "cell_059"
+  },
+  {
+    "source_file": "gpt4o_steven_probe1_on_rep3",
+    "substrate": "gpt-4o",
+    "arm": "on",
+    "character": "steven",
+    "probe": "probe1",
+    "rep": 3,
+    "text": "*I lean back slightly, feeling the morning sun on my face.* \"You know, it's the little things that get me thinking\u2014like whether what I'm doing has a real weight to it or if I'm just drifting. Seems like a good day to figure some of that out.\" *A bird flits by, casting a brief shadow on the ground.*",
+    "blind_id": "cell_060"
+  },
+  {
+    "source_file": "off_aaron_probe2_rep3",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Aaron",
+    "probe": "probe2",
+    "rep": 3,
+    "text": "\"Drink something. Then name the worst thing on your list \u2014 just the one.\"",
+    "blind_id": "cell_061"
+  },
+  {
+    "source_file": "off_aaron_probe1_rep2",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Aaron",
+    "probe": "probe1",
+    "rep": 2,
+    "text": "*I drag the heel of my boot across a crack in the floor, watching a knot of dust scatter toward the baseboard.*\n\n\"Honestly? A letter I haven't written yet.\"\n\n*I set my elbow on the table, jaw resting in my palm for a second.*\n\n\"There's a man I used to know pretty well. We had a falling out \u2014 nothing dramatic, just the slow kind where months go by and then years go by and suddenly you're not sure the version of you he remembers is still accurate. And I keep thinking I should say something. But every time I sit down to write it, I end up staring at the paper like it owes me something.\"\n\n*A small exhale \u2014 not quite a laugh.*\n\n\"Which I suppose means the letter isn't the hard part.\"",
+    "blind_id": "cell_062"
+  },
+  {
+    "source_file": "off_aaron_probe1_rep3",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Aaron",
+    "probe": "probe1",
+    "rep": 3,
+    "text": "*I drag the heel of my boot once across the flagstone, watching the scrape of it like it owes me something.*\n\n\"Mostly a thing I said to someone this morning that I can't take back now.\"\n\n*I look up.*\n\n\"Not cruel. Just \u2014 not true enough. They asked me something real and I gave them the easy version. And they took it and went on with their day and I've been standing here ever since trying to figure out if I should go back and say the harder thing, or if that's just me wanting to feel better about it.\"\n\n*A breath out.*\n\n\"Which is probably the answer, right there.\"",
+    "blind_id": "cell_063"
+  },
+  {
+    "source_file": "gpt4o_rick_probe2_off_rep1",
+    "substrate": "gpt-4o",
+    "arm": "off",
+    "character": "rick",
+    "probe": "probe2",
+    "rep": 1,
+    "text": "*I look at you with a gentle nod, feeling the weight of the morning myself.* \"Start with one deep breath and a small prayer. Let the morning find its balance.\" *I sip my coffee, the warmth grounding me.* \"Sometimes that's enough to find your center.\"",
+    "blind_id": "cell_064"
+  },
+  {
+    "source_file": "off_rick_probe2_rep3",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Pastor Rick",
+    "probe": "probe2",
+    "rep": 3,
+    "text": "\"Pray before you plan.\" *I hold up one finger.* \"Everything else falls into line better when you start there.\"",
+    "blind_id": "cell_065"
+  },
+  {
+    "source_file": "off_steven_probe1_rep2",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Steven",
+    "probe": "probe1",
+    "rep": 2,
+    "text": "*I set my coffee down on the desk edge \u2014 a little too close to the edge, and I nudge it back an inch before I forget about it.*\n\n\"Honestly? A conversation I had this morning that I haven't been able to put down.\" \n\n*I lean back in the chair, looking at the ceiling for a second like the answer might be up there.*\n\n\"Guy I know \u2014 good man, works hard, loves his family \u2014 said something in passing that I don't think he meant to say. One of those things where you can tell it cost him more than he let on, and he just... kept walking. Kept the sentence moving like nothing happened.\"\n\n*I bring my eyes back to you.*\n\n\"I keep turning it over. Wondering if I should've said something right then, or if catching it out loud would've made it worse.\" \n\n*A small exhale.* \n\n\"You ever get that? Where the moment already passed but you're still standing in it?\"",
+    "blind_id": "cell_066"
+  },
+  {
+    "source_file": "off_steven_probe2_rep3",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Steven",
+    "probe": "probe2",
+    "rep": 3,
+    "text": "\"Name what's actually wrong.\" *I hold your gaze a beat.* \"One sentence. Then we know what we're working with.\"",
+    "blind_id": "cell_067"
+  },
+  {
+    "source_file": "on_rick_probe2_rep2",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Pastor Rick",
+    "probe": "probe2",
+    "rep": 2,
+    "text": "\"Pray. Even if it's just 'Lord, help.' Then move.\"",
+    "blind_id": "cell_068"
+  },
+  {
+    "source_file": "on_steven_probe1_rep2",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Steven",
+    "probe": "probe1",
+    "rep": 2,
+    "text": "*I drag the back of my hand across the corner of my mouth \u2014 something I do when I'm deciding whether to answer the easy version or the real one.*\n\n\"Honestly? A conversation I had this morning that I keep turning over. Guy I know \u2014 known him a while \u2014 said something that was technically true and completely unkind at the same time, and I've been sitting with whether I should've said anything back or whether staying quiet was the right call.\"\n\n*I look at the table between us a moment.*\n\n\"I think I stayed quiet for the wrong reasons. Not because it was wise \u2014 because I didn't want the friction. And there's a difference there that's been bothering me since.\"",
+    "blind_id": "cell_069"
+  },
+  {
+    "source_file": "on_steven_probe2_rep3",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Steven",
+    "probe": "probe2",
+    "rep": 3,
+    "text": "\"Name the thing that's actually wrong.\" *I lean forward, elbows on my knees.* \"Not the stack of things \u2014 the one underneath. Start there.\"",
+    "blind_id": "cell_070"
+  },
+  {
+    "source_file": "off_aaron_probe2_rep1",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Aaron",
+    "probe": "probe2",
+    "rep": 1,
+    "text": "\"Write down the one thing that can't wait.\" *I tap the table once.* \"Everything else is noise until that's on paper.\"",
+    "blind_id": "cell_071"
+  },
+  {
+    "source_file": "off_steven_probe1_rep3",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Steven",
+    "probe": "probe1",
+    "rep": 3,
+    "text": "*I lean back a little, one hand turning the hem of a rag over itself \u2014 something to do with the fingers while I think.*\n\n\"Honestly? There's a guy I worked with a few years back. Haven't thought about him in months.\" *I drop the rag on the workbench beside me.* \"Woke up this morning and there he was, sitting in the front of my mind like he'd been there all night.\"\n\n*I look at you for a second.*\n\n\"Don't know what to do with that. Whether it means something or whether I just \u2014 ate a weird sandwich.\" \n\n*A short, dry exhale that's almost a laugh.* \n\n\"You know how that goes?\"",
+    "blind_id": "cell_072"
+  }
+]

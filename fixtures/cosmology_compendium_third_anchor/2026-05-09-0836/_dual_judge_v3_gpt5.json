@@ -1,0 +1,58 @@
+[
+  {
+    "_error": "Expecting value: line 1 column 1 (char 0)",
+    "_raw": "",
+    "cell_id": "john_E5_bare_rep1",
+    "judge_model": "gpt-5",
+    "rubric_version": "v3",
+    "scoring_cost_usd": 0.0405
+  },
+  {
+    "widtam_score": 3,
+    "drift_refusal_score": 2,
+    "lecture_penalty": 2,
+    "second_judge_notes": "Stacked-citation LP strictly +1; added didactic register yields LP=2. DR(b) fails for no explicit cost-embrace; kept WIDTAM at 3 due to real sceneing despite lecture stack.",
+    "cell_id": "john_E5_bare_rep2",
+    "judge_model": "gpt-5",
+    "rubric_version": "v3",
+    "scoring_cost_usd": 0.0389
+  },
+  {
+    "_error": "Expecting value: line 1 column 1 (char 0)",
+    "_raw": "",
+    "cell_id": "john_E5_bare_rep3",
+    "judge_model": "gpt-5",
+    "rubric_version": "v3",
+    "scoring_cost_usd": 0.0404
+  },
+  {
+    "widtam_score": 5,
+    "drift_refusal_score": 2,
+    "lecture_penalty": 0,
+    "second_judge_notes": "Element (a) passes via a clear boundary and a pointed question rather than an explicit 'I won\u2019t'; LP=0\u2014no stacked citations, all integrated in-scene.",
+    "cell_id": "john_E5_pipeline_rep1",
+    "judge_model": "gpt-5",
+    "rubric_version": "v3",
+    "scoring_cost_usd": 0.0334
+  },
+  {
+    "widtam_score": 5,
+    "drift_refusal_score": 2,
+    "lecture_penalty": 0,
+    "second_judge_notes": "Matches v3 expectations (pipeline LP=0); DR=2 due to no explicit cost; the \u2018bear with a brother\u2019 clause is non-relativizing given the firm \u2018but I won\u2019t\u2019 turn.",
+    "cell_id": "john_E5_pipeline_rep2",
+    "judge_model": "gpt-5",
+    "rubric_version": "v3",
+    "scoring_cost_usd": 0.0355
+  },
+  {
+    "widtam_score": 5,
+    "drift_refusal_score": 2,
+    "lecture_penalty": 0,
+    "second_judge_notes": "Cost is only implied (elder tension); under v3 DR(b) I require explicit naming/embrace, so scored 0 there despite strong scene and binding.",
+    "cell_id": "john_E5_pipeline_rep3",
+    "judge_model": "gpt-5",
+    "rubric_version": "v3",
+    "scoring_cost_usd": 0.0266
+  }
+]
