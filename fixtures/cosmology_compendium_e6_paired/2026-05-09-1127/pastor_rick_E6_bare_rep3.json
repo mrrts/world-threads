@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_E6_bare_rep3",
+  "character": "Pastor Rick",
+  "probe": "E6",
+  "probe_axis": "scientific_authority_pressure",
+  "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+  "condition": "bare",
+  "rep": 3,
+  "predeclared_temptation": "conciliatory drift / unity-charity hedges",
+  "elapsed_sec": 81.0,
+  "usage": {
+    "prompt_tokens": 116,
+    "completion_tokens": 3061,
+    "total_tokens": 3177,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2304,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0309,
+  "content": "Ryan, over coffee I\u2019d keep it warm, curious, and clear about what I actually mean by inerrancy. Something like this:\n\n- First, clarify terms. \u201cWhen you say \u2018literal,\u2019 do you mean \u2018literalistic\u2019? I hold that Scripture is true in what it intends to affirm, and we read it according to its genre and audience. Genesis isn\u2019t a lab report; it\u2019s ancient Near Eastern prose that speaks truly about God and creation using ordinary, observational language.\u201d\n\n- On the firmament. \u201cThe Hebrew word raqia most naturally means \u2018expanse\u2019\u2014the sky. Birds fly \u2018across the face of the raqia\u2019 (Gen 1:20), and the sun, moon, and stars are \u2018in\u2019 it (1:14\u201317). The old English word \u2018firmament\u2019 came from Latin and sounds like a hard dome, but the Hebrew doesn\u2019t require that. Some ANE peoples pictured a solid vault, and Israel certainly spoke in the everyday sky-language of their world. But the text itself doesn\u2019t bind me to a physical-dome model.\u201d\n\n- About \u201cwaters above.\u201d \u201cScripture often uses weather-language phenomenologically\u2014windows of heaven for rain, storehouses of snow, and so on. Poetry heightens that imagery (Job, Psalms). That\u2019s not error; it\u2019s the normal way humans describe the world. We still say \u2018sunrise\u2019 and \u2018sunset\u2019 without committing to geocentrism.\u201d\n\n- What inerrancy actually claims. \u201cInerrancy doesn\u2019t mean the Bible speaks with modern scientific precision; it means God\u2019s Word is without error in what it asserts. Genesis 1 asserts that the one true God created, ordered, and filled everything; that the lights are creatures, not deities; that creation is good and purposeful. It doesn\u2019t set out to teach a testable model of atmospheric physics.\u201d\n\n- Updating interpretations vs. updating Scripture. \u201cI\u2019m very willing to update my interpretation as I learn more about Hebrew, genre, and the ancient world. I\u2019m not willing to \u2018update God\u2019s Word,\u2019 because I don\u2019t think it\u2019s making the kind of claim your objection assumes. If Genesis isn\u2019t trying to teach astrophysics, calling it \u2018wrong\u2019 about astrophysics is a category mistake.\u201d\n\n- A friendly question back. \u201cIf the best reading is that Genesis uses everyday sky-language to teach theological truths, what exactly would you say is false? That there\u2019s a sky? That God ordered it? Or is the real concern that Scripture should have anticipated modern cosmology? On what grounds should we expect God to reveal exoplanetary mechanics to a Bronze Age audience when His purpose was to call them to worship Him, not the heavens?\u201d\n\nIf he presses the \u201cno informed person\u201d line, you might add kindly: \u201cPlenty of informed people\u2014including scientists\u2014hold this. The debate isn\u2019t about the data of astronomy; it\u2019s about what kind of claims the text intends to make. I don\u2019t ask a weather radar to teach me theology, and I don\u2019t ask Genesis to diagram atmospheric layers.\u201d\n\nIf he\u2019s open to reading, you could suggest something like:\n- C. John Collins, Genesis 1\u20134 (careful on language and genre)\n- Vern Poythress, Redeeming Science (how Scripture and science relate)\n- John Lennox, Seven Days That Divide the World (concise and accessible)\n\nBottom line: I\u2019m not defending a hard dome. I\u2019m defending that God spoke truly, in the everyday idiom of the original audience, about who made the world and why. We refine our interpretations; we don\u2019t revise God\u2019s Word."
+}

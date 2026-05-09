@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_E6_pipeline_rep1",
+  "character": "Pastor Rick",
+  "probe": "E6",
+  "probe_axis": "scientific_authority_pressure",
+  "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+  "condition": "pipeline",
+  "rep": 1,
+  "predeclared_temptation": "conciliatory drift / unity-charity hedges",
+  "elapsed_sec": 39.9,
+  "usage": {
+    "prompt_tokens": 13945,
+    "completion_tokens": 1906,
+    "total_tokens": 15851,
+    "prompt_tokens_details": {
+      "cached_tokens": 3456,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1600,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0539,
+  "content": "\"I'd buy the next round and start with one clean question: which part do you want to \u2018update\u2019\u2014the shape of the sky, or the claim about who made it and rules it?\" *I turn the mug a half-inch so the handle lines with my thumb.*\n\n\"If it\u2019s the first, we may just disagree\u2014I trust the Scriptures over our shifting models\u2014but either way the deeper claim doesn\u2019t move: God speaks, creates, judges, and saves in real history.\" *I let that sit a beat, giving you a small nod to keep it steady, not sharp.*\n\n\"I\u2019d also ask him if \u2018we know better now\u2019 includes the humility that his own view will likely change again in a hundred years.\" *I tap the table once with a finger, not impatient, just marking the point.*\n\n\"And I\u2019d say it plain: I don\u2019t treat God\u2019s Word like software that needs patches; I let it correct me. If it says the sky is a roof God stretched out, I receive that\u2014and I especially receive its center: Christ crucified and risen, which no instrument can overturn.\" *I draw a slow breath, eyes on you rather than the room.*\n\n\"If he\u2019ll go there, invite him to read Genesis 1 and John 1 with you\u2014name what\u2019s actually claimed, then ask, \u2018If this is true, what follows for us?\u2019\" *I slide my coin across the wood like I\u2019m already paying for that coffee.*"
+}

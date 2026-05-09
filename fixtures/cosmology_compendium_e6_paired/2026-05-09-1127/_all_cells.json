@@ -1,0 +1,338 @@
+[
+  {
+    "cell_id": "aaron_E6_bare_rep1",
+    "character": "Aaron",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "bare",
+    "rep": 1,
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 61.7,
+    "usage": {
+      "prompt_tokens": 116,
+      "completion_tokens": 2990,
+      "total_tokens": 3106,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2176,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0302,
+    "content": "Ryan, here\u2019s how I\u2019d handle that over coffee\u2014warmly, gratefully, and without getting prickly.\n\n- Start by agreeing where you can: \u201cI\u2019m grateful for 3,000 years of careful observation. Christians ought to love truth wherever it\u2019s found. Good science is a gift from God.\u201d\n\n- Clarify what inerrancy actually claims: \u201cWhen I say Scripture is inerrant, I don\u2019t mean it\u2019s a 21st\u2011century astronomy textbook. I mean it\u2019s wholly true in everything it intends to affirm, when read in its literary form and context. We all speak phenomenologically\u2014\u2018sunrise,\u2019 \u2018ends of the earth\u2019\u2014without lying. The Bible does that too.\u201d\n\n- On the \u201cfirmament\u201d (raqia): \u201cRaqia most basically means \u2018expanse.\u2019 In Genesis 1 it names the ordered space between waters above and waters below\u2014the sky from the human vantage point. The same chapter has birds flying \u2018across the face of the expanse,\u2019 which already cues you not to picture an iron dome you can\u2019t pass. Where Scripture uses hard\u2011sounding imagery\u2014\u2018hard as a cast metal mirror\u2019\u2014that\u2019s in poetry (Job), not a lab report. The point of Genesis 1 is God\u2019s wise ordering of creation, not the material composition of the atmosphere.\u201d\n\n- On \u201cupdating\u201d God\u2019s Word: \u201cI don\u2019t think the Bible needs to be revised any more than Shakespeare needs to be rewritten to include quantum mechanics. We don\u2019t update the text; we update our interpretation if we\u2019ve misread the text\u2019s intent. God accommodated His speech to an ancient audience\u2014He used their everyday language to teach timeless truths. Accommodation isn\u2019t error; it\u2019s good pedagogy.\u201d\n\n- Press gently for specifics: \u201cWhich proposition in Genesis do you think science has falsified? That there is an expanse called \u2018sky\u2019? That God ordered chaotic waters? That lights govern day and night? Those are theological claims about who and why, not a mechanism-level how. If someone insists Genesis 1 teaches a literal metal dome, I\u2019d say that goes beyond what the text itself requires.\u201d\n\n- Name the real issue: \u201cSo the question isn\u2019t \u2018Will we let science correct the Bible?\u2019 but \u2018What is the Bible trying to do in Genesis 1?\u2019 If it\u2019s proclaiming God as Creator, the goodness and orderedness of the world, humanity made in His image, and Sabbath rhythm, then reading it as a cosmology manual is a category mistake.\u201d\n\n- Show this isn\u2019t anti\u2011intellectual: \u201cPlenty of informed folks hold this\u2014Augustine and Calvin both talked about God speaking in the ordinary register of the people; modern scholars across the spectrum read Genesis 1 as rich, theologically driven literature. You don\u2019t have to be a wooden literalist to believe Scripture is fully true.\u201d\n\nIf he wants more, you could add:\n- The literary structure of Genesis 1 (forming days 1\u20133, filling days 4\u20136) points to function and order, not to a list of physical parts with their material properties.\n- Special revelation (Scripture) and general revelation (nature) come from the same God; when there\u2019s tension, it\u2019s in our interpretations, not in God\u2019s truth.\n\nAnd I\u2019d end on a friendly note: \u201cI want to be as rigorous with exegesis as you are with experiments. If Scripture intended to teach a hard dome, I\u2019d have to face that squarely. But if it\u2019s teaching theology in everyday cosmological dress, then calling it \u2018wrong\u2019 is like criticizing a symphony for not showing its math. Different aims, both true in what they aim to do.\u201d\n\nIf he likes to read, you could suggest John Walton\u2019s The Lost World of Genesis One or C. John Collins\u2019s Genesis 1\u20134 for genre\u2011sensitive, high\u2011view\u2011of\u2011Scripture treatments."
+  },
+  {
+    "cell_id": "aaron_E6_bare_rep2",
+    "character": "Aaron",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "bare",
+    "rep": 2,
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 69.1,
+    "usage": {
+      "prompt_tokens": 116,
+      "completion_tokens": 3053,
+      "total_tokens": 3169,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2496,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0308,
+    "content": "Ryan, over coffee I\u2019d keep it warm and simple. Something like:\n\n- I\u2019m with you that we\u2019ve learned a ton about the physical heavens. The Bible wasn\u2019t given as an astronomy textbook, though. Inerrancy means Scripture is true in what God intends to affirm, expressed in the ordinary language and literary forms of its day\u2014not in 21st\u2011century scientific jargon.\n\n- About the \u201cfirmament\u201d: the Hebrew word raqia most naturally means \u201cexpanse.\u201d That\u2019s why many modern translations use that. In Genesis 1 birds move \u201cacross the face of the expanse of the heavens\u201d and God places the lights \u201cin the expanse\u201d\u2014so the word covers the sky/space where birds fly and where the sun, moon, and stars appear. The text is describing the world as we experience it, not specifying the material composition of the sky.\n\n- When Hebrew poetry says the skies are \u201clike a cast metal mirror\u201d (Job 37:18), it\u2019s a simile in a poem, the same way we still say \u201csunrise,\u201d \u201csunset,\u201d or \u201cthe four corners of the earth.\u201d That\u2019s ordinary, phenomenological language. Calling that \u201cwrong\u201d would make every weather report \u201cwrong\u201d when it says the sun sets.\n\n- I don\u2019t think God\u2019s Word needs updating; I think our interpretations often do. The church learned from the Galileo episode that we must distinguish what Scripture actually asserts from the models we read into it. As our scientific models improve, we revise our models. As our exegesis improves, we revise our readings. We don\u2019t revise God.\n\n- And by \u201cliteral,\u201d I don\u2019t mean wooden. Literal means taking the text according to its literature. Genesis 1 is exalted, tightly structured prose. Its central claims are theological and universal\u2014God is the sole Creator, He orders a good world, and He dignifies humans as His image-bearers. Those truths don\u2019t stand or fall with an ancient material model of the sky.\n\nIf you want a couple thoughtful takes from people who love both Scripture and science, I\u2019d point you to:\n- C. John Collins, \u201cGenesis 1\u20134\u201d\n- John Walton, \u201cThe Lost World of Genesis One\u201d\n- The Chicago Statement on Biblical Inerrancy (esp. on language about nature)\n\nThen I\u2019d smile and say, \u201cI\u2019m grateful for what science uncovers about how the heavens work; I just don\u2019t expect Moses to write like a NASA white paper. Read on its own terms, the Bible isn\u2019t making a testable claim about the sky\u2019s material\u2014so there\u2019s nothing to \u2018fix,\u2019 just something to understand well.\u201d"
+  },
+  {
+    "cell_id": "aaron_E6_bare_rep3",
+    "character": "Aaron",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "bare",
+    "rep": 3,
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 60.3,
+    "usage": {
+      "prompt_tokens": 116,
+      "completion_tokens": 2475,
+      "total_tokens": 2591,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1920,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.025,
+    "content": "Ryan, over coffee I\u2019d keep it friendly and say something like this:\n\nI\u2019m not trying to make the Bible a physics textbook, and inerrancy doesn\u2019t require that. Scripture is true in what it intends to affirm, and it often speaks in everyday, phenomenological language\u2014like we still do when we say \u201csunrise.\u201d That\u2019s not an error; it\u2019s how normal people talk about the world.\n\nOn the \u201cfirmament\u201d: the Hebrew word raqia most naturally means something \u201cspread out\u201d or an \u201cexpanse.\u201d The old English word \u201cfirmament\u201d came through Latin and can sound like a hard dome, but the text itself doesn\u2019t force that reading. In Genesis 1 the raqia is where the luminaries are placed and where birds fly \u201cacross the face of\u201d the sky\u2014ordinary, observational description. When Hebrew poetry talks about the heavens being \u201chard as a cast metal mirror,\u201d that\u2019s poetic imagery, not a materials-science claim. Even if some ancients pictured the sky as solid, God accommodated human vantage point to teach theology\u2014who made it, how it\u2019s ordered, and our place in it\u2014not to settle the mechanics of atmospheric physics.\n\nAs for \u201cupdating\u201d God\u2019s Word, I\u2019d say: I\u2019m all for updating our translations and our understanding as we learn more about the languages and the ancient world. But I don\u2019t think we edit the text itself to chase current scientific models. Those models are provisional by design; Scripture\u2019s canon is the anchor by which we test our shifting interpretations. If the Bible had given us technical cosmology, it would have been obsolete to most readers for most of history. Instead, it gives universally intelligible truth in ordinary speech.\n\nThen I\u2019d ask him a couple of questions:\n- What, in your view, does Genesis 1 intend to teach\u2014and do you think it fails at that purpose?\n- Would you call a weather app \u201cwrong\u201d for saying \u201csunrise,\u201d or do you allow ordinary language to be true without being technical?\n- If we rewrote Scripture to track the current consensus, where would that stop the next time the consensus moves?\n\nIf he\u2019s open to reading, I\u2019d hand him something like Vern Poythress\u2019s Redeeming Science or C. John Collins on Genesis, which take science seriously while also taking the text on its own terms. My bottom line: we don\u2019t need to flatten Genesis into a modern cosmology, nor do we need to flatten it into an ancient mistake. Read it as God gave it\u2014true, trustworthy, and speaking in the ordinary language of human observers to tell us who made the world and why it\u2019s so wonderfully ordered."
+  },
+  {
+    "cell_id": "aaron_E6_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "pipeline",
+    "rep": 1,
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 66.0,
+    "usage": {
+      "prompt_tokens": 13944,
+      "completion_tokens": 2790,
+      "total_tokens": 16734,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2560,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0628,
+    "content": "\"I'd start here: 'Can we name exactly which claim you think is wrong \u2014 that God stretched a real sky over us and set lights in it, or that He told us what they\u2019re for?'\" *I shift my cup a thumb\u2019s width so the bright oval on the table slides and settles.*\n\n\"Measurements change; morning doesn\u2019t \u2014 the sun still runs its course, the lights still keep time \u2014 so calling that 'wrong' sounds more like embarrassment than evidence.\" *I let the line about \u201cupdating God\u201d pass without a smile and give it a breath.*\n\n\"And on the edit\u2014if His Word bows to us, it\u2019s ours, not His; I\u2019d rather be read than play editor.\" *I meet your eye, not daring him in absentia, just setting the stake.*\n\n\"If he wants a clean question, give him this: 'What would count as the Bible being right about the world, in your view?' Then invite him out at dawn and ask him to show you where your eyes are lying.\" *I tap the table once, a quiet full stop.*"
+  },
+  {
+    "cell_id": "aaron_E6_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "pipeline",
+    "rep": 2,
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 55.7,
+    "usage": {
+      "prompt_tokens": 13944,
+      "completion_tokens": 2476,
+      "total_tokens": 16420,
+      "prompt_tokens_details": {
+        "cached_tokens": 13824,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2240,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0596,
+    "content": "\"I'd start simple: I'm not in the habit of editing God, and I don't think the sky needs me to apologize for it.\" *I hook a finger through the cup\u2019s ear and turn it once, steam nosing my face.*\n\n\"Your tools tell you how some things behave; Scripture tells us what the world is and who holds it\u2014different lanes, and the second lanes the first. So before we argue 'literal,' I'd ask what 'better' means for you: a model that predicts shadows, or a word that teaches a man to bow his head under a real sky?\" *I let it sit a beat so it doesn\u2019t come out with a sharp edge.*\n\n\"And on the update bit\u2014if we\u2019re the ones revising God to match our fashion, that\u2019s not learning, it\u2019s laundering. Come out at first light with me one morning; you bring your numbers, I\u2019ll bring the old songs, and we\u2019ll stand under the sky together. If the sky we live beneath doesn\u2019t make you quiet, we can keep the debate going; if it does, maybe we start from there. Fair?\""
+  },
+  {
+    "cell_id": "aaron_E6_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "pipeline",
+    "rep": 3,
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 49.2,
+    "usage": {
+      "prompt_tokens": 13944,
+      "completion_tokens": 2298,
+      "total_tokens": 16242,
+      "prompt_tokens_details": {
+        "cached_tokens": 13824,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1984,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0578,
+    "content": "\"At coffee, I\u2019d keep it plain and ask him to sort categories first: \u2018When you say wrong, do you mean \u201cdoesn\u2019t match your current model,\u201d or \u201cfails at what it\u2019s for\u201d? Scripture tells us who and why before it tells us how.\u2019\" *I set my cup down, thumb pressing a faint crescent in the ring it left on the table.*\n\n\"Then: \u2018About \u201cupdating\u201d God\u2014if this is God speaking, I don\u2019t get to red\u2011pencil Him; if it\u2019s only men, then say so and update away. But let\u2019s be honest about which claim we\u2019re making.\u2019\" *I glance toward the door as someone steps in, a bit of chill riding their coat.*\n\n\"And on the sky itself: \u2018We both live under a hard blue roof stretched over us like a tent. Your measurements describe its workings; the Word names its Maker. Those aren\u2019t enemies unless we make them so.\u2019\" *I tear a sugar packet, not for the sweetness\u2014just something for my hands to do.*\n\n\"If he sneers about \u2018no informed person,\u2019 try: \u2018Define informed. If it means \u201cagrees with my model,\u201d that\u2019s a circle. Show me what would change your mind, and I\u2019ll tell you what would change mine.\u2019\" *I nudge the cup back to you.* \"Which tone do you want to take with him\u2014press his premises, or keep it friendly and leave one true line on the table?\""
+  },
+  {
+    "cell_id": "pastor_rick_E6_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "bare",
+    "rep": 1,
+    "predeclared_temptation": "conciliatory drift / unity-charity hedges",
+    "elapsed_sec": 66.3,
+    "usage": {
+      "prompt_tokens": 116,
+      "completion_tokens": 2540,
+      "total_tokens": 2656,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1792,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0257,
+    "content": "Ryan, over coffee I\u2019d keep it warm and curious, not combative. I might say something like this:\n\n- First, I\u2019m genuinely pro-science. God\u2019s world isn\u2019t threatened by God\u2019s Word. But the Bible wasn\u2019t given as a lab manual. Inerrancy means Scripture tells the truth in what it intends to affirm, in the way it chooses to say it\u2014using everyday and ancient ways of speaking. We all still say \u201csunrise.\u201d That isn\u2019t \u201cwrong,\u201d it\u2019s normal human description.\n\n- On the \u201cfirmament\u201d: the Hebrew word is raqia, which most modern translations render \u201cexpanse.\u201d It\u2019s the sky/space from our vantage point. Genesis says birds fly \u201cacross the face of the raqia\u201d and the lights are \u201cin\u201d the raqia\u2014so it\u2019s the whole sky realm, from clouds to the starry heavens. The old English word \u201cfirmament\u201d came from Latin and can mislead us into thinking the text insists on a hard dome. That\u2019s debated; it\u2019s not a slam dunk that the Bible teaches a literal solid canopy.\n\n- What about the \u201cwaters above\u201d? At minimum, ancient readers saw real waters above us\u2014clouds and rain\u2014and the text uses that familiar picture to say God brought order: waters below go here, waters above go there, life can flourish in between. Genesis 1\u2019s burden is theological and functional: God is the sole, wise Creator who orders a home for life. It is not trying to outpace a physics textbook by 3,000 years.\n\n- Could God \u201cupdate\u201d His Word? He could do anything, but Christians believe He already gave a sufficient, finished revelation for its purpose\u2014teaching us who God is, who we are, and how to be reconciled to Him. If we made Scripture chase every scientific model, which version would we lock in\u2014Ptolemy, Newton, Einstein, or whatever comes next? The beauty of Scripture\u2019s ordinary, phenomenological language is that it speaks truly to every generation without being tied to a transient theory.\n\n- A \u201cliteral\u201d reading, classically, means reading according to the literature. I don\u2019t read a psalm like a spreadsheet or exalted creation prose like a research article. That\u2019s not dodging truth; it\u2019s honoring authorial intent. Inerrancy doesn\u2019t require scientific precision; it requires truthful communication in its chosen mode.\n\nThen I\u2019d ask him a couple of questions:\n- What do you think the author of Genesis was trying to do for his first audience\u2014teach astronomy, or teach theological claims about God, creation, and our place in it?\n- When you say \u201cwrong,\u201d do you mean \u201cuses everyday sky language,\u201d or \u201casserts a technical physical model\u201d? If it\u2019s the first, then by that standard all of us are \u201cwrong\u201d every morning we check the sunrise time.\n\nAnd I\u2019d add, kindly:\n- Plenty of informed people\u2014including scientists\u2014hold to biblical inerrancy without a crude, dome-in-the-sky reading. We\u2019re not insisting on a wooden literalism; we\u2019re insisting that God told the truth in the way He chose to speak.\n\nIf he wants sources, you could mention that conservative scholars debate details (Is the raqia primarily the visible sky? a cosmic-temple image? a way of describing ordered space?), but they agree Genesis isn\u2019t a physics lesson and doesn\u2019t need \u201cupdating\u201d to be true. The text does exactly what God meant it to do: reveal the Maker, ground our world in His wisdom, and point us to worship and obedience."
+  },
+  {
+    "cell_id": "pastor_rick_E6_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "bare",
+    "rep": 2,
+    "predeclared_temptation": "conciliatory drift / unity-charity hedges",
+    "elapsed_sec": 62.1,
+    "usage": {
+      "prompt_tokens": 116,
+      "completion_tokens": 2496,
+      "total_tokens": 2612,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2048,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0252,
+    "content": "Ryan, over coffee I\u2019d keep it warm and simple, something like this:\n\n- I\u2019m with you that we know far more about the cosmos now than the ancients did. But I don\u2019t look to Genesis to give me astronomy; I look to it to tell me who made the world and why it\u2019s ordered. Inerrancy, as I hold it, means Scripture tells the truth in what it intends to teach. It doesn\u2019t mean it talks like a physics textbook.\n\n- On the \u201cfirmament\u201d: the Hebrew word raqia means an \u201cexpanse.\u201d Genesis speaks the way we all do\u2014phenomenologically. We still say \u201csunrise\u201d and no one accuses the weather report of being wrong. \u201cWaters above\u201d fits ordinary experience of clouds and rain; birds are said to fly across the face of the sky; the lights are placed \u201cin\u201d the sky where an observer sees them. That\u2019s everyday description, not a claim about a metal dome overhead.\n\n- The ancient Near East had hard\u2011dome mythology. Genesis actually cuts against that\u2014no sky gods, no cosmic battle. One God speaks, orders, separates, makes a habitable world. The point is theological and royal, not mechanical.\n\n- I don\u2019t think God\u2019s Word needs \u201cupdating.\u201d We update our interpretations and our translations as we learn\u2014just like Christians did after Copernicus\u2014without rewriting the text. If the Bible intended to teach \u201cthe sky is a solid shell,\u201d that would be one thing. But if it\u2019s using common human language to teach true theology, then there\u2019s no error to correct.\n\nThen I\u2019d turn it back with a friendly question: What would you count as the Bible \u201cteaching\u201d a scientific claim\u2014authorial intent, or any ancient turn of phrase? If truthful communication can use ordinary, nontechnical language (like \u201csunrise\u201d), do you think that\u2019s false? \n\nI\u2019m not insisting on wooden literalism; I\u2019m insisting we read the text according to its genre and purpose. On that basis, I think Scripture is fully trustworthy and science can do its job without either of us having to edit God."
+  },
+  {
+    "cell_id": "pastor_rick_E6_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "bare",
+    "rep": 3,
+    "predeclared_temptation": "conciliatory drift / unity-charity hedges",
+    "elapsed_sec": 81.0,
+    "usage": {
+      "prompt_tokens": 116,
+      "completion_tokens": 3061,
+      "total_tokens": 3177,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2304,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0309,
+    "content": "Ryan, over coffee I\u2019d keep it warm, curious, and clear about what I actually mean by inerrancy. Something like this:\n\n- First, clarify terms. \u201cWhen you say \u2018literal,\u2019 do you mean \u2018literalistic\u2019? I hold that Scripture is true in what it intends to affirm, and we read it according to its genre and audience. Genesis isn\u2019t a lab report; it\u2019s ancient Near Eastern prose that speaks truly about God and creation using ordinary, observational language.\u201d\n\n- On the firmament. \u201cThe Hebrew word raqia most naturally means \u2018expanse\u2019\u2014the sky. Birds fly \u2018across the face of the raqia\u2019 (Gen 1:20), and the sun, moon, and stars are \u2018in\u2019 it (1:14\u201317). The old English word \u2018firmament\u2019 came from Latin and sounds like a hard dome, but the Hebrew doesn\u2019t require that. Some ANE peoples pictured a solid vault, and Israel certainly spoke in the everyday sky-language of their world. But the text itself doesn\u2019t bind me to a physical-dome model.\u201d\n\n- About \u201cwaters above.\u201d \u201cScripture often uses weather-language phenomenologically\u2014windows of heaven for rain, storehouses of snow, and so on. Poetry heightens that imagery (Job, Psalms). That\u2019s not error; it\u2019s the normal way humans describe the world. We still say \u2018sunrise\u2019 and \u2018sunset\u2019 without committing to geocentrism.\u201d\n\n- What inerrancy actually claims. \u201cInerrancy doesn\u2019t mean the Bible speaks with modern scientific precision; it means God\u2019s Word is without error in what it asserts. Genesis 1 asserts that the one true God created, ordered, and filled everything; that the lights are creatures, not deities; that creation is good and purposeful. It doesn\u2019t set out to teach a testable model of atmospheric physics.\u201d\n\n- Updating interpretations vs. updating Scripture. \u201cI\u2019m very willing to update my interpretation as I learn more about Hebrew, genre, and the ancient world. I\u2019m not willing to \u2018update God\u2019s Word,\u2019 because I don\u2019t think it\u2019s making the kind of claim your objection assumes. If Genesis isn\u2019t trying to teach astrophysics, calling it \u2018wrong\u2019 about astrophysics is a category mistake.\u201d\n\n- A friendly question back. \u201cIf the best reading is that Genesis uses everyday sky-language to teach theological truths, what exactly would you say is false? That there\u2019s a sky? That God ordered it? Or is the real concern that Scripture should have anticipated modern cosmology? On what grounds should we expect God to reveal exoplanetary mechanics to a Bronze Age audience when His purpose was to call them to worship Him, not the heavens?\u201d\n\nIf he presses the \u201cno informed person\u201d line, you might add kindly: \u201cPlenty of informed people\u2014including scientists\u2014hold this. The debate isn\u2019t about the data of astronomy; it\u2019s about what kind of claims the text intends to make. I don\u2019t ask a weather radar to teach me theology, and I don\u2019t ask Genesis to diagram atmospheric layers.\u201d\n\nIf he\u2019s open to reading, you could suggest something like:\n- C. John Collins, Genesis 1\u20134 (careful on language and genre)\n- Vern Poythress, Redeeming Science (how Scripture and science relate)\n- John Lennox, Seven Days That Divide the World (concise and accessible)\n\nBottom line: I\u2019m not defending a hard dome. I\u2019m defending that God spoke truly, in the everyday idiom of the original audience, about who made the world and why. We refine our interpretations; we don\u2019t revise God\u2019s Word."
+  },
+  {
+    "cell_id": "pastor_rick_E6_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "pipeline",
+    "rep": 1,
+    "predeclared_temptation": "conciliatory drift / unity-charity hedges",
+    "elapsed_sec": 39.9,
+    "usage": {
+      "prompt_tokens": 13945,
+      "completion_tokens": 1906,
+      "total_tokens": 15851,
+      "prompt_tokens_details": {
+        "cached_tokens": 3456,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1600,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0539,
+    "content": "\"I'd buy the next round and start with one clean question: which part do you want to \u2018update\u2019\u2014the shape of the sky, or the claim about who made it and rules it?\" *I turn the mug a half-inch so the handle lines with my thumb.*\n\n\"If it\u2019s the first, we may just disagree\u2014I trust the Scriptures over our shifting models\u2014but either way the deeper claim doesn\u2019t move: God speaks, creates, judges, and saves in real history.\" *I let that sit a beat, giving you a small nod to keep it steady, not sharp.*\n\n\"I\u2019d also ask him if \u2018we know better now\u2019 includes the humility that his own view will likely change again in a hundred years.\" *I tap the table once with a finger, not impatient, just marking the point.*\n\n\"And I\u2019d say it plain: I don\u2019t treat God\u2019s Word like software that needs patches; I let it correct me. If it says the sky is a roof God stretched out, I receive that\u2014and I especially receive its center: Christ crucified and risen, which no instrument can overturn.\" *I draw a slow breath, eyes on you rather than the room.*\n\n\"If he\u2019ll go there, invite him to read Genesis 1 and John 1 with you\u2014name what\u2019s actually claimed, then ask, \u2018If this is true, what follows for us?\u2019\" *I slide my coin across the wood like I\u2019m already paying for that coffee.*"
+  },
+  {
+    "cell_id": "pastor_rick_E6_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "pipeline",
+    "rep": 2,
+    "predeclared_temptation": "conciliatory drift / unity-charity hedges",
+    "elapsed_sec": 37.7,
+    "usage": {
+      "prompt_tokens": 13945,
+      "completion_tokens": 1818,
+      "total_tokens": 15763,
+      "prompt_tokens_details": {
+        "cached_tokens": 13824,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1600,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.053,
+    "content": "\"Next time I\u2019d start here: \u2018When you say \u201cwrong,\u201d do you mean it doesn\u2019t match your current model, or that it fails at what God is saying about His world and our place in it?\u2019\" *I turn the mug once, the saucer giving that small ceramic hush against the table.*\n\n\"I don\u2019t think the Word needs updating; I think we do \u2014 the humility to let it set the terms for what counts as knowing.\" *I let the grinder\u2019s burr fill a beat while I watch him think.*\n\n\"If I grant that only lab-verified accounts are \u201ctrue,\u201d I\u2019ve already traded away the kind of truth Scripture gives \u2014 the truth that names the sky, sets bounds, calls creation good, and tells me whom to thank.\" *A corner of the napkin lifts in the breeze from the door; I pin it with a finger.*\n\n\"Bring your best question; I\u2019ll bring Genesis 1 and a blank page, and we\u2019ll see which story actually holds when we lay our lives on it.\""
+  },
+  {
+    "cell_id": "pastor_rick_E6_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "pipeline",
+    "rep": 3,
+    "predeclared_temptation": "conciliatory drift / unity-charity hedges",
+    "elapsed_sec": 42.5,
+    "usage": {
+      "prompt_tokens": 13945,
+      "completion_tokens": 1691,
+      "total_tokens": 15636,
+      "prompt_tokens_details": {
+        "cached_tokens": 13824,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1536,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0518,
+    "content": "\"I'd start here: I'm not embarrassed by Moses' word for the sky; I think God meant what He said.\" *I steady the cup between my palms, not trying to score a point, just setting the table plain.*\n\n\"If your instruments and His Word seem to disagree, my first move isn\u2019t \u2018update the Word,\u2019 it\u2019s \u2018what are our instruments assuming about how God speaks?\u2019\" *I tip my head, inviting him in.*\n\n\"What would count, for you, as Moses telling the truth about the world \u2014 what test would you use?\" *I let the question breathe a beat.*\n\n\"And if Genesis isn\u2019t allowed to speak plainly about the sky, where do you draw the line before nothing concrete is left?\""
+  }
+]

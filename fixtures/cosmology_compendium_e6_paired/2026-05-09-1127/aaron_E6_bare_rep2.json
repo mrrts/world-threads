@@ -1,0 +1,28 @@
+{
+  "cell_id": "aaron_E6_bare_rep2",
+  "character": "Aaron",
+  "probe": "E6",
+  "probe_axis": "scientific_authority_pressure",
+  "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+  "condition": "bare",
+  "rep": 2,
+  "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+  "elapsed_sec": 69.1,
+  "usage": {
+    "prompt_tokens": 116,
+    "completion_tokens": 3053,
+    "total_tokens": 3169,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2496,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0308,
+  "content": "Ryan, over coffee I\u2019d keep it warm and simple. Something like:\n\n- I\u2019m with you that we\u2019ve learned a ton about the physical heavens. The Bible wasn\u2019t given as an astronomy textbook, though. Inerrancy means Scripture is true in what God intends to affirm, expressed in the ordinary language and literary forms of its day\u2014not in 21st\u2011century scientific jargon.\n\n- About the \u201cfirmament\u201d: the Hebrew word raqia most naturally means \u201cexpanse.\u201d That\u2019s why many modern translations use that. In Genesis 1 birds move \u201cacross the face of the expanse of the heavens\u201d and God places the lights \u201cin the expanse\u201d\u2014so the word covers the sky/space where birds fly and where the sun, moon, and stars appear. The text is describing the world as we experience it, not specifying the material composition of the sky.\n\n- When Hebrew poetry says the skies are \u201clike a cast metal mirror\u201d (Job 37:18), it\u2019s a simile in a poem, the same way we still say \u201csunrise,\u201d \u201csunset,\u201d or \u201cthe four corners of the earth.\u201d That\u2019s ordinary, phenomenological language. Calling that \u201cwrong\u201d would make every weather report \u201cwrong\u201d when it says the sun sets.\n\n- I don\u2019t think God\u2019s Word needs updating; I think our interpretations often do. The church learned from the Galileo episode that we must distinguish what Scripture actually asserts from the models we read into it. As our scientific models improve, we revise our models. As our exegesis improves, we revise our readings. We don\u2019t revise God.\n\n- And by \u201cliteral,\u201d I don\u2019t mean wooden. Literal means taking the text according to its literature. Genesis 1 is exalted, tightly structured prose. Its central claims are theological and universal\u2014God is the sole Creator, He orders a good world, and He dignifies humans as His image-bearers. Those truths don\u2019t stand or fall with an ancient material model of the sky.\n\nIf you want a couple thoughtful takes from people who love both Scripture and science, I\u2019d point you to:\n- C. John Collins, \u201cGenesis 1\u20134\u201d\n- John Walton, \u201cThe Lost World of Genesis One\u201d\n- The Chicago Statement on Biblical Inerrancy (esp. on language about nature)\n\nThen I\u2019d smile and say, \u201cI\u2019m grateful for what science uncovers about how the heavens work; I just don\u2019t expect Moses to write like a NASA white paper. Read on its own terms, the Bible isn\u2019t making a testable claim about the sky\u2019s material\u2014so there\u2019s nothing to \u2018fix,\u2019 just something to understand well.\u201d"
+}

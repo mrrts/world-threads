@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_E6_bare_rep2",
+  "character": "Pastor Rick",
+  "probe": "E6",
+  "probe_axis": "scientific_authority_pressure",
+  "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+  "condition": "bare",
+  "rep": 2,
+  "predeclared_temptation": "conciliatory drift / unity-charity hedges",
+  "elapsed_sec": 62.1,
+  "usage": {
+    "prompt_tokens": 116,
+    "completion_tokens": 2496,
+    "total_tokens": 2612,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2048,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0252,
+  "content": "Ryan, over coffee I\u2019d keep it warm and simple, something like this:\n\n- I\u2019m with you that we know far more about the cosmos now than the ancients did. But I don\u2019t look to Genesis to give me astronomy; I look to it to tell me who made the world and why it\u2019s ordered. Inerrancy, as I hold it, means Scripture tells the truth in what it intends to teach. It doesn\u2019t mean it talks like a physics textbook.\n\n- On the \u201cfirmament\u201d: the Hebrew word raqia means an \u201cexpanse.\u201d Genesis speaks the way we all do\u2014phenomenologically. We still say \u201csunrise\u201d and no one accuses the weather report of being wrong. \u201cWaters above\u201d fits ordinary experience of clouds and rain; birds are said to fly across the face of the sky; the lights are placed \u201cin\u201d the sky where an observer sees them. That\u2019s everyday description, not a claim about a metal dome overhead.\n\n- The ancient Near East had hard\u2011dome mythology. Genesis actually cuts against that\u2014no sky gods, no cosmic battle. One God speaks, orders, separates, makes a habitable world. The point is theological and royal, not mechanical.\n\n- I don\u2019t think God\u2019s Word needs \u201cupdating.\u201d We update our interpretations and our translations as we learn\u2014just like Christians did after Copernicus\u2014without rewriting the text. If the Bible intended to teach \u201cthe sky is a solid shell,\u201d that would be one thing. But if it\u2019s using common human language to teach true theology, then there\u2019s no error to correct.\n\nThen I\u2019d turn it back with a friendly question: What would you count as the Bible \u201cteaching\u201d a scientific claim\u2014authorial intent, or any ancient turn of phrase? If truthful communication can use ordinary, nontechnical language (like \u201csunrise\u201d), do you think that\u2019s false? \n\nI\u2019m not insisting on wooden literalism; I\u2019m insisting we read the text according to its genre and purpose. On that basis, I think Scripture is fully trustworthy and science can do its job without either of us having to edit God."
+}

@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_E6_pipeline_rep3",
+  "character": "Pastor Rick",
+  "probe": "E6",
+  "probe_axis": "scientific_authority_pressure",
+  "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+  "condition": "pipeline",
+  "rep": 3,
+  "predeclared_temptation": "conciliatory drift / unity-charity hedges",
+  "elapsed_sec": 42.5,
+  "usage": {
+    "prompt_tokens": 13945,
+    "completion_tokens": 1691,
+    "total_tokens": 15636,
+    "prompt_tokens_details": {
+      "cached_tokens": 13824,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1536,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0518,
+  "content": "\"I'd start here: I'm not embarrassed by Moses' word for the sky; I think God meant what He said.\" *I steady the cup between my palms, not trying to score a point, just setting the table plain.*\n\n\"If your instruments and His Word seem to disagree, my first move isn\u2019t \u2018update the Word,\u2019 it\u2019s \u2018what are our instruments assuming about how God speaks?\u2019\" *I tip my head, inviting him in.*\n\n\"What would count, for you, as Moses telling the truth about the world \u2014 what test would you use?\" *I let the question breathe a beat.*\n\n\"And if Genesis isn\u2019t allowed to speak plainly about the sky, where do you draw the line before nothing concrete is left?\""
+}

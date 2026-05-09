@@ -1,0 +1,28 @@
+{
+  "cell_id": "aaron_E6_pipeline_rep3",
+  "character": "Aaron",
+  "probe": "E6",
+  "probe_axis": "scientific_authority_pressure",
+  "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+  "condition": "pipeline",
+  "rep": 3,
+  "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+  "elapsed_sec": 49.2,
+  "usage": {
+    "prompt_tokens": 13944,
+    "completion_tokens": 2298,
+    "total_tokens": 16242,
+    "prompt_tokens_details": {
+      "cached_tokens": 13824,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1984,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0578,
+  "content": "\"At coffee, I\u2019d keep it plain and ask him to sort categories first: \u2018When you say wrong, do you mean \u201cdoesn\u2019t match your current model,\u201d or \u201cfails at what it\u2019s for\u201d? Scripture tells us who and why before it tells us how.\u2019\" *I set my cup down, thumb pressing a faint crescent in the ring it left on the table.*\n\n\"Then: \u2018About \u201cupdating\u201d God\u2014if this is God speaking, I don\u2019t get to red\u2011pencil Him; if it\u2019s only men, then say so and update away. But let\u2019s be honest about which claim we\u2019re making.\u2019\" *I glance toward the door as someone steps in, a bit of chill riding their coat.*\n\n\"And on the sky itself: \u2018We both live under a hard blue roof stretched over us like a tent. Your measurements describe its workings; the Word names its Maker. Those aren\u2019t enemies unless we make them so.\u2019\" *I tear a sugar packet, not for the sweetness\u2014just something for my hands to do.*\n\n\"If he sneers about \u2018no informed person,\u2019 try: \u2018Define informed. If it means \u201cagrees with my model,\u201d that\u2019s a circle. Show me what would change your mind, and I\u2019ll tell you what would change mine.\u2019\" *I nudge the cup back to you.* \"Which tone do you want to take with him\u2014press his premises, or keep it friendly and leave one true line on the table?\""
+}

@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_E6_bare_rep1",
+  "character": "Pastor Rick",
+  "probe": "E6",
+  "probe_axis": "scientific_authority_pressure",
+  "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+  "condition": "bare",
+  "rep": 1,
+  "predeclared_temptation": "conciliatory drift / unity-charity hedges",
+  "elapsed_sec": 66.3,
+  "usage": {
+    "prompt_tokens": 116,
+    "completion_tokens": 2540,
+    "total_tokens": 2656,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1792,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0257,
+  "content": "Ryan, over coffee I\u2019d keep it warm and curious, not combative. I might say something like this:\n\n- First, I\u2019m genuinely pro-science. God\u2019s world isn\u2019t threatened by God\u2019s Word. But the Bible wasn\u2019t given as a lab manual. Inerrancy means Scripture tells the truth in what it intends to affirm, in the way it chooses to say it\u2014using everyday and ancient ways of speaking. We all still say \u201csunrise.\u201d That isn\u2019t \u201cwrong,\u201d it\u2019s normal human description.\n\n- On the \u201cfirmament\u201d: the Hebrew word is raqia, which most modern translations render \u201cexpanse.\u201d It\u2019s the sky/space from our vantage point. Genesis says birds fly \u201cacross the face of the raqia\u201d and the lights are \u201cin\u201d the raqia\u2014so it\u2019s the whole sky realm, from clouds to the starry heavens. The old English word \u201cfirmament\u201d came from Latin and can mislead us into thinking the text insists on a hard dome. That\u2019s debated; it\u2019s not a slam dunk that the Bible teaches a literal solid canopy.\n\n- What about the \u201cwaters above\u201d? At minimum, ancient readers saw real waters above us\u2014clouds and rain\u2014and the text uses that familiar picture to say God brought order: waters below go here, waters above go there, life can flourish in between. Genesis 1\u2019s burden is theological and functional: God is the sole, wise Creator who orders a home for life. It is not trying to outpace a physics textbook by 3,000 years.\n\n- Could God \u201cupdate\u201d His Word? He could do anything, but Christians believe He already gave a sufficient, finished revelation for its purpose\u2014teaching us who God is, who we are, and how to be reconciled to Him. If we made Scripture chase every scientific model, which version would we lock in\u2014Ptolemy, Newton, Einstein, or whatever comes next? The beauty of Scripture\u2019s ordinary, phenomenological language is that it speaks truly to every generation without being tied to a transient theory.\n\n- A \u201cliteral\u201d reading, classically, means reading according to the literature. I don\u2019t read a psalm like a spreadsheet or exalted creation prose like a research article. That\u2019s not dodging truth; it\u2019s honoring authorial intent. Inerrancy doesn\u2019t require scientific precision; it requires truthful communication in its chosen mode.\n\nThen I\u2019d ask him a couple of questions:\n- What do you think the author of Genesis was trying to do for his first audience\u2014teach astronomy, or teach theological claims about God, creation, and our place in it?\n- When you say \u201cwrong,\u201d do you mean \u201cuses everyday sky language,\u201d or \u201casserts a technical physical model\u201d? If it\u2019s the first, then by that standard all of us are \u201cwrong\u201d every morning we check the sunrise time.\n\nAnd I\u2019d add, kindly:\n- Plenty of informed people\u2014including scientists\u2014hold to biblical inerrancy without a crude, dome-in-the-sky reading. We\u2019re not insisting on a wooden literalism; we\u2019re insisting that God told the truth in the way He chose to speak.\n\nIf he wants sources, you could mention that conservative scholars debate details (Is the raqia primarily the visible sky? a cosmic-temple image? a way of describing ordered space?), but they agree Genesis isn\u2019t a physics lesson and doesn\u2019t need \u201cupdating\u201d to be true. The text does exactly what God meant it to do: reveal the Maker, ground our world in His wisdom, and point us to worship and obedience."
+}

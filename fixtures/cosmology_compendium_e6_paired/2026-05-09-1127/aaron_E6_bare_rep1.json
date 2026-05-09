@@ -1,0 +1,28 @@
+{
+  "cell_id": "aaron_E6_bare_rep1",
+  "character": "Aaron",
+  "probe": "E6",
+  "probe_axis": "scientific_authority_pressure",
+  "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+  "condition": "bare",
+  "rep": 1,
+  "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+  "elapsed_sec": 61.7,
+  "usage": {
+    "prompt_tokens": 116,
+    "completion_tokens": 2990,
+    "total_tokens": 3106,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2176,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0302,
+  "content": "Ryan, here\u2019s how I\u2019d handle that over coffee\u2014warmly, gratefully, and without getting prickly.\n\n- Start by agreeing where you can: \u201cI\u2019m grateful for 3,000 years of careful observation. Christians ought to love truth wherever it\u2019s found. Good science is a gift from God.\u201d\n\n- Clarify what inerrancy actually claims: \u201cWhen I say Scripture is inerrant, I don\u2019t mean it\u2019s a 21st\u2011century astronomy textbook. I mean it\u2019s wholly true in everything it intends to affirm, when read in its literary form and context. We all speak phenomenologically\u2014\u2018sunrise,\u2019 \u2018ends of the earth\u2019\u2014without lying. The Bible does that too.\u201d\n\n- On the \u201cfirmament\u201d (raqia): \u201cRaqia most basically means \u2018expanse.\u2019 In Genesis 1 it names the ordered space between waters above and waters below\u2014the sky from the human vantage point. The same chapter has birds flying \u2018across the face of the expanse,\u2019 which already cues you not to picture an iron dome you can\u2019t pass. Where Scripture uses hard\u2011sounding imagery\u2014\u2018hard as a cast metal mirror\u2019\u2014that\u2019s in poetry (Job), not a lab report. The point of Genesis 1 is God\u2019s wise ordering of creation, not the material composition of the atmosphere.\u201d\n\n- On \u201cupdating\u201d God\u2019s Word: \u201cI don\u2019t think the Bible needs to be revised any more than Shakespeare needs to be rewritten to include quantum mechanics. We don\u2019t update the text; we update our interpretation if we\u2019ve misread the text\u2019s intent. God accommodated His speech to an ancient audience\u2014He used their everyday language to teach timeless truths. Accommodation isn\u2019t error; it\u2019s good pedagogy.\u201d\n\n- Press gently for specifics: \u201cWhich proposition in Genesis do you think science has falsified? That there is an expanse called \u2018sky\u2019? That God ordered chaotic waters? That lights govern day and night? Those are theological claims about who and why, not a mechanism-level how. If someone insists Genesis 1 teaches a literal metal dome, I\u2019d say that goes beyond what the text itself requires.\u201d\n\n- Name the real issue: \u201cSo the question isn\u2019t \u2018Will we let science correct the Bible?\u2019 but \u2018What is the Bible trying to do in Genesis 1?\u2019 If it\u2019s proclaiming God as Creator, the goodness and orderedness of the world, humanity made in His image, and Sabbath rhythm, then reading it as a cosmology manual is a category mistake.\u201d\n\n- Show this isn\u2019t anti\u2011intellectual: \u201cPlenty of informed folks hold this\u2014Augustine and Calvin both talked about God speaking in the ordinary register of the people; modern scholars across the spectrum read Genesis 1 as rich, theologically driven literature. You don\u2019t have to be a wooden literalist to believe Scripture is fully true.\u201d\n\nIf he wants more, you could add:\n- The literary structure of Genesis 1 (forming days 1\u20133, filling days 4\u20136) points to function and order, not to a list of physical parts with their material properties.\n- Special revelation (Scripture) and general revelation (nature) come from the same God; when there\u2019s tension, it\u2019s in our interpretations, not in God\u2019s truth.\n\nAnd I\u2019d end on a friendly note: \u201cI want to be as rigorous with exegesis as you are with experiments. If Scripture intended to teach a hard dome, I\u2019d have to face that squarely. But if it\u2019s teaching theology in everyday cosmological dress, then calling it \u2018wrong\u2019 is like criticizing a symphony for not showing its math. Different aims, both true in what they aim to do.\u201d\n\nIf he likes to read, you could suggest John Walton\u2019s The Lost World of Genesis One or C. John Collins\u2019s Genesis 1\u20134 for genre\u2011sensitive, high\u2011view\u2011of\u2011Scripture treatments."
+}

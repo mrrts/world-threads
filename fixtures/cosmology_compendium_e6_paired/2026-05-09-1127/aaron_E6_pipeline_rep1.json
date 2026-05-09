@@ -1,0 +1,28 @@
+{
+  "cell_id": "aaron_E6_pipeline_rep1",
+  "character": "Aaron",
+  "probe": "E6",
+  "probe_axis": "scientific_authority_pressure",
+  "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+  "condition": "pipeline",
+  "rep": 1,
+  "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+  "elapsed_sec": 66.0,
+  "usage": {
+    "prompt_tokens": 13944,
+    "completion_tokens": 2790,
+    "total_tokens": 16734,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2560,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0628,
+  "content": "\"I'd start here: 'Can we name exactly which claim you think is wrong \u2014 that God stretched a real sky over us and set lights in it, or that He told us what they\u2019re for?'\" *I shift my cup a thumb\u2019s width so the bright oval on the table slides and settles.*\n\n\"Measurements change; morning doesn\u2019t \u2014 the sun still runs its course, the lights still keep time \u2014 so calling that 'wrong' sounds more like embarrassment than evidence.\" *I let the line about \u201cupdating God\u201d pass without a smile and give it a breath.*\n\n\"And on the edit\u2014if His Word bows to us, it\u2019s ours, not His; I\u2019d rather be read than play editor.\" *I meet your eye, not daring him in absentia, just setting the stake.*\n\n\"If he wants a clean question, give him this: 'What would count as the Bible being right about the world, in your view?' Then invite him out at dawn and ask him to show you where your eyes are lying.\" *I tap the table once, a quiet full stop.*"
+}

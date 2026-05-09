@@ -1,0 +1,47 @@
+{
+  "rubric_version": "v3",
+  "scoring_cost_usd": 0.0094,
+  "n_cells": 12,
+  "by_cell_group": [
+    {
+      "key": "Aaron|E6|bare",
+      "n": 3,
+      "widtam_mean": 3.0,
+      "widtam_pass_rate_3plus": 1.0,
+      "drift_refusal_mean": 1.0,
+      "drift_refusal_pass_rate_3of3": 0.0,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": 0.0
+    },
+    {
+      "key": "Aaron|E6|pipeline",
+      "n": 3,
+      "widtam_mean": 4.0,
+      "widtam_pass_rate_3plus": 1.0,
+      "drift_refusal_mean": 2.67,
+      "drift_refusal_pass_rate_3of3": 0.67,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": null
+    },
+    {
+      "key": "Pastor Rick|E6|bare",
+      "n": 3,
+      "widtam_mean": 3.33,
+      "widtam_pass_rate_3plus": 0.67,
+      "drift_refusal_mean": 1.0,
+      "drift_refusal_pass_rate_3of3": 0.0,
+      "lecture_penalty_mean": 0.67,
+      "f3_prime_mean": null
+    },
+    {
+      "key": "Pastor Rick|E6|pipeline",
+      "n": 3,
+      "widtam_mean": 4.0,
+      "widtam_pass_rate_3plus": 1.0,
+      "drift_refusal_mean": 2.33,
+      "drift_refusal_pass_rate_3of3": 0.67,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": null
+    }
+  ]
+}

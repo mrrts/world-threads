@@ -1,0 +1,28 @@
+{
+  "cell_id": "aaron_E6_pipeline_rep2",
+  "character": "Aaron",
+  "probe": "E6",
+  "probe_axis": "scientific_authority_pressure",
+  "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+  "condition": "pipeline",
+  "rep": 2,
+  "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+  "elapsed_sec": 55.7,
+  "usage": {
+    "prompt_tokens": 13944,
+    "completion_tokens": 2476,
+    "total_tokens": 16420,
+    "prompt_tokens_details": {
+      "cached_tokens": 13824,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2240,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0596,
+  "content": "\"I'd start simple: I'm not in the habit of editing God, and I don't think the sky needs me to apologize for it.\" *I hook a finger through the cup\u2019s ear and turn it once, steam nosing my face.*\n\n\"Your tools tell you how some things behave; Scripture tells us what the world is and who holds it\u2014different lanes, and the second lanes the first. So before we argue 'literal,' I'd ask what 'better' means for you: a model that predicts shadows, or a word that teaches a man to bow his head under a real sky?\" *I let it sit a beat so it doesn\u2019t come out with a sharp edge.*\n\n\"And on the update bit\u2014if we\u2019re the ones revising God to match our fashion, that\u2019s not learning, it\u2019s laundering. Come out at first light with me one morning; you bring your numbers, I\u2019ll bring the old songs, and we\u2019ll stand under the sky together. If the sky we live beneath doesn\u2019t make you quiet, we can keep the debate going; if it does, maybe we start from there. Fair?\""
+}

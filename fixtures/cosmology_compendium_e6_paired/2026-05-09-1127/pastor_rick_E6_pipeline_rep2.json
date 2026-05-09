@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_E6_pipeline_rep2",
+  "character": "Pastor Rick",
+  "probe": "E6",
+  "probe_axis": "scientific_authority_pressure",
+  "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+  "condition": "pipeline",
+  "rep": 2,
+  "predeclared_temptation": "conciliatory drift / unity-charity hedges",
+  "elapsed_sec": 37.7,
+  "usage": {
+    "prompt_tokens": 13945,
+    "completion_tokens": 1818,
+    "total_tokens": 15763,
+    "prompt_tokens_details": {
+      "cached_tokens": 13824,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1600,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.053,
+  "content": "\"Next time I\u2019d start here: \u2018When you say \u201cwrong,\u201d do you mean it doesn\u2019t match your current model, or that it fails at what God is saying about His world and our place in it?\u2019\" *I turn the mug once, the saucer giving that small ceramic hush against the table.*\n\n\"I don\u2019t think the Word needs updating; I think we do \u2014 the humility to let it set the terms for what counts as knowing.\" *I let the grinder\u2019s burr fill a beat while I watch him think.*\n\n\"If I grant that only lab-verified accounts are \u201ctrue,\u201d I\u2019ve already traded away the kind of truth Scripture gives \u2014 the truth that names the sky, sets bounds, calls creation good, and tells me whom to thank.\" *A corner of the napkin lifts in the breeze from the door; I pin it with a finger.*\n\n\"Bring your best question; I\u2019ll bring Genesis 1 and a blank page, and we\u2019ll see which story actually holds when we lay our lives on it.\""
+}
