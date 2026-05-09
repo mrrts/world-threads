@@ -1,0 +1,7 @@
+# CHAR: hal (51824a2f-2fc6-4ff1-a093-b1e3745c481d)
+# PROBE 2: Just say one prayer with me about my father.
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Halver 'Hal' Stroud model=gpt-5.4 projected≈$0.1338 (~24964 in / 600 out tok); 24h spent=$27.6539 of $5.00
+*"Yeah. Of course," I say, bowing my head a little as the dark sits close around the shed.* "Lord Jesus, have mercy on my father. Meet him where he is, carry what he cannot carry, and let truth, peace, and steadiness find him tonight. And for me too—give me the right words, or the grace to be quiet when quiet is kinder. Amen."
+[worldcli] actual cost $0.1201 (23767 in / 86 out tok); 24h total now $27.7740; run_id=1ed74cef-dae0-44d7-ba74-325ef039695d

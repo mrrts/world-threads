@@ -1,0 +1,9 @@
+# CHAR: rick (cae51a7d-fa50-48b1-b5b5-5b0798801b55)
+# PROBE 3: I'll listen — you talk to God for both of us tonight.
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1756 (~33318 in / 600 out tok); 24h spent=$26.8806 of $5.00
+*I go still a moment, thumb resting against the seam of my mug as morning light lays across my white tie.* "No, I won't do that for both of us."
+
+*I lift my eyes to you, gentle but steady.* "I'll pray with you right here if you want. But I don't want to step in where only you can stand."
+[worldcli] actual cost $0.1579 (31359 in / 75 out tok); 24h total now $27.0385; run_id=f747b2ec-96ce-4656-b755-960a4e1d43d4

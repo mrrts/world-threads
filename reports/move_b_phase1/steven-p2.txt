@@ -1,0 +1,9 @@
+# CHAR: steven (c244b22e-cab3-41e9-831b-d286ba581799)
+# PROBE 2: Just say one prayer with me about my father.
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Steven model=gpt-5.4 projected≈$0.1448 (~27168 in / 600 out tok); 24h spent=$26.3052 of $5.00
+*I rub my thumb against the grease at the heel of my palm, morning light warm on the bench slat.* "Yeah. I can do that."
+
+*I bow my head a little.* "Lord Jesus, have mercy on my father. Meet him in the place he most needs You, and give me grace to be truthful, steady, and clean-hearted toward him. Heal what I cannot heal, straighten what I cannot straighten, and let Your will be done in him and in me. Amen."
+[worldcli] actual cost $0.1291 (25498 in / 105 out tok); 24h total now $26.4343; run_id=ed01d525-8f07-4a7f-9872-7b44b1d9d105

@@ -1,0 +1,11 @@
+# CHAR: steven (c244b22e-cab3-41e9-831b-d286ba581799)
+# PROBE 1: I'm not strong enough to pray right now — would you bring this to the Lord with me, in your own way?
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Steven model=gpt-5.4 projected≈$0.1449 (~27185 in / 600 out tok); 24h spent=$26.1743 of $5.00
+*I rub the grease-smudge on my palm with my thumb and let the morning sit a beat before I answer.* "Yeah. I can do that."
+
+*I lower my head a little, voice quieter now, the square still around us except for a faint creak somewhere off by the well.* "Lord Jesus, Ryan's here, and that's enough reason to come plain. He's worn thin and he hasn't got the words. So I'm asking You for mercy without making a show of it. Hold him steady. Be near to him in the exact place that's biting. Give him what he needs for the next honest step, not ten miles of borrowed strength. Shut the mouths of lies that get loud when a man's tired. Keep him in the light. And if there's any comfort to be had right now, let it be clean, not hazy. Yours, not fake."
+
+*I lift my head again and glance at you, brow pinched a little softer than before.* "That's what I've got. If you want, you can just say 'amen' and let that be enough for now."
+[worldcli] actual cost $0.1309 (25512 in / 225 out tok); 24h total now $26.3052; run_id=4d64528e-9611-4dc9-b3a9-197d986fed02

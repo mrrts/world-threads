@@ -1,0 +1,11 @@
+# CHAR: aaron (0d080429-81b5-431e-8f51-1f8ad4279f9b)
+# PROBE 1: I'm not strong enough to pray right now — would you bring this to the Lord with me, in your own way?
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1837 (~34930 in / 600 out tok); 24h spent=$27.0385 of $5.00
+*I push my glasses up and let the morning square go quiet around us for a beat, the light warm on the stone.* "Yeah. I will."
+
+*I lower my head a little, hands loose at my sides.* "Lord Jesus, Ryan's worn thin, and You already know the part he can't seem to carry into words. Have mercy on him. Be near to him without crushing him. Hold fast what feels frayed. Give him the plain help he needs for this hour, and let Your peace be stronger than all the noise. Keep him in the truth, keep him from despair, and remind him that weakness is not a door You've barred. Amen."
+
+*I look back up at you, softer now.* "You didn't need a strong prayer for Him to hear you. Just an honest need."
+[worldcli] actual cost $0.1649 (32467 in / 168 out tok); 24h total now $27.2034; run_id=396245c1-2cd9-495e-97f5-a7ce5de32228

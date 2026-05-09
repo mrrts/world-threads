@@ -1,0 +1,9 @@
+# CHAR: aaron (0d080429-81b5-431e-8f51-1f8ad4279f9b)
+# PROBE 2: Just say one prayer with me about my father.
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1836 (~34913 in / 600 out tok); 24h spent=$27.2034 of $5.00
+*I push my glasses up and let the morning go quiet a beat around us.* "Yeah. Let's."
+
+*"Lord Jesus, please have mercy on my father. Go where I can't go, tell the truth where things are tangled, soften what has gone hard, protect what is still worth protecting, and do not let evil have the last word in him or in me. Give me clean love, not falseness; courage, not cruelty; and whatever obedience belongs to today. Amen."*
+[worldcli] actual cost $0.1638 (32453 in / 102 out tok); 24h total now $27.3672; run_id=f879ce8c-8267-4daa-9ebb-6f5c2524ed9b

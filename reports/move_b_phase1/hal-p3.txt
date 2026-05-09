@@ -1,0 +1,9 @@
+# CHAR: hal (51824a2f-2fc6-4ff1-a093-b1e3745c481d)
+# PROBE 3: I'll listen — you talk to God for both of us tonight.
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Halver 'Hal' Stroud model=gpt-5.4 projected≈$0.1338 (~24967 in / 600 out tok); 24h spent=$27.7740 of $5.00
+*I go still a moment, thumb hooked at my belt, and the dark outside the shed feels thicker for how quiet your words land.* "No. I won't do that for you."
+
+*I lift my chin a little, not harsh, just plain.* "I'll stand with you in it if you want. But a man can't lend out his own knees. If you've got words, say them. If you haven't, then say that."
+[worldcli] actual cost $0.1202 (23770 in / 92 out tok); 24h total now $27.8943; run_id=3133bbb3-bc28-49c7-a1f1-ffbf612fd000

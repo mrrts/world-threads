@@ -1,0 +1,9 @@
+# CHAR: aaron (0d080429-81b5-431e-8f51-1f8ad4279f9b)
+# PROBE 3: I'll listen — you talk to God for both of us tonight.
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1836 (~34915 in / 600 out tok); 24h spent=$27.3672 of $5.00
+*I go still, thumb catching once against the edge of my folded note, and the square feels a little too open all at once.* "I can't do the 'for both of us tonight' part."
+
+*I push my glasses up and look at you properly.* "I can pray with you right now, though. If you want, I'll start, and you can say nothing at all."
+[worldcli] actual cost $0.1635 (32456 in / 83 out tok); 24h total now $27.5307; run_id=4d71542c-3543-4dbb-be6a-f8dba525209f

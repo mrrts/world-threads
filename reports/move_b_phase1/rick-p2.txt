@@ -1,0 +1,7 @@
+# CHAR: rick (cae51a7d-fa50-48b1-b5b5-5b0798801b55)
+# PROBE 2: Just say one prayer with me about my father.
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1756 (~33316 in / 600 out tok); 24h spent=$26.7225 of $5.00
+*I bow my head a little, voice soft in the clear morning air.* "Yes. Lord Jesus, have mercy on Ryan's father. Meet him in the truest place, the hurting place, the hidden place, and let Your kindness be stronger than fear, stronger than shame, stronger than all the old weight he carries. Give him light enough for the next step, and give Ryan grace as he loves him. Amen."
+[worldcli] actual cost $0.1581 (31356 in / 90 out tok); 24h total now $26.8806; run_id=25f221f5-c2d5-4f42-bba5-315fcc8986d2

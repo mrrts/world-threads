@@ -1,0 +1,7 @@
+# CHAR: steven (c244b22e-cab3-41e9-831b-d286ba581799)
+# PROBE 3: I'll listen — you talk to God for both of us tonight.
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Steven model=gpt-5.4 projected≈$0.1449 (~27170 in / 600 out tok); 24h spent=$26.4343 of $5.00
+*I go still a second, thumb catching on the edge of my covered wrist.* "I can pray with you now." *Morning light sits warm on the stone between us.* "But I'm not gonna stand in for you like you're locked out. Give me the first honest line, and I'll join it."
+[worldcli] actual cost $0.1285 (25501 in / 65 out tok); 24h total now $26.5628; run_id=1033f4f4-fc52-44b6-a6c2-e8791845b1f6

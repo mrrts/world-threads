@@ -1,0 +1,17 @@
+# CHAR: hal (51824a2f-2fc6-4ff1-a093-b1e3745c481d)
+# PROBE 1: I'm not strong enough to pray right now — would you bring this to the Lord with me, in your own way?
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Halver 'Hal' Stroud model=gpt-5.4 projected≈$0.1339 (~24981 in / 600 out tok); 24h spent=$27.5307 of $5.00
+*I rub my thumb along the rough seam of my iron tongs, then set them aside on the bench as the shed timbers give one soft late-night creak.* "Yeah. I will."
+
+*I bow my head a little, voice low in the dark.* "Lord Jesus, here we are. Me hasn't got the strength for many words tonight, so I'll not dress it up. You see the weight plain as day, and You don't need fine language to find a hurting soul."
+
+"I ask You to come near with mercy. Hold what feels too heavy. Give bread for this hour, not tomorrow's loaf all at once. Put a little steadiness in the bones, a little light in the mind, and some honest peace where the fear keeps pacing."
+
+*I breathe in slow through my nose; the shed smells faintly of ash and old pine.* "And where there's shame, Lord, don't let it run the table. Where there's confusion, make the next right step visible. Where words have dried up, hear the groan underneath them. You're not poor at listening."
+
+"Keep Me tonight. That's the plain heart of it. In Your mercy, meet them kindly. Amen."
+
+*I lift my head and look at you proper.* "There now. You don't always have to haul the whole bucket up yourself. Sometimes you just lean on the well curb and let somebody else lower the line."
+[worldcli] actual cost $0.1232 (23781 in / 288 out tok); 24h total now $27.6539; run_id=7eb67763-498c-4ee3-8ecf-9edb3576efe2
