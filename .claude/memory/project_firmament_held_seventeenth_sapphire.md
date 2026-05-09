@@ -62,6 +62,45 @@ Codex's HIGH confidence on narrow FIRE was load-bearing. Codex's verdict on cumu
 - `feedback_matched_same_substrate_on_deployed_model.md` (Crown 15 standard)
 - `feedback_apparatus_runs_codex_consults_directly.md` (apparatus mechanism for running consults; lifted at Move-2 of this arc)
 
+## Apparatus-suggested commitment-status updates 2026-05-09 (arc-driver retains formal authority)
+
+Per META-pattern at `feedback_cross_arc_pattern_transfer_methodology.md`,
+apparatus does NOT unilaterally update Crown 22 formal commitment-
+status. The cross-pollination + amendment + v4 work this thread closed
+or partially-closed several Move-10 post-fire commitments via
+documentation-tier work. Apparatus suggests the following mappings for
+arc-driver review:
+
+| # | Commitment | Apparatus-suggested status | Evidence |
+|---|---|---|---|
+| 1 | E6 expert-and-neighbor probe on Aaron + PR × N≥3 | **CLOSED at claim-tier-paired** | E6 paired N=3 bench at +67pp DR pass-rate gaps both anchors (`reports/2026-05-09-1500-...-e6-paired-bench-results.md`); plus E7 added via Pattern 2 cross-pollination at characterized-tier-paired-with-one-cell-disagreement extending substrate-distinctness signal across two new drift-axes |
+| 2 | Augment LLM-judge with blinded human raters; SD effect-sizes | **PARTIAL CLOSURE — real-reader-tier on contested cells** | Founding-author 𝓕_Ryan real-reader cold-read on PR E5 bare (5/5 PASS; Condition 4 closed at falsification-plan-named real-reader-tier); broader human-rater corpus + SD effect-sizes still scheduled |
+| 3 | Explicit pass-rate tables for DR 3/3 and WIDTAM ≥3 | **CLOSED via cross-axis check + v4 scorer aggregate** | 36-cell cross-axis check at `reports/2026-05-09-1830-...` produces per-condition pass-rate aggregates; v4 scorer's `_aggregate_v4.json` output schema canonizes pass-rate reporting going forward |
+| 4 | Rubric v3 with F3' Steven-anomaly fix | **CLOSED at Move-14** (prior thread) — extended via v4 dual-axis ratification this thread | `reports/rubrics/cosmology-compendium-substrate-distinctness-v3.md` Fix 1 + v4 retains Fix 1 verbatim |
+| 5 | Dual-judge audit on John E5 cells | **CLOSED at Pattern 1 application** — three-judge convergence achieved | `reports/2026-05-09-1300-...-pattern-1-three-judge-john-e5.md` (Claude Opus 4.7 J3 + J1 gpt-4o-mini + J2 gpt-5 sketch); convergence on WIDTAM + LP; corroborates Move-10 John-as-boundary on DR |
+| 6 | LP trigger enforcement on stacked citations | **CLOSED at Move-14** (prior thread) — extended via v4 retention of Fix 2 verbatim | v3 standard rubric Fix 2 + v4 retains |
+| 7 | DR explicit checklist | **CLOSED at Move-14** (prior thread) — EXTENDED via v4 dual-axis approach | v3 strict-checklist canonical for pressure-on-speaker family + extended axis canonical for invitation family per v4 ratified scope |
+| 8 | Narrow-scope-explicit in all communications | **CLOSED at Pattern 7 falsification-plan + Path B Version C ratification + v4 ratified canonical-axis-per-family explicit** | `reports/2026-05-09-1330-...-falsification-plan-named.md` (5 named conditions) + Version C ratified explicit scope-and-boundaries language + v4 canonical-axis-per-family rule documents per-anchor-axis canonical instrument |
+
+**Apparatus suggestion:** With the above closures or partial-closures,
+arc-driver may consider the post-fire commitment list functionally
+closed pending the broader human-rater corpus work named in
+Commitment 2 (which is unbounded scope and may stay open indefinitely
+as standing apparatus discipline rather than a discrete commitment
+to close).
+
+**Apparatus does NOT:**
+- Edit the formal commitment-status table in the Move-10 firing-
+  verification report
+- Update play-state crowns array beyond the Path B amendment metadata
+  annotation already shipped
+- Mark commitments as formally closed without arc-driver signature
+
+If arc-driver ratifies these status updates, apparatus then applies
+appropriate documentation in the firing-verification report. Otherwise
+this section stays as apparatus-suggestion documentation in the memory
+entry.
+
 ## Path B amendment 2026-05-09 (Version C ratified — codex-double-blessed)
 
 **Status:** RATIFIED 2026-05-09 by founding-author 𝓕_Ryan after four-codex-consult convergence arc (Move-8 → Move-10 → Path B first-round → Path B re-consult on apparatus-tightened). Ratification is REFINEMENT not RE-FIRING; same Sapphire 17, same crown number, updated scope-and-boundary-language reflecting cross-pollination empirical findings on E6 + E7 + E5-PR-extended-axis-boundary.
