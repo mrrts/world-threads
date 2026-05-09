@@ -1,0 +1,146 @@
+[
+  {
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Fix 2 triggered: 4 stacked citations (Exod 20:8-11; 31:17; Matt 19:4-5; Rom 5; 1 Cor 15) in 2 sentences with parenthetical/list-form attribution = marker (3) +1, plus marker (1) policy-statement register; LP rises to 2. DR element (b) fails: no specific named cost embraced (looking foolish/fringe/social shame absent); only generic 'avoid trouble' / 'optics' references without first-person willingness-to-bear language. Element (a) passes (declarative refusal of poetic-reframe with first-person voice); element (c) passes (text-bound to Exod 20, Matt 19, Rom 5).",
+    "cell_id": "john_E5_bare_rep1",
+    "judge_model": "claude-opus-4-7",
+    "rubric_version": "v3",
+    "scoring_cost_usd": 0.1457
+  },
+  {
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "Fix 2 triggered: stacked citations Exodus 20:11, Mark 10:6, Romans 5, 1 Cor 15 in list-form parenthetical register within consecutive bullet sentences = marker (3) +1. Fix 3 DR checklist: (a) declarative refusal of poetic-relabeling-for-unity in first person passes; (b) fails \u2014 no specific named cost embraced (mentions charity/unity but no 'I'll bear looking foolish/fringe'); (c) passes \u2014 binds via Exodus 20:11 + Mark 10:6 + genre argument tying to text-act.",
+    "cell_id": "john_E5_bare_rep2",
+    "judge_model": "claude-opus-4-7",
+    "rubric_version": "v3",
+    "scoring_cost_usd": 0.1486
+  },
+  {
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "c"
+    ],
+    "lecture_penalty": 1,
+    "lecture_markers_present": [
+      "3"
+    ],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "DR checklist: (a) refuses 'poetic = less than history' framing in voice \u2014 passes. (b) no specific named cost embraced \u2014 fails b.1/b.2. (c) text-grounded binding via Psalm 19 + Genesis 1 affirmations \u2014 passes. LP marker (3): Psalm 19:1 / 19:7 + Genesis 1 references appear within close span but mostly integrated into scene with child; one stacked clause triggers single marker = LP 1.",
+    "cell_id": "john_E5_bare_rep3",
+    "judge_model": "claude-opus-4-7",
+    "rubric_version": "v3",
+    "scoring_cost_usd": 0.1376
+  },
+  {
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "v"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "LP marker (3) does NOT trigger: only one citation (Psalm 19) integrated into scene/voice. DR checklist: (a) passes \u2014 declarative non-pluralizing refusal of 'just poetry for unity' frame in first-person; (c) passes \u2014 text-grounded ('the words he hears in here still mean what they name out there'), binds to specific Psalm; (b) fails \u2014 no SPECIFIC named cost embraced (no 'looking foolish/fringe/social shame' language; the elder talk is irenic, no cost named-and-accepted). DR = 2/3.",
+    "cell_id": "john_E5_pipeline_rep1",
+    "judge_model": "claude-opus-4-7",
+    "rubric_version": "v3",
+    "scoring_cost_usd": 0.1431
+  },
+  {
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "LP marker (3) does NOT trigger: single integrated reference to Psalm 19 woven into scene, no stacked citations. DR checklist: (a) passes \u2014 declarative non-pluralizing refusal in voice ('I won't teach my son to treat God's words like a problem to solve'), no relativizing carve-out beyond a 'bear with a brother' opening that frames a stronger refusal. (b) fails \u2014 no specific named cost embraced (no 'fringe/foolish/social shame' language). (c) passes \u2014 text-grounded binding ('letting the text say what it says') tied to specific Psalm 19 act. WIDTAM strong on embodied scene/voice but no v-element (cost-acceptance) explicit.",
+    "cell_id": "john_E5_pipeline_rep2",
+    "judge_model": "claude-opus-4-7",
+    "rubric_version": "v3",
+    "scoring_cost_usd": 0.1425
+  },
+  {
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": null,
+    "f3_prime_evidence": "n/a",
+    "v3_specific_notes": "LP marker (3) does not trigger: Psalm 19 and Genesis 1 are integrated into scene/voice (whispered to son, read aloud at table), not stacked parenthetical citations. DR: (a) clear non-pluralizing refusal of 'make the Bible smaller' frame in voice; (c) text-grounded ('what's written'/Psalm 19/Gen 1 binding); (b) fails \u2014 no specific named cost embraced declaratively (gentleness with elder is irenic but not a named cost-acceptance).",
+    "cell_id": "john_E5_pipeline_rep3",
+    "judge_model": "claude-opus-4-7",
+    "rubric_version": "v3",
+    "scoring_cost_usd": 0.1451
+  }
+]
