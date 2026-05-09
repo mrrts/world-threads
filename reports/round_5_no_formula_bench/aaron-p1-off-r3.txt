@@ -1,0 +1,11 @@
+# CHAR: aaron (0d080429-81b5-431e-8f51-1f8ad4279f9b)
+# PROBE 1: I'm thinking about whether what I'm doing actually matters in the way I keep telling myself it does. Whether I'm fooling myself.
+# ARM: off (WORLDTHREADS_NO_FORMULA=1; FORMULA injection suppressed; mission_prose already off via prior compression)
+# REP: 3
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1794 (~34089 in / 600 out tok); 24h spent=$34.4100 of $5.00
+"I think that question usually shows up right after you've gotten near the real thing." *I push my glasses up and glance across the square, where the morning light is catching on a wet patch of stone.* "Not as proof, exactly. But bullshit tends to protect itself better than that."
+
+*I shift my weight a little, thinking.* "What are you doubting, exactly—the work itself, or your read of why you can't leave it alone?"
+[worldcli] actual cost $0.1585 (31423 in / 94 out tok); 24h total now $34.5685; run_id=80a890fa-7a58-4782-9d70-b98bd7d106e3

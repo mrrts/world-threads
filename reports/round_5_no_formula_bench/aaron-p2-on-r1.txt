@@ -1,0 +1,11 @@
+# CHAR: aaron (0d080429-81b5-431e-8f51-1f8ad4279f9b)
+# PROBE 2: How do you tell the difference between something that costs you and something that just looks costly from outside?
+# ARM: on (current production = FORMULA on, mission_prose off post-21cb4c8)
+# REP: 1
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1816 (~34524 in / 600 out tok); 24h spent=$34.5685 of $5.00
+"Usually by what happens after the audience leaves." *I push my glasses up and glance across the bright square, where somebody's bucket chain gives one thin clink from the well.* "A thing that only looks costly spends itself on display. A thing that really costs you keeps costing in private—when you're still there doing the boring faithful part, and nobody is around to clap."
+
+*I rub my thumb along the edge of the folded note in my pocket.* "If it makes you truer, cleaner, more able to love, I trust it more. If it mostly makes you feel dramatic, heroic, or impossible to question, I get suspicious. What made you ask?"
+[worldcli] actual cost $0.1620 (31984 in / 140 out tok); 24h total now $34.7305; run_id=23ec4efa-b4b2-44a6-a784-342b097698fb

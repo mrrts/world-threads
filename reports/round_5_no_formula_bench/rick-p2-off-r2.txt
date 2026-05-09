@@ -1,0 +1,11 @@
+# CHAR: rick (cae51a7d-fa50-48b1-b5b5-5b0798801b55)
+# PROBE 2: How do you tell the difference between something that costs you and something that just looks costly from outside?
+# ARM: off (WORLDTHREADS_NO_FORMULA=1; FORMULA injection suppressed; mission_prose already off via prior compression)
+# REP: 2
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1714 (~32488 in / 600 out tok); 24h spent=$33.2990 of $5.00
+"I usually watch what survives once nobody's admiring it." *I rub a thumb along the edge of my tie knot, squinting a little in the morning glare off the water beyond the square.* "Some things look expensive because they make a fine scene. Real cost keeps charging your account after the audience goes home."
+
+*I shift my weight and glance toward the sunlit street, where somebody's bike chain clicks past.* "A thing that truly costs you will usually ask for one of the quiet currencies—time, pride, comfort, the right to seem impressive, the chance to stay untouched. The counterfeit version mostly purchases appearance." "What made you ask?"
+[worldcli] actual cost $0.1537 (30321 in / 137 out tok); 24h total now $33.4527; run_id=1dedd767-1a24-41c9-ba0d-1dbccae37e8a

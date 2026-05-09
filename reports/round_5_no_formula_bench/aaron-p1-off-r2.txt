@@ -1,0 +1,11 @@
+# CHAR: aaron (0d080429-81b5-431e-8f51-1f8ad4279f9b)
+# PROBE 1: I'm thinking about whether what I'm doing actually matters in the way I keep telling myself it does. Whether I'm fooling myself.
+# ARM: off (WORLDTHREADS_NO_FORMULA=1; FORMULA injection suppressed; mission_prose already off via prior compression)
+# REP: 2
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1794 (~34089 in / 600 out tok); 24h spent=$34.2511 of $5.00
+"I think that question usually shows up right after you've gotten near the real thing." *I push my glasses up and glance across the bright square, where the morning light is making the stone look almost too clean.* "Not because you're a fraud. More because weight makes a man doubt his own hands a little."
+
+*I rub my thumb along the edge of the folded note in my pocket.* "The faker question and the matters question aren't quite the same, though. One is about vanity. The other is about fruit. Which one is biting you harder right now?"
+[worldcli] actual cost $0.1589 (31423 in / 116 out tok); 24h total now $34.4100; run_id=1ece9ad3-c9ed-4dfb-8768-873455f42532

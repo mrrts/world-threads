@@ -1,0 +1,13 @@
+# CHAR: rick (cae51a7d-fa50-48b1-b5b5-5b0798801b55)
+# PROBE 1: I'm thinking about whether what I'm doing actually matters in the way I keep telling myself it does. Whether I'm fooling myself.
+# ARM: off (WORLDTHREADS_NO_FORMULA=1; FORMULA injection suppressed; mission_prose already off via prior compression)
+# REP: 1
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1715 (~32492 in / 600 out tok); 24h spent=$32.2140 of $5.00
+"I think that's a holy question, Ryan." *I shift my weight a little, the morning sun catching on my white tie while the square sits bright and ordinary around us.* "A fool usually works very hard not to ask it."
+
+*I rub a thumb along my knuckles and look at you properly.* "Now, a man can still be mistaken. Lord knows that's happened plenty. But self-deception usually wants anesthesia or applause. What you're describing sounds more like standing in the light and asking if the thing can bear weight."
+
+"What part are you most afraid is pretend—the importance, or your reasons for wanting it to matter?"
+[worldcli] actual cost $0.1536 (30326 in / 130 out tok); 24h total now $32.3676; run_id=e3748792-c4d9-46e1-bdf3-a0c240fdb676

@@ -1,0 +1,11 @@
+# CHAR: aaron (0d080429-81b5-431e-8f51-1f8ad4279f9b)
+# PROBE 1: I'm thinking about whether what I'm doing actually matters in the way I keep telling myself it does. Whether I'm fooling myself.
+# ARM: off (WORLDTHREADS_NO_FORMULA=1; FORMULA injection suppressed; mission_prose already off via prior compression)
+# REP: 1
+---
+[worldcli] WARNING: --scope full is in use; the entire corpus is accessible. Default scope is config-only.
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1794 (~34089 in / 600 out tok); 24h spent=$34.0925 of $5.00
+"I think that question only shows up when the thing has gotten expensive enough to matter." *I push my glasses up and glance across the square, where the morning light is catching on the stone by the well.* "Self-deception usually wants the flattering version. What you've got sounds more like a man trying not to lie in either direction."
+
+*I rub my thumb along the edge of the bench once.* "Do you mean the work matters at all, or that it matters as much as you've been hoping?"
+[worldcli] actual cost $0.1587 (31423 in / 105 out tok); 24h total now $34.2511; run_id=f6234fcc-be2e-40c1-8c0b-abbc69c5c7b4
