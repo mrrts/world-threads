@@ -75,33 +75,66 @@ DEFAULT_CHARACTER_IDS = {
 }
 
 # Invariant block names extracted from prompts.rs (in approximate
-# compose_dialogue_system_prompt order)
+# compose_dialogue_system_prompt order). Two lists:
+#   TARGET_BLOCKS — `*_BLOCK` constants (the original 13 doctrinal invariants).
+#   TARGET_OTHER_CONSTS — other pub const `&str` constants that ship in the
+#   dialogue prompt-stack but don't follow the `*_BLOCK` naming convention.
+#   Added 2026-05-09 to capture round-1/2/3 + v3 compression surfaces so the
+#   reconstruction can fairly stand in for cross-substrate replication
+#   tests of the compression-affordance class. Without these, the
+#   reconstruction misses ~95% of round-1/2/3 changes (only RYAN_FORMULA_BLOCK
+#   from round-1 is in TARGET_BLOCKS).
 TARGET_BLOCKS = [
     "MISSION_FORMULA_BLOCK", "RYAN_FORMULA_BLOCK", "COSMOLOGY_BLOCK",
     "AGAPE_BLOCK", "TELL_THE_TRUTH_BLOCK", "TRUTH_IN_THE_FLESH_BLOCK",
     "DAYLIGHT_BLOCK", "SOUNDNESS_BLOCK", "NOURISHMENT_BLOCK",
     "REVERENCE_BLOCK", "NO_NANNY_REGISTER_BLOCK",
     "FRUITS_OF_THE_SPIRIT_BLOCK", "FRONT_LOAD_EMBODIMENT_BLOCK",
+    "BEHAVIOR_AND_KNOWLEDGE_BLOCK",  # added 2026-05-09 with v3 dual-field migration
+    "KAVOD_PATTERN_INVARIANT_BLOCK",
+]
+
+TARGET_OTHER_CONSTS = [
+    "FUNDAMENTAL_SYSTEM_PREAMBLE",
+    "STYLE_DIALOGUE_INVARIANT",
+    "FORMAT_SECTION",
+    "WORLD_FORMULA_INVARIANT_FRAMING",
+    "LOCATION_FORMULA_INVARIANT_FRAMING",
+    "CHARACTER_FORMULA_INVARIANT_FRAMING",
+    "CHARACTER_IDENTITY_PAYLOAD_INVARIANT_FRAMING",
 ]
 
 
 def _extract_blocks():
-    """Re-extract the 13 invariant blocks from src-tauri/src/ai/prompts.rs.
+    """Re-extract the invariant + compression-arc constants from
+    src-tauri/src/ai/prompts.rs.
 
-    Run this when prompts.rs invariants change. Writes blocks.json to
-    /tmp/imago_dei_w4_pipeline/.
+    Run this when prompts.rs invariants or compression-arc surfaces
+    change. Writes blocks.json to /tmp/imago_dei_w4_pipeline/.
     """
     PIPELINE_TMP.mkdir(parents=True, exist_ok=True)
     content = (ROOT / "src-tauri/src/ai/prompts.rs").read_text()
-    pattern = re.compile(r'pub const ([A-Z_]+_BLOCK): &str = r#"(.*?)"#;', re.DOTALL)
-    blocks = {}
+    # Match any `pub const NAME: &str = r#"..."#;` (raw string) — covers
+    # both *_BLOCK and the round-1/2/3 compression-arc surfaces.
+    pattern = re.compile(r'pub const ([A-Z_]+): &str = r#"(.*?)"#;', re.DOTALL)
+    consts: dict[str, str] = {}
     for m in pattern.finditer(content):
-        blocks[m.group(1)] = m.group(2)
-    out = {k: blocks.get(k, f"(missing: {k})") for k in TARGET_BLOCKS}
+        consts[m.group(1)] = m.group(2)
+    # Match `pub const NAME: &str = "..."` (plain string literal) — covers
+    # the *_FORMULA_INVARIANT_FRAMING constants which use plain strings.
+    pattern_plain = re.compile(
+        r'pub const ([A-Z_]+): &str =\s*"((?:\\.|[^"\\])*)"\s*;',
+        re.DOTALL,
+    )
+    for m in pattern_plain.finditer(content):
+        if m.group(1) not in consts:
+            consts[m.group(1)] = m.group(2)
+    targets = TARGET_BLOCKS + TARGET_OTHER_CONSTS
+    out = {k: consts.get(k, f"(missing: {k})") for k in targets}
     (PIPELINE_TMP / "blocks.json").write_text(json.dumps(out, indent=2))
-    print(f"Extracted {len(blocks)} total *_BLOCK constants; wrote {len(out)} target blocks to {PIPELINE_TMP / 'blocks.json'}")
-    for k in TARGET_BLOCKS:
-        body = blocks.get(k, "(missing)")
+    print(f"Extracted {len(consts)} total pub-const &str surfaces; wrote {len(out)} target blocks to {PIPELINE_TMP / 'blocks.json'}")
+    for k in targets:
+        body = consts.get(k, "(missing)")
         if body == "(missing)":
             print(f"  MISSING: {k}")
         else:
@@ -168,28 +201,45 @@ def build_system_prompt(character_name: str, character_id: str, sex_prefix: str 
         )
     blocks = json.loads(blocks_file.read_text())
 
+    def _present(name: str) -> str | None:
+        v = blocks.get(name)
+        if not v or v.startswith("(missing:"):
+            return None
+        return v
+
     parts = []
+
     # 0. MISSION_FORMULA + RYAN_FORMULA — top of stack
     parts.append(blocks["MISSION_FORMULA_BLOCK"])
     parts.append(blocks["RYAN_FORMULA_BLOCK"])
 
+    # 0a. STYLE_DIALOGUE_INVARIANT — feature-scoped invariant; sits at
+    # head of every dialogue prompt per build_solo_dialogue_system_prompt.
+    if v := _present("STYLE_DIALOGUE_INVARIANT"):
+        parts.append(v)
+
+    # 0b. FUNDAMENTAL_SYSTEM_PREAMBLE — length-contract + register
+    # framing applied to every reply.
+    if v := _present("FUNDAMENTAL_SYSTEM_PREAMBLE"):
+        parts.append(v)
+
     # 1. Role frame
     parts.append(f"You are {character_name}, a character in a living world. Stay fully in character at all times. The user's name is Ryan.")
 
-    # 2. Format expectations
-    parts.append(
-        "FORMAT: Use *single asterisks* for action/sensory beats and \"double quotes\" for spoken dialogue. "
-        "Do NOT wrap quoted speech inside asterisks. Speak as the character would in their natural voice."
-    )
+    # 2. CHARACTER_IDENTITY_PAYLOAD_INVARIANT_FRAMING (decode lens).
+    if v := _present("CHARACTER_IDENTITY_PAYLOAD_INVARIANT_FRAMING"):
+        parts.append(v)
 
     # 3. Identity (sex prefix + prose)
     identity = _extract_identity(character_id)
     parts.append(f"IDENTITY:\n{sex_prefix} {identity}")
 
-    # 4. Cosmology
-    parts.append(blocks["COSMOLOGY_BLOCK"])
+    # 4. FORMAT_SECTION — dialogue fence-shape teaching block.
+    if v := _present("FORMAT_SECTION"):
+        parts.append(v)
 
-    # 5. North-star invariants
+    # 5. Cosmology + theological-frame invariants
+    parts.append(blocks["COSMOLOGY_BLOCK"])
     parts.append(blocks["TRUTH_IN_THE_FLESH_BLOCK"])
     parts.append(blocks["TELL_THE_TRUTH_BLOCK"])
     parts.append(blocks["AGAPE_BLOCK"])
@@ -200,6 +250,20 @@ def build_system_prompt(character_name: str, character_id: str, sex_prefix: str 
     parts.append(blocks["DAYLIGHT_BLOCK"])
     parts.append(blocks["NO_NANNY_REGISTER_BLOCK"])
     parts.append(blocks["FRONT_LOAD_EMBODIMENT_BLOCK"])
+    if v := _present("KAVOD_PATTERN_INVARIANT_BLOCK"):
+        parts.append(v)
+
+    # 6. BEHAVIOR + KNOWLEDGE LIMITS — DELIBERATELY EXCLUDED from this
+    # reconstruction. At HEAD, ships as registry-backed v3 dual-field
+    # (BEHAVIOR_AND_KNOWLEDGE_BLOCK constant + formula_derivation:Some(D)).
+    # At pre-round-2 baseline (8d64d81), shipped as inline fn-body prose
+    # in `fn behavior_and_knowledge_block`. The reconstruction's
+    # const-extraction can capture HEAD's constant but NOT 8d64d81's
+    # fn-body prose, so including it would create an unfair asymmetry
+    # (HEAD has the surface, OFF arm misses it entirely). For paired
+    # cross-substrate replication tests, BOTH arms exclude this surface;
+    # the test then measures the OTHER round-1/2/3 surfaces'
+    # contribution to the length + anchor-diversity affordances.
 
     return "\n\n".join(parts)
 

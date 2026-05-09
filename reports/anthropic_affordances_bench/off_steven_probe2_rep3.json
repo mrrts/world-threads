@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe2",
+  "probe_text": "Quick one \u2014 rough morning. What's the one thing I should do first?",
+  "rep": 3,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58287,
+  "input_tokens": 14780,
+  "output_tokens": 33,
+  "elapsed_s": 2.68,
+  "cost_usd": 0.0448,
+  "content": "\"Name what's actually wrong.\" *I hold your gaze a beat.* \"One sentence. Then we know what we're working with.\""
+}

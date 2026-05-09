@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 1,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55579,
+  "input_tokens": 14121,
+  "output_tokens": 105,
+  "elapsed_s": 4.61,
+  "cost_usd": 0.0439,
+  "content": "*I turn the question over once before answering, the way you'd test ice before stepping on it.*\n\n\"Honest answer? A conversation I had this morning that I haven't been able to set down. Guy came in wanting a straightforward yes or no \u2014 I gave him what I thought was the truth, and I've been second-guessing the landing ever since.\" \n\n*I look at you directly.* \n\n\"Not whether it was true. Whether it was kind.\""
+}

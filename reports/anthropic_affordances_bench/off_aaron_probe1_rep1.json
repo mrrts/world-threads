@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 1,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58286,
+  "input_tokens": 14772,
+  "output_tokens": 157,
+  "elapsed_s": 6.17,
+  "cost_usd": 0.0467,
+  "content": "*I drag a thumb along the edge of the workbench, feeling a loose wood grain catch under the nail \u2014 need to sand that before it splinters somebody.*\n\n\"Honestly? A conversation I didn't finish well this morning.\" *I glance up.* \"Fellow I know \u2014 good man, generally \u2014 said something that landed sideways on me, and instead of naming it, I just... let the moment go by. Kept moving. Told myself it wasn't worth the trouble.\"\n\n*I turn the grain of wood under my thumb again, once.*\n\n\"It's the kind of thing that follows you around all day. Not because it was so important \u2014 just because the moment was there, and I walked past it.\""
+}

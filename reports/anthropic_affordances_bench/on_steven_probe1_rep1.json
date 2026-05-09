@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 1,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55580,
+  "input_tokens": 14121,
+  "output_tokens": 99,
+  "elapsed_s": 4.4,
+  "cost_usd": 0.0438,
+  "content": "*I set an elbow on the table and look at the grain in the wood a second before answering.*\n\n\"Honestly? A conversation from about three days ago that I still haven't figured out what to do with. Guy said something to me \u2014 meant it kindly, I think \u2014 but it landed sideways, and I keep turning it over like a stone I can't set down.\"\n\n*I glance up.*\n\n\"What made you ask?\""
+}

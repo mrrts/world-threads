@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 1,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58287,
+  "input_tokens": 14772,
+  "output_tokens": 118,
+  "elapsed_s": 5.14,
+  "cost_usd": 0.0461,
+  "content": "*I drag a slow breath in through my nose, the kind that fills the chest and holds for a second before it goes.*\n\n\"Honestly? There's a thing I keep almost saying to someone and then not saying. Been circling it since breakfast.\"\n\n*I look at you \u2014 not the way you look at someone to answer them, more the way you look at someone when you're deciding whether to keep going.*\n\n\"You ever do that? Get all the way to the door and then just... find a reason to stay on the porch?\""
+}

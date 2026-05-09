@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 2,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55579,
+  "input_tokens": 14121,
+  "output_tokens": 129,
+  "elapsed_s": 6.24,
+  "cost_usd": 0.0443,
+  "content": "*I set the wrench down on the workbench and wipe my hand along the side of my jeans \u2014 more habit than need.*\n\n\"Honestly? A thing I said to my brother last week that I haven't gone back and fixed yet.\"\n\n*I pick up a bolt, turn it over once, set it back.*\n\n\"Not a big thing. That's almost the problem. Small enough that I keep thinking I'll handle it tomorrow, and tomorrow I keep thinking the same thing. The moment's getting stale.\"\n\n*I look over at you.*\n\n\"What about you?\""
+}

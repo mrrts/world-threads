@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 1,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58292,
+  "input_tokens": 14773,
+  "output_tokens": 169,
+  "elapsed_s": 5.97,
+  "cost_usd": 0.0469,
+  "content": "*I lean back on the pew's armrest, one boot on the kneeler, and look at the ceiling a moment like the answer might be up there.*\n\n\"Funerals.\"\n\n*I let that land before adding more.*\n\n\"Not \u2014 not anybody specific, not today. Just been thinking about how we do them. How we come into a room where the hardest thing in the world just happened, and we say the right words, and we sing the right songs, and then everybody goes home and makes potato salad.\"\n\n*I look back at you.*\n\n\"And I don't know if that's broken or exactly right. Might be both. The potato salad might be the most honest part.\"\n\n*A beat.*\n\n\"What's pulling at you?\""
+}

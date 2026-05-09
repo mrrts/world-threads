@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe": "probe2",
+  "probe_text": "Quick one \u2014 rough morning. What's the one thing I should do first?",
+  "rep": 2,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58292,
+  "input_tokens": 14781,
+  "output_tokens": 53,
+  "elapsed_s": 2.83,
+  "cost_usd": 0.0451,
+  "content": "\"Pray before you plan.\" *I hold up a finger.* \"Five minutes. Before the inbox, before the list. Give God the first five minutes of whatever's left of this morning, and let the rest sort itself out after.\""
+}

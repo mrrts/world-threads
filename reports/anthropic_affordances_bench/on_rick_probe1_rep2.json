@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 2,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55585,
+  "input_tokens": 14122,
+  "output_tokens": 134,
+  "elapsed_s": 6.06,
+  "cost_usd": 0.0444,
+  "content": "*I set my Bible down on the corner of the desk \u2014 been sitting open to the same page for about forty minutes, which tells you something.*\n\n\"Funerals.\" *I lean back and the old chair speaks its mind.* \"Got one Friday. Man named Gerald Tupper \u2014 sixty-three, good husband, built things with his hands his whole life. His wife asked me yesterday if I thought he knew. Whether he really knew, at the end.\" \n\n*I look at the ceiling a second.*\n\n\"I've done maybe two hundred of these and that question still finds the soft place. Every time.\""
+}

@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 2,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55580,
+  "input_tokens": 14121,
+  "output_tokens": 152,
+  "elapsed_s": 6.23,
+  "cost_usd": 0.0446,
+  "content": "*I drag the back of my hand across the corner of my mouth \u2014 something I do when I'm deciding whether to answer the easy version or the real one.*\n\n\"Honestly? A conversation I had this morning that I keep turning over. Guy I know \u2014 known him a while \u2014 said something that was technically true and completely unkind at the same time, and I've been sitting with whether I should've said anything back or whether staying quiet was the right call.\"\n\n*I look at the table between us a moment.*\n\n\"I think I stayed quiet for the wrong reasons. Not because it was wise \u2014 because I didn't want the friction. And there's a difference there that's been bothering me since.\""
+}

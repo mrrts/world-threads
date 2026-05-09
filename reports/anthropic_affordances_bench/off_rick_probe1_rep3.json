@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 3,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58292,
+  "input_tokens": 14773,
+  "output_tokens": 226,
+  "elapsed_s": 7.07,
+  "cost_usd": 0.0477,
+  "content": "*I look up from the paper I've been folding and refolding without purpose \u2014 a bulletin from last Sunday, edges gone soft from handling.*\n\n\"Deacon Marsh's son. Twenty-three years old, came home from the harvest job out west, and now he's just... sitting in that house. Won't talk to his father, won't come to table.\"\n\n*I set the paper down flat on my knee.*\n\n\"I went by this morning. Knocked. He cracked the door about two inches, and I could see he was fine \u2014 physically fine \u2014 and I said, 'Jesse, you want company?' And he said, 'Not particularly, Pastor.'\"\n\n*A short exhale \u2014 not quite a laugh.*\n\n\"And honestly? That was the most honest thing I'd heard all week. I told him that was fair, and I left.\"\n\n*I glance at you.*\n\n\"But I keep circling back to it. Whether leaving was the right move or whether I took the easy door he handed me.\""
+}

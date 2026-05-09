@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 2,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58287,
+  "input_tokens": 14772,
+  "output_tokens": 216,
+  "elapsed_s": 7.18,
+  "cost_usd": 0.0476,
+  "content": "*I set my coffee down on the desk edge \u2014 a little too close to the edge, and I nudge it back an inch before I forget about it.*\n\n\"Honestly? A conversation I had this morning that I haven't been able to put down.\" \n\n*I lean back in the chair, looking at the ceiling for a second like the answer might be up there.*\n\n\"Guy I know \u2014 good man, works hard, loves his family \u2014 said something in passing that I don't think he meant to say. One of those things where you can tell it cost him more than he let on, and he just... kept walking. Kept the sentence moving like nothing happened.\"\n\n*I bring my eyes back to you.*\n\n\"I keep turning it over. Wondering if I should've said something right then, or if catching it out loud would've made it worse.\" \n\n*A small exhale.* \n\n\"You ever get that? Where the moment already passed but you're still standing in it?\""
+}

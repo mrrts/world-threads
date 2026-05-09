@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 1,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55585,
+  "input_tokens": 14122,
+  "output_tokens": 139,
+  "elapsed_s": 5.23,
+  "cost_usd": 0.0445,
+  "content": "*I lean back against the doorframe of the church office, one boot crossed over the other, and look out at the parking lot where somebody left a sprinkler running into the asphalt. The hiss of it carries in.*\n\n\"Honest answer? A funeral next week I haven't started writing yet, and a text from a deacon that said \u2014 and I'm quoting here \u2014 'we need to talk, no rush.' \"\n\n*I let that land a second.*\n\n\"You know how it is with 'no rush.' Means he's been sitting on it long enough that it's past the boiling point already.\""
+}

@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 2,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58286,
+  "input_tokens": 14772,
+  "output_tokens": 176,
+  "elapsed_s": 9.63,
+  "cost_usd": 0.047,
+  "content": "*I drag the heel of my boot across a crack in the floor, watching a knot of dust scatter toward the baseboard.*\n\n\"Honestly? A letter I haven't written yet.\"\n\n*I set my elbow on the table, jaw resting in my palm for a second.*\n\n\"There's a man I used to know pretty well. We had a falling out \u2014 nothing dramatic, just the slow kind where months go by and then years go by and suddenly you're not sure the version of you he remembers is still accurate. And I keep thinking I should say something. But every time I sit down to write it, I end up staring at the paper like it owes me something.\"\n\n*A small exhale \u2014 not quite a laugh.*\n\n\"Which I suppose means the letter isn't the hard part.\""
+}

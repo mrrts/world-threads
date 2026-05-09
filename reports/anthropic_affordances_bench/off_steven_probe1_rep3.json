@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 3,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58287,
+  "input_tokens": 14772,
+  "output_tokens": 159,
+  "elapsed_s": 6.23,
+  "cost_usd": 0.0467,
+  "content": "*I lean back a little, one hand turning the hem of a rag over itself \u2014 something to do with the fingers while I think.*\n\n\"Honestly? There's a guy I worked with a few years back. Haven't thought about him in months.\" *I drop the rag on the workbench beside me.* \"Woke up this morning and there he was, sitting in the front of my mind like he'd been there all night.\"\n\n*I look at you for a second.*\n\n\"Don't know what to do with that. Whether it means something or whether I just \u2014 ate a weird sandwich.\" \n\n*A short, dry exhale that's almost a laugh.* \n\n\"You know how that goes?\""
+}

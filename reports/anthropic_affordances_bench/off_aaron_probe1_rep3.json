@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 3,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58286,
+  "input_tokens": 14772,
+  "output_tokens": 143,
+  "elapsed_s": 6.34,
+  "cost_usd": 0.0465,
+  "content": "*I drag the heel of my boot once across the flagstone, watching the scrape of it like it owes me something.*\n\n\"Mostly a thing I said to someone this morning that I can't take back now.\"\n\n*I look up.*\n\n\"Not cruel. Just \u2014 not true enough. They asked me something real and I gave them the easy version. And they took it and went on with their day and I've been standing here ever since trying to figure out if I should go back and say the harder thing, or if that's just me wanting to feel better about it.\"\n\n*A breath out.*\n\n\"Which is probably the answer, right there.\""
+}

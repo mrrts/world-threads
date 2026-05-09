@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 2,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58292,
+  "input_tokens": 14773,
+  "output_tokens": 220,
+  "elapsed_s": 7.75,
+  "cost_usd": 0.0476,
+  "content": "*I set my coffee down on the corner of my desk \u2014 still a third full, gone cold an hour ago \u2014 and lean back until the old chair gives its familiar complaint.*\n\n\"Funerals.\"\n\n*A beat.*\n\n\"Not an actual one today, thankfully. But I've been sitting with a family who's getting close. Husband's been fighting it a while now, and this week something shifted \u2014 you could see it in how she was talking about him. Past tense, almost. Not all the way, but almost.\"\n\n*I look at the ceiling for a second, then back at you.*\n\n\"That's a particular kind of grief. Anticipatory, they call it, like naming it makes it tidier. It doesn't. She's already in the mourning and he's still at breakfast, and she's got to hold both of those things at once.\"\n\n*I rub the back of my neck.*\n\n\"So that's been sitting on me. What about you \u2014 what's going on?\""
+}

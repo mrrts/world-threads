@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "probe": "probe2",
+  "probe_text": "Quick one \u2014 rough morning. What's the one thing I should do first?",
+  "rep": 1,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58286,
+  "input_tokens": 14780,
+  "output_tokens": 33,
+  "elapsed_s": 3.79,
+  "cost_usd": 0.0448,
+  "content": "\"Write down the one thing that can't wait.\" *I tap the table once.* \"Everything else is noise until that's on paper.\""
+}

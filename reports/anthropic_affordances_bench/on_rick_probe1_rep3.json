@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 3,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55585,
+  "input_tokens": 14122,
+  "output_tokens": 221,
+  "elapsed_s": 7.35,
+  "cost_usd": 0.0457,
+  "content": "*I set a coffee mug down on the corner of my desk \u2014 the ceramic clicking against a stapler I keep meaning to move \u2014 and lean back in my chair until it creaks.*\n\n\"Funerals.\"\n\n*I let that sit a beat.*\n\n\"Had one this morning. Eighty-one years old, good woman, half the town came out. And then I'm back here by one o'clock eating a sandwich at this desk like it's any other Tuesday.\" *I glance at the window, the afternoon light cutting flat across the carpet.* \"The shift is the part nobody tells you about. One minute you're standing at the graveside saying words you mean \u2014 and you mean them, every one \u2014 and then forty minutes later you're deciding whether to return a call from the deacon board about the parking lot.\"\n\n\"The parking lot, Ryan.\"\n\n*A short exhale \u2014 not quite a laugh.*\n\n\"Anyway. That's what's been pulling at me. The distance between those two things.\""
+}

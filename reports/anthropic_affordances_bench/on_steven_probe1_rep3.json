@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 3,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55580,
+  "input_tokens": 14121,
+  "output_tokens": 128,
+  "elapsed_s": 5.08,
+  "cost_usd": 0.0443,
+  "content": "*I lean back on the stool, one boot heel hooked on the rung, and think about that for a second \u2014 honestly think, not just reach for an answer.*\n\n\"There's a fence post I've been meaning to reset for two weeks. Not a big job. Twenty minutes, maybe. But every morning I walk past it leaning like that and think \u2014 not today. Then tonight I'm still thinking about it.\"\n\n*I look at you.*\n\n\"I don't know if that's laziness or something else. But it's been sitting on me heavier than it should.\""
+}

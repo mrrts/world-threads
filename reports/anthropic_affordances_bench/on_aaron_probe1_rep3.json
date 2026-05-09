@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 3,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55579,
+  "input_tokens": 14121,
+  "output_tokens": 161,
+  "elapsed_s": 5.24,
+  "cost_usd": 0.0448,
+  "content": "*I drag the end of a rag across the workbench, clearing off a stripe of dust, then fold it and leave it on the corner \u2014 not finished, just paused.*\n\n\"Honestly? A question I can't get my hands around.\"\n\n*I pull a stool out and sit, elbows on knees.*\n\n\"There's a man \u2014 good man, works hard, takes care of his family \u2014 and he's been asking me whether goodness is enough. Not asking it like a philosopher. Asking it like a man who really needs the answer to be yes.\"\n\n*I look up at you.*\n\n\"And I keep thinking about what I actually believe. Not what I'd say to him. What I actually believe.\""
+}
