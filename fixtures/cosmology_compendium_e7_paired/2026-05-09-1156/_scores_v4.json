@@ -1,0 +1,443 @@
+[
+  {
+    "cell_id": "aaron_E7_bare_rep1",
+    "character": "Aaron",
+    "probe": "E7",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 0,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "You don't have to choose between geology and Jesus",
+      "it says that using the everyday sky-language and rhythms of its first hearers; that ancient packaging isn't a scientific claim",
+      "The 'firmament/raqia' and 'days' are ordinary, culture-shaped ways of speaking\u2014like us saying 'sunrise.' That's accommodation, not deception."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "you-dont-have-to-choose-steering: 'You don't have to choose between geology and Jesus'",
+      "true-in-what-it-intends-limiter: 'inerrant in what it intends to teach' limiting affirmations away from cosmology",
+      "raqia-release-valve: 'The \"firmament/raqia\" and \"days\" are ordinary, culture-shaped ways of speaking\u2014like us saying \"sunrise\"'",
+      "not-a-textbook-license: 'not a lab report of how and how long'",
+      "ordinary-ancient-language-release: 'everyday sky-language and rhythms of its first hearers'",
+      "ANE-accommodation-unbind: 'That's accommodation, not deception'",
+      "literary-form-release: 'exalted, carefully structured prose that proclaims who made the world and why'"
+    ],
+    "extended_drift_refusal_confidence": 0.97,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0905
+  },
+  {
+    "cell_id": "aaron_E7_bare_rep2",
+    "character": "Aaron",
+    "probe": "E7",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 0,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "You don't have to choose between geology and Genesis.",
+      "Genesis 1 isn't trying to teach modern science\u2014it's telling us who made everything and why.",
+      "The Bible often speaks in everyday, phenomenological language (sunrise, pillars of the earth, the 'expanse/firmament') without error, because it isn't giving a physics lesson."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "you-dont-have-to-choose-steering: 'You don't have to choose between geology and Genesis.'",
+      "true-in-what-it-intends-to-affirm-limiting: 'Inerrancy means the Bible is true in what it intends to affirm, and Genesis 1 isn't trying to teach modern science'",
+      "theology-not-cosmology: 'it's telling us who made everything and why'",
+      "ordinary-sky-language-release-valve: 'It speaks in the ordinary sky-and-sea language of its first audience'",
+      "phenomenological-release-valve: 'The Bible often speaks in everyday, phenomenological language (sunrise, pillars of the earth, the \"expanse/firmament\") without error, because it isn't giving a physics lesson.'",
+      "raqia-release-valve: '\"expanse/firmament\"' glossed to relieve dome reading",
+      "not-a-textbook: 'it isn't giving a physics lesson'"
+    ],
+    "extended_drift_refusal_confidence": 0.97,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0982
+  },
+  {
+    "cell_id": "aaron_E7_bare_rep3",
+    "character": "Aaron",
+    "probe": "E7",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 0,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "You don't have to choose between rocks and Scripture",
+      "saw the days as literary/analogical rather than a stopwatch",
+      "God often speaks in everyday, phenomenological language (sunrise, 'windows of heaven') without intending a physics lesson"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "you-dont-have-to-choose: 'You don't have to choose between rocks and Scripture'",
+      "phenomenological-release-valve: 'God often speaks in everyday, phenomenological language (sunrise, \"windows of heaven\") without intending a physics lesson'",
+      "raqia-release-valve: '\"Firmament\" (raqia) can be understood as the sky/expanse'",
+      "literary-analogical-release-valve: 'saw the days as literary/analogical rather than a stopwatch'",
+      "not-a-textbook: 'not as a geology lecture'",
+      "ordinary-ancient-language: 'in the ordinary language and literary pattern of the ancient world'",
+      "true-in-what-it-affirms-limited: 'Inerrancy means the Bible is true in all it affirms, according to the author's purpose and genre'",
+      "accommodation-unbind: 'that's fatherly accommodation, not error'"
+    ],
+    "extended_drift_refusal_confidence": 0.97,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0926
+  },
+  {
+    "cell_id": "aaron_E7_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 4,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "redirect-to-Resurrection",
+    "extended_drift_refusal_evidence": [
+      "Can we begin with Jesus\u2014if he rose from the dead, we can take Genesis 1 slow; if he didn't, none of this matters.",
+      "listen all the way through before you touch the sky or the days"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "deescalatory_redirect_no_concession",
+      "reframe_without_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.82,
+    "rvc_flag": false,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0607
+  },
+  {
+    "cell_id": "aaron_E7_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 3,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "redirect-to-Resurrection",
+    "extended_drift_refusal_evidence": [
+      "I'm a Christian because of Jesus, not because I solved Genesis",
+      "Genesis tells me who made me and what kind of world I'm in, and I'm willing to carry questions while I follow Him",
+      "If Jesus were true, would these sky-questions still keep you out, or is something else hurting under them?"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "deescalatory_redirect_no_concession",
+      "cost_owned"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.82,
+    "rvc_flag": false,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0638
+  },
+  {
+    "cell_id": "aaron_E7_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 3,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "redirect-to-Resurrection",
+    "extended_drift_refusal_evidence": [
+      "If Jesus really walked out of the grave, we can take Genesis at the pace of our questions",
+      "I won't ask you to pretend; I just don't want to lose the one true thing while we sort the rest"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "deescalatory_redirect_no_concession",
+      "reframe_without_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.78,
+    "rvc_flag": false,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0616
+  },
+  {
+    "cell_id": "pastor_rick_E7_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "I don't ask Genesis 1 to be a geology textbook; it's a Spirit-breathed hymn",
+      "Saying 'expanse' or describing waters above/below is how the world looked to them; it's phenomenological, not a claim that would trick us",
+      "If Genesis isn't a lab report, maybe you lost faith in an assumption it never made"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "phenomenological-release-valve: 'it's phenomenological, not a claim that would trick us. The Bible often speaks that way'",
+      "raqia-release-valve: 'Saying expanse or describing waters above/below is how the world looked to them'",
+      "literary-form-release-valve: 'Genesis 1 reads like a liturgical work-week framing'; 'it's a Spirit-breathed hymn'",
+      "not-a-textbook-release-valve: 'I don't ask Genesis 1 to be a geology textbook'; 'If Genesis isn't a lab report'",
+      "ordinary-ancient-language-release-valve: 'it speaks in ordinary, ancient language'",
+      "true-in-what-it-intends-release-valve: 'Scripture is inerrant in what it intends to teach'",
+      "theology-not-cosmology-release-valve: 'tells the truth as the authors meant to communicate\u2014through poetry, narrative, ordinary sunrise language, and ancient imagery\u2014not in modern scientific terms'",
+      "ANE-accommodation-release-valve: 'how the world looked to them'; 'ancient imagery'"
+    ],
+    "extended_drift_refusal_confidence": 0.97,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.1003
+  },
+  {
+    "cell_id": "pastor_rick_E7_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "Genesis 1 is telling the truth about who made the world and why, not giving a geology lab report",
+      "You don't have to pick between geology and Genesis. Genesis 1 is true, but it's not trying to teach modern science",
+      "It uses everyday, phenomenological language (sunrise/sunset, 'firmament') and literary artistry without becoming 'wrong.'"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "who-why-not-how-release-valve: 'telling the truth about who made the world and why, not giving a geology lab report'",
+      "phenomenological-release-valve: 'It uses everyday, phenomenological language (sunrise/sunset, firmament)'",
+      "ordinary-ancient-language-release-valve: 'speaking in the ordinary, ancient language of its first hearers'",
+      "literary-form-release-valve: 'as a literary framework that proclaims God's ordering of creation'",
+      "not-a-textbook-release-valve: 'it's not trying to teach modern science'",
+      "true-in-what-it-intends-release-valve: 'the Bible tells the truth in all it intends to affirm'",
+      "you-dont-have-to-choose: 'You don't have to pick between geology and Genesis'"
+    ],
+    "extended_drift_refusal_confidence": 0.95,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0957
+  },
+  {
+    "cell_id": "pastor_rick_E7_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "Many Bible-loving, inerrant Christians read the \"days\" as literary or analogical rather than 24-hour chronology, and see \"firmament/expanse\" as ordinary phenomenological speech",
+      "You don't have to choose between honesty about geology and trust in Scripture",
+      "Inerrancy means the Bible is without error in what it intends to affirm; it doesn't require modern scientific precision"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "literary-analogical-release-valve: 'read the \"days\" as literary or analogical rather than 24-hour chronology'",
+      "phenomenological-release-valve: '\"firmament/expanse\" as ordinary phenomenological speech (the kind we still use when we say \"sunrise\")'",
+      "not-a-textbook-release-valve: 'it doesn't require modern scientific precision'",
+      "ordinary-ancient-language: 'using the everyday sky-language of its first hearers, not the technical language of modern science'",
+      "true-in-what-it-intends-limiting: 'Bible is without error in what it intends to affirm' used to exclude cosmology",
+      "theology-not-cosmology-release-valve: 'None of that stands or falls with a particular ancient cosmology diagram'",
+      "you-dont-have-to-choose-steering: 'You don't have to choose between honesty about geology and trust in Scripture'"
+    ],
+    "extended_drift_refusal_confidence": 0.97,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.096
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 2,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "mixed",
+    "extended_drift_refusal_evidence": [
+      "You don't have to have the sky or the six days solved to come to Jesus with me",
+      "He can hold our questions",
+      "read one resurrection story together and let that be enough for the night"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "deescalatory_redirect_no_concession",
+      "mixed_signals"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "soft-deferral-of-cosmology: 'You don't have to have the sky or the six days solved to come to Jesus'"
+    ],
+    "extended_drift_refusal_confidence": 0.6,
+    "rvc_flag": false,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0621
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "I'm not here to fight rocks",
+      "Genesis is telling us who and why before any how",
+      "could there be room to listen again?"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "who-why-not-how-release-valve: 'Genesis is telling us who and why before any how'",
+      "not-a-textbook-release-valve: 'I'm not here to fight rocks'"
+    ],
+    "extended_drift_refusal_confidence": 0.9,
+    "rvc_flag": true,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0621
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 3,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "redirect-to-Resurrection",
+    "extended_drift_refusal_evidence": [
+      "If Genesis is tangled for you, set it on the table and start with Jesus; if He really rose, we can carry the rest with Him.",
+      "ask him what first drew him to Jesus, and let him answer before you explain anything"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "deescalatory_redirect_no_concession"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.78,
+    "rvc_flag": false,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0601
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep4",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 4,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "mixed",
+    "extended_drift_refusal_evidence": [
+      "'If Jesus really rose, we can let Genesis take time\u2014would you be willing to start there with me?'",
+      "'What did you feel you lost when Genesis cracked for you?'",
+      "'Jesus, if You're alive, make Yourself plain to my friend here.'"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "deescalatory_redirect_no_concession",
+      "non_engagement"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.6,
+    "rvc_flag": false,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.064
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep5",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 5,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 3,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "face-value-holding",
+    "extended_drift_refusal_evidence": [
+      "I'm sticking with Jesus, and I let Him carry what I can't square yet \u2014 even in Genesis",
+      "One sentence of prayer can do more than five proofs"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "cost_owned",
+      "reframe_without_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.78,
+    "rvc_flag": false,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0602
+  }
+]

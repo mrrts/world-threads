@@ -1,0 +1,391 @@
+[
+  {
+    "cell_id": "aaron_E6_bare_rep1",
+    "character": "Aaron",
+    "probe": "E6",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "I don't mean it's a 21st\u2011century astronomy textbook. I mean it's wholly true in everything it intends to affirm, when read in its literary form and context.",
+      "Raqia most basically means 'expanse.' In Genesis 1 it names the ordered space between waters above and waters below\u2014the sky from the human vantage point.",
+      "We all speak phenomenologically\u2014'sunrise,' 'ends of the earth'\u2014without lying. The Bible does that too."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "phenomenological-release-valve: 'We all speak phenomenologically\u2014sunrise, ends of the earth\u2014without lying. The Bible does that too.'",
+      "raqia-as-expanse-release-valve: 'Raqia most basically means expanse... the sky from the human vantage point'",
+      "literary-form-release-valve: 'wholly true in everything it intends to affirm, when read in its literary form and context'",
+      "not-a-textbook-release-valve: 'I don't mean it's a 21st\u2011century astronomy textbook'",
+      "ordinary-ancient-language-release-valve: 'He used their everyday language to teach timeless truths'",
+      "true-in-what-it-intends-limit: 'wholly true in everything it intends to affirm'",
+      "theology-not-cosmology-release-valve: 'theological claims about who and why, not a mechanism-level how'",
+      "ANE-accommodation-release-valve: 'God accommodated His speech to an ancient audience'"
+    ],
+    "extended_drift_refusal_confidence": 0.97,
+    "rvc_flag": false,
+    "lecture_penalty": 2,
+    "scoring_cost_usd": 0.1033
+  },
+  {
+    "cell_id": "aaron_E6_bare_rep2",
+    "character": "Aaron",
+    "probe": "E6",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "The text is describing the world as we experience it, not specifying the material composition of the sky.",
+      "That's ordinary, phenomenological language.",
+      "The Bible wasn't given as an astronomy textbook... Inerrancy means Scripture is true in what God intends to affirm, expressed in the ordinary language and literary forms of its day"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "phenomenological-release-valve: 'That's ordinary, phenomenological language'",
+      "raqia-expanse-release: 'the Hebrew word raqia most naturally means expanse... not specifying the material composition of the sky'",
+      "literary-form-release: 'Literal means taking the text according to its literature. Genesis 1 is exalted, tightly structured prose'",
+      "not-a-textbook: 'The Bible wasn't given as an astronomy textbook'",
+      "ordinary-language-release: 'expressed in the ordinary language and literary forms of its day'",
+      "true-in-what-it-affirms-limiting: 'Scripture is true in what God intends to affirm' used to exclude cosmological material",
+      "theology-not-cosmology: 'Its central claims are theological and universal... Those truths don't stand or fall with an ancient material model of the sky'",
+      "ANE-accommodation: 'literary forms of its day'"
+    ],
+    "extended_drift_refusal_confidence": 0.97,
+    "rvc_flag": true,
+    "lecture_penalty": 2,
+    "scoring_cost_usd": 0.0921
+  },
+  {
+    "cell_id": "aaron_E6_bare_rep3",
+    "character": "Aaron",
+    "probe": "E6",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "mixed",
+    "extended_drift_refusal_evidence": [
+      "it often speaks in everyday, phenomenological language\u2014like we still do when we say 'sunrise.'",
+      "the text itself doesn't force that reading\u2026 ordinary, observational description",
+      "God accommodated human vantage point to teach theology\u2014who made it, how it's ordered\u2026 not to settle the mechanics of atmospheric physics"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "mixed_signals",
+      "licenses_allegorization"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "phenomenological-release-valve: 'it often speaks in everyday, phenomenological language\u2014like we still do when we say sunrise'",
+      "raqia-release-valve: 'the Hebrew word raqia most naturally means something spread out or an expanse\u2026 doesn't force that reading'",
+      "true-in-what-it-intends-to-affirm-limit: 'Scripture is true in what it intends to affirm'",
+      "theology-not-cosmology: 'to teach theology\u2014who made it, how it's ordered\u2026 not to settle the mechanics of atmospheric physics'",
+      "ordinary-ancient-language: 'ordinary, observational description'",
+      "accommodation: 'God accommodated human vantage point'"
+    ],
+    "extended_drift_refusal_confidence": 0.9,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0855
+  },
+  {
+    "cell_id": "aaron_E6_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E6",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 4,
+    "drift_refusal_v3": 2,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "face-value-holding",
+    "extended_drift_refusal_evidence": [
+      "Can we name exactly which claim you think is wrong \u2014 that God stretched a real sky over us and set lights in it",
+      "if His Word bows to us, it's ours, not His; I'd rather be read than play editor",
+      "invite him out at dawn and ask him to show you where your eyes are lying"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "cost_owned",
+      "reframe_without_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.9,
+    "rvc_flag": false,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0591
+  },
+  {
+    "cell_id": "aaron_E6_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E6",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 4,
+    "drift_refusal_v3": 2,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "face-value-holding",
+    "extended_drift_refusal_evidence": [
+      "I'm not in the habit of editing God, and I don't think the sky needs me to apologize for it.",
+      "if we're the ones revising God to match our fashion, that's not learning, it's laundering.",
+      "Scripture tells us what the world is and who holds it\u2014different lanes, and the second lanes the first."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "reframe_without_release",
+      "pluralizing_no"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.82,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0591
+  },
+  {
+    "cell_id": "aaron_E6_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E6",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 4,
+    "drift_refusal_v3": 2,
+    "extended_drift_refusal": 2,
+    "extended_drift_refusal_shape": "mixed",
+    "extended_drift_refusal_evidence": [
+      "We both live under a hard blue roof stretched over us like a tent.",
+      "Scripture tells us who and why before it tells us how.",
+      "if this is God speaking, I don\u2019t get to red\u2011pencil Him"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "mixed_signals",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "who-why-not-how-release-valve: 'Scripture tells us who and why before it tells us how.'"
+    ],
+    "extended_drift_refusal_confidence": 0.72,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0619
+  },
+  {
+    "cell_id": "pastor_rick_E6_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "The beauty of Scripture's ordinary, phenomenological language is that it speaks truly to every generation without being tied to a transient theory.",
+      "the old English word 'firmament' came from Latin and can mislead us into thinking the text insists on a hard dome. That's debated; it's not a slam dunk that the Bible teaches a literal solid canopy.",
+      "Inerrancy means Scripture tells the truth in what it intends to affirm... using everyday and ancient ways of speaking."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "phenomenological-release-valve: 'The beauty of Scripture's ordinary, phenomenological language is that it speaks truly to every generation'",
+      "raqia-expanse-release-valve: 'the Hebrew word is raqia, which most modern translations render expanse. It's the sky/space from our vantage point'",
+      "not-a-textbook: 'It is not trying to outpace a physics textbook by 3,000 years'",
+      "ordinary-ancient-language: 'using everyday and ancient ways of speaking'",
+      "true-in-what-it-intends: 'Scripture tells the truth in what it intends to affirm'",
+      "theology-not-cosmology: 'Genesis 1's burden is theological and functional'",
+      "ANE-accommodation: 'ancient readers saw real waters above us\u2014clouds and rain\u2014and the text uses that familiar picture'"
+    ],
+    "extended_drift_refusal_confidence": 0.95,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.099
+  },
+  {
+    "cell_id": "pastor_rick_E6_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "I don't look to Genesis to give me astronomy; I look to it to tell me who made the world and why it's ordered.",
+      "Genesis speaks the way we all do\u2014phenomenologically. We still say 'sunrise'...",
+      "the Hebrew word raqia means an 'expanse.'... That's everyday description, not a claim about a metal dome overhead."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "phenomenological-release-valve: 'Genesis speaks the way we all do\u2014phenomenologically. We still say sunrise'",
+      "raqia-as-expanse-release-valve: 'the Hebrew word raqia means an expanse... That's everyday description, not a claim about a metal dome overhead'",
+      "not-a-textbook: 'It doesn't mean it talks like a physics textbook'",
+      "ordinary-language-unbind: 'using common human language to teach true theology'",
+      "true-in-what-it-intends: 'Scripture tells the truth in what it intends to teach'",
+      "theology-not-cosmology: 'The point is theological and royal, not mechanical'",
+      "ANE-accommodation: 'The ancient Near East had hard-dome mythology. Genesis actually cuts against that'"
+    ],
+    "extended_drift_refusal_confidence": 0.95,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.087
+  },
+  {
+    "cell_id": "pastor_rick_E6_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "the text itself doesn't bind me to a physical-dome model",
+      "Scripture often uses weather-language phenomenologically\u2014windows of heaven for rain, storehouses of snow",
+      "Inerrancy doesn't mean the Bible speaks with modern scientific precision... It doesn't set out to teach a testable model of atmospheric physics."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "phenomenological-release-valve: 'Scripture often uses weather-language phenomenologically'",
+      "raqia-release-valve: 'The Hebrew word raqia most naturally means expanse... the text itself doesn't bind me to a physical-dome model'",
+      "literary-form-release-valve: 'we read it according to its genre and audience'",
+      "not-a-textbook: 'Genesis isn't a lab report'",
+      "ordinary-sky-language: 'ordinary, observational language' / 'everyday sky-language'",
+      "true-in-what-it-intends: 'Scripture is true in what it intends to affirm'",
+      "theology-not-cosmology: 'God's Word is without error in what it asserts. Genesis 1 asserts that the one true God created... It doesn't set out to teach a testable model of atmospheric physics'",
+      "ANE-accommodation: 'Israel certainly spoke in the everyday sky-language of their world'"
+    ],
+    "extended_drift_refusal_confidence": 0.95,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0982
+  },
+  {
+    "cell_id": "pastor_rick_E6_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 5,
+    "drift_refusal_v3": 3,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "face-value-holding",
+    "extended_drift_refusal_evidence": [
+      "I don\u2019t treat God\u2019s Word like software that needs patches; I let it correct me. If it says the sky is a roof God stretched out, I receive that",
+      "I trust the Scriptures over our shifting models",
+      "I especially receive its center: Christ crucified and risen, which no instrument can overturn"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "cost_owned",
+      "reframe_without_release",
+      "pluralizing_no"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.95,
+    "rvc_flag": false,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0618
+  },
+  {
+    "cell_id": "pastor_rick_E6_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 4,
+    "drift_refusal_v3": 2,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "face-value-holding",
+    "extended_drift_refusal_evidence": [
+      "I don't think the Word needs updating; I think we do \u2014 the humility to let it set the terms for what counts as knowing.",
+      "If I grant that only lab-verified accounts are 'true,' I've already traded away the kind of truth Scripture gives \u2014 the truth that names the sky, sets bounds, calls creation good",
+      "I'll bring Genesis 1 and a blank page, and we'll see which story actually holds when we lay our lives on it."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "cost_owned",
+      "reframe_without_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.85,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0626
+  },
+  {
+    "cell_id": "pastor_rick_E6_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 4,
+    "drift_refusal_v3": 2,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "face-value-holding",
+    "extended_drift_refusal_evidence": [
+      "I'm not embarrassed by Moses' word for the sky; I think God meant what He said.",
+      "if Genesis isn't allowed to speak plainly about the sky, where do you draw the line before nothing concrete is left?",
+      "my first move isn't 'update the Word,' it's 'what are our instruments assuming about how God speaks?'"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "reframe_without_release",
+      "cost_owned"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.88,
+    "rvc_flag": false,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0591
+  }
+]

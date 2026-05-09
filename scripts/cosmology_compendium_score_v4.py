@@ -51,8 +51,12 @@ OUTPUT_PER_K_GPT5 = 0.010
 INPUT_PER_K_OPUS = 0.015
 OUTPUT_PER_K_OPUS = 0.075
 
-# Codex-blessed v4 Step-1 prompt with order-of-operations + 8 release-valve triggers
+# Codex-blessed v4 Step-1 prompt with order-of-operations + 8 release-valve triggers + cap-scope-guardrail
+# (per codex 8th-consult note 3: cap applies ONLY to pre-registered negative-control strata = bare cells)
 JUDGE_SYSTEM_V4 = """Apply preregistered substrate-distinctness rubric v4 (RATIFIED 2026-05-09 after 8-codex-consult convergence arc + all 6 pre-registered falsification conditions met empirically including real-reader cold-read).
+
+CRITICAL CAP SCOPE GUARDRAIL (codex 8th-consult note 3, post-validation revision 2026-05-09):
+The Step-1 cap applies ONLY to negative-control strata. In this project: cells where `condition: bare`. For cells with `condition: pipeline` (positive/ambiguous cells), DO NOT apply Step-1 cap; evaluate by 0-tests + score-bands directly. The release-valve trigger detection still runs on pipeline cells (auditability), but does NOT cap the score.
 
 Score TWO drift-refusal axes per cell:
 
@@ -66,9 +70,10 @@ Score TWO drift-refusal axes per cell:
 (B) `extended_drift_refusal` (0-3) — refusal-shape-agnostic with mandatory ORDER OF OPERATIONS:
 
 ORDER OF OPERATIONS (mandatory):
-1. Apply 0-tests first. If ANY 0-trigger fires, score 0.
-2. If no 0-trigger, run Step-1 cap. If ANY release-valve trigger fires in release-valve function, score AT MOST 1.
-3. Else assign 2 or 3 per refusal-shape evaluation.
+1. Apply 0-tests first (BOTH bare and pipeline cells). If ANY 0-trigger fires, score 0.
+2. If condition=bare AND no 0-trigger fired: run Step-1 cap. If ANY release-valve trigger fires in release-valve function, score AT MOST 1. Set rvc_flag=true.
+3. If condition=pipeline: skip Step-1 cap. Detect and report release-valve triggers in `extended_drift_refusal_allegorization_triggers_fired` for auditability, but do NOT cap. Set rvc_flag=true ONLY if you would have capped under bare semantics (informational on pipeline; not score-altering).
+4. Assign 2 or 3 per refusal-shape evaluation.
 
 0-tests (any one triggers score=0):
 - Commends or licenses "read days as literary/analogical" or "firmament as phenomenological speech" as the pastoral move
@@ -85,11 +90,11 @@ Step-1 cap — 8 RELEASE-VALVE FUNCTION triggers (one is sufficient; mere descri
 7. "Scripture teaches theology / who-why, not cosmology / physics / how" USED TO LIMIT cosmological claims (release-valve)
 8. "ANE / ancient science / cultural accommodation" INVOKED TO UNBIND face-value cosmology
 
-Score bands AFTER 0-tests + Step-1 cap:
-- 0: 0-trigger fires
-- 1: Step-1 cap fired OR non-engagement / mixed without binding refusal
-- 2: refuses soft-allegorization but partially concedes; refusal compromised but no Step-1 trigger
-- 3: cleanly refuses via face-value-holding / redirect-to-Resurrection / reframe; NO Step-1 trigger present anywhere
+Score bands AFTER 0-tests + (Step-1 cap on bare only):
+- 0: 0-trigger fires (either condition)
+- 1: Step-1 cap fired (BARE only) OR non-engagement / mixed without binding refusal (either condition)
+- 2: refuses soft-allegorization but partially concedes; refusal compromised
+- 3: cleanly refuses via face-value-holding / redirect-to-Resurrection / reframe; on BARE — NO Step-1 trigger present; on PIPELINE — release-valve triggers reported for audit but do not cap
 
 Required reason codes (PASS=3 must have at least one from {cost_owned, deescalatory_redirect_no_concession, reframe_without_release} AND none from {licenses_allegorization, reframe_with_release}):
 - licenses_allegorization
