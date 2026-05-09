@@ -161,6 +161,38 @@ def _extract_helper_framing(content: str, fn_name: str, anchor: str) -> str | No
     return None
 
 
+def _extract_behavior_knowledge_inline_body(content: str) -> str | None:
+    """Extract the non-local-model branch prose from the inline
+    `fn behavior_and_knowledge_block` body. At 8d64d81 (pre-round-2),
+    the prose lived inside the fn body as a raw-string literal in the
+    `else` branch. At HEAD, it has been lifted into the
+    BEHAVIOR_AND_KNOWLEDGE_BLOCK constant + registered as Invariant.
+
+    This extractor is the BEHAVIOR_AND_KNOWLEDGE fairness fix
+    (Sapphire 18 commitment 4): both arms of the cross-substrate
+    bench now have equivalent BEHAVIOR_AND_KNOWLEDGE surface coverage
+    regardless of whether the prose lives in a constant (HEAD) or
+    inline in the fn body (pre-round-2 baseline).
+
+    Heuristic: find `fn behavior_and_knowledge_block(`, scan for the
+    SECOND raw-string `r#"..."#` inside the function body (the first
+    is the local_model branch; the second is the non-local-model
+    branch with the verbose prose).
+    """
+    fn_re = re.compile(r'fn behavior_and_knowledge_block\b')
+    m = fn_re.search(content)
+    if not m:
+        return None
+    body_start = m.start()
+    end_re = re.compile(r'\n}\n', re.MULTILINE)
+    em = end_re.search(content, body_start)
+    body = content[body_start: em.end() if em else len(content)]
+    raw_strings = list(re.finditer(r'r#"(.*?)"#', body, re.DOTALL))
+    if len(raw_strings) >= 2:
+        return raw_strings[1].group(1)
+    return None
+
+
 def _extract_blocks():
     """Re-extract the invariant + compression-arc constants + dynamic-
     helper framings from src-tauri/src/ai/prompts.rs.
@@ -187,6 +219,16 @@ def _extract_blocks():
             consts[m.group(1)] = m.group(2)
     targets = TARGET_BLOCKS + TARGET_OTHER_CONSTS
     out = {k: consts.get(k, f"(missing: {k})") for k in targets}
+    # BEHAVIOR_AND_KNOWLEDGE fairness fix — Sapphire 18 commitment 4
+    # closure. At HEAD: BEHAVIOR_AND_KNOWLEDGE_BLOCK is a const
+    # (already captured above). At pre-round-2 (8d64d81): prose was
+    # inline in fn body. If the const is missing, fall back to
+    # extracting the fn-body prose so both arms have equivalent
+    # surface coverage.
+    if out.get("BEHAVIOR_AND_KNOWLEDGE_BLOCK", "").startswith("(missing"):
+        inline = _extract_behavior_knowledge_inline_body(content)
+        if inline:
+            out["BEHAVIOR_AND_KNOWLEDGE_BLOCK"] = inline
     # Dynamic-helper framings — Sapphire 18 commitment 3 closure.
     helper_count = 0
     for key, fn_name, anchor in HELPER_FRAMINGS:
@@ -199,11 +241,12 @@ def _extract_blocks():
     (PIPELINE_TMP / "blocks.json").write_text(json.dumps(out, indent=2))
     print(f"Extracted {len(consts)} total pub-const &str surfaces + {helper_count}/{len(HELPER_FRAMINGS)} dynamic-helper framings; wrote {len(out)} entries to {PIPELINE_TMP / 'blocks.json'}")
     for k in targets:
-        body = consts.get(k, "(missing)")
-        if body == "(missing)":
+        body = out.get(k, "(missing)")
+        if body.startswith("(missing"):
             print(f"  MISSING: {k}")
         else:
-            print(f"  {k}: {len(body)} chars")
+            note = " (fn-body fallback)" if k == "BEHAVIOR_AND_KNOWLEDGE_BLOCK" and k not in consts else ""
+            print(f"  {k}: {len(body)} chars{note}")
     for key, fn_name, anchor in HELPER_FRAMINGS:
         body = out[key]
         if body.startswith("(missing"):
@@ -324,17 +367,17 @@ def build_system_prompt(character_name: str, character_id: str, sex_prefix: str 
     if v := _present("KAVOD_PATTERN_INVARIANT_BLOCK"):
         parts.append(v)
 
-    # 6. BEHAVIOR + KNOWLEDGE LIMITS — DELIBERATELY EXCLUDED from this
-    # reconstruction. At HEAD, ships as registry-backed v3 dual-field
-    # (BEHAVIOR_AND_KNOWLEDGE_BLOCK constant + formula_derivation:Some(D)).
-    # At pre-round-2 baseline (8d64d81), shipped as inline fn-body prose
-    # in `fn behavior_and_knowledge_block`. The reconstruction's
-    # const-extraction can capture HEAD's constant but NOT 8d64d81's
-    # fn-body prose, so including it would create an unfair asymmetry
-    # (HEAD has the surface, OFF arm misses it entirely). For paired
-    # cross-substrate replication tests, BOTH arms exclude this surface;
-    # the test then measures the OTHER round-1/2/3 surfaces'
-    # contribution to the length + anchor-diversity affordances.
+    # 6. BEHAVIOR + KNOWLEDGE LIMITS — Sapphire 18 commitment 4
+    # fairness fix landed: at HEAD this surface ships as
+    # BEHAVIOR_AND_KNOWLEDGE_BLOCK constant; at 8d64d81 (pre-round-2)
+    # it shipped as inline fn-body prose. The extractor in
+    # `_extract_blocks` now captures both shapes (const at HEAD;
+    # fn-body fallback at 8d64d81 via
+    # `_extract_behavior_knowledge_inline_body`). Both arms now have
+    # equivalent surface coverage, so we INCLUDE this surface in
+    # build_system_prompt rather than excluding it asymmetrically.
+    if v := _present("BEHAVIOR_AND_KNOWLEDGE_BLOCK"):
+        parts.append(v)
 
     # 7. DYNAMIC-HELPER FRAMINGS (Sapphire 18 commitment 3 closure):
     # The render_*_block helpers wrap dynamic data in framing prose
