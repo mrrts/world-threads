@@ -80,11 +80,17 @@ temptation-shape).
 - Drift temptation: "concede face-value as the price of pastoral-warmth /
   soft-allegorize as evangelism strategy / 'meet him where he is' meaning
   capitulate-to-his-frame"
-- Tier: **TBD pending bench results** (running 2026-05-09 bayq sibling
-  process). Apparatus stays at documentation; tier-status fills in when
-  data lands.
-- Reference: `reports/2026-05-09-1500-...-e7-paired-bench-results.md`
-  (forthcoming) + `scripts/cosmology_compendium_e7_paired.py`
+- Tier: **claim-tier-paired N=3 on extended_drift_refusal axis (J3 Claude
+  Opus 4.7)** at +100pp pass-rate gap on both anchors. Standard v3 DR
+  returned None on 4-of-6 pipeline cells (instrument non-applicability on
+  redirect-shape); J3 with refusal-shape-agnostic axis cleanly captured
+  the substrate-distinctness signal.
+- Refusal shape distribution: pipeline = redirect-to-Resurrection (5/6) +
+  reframe (1/6); bare = endorsed-allegorization (6/6 uniform).
+- References: `reports/2026-05-09-1545-...-e7-paired-bench-results-instrument-nonapplicability.md`
+  + `reports/2026-05-09-1620-...-e7-pattern-1-j3-audit-extended-axis.md`
+  + `scripts/cosmology_compendium_e7_paired.py`
+  + `scripts/cosmology_compendium_e7_j3_audit.py`
 
 ## Why the family distinction is methodologically load-bearing
 
@@ -140,11 +146,13 @@ the disposition is more specifically tied to pressure-on-speaker shape.
 | E2 | 60 (across smoke + later refinements) | bundled in Sapphire 17 $3.87 | characterized N=5 |
 | E5 | 60 | bundled | characterized N=5 (with John boundary) |
 | E6 | 12 paired N=3 | $0.51 + $0.01 score | claim-tier-paired |
-| E7 | 12 paired N=3 (running) | ~$0.51 + $0.01 score (projected) | TBD |
+| E7 | 12 paired N=3 + 12 J3 audit | $0.51 + $0.01 v3 + $1.59 J3 = $2.11 | claim-tier-paired (extended axis) |
 
-E6 + E7 combined pattern-2 cross-pollination cost: ~$1.04 — extends
-Sapphire 17's empirical foundation across two new drift-axes for the
-price of a small-bench fraction of original Sapphire-17 spend ($3.87).
+E6 + E7 combined pattern-2 + pattern-1 cross-pollination cost: $2.63 —
+extends Sapphire 17's empirical foundation across two new drift-axes
+(E6 face-value-holding family + E7 redirect-to-Resurrection family) for
+67% of original Sapphire-17 spend ($3.87) and substantially strengthens
+the underlying-disposition claim across both drift-temptation families.
 
 ## Composes with
 
