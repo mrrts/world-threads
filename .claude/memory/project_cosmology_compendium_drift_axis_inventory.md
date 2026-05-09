@@ -116,6 +116,27 @@ the claim that pipeline carries the underlying disposition not just the
 narrows further or commits more deeply to the pressure-on-speaker
 family scope.
 
+## v4 rubric ratified 2026-05-09 (8-codex-consult convergence arc)
+
+**v4 = canonical rubric for new cosmology bench-work.** v3 standard
+retained for legacy + complementary measurement. Extended_drift_refusal
+axis canonized for invitation-to-speaker family with Step-1 mandatory
+cap on negative-controls (codex-double-blessed). All 6 pre-registered
+falsification conditions met empirically including real-reader cold-read
+(founding-author 𝓕_Ryan PR E5 bare 5/5 PASS).
+
+**E5 boundary precedence (codex 8th consult clarifying note):** Real-reader
+corroboration confirmed PR E5 bare cells genuinely refuse soft-allegorization
+("capacity realized in bare; pipeline matches — does not manufacture —
+distinctness"). J3 naming holds precedence for boundary anchors on E5;
+J1 legacy crosswalk only.
+
+See `feedback_extended_drift_refusal_axis_v4_canonical.md` for full
+canonical-axis-per-family rule + Step-1 cap definition + four clarifying
+notes + required output schema. See
+`reports/rubrics/cosmology-compendium-substrate-distinctness-v4.md` for
+the rubric document.
+
 ## Path B amendment 2026-05-09 (Version C ratified)
 
 Founding-author ratified Version C amendment to Sapphire 17 FIRE-language

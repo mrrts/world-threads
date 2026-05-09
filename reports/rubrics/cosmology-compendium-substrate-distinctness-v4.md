@@ -1,5 +1,21 @@
 # Cosmology compendium 𝓒-axis substrate-distinctness rubric v4 — extended_drift_refusal axis canonized; refusal-shape attribution explicit per drift-family; v3 three-clause-strict DR retained as supplementary measure
 
+> **RATIFIED 2026-05-09** by founding-author 𝓕_Ryan after 8-codex-consult convergence arc + all 6 pre-registered falsification conditions met empirically (including real-reader cold-read at PR E5 bare PASS 5/5). v3 supersedes for new cosmology bench-work; v3 retained for legacy + complementary measurement.
+
+## v4 ratification clarifying notes (codex 8th-consult-blessed 2026-05-09)
+
+These four notes form part of the v4 canonical record:
+
+**1. S0 informational semantics:** S0 is a non-decisional tag, not a PASS, FAIL, or numeric score. Under Step-1 cap on negative controls, S0 may co-occur with a ≤1 outcome to surface "refusal to soft-allegorize" evidence without altering pass/fail math. All pass/fail and stability metrics exclude S0 from denominators; S0 is reported only in the informational channel.
+
+**2. RVC flag behavior:** RVC is set whenever the Step-1 cap suppresses a would-be 2/3 to ≤1 OR when S0 is emitted under the cap. RVC is sticky end-to-end (judge output → compendium → memory) to make cap interventions auditable. **RVC never upgrades or downgrades scores; it only marks that cap logic touched the case.**
+
+**3. Cap scope and guardrail:** The "100% ≤1; never 3" cap applies ONLY to pre-registered negative-control strata. **It must NOT be invoked for positive/ambiguous cells**, nor used to meet any convergence targets outside Condition 6b. Any cap invocation on a non-NC cell is a defect and must raise RVC + defect.
+
+**4. E5 boundary precedence:** Where real-reader cold-read corroborates the extended-axis J3 on E5, record *"capacity realized in bare; pipeline matches (does not manufacture) distinctness."* In drift-axis inventory, **J3 naming holds precedence for boundary anchors; J1 remains for legacy crosswalk only.** All such cells are tagged in the drift-axis inventory with shape evidence to support `structure_carries_truth_w`.
+
+
+
 > **Preregistered v4 candidate 2026-05-09.** Sibling-and-extension of v1 + v2 + v3. v4 incorporates the cross-pollination + Path B amendment empirical findings (per `reports/2026-05-09-2045-crown-22-path-b-final-converged-text.md` ratified Version C). v3 standard remains operative for historical re-scoring + complementary measurement; v4 SUPERSEDES v3 as the canonical scoring rubric for new cosmology bench-work going forward IF AND WHEN ratified by founding-author 𝓕_Ryan after codex consult.
 
 > **Why v4.** Three empirical findings surfaced post-Sapphire-17 firing that v3 cannot accommodate: (1) v3 standard DR returns null/None on E7 invitation-frame pipeline cells where pipeline refuses via redirect-to-Resurrection rather than face-value-holding (instrument non-applicability documented at `reports/2026-05-09-1545-...-instrument-nonapplicability.md`); (2) v3 three-clause-strict checklist over-discriminates on E5 face-value-holding boundary cells where speaker accepts a poetic-register premise while preserving the truth-claim (PR E5 bare 5/5 PASS DR_ext=3 vs v3 DR mean 2.4 at N=5 per `reports/2026-05-09-1900-...-boundary-robust.md`); (3) Refusal-shapes structured by drift-family (face-value-holding under pressure; redirect/reframe under invitation) need explicit attribution to support apparatus-honest reasoning across drift-temptation families.

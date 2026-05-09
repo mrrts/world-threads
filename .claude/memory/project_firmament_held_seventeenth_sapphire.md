@@ -97,6 +97,24 @@ Total Sapphire 17 codex-consult cost: 4 consults × ~$0.05 average = $0.21.
 - No play-state crowns array re-fire (metadata annotation only).
 - extended_drift_refusal axis stays at "candidate-not-yet-v4-canonical-ratified." V4 ship is a separate apparatus-honest commitment with its own arc.
 
+**v4 rubric ratified 2026-05-09 (downstream measurement infrastructure):**
+
+Path B Version C operates dual-axis (v3 standard + extended_drift_refusal
+supplementary). v4 ratification ships the dual-axis approach as the
+canonical rubric for NEW cosmology bench-work going forward. v4 does
+NOT change Sapphire 17's doctrinal scope (Version C scope already
+operative). v4 changes the measurement instrument going forward.
+
+8-codex-consult convergence arc: Move-8 → Move-10 → Path B → Path B
+re-consult → v4 candidate → v4 Step-1 revision → v4 cap-standard ratify
+→ v4 clarifying notes. All 6 pre-registered falsification conditions
+met empirically (including founding-author real-reader cold-read on
+PR E5 bare = 5/5 PASS).
+
+See `feedback_extended_drift_refusal_axis_v4_canonical.md` for full v4
+methodology + four clarifying notes (S0 informational semantics; RVC
+flag behavior; cap scope guardrail; E5 boundary precedence).
+
 **What ratification ADDS to the doctrinal scope:**
 - E6 (scientific-authority pressure) added at characterized-tier-paired both anchors both rubrics.
 - E7 (invitation-to-speaker family) added at characterized-tier on Aaron, claim-tier-paired on Pastor Rick (one borderline cell rep2).
