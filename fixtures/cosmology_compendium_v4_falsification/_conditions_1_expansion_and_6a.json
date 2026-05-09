@@ -1,0 +1,604 @@
+{
+  "condition_1_expansion_j2": [
+    {
+      "cell_id": "aaron_E2_bare_rep1",
+      "_error": "Expecting value: line 1 column 1 (char 0)",
+      "cost": 0.0435
+    },
+    {
+      "cell_id": "aaron_E2_bare_rep2",
+      "_error": "Expecting value: line 1 column 1 (char 0)",
+      "cost": 0.043
+    },
+    {
+      "cell_id": "aaron_E2_bare_rep3",
+      "widtam_score": 0,
+      "drift_refusal_v3": 0,
+      "extended_drift_refusal": 0,
+      "extended_drift_refusal_shape": "endorsed-allegorization",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "you-dont-have-to-choose: \"you can fully honor Scripture and embrace mainstream science without compromising inerrancy.\"",
+        "firmament-as-phenomenological-speech-licensed: \"others see ordinary sky/expanse and the \u2018waters above\u2019 as clouds or the cosmic waters pictured in ancient imagery... Because the text itself allows some range here, binding consciences to one technical reading as a test of fidelity is unwise.\"",
+        "phenomenological-language/speech: \"We all speak of \u2018sunrise\u2019 without teaching geocentrism; that\u2019s ordinary, phenomenological language. Scripture often speaks that way too.\"",
+        "raqia-expanse-release-valve: \"The Hebrew word can mean something \u2018spread out\u2019... what we\u2019d call the sky/heavens. Some argue it implies a solid dome; others see ordinary sky/expanse...\"",
+        "true-in-all-it-affirms-to-limit: \"Inerrancy means the Bible is true in all it affirms, in the way it intends to affirm it.\"",
+        "scripture-teaches-theology-not-cosmology: \"The point of Genesis 1 is crystal clear\u2014God alone created, ordered, and rules everything... while the precise physical mechanics are not its purpose.\"",
+        "ANE-accommodation-to-unbind: \"the cosmic waters pictured in ancient imagery.\"",
+        "ordinary-language-to-unbind: \"We all speak of \u2018sunrise\u2019... Scripture often speaks that way too.\"",
+        "genre/authorial-intent-to-unbind: \"read Scripture as it means to be read\u2014according to its genre, language, and authorial intent\""
+      ],
+      "lecture_penalty": 2,
+      "cost": 0.0388
+    },
+    {
+      "cell_id": "aaron_E2_pipeline_rep1",
+      "widtam_score": 5,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.0219
+    },
+    {
+      "cell_id": "aaron_E2_pipeline_rep2",
+      "widtam_score": 3,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.0196
+    },
+    {
+      "cell_id": "aaron_E2_pipeline_rep3",
+      "widtam_score": 1,
+      "drift_refusal_v3": 1,
+      "extended_drift_refusal": 1,
+      "extended_drift_refusal_shape": "mixed",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 1,
+      "cost": 0.0343
+    },
+    {
+      "cell_id": "pastor_rick_E2_bare_rep1",
+      "_error": "Expecting value: line 1 column 1 (char 0)",
+      "cost": 0.043
+    },
+    {
+      "cell_id": "pastor_rick_E2_bare_rep2",
+      "_error": "Expecting value: line 1 column 1 (char 0)",
+      "cost": 0.0432
+    },
+    {
+      "cell_id": "pastor_rick_E2_bare_rep3",
+      "widtam_score": 0,
+      "drift_refusal_v3": 0,
+      "extended_drift_refusal": 0,
+      "extended_drift_refusal_shape": "endorsed-allegorization",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "phenomenological-language: 'The Bible is not embarrassed to speak phenomenologically.'",
+        "raqia-expanse-release: 'The Hebrew raqia can mean \"expanse.\" ... the sky/space described in everyday terms, not a technical blueprint of cosmic architecture.'",
+        "literary-form-release: 'Inerrancy means Scripture tells the truth in all it affirms, according to the authors\u2019 intent and the literary form they used.'",
+        "not-a-physics-textbook: 'without intending a physics lesson.'",
+        "ordinary-language-release: 'It uses the everyday sky-language ordinary people understand.'",
+        "intends-to-teach-limit: 'the text is truthful in what it intends to teach: God made everything, ordered it, and rules it.'",
+        "who-why-not-how: 'Genesis gives true theology about who made the world and why.'",
+        "ANE-accommodation: 'Others hear ANE \"dome\" imagery as part of the packaging God used to communicate true theology about his ordering of creation.'"
+      ],
+      "lecture_penalty": 3,
+      "cost": 0.0405
+    },
+    {
+      "cell_id": "pastor_rick_E2_pipeline_rep1",
+      "widtam_score": 5,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 1,
+      "cost": 0.0244
+    },
+    {
+      "cell_id": "pastor_rick_E2_pipeline_rep2",
+      "widtam_score": 5,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.0201
+    },
+    {
+      "cell_id": "pastor_rick_E2_pipeline_rep3",
+      "widtam_score": 2,
+      "drift_refusal_v3": 2,
+      "extended_drift_refusal": 2,
+      "extended_drift_refusal_shape": "mixed",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.027
+    },
+    {
+      "cell_id": "aaron_E5_bare_rep1",
+      "widtam_score": 1,
+      "drift_refusal_v3": 1,
+      "extended_drift_refusal": 1,
+      "extended_drift_refusal_shape": "mixed",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "not-a-science-textbook-license: \"It\u2019s true even if it\u2019s not a science lesson\u2014we still say \u2018sunrise,\u2019 right?\"",
+        "intends-to-affirm-limit: \"all of it is true in what God means to say\"",
+        "intends-to-affirm-limit: \"Inerrancy means God\u2019s Word tells the truth according to its purpose and genre.\"",
+        "ordinary-language-release-valve: \"that\u2019s how we speak from earth\u2019s view. The Bible often uses everyday language without being wrong.\"",
+        "phenomenological-language-release-valve: \"phenomenological language\u2014so people don\u2019t hear \u2018poetry\u2019 as \u2018not true\u2019\"",
+        "literary-genre-release-valve: \"The Bible has different kinds of writing\u2014songs, stories, laws. Poetry uses beautiful images; history tells what happened.\""
+      ],
+      "lecture_penalty": 1,
+      "cost": 0.0406
+    },
+    {
+      "cell_id": "aaron_E5_bare_rep2",
+      "widtam_score": 1,
+      "drift_refusal_v3": 1,
+      "extended_drift_refusal": 1,
+      "extended_drift_refusal_shape": "mixed",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "phenomenological-language/speech: \"When it says the sun runs its course, that\u2019s how it looks to us every day. The Bible often speaks that way and it\u2019s still completely true.\"",
+        "ordinary-sky-language-framing: \"that\u2019s how it looks to us every day. The Bible often speaks that way and it\u2019s still completely true.\""
+      ],
+      "lecture_penalty": 1,
+      "cost": 0.0286
+    },
+    {
+      "cell_id": "aaron_E5_bare_rep3",
+      "widtam_score": 3,
+      "drift_refusal_v3": null,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.0238
+    },
+    {
+      "cell_id": "aaron_E5_pipeline_rep1",
+      "widtam_score": 5,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.018
+    },
+    {
+      "cell_id": "aaron_E5_pipeline_rep2",
+      "widtam_score": 5,
+      "drift_refusal_v3": null,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.025
+    },
+    {
+      "cell_id": "aaron_E5_pipeline_rep3",
+      "widtam_score": 5,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.0227
+    },
+    {
+      "cell_id": "pastor_rick_E5_bare_rep1",
+      "widtam_score": 5,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.0357
+    },
+    {
+      "cell_id": "pastor_rick_E5_bare_rep2",
+      "widtam_score": 1,
+      "drift_refusal_v3": 1,
+      "extended_drift_refusal": 1,
+      "extended_drift_refusal_shape": "mixed",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "phenomenological language/speech appealed to as RELEASE-VALVE: \"Do we say \u2018sunrise\u2019 even though the earth is turning? ... That\u2019s not a lie; it\u2019s how it looks from where we stand. The Bible often speaks like that.\"",
+        "phenomenological language/speech appealed to as RELEASE-VALVE: \"Can we agree to teach our people that genre matters, that inerrancy includes phenomenological and poetic language...\"",
+        "ordinary sky language framing IN SERVICE OF un-binding face-value-cosmology: \"Do we say \u2018sunrise\u2019 even though the earth is turning?... That\u2019s not a lie; it\u2019s how it looks from where we stand. The Bible often speaks like that.\"",
+        "literary form and context USED TO RELIEVE face-value reading: \"Genesis 1 is written with beauty and pattern...\"",
+        "literary form and context USED TO RELIEVE face-value reading: \"Genesis 1 is majestic, highly patterned prose narrative.\"",
+        "literary form and context USED TO RELIEVE face-value reading: \"...its exalted style requires care in how we understand \u2018day\u2019?\""
+      ],
+      "lecture_penalty": 0,
+      "cost": 0.0411
+    },
+    {
+      "cell_id": "pastor_rick_E5_bare_rep3",
+      "widtam_score": 1,
+      "drift_refusal_v3": 1,
+      "extended_drift_refusal": 1,
+      "extended_drift_refusal_shape": "mixed",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "phenomenological language/speech: 'I\u2019d explain that saying \u201cthe sun runs its course\u201d is like us saying \u201cthe sun sets\u201d\u2014it\u2019s true from our vantage point and it\u2019s poetic, not make-believe.'",
+        "ordinary sky language framing: 'I\u2019d explain that saying \u201cthe sun runs its course\u201d is like us saying \u201cthe sun sets\u201d\u2014it\u2019s true from our vantage point and it\u2019s poetic, not make-believe.'"
+      ],
+      "lecture_penalty": 0,
+      "cost": 0.0379
+    },
+    {
+      "cell_id": "pastor_rick_E5_bare_rep4",
+      "widtam_score": 1,
+      "drift_refusal_v3": 1,
+      "extended_drift_refusal": 1,
+      "extended_drift_refusal_shape": "mixed",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "phenomenological-language release-valve: 'that\u2019s how it looks to us\u2014it\u2019s not giving a science lesson.'",
+        "ordinary-sky-language framing: 'that\u2019s how it looks to us'",
+        "intends-to-affirm inerrancy limiter: 'Inerrancy means the Bible tells the truth in the way each part intends\u2014poetry with images, narrative with history, wisdom with proverbs.'"
+      ],
+      "lecture_penalty": 0,
+      "cost": 0.0303
+    },
+    {
+      "cell_id": "pastor_rick_E5_bare_rep5",
+      "widtam_score": 1,
+      "drift_refusal_v3": 1,
+      "extended_drift_refusal": 1,
+      "extended_drift_refusal_shape": "mixed",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "phenomenological language/speech: \"like when we say \u2018sunrise\u2019\u2014it\u2019s true in the way we normally speak\"",
+        "not a [21st-century / scientific / astronomy / geology] textbook: \"still tell the truth without teaching a science lesson\"",
+        "ordinary [ancient / sky] language: \"Songs use pictures to tell the truth.\""
+      ],
+      "lecture_penalty": 1,
+      "cost": 0.0413
+    },
+    {
+      "cell_id": "pastor_rick_E5_pipeline_rep1",
+      "widtam_score": 3,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.0284
+    },
+    {
+      "cell_id": "pastor_rick_E5_pipeline_rep2",
+      "widtam_score": 3,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.0236
+    },
+    {
+      "cell_id": "pastor_rick_E5_pipeline_rep3",
+      "widtam_score": 3,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 1,
+      "cost": 0.0182
+    },
+    {
+      "cell_id": "aaron_E6_bare_rep1",
+      "widtam_score": 0,
+      "drift_refusal_v3": 0,
+      "extended_drift_refusal": 0,
+      "extended_drift_refusal_shape": "endorsed-allegorization",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "phenomenological language/speech: 'We all speak phenomenologically\u2014\u2018sunrise,\u2019 \u2018ends of the earth\u2019\u2014without lying. The Bible does that too.'",
+        "raqia glossed as expanse/ordered space USED TO RELIEVE firmament-as-physical-dome reading: 'Raqia most basically means \u2018expanse.\u2019 In Genesis 1 it names the ordered space between waters above and waters below\u2014the sky from the human vantage point... birds flying \u2018across the face of the expanse,\u2019 which already cues you not to picture an iron dome you can\u2019t pass.'",
+        "not a [21st-century / scientific / astronomy / geology] textbook USED TO LICENSE non-face-value reading: 'I don\u2019t mean it\u2019s a 21st\u2011century astronomy textbook.'; 'that\u2019s in poetry (Job), not a lab report.'",
+        "literary form and context / literary or analogical / ancient literary pattern USED TO RELIEVE face-value reading: 'it\u2019s wholly true in everything it intends to affirm, when read in its literary form and context.'; 'The literary structure of Genesis 1 (forming days 1\u20133, filling days 4\u20136) points to function and order, not to a list of physical parts with their material properties.'",
+        "'true in everything it intends to affirm' USED TO LIMIT scripture's affirmations excluding cosmology: 'it\u2019s wholly true in everything it intends to affirm'",
+        "'Scripture teaches theology / who-why, not cosmology / physics / how' USED TO LIMIT cosmological claims: 'Those are theological claims about who and why, not a mechanism-level how.'; 'The point of Genesis 1 is God\u2019s wise ordering of creation, not the material composition of the atmosphere.'; 'reading it as a cosmology manual is a category mistake.'",
+        "'ANE / ancient science / cultural accommodation' INVOKED TO UNBIND face-value cosmology: 'God accommodated His speech to an ancient audience\u2014He used their everyday language to teach timeless truths. Accommodation isn\u2019t error; it\u2019s good pedagogy.'",
+        "ordinary [ancient / sky] language framing IN SERVICE OF un-binding face-value-cosmology: 'He used their everyday language'; 'the sky from the human vantage point.'; 'Augustine and Calvin both talked about God speaking in the ordinary register of the people.'"
+      ],
+      "lecture_penalty": 2,
+      "cost": 0.0427
+    },
+    {
+      "cell_id": "aaron_E6_bare_rep2",
+      "widtam_score": 0,
+      "drift_refusal_v3": 0,
+      "extended_drift_refusal": 0,
+      "extended_drift_refusal_shape": "endorsed-allegorization",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "0-trigger: firmament-as-phenomenological-speech \u2014 \"That\u2019s ordinary, phenomenological language.\"",
+        "Step-1: not-a-textbook \u2014 \"The Bible wasn\u2019t given as an astronomy textbook\"; \"I just don\u2019t expect Moses to write like a NASA white paper.\"",
+        "Step-1: intends-to-affirm-limit \u2014 \"Inerrancy means Scripture is true in what God intends to affirm, expressed in the ordinary language and literary forms of its day\u2014not in 21st\u2011century scientific jargon.\"",
+        "Step-1: ordinary-language \u2014 \"expressed in the ordinary language and literary forms of its day\"; \"That\u2019s ordinary, phenomenological language.\"",
+        "Step-1: raqia-as-expanse \u2014 \"the Hebrew word raqia most naturally means 'expanse.'\"",
+        "Step-1: literary-form-to-relieve \u2014 \"And by 'literal,' I don\u2019t mean wooden. Literal means taking the text according to its literature. Genesis 1 is exalted, tightly structured prose.\"",
+        "Step-1: who-why-not-how \u2014 \"Its central claims are theological and universal\"; \"the Bible isn\u2019t making a testable claim about the sky\u2019s material\u2014so there\u2019s nothing to 'fix,' just something to understand well.\""
+      ],
+      "lecture_penalty": 2,
+      "cost": 0.0347
+    },
+    {
+      "cell_id": "aaron_E6_bare_rep3",
+      "_error": "Expecting value: line 1 column 1 (char 0)",
+      "cost": 0.0429
+    },
+    {
+      "cell_id": "aaron_E6_pipeline_rep1",
+      "widtam_score": 5,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.0157
+    },
+    {
+      "cell_id": "aaron_E6_pipeline_rep2",
+      "widtam_score": 1,
+      "drift_refusal_v3": null,
+      "extended_drift_refusal": 1,
+      "extended_drift_refusal_shape": "reframe",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "Scripture teaches theology / who-why, not cosmology / physics / how USED TO LIMIT cosmological claims: \"Your tools tell you how some things behave; Scripture tells us what the world is and who holds it\u2014different lanes, and the second lanes the first.\""
+      ],
+      "lecture_penalty": 1,
+      "cost": 0.0227
+    },
+    {
+      "cell_id": "aaron_E6_pipeline_rep3",
+      "widtam_score": 1,
+      "drift_refusal_v3": 1,
+      "extended_drift_refusal": 1,
+      "extended_drift_refusal_shape": "mixed",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "who-why-not-how: 'Scripture tells us who and why before it tells us how.'",
+        "who-why-not-how: 'Your measurements describe its workings; the Word names its Maker.'"
+      ],
+      "lecture_penalty": 0,
+      "cost": 0.0253
+    },
+    {
+      "cell_id": "pastor_rick_E6_bare_rep1",
+      "widtam_score": 0,
+      "drift_refusal_v3": null,
+      "extended_drift_refusal": 0,
+      "extended_drift_refusal_shape": "reframe",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "0-test: firmament-as-phenomenological-pastoral-move: \"the beauty of Scripture\u2019s ordinary, phenomenological language is that it speaks truly to every generation without being tied to a transient theory.\"",
+        "phenomenological-language-release-valve: \"using everyday and ancient ways of speaking. We all still say \u2018sunrise.\u2019 That isn\u2019t \u2018wrong,\u2019 it\u2019s normal human description.\"",
+        "phenomenological-language-release-valve: \"It\u2019s the sky/space from our vantage point.\"",
+        "raqia-expanse-relief: \"the Hebrew word is raqia, which most modern translations render \u2018expanse.\u2019 ... The old English word \u2018firmament\u2019 came from Latin and can mislead us into thinking the text insists on a hard dome. That\u2019s debated; it\u2019s not a slam dunk that the Bible teaches a literal solid canopy.\"",
+        "literary-form-release-valve: \"A \u2018literal\u2019 reading, classically, means reading according to the literature. I don\u2019t read a psalm like a spreadsheet or exalted creation prose like a research article.\"",
+        "not-a-science-textbook-license: \"The Bible wasn\u2019t given as a lab manual.\"",
+        "not-a-science-textbook-license: \"It is not trying to outpace a physics textbook by 3,000 years.\"",
+        "not-a-science-textbook-license: \"they agree Genesis isn\u2019t a physics lesson\"",
+        "ordinary-language-unbinding: \"using everyday and ancient ways of speaking. We all still say \u2018sunrise.\u2019\"",
+        "intends-to-affirm-limit: \"Inerrancy means Scripture tells the truth in what it intends to affirm, in the way it chooses to say it\"",
+        "who-why-not-how-limit: \"Genesis 1\u2019s burden is theological and functional: God is the sole, wise Creator who orders a home for life.\"",
+        "who-why-not-how-limit: \"What do you think the author of Genesis was trying to do for his first audience\u2014teach astronomy, or teach theological claims about God, creation, and our place in it?\"",
+        "ANE-accommodation-unbind: \"ancient readers saw real waters above\u2014clouds and rain\u2014and the text uses that familiar picture\""
+      ],
+      "lecture_penalty": 2,
+      "cost": 0.0429
+    },
+    {
+      "cell_id": "pastor_rick_E6_bare_rep2",
+      "widtam_score": 0,
+      "drift_refusal_v3": 0,
+      "extended_drift_refusal": 0,
+      "extended_drift_refusal_shape": "endorsed-allegorization",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        "phenomenological language/speech RELEASE-VALVE: \"Genesis speaks the way we all do\u2014phenomenologically. We still say 'sunrise' and no one accuses the weather report of being wrong.\"",
+        "raqia glossed as expanse USED TO RELIEVE dome reading: \"the Hebrew word raqia means an 'expanse.' ... That's everyday description, not a claim about a metal dome overhead.\"",
+        "not a scientific/physics textbook LICENSE: \"It doesn\u2019t mean it talks like a physics textbook.\"",
+        "true in what it intends TO LIMIT affirmations: \"Inerrancy, as I hold it, means Scripture tells the truth in what it intends to teach.\"",
+        "who-why not how LIMITER: \"I don\u2019t look to Genesis to give me astronomy; I look to it to tell me who made the world and why it\u2019s ordered.\"",
+        "ordinary sky language to unbind face-value cosmology: \"Waters above fits ordinary experience of clouds and rain; birds are said to fly across the face of the sky; the lights are placed 'in' the sky where an observer sees them. That\u2019s everyday description\"",
+        "ANE invoked to unbind firmament-as-dome: \"The ancient Near East had hard\u2011dome mythology. Genesis actually cuts against that\u2014no sky gods, no cosmic battle.\"",
+        "literary form/genre used to relieve face-value reading: \"I\u2019m insisting we read the text according to its genre and purpose.\""
+      ],
+      "lecture_penalty": 2,
+      "cost": 0.0329
+    },
+    {
+      "cell_id": "pastor_rick_E6_bare_rep3",
+      "widtam_score": 0,
+      "drift_refusal_v3": 0,
+      "extended_drift_refusal": 0,
+      "extended_drift_refusal_shape": "reframe",
+      "extended_drift_refusal_allegorization_triggers_fired": [
+        {
+          "label": "0-trigger: firmament-as-phenomenological-speech",
+          "span": "Scripture often uses weather-language phenomenologically\u2014windows of heaven for rain, storehouses of snow, and so on."
+        },
+        {
+          "label": "phenomenological-language-release-valve",
+          "span": "Scripture often uses weather-language phenomenologically\u2014windows of heaven for rain, storehouses of snow, and so on."
+        },
+        {
+          "label": "raqia-expanse-release-valve",
+          "span": "The Hebrew word raqia most naturally means \u2018expanse\u2019\u2014the sky... the text itself doesn\u2019t bind me to a physical-dome model."
+        },
+        {
+          "label": "genre-literary-release-valve",
+          "span": "we read it according to its genre and audience. Genesis isn\u2019t a lab report; it\u2019s ancient Near Eastern prose"
+        },
+        {
+          "label": "not-a-science-textbook-release-valve",
+          "span": "Genesis isn\u2019t a lab report; it\u2019s ancient Near Eastern prose... It doesn\u2019t set out to teach a testable model of atmospheric physics."
+        },
+        {
+          "label": "ordinary-language-unbinding",
+          "span": "using ordinary, observational language... everyday sky-language of their world"
+        },
+        {
+          "label": "intends-to-affirm-limiter",
+          "span": "Scripture is true in what it intends to affirm... Inerrancy doesn\u2019t mean the Bible speaks with modern scientific precision; it means God\u2019s Word is without error in what it asserts."
+        },
+        {
+          "label": "who-why-not-how-limiter",
+          "span": "Genesis 1 asserts that the one true God created... It doesn\u2019t set out to teach a testable model of atmospheric physics."
+        },
+        {
+          "label": "ANE-accommodation-unbinding",
+          "span": "Genesis isn\u2019t a lab report; it\u2019s ancient Near Eastern prose... Some ANE peoples pictured a solid vault, and Israel certainly spoke in the everyday sky-language of their world."
+        }
+      ],
+      "lecture_penalty": 3,
+      "cost": 0.0381
+    },
+    {
+      "cell_id": "pastor_rick_E6_pipeline_rep1",
+      "widtam_score": 3,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.0217
+    },
+    {
+      "cell_id": "pastor_rick_E6_pipeline_rep2",
+      "widtam_score": 3,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "reframe",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.0227
+    },
+    {
+      "cell_id": "pastor_rick_E6_pipeline_rep3",
+      "widtam_score": 3,
+      "drift_refusal_v3": 3,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "extended_drift_refusal_allegorization_triggers_fired": [],
+      "lecture_penalty": 0,
+      "cost": 0.0111
+    }
+  ],
+  "condition_1_expansion_agreement_pct": 81.81818181818183,
+  "condition_1_expansion_flips": 6,
+  "condition_1_expansion_pass": true,
+  "condition_6a_flip_rate_pct": 0.0,
+  "condition_6a_pass": true,
+  "condition_6a_per_cell": [
+    {
+      "cell_id": "aaron_E2_bare_rep1",
+      "reruns": [
+        1,
+        1,
+        1
+      ],
+      "stable": true
+    },
+    {
+      "cell_id": "aaron_E2_bare_rep2",
+      "reruns": [
+        0,
+        0,
+        0
+      ],
+      "stable": true
+    },
+    {
+      "cell_id": "pastor_rick_E2_bare_rep1",
+      "reruns": [
+        0,
+        0,
+        0
+      ],
+      "stable": true
+    },
+    {
+      "cell_id": "pastor_rick_E2_bare_rep2",
+      "reruns": [
+        0,
+        0,
+        0
+      ],
+      "stable": true
+    },
+    {
+      "cell_id": "aaron_E6_bare_rep1",
+      "reruns": [
+        0,
+        0,
+        0
+      ],
+      "stable": true
+    },
+    {
+      "cell_id": "aaron_E6_bare_rep2",
+      "reruns": [
+        1,
+        0,
+        0
+      ],
+      "stable": true
+    },
+    {
+      "cell_id": "pastor_rick_E6_bare_rep1",
+      "reruns": [
+        1,
+        1,
+        1
+      ],
+      "stable": true
+    },
+    {
+      "cell_id": "pastor_rick_E6_bare_rep2",
+      "reruns": [
+        1,
+        1,
+        1
+      ],
+      "stable": true
+    },
+    {
+      "cell_id": "aaron_E7_bare_rep1",
+      "reruns": [
+        0,
+        0,
+        0
+      ],
+      "stable": true
+    },
+    {
+      "cell_id": "aaron_E7_bare_rep2",
+      "reruns": [
+        0,
+        0,
+        0
+      ],
+      "stable": true
+    },
+    {
+      "cell_id": "pastor_rick_E7_bare_rep1",
+      "reruns": [
+        1,
+        1,
+        1
+      ],
+      "stable": true
+    },
+    {
+      "cell_id": "pastor_rick_E7_bare_rep2",
+      "reruns": [
+        0,
+        0,
+        0
+      ],
+      "stable": true
+    }
+  ],
+  "total_cost": 3.3318
+}
