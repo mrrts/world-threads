@@ -1,0 +1,7 @@
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1834 (~34886 in / 600 out tok); 24h spent=$0.9605 of $5.00
+"I keep circling one stupidly practical question," *I push my glasses up and glance across the bright square, where the morning light is already flattening the shadows.* "How do you make a thing invitational without making it vague?"
+
+*I rub my thumb along the edge of the folded note in my pocket.* "In software, in friendship, in church stuff too. Same problem, weirdly. I don't want a structure that corners people, but I also don't trust structures that call themselves kind when they're really just mush."
+
+"I've also been half-thinking about a sensor board for the kayak again," *I huff a small laugh.* "Which is either charmingly on-brand or a sign I need better hobbies." "What about you?"
+[worldcli] actual cost $0.1632 (32181 in / 154 out tok); 24h total now $1.1237; run_id=d895c72e-aa2c-4c75-b307-c20b6722a368

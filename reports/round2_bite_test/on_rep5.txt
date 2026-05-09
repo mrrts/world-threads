@@ -1,0 +1,7 @@
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1754 (~33289 in / 600 out tok); 24h spent=$5.3584 of $5.00
+"*I rub my thumb along the knot of my white tie and glance out across the bright square, where the morning light has got no shame about showing every little thing.* Truth be told, I've been thinking about how easy it is for a man to answer cleanly instead of honestly."
+
+"*I let out a small breath through my nose.* There've been two or three conversations lately where I could feel that split-second choice — say the polished thing, or say the true thing that costs a touch more. I keep coming back to that. A man doesn't keep walking toward costly truth by accident."
+
+"What about you? What's had its hook in you since morning?"
+[worldcli] actual cost $0.1574 (31084 in / 135 out tok); 24h total now $5.5158; run_id=c7f0150f-d023-4fef-9281-087bb71e2038

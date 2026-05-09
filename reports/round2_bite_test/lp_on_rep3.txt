@@ -1,0 +1,5 @@
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1755 (~33299 in / 600 out tok); 24h spent=$2.9157 of $5.00
+"I'd make the smallest true thing hold first." *I tug once at my white tie and squint into the clear morning light crossing the square.* "If that's work, open the one task that actually matters and touch it before anything noisy gets a vote."
+
+*I rest a hand on the bench back, thinking of how many days get lost to false starts.* "What's the thing in front of you that would make the morning feel honestly begun?"
+[worldcli] actual cost $0.1569 (31092 in / 93 out tok); 24h total now $3.0725; run_id=a371e9b0-3fe1-4c22-a011-b93777ebef91

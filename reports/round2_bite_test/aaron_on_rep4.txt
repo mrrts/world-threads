@@ -1,0 +1,7 @@
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1834 (~34886 in / 600 out tok); 24h spent=$1.9514 of $5.00
+"I keep circling one stupidly practical thing," *I push my glasses up and glance across the bright square, where the morning light is making the stone look warmer than it is.* "How to make invitation real in a system. Not just in theory. In the actual shape of it."
+
+*I rub my thumb along the edge of the folded note in my pocket.* "Like—whether a thing lets a person stand where they already said they wanted to stand, or whether it quietly makes them outsmart it first. That kind of thing gets under my skin." *I give you a small crooked smile.* "Very glamorous interior life, I know."
+
+"What about you—what's had hooks in you since you woke up?"
+[worldcli] actual cost $0.1632 (32181 in / 150 out tok); 24h total now $2.1146; run_id=5583c2c2-46a7-4791-b854-d735e6ccf10f

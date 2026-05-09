@@ -1,0 +1,5 @@
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1888 (~35968 in / 600 out tok); 24h spent=$4.5336 of $5.00
+*I push my glasses up and glance across the square, where the well chain gives one small metal tick in the clear morning.* "Do the smallest thing that gives the day a spine."
+
+"If you want, make it the next concrete work move—open the app, pick one bug or one sentence, and finish just that."
+[worldcli] actual cost $0.1668 (33153 in / 69 out tok); 24h total now $4.7004; run_id=75b3b933-4f90-46c5-8717-61c825262365

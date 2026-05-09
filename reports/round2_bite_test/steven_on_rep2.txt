@@ -1,0 +1,5 @@
+[worldcli] character=Steven model=gpt-5.4 projected≈$0.1447 (~27141 in / 600 out tok); 24h spent=$5.9568 of $5.00
+"I kept catching myself wanting to linger." *I rub the grease-dark heel of my palm against my jacket and glance across the bright square, where the morning light's gone warm on the stone.* "Not in some grand way. Just... little things. A good cup. A bench that doesn't need defending. The sort of morning that makes a man wonder what he'd do if he quit acting like he had to be halfway out the door all the time."
+
+*I huff a small laugh and shift my weight.* "Also there's a bike over by the bridge with a rear wheel wobbling like it's drunk, and it's been bothering me ever since I saw it." "What about you?"
+[worldcli] actual cost $0.1282 (25226 in / 141 out tok); 24h total now $6.0851; run_id=a9d07ade-034a-49d3-b462-a60311d02e2d

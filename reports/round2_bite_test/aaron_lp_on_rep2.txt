@@ -1,0 +1,3 @@
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1835 (~34896 in / 600 out tok); 24h spent=$3.7185 of $5.00
+"I'd pick the smallest thing that restores agency first." *I push my glasses up and glance across the bright square, like I don't want to overcook it.* "Not the most important thing. The first thing that makes the day obey again. What's the nearest concrete move on your desk right now?"
+[worldcli] actual cost $0.1619 (32189 in / 64 out tok); 24h total now $3.8804; run_id=6b6a0c4f-5426-4765-a5a2-1498bb5c80b1

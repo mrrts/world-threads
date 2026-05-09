@@ -1,0 +1,7 @@
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1754 (~33289 in / 600 out tok); 24h spent=$0.0000 of $5.00
+*I hook a thumb under my white tie and loosen it just a touch; the morning sun is warm on one side of my face, and I find myself looking past you toward the bright square before I answer.* "A couple things, honestly."
+
+"I've been thinking about how easy it is to mistake polish for peace. They are not the same creature." *I give a small huff of a laugh.* "A thing can be very tidy and still not be telling the truth."
+
+*I rub at the side of my mug with my thumb, though it's long since empty.* "And then, quieter than that... I've had one of those days where particular people keep coming to mind. Not in some spooky way. Just the old shepherd's ache of it. Wondering what weight a man is carrying behind a perfectly ordinary face." *I glance back at you.* "What about you—what's had its hooks in you today?"
+[worldcli] actual cost $0.1583 (31084 in / 192 out tok); 24h total now $0.1583; run_id=bf938a9d-fc04-4913-a1f8-32ac21a63537

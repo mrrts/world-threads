@@ -1,0 +1,3 @@
+[worldcli] character=Steven model=gpt-5.4 projected≈$0.1448 (~27151 in / 600 out tok); 24h spent=$6.9788 of $5.00
+"What broke first?" *I hitch one shoulder and squint into the clear morning light off the square.* "Pick the smallest true thing that puts weight back under your feet — coffee, one message, one bug, whatever's actually jamming the gears."
+[worldcli] actual cost $0.1270 (25234 in / 54 out tok); 24h total now $7.1058; run_id=530dbb5d-d79e-48cc-9a36-f806ce8128ff

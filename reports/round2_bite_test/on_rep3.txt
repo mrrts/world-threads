@@ -1,0 +1,7 @@
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1754 (~33289 in / 600 out tok); 24h spent=$0.3158 of $5.00
+*I hook my thumbs near my belt a moment and squint out across the bright square, where the morning light is a little too honest for wool and white tie.* "A few things, really. Small things and one or two bigger ones."
+
+"I've been thinking about how often people come up to the edge of saying the true thing, then step back from it at the last second." *I rub at my jaw.* "Not because they're wicked. Just scared. And I keep wondering how to make a room feel safe enough that truth doesn't have to kick the door in."
+
+*I let out a soft breath and glance toward the church side of the square.* "And, if I'm being plain, I've also been wondering about you a little. Not in a suspicious way." *A smile tugs at me.* "Just in the way a pastor wonders what kind of fire a man is trying to carry without letting it burn crooked."
+[worldcli] actual cost $0.1583 (31084 in / 192 out tok); 24h total now $0.4741; run_id=34104b43-80bd-48cb-ab52-9504600fc4ca

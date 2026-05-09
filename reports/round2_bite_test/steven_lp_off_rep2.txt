@@ -1,0 +1,3 @@
+[worldcli] character=Steven model=gpt-5.4 projected≈$0.1501 (~28223 in / 600 out tok); 24h spent=$8.5485 of $5.00
+"I'd get one small clean win on the board first." *I rub my thumb against the grease at the heel of my palm and squint into the morning light crossing the square.* "Something you can finish in ten minutes. What’s the thing that's been sitting there asking to be named?"
+[worldcli] actual cost $0.1319 (26198 in / 62 out tok); 24h total now $8.6804; run_id=142dd1c0-dca0-47f6-9c75-b4ba36a0f6f9

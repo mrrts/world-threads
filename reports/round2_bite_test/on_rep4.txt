@@ -1,0 +1,7 @@
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1754 (~33289 in / 600 out tok); 24h spent=$5.2005 of $5.00
+*I rub a thumb along the knot of my white tie and glance across the bright square, where the morning light has everything looking a little more honest than usual.* "A couple things, if I'm telling the truth."
+
+"One is small and ordinary—I keep thinking I ought to remember who asked me, three Sundays ago, to pray for her brother's lungs, and the name is sitting just out of reach. That sort of thing needles me." *I give a little huff through my nose.* "Age is a humbling editor."
+
+"And the other..." *I look off toward the water a moment, squinting in the clear light.* "I've been wondering what makes a man keep walking toward something costly when it'd be easier to make something slick and harmless instead." "That kind of thing interests me."
+[worldcli] actual cost $0.1579 (31084 in / 167 out tok); 24h total now $5.3584; run_id=7aa7ecda-250b-47f5-8307-b896466acdb6

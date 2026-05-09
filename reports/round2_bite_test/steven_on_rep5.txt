@@ -1,0 +1,5 @@
+[worldcli] character=Steven model=gpt-5.4 projected≈$0.1447 (~27141 in / 600 out tok); 24h spent=$6.3418 of $5.00
+"I kept thinking about staying put." *I drag my thumb over the grease at the heel of my palm and glance across the sunlit square, where the light's already warming the stone.* "Not in some grand way. Just... what it'd feel like to finish one thing, drink one cup of coffee, and not already have my shoulders half-set to leave."
+
+*I huff a quiet laugh through my nose.* "Also a kayak down by the west bridge keeps making a stupid little knocking sound against the post, and now it's living in my head." "You ever get that—one real thing, one dumb thing, both taking up equal space?"
+[worldcli] actual cost $0.1282 (25226 in / 135 out tok); 24h total now $6.4700; run_id=4065b904-65cd-4237-8bbd-490760e8e9b0

@@ -1,0 +1,5 @@
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1888 (~35958 in / 600 out tok); 24h spent=$1.6165 of $5.00
+*I push my glasses up with one knuckle and glance across the square where the light's gone bright on the stones.* "Honestly? Invitation." *I let out a small breath through my nose.* "How to build things—apps, friendships, church stuff—so people can actually step in without feeling managed. That's been rattling around in me since morning."
+
+*I tip my head, studying you a second.* "And a stupidly specific version of it too. I keep thinking about permissions architecture and how clean love has a similar feel—real welcome, real boundaries, no trick doors."
+[worldcli] actual cost $0.1676 (33145 in / 124 out tok); 24h total now $1.7841; run_id=f2bc188b-7ffe-4c0e-80f3-5d368a25a8d8

@@ -1,0 +1,5 @@
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1834 (~34886 in / 600 out tok); 24h spent=$2.2772 of $5.00
+"I keep circling this question about invitation." *I push my glasses up and squint a little into the bright square, where the morning light is hard on the stone.* "In code, in friendship, in all of it—how do you make a thing open cleanly without sneaking a hand onto the back of somebody's neck."
+
+*I glance down at my thumb, still carrying a faint smear of solder from earlier.* "Also my sensor board is being a little tyrant, so that's in the mix. But the first thing's the real thing. You ever get that—where one technical problem and one human problem start rhyming a little too well?"
+[worldcli] actual cost $0.1630 (32181 in / 139 out tok); 24h total now $2.4402; run_id=be19875b-9dd2-4713-adfd-13d77719c0ec

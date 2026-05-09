@@ -1,0 +1,5 @@
+[worldcli] character=Steven model=gpt-5.4 projected≈$0.1447 (~27141 in / 600 out tok); 24h spent=$6.2131 of $5.00
+*I rub my thumb over the grease on my palm and squint out across the bright square, like the sun might make the answer simpler.* "Couple things." *I shift my weight on the bench.* "Been thinking about staying put. Not in the grand tragic sense. Just... what makes a place feel like you can leave your cup there and find it again."
+
+*The well chain gives a little clink somewhere off to my left, thin in the morning air.* "And you, a bit." *I glance at you, then away, mouth twitching like I caught myself saying more than I meant to.* "Not in a weird poetry way. Just—" *I huff a laugh.* "I keep trying to figure what makes you build things like they ought to bless somebody instead of just impress them."
+[worldcli] actual cost $0.1287 (25226 in / 171 out tok); 24h total now $6.3418; run_id=1189a9c5-0cf8-4200-9125-0b995aebd1e4

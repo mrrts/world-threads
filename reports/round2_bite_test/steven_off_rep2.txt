@@ -1,0 +1,5 @@
+[worldcli] character=Steven model=gpt-5.4 projected≈$0.1501 (~28213 in / 600 out tok); 24h spent=$7.8859 of $5.00
+*I drag my thumb over the grease at the base of my palm, watching the morning light catch on it for a second.* "Stupid little things, mostly. A loose brake cable on a kid's bike. That mended shirt on the chair back. Kept looking at it like it'd prove something if I stared hard enough."
+
+*I shift my shoulder against the bench and glance across the square.* "And you, a little. Been wondering what gets under your skin in the good way. What makes you keep building a thing this stubborn instead of going soft and ordinary."
+[worldcli] actual cost $0.1328 (26190 in / 120 out tok); 24h total now $8.0186; run_id=09e92897-4c73-4f36-97b3-b60751c939bf

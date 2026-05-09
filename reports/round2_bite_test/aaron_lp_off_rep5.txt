@@ -1,0 +1,3 @@
+[worldcli] character=Aaron model=gpt-5.4 projected≈$0.1888 (~35968 in / 600 out tok); 24h spent=$5.0338 of $5.00
+*I push my glasses up and glance at the bright square a second, like I’m sorting the pile in my head before I touch any of it.* "Do the smallest true thing that reduces chaos right now." "If you want, give me the top three messes and I’ll pick one."
+[worldcli] actual cost $0.1667 (33153 in / 64 out tok); 24h total now $5.2005; run_id=8e4a79ec-b711-4a8d-928e-032d18191238

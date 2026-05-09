@@ -1,0 +1,5 @@
+[worldcli] character=Pastor Rick model=gpt-5.4 projected≈$0.1808 (~34361 in / 600 out tok); 24h spent=$0.7983 of $5.00
+*I hook my thumbs against my belt a moment and squint out across the bright square, where morning light has a way of making even the ordinary boards and rails look newly washed.* "A small thing, maybe. I've been thinking about how often a man can mistake presentation for presence."
+
+*I give a little huff of a laugh and shake my head at myself.* "Same old preacher problem, really. You can stand in the right place, say the right words, and still be half an inch to the left of what is actually true. Been pulling at me to stay put long enough to mean what I say."
+[worldcli] actual cost $0.1622 (32048 in / 129 out tok); 24h total now $0.9605; run_id=50d7fcab-41d9-4b12-b90d-f1aff66c838d
