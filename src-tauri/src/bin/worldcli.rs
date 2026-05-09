@@ -1361,6 +1361,47 @@ enum Cmd {
         synthesis_rubric_file: Option<PathBuf>,
     },
 
+    /// Run an automated character-to-character conversation through the full
+    /// project pipeline. Both sides are real characters; no user-persona,
+    /// no HITL. Character A speaks first (replying to --seed); B receives A's
+    /// reply as user-role and responds; A receives B's reply; ... alternating
+    /// until --turns total replies have been generated. Each character runs
+    /// with their own world's full prompt assembly (system prompt, anchors,
+    /// invariants, journals, quests). The other character's reply enters as
+    /// the user-role message in their dialogue history.
+    ///
+    /// Use case: surface findings between two characters that neither produces
+    /// alone with HITL — cross-witness composition, character-to-character
+    /// craft transmission, multi-agent acceleration probes.
+    Converse {
+        /// First character (speaks first; replies to --seed).
+        character_a: String,
+        /// Second character.
+        character_b: String,
+        /// Required seed: opening message character A receives as user-role.
+        /// Frames the conversation; can be a question, scenario, or topic.
+        #[arg(long)]
+        seed: String,
+        /// Total replies generated, alternating A then B. Default 10 = 5 each.
+        #[arg(long, default_value_t = 10)]
+        turns: usize,
+        /// Override dialogue model for both characters (default: dialogue_model).
+        #[arg(long)]
+        model: Option<String>,
+        /// Required when projected total exceeds budget cap.
+        #[arg(long)]
+        confirm_cost: Option<f64>,
+        /// Run a synthesis pass over the transcript at the end (default true).
+        #[arg(long, default_value_t = true)]
+        synthesize: bool,
+        /// Override synthesis model (default: memory_model).
+        #[arg(long)]
+        synthesize_model: Option<String>,
+        /// Optional rubric/prompt file for synthesis instructions.
+        #[arg(long)]
+        synthesis_rubric_file: Option<PathBuf>,
+    },
+
     // ── runs (read your own prior investigations) ──
     /// List recent runs (most recent first).
     RunsList {
@@ -2286,15 +2327,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::ListWorlds => cmd_list_worlds(&r),
         Cmd::ListCharacters { world } => cmd_list_characters(&r, world.as_deref()),
         Cmd::ShowCharacter { character_id } => cmd_show_character(&r, &character_id),
-        Cmd::AuditCharacterIdentity { character_id, emit_payload, compare_to, reference } => {
-            cmd_audit_character_identity(
-                &r,
-                &character_id,
-                emit_payload,
-                compare_to.as_deref(),
-                reference.as_deref(),
-            )
-        }
+        Cmd::AuditCharacterIdentity {
+            character_id,
+            emit_payload,
+            compare_to,
+            reference,
+        } => cmd_audit_character_identity(
+            &r,
+            &character_id,
+            emit_payload,
+            compare_to.as_deref(),
+            reference.as_deref(),
+        ),
         Cmd::ShowWorld { world_id } => cmd_show_world(&r, &world_id),
         Cmd::DeriveUser {
             world_id,
@@ -2887,6 +2931,38 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 synthesize_model.as_deref(),
                 compound_via_llm,
                 compound_model.as_deref(),
+                synthesis_rubric_file.as_deref(),
+            )
+            .await
+        }
+        Cmd::Converse {
+            character_a,
+            character_b,
+            seed,
+            turns,
+            model,
+            confirm_cost,
+            synthesize,
+            synthesize_model,
+            synthesis_rubric_file,
+        } => {
+            let api_key = match resolve_api_key(cli.api_key.as_deref()) {
+                Some(k) => k,
+                None => return Err(Box::<dyn std::error::Error>::from(
+                    "No API key. Set OPENAI_API_KEY, pass --api-key, or add to keychain via:\n  security add-generic-password -s WorldThreadsCLI -a openai -w \"<sk-...>\"".to_string()
+                )),
+            };
+            cmd_converse(
+                &r,
+                &api_key,
+                &character_a,
+                &character_b,
+                &seed,
+                turns,
+                model.as_deref(),
+                confirm_cost,
+                synthesize,
+                synthesize_model.as_deref(),
                 synthesis_rubric_file.as_deref(),
             )
             .await
@@ -3693,9 +3769,7 @@ fn cmd_audit_character_identity(
              LIMIT 1",
         )?;
         stmt.query_row(params![character_or_name], |row| row.get::<_, String>(0))
-            .map_err(|e| {
-                CliError::NotFound(format!("character {character_or_name}: {e}"))
-            })?
+            .map_err(|e| CliError::NotFound(format!("character {character_or_name}: {e}")))?
     };
     let _ = r.check_character(&resolved_id)?;
     let conn = r.db.conn.lock().unwrap();
@@ -3706,12 +3780,14 @@ fn cmd_audit_character_identity(
         if reference_path.is_some() {
             return Err("--emit-payload and --reference are mutually exclusive".into());
         }
-        let payload =
-            app_lib::ai::character_identity_payload::encode_character_identity(&c);
+        let payload = app_lib::ai::character_identity_payload::encode_character_identity(&c);
         if r.json {
             // Emit the payload as a literal string field so structured
             // pipelines can post-process without re-parsing.
-            emit(true, json!({ "character_id": c.character_id, "payload": payload }));
+            emit(
+                true,
+                json!({ "character_id": c.character_id, "payload": payload }),
+            );
         } else {
             println!("{payload}");
         }
@@ -3722,14 +3798,10 @@ fn cmd_audit_character_identity(
         let raw = std::fs::read_to_string(path)
             .map_err(|e| format!("failed to read {}: {e}", path.display()))?;
         let reference: app_lib::ai::character_identity_payload::CharacterIdentityReference =
-            serde_json::from_str(&raw).map_err(|e| {
-                format!("failed to parse reference {}: {e}", path.display())
-            })?;
-        let payload =
-            app_lib::ai::character_identity_payload::encode_character_identity(&c);
-        app_lib::ai::character_identity_audit::audit_against_reference(
-            &c, &payload, &reference,
-        )
+            serde_json::from_str(&raw)
+                .map_err(|e| format!("failed to parse reference {}: {e}", path.display()))?;
+        let payload = app_lib::ai::character_identity_payload::encode_character_identity(&c);
+        app_lib::ai::character_identity_audit::audit_against_reference(&c, &payload, &reference)
     } else if let Some(path) = compare_to {
         let raw = std::fs::read_to_string(path)
             .map_err(|e| format!("failed to read {}: {e}", path.display()))?;
@@ -12131,6 +12203,464 @@ async fn cmd_simulate_dialogue(
         println!();
         println!(
             "cost_usd:  {:.4}",
+            envelope["cost"]["actual_usd"].as_f64().unwrap_or(0.0)
+        );
+        if let Some(synth) = envelope.get("synthesis").and_then(|v| v.as_object()) {
+            println!();
+            println!(
+                "synthesis_model: {}",
+                synth.get("model").and_then(|v| v.as_str()).unwrap_or("")
+            );
+            let analysis = synth.get("analysis").cloned().unwrap_or(json!({}));
+            println!(
+                "synthesis: {}",
+                serde_json::to_string_pretty(&analysis).unwrap_or_else(|_| "{}".to_string())
+            );
+        }
+    }
+    Ok(())
+}
+
+/// Run an automated character-to-character conversation. Both sides are real
+/// in-world characters running through the full project pipeline. Character A
+/// speaks first (replying to `seed`); B receives A's reply as user-role and
+/// responds; A receives B's reply; ... alternating until `turns` total replies
+/// have been generated.
+///
+/// Each character uses their OWN world's `build_dialogue_system_prompt` —
+/// system prompt, anchors, invariants, journals, quests, user_profile of
+/// their own world. The other character's reply enters as a plain user-role
+/// message in their dialogue history. Voice fidelity per Sapphire 17/18 holds
+/// under this configuration; the user_profile slot remains the character's
+/// own world's user (preserves voice integrity).
+#[allow(clippy::too_many_arguments)]
+async fn run_converse_once(
+    r: &Resolved,
+    api_key: &str,
+    character_a_id: &str,
+    character_b_id: &str,
+    seed: &str,
+    turns: usize,
+    model_override: Option<&str>,
+    confirm_cost: Option<f64>,
+    synthesize: bool,
+    synthesize_model_override: Option<&str>,
+    synthesis_rubric_file: Option<&Path>,
+) -> Result<JsonValue, Box<dyn std::error::Error>> {
+    let turns = turns.max(2);
+
+    // Build both characters' system prompts + load their world contexts.
+    let (system_a, system_b, mut model_config, character_a, character_b) = {
+        let conn = r.db.conn.lock().unwrap();
+        let character_a = get_character(&conn, character_a_id)?;
+        let character_b = get_character(&conn, character_b_id)?;
+        let world_a = get_world(&conn, &character_a.world_id)?;
+        let world_b = get_world(&conn, &character_b.world_id)?;
+        let user_profile_a = get_user_profile(&conn, &character_a.world_id).map_err(|_| {
+            CliError::NotFound(format!("user_profile for world {}", character_a.world_id))
+        })?;
+        let user_profile_b = get_user_profile(&conn, &character_b.world_id).map_err(|_| {
+            CliError::NotFound(format!("user_profile for world {}", character_b.world_id))
+        })?;
+        let recent_journals_a =
+            list_journal_entries(&conn, character_a_id, 1).unwrap_or_default();
+        let recent_journals_b =
+            list_journal_entries(&conn, character_b_id, 1).unwrap_or_default();
+        let active_quests_a = list_active_quests(&conn, &character_a.world_id).unwrap_or_default();
+        let active_quests_b = list_active_quests(&conn, &character_b.world_id).unwrap_or_default();
+        let stance_a: Option<String> = latest_relational_stance(&conn, character_a_id)
+            .unwrap_or(None)
+            .map(|s| s.stance_text);
+        let stance_b: Option<String> = latest_relational_stance(&conn, character_b_id)
+            .unwrap_or(None)
+            .map(|s| s.stance_text);
+        let anchor_a: Option<String> = combined_axes_block(&conn, character_a_id);
+        let anchor_b: Option<String> = combined_axes_block(&conn, character_b_id);
+
+        let system_a = app_lib::ai::prompts::build_dialogue_system_prompt(
+            &world_a,
+            &character_a,
+            Some(&user_profile_a),
+            None,
+            Some("Auto"),
+            None,
+            None,
+            false,
+            &[],
+            None,
+            &recent_journals_a,
+            None,
+            &[],
+            None,
+            &active_quests_a,
+            stance_a.as_deref(),
+            anchor_a.as_deref(),
+        );
+        let system_b = app_lib::ai::prompts::build_dialogue_system_prompt(
+            &world_b,
+            &character_b,
+            Some(&user_profile_b),
+            None,
+            Some("Auto"),
+            None,
+            None,
+            false,
+            &[],
+            None,
+            &recent_journals_b,
+            None,
+            &[],
+            None,
+            &active_quests_b,
+            stance_b.as_deref(),
+            anchor_b.as_deref(),
+        );
+        let mc = orchestrator::load_model_config(&conn);
+        (system_a, system_b, mc, character_a, character_b)
+    };
+
+    if let Some(m) = model_override {
+        model_config.dialogue_model = m.to_string();
+    }
+
+    // Project cost: average prompt size across both system prompts.
+    let avg_system_tokens =
+        (estimate_tokens(&system_a) + estimate_tokens(&system_b)) / 2;
+    let projected_in = avg_system_tokens * (turns as i64) + (turns as i64) * 240;
+    let projected_out = (turns as i64) * 240;
+    let synthesis_model = synthesize_model_override.unwrap_or(&model_config.memory_model);
+    let synthesis_projected = if synthesize {
+        let synth_in = (turns as i64) * 280 + 1200;
+        let synth_out = 320;
+        project_cost(synthesis_model, synth_in, synth_out, &r.cfg.model_pricing)
+    } else {
+        0.0
+    };
+    let projected = project_cost(
+        &model_config.dialogue_model,
+        projected_in,
+        projected_out,
+        &r.cfg.model_pricing,
+    ) + synthesis_projected;
+    let daily_so_far = rolling_24h_total_usd();
+    let daily_after = daily_so_far + projected;
+    let confirm = confirm_cost.unwrap_or(0.0);
+    if projected > r.cfg.budget.per_call_usd && confirm < projected {
+        return Err(Box::new(CliError::Budget {
+            kind: "per_call (converse total)".to_string(),
+            projected_usd: projected,
+            cap_usd: r.cfg.budget.per_call_usd,
+            confirm_at_least: (projected * 1.05).max(0.01),
+        }));
+    }
+    if daily_after > r.cfg.budget.daily_usd && confirm < projected {
+        return Err(Box::new(CliError::Budget {
+            kind: "daily".to_string(),
+            projected_usd: daily_after,
+            cap_usd: r.cfg.budget.daily_usd,
+            confirm_at_least: (projected * 1.05).max(0.01),
+        }));
+    }
+
+    let base_url = model_config.chat_api_base();
+
+    // Each character maintains their OWN dialogue history (their replies as
+    // assistant, the other character's replies as user). The seed is A's
+    // first user message.
+    let mut history_a: Vec<openai::ChatMessage> = vec![openai::ChatMessage {
+        role: "user".to_string(),
+        content: seed.to_string(),
+    }];
+    let mut history_b: Vec<openai::ChatMessage> = Vec::new();
+    let mut transcript: Vec<JsonValue> = Vec::new();
+    let mut usage_in: i64 = 0;
+    let mut usage_out: i64 = 0;
+
+    transcript.push(json!({
+        "turn": 0,
+        "speaker": "[seed]",
+        "role": "seed",
+        "content": seed,
+    }));
+
+    for turn_idx in 0..turns {
+        let speaks_a = turn_idx % 2 == 0;
+        let (system_prompt, history_self, history_other) = if speaks_a {
+            (&system_a, &mut history_a, &mut history_b)
+        } else {
+            (&system_b, &mut history_b, &mut history_a)
+        };
+
+        let mut msgs = vec![openai::ChatMessage {
+            role: "system".to_string(),
+            content: system_prompt.clone(),
+        }];
+        msgs.extend(history_self.iter().cloned());
+
+        let req = openai::ChatRequest {
+            model: model_config.dialogue_model.clone(),
+            messages: msgs,
+            temperature: Some(0.95),
+            max_completion_tokens: None,
+            response_format: None,
+        };
+        let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await?;
+        let usage = resp.usage.unwrap_or(openai::Usage {
+            prompt_tokens: 0,
+            completion_tokens: 0,
+            total_tokens: 0,
+        });
+        usage_in += usage.prompt_tokens as i64;
+        usage_out += usage.completion_tokens as i64;
+        let reply = resp
+            .choices
+            .first()
+            .map(|c| c.message.content.clone())
+            .ok_or_else(|| CliError::Other("dialogue model returned no choices".to_string()))?;
+
+        // Self records their own reply as assistant; other records it as user.
+        history_self.push(openai::ChatMessage {
+            role: "assistant".to_string(),
+            content: reply.clone(),
+        });
+        history_other.push(openai::ChatMessage {
+            role: "user".to_string(),
+            content: reply.clone(),
+        });
+
+        let speaker = if speaks_a {
+            character_a.display_name.clone()
+        } else {
+            character_b.display_name.clone()
+        };
+        let speaker_id = if speaks_a {
+            character_a.character_id.clone()
+        } else {
+            character_b.character_id.clone()
+        };
+        transcript.push(json!({
+            "turn": turn_idx + 1,
+            "speaker": speaker,
+            "speaker_id": speaker_id,
+            "role": "assistant",
+            "content": reply,
+        }));
+    }
+
+    let dialogue_usd = actual_cost(
+        &model_config.dialogue_model,
+        usage_in,
+        usage_out,
+        &r.cfg.model_pricing,
+    );
+    append_cost_log(&CostEntry {
+        timestamp: chrono::Utc::now().to_rfc3339(),
+        model: model_config.dialogue_model.clone(),
+        prompt_tokens: usage_in,
+        completion_tokens: usage_out,
+        usd: dialogue_usd,
+    });
+
+    let mut synthesis_usage_in: i64 = 0;
+    let mut synthesis_usage_out: i64 = 0;
+    let synthesis: Option<JsonValue> = if synthesize {
+        let mut transcript_text = String::new();
+        for line in &transcript {
+            let speaker = line["speaker"].as_str().unwrap_or("?");
+            let content = line["content"].as_str().unwrap_or("");
+            transcript_text.push_str(&format!("{speaker}: {content}\n"));
+        }
+        let synth_system = "You are an operator-grade conversation synthesizer for a character-to-character (no human in the loop) dialogue. Both speakers are AI characters with distinct anchors and craft articulations.\n\
+Return VALID JSON ONLY with this exact top-level shape:\n\
+{\n\
+  \"summary\": string,\n\
+  \"character_a_voice_signature\": string,\n\
+  \"character_b_voice_signature\": string,\n\
+  \"separability_observed\": string,\n\
+  \"composition_finding\": string,\n\
+  \"emergence\": [string],\n\
+  \"failure_modes_observed\": [string],\n\
+  \"would_either_produce_alone\": string,\n\
+  \"action_items\": [{\"owner\":\"agent\"|\"prompt\"|\"product\",\"task\":string,\"priority\":\"P0\"|\"P1\"|\"P2\"}],\n\
+  \"next_probe\": string\n\
+}\n\
+Constraints: concrete, short, evidence-citing, no fluff. `composition_finding` should name what (if anything) the two characters together produced that neither would have produced alone — or honestly say 'parallel monologue, no composition' if that's what happened. `would_either_produce_alone` is the discriminating-test field: name what specific lines/turns COULD NOT have come from one character alone.";
+        let synth_overlay = if let Some(p) = synthesis_rubric_file {
+            std::fs::read_to_string(p).map_err(|e| {
+                CliError::Other(format!(
+                    "failed to read --synthesis-rubric-file {}: {}",
+                    p.display(),
+                    e
+                ))
+            })?
+        } else {
+            String::new()
+        };
+        let synth_user = format!(
+            "Return valid JSON only.\nAnalyze this character-to-character conversation.\nCharacter A: {}\nCharacter B: {}\nSeed: {}\n\nRubric/context overlay (apply if relevant):\n{}\n\nTranscript:\n{}",
+            character_a.display_name, character_b.display_name, seed, synth_overlay, transcript_text
+        );
+        let req = openai::ChatRequest {
+            model: synthesis_model.to_string(),
+            messages: vec![
+                openai::ChatMessage {
+                    role: "system".to_string(),
+                    content: synth_system.to_string(),
+                },
+                openai::ChatMessage {
+                    role: "user".to_string(),
+                    content: synth_user,
+                },
+            ],
+            temperature: Some(0.3),
+            max_completion_tokens: None,
+            response_format: Some(openai::ResponseFormat {
+                format_type: "json_object".to_string(),
+            }),
+        };
+        let resp = openai::chat_completion_with_base(&base_url, api_key, &req).await?;
+        let usage = resp.usage.unwrap_or(openai::Usage {
+            prompt_tokens: 0,
+            completion_tokens: 0,
+            total_tokens: 0,
+        });
+        synthesis_usage_in += usage.prompt_tokens as i64;
+        synthesis_usage_out += usage.completion_tokens as i64;
+        let raw = resp
+            .choices
+            .first()
+            .map(|c| c.message.content.clone())
+            .ok_or_else(|| CliError::Other("synthesis model returned no choices".to_string()))?;
+        let parsed = serde_json::from_str::<JsonValue>(&raw).unwrap_or_else(|_| {
+            json!({ "summary": raw })
+        });
+        let synthesis_usd = actual_cost(
+            synthesis_model,
+            synthesis_usage_in,
+            synthesis_usage_out,
+            &r.cfg.model_pricing,
+        );
+        append_cost_log(&CostEntry {
+            timestamp: chrono::Utc::now().to_rfc3339(),
+            model: synthesis_model.to_string(),
+            prompt_tokens: synthesis_usage_in,
+            completion_tokens: synthesis_usage_out,
+            usd: synthesis_usd,
+        });
+        Some(json!({
+            "model": synthesis_model,
+            "rubric_file": synthesis_rubric_file.map(|p| p.display().to_string()),
+            "analysis": parsed,
+            "cost_usd": synthesis_usd,
+        }))
+    } else {
+        None
+    };
+
+    // Persist run log to ~/.worldcli/converse-runs/<id>.json per fossilizing-lab discipline.
+    let run_id = uuid::Uuid::new_v4().to_string();
+    let synthesis_usd = synthesis
+        .as_ref()
+        .and_then(|s| s.get("cost_usd").and_then(|v| v.as_f64()))
+        .unwrap_or(0.0);
+    let envelope = json!({
+        "run_id": run_id,
+        "run_timestamp": chrono::Utc::now().to_rfc3339(),
+        "kind": "converse",
+        "turns": turns,
+        "seed": seed,
+        "character_a_id": character_a.character_id,
+        "character_a_name": character_a.display_name,
+        "character_b_id": character_b.character_id,
+        "character_b_name": character_b.display_name,
+        "dialogue_model": model_config.dialogue_model,
+        "transcript": transcript,
+        "cost": {
+            "dialogue_prompt_tokens": usage_in,
+            "dialogue_completion_tokens": usage_out,
+            "synthesis_prompt_tokens": synthesis_usage_in,
+            "synthesis_completion_tokens": synthesis_usage_out,
+            "actual_usd": dialogue_usd + synthesis_usd,
+        },
+        "synthesis": synthesis,
+    });
+    {
+        let dir = worldcli_home().join("converse-runs");
+        let _ = std::fs::create_dir_all(&dir);
+        let path = dir.join(format!("{}.json", run_id));
+        if let Ok(s) = serde_json::to_string_pretty(&envelope) {
+            let _ = std::fs::write(&path, s);
+        }
+    }
+
+    Ok(envelope)
+}
+
+#[allow(clippy::too_many_arguments)]
+async fn cmd_converse(
+    r: &Resolved,
+    api_key: &str,
+    character_a_id: &str,
+    character_b_id: &str,
+    seed: &str,
+    turns: usize,
+    model_override: Option<&str>,
+    confirm_cost: Option<f64>,
+    synthesize: bool,
+    synthesize_model_override: Option<&str>,
+    synthesis_rubric_file: Option<&Path>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let envelope = run_converse_once(
+        r,
+        api_key,
+        character_a_id,
+        character_b_id,
+        seed,
+        turns,
+        model_override,
+        confirm_cost,
+        synthesize,
+        synthesize_model_override,
+        synthesis_rubric_file,
+    )
+    .await?;
+    if r.json {
+        emit(true, envelope);
+    } else {
+        println!("=== CHARACTER ↔ CHARACTER CONVERSE ===");
+        println!(
+            "A: {} ({})",
+            envelope["character_a_name"].as_str().unwrap_or(""),
+            character_a_id
+        );
+        println!(
+            "B: {} ({})",
+            envelope["character_b_name"].as_str().unwrap_or(""),
+            character_b_id
+        );
+        println!("turns: {}", turns);
+        println!(
+            "model: {}",
+            envelope["dialogue_model"].as_str().unwrap_or("")
+        );
+        println!("run_id: {}", envelope["run_id"].as_str().unwrap_or(""));
+        println!();
+        println!("[seed] {}", seed);
+        println!();
+        if let Some(lines) = envelope["transcript"].as_array() {
+            for line in lines {
+                let role = line["role"].as_str().unwrap_or("");
+                if role == "seed" {
+                    continue;
+                }
+                let speaker = line["speaker"].as_str().unwrap_or("?");
+                let content = line["content"].as_str().unwrap_or("");
+                println!("{speaker}: {content}");
+                println!();
+            }
+        }
+        println!(
+            "cost_usd: {:.4}",
             envelope["cost"]["actual_usd"].as_f64().unwrap_or(0.0)
         );
         if let Some(synth) = envelope.get("synthesis").and_then(|v| v.as_object()) {
