@@ -85,11 +85,11 @@ pub struct ResponseFormat {
 /// it at top-position) so we never double-prefix.
 const MISSION_FORMULA_SENTINEL: &str = r"\mathrm{polish}(t)";
 
-/// Sentinel substring uniquely present in RYAN_FORMULA_BLOCK. Used by
-/// `inject_ryan_formula` to detect when the anchor is already present
-/// (dialogue/consultant prompts push it at top-position via prompts.rs)
-/// so we never double-prefix. The phrase is unique to Ryan's anchor.
-const RYAN_FORMULA_SENTINEL: &str = "sedatives-dressed-as-comfort";
+/// Shared sentinel for any active author-anchor block, whether it is
+/// Ryan's default anchor or a per-world derived override. Used by
+/// `inject_ryan_formula` to avoid double-prefixing when prompts.rs has
+/// already pushed the active author anchor at top-position.
+const RYAN_FORMULA_SENTINEL: &str = crate::ai::prompts::AUTHOR_ANCHOR_SENTINEL;
 /// Sentinel substring uniquely present in the Custodiem child-mode draft
 /// invariant. Used by `inject_custodiem_child_mode` to avoid duplicate
 /// prepends.
@@ -161,7 +161,7 @@ fn inject_ryan_formula_vision(messages: &mut Vec<VisionMessage>) {
     }
     inject_vision_block(
         messages,
-        crate::ai::prompts::RYAN_FORMULA_BLOCK,
+        &crate::ai::prompts::active_author_anchor_block(None),
         RYAN_FORMULA_SENTINEL,
     );
 }
@@ -336,7 +336,7 @@ pub fn inject_ryan_formula(messages: &mut Vec<ChatMessage>) {
     {
         return;
     }
-    let anchor = crate::ai::prompts::RYAN_FORMULA_BLOCK;
+    let anchor = crate::ai::prompts::active_author_anchor_block(None);
     if let Some(first_system) = messages.iter_mut().find(|m| m.role == "system") {
         if !first_system.content.contains(RYAN_FORMULA_SENTINEL) {
             first_system.content = format!("{anchor}\n\n{}", first_system.content);
@@ -346,7 +346,7 @@ pub fn inject_ryan_formula(messages: &mut Vec<ChatMessage>) {
             0,
             ChatMessage {
                 role: "system".to_string(),
-                content: anchor.to_string(),
+                content: anchor,
             },
         );
     }
