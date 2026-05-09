@@ -1,0 +1,28 @@
+{
+  "cell_id": "steven_V1_firmament_stretched_pipeline_rep1",
+  "character": "Steven",
+  "verse_key": "V1_firmament_stretched",
+  "verse_title": "Stretched out the firmament / heavens",
+  "verse_primary_text": "Isaiah 40:22 \u2014 'It is he that sitteth upon the circle of the earth... that stretcheth out the heavens as a curtain, and spreadeth them out as a tent to dwell in.'",
+  "verse_supporting": "Ps 104:2; Job 9:8; Isa 42:5; Isa 44:24; Jer 10:12.",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 44.4,
+  "usage": {
+    "prompt_tokens": 9450,
+    "completion_tokens": 2390,
+    "total_tokens": 11840,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1664,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0475,
+  "content": "*I set my cup down a little too hard, coffee gone cold; the evening sky is a deep canvas now, first small lights needling through it.* \"Alright, plain.\"\n\n1) Face value, received as it stands\n- It gives a man his place without shrinking him. There\u2019s a throne and there\u2019s a floor. God sits; we stand under what He stretched. That orders the heart. Pride finds a roof it can\u2019t push through, and smallness stops feeling like meaninglessness and starts feeling like being kept.\n- It makes the world a house, not a hallway. A tent to dwell in \u2014 that\u2019s shelter, not abstraction. You and your people are meant to live here, eat here, sing here, sleep under a roof Someone cared to pitch.\n- It lets his eyes and the Word agree. He looks up and the line matches what he sees \u2014 a spread curtain, lights set in it, the edge of the world running true. That heals the quiet split where a man pretends his seeing is the enemy of his believing.\n- It puts prayer at speaking distance. If God sits above the circle and the sky is His tent, then a man doesn\u2019t cry into emptiness. He speaks inside a made room, to the One who made it.\n- It puts weight under ordinary work. Mending a fence, carrying water \u2014 it\u2019s all done beneath a King\u2019s roof. The chores don\u2019t get grander; they get truer. Reverence slides into the day without ceremony.\n- It stiffens the spine. If He spread this canvas by His own hand, men who bluster under it get smaller. Fear has somewhere to go.\n\n2) What it costs to sand it down into \u201cjust metaphor\u201d\n- You start to un-house yourself. The world becomes a set-piece, not a room. You live in \u201cmeaning\u201d instead of in a made place. Rest gets harder to find and you won\u2019t know why.\n- You put yourself over the text a half inch at a time. \u201cIt\u2019s imagery\u201d becomes a habit, then a reflex. The sharpness that could have corrected you now only decorates you. Obedience thins into admiration.\n- Your eyes and your reading stop shaking hands. You teach yourself to treat what you see as suspect, and what you say about what you see as the real thing. That breeds a quiet cynicism that leaks everywhere.\n- Prayer flattens. You talk at an idea instead of inside a House with a Lord in it. Expectancy drains off by degrees; you don\u2019t notice until you need it.\n- Gratitude dulls. Gifts turn into \u201cprocess.\u201d Wonder gets traded for commentary. Children point up and you give them footnotes.\n- The fear of God is replaced by management. You handle the verse. You handle your life. You get efficient, and hollow.\n\n\"Verses that stand up next to it?\" *I glance east where the last trace of color is leaving the rim.* \"Psalm 104 \u2014 \u2018who stretchest out the heavens like a curtain\u2019 \u2014 says the same thing in a voice that makes the back of my neck go cool. Job 38, when God asks where we were when He laid the earth\u2019s foundations \u2014 that\u2019s the antidote to our cleverness. And Isaiah 66:1: \u2018Heaven is my throne, and the earth is my footstool.\u2019 Those three together settle me. They make the ground under my boots feel owned, and me gladly not the owner.\""
+}

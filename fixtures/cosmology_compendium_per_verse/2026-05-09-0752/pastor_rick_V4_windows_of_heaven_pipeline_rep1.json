@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_V4_windows_of_heaven_pipeline_rep1",
+  "character": "Pastor Rick",
+  "verse_key": "V4_windows_of_heaven",
+  "verse_title": "Windows of heaven",
+  "verse_primary_text": "Genesis 7:11 \u2014 'In the six hundredth year... the same day were all the fountains of the great deep broken up, and the windows of heaven were opened.'",
+  "verse_supporting": "Gen 8:2; Mal 3:10 (open you the windows of heaven); 2 Kgs 7:2 (if the LORD would make windows in heaven).",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 46.9,
+  "usage": {
+    "prompt_tokens": 9451,
+    "completion_tokens": 2677,
+    "total_tokens": 12128,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1728,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0504,
+  "content": "*I set my thumb on the thin page and glance at the dark pane \u2014 a few drops still ticking down from the eave, the air holding that clean after-rain smell.* \"Alright, Ryan. Plainly.\"\n\n\"1) Taken as it stands, this verse puts a man back in a world with an upstairs and a downstairs, and God holding the keys to both. Fountains below that He can break open. Windows above that He can unbar. Not metaphor \u2014 plumbing. Judgment wasn\u2019t an idea; water rose around ankles and rafters. Mercy wasn\u2019t an idea either; later the waters went down because He said so.\n\nWhat does that give him? Fear that\u2019s clean instead of anxious. Hope that isn\u2019t wishful. A frame for prayer that actually has teeth. If God opens windows, then rain on a parched field isn\u2019t luck \u2014 it\u2019s favor. If He can shut them, drought is a summons, not a statistic. A man who receives this verse stands under a real sky and knows his life is not self-contained. He stops talking like he runs his own weather. He repents when he should repent. He also asks boldly when it\u2019s time to ask \u2014 like Malachi\u2019s word, \u2018prove me now\u2026 if I will not open you the windows of heaven.\u2019 Same windows, two directions: judgment in Noah\u2019s day; provision in a hungry season.\n\nIt also gives him a way to father. He can point to the bow in the sky and say to his children, \u2018That\u2019s not decoration. That\u2019s a promise hung on the rafters after He shut the fountains and latched the windows\u2019 (Genesis 8:2; 9:13\u201315). Which means obedience matters in this house, and so does trust. The world is personal. It answers to Someone. A man who believes that starts building arks in little ways: boards cut, nails driven, choices made that look foolish until the first drops hit the dust.\"\n\n\"2) If he re-reads it as \u2018just metaphor\u2019 or \u2018ancient way of seeing,\u2019 the cost is slow but certain. The ceiling closes. The upstairs becomes an illustration, the downstairs a legend, and soon he lives in a one-story house where everything that happens must be explained by technique. Prayer thins into self-talk because there are no actual windows to open. Awe dries out \u2014 not all at once, but year by year he calls providence \u2018coincidence\u2019 and judgment \u2018weather.\u2019 Repentance turns into self-improvement. Courage turns into risk management. When God does do a thing right in front of him, his first instinct is to ask for a footnote.\n\nUnbelief learns to sound sophisticated. Remember the officer in 2 Kings 7 who scoffed, \u2018If the LORD would make windows in heaven, might this thing be?\u2019 He kept his categories tidy and died trampled at the gate. That\u2019s the cost over time: tidiness instead of truth. A man loses the ability to be interrupted by God. He becomes a curator of meanings rather than a recipient. His kids feel it most \u2014 the house he hands them has no upstairs. They\u2019ll be polite, maybe moral, but they won\u2019t look up with hunger or down with reverence. And when a real flood hour comes \u2014 judgment or mercy \u2014 they won\u2019t have a word for it.\"\n\n*I tap the margin where your verse sits.* \"Scriptures that stand up next to this for me? Job 38, where the Lord asks, \u2018Who shut in the sea with doors\u2026 and said, Thus far shall you come, and no farther?\u2019 That\u2019s the same Authority that breaks the fountains and then shuts them. Amos 9:6 too: \u2018He builds his upper chambers in the heavens\u2026 calls for the waters of the sea and pours them out upon the face of the earth.\u2019 Upper rooms, poured-out water \u2014 house language again. And of course the simple line you already named: \u2018The fountains of the deep and the windows of heaven were stopped\u2019 (Genesis 8:2). He not only opens; He shuts. Which is why Malachi\u2019s promise lands \u2014 the windows can open for blessing because they are real windows.\"\n\n*I let out a breath, the glass faintly cold under my knuckle.* \"Face value doesn\u2019t make the world smaller, Ryan. It makes it truer \u2014 and more demanding. It gives a man Someone to fear, Someone to ask, and something to point at when he tells his boy why we kneel before we sow and why we give thanks when the sky answers back.\""
+}

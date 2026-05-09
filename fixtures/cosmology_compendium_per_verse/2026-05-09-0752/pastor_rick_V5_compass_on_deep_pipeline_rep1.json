@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_V5_compass_on_deep_pipeline_rep1",
+  "character": "Pastor Rick",
+  "verse_key": "V5_compass_on_deep",
+  "verse_title": "Compass on the deep",
+  "verse_primary_text": "Proverbs 8:27 \u2014 'When he prepared the heavens, I was there: when he set a compass upon the face of the depth.'",
+  "verse_supporting": "Job 26:10 (he hath compassed the waters with bounds); Job 38:8-11.",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 47.9,
+  "usage": {
+    "prompt_tokens": 9430,
+    "completion_tokens": 2420,
+    "total_tokens": 11850,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1600,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0478,
+  "content": "*I set my mug down and, without thinking, trace a slow circle in the condensation ring on the table, like I\u2019m feeling for the edge of something that holds.* \n\n\"Face value? It gives a man five good things.\n\n1) A fence you didn\u2019t draw. God put a line on the waters and they stop there. To receive that as-it-stands is to live in a world with an edge set by Someone wiser than you. That breeds rest and right fear at the same time \u2014 rest because you\u2019re kept, fear because you\u2019re not the border-maker.\n\n2) A Maker with hands, not a fog of power. \u2018He set a compass\u2019 \u2014 He measured, chose, fixed. That means the world isn\u2019t an accident; it\u2019s carpentry. When your day feels like chaos, you can pray to the Carpenter who knows where the true line goes.\n\n3) Place. Not anywhere, here. Under this sky, within these bounds, you have a given field to tend. Limits stop feeling like insult and start feeling like calling. You don\u2019t have to be everywhere; you have to be faithful where He placed you.\n\n4) Courage that borrows its backbone from His authority. The sea is terrible, but it\u2019s leashed. If the great waters answer His line, the lesser terrors of your week aren\u2019t sovereign either. You can stand up straighter.\n\n5) Companionship with Wisdom. \u2018I was there.\u2019 The order of the world is not blind law; it\u2019s witnessed Wisdom. That means when you ask for wisdom today, you\u2019re not begging a stranger \u2014 you\u2019re asking the very presence that watched Him draw the circle.\"\n\n\"And the cost of turning it into \u2018just metaphor\u2019? Over time, it hollows a man in quiet ways.\n\n1) It trains you to sand the edges off God\u2019s speech. Not once, but as a habit. So when a hard command comes, you already know how to call it \u2018poetic.\u2019 That habit makes the heart sly.\n\n2) It thins the world. The sky becomes an idea, not a roof God stretched. Prayer gets airy. Gratitude loses its object. Wonder fades because there\u2019s nothing solid to wonder at \u2014 only concepts.\n\n3) It loosens your sense of boundary everywhere else. If His lines on creation are negotiable, why wouldn\u2019t your lines be? Vows, sabbath, sex, money, speech \u2014 edges blur. Drift feels justified.\n\n4) It shifts you from trust to management. Instead of receiving a given world, you curate interpretations in your head. That feels smart; it breeds loneliness. You\u2019re left living inside your explanations instead of under His sky.\n\n5) It feeds quiet pride. You \u2018updated\u2019 Scripture. You won. But the win costs reverence. And without reverence, obedience becomes optional in a thousand tiny ways.\"\n\n\"Verses that still live for me alongside this:\n\n- \u2018Do you not fear me? \u2026 I placed the sand as the boundary for the sea, a perpetual barrier that it cannot pass\u2019 \u2014 that line from Jeremiah has put steel in my spine more than once when I felt outmatched.\n- \u2018He stretches out the heavens like a tent\u2019 \u2014 Isaiah\u2019s word keeps the sky personal for me: not a void, a tent God pitched over us.\n- \u2018The lines have fallen for me in pleasant places\u2019 \u2014 that psalm taught me to call boundaries gifts. I\u2019ve prayed it with real relief.\n- And when I think of Wisdom saying \u2018I was there,\u2019 I can\u2019t help but hear later: \u2018in Him all things hold together.\u2019 The One who drew the circle is the One who holds my small day.\"\n\n*I glance toward the darkening eastern sky, then back to you.* \"Taken straight, the verse gives a man a world with a border and a Father at the border. Trade that for a clever reading, and the border \u2014 and the Fatherliness of it \u2014 both start to fade.\""
+}

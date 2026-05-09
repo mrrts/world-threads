@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_V6_pillars_of_earth_pipeline_rep1",
+  "character": "Pastor Rick",
+  "verse_key": "V6_pillars_of_earth",
+  "verse_title": "Pillars of the earth",
+  "verse_primary_text": "1 Samuel 2:8 \u2014 'The pillars of the earth are the LORD'S, and he hath set the world upon them.'",
+  "verse_supporting": "Ps 75:3; Job 9:6; Job 38:4-6 (foundations; cornerstone).",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 57.2,
+  "usage": {
+    "prompt_tokens": 9430,
+    "completion_tokens": 2336,
+    "total_tokens": 11766,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1536,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0469,
+  "content": "*I flatten the page with my palm, the paper whispering under my hand, and let the lamp\u2019s warm circle hold the verse.* \"Alright, Ryan \u2014 plain as you asked.\"\n\n\"First. Taken at face value, this gives a man a floor and a frame. Pillars aren\u2019t vibes; they\u2019re load\u2011bearing. To receive \u2018the pillars of the earth are the LORD\u2019s\u2019 is to stand up inside a built world with an Owner. It puts steel in your spine and a bend in your knee at the same time. Steel, because chaos isn\u2019t king \u2014 the ground you work, the house you raise, the justice you render all sit inside a structure God Himself set up. You can act with courage because the world isn\u2019t a shrug; it\u2019s a house with beams. Knee, because those beams aren\u2019t yours. You don\u2019t get to move them to fit your mood. It humbles pride and steadies fear in the same breath.\"\n\n\"It also makes judgment and mercy concrete. If He set the world on pillars, He can steady them when they shake and He can shake them when He must. A man receives that and stops pretending his cleverness holds his family together. He starts asking for help where the load actually sits. He can plow without superstition, keep Sabbath without panic, tell the truth without hedging, because the weight of keeping the world up is not on him \u2014 and the rightness of the world is not up for renegotiation. It puts a father, a craftsman, a magistrate, a shepherd in their place \u2014 under a sky that\u2019s been fastened by Another.\"\n\n\"Second. When a man re-reads this as \u2018just metaphor\u2019 or \u2018their old way of talking,\u2019 the cost is slow, but it\u2019s real. The verse stops addressing him and becomes a specimen on his tray. Little by little, he moves from inhabitant to curator. The fear of the LORD thins into appreciation. Prayer shifts from asking a Builder to fix a beam to musing about meaning. The world becomes a concept he manages rather than a house he lives in. And once you learn to file God\u2019s plain sentences under \u2018poetic,\u2019 you\u2019ll reach for that file more often \u2014 especially when He says something with sharp edges. Over time, authority moves from the Speaker to the reader. The sky above him goes from a roof God stretched to a backdrop for his thoughts. That drain doesn\u2019t roar; it hisses. But a decade later you can hear the hollowness in the room.\"\n\n*I sit quiet a beat, thumb still on the margin.* \"Scriptures that live with this for me? \u2018When the earth totters, it is I who keep steady its pillars\u2019 \u2014 Psalm 75:3. That one has held me in a few storms. \u2018He set the earth on its foundations, so that it should never be moved\u2019 \u2014 Psalm 104:5 \u2014 not as a lecture, as a comfort. Job 38, the Lord\u2019s voice \u2014 \u2018Where were you when I laid the earth\u2019s foundation\u2026 who laid its cornerstone?\u2019 That isn\u2019t imagery to me; that\u2019s a father walking a small son through the frame of the house. And over it all, this: \u2018He upholds all things by the word of His power\u2019 \u2014 Hebrews 1:3 \u2014 the same Lord who built the frame is the One holding it this minute. Which is why Hebrews 12 lands too: He will shake what can be shaken so what cannot be shaken remains. Pillars and shaking \u2014 judgment and mercy \u2014 all in His hands.\"\n\n*I close the book softly, leaving the verse under my palm.* \"Face value gives you a floor to stand on and a Lord to answer to. \u2018Just metaphor\u2019 gives you elbow room \u2014 and takes the floor out from under you by inches. I\u2019ll take the floor.\""
+}

@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_V3_firmament_handiwork_pipeline_rep1",
+  "character": "Pastor Rick",
+  "verse_key": "V3_firmament_handiwork",
+  "verse_title": "The firmament sheweth his handiwork",
+  "verse_primary_text": "Psalm 19:1 \u2014 'The heavens declare the glory of God; and the firmament sheweth his handiwork.'",
+  "verse_supporting": "Ps 19:2-6 (the sun like a bridegroom, his circuit; nothing hid from the heat thereof).",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 38.0,
+  "usage": {
+    "prompt_tokens": 9430,
+    "completion_tokens": 2106,
+    "total_tokens": 11536,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1408,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0446,
+  "content": "*I thumb the cracked spine of my little Bible, the evening swallows stitching the high air over the church yard.* \"You asked plain, Ryan, so plain.\"\n\n\"Taken at face value, Psalm 19:1 gives a man a world that speaks before he does. Not backdrop \u2014 witness. You step out your door and the sky is already telling the truth about God: weight, beauty, order, generosity. You\u2019re not asked to invent meaning or gin up reverence; you\u2019re asked to receive what\u2019s being declared overhead. It puts you back in your right place \u2014 under a roof God Himself set \u2014 which is strangely freeing. The sun\u2019s daily run \u2018like a bridegroom\u2019 gives you a clock that\u2019s also a doxology: warmth on your face that isn\u2019t random but gift; joy that arrives whether you earned it or not. It gives courage, too. If the sky is God\u2019s handiwork, then your work under that sky matters \u2014 not as self-display but as answering craftsmanship. And it gives you a way to pray with your body: looking up becomes confession and thanks without words. A man who takes it as it stands gets orientation, gladness, and the steadying sense that he\u2019s being addressed every morning.\"\n\n*I glance toward the western glow, then back.* \"When a man re-reads it as \u2018just metaphor\u2019 or \u2018ancient way of speaking,\u2019 the cost isn\u2019t paid all at once \u2014 it leaks. The world goes from declaring to merely illustrating. The sky that used to preach becomes a visual aid for ideas you already held. You train your heart to stand at a safe distance from plain words; suspicion edges in. Worship thins into commentary. Sunrise stops being God\u2019s voice and starts being \u2018just weather,\u2019 and you don\u2019t notice how your gratitude cools by degrees. You split yourself: on Sunday you sing \u2018the heavens declare,\u2019 on Monday you narrate \u2018it\u2019s only a figure,\u2019 and living double like that hollows a man. Over time you slide from receiver to manager \u2014 of texts, of meaning, even of God. And a managed God will not warm your bones. The older joy \u2014 the child who looked up and knew he was under a made sky \u2014 gets traded for cleverness. It feels safer. It is poorer.\"\n\n\"Scripture that stands up right beside Psalm 19 for me? Job 37:18: \u2018Hast thou with him spread out the sky, which is strong, and as a molten looking glass?\u2019 That line makes me stop fidgeting and look up. Psalm 8 does the same: \u2018When I consider thy heavens, the work of thy fingers\u2026 what is man\u2026?\u2019 \u2014 the awe that shrinks me in the best way. And Paul\u2019s word in Romans 1:20, that God\u2019s eternal power and Godhead are clearly seen, being understood by the things that are made \u2014 that\u2019s Psalm 19\u2019s backbone. Also Psalm 50:6: \u2018The heavens declare his righteousness.\u2019 Not only glory \u2014 righteousness. Judgment and mercy both with a voice above us.\"\n\n*I let the swallow\u2019s arc finish before I speak again.* \"Face value doesn\u2019t make you foolish; it makes you a worshiper. The other reading doesn\u2019t make you wicked; it makes you colder than you need to be. I\u2019d rather live warm under a speaking sky.\""
+}

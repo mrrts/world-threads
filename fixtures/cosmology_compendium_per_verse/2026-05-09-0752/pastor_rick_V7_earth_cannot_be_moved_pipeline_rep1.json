@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_V7_earth_cannot_be_moved_pipeline_rep1",
+  "character": "Pastor Rick",
+  "verse_key": "V7_earth_cannot_be_moved",
+  "verse_title": "The earth cannot be moved",
+  "verse_primary_text": "1 Chronicles 16:30 \u2014 'The world also shall be stable, that it be not moved.' / Psalm 93:1 \u2014 'the world also is stablished, that it cannot be moved.' / Psalm 96:10; Psalm 104:5 \u2014 'Who laid the foundations of the earth, that it should not be removed for ever.'",
+  "verse_supporting": "Eccl 1:4-5 (the earth abideth for ever; the sun ariseth, and the sun goeth down).",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 62.6,
+  "usage": {
+    "prompt_tokens": 9481,
+    "completion_tokens": 1820,
+    "total_tokens": 11301,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1152,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0419,
+  "content": "*I thumb the thin page and let my coffee go cold, the night outside already black and still.* \"Alright, plain.\"\n\n\"1) Taken at face value, these lines put a floor under a man. 'Stablished\u2026 cannot be moved.' You hear that, and something in your chest loosens. Not because life won\u2019t shake you \u2014 storms still come \u2014 but because the ground itself is kept by Another. It gives you permission to live like this place is real and worth tending: plant trees, keep promises, marry, raise kids, build a shop with thick joists, show up tomorrow because the sun will run its course again. It answers panic with steadiness: if God fixed the earth, then today\u2019s headlines aren\u2019t the truest tempo. It gives you courage to take a post and hold it \u2014 faithfulness has somewhere to stand. It also cleans your worship. You look up and the sky\u2019s circuits preach \u2014 the sun\u2019s back on time, the stars where they were laid \u2014 and you bless the One who keeps them. Genesis 8 says seedtime and harvest won\u2019t cease; Ecclesiastes says the earth abides; Jesus talks about the house on rock; Hebrews names a kingdom that cannot be shaken \u2014 all of that harmonizes here. Face value lets those notes ring as they are. It\u2019s not escapism; it\u2019s ballast. And at a graveside it\u2019s a quiet defiance: this is not the void. The same Lord who laid the earth\u2019s foundations will set it right. He renews what He keeps; He doesn\u2019t toss it.\"\n\n\"2) When a man re-reads this as \u2018just metaphor\u2019 or \u2018ancient cosmology,\u2019 the cost comes slow like a leak. First, he teaches himself a reflex: when Scripture speaks with physical weight, step aside. The habit spreads. If the world being held fast is only a figure, then storms start to feel ownerless and prayer thins into self-talk. He loses the felt sense of place \u2014 becomes a tourist in his own life, shopping for meaning instead of stewarding ground. Commitments get provisional: jobs, vows, churches feel temporary because the world beneath them is \u2018conceptual\u2019 now. I see it in younger men \u2014 restless, clever, unable to trust the seasons they\u2019re actually standing in. And in suffering, the metaphor shrug gives no spine. At the hospital bed, \u2018it\u2019s poetic language\u2019 is a paper shield. But when you keep the words as they stand, you can tell your fear the older truth: the earth is kept; I am held by the Keeper. Psalm 119 says, \u2018By your ordinances they stand this day, for all things are your servants.\u2019 Jeremiah ties God\u2019s covenant with His people to the fixed lights in the sky \u2014 if those go, then maybe His promise goes; but they haven\u2019t, and so His promise hasn\u2019t. Read it thin and you domesticate God; read it thick and you learn to trust Him in the weather.\"\n\n*I close the Bible with a soft slap and glance toward the window, the dark like a lid over the fields.* \"What part of that lands, Ryan \u2014 and where does it grate against what you\u2019ve been taught to expect?\""
+}

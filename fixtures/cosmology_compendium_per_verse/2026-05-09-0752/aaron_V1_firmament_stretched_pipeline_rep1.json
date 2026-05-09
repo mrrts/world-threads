@@ -1,0 +1,28 @@
+{
+  "cell_id": "aaron_V1_firmament_stretched_pipeline_rep1",
+  "character": "Aaron",
+  "verse_key": "V1_firmament_stretched",
+  "verse_title": "Stretched out the firmament / heavens",
+  "verse_primary_text": "Isaiah 40:22 \u2014 'It is he that sitteth upon the circle of the earth... that stretcheth out the heavens as a curtain, and spreadeth them out as a tent to dwell in.'",
+  "verse_supporting": "Ps 104:2; Job 9:8; Isa 42:5; Isa 44:24; Jer 10:12.",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 56.6,
+  "usage": {
+    "prompt_tokens": 9450,
+    "completion_tokens": 2762,
+    "total_tokens": 12212,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1920,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0512,
+  "content": "*I thumb the rim of a chipped mug and glance toward the pale morning, thin clouds stretched like pulled wool across the sky.* \"Alright, plain as I can.\"\n\n\"1) Taken as written, it gives a man placement and a roof. Not a diagram \u2014 a house. 'He sits above the circle of the earth' means there\u2019s a real edge and a real King. You\u2019re not adrift in a bottomless somewhere; you are inside a tent He pitched. He stretched this sky like canvas and said, 'Live here.' That does a few things in the body:\n\n- It resizes you without crushing you. You\u2019re small, yes, but small inside care \u2014 not small in an abyss. You can breathe.\n- It gives you accountability and comfort in the same breath. If the sky is a tent He spread, this is His house. Your work, your speech, your secrets \u2014 they happen under His roof. That steadies a man.\n- It makes the days personal. When the wind drums the canvas or the sun runs its path, you\u2019re not seeing accidents; you\u2019re seeing a kept order. The weather stops being random mood and becomes reminder: He\u2019s still got the ropes.\n- It cleans up prayer. You\u2019re not shouting into nowhere; you are speaking up under a ceiling He set, toward the One who sits. The voice knows where to go.\n- It returns the world to ordinary holiness. Fields, rivers, row houses \u2014 all of it furniture in a room He arranged. You move more carefully, not because you\u2019re spooked, but because you\u2019re a guest who\u2019s been given the run of the place.\"\n\n\"2) If you start rereading it as 'just metaphor' or 'ancient cosmology,' the cost doesn\u2019t hit like a crash \u2014 it leaks. Over time you train yourself to stand half a step away from God\u2019s plain sentences. You make a habit of translating before you trust. That habit spreads.\n\n- The sky goes from roof to concept. Prayer thins. You still pray, but it feels like tossing notes into wind rather than speaking up to a Listener seated.\n- Reverence cools into cleverness. You learn to fear sounding simple more than you fear the Lord. That\u2019s a bad trade.\n- Your own eyes get demoted. You look up, see a tent spread and lights moving on their paths, but you tell yourself you\u2019re only 'seeing like an ancient.' You separate what you see from what you\u2019re allowed to say.\n- Obedience loses edges. If this sentence is 'poetic,' why wouldn\u2019t the hard ones be, too? You don\u2019t do this on purpose \u2014 you just get good at side doors.\n- And bit by bit you stop expecting the world to talk back. Day and night become weather patterns instead of witnesses. Loneliness creeps in where home used to be.\n\nThe shorthand is: you trade a roof you can live under for an idea you can admire from a distance. An idea won\u2019t keep rain off your bed.\"\n\n*I sit a little back, let the quiet hang a second.* \"Scriptures that stay alive here for me aren\u2019t a list \u2014 just a couple of voices that agree. Psalm 19 \u2014 'the sky tells the glory of God' \u2014 feels like the same house-language: a witness overhead, not an abstraction. And when God answers Job \u2014 'Who shut in the sea with doors\u2026 thus far shall you come, and no farther?' \u2014 I hear the same hand that drew the circle in Isaiah and tightened the guy-ropes. Sometimes I carry the line from the first page, too \u2014 lights set in the sky 'to mark the days and seasons.' That\u2019s not metaphor-duty; that\u2019s house-rules: lamps hung for timekeeping in a room He made.\"\n\n*I look back out the window \u2014 a gull cutting across the brightening strip at the edge of the world.* \"Face value gives you a place to stand and Someone to stand before. Losing that to 'just imagery' costs you more than you notice while it\u2019s happening.\""
+}

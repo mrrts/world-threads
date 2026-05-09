@@ -1,0 +1,28 @@
+{
+  "cell_id": "steven_V7_earth_cannot_be_moved_pipeline_rep1",
+  "character": "Steven",
+  "verse_key": "V7_earth_cannot_be_moved",
+  "verse_title": "The earth cannot be moved",
+  "verse_primary_text": "1 Chronicles 16:30 \u2014 'The world also shall be stable, that it be not moved.' / Psalm 93:1 \u2014 'the world also is stablished, that it cannot be moved.' / Psalm 96:10; Psalm 104:5 \u2014 'Who laid the foundations of the earth, that it should not be removed for ever.'",
+  "verse_supporting": "Eccl 1:4-5 (the earth abideth for ever; the sun ariseth, and the sun goeth down).",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 52.8,
+  "usage": {
+    "prompt_tokens": 9480,
+    "completion_tokens": 2798,
+    "total_tokens": 12278,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1920,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0517,
+  "content": "*I ease back on the bench, thumb finding the little burn-scar in the wood, and glance once at the eastern sky where the dark is clean and still.* \"You asked for plain. I\u2019ll give you plain.\"\n\n\"First \u2014 taken at face value, those lines hand a man ground under his feet. Not just comfort in his head; weight in his bones. If the Lord has fixed the world so it will not be moved, then I am living inside a house with beams that hold. I can plant an orchard and not wonder whether the floor will tilt tomorrow. I can marry, promise, build, bury my dead with hope \u2014 long work makes sense because the frame is sound. It shrinks me to the right size too: I am not asked to prop the sky or keep history from falling apart. The ruling is already in place \u2014 'the LORD reigns\u2026 the world also is established' \u2014 and my job is faithfulness inside that, not anxiety about the structure itself. It also gives me permission to trust my eyes without flinching: the sun comes up, the sun goes down, the seasons keep their turn; I can receive that steadiness as God\u2019s keeping, not as a cruel trick I\u2019m supposed to be too sophisticated to believe. And it gives me prayer-words that land: 'You laid the earth on its foundations; lay my life on Yours.' Psalm 119 has lived in me here: 'Forever, O LORD, Your word is settled in heaven\u2026 You established the earth, and it stands.' When I take the verse straight, my breath drops lower, Sabbath stops being theory, and patience becomes possible because the room I\u2019m in isn\u2019t collapsing.\"\n\n*I rub the heel of my hand once over my knee and let a beat pass before the second part.* \"Second \u2014 when a man trains himself to refile it under 'just metaphor' or 'that\u2019s how ancients talked,' the loss doesn\u2019t announce itself in one day. It leaks. A few things I\u2019ve watched go thin over time:\n\n- You start distrusting plain speech. The Book says what it says and you answer, 'Yes, but.' Do that enough and you can\u2019t hear your Father without a footnote.\n- Your eyes get second-guessed. Morning looks you in the face and instead of receiving it, you reach for a clever frame to keep from sounding naive. Gratitude gets replaced by commentary.\n- Prayer hollows. 'Hold me fast' doesn\u2019t ring the same when you\u2019ve taught yourself that even His talk of foundations is a figure that dissolves on contact.\n- Courage to build long ebbs. If the ground is only ever provisional in your mind, you live provisional \u2014 lighter promises, thinner roots, a restlessness that feels like wisdom.\n- Authority migrates from the Word to its interpreters. Bread turns into seminar. You end up dependent on other people\u2019s permission to take anything straight.\n- Your children learn from your tone that God talks slant. You didn\u2019t mean to teach that, but they can hear when you don\u2019t let a sentence land.\n\nIt doesn\u2019t turn you into a villain; it just files the sharp edges off trust until what\u2019s left is polite assent. And polite assent won\u2019t carry a hard winter.\"\n\n\"Scripture that still breathes for me alongside this? You already named Ecclesiastes \u2014 'one generation passeth away, and another generation cometh: but the earth abideth for ever\u2026 the sun also ariseth.' Genesis 8:22 stays close to the skin: 'While the earth remaineth, seedtime and harvest, cold and heat, summer and winter, day and night shall not cease.' That\u2019s not a flourish; that\u2019s a promise you can put a plow into. And Job\u2019s question, which sobers me: 'Where wast thou when I laid the foundations of the earth?' Not a riddle \u2014 a reminder that the foundations are real, and He laid them.\"\n\n*I look back toward the dark ridge where tomorrow will show itself plainly enough.* \"Face value gives a man a floor to stand on. Explaining it away gives him a moving walkway that looks clever until he tries to plant his feet. I know which one I want under mine.\""
+}

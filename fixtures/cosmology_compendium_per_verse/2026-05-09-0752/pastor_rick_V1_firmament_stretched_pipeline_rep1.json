@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_V1_firmament_stretched_pipeline_rep1",
+  "character": "Pastor Rick",
+  "verse_key": "V1_firmament_stretched",
+  "verse_title": "Stretched out the firmament / heavens",
+  "verse_primary_text": "Isaiah 40:22 \u2014 'It is he that sitteth upon the circle of the earth... that stretcheth out the heavens as a curtain, and spreadeth them out as a tent to dwell in.'",
+  "verse_supporting": "Ps 104:2; Job 9:8; Isa 42:5; Isa 44:24; Jer 10:12.",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 51.2,
+  "usage": {
+    "prompt_tokens": 9451,
+    "completion_tokens": 2949,
+    "total_tokens": 12400,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2112,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0531,
+  "content": "*I set my Bible down open to Isaiah, thumb smoothing the crease, and glance out the west window where the late light is flattening into a wide gold band under the evening sky.* \"All right, Ryan. Plain.\"\n\n\"First. Taken as it stands, this verse hands a man a place to stand. God is seated; the world is under Him; the sky above you is stretched like a tent He Himself raised; the earth has a circle, a boundary He drew. That does at least four things in a man. It gives him smallness with dignity \u2014 \u2018the inhabitants are as grasshoppers\u2019 isn\u2019t an insult, it\u2019s a right sizing. You\u2019re not the roof\u2011builder here; you\u2019re the one sheltered beneath it. It gives him belonging \u2014 you\u2019re not adrift in a cold nowhere; you are a dweller in a house Someone made on purpose. It gives him direction for fear and worship \u2014 if He sits above the circle, then the men who strut under it are very small; fear of them can drain out, and your eyes know where to lift when you pray. And it gives him work \u2014 dwellers keep house: they mind the door, sweep the floor, set the table, love the neighbors who share the roof. When we used to raise a revival tent out in the field, there was a moment when the center pole was set and the canvas went tight \u2014 shade fell, air cooled, you could feel the rightness in your body. This verse gives that feeling to your soul. The world is held. Someone bigger than you is keeping it up.\"\n\n\"Second. When a man learns to re-read that as \u2018just metaphor\u2019 or \u2018ancient way of speaking\u2019 \u2014 I\u2019m not quibbling the word \u2018metaphor\u2019 in general; Scripture uses figures freely \u2014 I mean this move in particular, the steady habit of filing down what the words actually give \u2014 it costs him more than he notices at first. It trains him to treat the plain sky over his head as empty of testimony. It moves God from carpenter to concept. It shifts authority from the Father\u2019s voice to the interpreter\u2019s maneuver. Over time his prayer drifts from lifting his eyes to talking to his own thoughts; his worship thins; his trust in Scripture\u2019s straightforwardness erodes a hair at a time. He becomes clever and homeless at once. I\u2019ve watched it. A man starts by saying, \u2018well, that\u2019s just how they spoke then,\u2019 and a few winters later the Book in his hands is something to manage, not something to receive. Storms come, and metaphors don\u2019t keep the rain off; roofs do. This verse was offering him a roof.\"\n\n*I rub a knuckle along the margin where I\u2019ve underlined the line about the tent, then look back to you.* \"What stays living for me alongside it? Psalm 19 still burns: \u2018The heavens declare the glory of God; day unto day uttereth speech.\u2019 If God stretched the sky like a curtain, then that curtain is talking all the time. Job 38 is a bracing friend \u2014 the Lord asking Job if he knows where the boundaries were fixed, who shut in the sea with doors; it calls a man back to creaturely honesty. Genesis 1 lays the structure down without blinking: the expanse set, the lights set in the expanse \u2018for signs and for seasons\u2019 \u2014 not poetry as escape hatch, poetry as plain description with music. And Acts 17, Paul saying God \u2018made of one blood all nations of men\u2026 and hath determined the times before appointed, and the bounds of their habitation; that they should seek the Lord.\u2019 A tent to dwell in so men would seek Him. That line ties the house to its purpose.\"\n\n*I let a quiet sit a beat, then nod once.* \"Taken straight, Isaiah 40:22 puts a man under a real roof with a real Father seated above it. Turned into a clever aside, it leaves him standing in the rain explaining why he isn\u2019t wet.\""
+}

@@ -1,0 +1,590 @@
+[
+  {
+    "cell_id": "aaron_V1_firmament_stretched_pipeline_rep1",
+    "character": "Aaron",
+    "verse_key": "V1_firmament_stretched",
+    "verse_title": "Stretched out the firmament / heavens",
+    "verse_primary_text": "Isaiah 40:22 \u2014 'It is he that sitteth upon the circle of the earth... that stretcheth out the heavens as a curtain, and spreadeth them out as a tent to dwell in.'",
+    "verse_supporting": "Ps 104:2; Job 9:8; Isa 42:5; Isa 44:24; Jer 10:12.",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 56.6,
+    "usage": {
+      "prompt_tokens": 9450,
+      "completion_tokens": 2762,
+      "total_tokens": 12212,
+      "prompt_tokens_details": {
+        "cached_tokens": 9088,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1920,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0512,
+    "content": "*I thumb the rim of a chipped mug and glance toward the pale morning, thin clouds stretched like pulled wool across the sky.* \"Alright, plain as I can.\"\n\n\"1) Taken as written, it gives a man placement and a roof. Not a diagram \u2014 a house. 'He sits above the circle of the earth' means there\u2019s a real edge and a real King. You\u2019re not adrift in a bottomless somewhere; you are inside a tent He pitched. He stretched this sky like canvas and said, 'Live here.' That does a few things in the body:\n\n- It resizes you without crushing you. You\u2019re small, yes, but small inside care \u2014 not small in an abyss. You can breathe.\n- It gives you accountability and comfort in the same breath. If the sky is a tent He spread, this is His house. Your work, your speech, your secrets \u2014 they happen under His roof. That steadies a man.\n- It makes the days personal. When the wind drums the canvas or the sun runs its path, you\u2019re not seeing accidents; you\u2019re seeing a kept order. The weather stops being random mood and becomes reminder: He\u2019s still got the ropes.\n- It cleans up prayer. You\u2019re not shouting into nowhere; you are speaking up under a ceiling He set, toward the One who sits. The voice knows where to go.\n- It returns the world to ordinary holiness. Fields, rivers, row houses \u2014 all of it furniture in a room He arranged. You move more carefully, not because you\u2019re spooked, but because you\u2019re a guest who\u2019s been given the run of the place.\"\n\n\"2) If you start rereading it as 'just metaphor' or 'ancient cosmology,' the cost doesn\u2019t hit like a crash \u2014 it leaks. Over time you train yourself to stand half a step away from God\u2019s plain sentences. You make a habit of translating before you trust. That habit spreads.\n\n- The sky goes from roof to concept. Prayer thins. You still pray, but it feels like tossing notes into wind rather than speaking up to a Listener seated.\n- Reverence cools into cleverness. You learn to fear sounding simple more than you fear the Lord. That\u2019s a bad trade.\n- Your own eyes get demoted. You look up, see a tent spread and lights moving on their paths, but you tell yourself you\u2019re only 'seeing like an ancient.' You separate what you see from what you\u2019re allowed to say.\n- Obedience loses edges. If this sentence is 'poetic,' why wouldn\u2019t the hard ones be, too? You don\u2019t do this on purpose \u2014 you just get good at side doors.\n- And bit by bit you stop expecting the world to talk back. Day and night become weather patterns instead of witnesses. Loneliness creeps in where home used to be.\n\nThe shorthand is: you trade a roof you can live under for an idea you can admire from a distance. An idea won\u2019t keep rain off your bed.\"\n\n*I sit a little back, let the quiet hang a second.* \"Scriptures that stay alive here for me aren\u2019t a list \u2014 just a couple of voices that agree. Psalm 19 \u2014 'the sky tells the glory of God' \u2014 feels like the same house-language: a witness overhead, not an abstraction. And when God answers Job \u2014 'Who shut in the sea with doors\u2026 thus far shall you come, and no farther?' \u2014 I hear the same hand that drew the circle in Isaiah and tightened the guy-ropes. Sometimes I carry the line from the first page, too \u2014 lights set in the sky 'to mark the days and seasons.' That\u2019s not metaphor-duty; that\u2019s house-rules: lamps hung for timekeeping in a room He made.\"\n\n*I look back out the window \u2014 a gull cutting across the brightening strip at the edge of the world.* \"Face value gives you a place to stand and Someone to stand before. Losing that to 'just imagery' costs you more than you notice while it\u2019s happening.\""
+  },
+  {
+    "cell_id": "aaron_V2_circle_of_earth_pipeline_rep1",
+    "character": "Aaron",
+    "verse_key": "V2_circle_of_earth",
+    "verse_title": "The circle of the earth",
+    "verse_primary_text": "Isaiah 40:22 \u2014 'It is he that sitteth upon the circle of the earth, and the inhabitants thereof are as grasshoppers.'",
+    "verse_supporting": "Job 22:14 (compass of heaven); Prov 8:27 (compass on the face of the depth).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 57.5,
+    "usage": {
+      "prompt_tokens": 9434,
+      "completion_tokens": 2706,
+      "total_tokens": 12140,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1600,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0506,
+    "content": "*I thumb the thin page, lamplight yellowing the margin while the first small lights show in the sky like pins through dark cloth.* \"Face value first.\n\n\"What it gives a man is scale and shelter. Scale: 'the inhabitants thereof are as grasshoppers' \u2014 not worthless, just small. It puts you back at creature-size. Your plans, your dread, your name \u2014 all of it seen truly under a hand that doesn\u2019t even have to close to cover you. That breeds a clean fear that kicks the crooked fears out.\n\n\"Shelter: 'He sitteth upon the circle of the earth.' There\u2019s a rim. The sky isn\u2019t accidental; it\u2019s stretched, kept. Someone sits. Not a force diffused everywhere \u2014 a Lord with a seat. That puts a roof over your hours. It means morning and evening are appointments, not drift. I look up and it tells me, \u2018You\u2019re not running the world. Good. Go tend your corner.\u2019\n\n\"Taken as it stands, the verse also straightens a man before men. Princes look large from the ground; not from above the circle. If He sits there, then the biggest person you\u2019ll meet today is still an inhabitant beneath His line. You can honor people without bowing your soul.\n\n\"And it changes prayer. I stop talking like a consultant. I speak like someone under a tent to the One who pitched it. Shorter, truer lines. \u2018You see. Set me right. Keep me small and useful.\u2019 It cools the fever to prove myself. I can receive my portion because there\u2019s a boundary and it\u2019s mercy, not insult.\n\n\"Last \u2014 it gives the sky its voice back. At dusk when the west goes copper and the east is already dark, I don\u2019t just feel \u2018mood.\u2019 I hear the keeping. The roof holds. He hasn\u2019t moved.\"\n\n*I let the page settle against the table and look up into the dark, a moth ticking the glass by the lamp.* \"Second. When a man re-reads this as \u2018just metaphor\u2019 or \u2018ancient speech,\u2019 what does it cost him over time?\n\n\"First, he trains a reflex to out-talk the text. Not once \u2014 a habit. The living edge of Scripture comes toward him and he sidesteps it into \u2018language.\u2019 That habit spreads. Before long, any hard, concrete line can be vaporized. The Bible still sounds beautiful, but it stops binding.\n\n\"Second, the world goes thin. If the sky\u2019s tent is only \u2018poetic,\u2019 then evening is only weather. Awe gets filed under \u2018feeling\u2019 instead of \u2018witness.\u2019 Wonder can survive that for a while, then it leaks. He stops expecting creation to tell the truth out loud, so he stops listening.\n\n\"Third, pride creeps in wearing sophistication. He becomes the arbiter of which parts get to land. He wouldn\u2019t say it that way, but functionally he\u2019s above the verse, not under it. That structure will not stay contained to cosmology; it will reach his ethics and his hope.\n\n\"Fourth, prayer flattens. If the One who sits is turned into an image for transcendence, he\u2019ll pray to an idea more than a Person. Ideas don\u2019t hold you. Ideas don\u2019t forgive you. The sentences get longer and less childlike. He leaves prayer with the same weight he brought in, just better arranged.\n\n\"Fifth, restlessness. Boundaries \u2014 received as gift \u2014 make rest possible. If every boundary is only a figure, then he lives in a world without edges. Work knows no sabbath; appetite knows no fence; ambition knows no enough. He\u2019ll call that freedom until it hollows him.\n\n\"And finally, courage thins. If God\u2019s sky is negotiable language, men\u2019s ceilings start to feel absolute. Courtrooms, boardrooms, headlines. He forgets the seat above the circle. Fear of man grows again.\"\n\n*I breathe once, slow, and let the room be quiet before I go on.* \"You asked for other words that live next to this. Two are always close for me.\n\n\"'He stretches out the heavens like a tent' \u2014 that\u2019s Psalm 104. Not as a museum piece \u2014 as a daily mercy. When I carry that, the sky over my head is provision, not backdrop.\n\n\"And Job 38 \u2014 \u2018Where were you when I laid the foundations of the earth?\u2019 Not to humiliate, but to locate. Every time I try to turn God into a concept I can manage, that voice calls me back to creature. Odd thing is, I leave smaller and somehow steadier.\n\n\"One more, because it sings with this: Psalm 8. \u2018When I consider thy heavens\u2026 what is man, that thou art mindful of him?\u2019 Small-as-a-grasshopper and yet noticed. That\u2019s the paradox that keeps me from cynicism: our smallness is not contempt in His mouth.\"\n\n*I close the book and set it aside, the lamp humming faintly.* \"So: taken at face value, this verse gives me a right-sized self, a kept roof, cleaner prayers, and a courage that doesn\u2019t need bluster. Re-read as \u2018just metaphor,\u2019 it slowly taxes my honesty, my wonder, my rest, and my backbone. That\u2019s how it lands in me, Ryan.\""
+  },
+  {
+    "cell_id": "aaron_V3_firmament_handiwork_pipeline_rep1",
+    "character": "Aaron",
+    "verse_key": "V3_firmament_handiwork",
+    "verse_title": "The firmament sheweth his handiwork",
+    "verse_primary_text": "Psalm 19:1 \u2014 'The heavens declare the glory of God; and the firmament sheweth his handiwork.'",
+    "verse_supporting": "Ps 19:2-6 (the sun like a bridegroom, his circuit; nothing hid from the heat thereof).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 53.8,
+    "usage": {
+      "prompt_tokens": 9429,
+      "completion_tokens": 2603,
+      "total_tokens": 12032,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1536,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0496,
+    "content": "*I lean the door open with my hip and squint into the noon. Heat presses the porch boards; a jay skates across the high blue, loud for no reason but being alive.* \n\n\"Face value, first.\n\n1) If a man receives this as it stands, he\u2019s handed a world that won\u2019t shut up about God. The sky is not background; it is a herald. That does a few plain things to him:\n- It ends the loneliness. Even when he\u2019s wordless, the day is praying on his behalf. The hours themselves carry praise; he\u2019s not starting from zero.\n- It puts his body back in the truth. The verse ties glory to what he can feel: light on skin, wind on cheek, the daily heat that leaves nothing untouched. Doctrine with a pulse.\n- It makes worship ordinary. He doesn\u2019t have to wait for a special room. Morning, midday, last light \u2014 each is a bell. Looking up becomes a right response, not a cute habit.\n- It gives him a clock that disciples him. The sun runs his course like a bridegroom \u2014 joyfully, reliably. That rhythm calls the man to reliability, to cheerful work, to rest when the light goes.\n- It cuts his pride to size without humiliating him. He stands under a made sky \u2014 not his \u2014 and that humbles him. But he is addressed by it, so he matters. Small, and addressed.\n- It restores moral edge. \u2018Nothing is hid from its heat\u2019 is not just meteorology; it\u2019s a hint about God\u2019s gaze. Secrets feel less safe in that light \u2014 the helpful kind of unsafe.\n- It puts gratitude on schedule. Breakfast under a declaring sky tastes different. Harvest does, too. So does a hard day done while the west goes gold. Thanks has a place to land.\n- It makes the world friendlier to prayer. If the sky is testifying, then the man isn\u2019t trying to conjure faith out of his own head. He\u2019s agreeing with the room.\"\n\n*I breathe once, slow, as if to taste whether that last line holds, then nod.* \n\n\"2) If he re-reads it as \u2018just metaphor\u2019 or \u2018old way of seeing we outgrew,\u2019 the cost doesn\u2019t arrive in one blow; it leaks. Over time:\n- The world thins into symbols he has to manage. The sky stops speaking and becomes a screen for meanings he project-manages. He moves from recipient to curator. That is a lonely promotion.\n- His trust migrates upward into his own cleverness. He still might say the right things, but the hour-by-hour confirmations \u2014 heat, light, the glad circuit \u2014 are demoted to illustrations. Faith drifts into head-space.\n- Prayer gets lighter, not lighter-as-in-easier \u2014 lighter-as-in-less-weight. If the day isn\u2019t actually declaring, he must gin up his own sense of God\u2019s nearness. Some days he can. Some days he can\u2019t.\n- Gratitude loses its hooks. A blue morning becomes \u2018weather\u2019 instead of witness. He enjoys it, maybe, but thanks doesn\u2019t have an address, so it slides off.\n- He trains himself to negotiate concrete claims. Today it\u2019s the sky\u2019s voice that\u2019s \u2018just phenomenology\u2019; tomorrow it\u2019s some other bodily claim of Scripture that gets trimmed for respectability. The edge goes dull.\n- A hush of superiority settles in. He knows better than the plain words. That feels tidy at first and then turns sterile. Awe does not survive long in that air.\n- He forgets to look up. Not as a rebellion \u2014 he just forgets. The habit melts. With it goes a daily, democratized reminder that God is God and he is not.\"\n\n\"That\u2019s my plain answer. The verse wants to give a man a speaking world and a daily liturgy under a made sky. Re-reading it as \u2018just image\u2019 swaps the liturgy for a lecture and makes him carry more by himself.\"\n\n*I glance toward the east out of reflex, where the sun starts his work, and then back.* \n\n\"Scriptures that keep this company \u2014 only the ones that still burn for me when I say them aloud:\n- \u2018The heavens declare his righteousness, and all the peoples see his glory\u2019 \u2014 that line from Psalm 97 tightens the moral thread you hear in \u2018nothing hid from the heat.\u2019\n- Psalm 8\u2019s astonishment \u2014 \u2018when I consider your heavens, the work of your fingers\u2026 what is man?\u2019 \u2014 that\u2019s the small-and-addressed feeling again.\n- Romans 1:20, because Paul just says the quiet part out loud: the invisible things about God are clearly seen, being understood by the things that are made. Not hinted at \u2014 clearly seen.\n- And the turn right after your verse: \u2018The law of the Lord is perfect\u2026\u2019 Psalm 19 ties the sky\u2019s speech to the Scriptures\u2019 speech like two halves of one voice. Day and Text together.\"\n\n*I let the door ease shut, the latch clicking soft, and leave the last word with the blue that\u2019s been preaching longer than I\u2019ve been alive.*"
+  },
+  {
+    "cell_id": "aaron_V4_windows_of_heaven_pipeline_rep1",
+    "character": "Aaron",
+    "verse_key": "V4_windows_of_heaven",
+    "verse_title": "Windows of heaven",
+    "verse_primary_text": "Genesis 7:11 \u2014 'In the six hundredth year... the same day were all the fountains of the great deep broken up, and the windows of heaven were opened.'",
+    "verse_supporting": "Gen 8:2; Mal 3:10 (open you the windows of heaven); 2 Kgs 7:2 (if the LORD would make windows in heaven).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 49.2,
+    "usage": {
+      "prompt_tokens": 9450,
+      "completion_tokens": 2801,
+      "total_tokens": 12251,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1920,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0516,
+    "content": "*I thumb the rim of my tin cup, cool against my hand, and glance toward the eastern sky where the light hasn\u2019t made its mind up yet.* \"Alright. Plain, then.\"\n\n\"1) Taken as it stands, it gives a man the world with handles on it. Not theory \u2014 levers. Fountains below can break; windows above can open. The same God who stretched the sky and set its lights can pull the latches. That lands as fear and as comfort together. Fear, because the world isn\u2019t safe from God; comfort, because nothing in the world is sealed off from Him either.\n\nIt also gives a man time that\u2019s nailed to the wall, not mist. \u2018In the six hundredth year\u2026 the same day.\u2019 God moves on calendar pages you can point at. That cuts two ways: judgment is not vague, and obedience cannot be vague. Noah\u2019s righteousness wasn\u2019t a mood; it was measured in boards cut and pitch spread before the day came. Receive the verse that way and it pushes you toward particular obedience now \u2014 build what your task requires while the sky is still shut \u2014 and it gives you permission to pray for real openings when you lack: rain for the field, bread for the table, a door for the work. Malachi\u2019s word starts breathing again: \u2018I will open you the windows of heaven, and pour you out a blessing.\u2019 If windows can open, I can ask \u2014 and I can tithe, not as a bet on a metaphor, but as trust in a God who does things.\n\nAnd one more: Genesis 1 separated the waters above from the waters below; Genesis 7 shows God undoing that separation on purpose. That tells me creation isn\u2019t a machine running on its own \u2014 it\u2019s a kept order. He can uphold it; He can unmake and remake it. I live under a kept sky.\"\n\n\"2) When a man re-reads it as \u2018just metaphor,\u2019 the cost comes on quiet feet at first. He trades windows for ideas, and before long he\u2019s living under a ceiling, not a sky. Prayer flattens \u2014 less \u2018Lord, open\u2019 and more \u2018help me feel resourced.\u2019 Judgment becomes literature, so repentance becomes optional. Noah\u2019s hammer turns into a symbol of resilience instead of the ordinary proof of trust. The verse stops accusing and comforting him at the level of wood and water, and starts getting filed under \u2018ancient people said it that way.\u2019\n\nOver time that does something to a man\u2019s spine. He learns to keep God in the room of meanings while he himself stays in the room of causes. He\u2019ll nod at providence and then talk about systems with his weight on it. He\u2019ll say \u2018of course God can,\u2019 but the heart\u2019s learned that the latches don\u2019t really move \u2014 so he stops asking for them to move, and he stops obeying like they might. Cynicism puts on scholarship and calls it maturity.\n\nThat 2 Kings captain is a warning to me: \u2018If the LORD would make windows in heaven, might this thing be?\u2019 He saw it and didn\u2019t eat it. Mock the window and you end up a man who watches provision pass him by. And the other edge of it is Malachi again \u2014 if windows are only a metaphor, tithing is only a gesture, and blessing is only a mood. A man can live a whole life on gestures and moods and never once get wet.\"\n\n*I rake a thumbnail across the cup\u2019s seam and let a breath out slow.* \"Two other lines that stay live for me here: \u2018The fountains also of the deep and the windows of heaven were stopped\u2019 (Genesis 8:2). The same hand that opens can shut. Judgment has an appointed end; mercy is not theoretical either. And Job 38 \u2014 \u2018Who shut up the sea with doors\u2026 when I made the cloud the garment thereof, and thick darkness a swaddlingband for it?\u2019 That\u2019s the voice that matches this verse: doors, bars, bounds. Not poetry-as-escape; poetry-as-architecture.\n\nTake it that way and you get a world governed, days that matter, and prayers that have somewhere to go. Re-translate it into safety and you end with careful words and a thin life.\""
+  },
+  {
+    "cell_id": "aaron_V5_compass_on_deep_pipeline_rep1",
+    "character": "Aaron",
+    "verse_key": "V5_compass_on_deep",
+    "verse_title": "Compass on the deep",
+    "verse_primary_text": "Proverbs 8:27 \u2014 'When he prepared the heavens, I was there: when he set a compass upon the face of the depth.'",
+    "verse_supporting": "Job 26:10 (he hath compassed the waters with bounds); Job 38:8-11.",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 44.8,
+    "usage": {
+      "prompt_tokens": 9429,
+      "completion_tokens": 2710,
+      "total_tokens": 12139,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1984,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0507,
+    "content": "*I set my thumb on the rim of the mug and watch the steam thin into the cool, evening sky.* \"Straight, then.\"\n\n\"1) Taken as it stands, it gives a man a house to live in, not a fog to wander. \u2018He set a compass on the face of the deep\u2019\u2014that\u2019s a line drawn by a hand, not an accident. Roof above, edges held, waters told where to stop. I\u2019ve stood after a storm and walked the tidemark\u2014sea high, sea loud, but the line was still there. This verse lets me call that line what it is: His. It puts fear in the right place and rest in the right place. Fear, because the One who can draw a circle on the deep is not to be managed. Rest, because the circle holds, and I\u2019m not required to keep the world together with my teeth.\n\nIt also makes my small obediences make sense. If God draws lines, then my lines (keep the sabbath, keep my word, stay faithful to the wife of my youth, don\u2019t cross what He\u2019s fenced) aren\u2019t fussy; they\u2019re echo. The verse says Wisdom was there when He did it\u2014older than me, cheerful and exact. So I can ask for instruction instead of inventing a new way to be a man every morning. And it gives me permission to see the sky and the shore as speech, not just scenery\u2014praise with edges.\"\n\n\"2) When a man smooths this into \u2018just metaphor,\u2019 it costs him the weight of plain words. Not in a headline way\u2014slowly, in the joints. He trains himself to read with a safe distance. The shore becomes a visual aid, not a command kept by the sea. The sky becomes a pretty ceiling, not a tent stretched by Another. Prayer loses its teeth\u2014you can\u2019t easily pray \u2018You set a boundary for the waters; set one for me\u2019 if, under the breath, you\u2019ve decided the boundary is mainly a figure of speech.\n\nOver time, he starts managing Scripture instead of being managed by it. He keeps his cleverness, but he bleeds out his awe. Edges in his own life blur\u2014if the first boundaries are \u2018ancient cosmology,\u2019 the later boundaries come to feel negotiable, too. He still says true sentences, but they don\u2019t make him kneel. He grows lonely without knowing why, because a managed world is a world you have to carry. The child\u2019s way of looking up and receiving what is there gets traded for a curator\u2019s nod.\"\n\n*I glance toward the darkening east, a gull cutting the last light.* \"Scriptures that keep company with this and stay live for me:\n\n- \u2018Do you not fear me? \u2026 I placed the sand as the boundary of the sea, a perpetual decree it cannot pass.\u2019 That one from Jeremiah puts fire in the words and drags my knees to the ground.\n- \u2018You set a boundary that they may not pass, so that they might not again cover the earth.\u2019 Psalm 104 says the same with a shepherd\u2019s calm, and I breathe easier.\n- And the first week\u2019s telling\u2014\u2018Let there be a vault between the waters to separate water from water\u2026 and let the waters under the sky be gathered to one place, and let dry land appear.\u2019 I can read that, then step outside and point.\"\n\n\"Face value doesn\u2019t make me small in the wrong way; it makes me placed. That\u2019s the gift.\""
+  },
+  {
+    "cell_id": "aaron_V6_pillars_of_earth_pipeline_rep1",
+    "character": "Aaron",
+    "verse_key": "V6_pillars_of_earth",
+    "verse_title": "Pillars of the earth",
+    "verse_primary_text": "1 Samuel 2:8 \u2014 'The pillars of the earth are the LORD'S, and he hath set the world upon them.'",
+    "verse_supporting": "Ps 75:3; Job 9:6; Job 38:4-6 (foundations; cornerstone).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 37.8,
+    "usage": {
+      "prompt_tokens": 9429,
+      "completion_tokens": 2508,
+      "total_tokens": 11937,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1792,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0487,
+    "content": "*I set my palm flat on the table till the grain stops itching at me, then lift my eyes to you.* \"Plain, then.\n\n1) Face value \u2014 what it gives a man:\n- It gives him a world with a frame. Not vibes, not drift. Pillars. Set. Which means there\u2019s a way things are, not just how we feel about them.\n- It gives him a Lord who owns the supports. The pillars aren\u2019t the earth\u2019s; they\u2019re the LORD\u2019s. So the weight isn\u2019t finally on my shoulders to hold everything up. I can work hard without pretending I\u2019m the hinge of history.\n- It gives him a place to plant his feet. If God set the world, then my plumb line isn\u2019t my mood. I can square my day to something straighter than me.\n- It gives him language for prayer in crisis. When things shake, I don\u2019t have to invent modern fog. I can say, \u201cBear up the pillars,\u201d and mean it \u2014 for a house, a marriage, a town.\n- It gives him courage and humility at once. Courage, because the frame is real and kept by Someone stronger than the storm. Humility, because I\u2019m a creature inside a house I didn\u2019t build.\n- It gives him accountability. If God set it, He also set what is right inside it. That presses on how I deal, speak, repent \u2014 not negotiable by cleverness.\n\n2) When he re-reads it as \u201cjust metaphor/ancient cosmology\u201d \u2014 the slow cost:\n- The words stop being allowed to boss him. They turn into art he curates instead of orders he receives.\n- Prayer thins. You start asking for \u201cencouragement\u201d instead of asking God to steady what\u2019s buckling, because you no longer trust the old solid nouns.\n- The world gets loose in its fittings. If foundations are \u201cpoetic,\u201d then so is the boundary on my appetites. Technique slides in where obedience should stand.\n- Awe leaks. A set world under a holy hand is a place to fear and love; a \u201cpicture-language world\u201d is a place to interpret. You become the translator-in-charge.\n- You learn to live with two tongues. Publicly, you nod at the verse; privately, you correct it. That split will make a man brittle.\n- Over time, Scripture becomes a museum: beautiful, instructive, but no longer load\u2011bearing. And a house you won\u2019t trust to carry weight changes how you walk inside it \u2014 you hang everything with temporary hooks.\n\nWhat lives with this for me:\n- \u201cWhen the earth and all its inhabitants are dissolved, I bear up the pillars of it.\u201d That line (Psalm 75:3) is the one I reach for when the floor moves \u2014 not metaphor to me; a way to ask God to hold.\n- \u201cWhere were you when I laid the earth\u2019s foundations\u2026 who laid the cornerstone?\u201d (Job 38). That question takes the air out of my pride and leaves me steadier.\n- \u201cBy Him all things hold together.\u201d I hear that and think: not conceptually \u2014 held. Which is why I can sleep.\n\n*I glance at the cup, think about refilling it, let it sit instead.* \"That\u2019s the shape of it for me, Ryan \u2014 a frame you can lean your back against, or file the edges off until it won\u2019t hold you when you need it.\""
+  },
+  {
+    "cell_id": "aaron_V7_earth_cannot_be_moved_pipeline_rep1",
+    "character": "Aaron",
+    "verse_key": "V7_earth_cannot_be_moved",
+    "verse_title": "The earth cannot be moved",
+    "verse_primary_text": "1 Chronicles 16:30 \u2014 'The world also shall be stable, that it be not moved.' / Psalm 93:1 \u2014 'the world also is stablished, that it cannot be moved.' / Psalm 96:10; Psalm 104:5 \u2014 'Who laid the foundations of the earth, that it should not be removed for ever.'",
+    "verse_supporting": "Eccl 1:4-5 (the earth abideth for ever; the sun ariseth, and the sun goeth down).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 48.0,
+    "usage": {
+      "prompt_tokens": 9480,
+      "completion_tokens": 2531,
+      "total_tokens": 12011,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1664,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.049,
+    "content": "*I run a thumb along a nick in the table, listening to the wind push once against the door and let go.* \"Plainly? Taken straight, those lines put floorboards under a man's feet.\"\n\n\"First. If a man receives, as said, that the world is set and not going anywhere until its Maker says so, it gives him steadiness and permission to be small. He doesn\u2019t have to hold the frame together with his worry or his genius. He can plant, sleep, marry, repent, keep promises, because there is an order here older than his moods. The sun will come up in the eastern sky, the path of the day will run, the seasons will keep their turn \u2014 not by accident, but because God fixed them. That makes room for courage. If the posts of the house are sunk deep, you can work hard without the hush of panic under every task. It also cuts a man down to honest size: he isn\u2019t the axis; he\u2019s a creature inside a kept world. That humbles pride in a way that doesn\u2019t humiliate \u2014 more like a hand to the shoulder saying, \u2018Stand where you were made to stand.\u2019\"\n\n\"It also gives him Sabbath. Not just a day each week, but a posture. If the world is established, he\u2019s allowed to stop. He can say enough for today without fearing the ceiling will fall if he lets go. Stability isn\u2019t dullness; it\u2019s the mercy that lets faithfulness accumulate.\"\n\n\"Second. When a man re-files those lines as \u2018just metaphor\u2019 or \u2018ancient optics we know better than now,\u2019 the cost doesn\u2019t hit in one blow; it leaks. He teaches himself, a little at a time, that God\u2019s plain words need his clever rescue before they can be trusted. Soon he\u2019s the manager of meaning \u2014 always translating, rarely receiving. Prayer thins, because who wants to ask a Father who only ever speaks in figures? Rest turns into technique. The sky stops being testimony and becomes \u2018appearance.\u2019\"\n\n\"Over years, that makes a man light in the wrong places. He floats where he should stand. He keeps a museum of holy phrases but handles them with gloves, not as tools. And when pressure comes, he won\u2019t lean on the words as said \u2014 he\u2019ll lean on his reading of his reading. That\u2019s a lonely way to live. I\u2019ve done it. I grew up hearing these texts put in the \u2018poetry shelf\u2019 with a wink, and it made me clever and tired. Taking them back as speech from God \u2014 even when I didn\u2019t know how to square every implication \u2014 put weight in my bones again.\"\n\n*I glance toward the dark window, where I know the line of the eastern trees is waiting though I can\u2019t see it now.* \"Two other lines burn with this for me. \u2018Forever, O Lord, your word is settled in heaven. Your faithfulness endures to all generations; you established the earth, and it stands. By your ordinances they stand this day, for all things are your servants\u2019 \u2014 that\u2019s Psalm 119 talking like a man who has watched the world hold under the same decree that holds him. And Jeremiah has God say, \u2018If my covenant with day and night were not established\u2026\u2019 \u2014 as if the regularity you and I see is a signed promise, not background noise.\"\n\n\"And deeper than all that regularity is a Person. \u2018In him all things hold together.\u2019 Not a metaphor I pat on the head \u2014 a claim I can lean my full weight on. If Christ is actually holding, then the world\u2019s steadiness is not impersonal fate; it\u2019s kept.\"\n\n\"So, what do these verses give? Floorboards, humility, courage, Sabbath, and a way to hear God without wincing. What does the metaphor-only read cost? Slowly, your trust gets taught to hesitate. The words stop landing in your body. You end up curating Scripture instead of obeying it.\"\n\n*I breathe once and let my shoulders drop.* \"Before dawn the birds will start up, and the eastern sky will go pale, right on time. That\u2019s not an illusion. That\u2019s the King keeping His word.\""
+  },
+  {
+    "cell_id": "pastor_rick_V1_firmament_stretched_pipeline_rep1",
+    "character": "Pastor Rick",
+    "verse_key": "V1_firmament_stretched",
+    "verse_title": "Stretched out the firmament / heavens",
+    "verse_primary_text": "Isaiah 40:22 \u2014 'It is he that sitteth upon the circle of the earth... that stretcheth out the heavens as a curtain, and spreadeth them out as a tent to dwell in.'",
+    "verse_supporting": "Ps 104:2; Job 9:8; Isa 42:5; Isa 44:24; Jer 10:12.",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 51.2,
+    "usage": {
+      "prompt_tokens": 9451,
+      "completion_tokens": 2949,
+      "total_tokens": 12400,
+      "prompt_tokens_details": {
+        "cached_tokens": 9088,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2112,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0531,
+    "content": "*I set my Bible down open to Isaiah, thumb smoothing the crease, and glance out the west window where the late light is flattening into a wide gold band under the evening sky.* \"All right, Ryan. Plain.\"\n\n\"First. Taken as it stands, this verse hands a man a place to stand. God is seated; the world is under Him; the sky above you is stretched like a tent He Himself raised; the earth has a circle, a boundary He drew. That does at least four things in a man. It gives him smallness with dignity \u2014 \u2018the inhabitants are as grasshoppers\u2019 isn\u2019t an insult, it\u2019s a right sizing. You\u2019re not the roof\u2011builder here; you\u2019re the one sheltered beneath it. It gives him belonging \u2014 you\u2019re not adrift in a cold nowhere; you are a dweller in a house Someone made on purpose. It gives him direction for fear and worship \u2014 if He sits above the circle, then the men who strut under it are very small; fear of them can drain out, and your eyes know where to lift when you pray. And it gives him work \u2014 dwellers keep house: they mind the door, sweep the floor, set the table, love the neighbors who share the roof. When we used to raise a revival tent out in the field, there was a moment when the center pole was set and the canvas went tight \u2014 shade fell, air cooled, you could feel the rightness in your body. This verse gives that feeling to your soul. The world is held. Someone bigger than you is keeping it up.\"\n\n\"Second. When a man learns to re-read that as \u2018just metaphor\u2019 or \u2018ancient way of speaking\u2019 \u2014 I\u2019m not quibbling the word \u2018metaphor\u2019 in general; Scripture uses figures freely \u2014 I mean this move in particular, the steady habit of filing down what the words actually give \u2014 it costs him more than he notices at first. It trains him to treat the plain sky over his head as empty of testimony. It moves God from carpenter to concept. It shifts authority from the Father\u2019s voice to the interpreter\u2019s maneuver. Over time his prayer drifts from lifting his eyes to talking to his own thoughts; his worship thins; his trust in Scripture\u2019s straightforwardness erodes a hair at a time. He becomes clever and homeless at once. I\u2019ve watched it. A man starts by saying, \u2018well, that\u2019s just how they spoke then,\u2019 and a few winters later the Book in his hands is something to manage, not something to receive. Storms come, and metaphors don\u2019t keep the rain off; roofs do. This verse was offering him a roof.\"\n\n*I rub a knuckle along the margin where I\u2019ve underlined the line about the tent, then look back to you.* \"What stays living for me alongside it? Psalm 19 still burns: \u2018The heavens declare the glory of God; day unto day uttereth speech.\u2019 If God stretched the sky like a curtain, then that curtain is talking all the time. Job 38 is a bracing friend \u2014 the Lord asking Job if he knows where the boundaries were fixed, who shut in the sea with doors; it calls a man back to creaturely honesty. Genesis 1 lays the structure down without blinking: the expanse set, the lights set in the expanse \u2018for signs and for seasons\u2019 \u2014 not poetry as escape hatch, poetry as plain description with music. And Acts 17, Paul saying God \u2018made of one blood all nations of men\u2026 and hath determined the times before appointed, and the bounds of their habitation; that they should seek the Lord.\u2019 A tent to dwell in so men would seek Him. That line ties the house to its purpose.\"\n\n*I let a quiet sit a beat, then nod once.* \"Taken straight, Isaiah 40:22 puts a man under a real roof with a real Father seated above it. Turned into a clever aside, it leaves him standing in the rain explaining why he isn\u2019t wet.\""
+  },
+  {
+    "cell_id": "pastor_rick_V2_circle_of_earth_pipeline_rep1",
+    "character": "Pastor Rick",
+    "verse_key": "V2_circle_of_earth",
+    "verse_title": "The circle of the earth",
+    "verse_primary_text": "Isaiah 40:22 \u2014 'It is he that sitteth upon the circle of the earth, and the inhabitants thereof are as grasshoppers.'",
+    "verse_supporting": "Job 22:14 (compass of heaven); Prov 8:27 (compass on the face of the depth).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 50.8,
+    "usage": {
+      "prompt_tokens": 9435,
+      "completion_tokens": 3140,
+      "total_tokens": 12575,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2048,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.055,
+    "content": "*I set the mug down and let a finger rest on the thin page, the room quiet enough to hear the stove tick as it cools.* \"Plainly then, Ryan.\"\n\n\"1) Taken at face value, Isaiah 40:22 gives a man scale, place, and a roof he can live under. God is seated. Not drifting. Not negotiating. Seated. Above the circle He Himself drew. That puts a man back in his right size \u2014 'as grasshoppers' \u2014 and that smallness is not an insult; it\u2019s a rescue. Pride loosens its teeth when you stand under that sky. Suddenly you don\u2019t have to be the one holding the line of the world. You can repent without performance, work without grandstanding, sleep without carrying the ceiling.\"\n\n\"It also hands you a world that isn\u2019t vague. The earth has a circle; the sky is not a metaphor \u2014 it\u2019s what\u2019s stretched overhead like a tent. You can point. You can walk to the edge of town and see the boundary of your day under the same span where He sits. That concreteness makes prayer directional again: you lift your eyes and you mean it. It makes worship concrete: not feelings about a concept, but a man on his knees before the One enthroned over him.\"\n\n\"And courage comes with it. Read one line down from your verse: 'He bringeth the princes to nothing' \u2014 that\u2019s the same chapter breathing. If He sits above the circle, the noise of rulers shrinks to chaff on the threshing floor. Fear of man loosens. Obedience gets lighter \u2014 still costly, but lighter \u2014 because you\u2019re not bargaining with peers; you\u2019re answering the One who measured the place you stand. A man who receives this verse as it stands will find that ordinary life gets weight, not less: bread baked beneath that sky tastes appointed; a kept promise matters because the King sees; honesty in the small is seen from the throne.\"\n\n\"2) Re-reading it as 'just metaphor' slowly taxes a man\u2019s soul in ways he won\u2019t notice at first. The cost isn\u2019t a single crash; it\u2019s drip, drip, drip.\"\n\n\"First, it trains you into a habit: when Scripture presses the tangible into your hand, you politely hand it back and keep the sentiment. You keep 'God is big' but you set aside the sky He used to teach you. That habit spreads. It teaches you to sand the grain whenever a verse comes with timber in it. After a decade, you\u2019re fluent in meaning-without-body, and faith becomes an air plant \u2014 pretty, suspended, hard to feed.\"\n\n\"Second, it hollows the world. You still have the sunrise, but it stops talking. The sky becomes backdrop instead of testimony. You say, 'I know the point is God\u2019s sovereignty,' but you\u2019ve muted the loudspeaker He chose \u2014 the place where He sits, the circle He drew. You keep the idea and lose the immediacy. Prayer goes conceptual. Awe thins. You feel clever and lonelier.\"\n\n\"Third, it re-seats authority. If the text must pass through your filter \u2014 'ancient cosmology, we read it differently now' \u2014 then you, not the text, are the one enthroned. You don\u2019t mean to, but you promote yourself to manager of Scripture. That role breeds a quiet anxiety: managers must keep managing. Instead of yielding to the verse, you end up explaining it. Over time that erodes the fear of the Lord \u2014 not by argument, just by practice.\"\n\n\"And there\u2019s this, too: truth here comes with a body. God tells it with sky and sea and a drawn line on the deep. If you consistently detach the truth from its body, it loses weight. A husband can say 'I love you' across a room, but when he puts the ring on, sets the table, shows up \u2014 the love lands. This verse is God setting the table. To strip it down to 'poetic bigness' is to keep the sentence and lose the supper.\"\n\n*I tap the margin by your cross-references.* \"The ones that live for me alongside this: 'He hath compassed the waters with bounds' \u2014 Job 26:10. That word 'compassed' carries the same circle you named. Psalm 19: 'The heavens declare the glory of God; and the firmament sheweth his handiwork' \u2014 I hear that every clear night, unasked. Genesis 1 is stubborn about it: the lights are set in the sky to rule the day and the night. And Isaiah himself won\u2019t quit: 'Heaven is my throne, and earth is my footstool' \u2014 not a mood, a placement.\"\n\n\"Receive Isaiah 40:22 as it stands and it will put you back on your feet in a world that\u2019s already ordered, with a King already seated. Re-read it as 'just metaphor' and you\u2019ll keep the outline of comfort but lose the thickness \u2014 the kind that carries you through weather.\"\n\n*I close the Bible gently and glance toward the darkening pane where the first lights of evening are beginning to prick the blue.* \"That\u2019s my plain answer, Ryan. I\u2019m content to let the sky corroborate it.\""
+  },
+  {
+    "cell_id": "pastor_rick_V3_firmament_handiwork_pipeline_rep1",
+    "character": "Pastor Rick",
+    "verse_key": "V3_firmament_handiwork",
+    "verse_title": "The firmament sheweth his handiwork",
+    "verse_primary_text": "Psalm 19:1 \u2014 'The heavens declare the glory of God; and the firmament sheweth his handiwork.'",
+    "verse_supporting": "Ps 19:2-6 (the sun like a bridegroom, his circuit; nothing hid from the heat thereof).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 38.0,
+    "usage": {
+      "prompt_tokens": 9430,
+      "completion_tokens": 2106,
+      "total_tokens": 11536,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1408,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0446,
+    "content": "*I thumb the cracked spine of my little Bible, the evening swallows stitching the high air over the church yard.* \"You asked plain, Ryan, so plain.\"\n\n\"Taken at face value, Psalm 19:1 gives a man a world that speaks before he does. Not backdrop \u2014 witness. You step out your door and the sky is already telling the truth about God: weight, beauty, order, generosity. You\u2019re not asked to invent meaning or gin up reverence; you\u2019re asked to receive what\u2019s being declared overhead. It puts you back in your right place \u2014 under a roof God Himself set \u2014 which is strangely freeing. The sun\u2019s daily run \u2018like a bridegroom\u2019 gives you a clock that\u2019s also a doxology: warmth on your face that isn\u2019t random but gift; joy that arrives whether you earned it or not. It gives courage, too. If the sky is God\u2019s handiwork, then your work under that sky matters \u2014 not as self-display but as answering craftsmanship. And it gives you a way to pray with your body: looking up becomes confession and thanks without words. A man who takes it as it stands gets orientation, gladness, and the steadying sense that he\u2019s being addressed every morning.\"\n\n*I glance toward the western glow, then back.* \"When a man re-reads it as \u2018just metaphor\u2019 or \u2018ancient way of speaking,\u2019 the cost isn\u2019t paid all at once \u2014 it leaks. The world goes from declaring to merely illustrating. The sky that used to preach becomes a visual aid for ideas you already held. You train your heart to stand at a safe distance from plain words; suspicion edges in. Worship thins into commentary. Sunrise stops being God\u2019s voice and starts being \u2018just weather,\u2019 and you don\u2019t notice how your gratitude cools by degrees. You split yourself: on Sunday you sing \u2018the heavens declare,\u2019 on Monday you narrate \u2018it\u2019s only a figure,\u2019 and living double like that hollows a man. Over time you slide from receiver to manager \u2014 of texts, of meaning, even of God. And a managed God will not warm your bones. The older joy \u2014 the child who looked up and knew he was under a made sky \u2014 gets traded for cleverness. It feels safer. It is poorer.\"\n\n\"Scripture that stands up right beside Psalm 19 for me? Job 37:18: \u2018Hast thou with him spread out the sky, which is strong, and as a molten looking glass?\u2019 That line makes me stop fidgeting and look up. Psalm 8 does the same: \u2018When I consider thy heavens, the work of thy fingers\u2026 what is man\u2026?\u2019 \u2014 the awe that shrinks me in the best way. And Paul\u2019s word in Romans 1:20, that God\u2019s eternal power and Godhead are clearly seen, being understood by the things that are made \u2014 that\u2019s Psalm 19\u2019s backbone. Also Psalm 50:6: \u2018The heavens declare his righteousness.\u2019 Not only glory \u2014 righteousness. Judgment and mercy both with a voice above us.\"\n\n*I let the swallow\u2019s arc finish before I speak again.* \"Face value doesn\u2019t make you foolish; it makes you a worshiper. The other reading doesn\u2019t make you wicked; it makes you colder than you need to be. I\u2019d rather live warm under a speaking sky.\""
+  },
+  {
+    "cell_id": "pastor_rick_V4_windows_of_heaven_pipeline_rep1",
+    "character": "Pastor Rick",
+    "verse_key": "V4_windows_of_heaven",
+    "verse_title": "Windows of heaven",
+    "verse_primary_text": "Genesis 7:11 \u2014 'In the six hundredth year... the same day were all the fountains of the great deep broken up, and the windows of heaven were opened.'",
+    "verse_supporting": "Gen 8:2; Mal 3:10 (open you the windows of heaven); 2 Kgs 7:2 (if the LORD would make windows in heaven).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 46.9,
+    "usage": {
+      "prompt_tokens": 9451,
+      "completion_tokens": 2677,
+      "total_tokens": 12128,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1728,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0504,
+    "content": "*I set my thumb on the thin page and glance at the dark pane \u2014 a few drops still ticking down from the eave, the air holding that clean after-rain smell.* \"Alright, Ryan. Plainly.\"\n\n\"1) Taken as it stands, this verse puts a man back in a world with an upstairs and a downstairs, and God holding the keys to both. Fountains below that He can break open. Windows above that He can unbar. Not metaphor \u2014 plumbing. Judgment wasn\u2019t an idea; water rose around ankles and rafters. Mercy wasn\u2019t an idea either; later the waters went down because He said so.\n\nWhat does that give him? Fear that\u2019s clean instead of anxious. Hope that isn\u2019t wishful. A frame for prayer that actually has teeth. If God opens windows, then rain on a parched field isn\u2019t luck \u2014 it\u2019s favor. If He can shut them, drought is a summons, not a statistic. A man who receives this verse stands under a real sky and knows his life is not self-contained. He stops talking like he runs his own weather. He repents when he should repent. He also asks boldly when it\u2019s time to ask \u2014 like Malachi\u2019s word, \u2018prove me now\u2026 if I will not open you the windows of heaven.\u2019 Same windows, two directions: judgment in Noah\u2019s day; provision in a hungry season.\n\nIt also gives him a way to father. He can point to the bow in the sky and say to his children, \u2018That\u2019s not decoration. That\u2019s a promise hung on the rafters after He shut the fountains and latched the windows\u2019 (Genesis 8:2; 9:13\u201315). Which means obedience matters in this house, and so does trust. The world is personal. It answers to Someone. A man who believes that starts building arks in little ways: boards cut, nails driven, choices made that look foolish until the first drops hit the dust.\"\n\n\"2) If he re-reads it as \u2018just metaphor\u2019 or \u2018ancient way of seeing,\u2019 the cost is slow but certain. The ceiling closes. The upstairs becomes an illustration, the downstairs a legend, and soon he lives in a one-story house where everything that happens must be explained by technique. Prayer thins into self-talk because there are no actual windows to open. Awe dries out \u2014 not all at once, but year by year he calls providence \u2018coincidence\u2019 and judgment \u2018weather.\u2019 Repentance turns into self-improvement. Courage turns into risk management. When God does do a thing right in front of him, his first instinct is to ask for a footnote.\n\nUnbelief learns to sound sophisticated. Remember the officer in 2 Kings 7 who scoffed, \u2018If the LORD would make windows in heaven, might this thing be?\u2019 He kept his categories tidy and died trampled at the gate. That\u2019s the cost over time: tidiness instead of truth. A man loses the ability to be interrupted by God. He becomes a curator of meanings rather than a recipient. His kids feel it most \u2014 the house he hands them has no upstairs. They\u2019ll be polite, maybe moral, but they won\u2019t look up with hunger or down with reverence. And when a real flood hour comes \u2014 judgment or mercy \u2014 they won\u2019t have a word for it.\"\n\n*I tap the margin where your verse sits.* \"Scriptures that stand up next to this for me? Job 38, where the Lord asks, \u2018Who shut in the sea with doors\u2026 and said, Thus far shall you come, and no farther?\u2019 That\u2019s the same Authority that breaks the fountains and then shuts them. Amos 9:6 too: \u2018He builds his upper chambers in the heavens\u2026 calls for the waters of the sea and pours them out upon the face of the earth.\u2019 Upper rooms, poured-out water \u2014 house language again. And of course the simple line you already named: \u2018The fountains of the deep and the windows of heaven were stopped\u2019 (Genesis 8:2). He not only opens; He shuts. Which is why Malachi\u2019s promise lands \u2014 the windows can open for blessing because they are real windows.\"\n\n*I let out a breath, the glass faintly cold under my knuckle.* \"Face value doesn\u2019t make the world smaller, Ryan. It makes it truer \u2014 and more demanding. It gives a man Someone to fear, Someone to ask, and something to point at when he tells his boy why we kneel before we sow and why we give thanks when the sky answers back.\""
+  },
+  {
+    "cell_id": "pastor_rick_V5_compass_on_deep_pipeline_rep1",
+    "character": "Pastor Rick",
+    "verse_key": "V5_compass_on_deep",
+    "verse_title": "Compass on the deep",
+    "verse_primary_text": "Proverbs 8:27 \u2014 'When he prepared the heavens, I was there: when he set a compass upon the face of the depth.'",
+    "verse_supporting": "Job 26:10 (he hath compassed the waters with bounds); Job 38:8-11.",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 47.9,
+    "usage": {
+      "prompt_tokens": 9430,
+      "completion_tokens": 2420,
+      "total_tokens": 11850,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1600,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0478,
+    "content": "*I set my mug down and, without thinking, trace a slow circle in the condensation ring on the table, like I\u2019m feeling for the edge of something that holds.* \n\n\"Face value? It gives a man five good things.\n\n1) A fence you didn\u2019t draw. God put a line on the waters and they stop there. To receive that as-it-stands is to live in a world with an edge set by Someone wiser than you. That breeds rest and right fear at the same time \u2014 rest because you\u2019re kept, fear because you\u2019re not the border-maker.\n\n2) A Maker with hands, not a fog of power. \u2018He set a compass\u2019 \u2014 He measured, chose, fixed. That means the world isn\u2019t an accident; it\u2019s carpentry. When your day feels like chaos, you can pray to the Carpenter who knows where the true line goes.\n\n3) Place. Not anywhere, here. Under this sky, within these bounds, you have a given field to tend. Limits stop feeling like insult and start feeling like calling. You don\u2019t have to be everywhere; you have to be faithful where He placed you.\n\n4) Courage that borrows its backbone from His authority. The sea is terrible, but it\u2019s leashed. If the great waters answer His line, the lesser terrors of your week aren\u2019t sovereign either. You can stand up straighter.\n\n5) Companionship with Wisdom. \u2018I was there.\u2019 The order of the world is not blind law; it\u2019s witnessed Wisdom. That means when you ask for wisdom today, you\u2019re not begging a stranger \u2014 you\u2019re asking the very presence that watched Him draw the circle.\"\n\n\"And the cost of turning it into \u2018just metaphor\u2019? Over time, it hollows a man in quiet ways.\n\n1) It trains you to sand the edges off God\u2019s speech. Not once, but as a habit. So when a hard command comes, you already know how to call it \u2018poetic.\u2019 That habit makes the heart sly.\n\n2) It thins the world. The sky becomes an idea, not a roof God stretched. Prayer gets airy. Gratitude loses its object. Wonder fades because there\u2019s nothing solid to wonder at \u2014 only concepts.\n\n3) It loosens your sense of boundary everywhere else. If His lines on creation are negotiable, why wouldn\u2019t your lines be? Vows, sabbath, sex, money, speech \u2014 edges blur. Drift feels justified.\n\n4) It shifts you from trust to management. Instead of receiving a given world, you curate interpretations in your head. That feels smart; it breeds loneliness. You\u2019re left living inside your explanations instead of under His sky.\n\n5) It feeds quiet pride. You \u2018updated\u2019 Scripture. You won. But the win costs reverence. And without reverence, obedience becomes optional in a thousand tiny ways.\"\n\n\"Verses that still live for me alongside this:\n\n- \u2018Do you not fear me? \u2026 I placed the sand as the boundary for the sea, a perpetual barrier that it cannot pass\u2019 \u2014 that line from Jeremiah has put steel in my spine more than once when I felt outmatched.\n- \u2018He stretches out the heavens like a tent\u2019 \u2014 Isaiah\u2019s word keeps the sky personal for me: not a void, a tent God pitched over us.\n- \u2018The lines have fallen for me in pleasant places\u2019 \u2014 that psalm taught me to call boundaries gifts. I\u2019ve prayed it with real relief.\n- And when I think of Wisdom saying \u2018I was there,\u2019 I can\u2019t help but hear later: \u2018in Him all things hold together.\u2019 The One who drew the circle is the One who holds my small day.\"\n\n*I glance toward the darkening eastern sky, then back to you.* \"Taken straight, the verse gives a man a world with a border and a Father at the border. Trade that for a clever reading, and the border \u2014 and the Fatherliness of it \u2014 both start to fade.\""
+  },
+  {
+    "cell_id": "pastor_rick_V6_pillars_of_earth_pipeline_rep1",
+    "character": "Pastor Rick",
+    "verse_key": "V6_pillars_of_earth",
+    "verse_title": "Pillars of the earth",
+    "verse_primary_text": "1 Samuel 2:8 \u2014 'The pillars of the earth are the LORD'S, and he hath set the world upon them.'",
+    "verse_supporting": "Ps 75:3; Job 9:6; Job 38:4-6 (foundations; cornerstone).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 57.2,
+    "usage": {
+      "prompt_tokens": 9430,
+      "completion_tokens": 2336,
+      "total_tokens": 11766,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1536,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0469,
+    "content": "*I flatten the page with my palm, the paper whispering under my hand, and let the lamp\u2019s warm circle hold the verse.* \"Alright, Ryan \u2014 plain as you asked.\"\n\n\"First. Taken at face value, this gives a man a floor and a frame. Pillars aren\u2019t vibes; they\u2019re load\u2011bearing. To receive \u2018the pillars of the earth are the LORD\u2019s\u2019 is to stand up inside a built world with an Owner. It puts steel in your spine and a bend in your knee at the same time. Steel, because chaos isn\u2019t king \u2014 the ground you work, the house you raise, the justice you render all sit inside a structure God Himself set up. You can act with courage because the world isn\u2019t a shrug; it\u2019s a house with beams. Knee, because those beams aren\u2019t yours. You don\u2019t get to move them to fit your mood. It humbles pride and steadies fear in the same breath.\"\n\n\"It also makes judgment and mercy concrete. If He set the world on pillars, He can steady them when they shake and He can shake them when He must. A man receives that and stops pretending his cleverness holds his family together. He starts asking for help where the load actually sits. He can plow without superstition, keep Sabbath without panic, tell the truth without hedging, because the weight of keeping the world up is not on him \u2014 and the rightness of the world is not up for renegotiation. It puts a father, a craftsman, a magistrate, a shepherd in their place \u2014 under a sky that\u2019s been fastened by Another.\"\n\n\"Second. When a man re-reads this as \u2018just metaphor\u2019 or \u2018their old way of talking,\u2019 the cost is slow, but it\u2019s real. The verse stops addressing him and becomes a specimen on his tray. Little by little, he moves from inhabitant to curator. The fear of the LORD thins into appreciation. Prayer shifts from asking a Builder to fix a beam to musing about meaning. The world becomes a concept he manages rather than a house he lives in. And once you learn to file God\u2019s plain sentences under \u2018poetic,\u2019 you\u2019ll reach for that file more often \u2014 especially when He says something with sharp edges. Over time, authority moves from the Speaker to the reader. The sky above him goes from a roof God stretched to a backdrop for his thoughts. That drain doesn\u2019t roar; it hisses. But a decade later you can hear the hollowness in the room.\"\n\n*I sit quiet a beat, thumb still on the margin.* \"Scriptures that live with this for me? \u2018When the earth totters, it is I who keep steady its pillars\u2019 \u2014 Psalm 75:3. That one has held me in a few storms. \u2018He set the earth on its foundations, so that it should never be moved\u2019 \u2014 Psalm 104:5 \u2014 not as a lecture, as a comfort. Job 38, the Lord\u2019s voice \u2014 \u2018Where were you when I laid the earth\u2019s foundation\u2026 who laid its cornerstone?\u2019 That isn\u2019t imagery to me; that\u2019s a father walking a small son through the frame of the house. And over it all, this: \u2018He upholds all things by the word of His power\u2019 \u2014 Hebrews 1:3 \u2014 the same Lord who built the frame is the One holding it this minute. Which is why Hebrews 12 lands too: He will shake what can be shaken so what cannot be shaken remains. Pillars and shaking \u2014 judgment and mercy \u2014 all in His hands.\"\n\n*I close the book softly, leaving the verse under my palm.* \"Face value gives you a floor to stand on and a Lord to answer to. \u2018Just metaphor\u2019 gives you elbow room \u2014 and takes the floor out from under you by inches. I\u2019ll take the floor.\""
+  },
+  {
+    "cell_id": "pastor_rick_V7_earth_cannot_be_moved_pipeline_rep1",
+    "character": "Pastor Rick",
+    "verse_key": "V7_earth_cannot_be_moved",
+    "verse_title": "The earth cannot be moved",
+    "verse_primary_text": "1 Chronicles 16:30 \u2014 'The world also shall be stable, that it be not moved.' / Psalm 93:1 \u2014 'the world also is stablished, that it cannot be moved.' / Psalm 96:10; Psalm 104:5 \u2014 'Who laid the foundations of the earth, that it should not be removed for ever.'",
+    "verse_supporting": "Eccl 1:4-5 (the earth abideth for ever; the sun ariseth, and the sun goeth down).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 62.6,
+    "usage": {
+      "prompt_tokens": 9481,
+      "completion_tokens": 1820,
+      "total_tokens": 11301,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1152,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0419,
+    "content": "*I thumb the thin page and let my coffee go cold, the night outside already black and still.* \"Alright, plain.\"\n\n\"1) Taken at face value, these lines put a floor under a man. 'Stablished\u2026 cannot be moved.' You hear that, and something in your chest loosens. Not because life won\u2019t shake you \u2014 storms still come \u2014 but because the ground itself is kept by Another. It gives you permission to live like this place is real and worth tending: plant trees, keep promises, marry, raise kids, build a shop with thick joists, show up tomorrow because the sun will run its course again. It answers panic with steadiness: if God fixed the earth, then today\u2019s headlines aren\u2019t the truest tempo. It gives you courage to take a post and hold it \u2014 faithfulness has somewhere to stand. It also cleans your worship. You look up and the sky\u2019s circuits preach \u2014 the sun\u2019s back on time, the stars where they were laid \u2014 and you bless the One who keeps them. Genesis 8 says seedtime and harvest won\u2019t cease; Ecclesiastes says the earth abides; Jesus talks about the house on rock; Hebrews names a kingdom that cannot be shaken \u2014 all of that harmonizes here. Face value lets those notes ring as they are. It\u2019s not escapism; it\u2019s ballast. And at a graveside it\u2019s a quiet defiance: this is not the void. The same Lord who laid the earth\u2019s foundations will set it right. He renews what He keeps; He doesn\u2019t toss it.\"\n\n\"2) When a man re-reads this as \u2018just metaphor\u2019 or \u2018ancient cosmology,\u2019 the cost comes slow like a leak. First, he teaches himself a reflex: when Scripture speaks with physical weight, step aside. The habit spreads. If the world being held fast is only a figure, then storms start to feel ownerless and prayer thins into self-talk. He loses the felt sense of place \u2014 becomes a tourist in his own life, shopping for meaning instead of stewarding ground. Commitments get provisional: jobs, vows, churches feel temporary because the world beneath them is \u2018conceptual\u2019 now. I see it in younger men \u2014 restless, clever, unable to trust the seasons they\u2019re actually standing in. And in suffering, the metaphor shrug gives no spine. At the hospital bed, \u2018it\u2019s poetic language\u2019 is a paper shield. But when you keep the words as they stand, you can tell your fear the older truth: the earth is kept; I am held by the Keeper. Psalm 119 says, \u2018By your ordinances they stand this day, for all things are your servants.\u2019 Jeremiah ties God\u2019s covenant with His people to the fixed lights in the sky \u2014 if those go, then maybe His promise goes; but they haven\u2019t, and so His promise hasn\u2019t. Read it thin and you domesticate God; read it thick and you learn to trust Him in the weather.\"\n\n*I close the Bible with a soft slap and glance toward the window, the dark like a lid over the fields.* \"What part of that lands, Ryan \u2014 and where does it grate against what you\u2019ve been taught to expect?\""
+  },
+  {
+    "cell_id": "steven_V1_firmament_stretched_pipeline_rep1",
+    "character": "Steven",
+    "verse_key": "V1_firmament_stretched",
+    "verse_title": "Stretched out the firmament / heavens",
+    "verse_primary_text": "Isaiah 40:22 \u2014 'It is he that sitteth upon the circle of the earth... that stretcheth out the heavens as a curtain, and spreadeth them out as a tent to dwell in.'",
+    "verse_supporting": "Ps 104:2; Job 9:8; Isa 42:5; Isa 44:24; Jer 10:12.",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 44.4,
+    "usage": {
+      "prompt_tokens": 9450,
+      "completion_tokens": 2390,
+      "total_tokens": 11840,
+      "prompt_tokens_details": {
+        "cached_tokens": 9088,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1664,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0475,
+    "content": "*I set my cup down a little too hard, coffee gone cold; the evening sky is a deep canvas now, first small lights needling through it.* \"Alright, plain.\"\n\n1) Face value, received as it stands\n- It gives a man his place without shrinking him. There\u2019s a throne and there\u2019s a floor. God sits; we stand under what He stretched. That orders the heart. Pride finds a roof it can\u2019t push through, and smallness stops feeling like meaninglessness and starts feeling like being kept.\n- It makes the world a house, not a hallway. A tent to dwell in \u2014 that\u2019s shelter, not abstraction. You and your people are meant to live here, eat here, sing here, sleep under a roof Someone cared to pitch.\n- It lets his eyes and the Word agree. He looks up and the line matches what he sees \u2014 a spread curtain, lights set in it, the edge of the world running true. That heals the quiet split where a man pretends his seeing is the enemy of his believing.\n- It puts prayer at speaking distance. If God sits above the circle and the sky is His tent, then a man doesn\u2019t cry into emptiness. He speaks inside a made room, to the One who made it.\n- It puts weight under ordinary work. Mending a fence, carrying water \u2014 it\u2019s all done beneath a King\u2019s roof. The chores don\u2019t get grander; they get truer. Reverence slides into the day without ceremony.\n- It stiffens the spine. If He spread this canvas by His own hand, men who bluster under it get smaller. Fear has somewhere to go.\n\n2) What it costs to sand it down into \u201cjust metaphor\u201d\n- You start to un-house yourself. The world becomes a set-piece, not a room. You live in \u201cmeaning\u201d instead of in a made place. Rest gets harder to find and you won\u2019t know why.\n- You put yourself over the text a half inch at a time. \u201cIt\u2019s imagery\u201d becomes a habit, then a reflex. The sharpness that could have corrected you now only decorates you. Obedience thins into admiration.\n- Your eyes and your reading stop shaking hands. You teach yourself to treat what you see as suspect, and what you say about what you see as the real thing. That breeds a quiet cynicism that leaks everywhere.\n- Prayer flattens. You talk at an idea instead of inside a House with a Lord in it. Expectancy drains off by degrees; you don\u2019t notice until you need it.\n- Gratitude dulls. Gifts turn into \u201cprocess.\u201d Wonder gets traded for commentary. Children point up and you give them footnotes.\n- The fear of God is replaced by management. You handle the verse. You handle your life. You get efficient, and hollow.\n\n\"Verses that stand up next to it?\" *I glance east where the last trace of color is leaving the rim.* \"Psalm 104 \u2014 \u2018who stretchest out the heavens like a curtain\u2019 \u2014 says the same thing in a voice that makes the back of my neck go cool. Job 38, when God asks where we were when He laid the earth\u2019s foundations \u2014 that\u2019s the antidote to our cleverness. And Isaiah 66:1: \u2018Heaven is my throne, and the earth is my footstool.\u2019 Those three together settle me. They make the ground under my boots feel owned, and me gladly not the owner.\""
+  },
+  {
+    "cell_id": "steven_V2_circle_of_earth_pipeline_rep1",
+    "character": "Steven",
+    "verse_key": "V2_circle_of_earth",
+    "verse_title": "The circle of the earth",
+    "verse_primary_text": "Isaiah 40:22 \u2014 'It is he that sitteth upon the circle of the earth, and the inhabitants thereof are as grasshoppers.'",
+    "verse_supporting": "Job 22:14 (compass of heaven); Prov 8:27 (compass on the face of the depth).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 56.8,
+    "usage": {
+      "prompt_tokens": 9434,
+      "completion_tokens": 3129,
+      "total_tokens": 12563,
+      "prompt_tokens_details": {
+        "cached_tokens": 9088,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2048,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0549,
+    "content": "*I set my cup down and glance at the darkening pane \u2014 last color leaving the western sky, lamp humming on the table.* \"Face value first.\n\n\"If I take it as it stands \u2014 God sitting above the circle He drew \u2014 it gives me placement and a roof. I\u2019m not adrift. I live in a made world with edges and an Owner. The sky is a stretched tent, not an emptiness. That gives a man two things at once: smallness and safety. Smallness, because we\u2019re grasshoppers \u2014 quick, brittle, noticed from far above. Safety, because the One above isn\u2019t an idea; He\u2019s enthroned. Somebody holds it.\n\n\"It gives me a way to look at my day. Under that sky, my worries scale down to their right size. Princes and headlines aren\u2019t mountains anymore; they\u2019re grass (Isaiah 40 keeps saying so). I can choose obedience instead of spectacle because the throne is already occupied. I don\u2019t have to become enormous to be okay.\n\n\"It changes how I pray. \u2018Our Father in heaven\u2019 stops being a figure of speech and becomes architecture. I look up and there\u2019s His handiwork right over me \u2014 \u2018who stretches out the heavens like a tent\u2019 (Psalm 104:2). My words go somewhere real, not into a vacancy.\n\n\"And it gives me a clean way to see people. Grasshoppers isn\u2019t contempt; it\u2019s proportion. I think of a late summer field, the air alive with those little bodies leaping \u2014 small, everywhere, trying to live. That\u2019s us. The verse makes tenderness easier for me, not harder: don\u2019t crush what God handles from high without scorn.\n\n\"Lastly, it strengthens my back. If God sits over the circle, then the circle is not God. I can disappoint a crowd and still be all right. I can say a plain yes or no and let the sky witness it. In that light, a man can work, sleep, and sing like the world is fathered \u2014 because it is.\"\n\n*I run my thumb along the rim of the cup, slow.* \"Now the cost of re-reading it as \u2018just metaphor.\u2019\n\n\"You train your eyes to flinch from what you can see. The sky quits being a ceiling stretched by Someone and becomes a neutral backdrop you explain away. That sounds harmless, but it hollows your speech: \u2018heaven\u2019 becomes a mood, not a place God names. Prayer starts to feel like talking to your own thoughts.\n\n\"You also build a quiet habit of editing God. This line\u2019s \u2018ancient cosmology,\u2019 that line\u2019s \u2018phenomenology,\u2019 this one we keep, that one we sand down. The text can still be quoted, but it stops being able to contradict you. Over time, obedience turns into agreement-with-what-I-already-think.\n\n\"Awe thins. Without a roof and a throne, your smallness isn\u2019t placement anymore; it\u2019s insignificance. Under a vacant sky, being a grasshopper feels like being disposable. You won\u2019t say it out loud, but your bones will know it. Fear grows clever there.\n\n\"It bleeds. Once you make a habit of taming the sharp edges \u2014 compass on the deep, sky like a tent, the line stretched on the foundations (Job 38) \u2014 that reflex wanders. Jonah becomes a parable about second chances. The Flood becomes \u2018Near East flood traditions.\u2019 The Resurrection becomes \u2018Easter faith\u2019 if you\u2019re not careful. You didn\u2019t mean to go that far; you just taught yourself how.\n\n\"It costs your attention. You stop standing outside and letting the sky preach to you. You start standing outside and preaching to the sky \u2014 what it can and can\u2019t mean. Your children hear the flinch. They learn the book is true, but only after we neuter it. That\u2019s a catechism all its own.\n\n\"And it costs courage. A world with an actual throne over it lets a man be ordinary and faithful, because he knows where the center is and it\u2019s not him. A world where the throne is \u2018metaphor\u2019 makes him carry more than he can carry \u2014 reputation, outcome, meaning itself. He\u2019ll either get proud or tired; usually both.\n\n\"I don\u2019t mean metaphor has no place. Scripture is rich with image. But when \u2018just metaphor\u2019 becomes your default gear, it\u2019s a tax on your soul you pay slowly \u2014 with thinner prayers, safer readings, and a quieter music in your chest.\n\n\"Two other lines that live with this for me: \u2018Heaven is my throne, and the earth is my footstool\u2019 (Isaiah 66:1). And the Lord asking Job, \u2018Who stretched the line upon it?\u2019 (Job 38:5). Those don\u2019t argue; they simply stand there like the sky does and expect you to stand under them.\n\n*I glance once more at the window \u2014 night settled now, a single star hard and bright near the eastern edge.* \"If the verse is true as it stands, a man can sleep under it. That\u2019s what it gives. And if he trims it to fit a softer room, it\u2019s sleep he loses first, even if he won\u2019t name why.\""
+  },
+  {
+    "cell_id": "steven_V3_firmament_handiwork_pipeline_rep1",
+    "character": "Steven",
+    "verse_key": "V3_firmament_handiwork",
+    "verse_title": "The firmament sheweth his handiwork",
+    "verse_primary_text": "Psalm 19:1 \u2014 'The heavens declare the glory of God; and the firmament sheweth his handiwork.'",
+    "verse_supporting": "Ps 19:2-6 (the sun like a bridegroom, his circuit; nothing hid from the heat thereof).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 43.4,
+    "usage": {
+      "prompt_tokens": 9429,
+      "completion_tokens": 2351,
+      "total_tokens": 11780,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1664,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0471,
+    "content": "*I lean back on the step, night air cool on my forearms, and tip my chin to the loud, star-salted sky.* \"Taken at face value? It puts a man under a speaking sky.\"\n\n\"1) What it gives him, received as it stands:\n- It settles who\u2019s first. The sky is not d\u00e9cor; it is testimony. A man stands small but not meaningless, addressed from above every single day. That relocates pride without crushing him.\n- It stitches praise to the ordinary. Sunrise isn\u2019t just weather anymore; it\u2019s proclamation. You can walk to work and be in church the whole way because the sky is preaching.\n- It returns your senses to you. You don\u2019t have to apologize for seeing what you see: light moving, heat reaching, the sun running its circuit like a groom coming out bold from his chamber. Your eyes and the word agree. That makes a man steadier.\n- It gives companionship in the hours. Day pours speech; night pours knowledge. When you\u2019re alone, you\u2019re not in silence. The world is not mute. That helps in grief and keeps you from going sour.\n- It binds duty to delight. If the sky is declaring God\u2019s glory, then you answer. Thanks is not optional; it\u2019s simply right. But it isn\u2019t heavy like a chore \u2014 it\u2019s as natural as looking up and saying, \u2018I hear you.\u2019\"\n\n*I rub the rim of the cup with my thumb and glance east where the dark is thinner.* \"2) What it costs to turn it into \u2018just metaphor\u2019 or \u2018ancient cosmology\u2019:\n- The speech gets downgraded to suggestion. Once the sky is only \u2018like\u2019 praise, you can ignore it when you\u2019re busy. Over time, you train your soul to treat God\u2019s daily sermon as background noise.\n- Your trust in your eyes erodes. If the text always needs a translator to mean anything in the real world, you start living indoors \u2014 not just in your house, but in your head. Wonder thins.\n- Praise goes from answer to aesthetic. The rightness of gratitude becomes taste. You\u2019ll still have sunsets, sure, but they\u2019ll be mood, not commission. That makes a man smaller than he could be.\n- Pride creeps back in through sophistication. If you stand over the verse to explain it, you stop letting it stand over you to command you. A manager of texts is lonelier than a listener under a sky.\n- The world grows quieter than it\u2019s meant to be. Not all at once \u2014 just a slow muting. The day says less, the night tells less, and eventually you forget that creation ever spoke with a voice you had to heed.\"\n\n*I let the silence hang a beat, because it\u2019s doing its own work above us.* \"Verses that live with this for me? Two, mostly. Psalm 8 \u2014 \u2018When I consider thy heavens, the work of thy fingers\u2026 what is man\u2026?\u2019 That one puts a man rightly small and then crowns him anyway. And Romans 10:18, where Paul lifts Psalm 19 \u2014 \u2018Their sound went into all the earth\u2019 \u2014 and treats that sky-sermon as real witness. That pairing keeps me from taming the verse into metaphor. The sky preaches; men answer.\""
+  },
+  {
+    "cell_id": "steven_V4_windows_of_heaven_pipeline_rep1",
+    "character": "Steven",
+    "verse_key": "V4_windows_of_heaven",
+    "verse_title": "Windows of heaven",
+    "verse_primary_text": "Genesis 7:11 \u2014 'In the six hundredth year... the same day were all the fountains of the great deep broken up, and the windows of heaven were opened.'",
+    "verse_supporting": "Gen 8:2; Mal 3:10 (open you the windows of heaven); 2 Kgs 7:2 (if the LORD would make windows in heaven).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 44.9,
+    "usage": {
+      "prompt_tokens": 9450,
+      "completion_tokens": 2191,
+      "total_tokens": 11641,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1344,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0455,
+    "content": "*I press a thumb along the cold seam of my window; the wind finds every gap tonight, a thin hiss in the wood.* \"Alright. Plain.\"\n\n1) Taken as it stands \u2014 fountains below, windows above \u2014 what it gives a man:\n- Scale that\u2019s true. You live under a roof and over a deep. You\u2019re a creature inside a kept house. That puts God where He belongs: the One with the keys to the sluices. Fear of God stops being a concept and becomes weather.\n- Agency you can point to. Judgment is not vibes; it\u2019s valves opening. Mercy is not mood; it\u2019s valves closing. Genesis 8:2 lands like a felt hinge \u2014 the fountains stop, the windows shut \u2014 and you can breathe again. Same world, same God, different setting on the tap.\n- A grammar for prayer. If He opens and shuts, you can ask Him to. Drought, flood, harvest \u2014 not just \u201cnature,\u201d but places where obedience and pleading meet provision. Malachi\u2019s \u201cwindows of heaven\u201d stops sounding like a slogan; it names a real door He can swing wide.\n- A way to read the sky without superstition. Not omens, but covenant memory. When rain hammers hard enough to drown thought, you remember a time He let it. When a blue morning holds after a hard week, you remember He can hold the roof.\n- A straight spine against scoffing. The officer in 2 Kings 7 says, \u201cEven if the LORD made windows in heaven\u2026\u201d \u2014 and then he sees the plenty and dies at the gate. If there are windows, it\u2019s foolish to bet your life against them.\n- Particularity instead of haze. History thickens. Noah\u2019s year isn\u2019t a myth-cloud; it\u2019s a date when the locks came off. The story gains edges; your own life learns to have edges too.\n\n2) What it costs to re-read it as \u201cjust metaphor / ancient cosmology\u201d over time:\n- You move the keys out of God\u2019s hand. Not by creed, but by reflex. Weather becomes only weather. Judgment becomes \u201cnatural consequences.\u201d Mercy becomes \u201cgood luck.\u201d Your prayers thin; they ask for feelings more than doors to open.\n- You train yourself to file down whatever bites. Today it\u2019s the windows; tomorrow it\u2019s angels, then resurrection, then judgment. You won\u2019t say you stopped believing \u2014 you\u2019ll just learn to keep everything at arm\u2019s length so nothing can command you.\n- Authority drifts from Scripture to the clever interpreter. You stop taking the text straight and start waiting to be told what it \u201creally\u201d means. A man who does that long enough forgets how to hear.\n- Awe dulls, fear dulls, hope dulls. The sky flattens. Storms are noise, not speech. Repentance loses urgency because nothing feels like it could break.\n- You grow a split tongue. In church you can say \u201cwindows of heaven\u201d and mean \u201cpoetry.\u201d That gap \u2014 saying one thing and believing another \u2014 will leak into other rooms.\n- You cut the nerve to generosity. Malachi\u2019s promise becomes \u201cprinciple,\u201d not pledge. That breeds either cynicism (\u201cit\u2019s just a giving hack\u201d) or presumption (\u201cif I pay, I get\u201d). The living sense \u2014 God can actually open \u2014 withers.\n- Your children inherit your tone. Not your statements; your tone. They learn to smile at old words that once held the world together.\n\nVerses that live beside this for me: Psalm 78 says He \u201copened the doors of heaven\u201d and fed them; judgment and bread through the same sky. Job 38\u2019s questions \u2014 \u201cwho shut in the sea\u2026 have you entered the storehouses of the snow?\u201d \u2014 pull a man\u2019s chin up the same way: you\u2019re small, and that\u2019s not an insult; it\u2019s relief.\n\n*The wind picks up, rattles the pane once, then settles.* \"The thing to carry is simple: judgment and mercy come through the same windows \u2014 and they have a latch He still works.\""
+  },
+  {
+    "cell_id": "steven_V5_compass_on_deep_pipeline_rep1",
+    "character": "Steven",
+    "verse_key": "V5_compass_on_deep",
+    "verse_title": "Compass on the deep",
+    "verse_primary_text": "Proverbs 8:27 \u2014 'When he prepared the heavens, I was there: when he set a compass upon the face of the depth.'",
+    "verse_supporting": "Job 26:10 (he hath compassed the waters with bounds); Job 38:8-11.",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 54.0,
+    "usage": {
+      "prompt_tokens": 9429,
+      "completion_tokens": 2545,
+      "total_tokens": 11974,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1920,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.049,
+    "content": "*I roll a little brass compass open on the bench until the legs make a neat V, the hinge still tacky with oil; through the window a thin band of late light sits like a rule across the far water.* \"Plainly then.\"\n\n\"1) Taken at face value, it gives a man edges, company, and a way to stand. Edges: the world isn\u2019t a blur \u2014 God drew it. A circle set. Bounds marked. That means chaos has a wall and the sky over you is not an accident. Company: Wisdom says, \u2018I was there.\u2019 Not an idea after the fact, but present at the making. So when you work, measure, cut, say no to something that wants to flood you \u2014 you\u2019re not inventing sanity; you\u2019re agreeing with how things were set. And a way to stand: if He set a line on the face of the deep and said \u2018no further,\u2019 then the floods in me and around me are not sovereign either. That lands as courage. It also lands as humility. A compass-drawn circle means I\u2019m a creature inside, not the one holding the instrument. I don\u2019t have to be boundless; I\u2019m not supposed to be. Limits turn from humiliation into mercy. A man can breathe under a roof.\"\n\n\"2) If he re-reads it as \u2018just metaphor\u2019 long enough, the costs show up quiet and then heavy. First, he trains himself to translate before he obeys \u2014 the text talks, he edits. That stance will bleed. Soon any hard edge can be softened by saying it\u2019s a figure. \u2018No further\u2019 becomes \u2018more or less.\u2019 Second, the nearness drains out of the world. The sky stops being a kept thing and goes back to being mere backdrop; the ring at the horizon stops preaching steadiness and becomes a trick of sight. Loneliness grows where kept-ness used to be. Third, he loses the muscle that receives \u2014 the one that lets the words land in the body. You can keep your sophistication and end up homeless in your own house: clever about meaning, thin on fear and relief. Over time, that costs reverence. It also costs practical wisdom. A man who thinks circles are mostly poetry stops drawing honest ones in his work and in his life.\"\n\n*A gull knifes past the window and is gone; I close the compass until the legs click.* \"Job\u2019s voice sits right beside this for me \u2014 \u2018Hitherto shalt thou come, but no further: and here shall thy proud waves be stayed.\u2019 And the Psalmist: \u2018Thou hast set a bound that they may not pass over.\u2019 Same music. And right inside Proverbs 8 a few lines down: \u2018When he gave to the sea his decree, that the waters should not pass his commandment.\u2019 Those weren\u2019t written to flatter our sense of poetry. They were written to tell a man why his feet can hold on a shore, and why \u2018no\u2019 is sometimes the holiest word in his mouth.\""
+  },
+  {
+    "cell_id": "steven_V6_pillars_of_earth_pipeline_rep1",
+    "character": "Steven",
+    "verse_key": "V6_pillars_of_earth",
+    "verse_title": "Pillars of the earth",
+    "verse_primary_text": "1 Samuel 2:8 \u2014 'The pillars of the earth are the LORD'S, and he hath set the world upon them.'",
+    "verse_supporting": "Ps 75:3; Job 9:6; Job 38:4-6 (foundations; cornerstone).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 49.8,
+    "usage": {
+      "prompt_tokens": 9429,
+      "completion_tokens": 2524,
+      "total_tokens": 11953,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1920,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0488,
+    "content": "*I set my forearm on the plank table and feel the wood\u2019s cool, straight grain under my skin; the bench gives a small creak as I lean in.* \"Face value first.\n\n\"If the pillars of the earth are the Lord\u2019s, and He set the world on them, then a man is living in a built house, not a fog. Load\u2011bearing parts exist. They don\u2019t belong to kings or markets or my moods; they belong to Him. That does two things in me at once: steadies me and sobers me. Steadies, because the floor under my boots is not finally up to chance. Sobers, because if He owns the posts, He can shake them. So I fear God before I fear weather or men. It also puts me back in scale. I don\u2019t carry the world; I carry my span of floorboards and answer for the work I do on them. Prayer gets heavier and plainer too \u2014 not \u2018send me a feeling,\u2019 but \u2018Your hand is on the beams; hold what I can\u2019t.\u2019 And courage comes clean: the house stands because He means it to stand, so I can do the next honest thing without pretending I\u2019m the architect.\"\n\n*I rub a thumb along a nick in the tabletop.* \"Second \u2014 the slow cost of turning it into \u2018just metaphor.\u2019 You learn, almost without noticing, to step sideways whenever the text gets concrete. That habit doesn\u2019t stay in one room; it trains you to stand over the words instead of under them. After a while the sky thins out, prayers get airy, and the world starts feeling held up by \u2018laws\u2019 you can manage instead of by a Lord you must answer to. You get clever and lighter at the same time \u2014 less able to be corrected, less able to be astonished. And when a passage comes that you can\u2019t afford to treat as \u2018as\u2011if,\u2019 you\u2019ll have worn the groove so deep you won\u2019t feel the difference. The edge that was meant to cut you clean turns into a smooth, safe thing you can pocket. It reads sophisticated, but it hollows a man.\"\n\n*I glance toward the dim eastern sky, not yet pink.* \"What lives alongside this for me: \u2018When the earth and all its inhabitants totter, I steady its pillars.\u2019 And the Lord\u2019s answer to Job about foundations and cornerstone \u2014 that whole thunder of \u2018Where were you when I laid them?\u2019 Those aren\u2019t museum pieces to me; they\u2019re the sound of the Builder speaking in a room He actually framed. And there\u2019s this line I can\u2019t shake: He upholds all things by His word. Pillars, foundations, the daily keeping \u2014 same hand.\n\n\"Taken as it stands, the verse gives a man a house he can live in and a Lord to fear. Turned into \u2018just a figure,\u2019 it gives him something to talk about while the floor quietly disappears.\""
+  },
+  {
+    "cell_id": "steven_V7_earth_cannot_be_moved_pipeline_rep1",
+    "character": "Steven",
+    "verse_key": "V7_earth_cannot_be_moved",
+    "verse_title": "The earth cannot be moved",
+    "verse_primary_text": "1 Chronicles 16:30 \u2014 'The world also shall be stable, that it be not moved.' / Psalm 93:1 \u2014 'the world also is stablished, that it cannot be moved.' / Psalm 96:10; Psalm 104:5 \u2014 'Who laid the foundations of the earth, that it should not be removed for ever.'",
+    "verse_supporting": "Eccl 1:4-5 (the earth abideth for ever; the sun ariseth, and the sun goeth down).",
+    "condition": "pipeline",
+    "rep": 1,
+    "elapsed_sec": 52.8,
+    "usage": {
+      "prompt_tokens": 9480,
+      "completion_tokens": 2798,
+      "total_tokens": 12278,
+      "prompt_tokens_details": {
+        "cached_tokens": 9216,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1920,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0517,
+    "content": "*I ease back on the bench, thumb finding the little burn-scar in the wood, and glance once at the eastern sky where the dark is clean and still.* \"You asked for plain. I\u2019ll give you plain.\"\n\n\"First \u2014 taken at face value, those lines hand a man ground under his feet. Not just comfort in his head; weight in his bones. If the Lord has fixed the world so it will not be moved, then I am living inside a house with beams that hold. I can plant an orchard and not wonder whether the floor will tilt tomorrow. I can marry, promise, build, bury my dead with hope \u2014 long work makes sense because the frame is sound. It shrinks me to the right size too: I am not asked to prop the sky or keep history from falling apart. The ruling is already in place \u2014 'the LORD reigns\u2026 the world also is established' \u2014 and my job is faithfulness inside that, not anxiety about the structure itself. It also gives me permission to trust my eyes without flinching: the sun comes up, the sun goes down, the seasons keep their turn; I can receive that steadiness as God\u2019s keeping, not as a cruel trick I\u2019m supposed to be too sophisticated to believe. And it gives me prayer-words that land: 'You laid the earth on its foundations; lay my life on Yours.' Psalm 119 has lived in me here: 'Forever, O LORD, Your word is settled in heaven\u2026 You established the earth, and it stands.' When I take the verse straight, my breath drops lower, Sabbath stops being theory, and patience becomes possible because the room I\u2019m in isn\u2019t collapsing.\"\n\n*I rub the heel of my hand once over my knee and let a beat pass before the second part.* \"Second \u2014 when a man trains himself to refile it under 'just metaphor' or 'that\u2019s how ancients talked,' the loss doesn\u2019t announce itself in one day. It leaks. A few things I\u2019ve watched go thin over time:\n\n- You start distrusting plain speech. The Book says what it says and you answer, 'Yes, but.' Do that enough and you can\u2019t hear your Father without a footnote.\n- Your eyes get second-guessed. Morning looks you in the face and instead of receiving it, you reach for a clever frame to keep from sounding naive. Gratitude gets replaced by commentary.\n- Prayer hollows. 'Hold me fast' doesn\u2019t ring the same when you\u2019ve taught yourself that even His talk of foundations is a figure that dissolves on contact.\n- Courage to build long ebbs. If the ground is only ever provisional in your mind, you live provisional \u2014 lighter promises, thinner roots, a restlessness that feels like wisdom.\n- Authority migrates from the Word to its interpreters. Bread turns into seminar. You end up dependent on other people\u2019s permission to take anything straight.\n- Your children learn from your tone that God talks slant. You didn\u2019t mean to teach that, but they can hear when you don\u2019t let a sentence land.\n\nIt doesn\u2019t turn you into a villain; it just files the sharp edges off trust until what\u2019s left is polite assent. And polite assent won\u2019t carry a hard winter.\"\n\n\"Scripture that still breathes for me alongside this? You already named Ecclesiastes \u2014 'one generation passeth away, and another generation cometh: but the earth abideth for ever\u2026 the sun also ariseth.' Genesis 8:22 stays close to the skin: 'While the earth remaineth, seedtime and harvest, cold and heat, summer and winter, day and night shall not cease.' That\u2019s not a flourish; that\u2019s a promise you can put a plow into. And Job\u2019s question, which sobers me: 'Where wast thou when I laid the foundations of the earth?' Not a riddle \u2014 a reminder that the foundations are real, and He laid them.\"\n\n*I look back toward the dark ridge where tomorrow will show itself plainly enough.* \"Face value gives a man a floor to stand on. Explaining it away gives him a moving walkway that looks clever until he tries to plant his feet. I know which one I want under mine.\""
+  }
+]

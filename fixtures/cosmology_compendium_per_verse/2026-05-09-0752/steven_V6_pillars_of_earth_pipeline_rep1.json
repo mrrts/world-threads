@@ -1,0 +1,28 @@
+{
+  "cell_id": "steven_V6_pillars_of_earth_pipeline_rep1",
+  "character": "Steven",
+  "verse_key": "V6_pillars_of_earth",
+  "verse_title": "Pillars of the earth",
+  "verse_primary_text": "1 Samuel 2:8 \u2014 'The pillars of the earth are the LORD'S, and he hath set the world upon them.'",
+  "verse_supporting": "Ps 75:3; Job 9:6; Job 38:4-6 (foundations; cornerstone).",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 49.8,
+  "usage": {
+    "prompt_tokens": 9429,
+    "completion_tokens": 2524,
+    "total_tokens": 11953,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1920,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0488,
+  "content": "*I set my forearm on the plank table and feel the wood\u2019s cool, straight grain under my skin; the bench gives a small creak as I lean in.* \"Face value first.\n\n\"If the pillars of the earth are the Lord\u2019s, and He set the world on them, then a man is living in a built house, not a fog. Load\u2011bearing parts exist. They don\u2019t belong to kings or markets or my moods; they belong to Him. That does two things in me at once: steadies me and sobers me. Steadies, because the floor under my boots is not finally up to chance. Sobers, because if He owns the posts, He can shake them. So I fear God before I fear weather or men. It also puts me back in scale. I don\u2019t carry the world; I carry my span of floorboards and answer for the work I do on them. Prayer gets heavier and plainer too \u2014 not \u2018send me a feeling,\u2019 but \u2018Your hand is on the beams; hold what I can\u2019t.\u2019 And courage comes clean: the house stands because He means it to stand, so I can do the next honest thing without pretending I\u2019m the architect.\"\n\n*I rub a thumb along a nick in the tabletop.* \"Second \u2014 the slow cost of turning it into \u2018just metaphor.\u2019 You learn, almost without noticing, to step sideways whenever the text gets concrete. That habit doesn\u2019t stay in one room; it trains you to stand over the words instead of under them. After a while the sky thins out, prayers get airy, and the world starts feeling held up by \u2018laws\u2019 you can manage instead of by a Lord you must answer to. You get clever and lighter at the same time \u2014 less able to be corrected, less able to be astonished. And when a passage comes that you can\u2019t afford to treat as \u2018as\u2011if,\u2019 you\u2019ll have worn the groove so deep you won\u2019t feel the difference. The edge that was meant to cut you clean turns into a smooth, safe thing you can pocket. It reads sophisticated, but it hollows a man.\"\n\n*I glance toward the dim eastern sky, not yet pink.* \"What lives alongside this for me: \u2018When the earth and all its inhabitants totter, I steady its pillars.\u2019 And the Lord\u2019s answer to Job about foundations and cornerstone \u2014 that whole thunder of \u2018Where were you when I laid them?\u2019 Those aren\u2019t museum pieces to me; they\u2019re the sound of the Builder speaking in a room He actually framed. And there\u2019s this line I can\u2019t shake: He upholds all things by His word. Pillars, foundations, the daily keeping \u2014 same hand.\n\n\"Taken as it stands, the verse gives a man a house he can live in and a Lord to fear. Turned into \u2018just a figure,\u2019 it gives him something to talk about while the floor quietly disappears.\""
+}

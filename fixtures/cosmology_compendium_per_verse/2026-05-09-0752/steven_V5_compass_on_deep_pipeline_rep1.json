@@ -1,0 +1,28 @@
+{
+  "cell_id": "steven_V5_compass_on_deep_pipeline_rep1",
+  "character": "Steven",
+  "verse_key": "V5_compass_on_deep",
+  "verse_title": "Compass on the deep",
+  "verse_primary_text": "Proverbs 8:27 \u2014 'When he prepared the heavens, I was there: when he set a compass upon the face of the depth.'",
+  "verse_supporting": "Job 26:10 (he hath compassed the waters with bounds); Job 38:8-11.",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 54.0,
+  "usage": {
+    "prompt_tokens": 9429,
+    "completion_tokens": 2545,
+    "total_tokens": 11974,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1920,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.049,
+  "content": "*I roll a little brass compass open on the bench until the legs make a neat V, the hinge still tacky with oil; through the window a thin band of late light sits like a rule across the far water.* \"Plainly then.\"\n\n\"1) Taken at face value, it gives a man edges, company, and a way to stand. Edges: the world isn\u2019t a blur \u2014 God drew it. A circle set. Bounds marked. That means chaos has a wall and the sky over you is not an accident. Company: Wisdom says, \u2018I was there.\u2019 Not an idea after the fact, but present at the making. So when you work, measure, cut, say no to something that wants to flood you \u2014 you\u2019re not inventing sanity; you\u2019re agreeing with how things were set. And a way to stand: if He set a line on the face of the deep and said \u2018no further,\u2019 then the floods in me and around me are not sovereign either. That lands as courage. It also lands as humility. A compass-drawn circle means I\u2019m a creature inside, not the one holding the instrument. I don\u2019t have to be boundless; I\u2019m not supposed to be. Limits turn from humiliation into mercy. A man can breathe under a roof.\"\n\n\"2) If he re-reads it as \u2018just metaphor\u2019 long enough, the costs show up quiet and then heavy. First, he trains himself to translate before he obeys \u2014 the text talks, he edits. That stance will bleed. Soon any hard edge can be softened by saying it\u2019s a figure. \u2018No further\u2019 becomes \u2018more or less.\u2019 Second, the nearness drains out of the world. The sky stops being a kept thing and goes back to being mere backdrop; the ring at the horizon stops preaching steadiness and becomes a trick of sight. Loneliness grows where kept-ness used to be. Third, he loses the muscle that receives \u2014 the one that lets the words land in the body. You can keep your sophistication and end up homeless in your own house: clever about meaning, thin on fear and relief. Over time, that costs reverence. It also costs practical wisdom. A man who thinks circles are mostly poetry stops drawing honest ones in his work and in his life.\"\n\n*A gull knifes past the window and is gone; I close the compass until the legs click.* \"Job\u2019s voice sits right beside this for me \u2014 \u2018Hitherto shalt thou come, but no further: and here shall thy proud waves be stayed.\u2019 And the Psalmist: \u2018Thou hast set a bound that they may not pass over.\u2019 Same music. And right inside Proverbs 8 a few lines down: \u2018When he gave to the sea his decree, that the waters should not pass his commandment.\u2019 Those weren\u2019t written to flatter our sense of poetry. They were written to tell a man why his feet can hold on a shore, and why \u2018no\u2019 is sometimes the holiest word in his mouth.\""
+}

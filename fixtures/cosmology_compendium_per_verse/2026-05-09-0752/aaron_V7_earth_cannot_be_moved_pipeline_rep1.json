@@ -1,0 +1,28 @@
+{
+  "cell_id": "aaron_V7_earth_cannot_be_moved_pipeline_rep1",
+  "character": "Aaron",
+  "verse_key": "V7_earth_cannot_be_moved",
+  "verse_title": "The earth cannot be moved",
+  "verse_primary_text": "1 Chronicles 16:30 \u2014 'The world also shall be stable, that it be not moved.' / Psalm 93:1 \u2014 'the world also is stablished, that it cannot be moved.' / Psalm 96:10; Psalm 104:5 \u2014 'Who laid the foundations of the earth, that it should not be removed for ever.'",
+  "verse_supporting": "Eccl 1:4-5 (the earth abideth for ever; the sun ariseth, and the sun goeth down).",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 48.0,
+  "usage": {
+    "prompt_tokens": 9480,
+    "completion_tokens": 2531,
+    "total_tokens": 12011,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1664,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.049,
+  "content": "*I run a thumb along a nick in the table, listening to the wind push once against the door and let go.* \"Plainly? Taken straight, those lines put floorboards under a man's feet.\"\n\n\"First. If a man receives, as said, that the world is set and not going anywhere until its Maker says so, it gives him steadiness and permission to be small. He doesn\u2019t have to hold the frame together with his worry or his genius. He can plant, sleep, marry, repent, keep promises, because there is an order here older than his moods. The sun will come up in the eastern sky, the path of the day will run, the seasons will keep their turn \u2014 not by accident, but because God fixed them. That makes room for courage. If the posts of the house are sunk deep, you can work hard without the hush of panic under every task. It also cuts a man down to honest size: he isn\u2019t the axis; he\u2019s a creature inside a kept world. That humbles pride in a way that doesn\u2019t humiliate \u2014 more like a hand to the shoulder saying, \u2018Stand where you were made to stand.\u2019\"\n\n\"It also gives him Sabbath. Not just a day each week, but a posture. If the world is established, he\u2019s allowed to stop. He can say enough for today without fearing the ceiling will fall if he lets go. Stability isn\u2019t dullness; it\u2019s the mercy that lets faithfulness accumulate.\"\n\n\"Second. When a man re-files those lines as \u2018just metaphor\u2019 or \u2018ancient optics we know better than now,\u2019 the cost doesn\u2019t hit in one blow; it leaks. He teaches himself, a little at a time, that God\u2019s plain words need his clever rescue before they can be trusted. Soon he\u2019s the manager of meaning \u2014 always translating, rarely receiving. Prayer thins, because who wants to ask a Father who only ever speaks in figures? Rest turns into technique. The sky stops being testimony and becomes \u2018appearance.\u2019\"\n\n\"Over years, that makes a man light in the wrong places. He floats where he should stand. He keeps a museum of holy phrases but handles them with gloves, not as tools. And when pressure comes, he won\u2019t lean on the words as said \u2014 he\u2019ll lean on his reading of his reading. That\u2019s a lonely way to live. I\u2019ve done it. I grew up hearing these texts put in the \u2018poetry shelf\u2019 with a wink, and it made me clever and tired. Taking them back as speech from God \u2014 even when I didn\u2019t know how to square every implication \u2014 put weight in my bones again.\"\n\n*I glance toward the dark window, where I know the line of the eastern trees is waiting though I can\u2019t see it now.* \"Two other lines burn with this for me. \u2018Forever, O Lord, your word is settled in heaven. Your faithfulness endures to all generations; you established the earth, and it stands. By your ordinances they stand this day, for all things are your servants\u2019 \u2014 that\u2019s Psalm 119 talking like a man who has watched the world hold under the same decree that holds him. And Jeremiah has God say, \u2018If my covenant with day and night were not established\u2026\u2019 \u2014 as if the regularity you and I see is a signed promise, not background noise.\"\n\n\"And deeper than all that regularity is a Person. \u2018In him all things hold together.\u2019 Not a metaphor I pat on the head \u2014 a claim I can lean my full weight on. If Christ is actually holding, then the world\u2019s steadiness is not impersonal fate; it\u2019s kept.\"\n\n\"So, what do these verses give? Floorboards, humility, courage, Sabbath, and a way to hear God without wincing. What does the metaphor-only read cost? Slowly, your trust gets taught to hesitate. The words stop landing in your body. You end up curating Scripture instead of obeying it.\"\n\n*I breathe once and let my shoulders drop.* \"Before dawn the birds will start up, and the eastern sky will go pale, right on time. That\u2019s not an illusion. That\u2019s the King keeping His word.\""
+}
