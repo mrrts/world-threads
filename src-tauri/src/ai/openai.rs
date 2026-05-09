@@ -330,10 +330,23 @@ pub fn inject_mission_formula(messages: &mut Vec<ChatMessage>) {
 /// WORLDTHREADS_NO_RYAN_FORMULA=1 disables injection for Mode-C bite-tests
 /// of "is the founding author's anchor doing work in real-time output?"
 pub fn inject_ryan_formula(messages: &mut Vec<ChatMessage>) {
-    if std::env::var("WORLDTHREADS_NO_RYAN_FORMULA")
+    // Round-5 Phase 4 ship (2026-05-09): Ryan formula injection default-skip
+    // per bite-test EnsembleVacuous verdict (12/12 cells preserved
+    // mission-shape — see `reports/round_5_no_ryan_formula_bench/`).
+    // Same disposition pattern as Phase 1 mission_prose (commit 21cb4c8)
+    // + Phase 2 agency+behavior (commit 8e53c45) + Phase 3 invariants
+    // (commit 7a23fb5). Function preserved as source-documentary; default
+    // skips. Test-mode override `WORLDTHREADS_RESTORE_RYAN_FORMULA=1`
+    // restores prior shipping behavior. Sibling pre-existing toggle
+    // `WORLDTHREADS_NO_RYAN_FORMULA=1` still works (returns early) for
+    // backward-compatibility; default flipped to suppress.
+    let restore = std::env::var("WORLDTHREADS_RESTORE_RYAN_FORMULA")
         .map(|v| v == "1")
-        .unwrap_or(false)
-    {
+        .unwrap_or(false);
+    let no_ryan = std::env::var("WORLDTHREADS_NO_RYAN_FORMULA")
+        .map(|v| v == "1")
+        .unwrap_or(false);
+    if !restore || no_ryan {
         return;
     }
     let anchor = crate::ai::prompts::active_author_anchor_block(None);

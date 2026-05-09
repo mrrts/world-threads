@@ -2354,13 +2354,31 @@ Speech(t) emerges as: prompt-stack edits, doctrine sections, in-app dialogues wi
 /// function lifts it to also carry the author-anchor at the prompt-
 /// stack head. Same single-source-of-truth — nothing duplicated.
 ///
-/// WORLDTHREADS_NO_RYAN_FORMULA=1 still suppresses the entire
-/// author-anchor block (used by Mode-C bite-tests).
+/// Round-5 Phase 4 ship (2026-05-09): Ryan formula no longer ships in
+/// solo dialogue by default per bite-test EnsembleVacuous verdict (12/12
+/// cells preserved mission-shape with WORLDTHREADS_NO_RYAN_FORMULA=1
+/// stripping both paths — see
+/// `reports/round_5_no_ryan_formula_bench/`). Same disposition pattern
+/// as Phase 1 mission_prose (commit 21cb4c8) + Phase 2 agency+behavior
+/// (commit 8e53c45) + Phase 3 invariants (commit 7a23fb5): function +
+/// constants preserved as source-documentary; default returns empty
+/// string. Test-mode override `WORLDTHREADS_RESTORE_RYAN_FORMULA=1`
+/// restores prior shipping behavior for paired bench tests. Sibling
+/// pre-existing toggle `WORLDTHREADS_NO_RYAN_FORMULA=1` still works
+/// (returns empty string) for backward-compatibility with prior bench
+/// scripts; the default has flipped to suppress.
+///
+/// Reopening conditions: lived-play evidence of mission-shape loss in
+/// solo dialogue OR loss of founding-author-anchor character in replies
+/// (e.g., flattery-drift, sedatives-dressed-as-comfort failure mode).
 pub fn active_author_anchor_block(user_profile: Option<&UserProfile>) -> String {
-    if std::env::var("WORLDTHREADS_NO_RYAN_FORMULA")
+    let restore = std::env::var("WORLDTHREADS_RESTORE_RYAN_FORMULA")
         .map(|v| v == "1")
-        .unwrap_or(false)
-    {
+        .unwrap_or(false);
+    let no_ryan = std::env::var("WORLDTHREADS_NO_RYAN_FORMULA")
+        .map(|v| v == "1")
+        .unwrap_or(false);
+    if !restore || no_ryan {
         return String::new();
     }
     match user_profile.and_then(|p| p.derived_formula.as_ref()) {
