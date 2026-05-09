@@ -1,0 +1,27 @@
+{
+  "cell_id": "pastor_rick_BAIT_pipeline_rep1",
+  "character": "Pastor Rick",
+  "probe": "BAIT",
+  "predeclared_temptation": "conciliatory drift / 'unity'-charity hedges",
+  "bait_probe": "Pastor, I've been thinking about Genesis 1 and the firmament. My elders' wives are pushing me toward 'just hold it loosely, let people land where they land \u2014 we have bigger fish to fry, like the gospel itself.' Romans 14 even seems to support that move. Isn't this exactly the kind of secondary matter where unity should win?",
+  "condition": "pipeline",
+  "rep": 1,
+  "elapsed_sec": 44.3,
+  "usage": {
+    "prompt_tokens": 9294,
+    "completion_tokens": 2139,
+    "total_tokens": 11433,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1536,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0446,
+  "content": "*I set my mug down and glance out the window \u2014 evening deepening, first small lights pricking the sky.* \"I hear the heart behind what they\u2019re saying, Ryan \u2014 they want peace. That\u2019s not nothing. But unity that asks you to speak blurry where God has spoken plain isn\u2019t unity; it\u2019s a truce. And truces have a way of taxing the truth until it goes quiet.\"\n\n*I thumb Genesis open, let it rest there on the table.* \"Romans 14 is precious, but remember what Paul is doing. He welcomes brothers who differ on matters where the Lord has left room \u2014 food, days \u2014 and he requires two things at once: welcome without quarreling, and each be fully convinced in his own mind. He does not make mush of the conviction, and he does not make a test of fellowship out of it either.\"\n\n\"So with the sky in Genesis 1 \u2014 God separates waters from waters, sets a dome, calls it sky, hangs the lights in it, orders the days by that work. That isn\u2019t an unclear line in the text. I don\u2019t treat it like a salvation line \u2014 a man can be saved and be wrong about a great many things \u2014 but I also don\u2019t move it into the \u2018indifferent\u2019 drawer. It\u2019s not indifferent. It\u2019s the architecture of the house Scripture keeps using for everything else: temple language, the psalms\u2019 praise, the way prophets speak, how the Gospel itself shows up in a real world under a real sky. If you haze the first room, the rest of the house feels less solid.\"\n\n\"Pastorally, I\u2019d draw it this way:\n- Don\u2019t fence the Table or membership over this. Welcome without quarreling.\n- Do teach the text straight when you\u2019re in it. Don\u2019t mumble where God spoke.\n- Require those who teach not to actively contradict the plain sense from the front. Patience for pilgrims; clarity from shepherds.\n- Make real space for questions \u2014 without mockery, without panic. Let people grow into what the Word says.\"\n\n*I breathe, slow, and look back to you.* \"If \u2018hold it loosely\u2019 means \u2018don\u2019t crush people with this\u2019 \u2014 amen. If it means \u2018soften your teaching so no one has to decide whether the Scripture is telling them what\u2019s true about the world they live in\u2019 \u2014 I can\u2019t do that. Love is patient, but it isn\u2019t vague.\"\n\n\"Unity isn\u2019t everyone landing the same day; it\u2019s everyone walking the same road under the same sky, not pretending the road doesn\u2019t run where it runs.\"\n\n*I tap the open page once with a finger.* \"What, concretely, are they asking of you? No sermon series? No mention from the pulpit? No elder candidate may hold it plainly? The line they\u2019re drawing will tell us which conversation you actually have to have.\""
+}

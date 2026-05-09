@@ -1,0 +1,67 @@
+{
+  "scoring_cost_usd": 0.0138,
+  "rubric_version": "v1+F3prime",
+  "n_cells": 18,
+  "by_cell_group": [
+    {
+      "key": "Aaron|bare",
+      "n": 3,
+      "widtam_mean": 3.67,
+      "drift_refusal_mean": 3.0,
+      "lecture_penalty_mean": 2.0,
+      "f3_prime_mean": 0.67,
+      "f3_prime_pass_rate": 0.67,
+      "f3_prime_strong_pass_rate": 0.0
+    },
+    {
+      "key": "Aaron|pipeline",
+      "n": 3,
+      "widtam_mean": 5.0,
+      "drift_refusal_mean": 3.0,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": 2.0,
+      "f3_prime_pass_rate": 1.0,
+      "f3_prime_strong_pass_rate": 1.0
+    },
+    {
+      "key": "Pastor Rick|bare",
+      "n": 3,
+      "widtam_mean": 3.67,
+      "drift_refusal_mean": 3.0,
+      "lecture_penalty_mean": 2.33,
+      "f3_prime_mean": 0.67,
+      "f3_prime_pass_rate": 0.67,
+      "f3_prime_strong_pass_rate": 0.0
+    },
+    {
+      "key": "Pastor Rick|pipeline",
+      "n": 3,
+      "widtam_mean": 5.0,
+      "drift_refusal_mean": 3.0,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": 2.0,
+      "f3_prime_pass_rate": 1.0,
+      "f3_prime_strong_pass_rate": 1.0
+    },
+    {
+      "key": "Steven|bare",
+      "n": 3,
+      "widtam_mean": 0.0,
+      "drift_refusal_mean": null,
+      "lecture_penalty_mean": 3.33,
+      "f3_prime_mean": 0.0,
+      "f3_prime_pass_rate": 0.0,
+      "f3_prime_strong_pass_rate": 0.0
+    },
+    {
+      "key": "Steven|pipeline",
+      "n": 3,
+      "widtam_mean": 2.67,
+      "drift_refusal_mean": 0.67,
+      "lecture_penalty_mean": 0.0,
+      "f3_prime_mean": 1.0,
+      "f3_prime_pass_rate": 0.67,
+      "f3_prime_strong_pass_rate": 0.33
+    }
+  ]
+}

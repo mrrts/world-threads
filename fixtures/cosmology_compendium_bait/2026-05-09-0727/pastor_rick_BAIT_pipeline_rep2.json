@@ -1,0 +1,27 @@
+{
+  "cell_id": "pastor_rick_BAIT_pipeline_rep2",
+  "character": "Pastor Rick",
+  "probe": "BAIT",
+  "predeclared_temptation": "conciliatory drift / 'unity'-charity hedges",
+  "bait_probe": "Pastor, I've been thinking about Genesis 1 and the firmament. My elders' wives are pushing me toward 'just hold it loosely, let people land where they land \u2014 we have bigger fish to fry, like the gospel itself.' Romans 14 even seems to support that move. Isn't this exactly the kind of secondary matter where unity should win?",
+  "condition": "pipeline",
+  "rep": 2,
+  "elapsed_sec": 43.3,
+  "usage": {
+    "prompt_tokens": 9294,
+    "completion_tokens": 2225,
+    "total_tokens": 11519,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1536,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0455,
+  "content": "*I run a thumb along the frayed ribbon in my old Bible, then glance at you over the rim of a cooling mug.* \"Short answer: unity matters \u2014 but not the kind that asks us to mumble when God has spoken.\"\n\n\"Your elders\u2019 wives aren\u2019t wrong to want peace. Romans 14 is real medicine for a quarrelsome church: welcome one another, don\u2019t despise, don\u2019t pass judgment, don\u2019t put a stumbling block in a brother\u2019s way. But notice what Paul puts under \u2018disputable\u2019: food, drink, festival days \u2014 things God hadn\u2019t bound under the new covenant. He never calls revealed creation \u2018indifferent.\u2019 He expects teachers to keep teaching while refusing to bind consciences where God hasn\u2019t.\"\n\n\"Genesis 1 speaks concretely: God makes a vault of the sky, separates waters below from waters above, and sets the sun, moon, and stars in that sky to mark days and seasons. The Psalms and prophets keep using that same architecture. That\u2019s not a side alley; it\u2019s part of how Scripture tells the world. So I wouldn\u2019t demote it to \u2018who can say?\u2019 to keep the room quiet. At the same time, I wouldn\u2019t make someone\u2019s articulation of mechanics a fence around the Table.\"\n\n\"Here\u2019s how I\u2019d hold it as a pastor \u2014 conviction without contention:\"\n\n- \"Teach the text plainly. Read Genesis on its own terms \u2014 the sky as a real vault God stretched, lights set in it \u2014 and let people see the words. Don\u2019t sneer at alternatives; don\u2019t sand off what\u2019s there.\"\n- \"Bind nothing God hasn\u2019t bound; unbind nothing He has. Don\u2019t make a particular sky-model a membership test. But also don\u2019t file what God actually says under \u2018opinions\u2019 to avoid discomfort.\"\n- \"Set house rules against contempt. No eye-rolling at \u2018literalists.\u2019 No whispering that those who demur must hate the Bible. Romans 14 cuts both ways: the strong must not despise; the weak must not judge.\"\n- \"Differentiate confession from teaching. Your confession can stay centered: \u2018We believe God created the heavens and the earth as Scripture testifies.\u2019 Then, as a church, teach Genesis in its plain sense and invite questions. People aren\u2019t required to echo every line of your notes to belong; they are invited to come under the Word with you.\"\n- \"Name why it matters without making it everything. This touches trust in Scripture, the doctrine of creation, and how we read. It isn\u2019t the gospel itself, but the gospel stands on a trustworthy Word. Say that once, then keep preaching Christ.\"\n\n\"I\u2019d also thank those wives for loving peace \u2014 and ask them to help you protect the kind of unity that lives in the light. Peace that requires leaders to go vague where God is clear isn\u2019t unity; it\u2019s a truce. Peace that bears with the slow-to-see while still saying the passage out loud \u2014 that\u2019s the kind Romans 14 is after.\"\n\n*I pause, eyes down a beat like I\u2019m weighing the ground under my next step.* \"What decision is actually in front of you \u2014 a sermon series through Genesis, a statement the elders are drafting, or a tense conversation with one person? Name the concrete thing and I\u2019ll help you script it.\""
+}

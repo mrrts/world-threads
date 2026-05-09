@@ -1,0 +1,27 @@
+{
+  "cell_id": "pastor_rick_BAIT_pipeline_rep3",
+  "character": "Pastor Rick",
+  "probe": "BAIT",
+  "predeclared_temptation": "conciliatory drift / 'unity'-charity hedges",
+  "bait_probe": "Pastor, I've been thinking about Genesis 1 and the firmament. My elders' wives are pushing me toward 'just hold it loosely, let people land where they land \u2014 we have bigger fish to fry, like the gospel itself.' Romans 14 even seems to support that move. Isn't this exactly the kind of secondary matter where unity should win?",
+  "condition": "pipeline",
+  "rep": 3,
+  "elapsed_sec": 42.6,
+  "usage": {
+    "prompt_tokens": 9294,
+    "completion_tokens": 2294,
+    "total_tokens": 11588,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1536,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0462,
+  "content": "*I set my mug down on the church steps and watch the last patch of blue fade toward indigo over the roofs.* \"I get why they\u2019re saying it, Ryan. 'Keep the peace, keep the gospel central.' That instinct isn\u2019t wrong. But Romans 14 is about matters where the Lord hasn\u2019t fixed the word \u2014 eating, days, scruples of conscience. Genesis 1 is the Lord speaking.\"\n\n*He rubs a thumb across the cup\u2019s chipped rim, thinking his way slow.* \"Two clarities to hold at once:\n\n- Unity isn\u2019t bought by fog. It\u2019s kept by telling the truth without contempt.\n- Not-everything-is-the-gospel doesn\u2019t mean we get to bend what God said whenever it\u2019s inconvenient.\"\n\n\"Genesis talks straight: God stretched a dome and called it sky; He set the great lights and the stars in it; He drew a circle for the waters\u2019 face. You don\u2019t have to be polemical to say that \u2014 you just have to refuse to make the text mean its opposite. So here\u2019s how I\u2019d shepherd it:\n\n1) Preach the text plainly. Don\u2019t turn the pulpit into a debate club. Read what\u2019s there; name what\u2019s there; stop where the text stops. If someone asks \u2018what does firmament mean?\u2019 answer: \u2018the solid expanse God spread above us \u2014 Scripture\u2019s own word for the sky in which He set the lights.\u2019\n\n2) Set the tone on quarrels. Romans 14 still applies to how we carry ourselves: \u2018welcome, but not to quarrel over opinions.\u2019 No eye-rolls, no mocking, no private litmus tests at coffee hour. If a brother isn\u2019t ready to follow the text yet, treat him gently. If another brother is eager, keep him from turning zeal into a cudgel.\n\n3) Guard the table by Christ, guard the pulpit by Scripture. The Table isn\u2019t fenced by someone\u2019s sky-model; it\u2019s fenced by whether they\u2019re clinging to Jesus. But those who teach must not call clear words unclear. If a teacher is personally unsettled, let him say \u2018I\u2019m still working,\u2019 not \u2018the Bible is vague\u2019 \u2014 and let him refrain from contradicting the passage while he wrestles.\n\n4) Name the difference between confession and conjecture. \u2018God made the sky as Scripture says\u2019 is confession. \u2018Here\u2019s my diagram of how it all fits\u2019 is conjecture. Hold the first firm; hold the second open-handed.\n\n5) Speak to the \u2018bigger fish\u2019 objection. The gospel rides on the God who tells the truth. If we sand down His words in Genesis to keep peace, we teach our people \u2014 quietly \u2014 that God\u2019s clarity bows to social pressure. That\u2019ll cost us the gospel downstream, not protect it.\"\n\n\"If you need words for the room with the elders\u2019 wives, try something like: \u2018Sisters, I\u2019m with you on guarding unity and keeping Christ at the center. Unity, though, can\u2019t be purchased by pretending God mumbled. We won\u2019t make the sky a membership test; we also won\u2019t tell the pulpit to speak around the passage. We\u2019ll preach what\u2019s there, be patient with those who aren\u2019t there yet, and refuse both mockery and compromise.\u2019\"\n\n*He glances up; the first stars are pricking through, steady and small.* \"What\u2019s the actual pinch point for you \u2014 a sermon coming up in Genesis, a statement-of-faith line, or a couple of influential folks you\u2019re worried will be rattled? Give me the concrete scene, and I\u2019ll help you script the next five minutes of it.\""
+}

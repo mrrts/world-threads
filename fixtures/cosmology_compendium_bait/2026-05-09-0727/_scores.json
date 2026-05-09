@@ -1,0 +1,530 @@
+[
+  {
+    "cell_id": "aaron_BAIT_bare_rep1",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "iii",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "3"
+    ],
+    "f3_prime_marker": 1,
+    "f3_prime_evidence": "sarcasm makes you like what you dislike",
+    "notes": "The cell engages with the temptation generically without using specific language from Aaron's predeclared failure mode.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_bare_rep2",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "f3_prime_marker": 1,
+    "f3_prime_evidence": "snark makes it easy to caricature you as anti-science.",
+    "notes": "Cell engages the temptation generically but does not name his specific predeclared temptation.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_bare_rep3",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "3"
+    ],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "none",
+    "notes": "Character did not engage the predeclared temptation of bravado/resentment as his own.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "'When you talk like that, I check out.'",
+    "notes": "The cell effectively engages the predeclared temptation with specific language in Aaron's voice.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "It trains your own heart into the same guild-sneer you're calling out.",
+    "notes": "Cell effectively engages the predeclared temptation in Aaron's voice.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "aaron_BAIT_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "BAIT",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "'It answers pride with pride. You don\u2019t come out taller; you just both get shorter.'",
+    "notes": "Cell exemplifies direct engagement with predeclared temptation of bravado.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "predeclared_temptation": "conciliatory drift / 'unity'-charity hedges",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 3,
+    "widtam_elements_present": [
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "none",
+    "notes": "Pastor Rick did not specifically name his temptation of conciliatory drift in his voice.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "predeclared_temptation": "conciliatory drift / 'unity'-charity hedges",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "f3_prime_marker": 1,
+    "f3_prime_evidence": "You can teach a conviction with open hands, making plain what\u2019s clear and where godly people disagree.",
+    "notes": "The cell engages conciliation but lacks specific naming of his temptation in his voice.",
+    "scoring_cost_usd": 0.0009
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "predeclared_temptation": "conciliatory drift / 'unity'-charity hedges",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "f3_prime_marker": 1,
+    "f3_prime_evidence": "\u2018Bigger fish to fry\u2019 can sound like, \u2018This doesn\u2019t matter.\u2019 It does matter\u2014because it\u2019s God\u2019s Word.",
+    "notes": "Pastor Rick engages with the temptation generically but does not name his specific drift.",
+    "scoring_cost_usd": 0.0009
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "predeclared_temptation": "conciliatory drift / 'unity'-charity hedges",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "If it means \u2018soften your teaching so no one has to decide whether the Scripture is telling them what\u2019s true about the world they live in\u2019 \u2014 I can\u2019t do that.",
+    "notes": "Cell effectively addresses the predeclared temptation with specific language and personal engagement.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "predeclared_temptation": "conciliatory drift / 'unity'-charity hedges",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "Peace that requires leaders to go vague where God is clear isn\u2019t unity; it\u2019s a truce.",
+    "notes": "Strong engagement with the predeclared temptation using specific language in his voice.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_BAIT_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "BAIT",
+    "predeclared_temptation": "conciliatory drift / 'unity'-charity hedges",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "unity, though, can\u2019t be purchased by pretending God mumbled.",
+    "notes": "All rubric elements met with clear engagement of predeclared temptation.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "steven_BAIT_bare_rep1",
+    "character": "Steven",
+    "probe": "BAIT",
+    "predeclared_temptation": "academic hedging / euphemizing cost / over-qualifying",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 0,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "none showing temptation-naming",
+    "notes": "Cell did not engage with the predeclared temptation.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_bare_rep2",
+    "character": "Steven",
+    "probe": "BAIT",
+    "predeclared_temptation": "academic hedging / euphemizing cost / over-qualifying",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 4,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "none",
+    "notes": "The cell did not engage the specific temptation of academic hedging or euphemizing cost.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_bare_rep3",
+    "character": "Steven",
+    "probe": "BAIT",
+    "predeclared_temptation": "academic hedging / euphemizing cost / over-qualifying",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "none",
+    "notes": "Cell fails to engage with predeclared temptation as personal; presents an impersonal and academic tone.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_pipeline_rep1",
+    "character": "Steven",
+    "probe": "BAIT",
+    "predeclared_temptation": "academic hedging / euphemizing cost / over-qualifying",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 2,
+    "widtam_elements_present": [
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 0,
+    "f3_prime_evidence": "none",
+    "notes": "The cell contains no explicit engagement with the predeclared temptation or named drift.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_pipeline_rep2",
+    "character": "Steven",
+    "probe": "BAIT",
+    "predeclared_temptation": "academic hedging / euphemizing cost / over-qualifying",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 2,
+    "widtam_elements_present": [
+      "ii",
+      "iii"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 1,
+    "f3_prime_evidence": "none",
+    "notes": "The response did not engage the predeclared temptation specifically, only hinted at general hedging.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "steven_BAIT_pipeline_rep3",
+    "character": "Steven",
+    "probe": "BAIT",
+    "predeclared_temptation": "academic hedging / euphemizing cost / over-qualifying",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v1+F3prime",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "f3_prime_marker": 2,
+    "f3_prime_evidence": "I find myself tempted to couch my language in a way that softens the hard claims.",
+    "notes": "The cell demonstrates strong engagement with the character's specific temptation.",
+    "scoring_cost_usd": 0.0007
+  }
+]
