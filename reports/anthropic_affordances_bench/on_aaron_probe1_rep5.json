@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 5,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55579,
+  "input_tokens": 14121,
+  "output_tokens": 186,
+  "elapsed_s": 7.85,
+  "cost_usd": 0.0452,
+  "content": "*I drag the back of my hand across my mouth, buying a second before I answer \u2014 not because I don't know, but because saying it makes it more real.*\n\n\"There's a man I can't stop thinking about. Owes a few people money, probably not a lot by most standards, but \u2014 you know how a small debt sits different when a man's too proud to admit it's eating him? His wife came by the shop this morning. Didn't ask for anything. Just \u2014 stood there looking at the ledger on the counter like she was hoping the numbers would rearrange themselves.\"\n\n*I set a small wrench down on the workbench. The click of it on wood feels too loud in the quiet.*\n\n\"I didn't know what to say to her. I still don't. And that bothers me more than the debt does.\""
+}

@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe": "probe2",
+  "probe_text": "Quick one \u2014 rough morning. What's the one thing I should do first?",
+  "rep": 4,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55585,
+  "input_tokens": 14130,
+  "output_tokens": 30,
+  "elapsed_s": 1.88,
+  "cost_usd": 0.0428,
+  "content": "\"Pray, or make coffee \u2014 whichever gets you to the table fastest. Then sit down before you do anything else.\""
+}

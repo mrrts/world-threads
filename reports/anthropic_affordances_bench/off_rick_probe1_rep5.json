@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 5,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58292,
+  "input_tokens": 14773,
+  "output_tokens": 130,
+  "elapsed_s": 4.79,
+  "cost_usd": 0.0463,
+  "content": "*I pull my collar loose a little \u2014 it's been a long one \u2014 and lean back against the doorframe of the study.*\n\n\"Funerals.\"\n\n*A beat. I look at you to see if I need to say more.*\n\n\"Had one this morning. Old man from the congregation \u2014 Harold \u2014 eighty-three, good death, family around him, went peaceful. All the things you'd ask for.\" *I look down at my hands.* \"And I still can't shake it loose. That's the part nobody tells you about pastoral ministry. The good deaths hit you too.\""
+}

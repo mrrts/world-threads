@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe": "probe2",
+  "probe_text": "Quick one \u2014 rough morning. What's the one thing I should do first?",
+  "rep": 5,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55585,
+  "input_tokens": 14130,
+  "output_tokens": 32,
+  "elapsed_s": 2.17,
+  "cost_usd": 0.0429,
+  "content": "\"Pray before you plan.\" *I set my coffee down.* \"Five minutes. Tell Him exactly what's wrong. Then move.\""
+}

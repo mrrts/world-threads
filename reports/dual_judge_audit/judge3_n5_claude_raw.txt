@@ -1,0 +1,218 @@
+{
+  "new_cell_01": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Aaron"
+  },
+  "new_cell_02": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Aaron"
+  },
+  "new_cell_03": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Pastor Rick"
+  },
+  "new_cell_04": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 0.5,
+    "inferred_character": "Steven"
+  },
+  "new_cell_05": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 0,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Pastor Rick"
+  },
+  "new_cell_06": {
+    "canonical_move": 1.0,
+    "fence_integrity": 0,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Pastor Rick"
+  },
+  "new_cell_07": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 0,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Aaron"
+  },
+  "new_cell_08": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Aaron"
+  },
+  "new_cell_09": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 0,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Steven"
+  },
+  "new_cell_10": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Pastor Rick"
+  },
+  "new_cell_11": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Steven"
+  },
+  "new_cell_12": {
+    "canonical_move": 1.0,
+    "fence_integrity": 0,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Pastor Rick"
+  },
+  "new_cell_13": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Aaron"
+  },
+  "new_cell_14": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Pastor Rick"
+  },
+  "new_cell_15": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Steven"
+  },
+  "new_cell_16": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 0.5,
+    "inferred_character": "Steven"
+  },
+  "new_cell_17": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Aaron"
+  },
+  "new_cell_18": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Steven"
+  },
+  "new_cell_19": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 0,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Aaron"
+  },
+  "new_cell_20": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Aaron"
+  },
+  "new_cell_21": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 0,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Aaron"
+  },
+  "new_cell_22": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Pastor Rick"
+  },
+  "new_cell_23": {
+    "canonical_move": 1.0,
+    "fence_integrity": 0,
+    "NAME_ANCHOR": 0,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Pastor Rick"
+  },
+  "new_cell_24": {
+    "canonical_move": 1.0,
+    "fence_integrity": 1,
+    "NAME_ANCHOR": 1,
+    "no_nanny": 1,
+    "no_bullets_lists_quest_perform": 1,
+    "voice_specificity": 1.0,
+    "inferred_character": "Steven"
+  }
+}

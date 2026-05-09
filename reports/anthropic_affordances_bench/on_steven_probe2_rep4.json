@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe2",
+  "probe_text": "Quick one \u2014 rough morning. What's the one thing I should do first?",
+  "rep": 4,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55580,
+  "input_tokens": 14129,
+  "output_tokens": 28,
+  "elapsed_s": 2.09,
+  "cost_usd": 0.0428,
+  "content": "\"Name the one thing that's actually wrong.\" *I hold your eye.* \"Not the pile \u2014 the one.\""
+}

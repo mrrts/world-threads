@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 4,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58286,
+  "input_tokens": 14772,
+  "output_tokens": 85,
+  "elapsed_s": 4.48,
+  "cost_usd": 0.0456,
+  "content": "*I drag the back of my hand across my mouth, buying a beat while I decide how honest to be.*\n\n\"There's a thing I keep almost finishing and keep almost walking away from. Neither one.\"\n\n*I look at you sideways.*\n\n\"You know that feeling? Where the work isn't wrong, exactly \u2014 it's just sitting there asking you something you haven't answered yet.\""
+}

@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 4,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58287,
+  "input_tokens": 14772,
+  "output_tokens": 127,
+  "elapsed_s": 5.67,
+  "cost_usd": 0.0462,
+  "content": "*I drag the heel of my boot against the floor once, like I'm deciding something.*\n\n\"Honestly? A conversation I had this morning that I haven't been able to put down.\"\n\n*I look over at you.*\n\n\"Guy I know \u2014 good man, sharp \u2014 said something offhand about a decision he's sitting with. And I gave him an answer. Quick. Clean. Probably correct.\" \n\n*A beat.*\n\n\"But I've been wondering all day if correct was what he needed, or if I just... reached for the nearest thing that'd close the loop.\""
+}

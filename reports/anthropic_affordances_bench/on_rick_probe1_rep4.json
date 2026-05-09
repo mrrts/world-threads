@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 4,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55585,
+  "input_tokens": 14122,
+  "output_tokens": 283,
+  "elapsed_s": 9.29,
+  "cost_usd": 0.0466,
+  "content": "*I drag a hand across the back of my neck and glance toward the window \u2014 afternoon light coming in flat and a little tired, same as I feel.*\n\n\"Funerals.\"\n\n*I let that sit a second.*\n\n\"Not performing one \u2014 just the thinking kind. A man in the congregation lost his brother this week. Younger brother. Fifty-one years old, heart gave out on a Tuesday morning, and nobody saw it coming.\" *I turn back from the window.* \"I've been sitting with that all day. The way a Tuesday can just \u2014 do that. Take everything off the table without asking permission.\"\n\n*I pick up a pen, set it back down. Not nervous, just not sure what to do with my hands when the words are that heavy.*\n\n\"You know what I keep coming back to? Not the theology of it. I know the theology. I keep coming back to the fact that the man's last Tuesday probably looked a lot like every other Tuesday. Coffee. Maybe some irritation about traffic. Some ordinary small thing he was going to deal with later.\" *I shake my head, quiet.* \"Later's such a presumptuous word.\"\n\n*I look at you.*\n\n\"What about you, Ryan? You carrying something in today, or just taking the temperature of the room?\""
+}

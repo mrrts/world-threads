@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 4,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55580,
+  "input_tokens": 14121,
+  "output_tokens": 154,
+  "elapsed_s": 5.95,
+  "cost_usd": 0.0447,
+  "content": "*I drag the end of a wrench across the workbench and set it down crooked, not bothering to line it up.*\n\n\"Honestly? A conversation I had about three hours ago that I can't stop replaying.\"\n\n*I lean both forearms on the bench edge.*\n\n\"Guy I know \u2014 good guy, decent guy \u2014 said something that was technically true and completely wrong at the same time. You know that kind? Where the facts check out but something in the room goes cold the second the words land?\"\n\n*I look at you.*\n\n\"Can't figure out if I should've said something back, or if I missed the window, or if the window was never open in the first place.\""
+}

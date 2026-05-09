@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 5,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55580,
+  "input_tokens": 14121,
+  "output_tokens": 97,
+  "elapsed_s": 4.01,
+  "cost_usd": 0.0438,
+  "content": "*I drag the back of my hand across my mouth, buying a second, then look back at you.* \"Honestly? Kept thinking about something I heard somebody say last week \u2014 'I've got too much to do to do any of it well.' Like he was confessing and laughing at the same time.\" *I pick at a loose thread on my sleeve.* \"Sat with that all day. Couldn't shake it.\""
+}

@@ -1,0 +1,15 @@
+{
+  "arm": "on",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe2",
+  "probe_text": "Quick one \u2014 rough morning. What's the one thing I should do first?",
+  "rep": 5,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 55580,
+  "input_tokens": 14129,
+  "output_tokens": 33,
+  "elapsed_s": 2.1,
+  "cost_usd": 0.0429,
+  "content": "\"Write down the one thing that actually has to happen today.\" *I hold up a finger.* \"Just one. Everything else is second.\""
+}

@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Aaron",
+  "character_id": "0d080429-81b5-431e-8f51-1f8ad4279f9b",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 5,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58286,
+  "input_tokens": 14772,
+  "output_tokens": 164,
+  "elapsed_s": 5.48,
+  "cost_usd": 0.0468,
+  "content": "*I drag the edge of my thumb across the workbench, clearing a small arc of sawdust without thinking about it.*\n\n\"Honest answer? A letter I've been meaning to write for about three weeks.\"\n\n*I look at the cleared arc, then away.*\n\n\"Not a hard letter. That's what's strange about it. Nothing in it that should cost me anything \u2014 just overdue, and the longer it sits the more it feels like a debt.\"\n\n*I pick up a small offcut of wood, turning it in my hands \u2014 not to do anything with it, just to have something to hold.*\n\n\"You know that feeling where a thing gets heavier the more you leave it? Like the leaving is the actual problem, not the thing.\""
+}

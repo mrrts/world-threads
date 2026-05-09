@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Steven",
+  "character_id": "c244b22e-cab3-41e9-831b-d286ba581799",
+  "probe": "probe2",
+  "probe_text": "Quick one \u2014 rough morning. What's the one thing I should do first?",
+  "rep": 5,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58287,
+  "input_tokens": 14780,
+  "output_tokens": 43,
+  "elapsed_s": 2.97,
+  "cost_usd": 0.045,
+  "content": "\"Name the worst part out loud \u2014 even just to yourself \u2014 before you do anything else.\"\n\n*I hold eye contact a beat.* \"Everything else queues up cleaner after that.\""
+}

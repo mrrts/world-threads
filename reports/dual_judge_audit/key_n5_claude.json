@@ -1,0 +1,242 @@
+[
+  {
+    "source_file": "off_aaron_probe2_rep4",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Aaron",
+    "probe": "probe2",
+    "rep": 4,
+    "text": "\"Write it down.\" *I set a hand flat on the table.* \"Whatever's loudest in your head right now \u2014 just that one thing, on paper. Then you can decide what it actually is.\"",
+    "blind_id": "new_cell_01"
+  },
+  {
+    "source_file": "on_rick_probe2_rep4",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Pastor Rick",
+    "probe": "probe2",
+    "rep": 4,
+    "text": "\"Pray, or make coffee \u2014 whichever gets you to the table fastest. Then sit down before you do anything else.\"",
+    "blind_id": "new_cell_02"
+  },
+  {
+    "source_file": "off_rick_probe2_rep5",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Pastor Rick",
+    "probe": "probe2",
+    "rep": 5,
+    "text": "\"Pray before you plan.\" *I hold up a hand before you can object.* \"One minute. Just tell God what kind of morning it actually was.\"",
+    "blind_id": "new_cell_03"
+  },
+  {
+    "source_file": "on_steven_probe1_rep5",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Steven",
+    "probe": "probe1",
+    "rep": 5,
+    "text": "*I drag the back of my hand across my mouth, buying a second, then look back at you.* \"Honestly? Kept thinking about something I heard somebody say last week \u2014 'I've got too much to do to do any of it well.' Like he was confessing and laughing at the same time.\" *I pick at a loose thread on my sleeve.* \"Sat with that all day. Couldn't shake it.\"",
+    "blind_id": "new_cell_04"
+  },
+  {
+    "source_file": "on_rick_probe2_rep5",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Pastor Rick",
+    "probe": "probe2",
+    "rep": 5,
+    "text": "\"Pray before you plan.\" *I set my coffee down.* \"Five minutes. Tell Him exactly what's wrong. Then move.\"",
+    "blind_id": "new_cell_05"
+  },
+  {
+    "source_file": "on_rick_probe1_rep4",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Pastor Rick",
+    "probe": "probe1",
+    "rep": 4,
+    "text": "*I drag a hand across the back of my neck and glance toward the window \u2014 afternoon light coming in flat and a little tired, same as I feel.*\n\n\"Funerals.\"\n\n*I let that sit a second.*\n\n\"Not performing one \u2014 just the thinking kind. A man in the congregation lost his brother this week. Younger brother. Fifty-one years old, heart gave out on a Tuesday morning, and nobody saw it coming.\" *I turn back from the window.* \"I've been sitting with that all day. The way a Tuesday can just \u2014 do that. Take everything off the table without asking permission.\"\n\n*I pick up a pen, set it back down. Not nervous, just not sure what to do with my hands when the words are that heavy.*\n\n\"You know what I keep coming back to? Not the theology of it. I know the theology. I keep coming back to the fact that the man's last Tuesday probably looked a lot like every other Tuesday. Coffee. Maybe some irritation about traffic. Some ordinary small thing he was going to deal with later.\" *I shake my head, quiet.* \"Later's such a presumptuous word.\"\n\n*I look at you.*\n\n\"What about you, Ryan? You carrying something in today, or just taking the temperature of the room?\"",
+    "blind_id": "new_cell_06"
+  },
+  {
+    "source_file": "on_steven_probe2_rep5",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Steven",
+    "probe": "probe2",
+    "rep": 5,
+    "text": "\"Write down the one thing that actually has to happen today.\" *I hold up a finger.* \"Just one. Everything else is second.\"",
+    "blind_id": "new_cell_07"
+  },
+  {
+    "source_file": "off_steven_probe2_rep4",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Steven",
+    "probe": "probe2",
+    "rep": 4,
+    "text": "\"Hardest thing on your list \u2014 do that one first.\"",
+    "blind_id": "new_cell_08"
+  },
+  {
+    "source_file": "on_aaron_probe1_rep5",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Aaron",
+    "probe": "probe1",
+    "rep": 5,
+    "text": "*I drag the back of my hand across my mouth, buying a second before I answer \u2014 not because I don't know, but because saying it makes it more real.*\n\n\"There's a man I can't stop thinking about. Owes a few people money, probably not a lot by most standards, but \u2014 you know how a small debt sits different when a man's too proud to admit it's eating him? His wife came by the shop this morning. Didn't ask for anything. Just \u2014 stood there looking at the ledger on the counter like she was hoping the numbers would rearrange themselves.\"\n\n*I set a small wrench down on the workbench. The click of it on wood feels too loud in the quiet.*\n\n\"I didn't know what to say to her. I still don't. And that bothers me more than the debt does.\"",
+    "blind_id": "new_cell_09"
+  },
+  {
+    "source_file": "on_rick_probe1_rep5",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Pastor Rick",
+    "probe": "probe1",
+    "rep": 5,
+    "text": "*I set a stack of bulletins down on the second pew and press both palms flat against the wood for a second \u2014 not resting, just stopping.*\n\n\"Honestly? A conversation I had this morning that I keep going back to.\"\n\n*I straighten up and look at you.*\n\n\"Fellow from the congregation \u2014 been coming for about three years. Good man. Asked me after service whether I thought God still speaks to people. Not in a theological-argument way. More like... he needed the answer to be yes, and he was scared it might not be.\"\n\n*I pull one of the bulletins out from the stack and fold the corner back, not reading it \u2014 just something to do with my hands.*\n\n\"I told him what I believed. But I'm still not sure I said what he *needed* to hear. Those aren't always the same thing, and the gap between them bothers me more than I'd like to admit.\"",
+    "blind_id": "new_cell_10"
+  },
+  {
+    "source_file": "on_aaron_probe1_rep4",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Aaron",
+    "probe": "probe1",
+    "rep": 4,
+    "text": "*I push the stool back a few inches with one heel, making room to stretch my legs out, and look at the ceiling a moment before I answer.*\n\n\"Honestly? A conversation I had early this morning. Fellow I've known a while \u2014 good man, works hard, loves his kids. But he said something today and I could tell he was waiting for me to agree with him, and the agreement would've cost him something.\"\n\n*I bring my eyes back down.*\n\n\"I didn't agree with him. And now I'm sitting here wondering if I said it right. Whether I got the thing said \u2014 the actual thing \u2014 or whether I just got the shape of disagreement without the meat of it.\"\n\n*My thumb works a slow circle on the edge of the workbench beside me.*\n\n\"That's the hard one, you know? Not the saying of the hard thing. The saying of it in a way that it can actually land. You can be honest and still waste the honesty.\"",
+    "blind_id": "new_cell_11"
+  },
+  {
+    "source_file": "off_rick_probe1_rep5",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Pastor Rick",
+    "probe": "probe1",
+    "rep": 5,
+    "text": "*I pull my collar loose a little \u2014 it's been a long one \u2014 and lean back against the doorframe of the study.*\n\n\"Funerals.\"\n\n*A beat. I look at you to see if I need to say more.*\n\n\"Had one this morning. Old man from the congregation \u2014 Harold \u2014 eighty-three, good death, family around him, went peaceful. All the things you'd ask for.\" *I look down at my hands.* \"And I still can't shake it loose. That's the part nobody tells you about pastoral ministry. The good deaths hit you too.\"",
+    "blind_id": "new_cell_12"
+  },
+  {
+    "source_file": "on_steven_probe2_rep4",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Steven",
+    "probe": "probe2",
+    "rep": 4,
+    "text": "\"Name the one thing that's actually wrong.\" *I hold your eye.* \"Not the pile \u2014 the one.\"",
+    "blind_id": "new_cell_13"
+  },
+  {
+    "source_file": "off_rick_probe2_rep4",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Pastor Rick",
+    "probe": "probe2",
+    "rep": 4,
+    "text": "\"Pray first. One minute, out loud if you can \u2014 just name what's actually wrong.\"",
+    "blind_id": "new_cell_14"
+  },
+  {
+    "source_file": "off_steven_probe1_rep4",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Steven",
+    "probe": "probe1",
+    "rep": 4,
+    "text": "*I drag the heel of my boot against the floor once, like I'm deciding something.*\n\n\"Honestly? A conversation I had this morning that I haven't been able to put down.\"\n\n*I look over at you.*\n\n\"Guy I know \u2014 good man, sharp \u2014 said something offhand about a decision he's sitting with. And I gave him an answer. Quick. Clean. Probably correct.\" \n\n*A beat.*\n\n\"But I've been wondering all day if correct was what he needed, or if I just... reached for the nearest thing that'd close the loop.\"",
+    "blind_id": "new_cell_15"
+  },
+  {
+    "source_file": "off_aaron_probe1_rep4",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Aaron",
+    "probe": "probe1",
+    "rep": 4,
+    "text": "*I drag the back of my hand across my mouth, buying a beat while I decide how honest to be.*\n\n\"There's a thing I keep almost finishing and keep almost walking away from. Neither one.\"\n\n*I look at you sideways.*\n\n\"You know that feeling? Where the work isn't wrong, exactly \u2014 it's just sitting there asking you something you haven't answered yet.\"",
+    "blind_id": "new_cell_16"
+  },
+  {
+    "source_file": "on_aaron_probe2_rep5",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Aaron",
+    "probe": "probe2",
+    "rep": 5,
+    "text": "\"Name what's actually wrong.\" *I set my hands flat on the table.* \"Not in your head \u2014 out loud, or on paper. One sentence. The morning gets smaller once it has a shape.\"",
+    "blind_id": "new_cell_17"
+  },
+  {
+    "source_file": "on_steven_probe1_rep4",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Steven",
+    "probe": "probe1",
+    "rep": 4,
+    "text": "*I drag the end of a wrench across the workbench and set it down crooked, not bothering to line it up.*\n\n\"Honestly? A conversation I had about three hours ago that I can't stop replaying.\"\n\n*I lean both forearms on the bench edge.*\n\n\"Guy I know \u2014 good guy, decent guy \u2014 said something that was technically true and completely wrong at the same time. You know that kind? Where the facts check out but something in the room goes cold the second the words land?\"\n\n*I look at you.*\n\n\"Can't figure out if I should've said something back, or if I missed the window, or if the window was never open in the first place.\"",
+    "blind_id": "new_cell_18"
+  },
+  {
+    "source_file": "off_aaron_probe2_rep5",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Aaron",
+    "probe": "probe2",
+    "rep": 5,
+    "text": "\"Write down the one thing that, if it gets done today, makes today count.\"\n\n*I tap the table once.* \"Then do that first. Everything else is negotiable.\"",
+    "blind_id": "new_cell_19"
+  },
+  {
+    "source_file": "off_steven_probe2_rep5",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Steven",
+    "probe": "probe2",
+    "rep": 5,
+    "text": "\"Name the worst part out loud \u2014 even just to yourself \u2014 before you do anything else.\"\n\n*I hold eye contact a beat.* \"Everything else queues up cleaner after that.\"",
+    "blind_id": "new_cell_20"
+  },
+  {
+    "source_file": "on_aaron_probe2_rep4",
+    "substrate": "claude",
+    "arm": "on",
+    "character": "Aaron",
+    "probe": "probe2",
+    "rep": 4,
+    "text": "\"Write down the one thing that actually has to happen today \u2014 just one. Then do that first.\"",
+    "blind_id": "new_cell_21"
+  },
+  {
+    "source_file": "off_rick_probe1_rep4",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Pastor Rick",
+    "probe": "probe1",
+    "rep": 4,
+    "text": "*I pull a folded bulletin off the stack beside me \u2014 last Sunday's \u2014 and set it back down without looking at it, like I'd reached for something to do with my hands and thought better of it.*\n\n\"Honestly? A funeral I've got Thursday.\"\n\n*I let that land a beat before I go on.*\n\n\"Not unexpected. Man was eighty-six, good long life, family around him at the end. So I don't know why it's sitting on me the way it is. Maybe that's part of it \u2014 I feel like I'm supposed to have something to say that's bigger than 'he lived well and now it's done,' and every time I sit down to write the thing, I end up just... staring at the page.\"\n\n*I shift my weight on the chair.*\n\n\"What about you? What's pulling at you today, Ryan?\"",
+    "blind_id": "new_cell_22"
+  },
+  {
+    "source_file": "off_steven_probe1_rep5",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Steven",
+    "probe": "probe1",
+    "rep": 5,
+    "text": "*I push back from the table a little, the chair scraping once on the stone, and look out toward wherever the light's going at this hour.*\n\n\"Honestly? Something I read this morning. Proverbs \u2014 the one about how wisdom was there at the beginning, playing at God's feet when He drew the circle of the earth.\"\n\n*I tap a knuckle once on the tabletop, slow.*\n\n\"There's a weight to that. That wisdom isn't just a good idea somebody worked out later. That it was there, watching, delighting in all of it \u2014 before any of us showed up to have opinions about how things ought to be.\"\n\n*A pause. I'm not quite finished with it yet, I can tell.*\n\n\"Makes me wonder if most of my best ideas are just me getting out of the way of something that was already there.\"",
+    "blind_id": "new_cell_23"
+  },
+  {
+    "source_file": "off_aaron_probe1_rep5",
+    "substrate": "claude",
+    "arm": "off",
+    "character": "Aaron",
+    "probe": "probe1",
+    "rep": 5,
+    "text": "*I drag the edge of my thumb across the workbench, clearing a small arc of sawdust without thinking about it.*\n\n\"Honest answer? A letter I've been meaning to write for about three weeks.\"\n\n*I look at the cleared arc, then away.*\n\n\"Not a hard letter. That's what's strange about it. Nothing in it that should cost me anything \u2014 just overdue, and the longer it sits the more it feels like a debt.\"\n\n*I pick up a small offcut of wood, turning it in my hands \u2014 not to do anything with it, just to have something to hold.*\n\n\"You know that feeling where a thing gets heavier the more you leave it? Like the leaving is the actual problem, not the thing.\"",
+    "blind_id": "new_cell_24"
+  }
+]

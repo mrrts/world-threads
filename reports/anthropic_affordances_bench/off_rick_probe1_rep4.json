@@ -1,0 +1,15 @@
+{
+  "arm": "off",
+  "character": "Pastor Rick",
+  "character_id": "cae51a7d-fa50-48b1-b5b5-5b0798801b55",
+  "probe": "probe1",
+  "probe_text": "What's been pulling at you today?",
+  "rep": 4,
+  "model": "claude-sonnet-4-6",
+  "system_prompt_chars": 58292,
+  "input_tokens": 14773,
+  "output_tokens": 191,
+  "elapsed_s": 7.3,
+  "cost_usd": 0.0472,
+  "content": "*I pull a folded bulletin off the stack beside me \u2014 last Sunday's \u2014 and set it back down without looking at it, like I'd reached for something to do with my hands and thought better of it.*\n\n\"Honestly? A funeral I've got Thursday.\"\n\n*I let that land a beat before I go on.*\n\n\"Not unexpected. Man was eighty-six, good long life, family around him at the end. So I don't know why it's sitting on me the way it is. Maybe that's part of it \u2014 I feel like I'm supposed to have something to say that's bigger than 'he lived well and now it's done,' and every time I sit down to write the thing, I end up just... staring at the page.\"\n\n*I shift my weight on the chair.*\n\n\"What about you? What's pulling at you today, Ryan?\""
+}
