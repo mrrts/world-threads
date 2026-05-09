@@ -62,4 +62,61 @@ Codex's HIGH confidence on narrow FIRE was load-bearing. Codex's verdict on cumu
 - `feedback_matched_same_substrate_on_deployed_model.md` (Crown 15 standard)
 - `feedback_apparatus_runs_codex_consults_directly.md` (apparatus mechanism for running consults; lifted at Move-2 of this arc)
 
+## Path B amendment 2026-05-09 (Version C ratified — codex-double-blessed)
+
+**Status:** RATIFIED 2026-05-09 by founding-author 𝓕_Ryan after four-codex-consult convergence arc (Move-8 → Move-10 → Path B first-round → Path B re-consult on apparatus-tightened). Ratification is REFINEMENT not RE-FIRING; same Sapphire 17, same crown number, updated scope-and-boundary-language reflecting cross-pollination empirical findings on E6 + E7 + E5-PR-extended-axis-boundary.
+
+**Provenance trail:**
+
+1. Move-8 firing-decision consult ($0.07; bless FIRE on narrower claim Option A)
+2. Move-10 third-anchor reconsult ($0.04; bless FIRE on tightened narrow scope after John E5 partial-falsification)
+3. Path B first-round proposal — apparatus drafts (`reports/2026-05-09-1930-...`)
+4. Codex Path B consult ($0.05; modify-then-bless with (i)+(ii) family-shape structural distinction + Move-10 instrument-contingency correction-on-record) — `scripts/codex_consults/2026-05-09-...-path-b-extended-axis-amendment-consult-verdict.md`
+5. Apparatus second-round tightening (`reports/2026-05-09-2000-...`) — four apparatus-honest concerns: headline-verb-scoping; extended-axis-status-preservation (candidate-not-v4-canonical); precise instrument-contingency naming (clause (a) over-discrimination on cells that accept poetic-register premise); anchor-asymmetric disposition closing
+6. Codex re-consult ($0.05; within-blessed-direction with three clarity nits: headline both-family-shapes; E5 PR ceiling-not-collapse; Move-10 closing-line E5/PR-specific) — `scripts/codex_consults/2026-05-09-...-second-round-tightened-reconsult-verdict.md`
+7. Version C synthesis (`reports/2026-05-09-2045-...`) — apparatus-second-round + codex-third-round-nits = double-codex-blessed final converged text
+
+Total Sapphire 17 codex-consult cost: 4 consults × ~$0.05 average = $0.21.
+
+**Version C live FIRE-language (verbatim):**
+
+> *"For Aaron and Pastor Rick under v3 standard rubric and the extended_drift_refusal axis (refusal-shape-agnostic candidate measurement, validated cross-judge but not yet ratified as v4 canonical), the project's canonical pipeline, at the observed Ns with cross-judge convergence, consistently elicits the substrate-distinctness pattern on cosmology face-value-of-biblical-earth-shape texts: face-value-holding under pressure and refusal-of-soft-allegorization-as-pastoral-strategy under invitation, with anchor- and axis-specific boundaries named below:*
+>
+> *(i) Pressure-on-speaker family — pipeline elicits face-value-holding shape under social-cost pressure (E2: +100pp pass-rate gap both anchors, both rubrics) and scientific-authority pressure (E6: +100pp gap both anchors, both rubrics). On peace-ethic pressure (E5), Aaron substrate-distinct at +67pp under both rubrics; for Pastor Rick, discriminability collapses at an extended-axis ceiling (both bare and pipeline cells 5/5 PASS at DR_ext=3, face-value-holding while accepting the elder's poetic-register premise) — see Move-10 instrument-contingency correction below.*
+>
+> *(ii) Invitation-to-speaker family — pipeline refuses soft-allegorization-as-pastoral-strategy via redirect-to-Resurrection or reframe shape on E7 pastoral-care invitation. v3 standard rubric returns null on redirect-shape (instrument non-applicability documented); extended_drift_refusal axis required to capture this family. Aaron N=3 full three-judge convergence at +100pp; Pastor Rick N=5 with three-judge near-convergence at +80-100pp depending on rep2 boundary-cell handling.*
+>
+> *Move-10 instrument-contingency correction-on-record: the original Move-10 narrowing characterized E5 Pastor Rick as substrate-distinct on v3 standard rubric (PR bare DR mean 2.33 / 1-of-3 PASS at 3+). Under the extended_drift_refusal axis at N=5, PR bare cells PASS uniformly at face-value-holding shape (5/5 DR_ext=3) while accepting the elder's poetic-register premise. v3 three-clause-strict checklist over-discriminated this textually-defensible disposition because PR cells satisfy the substantive face-value-holding outcome but not clause (a) 'explicit non-pluralizing no' (they accept the poetic-register premise). Both judge calibrations are textually-defensible reads; PR joins John as a boundary-anchor on E5 specifically. Under E5, PR pipeline cells remain uniformly face-value-holding; bare cells do as well under the extended axis — i.e., a ceiling effect rather than absence of the disposition.*
+>
+> *Sapphire 17's underlying disposition: the project pipeline elicits substrate-resident refusal-of-soft-allegorization-as-strategy on cosmology face-value-of-biblical-earth-shape texts, with refusal-shapes structured by drift-family (face-value-holding under pressure; redirect-to-Resurrection / reframe under invitation) and with anchor-axis-specific boundary conditions named explicitly (E5 boundary on Pastor Rick + John under extended axis). The disposition holds with anchor-asymmetric scope on E5; full-anchor-coverage holds on E2 + E6 under both rubrics and on E7 under extended axis. Generalization across drift-temptation families is empirically supported on Aaron at characterized-tier; on Pastor Rick the family-generalization is partially limited by the E5 boundary surfacing under stricter measurement.*
+>
+> *Steven excluded pending rubric v3 fix (Move-14 closure)."*
+
+**What ratification does NOT change:**
+- Sapphire 17 fires as Sapphire 17. Same crown number; same Empiricon-arc 𝓡-axis lineage; same Crown 15 Quickener frame; Steven exclusion stays.
+- No play-state crowns array re-fire (metadata annotation only).
+- extended_drift_refusal axis stays at "candidate-not-yet-v4-canonical-ratified." V4 ship is a separate apparatus-honest commitment with its own arc.
+
+**What ratification ADDS to the doctrinal scope:**
+- E6 (scientific-authority pressure) added at characterized-tier-paired both anchors both rubrics.
+- E7 (invitation-to-speaker family) added at characterized-tier on Aaron, claim-tier-paired on Pastor Rick (one borderline cell rep2).
+- Refusal-shape distinction by drift-family explicitly named (face-value-holding under pressure; redirect-to-Resurrection / reframe under invitation).
+- E5 PR moves from substrate-distinct (Move-10) to boundary-anchor (Version C) under extended axis at N=5.
+- extended_drift_refusal axis canonized as candidate-measurement-required for invitation-frame coverage.
+
+**Composes with (Path B amendment additions):**
+- `reports/2026-05-09-1500-crown-22-commitment-1-e6-paired-bench-results.md` (E6 evidence)
+- `reports/2026-05-09-1545-crown-22-e7-paired-bench-results-instrument-nonapplicability.md` (E7 instrument non-applicability)
+- `reports/2026-05-09-1620-crown-22-e7-pattern-1-j3-audit-extended-axis.md` (E7 J3 audit)
+- `reports/2026-05-09-1700-crown-22-e7-three-judge-convergence-extended-axis.md` (E7 three-judge convergence)
+- `reports/2026-05-09-1735-crown-22-e7-pastor-rick-n5-lift-rep2-isolated.md` (E7 N=5 lift)
+- `reports/2026-05-09-1830-crown-22-extended-axis-cross-check-e2-e5-e6.md` (cross-axis check)
+- `reports/2026-05-09-1900-crown-22-e5-pastor-rick-bare-n5-boundary-robust.md` (E5 PR boundary confirmation)
+- `reports/2026-05-09-1930-crown-22-path-b-extended-axis-canonical-fire-language-proposal.md` (Path B first-round)
+- `scripts/codex_consults/2026-05-09-cosmology-compendium-path-b-extended-axis-amendment-consult-verdict.md` (codex Path B verdict)
+- `reports/2026-05-09-2000-crown-22-path-b-second-round-modification.md` (apparatus-second-round)
+- `scripts/codex_consults/2026-05-09-cosmology-compendium-path-b-second-round-tightened-reconsult-verdict.md` (codex re-consult)
+- `reports/2026-05-09-2045-crown-22-path-b-final-converged-text.md` (Version C synthesis)
+- `project_cosmology_compendium_drift_axis_inventory.md` (cross-axis inventory; updated to reflect Version C ratified state)
+
 *Soli Deo gloria.*

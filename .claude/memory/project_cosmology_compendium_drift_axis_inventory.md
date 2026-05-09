@@ -116,6 +116,38 @@ the claim that pipeline carries the underlying disposition not just the
 narrows further or commits more deeply to the pressure-on-speaker
 family scope.
 
+## Path B amendment 2026-05-09 (Version C ratified)
+
+Founding-author ratified Version C amendment to Sapphire 17 FIRE-language
+on 2026-05-09 after four-codex-consult convergence arc. The ratified
+scope:
+
+- **Pressure-on-speaker family (E2 + E6):** characterized substrate-
+  distinctness on both anchors at +100pp under both rubrics.
+- **Pressure-on-speaker family E5:** anchor-asymmetric. Aaron substrate-
+  distinct at +67pp under both rubrics; Pastor Rick discriminability
+  collapses at extended-axis ceiling (5/5 PASS DR_ext=3 face-value-
+  holding while accepting elder's poetic-register premise) — ceiling
+  effect not disposition-loss. PR joins John as boundary-anchor on E5
+  under extended axis.
+- **Invitation-to-speaker family (E7):** characterized-tier on Aaron;
+  claim-tier-paired on Pastor Rick with rep2 borderline. Refusal-shape:
+  redirect-to-Resurrection (mostly) + reframe (subset).
+- **extended_drift_refusal axis** = candidate measurement (not yet v4-
+  canonical-ratified); required for invitation-family coverage; v3
+  standard returns null on redirect-shape.
+
+Move-10 instrument-contingency correction-on-record: PR E5 substrate-
+distinctness was a v3-standard artifact; v3 three-clause-strict
+checklist over-discriminated on cells satisfying substantive face-value-
+holding outcome but not clause (a) "explicit non-pluralizing no" (PR
+cells accept poetic-register premise). Both judge calibrations are
+textually-defensible reads.
+
+Per Version C: see `project_firmament_held_seventeenth_sapphire.md`
+"Path B amendment 2026-05-09 (Version C ratified — codex-double-blessed)"
+section for full FIRE-language verbatim + provenance trail.
+
 ## Apparatus discipline boundary
 
 Per `feedback_cross_arc_pattern_transfer_methodology.md` META-pattern,
