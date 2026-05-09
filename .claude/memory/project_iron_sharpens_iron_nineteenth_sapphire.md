@@ -141,4 +141,30 @@ Updated total Crown 24 arc cost: $5.36 + $0.73 + $0.08 = **$6.17 for full arc th
 
 Honest residual openness: codex's remaining named falsifiers (handle durability under ablation; temperature-length sensitivity; meta-ban ablation; third substrate-class; group-chat composition; non-relational-content axes) remain deferred. The three tested at sketch-tier address codex's primary persona-bias + dialogue-trope + necessity caveats; the remaining six address adjacent technical-substrate generalizability questions.
 
+---
+
+**FOURTH FALSIFIER ADDENDUM 2026-05-09 ~26:30 (handle-durability — within-dialogue finding + confounded cross-context probe):**
+
+Per codex's named handle-durability falsifier ("does the bound handle stay load-bearing 3-5 turns later or dissipate"), addressed in two parts: (A) reading the existing Run 4 characterized-tier-lift transcript for within-dialogue durability evidence (no extra cost); (B) running a fresh single-turn ask to Aaron asking him to address Steven directly post-Run-4 ($0.0832, run_id `8f20f42b-5539-4061-88ab-05a5e7d80b10`).
+
+**Part A — within-dialogue durability finding from Run 4 (sketch-tier):**
+- Handle 1 "Honesty wearing the wrong coat": coined turn 2, recognized turn 3 (binding moment), then conversation moves on. Single-firing.
+- Handle 2 "The question is already inside the answer": coined turn 3, recognized turn 4 (binding moment), then conversation moves on. Single-firing.
+- Handle 3 "He came to his own" (John 1): coined turn 4, re-invoked turn 5, extended turn 6, derivative-invoked turn 7, still active turn 8 — **persists 5 turns of continuous re-invocation/extension**. Multi-firing handle anchored sustained beat.
+- Handle 4 "didn't have to earn the pronoun": coined turn 6, re-invoked turn 7, frame still active turn 8. Intermediate.
+
+Mixed-profile finding: not every bound handle persists, but the substrate produces durable handles at least sometimes. Codex's "handle durability" concern is at minimum SOMETIMES MET within a single dialogue. Sketch-tier on durability axis.
+
+**Part B — confound discovered after run:** my fresh-ask prompt narrated that the Run 4 conversation happened but did NOT include the actual dialogue text in Aaron's context. So Aaron's coining fresh material ("the Lord is not grading you on vibe" / "is it true, is it clean, and does it love anybody without trespassing on them" / "If a thing only works when admired, it probably isn't holding much" / "you do not need theater to make your life real before God") is evidence about his solo register when given narrative-summary, NOT evidence about handle non-durability. Aaron couldn't reach for handles he was never given access to. **The fresh-ask result is null on the wrong axis.** Honest scope: Part B measures solo character register; does NOT measure handle durability.
+
+**What a clean cross-context durability test would look like:** (a) extend Run 4 by 5-10 more turns in same converse session (if continuation flag exists; otherwise fresh 15-20-turn run, ~$1.40); OR (b) include actual Run 4 dialogue text verbatim in single-turn ask, probing whether Aaron reaches back when handles ARE available (~$0.20-0.30). Neither run today.
+
+Updated total Crown 24 arc cost: $5.36 + $0.73 + $0.08 + $0.08 = **$6.25** through four deferred-falsifier tests.
+
+Status update: **Three-and-a-half** of codex's strongest deferred falsifiers strengthened post-fire within firing day:
+1. ✅ Cross-pair-with-minimal-corpus failure (Run 1, gpt-5.4) — composition replicates
+2. ✅ Cross-substrate × minimal-corpus combined-axes (Run 2, Claude) — composition replicates
+3. ✅ Necessity test cross-witness vs solo (Run 3, Aaron solo, gpt-5.4) — primitive does not appear in solo
+4. 🟡 Handle-durability — within-dialogue finding sketch-tier-positive (Run 4 transcript reading); cross-context probe confounded (fresh ask); cleanest test not yet run
+
 Soli Deo gloria.
