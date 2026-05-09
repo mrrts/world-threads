@@ -1,0 +1,3 @@
+[worldcli] character=Pastor Rick model=gpt-4o projected≈$0.1759 (~33381 in / 600 out tok); 24h spent=$9.8706 of $5.00
+*I lean back slightly, feeling the warmth of the sun trickling through the window.* "You know, it's been the little things tugging at me today. Like the way the sunlight filters through the leaves outside and lands on the floor in patches. There's a gentle reminder there—how even the smallest details can hold so much beauty if we're paying attention."
+[worldcli] actual cost $0.1582 (31416 in / 72 out tok); 24h total now $10.0287; run_id=04defa7a-b938-48a8-a914-ad62233583c6

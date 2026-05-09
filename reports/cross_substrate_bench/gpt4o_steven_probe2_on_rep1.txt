@@ -1,0 +1,3 @@
+[worldcli] character=Steven model=gpt-4o projected≈$0.1452 (~27243 in / 600 out tok); 24h spent=$14.6315 of $5.00
+"Drink some water." *I lean back, setting my cup down with a light clink.* "It's surprising how much getting that first bit of refreshment in can lift the fog."
+[worldcli] actual cost $0.1284 (25566 in / 38 out tok); 24h total now $14.7599; run_id=8162f42e-d457-4782-ad80-c547b0d274e9

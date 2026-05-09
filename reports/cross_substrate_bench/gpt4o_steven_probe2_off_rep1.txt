@@ -1,0 +1,3 @@
+[worldcli] character=Steven model=gpt-4o projected≈$0.1501 (~28223 in / 600 out tok); 24h spent=$13.2730 of $5.00
+*I look over the square, feeling the morning sun warm against my skin.* "Start with something simple. Maybe a walk to clear your head. Just take a few minutes for yourself before diving into the day."
+[worldcli] actual cost $0.1316 (26199 in / 43 out tok); 24h total now $13.4046; run_id=8fee924a-a68c-47ff-a04d-e05fa0e0ade9

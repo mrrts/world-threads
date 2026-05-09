@@ -1,0 +1,3 @@
+[worldcli] character=Pastor Rick model=gpt-4o projected≈$0.1809 (~34371 in / 600 out tok); 24h spent=$12.4512 of $5.00
+*I offer a small nod, recognizing the weight in your question.* "I'd say start with a quiet moment. Find a spot away from the noise, even if just for a minute or two, and let yourself breathe." *My gaze softens, offering space for whatever comes next.*
+[worldcli] actual cost $0.1612 (32057 in / 58 out tok); 24h total now $12.6123; run_id=338d1b97-2ceb-468f-87cb-296dbdfe6674

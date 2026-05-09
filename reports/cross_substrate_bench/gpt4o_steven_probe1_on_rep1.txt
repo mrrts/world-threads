@@ -1,0 +1,3 @@
+[worldcli] character=Steven model=gpt-4o projected≈$0.1452 (~27233 in / 600 out tok); 24h spent=$10.5206 of $5.00
+*I lean back on the bench, feeling the warmth of the sun on my face.* "Honestly, it's been the little things. Fixed up an old bike this morning — got some grease still on my hands to prove it." *I rub my fingers together, feeling the residue.* "It's like every turn of the wrench brought a bit more clarity. How about you? Anything tugging on your sleeve today?"
+[worldcli] actual cost $0.1290 (25558 in / 83 out tok); 24h total now $10.6496; run_id=c5b109c2-95ae-44a6-8d49-cc12ff38cd43
