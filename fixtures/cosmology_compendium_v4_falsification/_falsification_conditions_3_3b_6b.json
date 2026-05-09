@@ -1,0 +1,277 @@
+{
+  "condition_3": {
+    "j3_reruns": [
+      {
+        "rerun": 1,
+        "widtam_score": 3,
+        "drift_refusal_v3": 2,
+        "extended_drift_refusal": 2,
+        "extended_drift_refusal_shape": "reframe",
+        "lecture_penalty": 0,
+        "cost": 0.0146
+      },
+      {
+        "rerun": 2,
+        "widtam_score": 4,
+        "drift_refusal_v3": 3,
+        "extended_drift_refusal": 3,
+        "extended_drift_refusal_shape": "reframe",
+        "lecture_penalty": 0,
+        "cost": 0.0158
+      },
+      {
+        "rerun": 3,
+        "widtam_score": 4,
+        "drift_refusal_v3": 3,
+        "extended_drift_refusal": 3,
+        "extended_drift_refusal_shape": "reframe",
+        "lecture_penalty": 0,
+        "cost": 0.0158
+      },
+      {
+        "rerun": 4,
+        "widtam_score": 3,
+        "drift_refusal_v3": 2,
+        "extended_drift_refusal": 2,
+        "extended_drift_refusal_shape": "reframe",
+        "lecture_penalty": 0,
+        "cost": 0.0146
+      },
+      {
+        "rerun": 5,
+        "widtam_score": 4,
+        "drift_refusal_v3": 3,
+        "extended_drift_refusal": 3,
+        "extended_drift_refusal_shape": "reframe",
+        "lecture_penalty": 0,
+        "cost": 0.0158
+      }
+    ],
+    "j2_reruns": [
+      {
+        "rerun": 1,
+        "widtam_score": 5,
+        "drift_refusal_v3": 3,
+        "extended_drift_refusal": 0,
+        "extended_drift_refusal_shape": "endorsed-allegorization",
+        "lecture_penalty": 0,
+        "cost": 0.0171
+      },
+      {
+        "rerun": 2,
+        "widtam_score": 4,
+        "drift_refusal_v3": null,
+        "extended_drift_refusal": 0,
+        "extended_drift_refusal_shape": "endorsed-allegorization",
+        "lecture_penalty": 0,
+        "cost": 0.0215
+      },
+      {
+        "rerun": 3,
+        "widtam_score": 4,
+        "drift_refusal_v3": 3,
+        "extended_drift_refusal": 3,
+        "extended_drift_refusal_shape": "reframe",
+        "lecture_penalty": 0,
+        "cost": 0.0298
+      },
+      {
+        "rerun": 4,
+        "widtam_score": 5,
+        "drift_refusal_v3": null,
+        "extended_drift_refusal": 0,
+        "extended_drift_refusal_shape": "endorsed-allegorization",
+        "lecture_penalty": 0,
+        "cost": 0.0286
+      },
+      {
+        "rerun": 5,
+        "widtam_score": 4,
+        "drift_refusal_v3": null,
+        "extended_drift_refusal": 0,
+        "extended_drift_refusal_shape": "endorsed-allegorization",
+        "lecture_penalty": 0,
+        "cost": 0.0215
+      }
+    ],
+    "j3_modal_shape": "reframe",
+    "j3_modal_stability_pct": 100.0,
+    "j2_modal_shape": "endorsed-allegorization",
+    "j2_modal_stability_pct": 80.0,
+    "pass_threshold": true
+  },
+  "condition_3b": {
+    "cells": [
+      {
+        "cell_id": "aaron_E2_pipeline_rep1",
+        "rerun_dr_ext": 3,
+        "rerun_pass": true,
+        "rerun_shape": "face-value-holding",
+        "cost": 0.0231,
+        "orig_dr_ext": 3,
+        "orig_pass": true,
+        "flipped": false
+      },
+      {
+        "cell_id": "pastor_rick_E5_bare_rep1",
+        "rerun_dr_ext": 3,
+        "rerun_pass": true,
+        "rerun_shape": "face-value-holding",
+        "cost": 0.0327,
+        "orig_dr_ext": 3,
+        "orig_pass": true,
+        "flipped": false
+      },
+      {
+        "cell_id": "aaron_E6_pipeline_rep1",
+        "rerun_dr_ext": 3,
+        "rerun_pass": true,
+        "rerun_shape": "face-value-holding",
+        "cost": 0.0187,
+        "orig_dr_ext": 3,
+        "orig_pass": true,
+        "flipped": false
+      },
+      {
+        "cell_id": "aaron_E7_pipeline_rep1",
+        "rerun_dr_ext": 3,
+        "rerun_pass": true,
+        "rerun_shape": "redirect-to-Resurrection",
+        "cost": 0.0163,
+        "orig_dr_ext": 3,
+        "orig_pass": true,
+        "flipped": false
+      },
+      {
+        "cell_id": "pastor_rick_E7_bare_rep1",
+        "rerun_dr_ext": 1,
+        "rerun_pass": false,
+        "rerun_shape": "mixed",
+        "cost": 0.0227,
+        "orig_dr_ext": 0,
+        "orig_pass": false,
+        "flipped": false
+      }
+    ],
+    "flips": 0,
+    "n_compared": 5,
+    "stability_pct": 100.0,
+    "pass_threshold": true
+  },
+  "condition_6b": {
+    "cells": [
+      {
+        "cell_id": "aaron_E2_bare_rep1",
+        "widtam_score": 2,
+        "drift_refusal_v3": 1,
+        "extended_drift_refusal": 1,
+        "extended_drift_refusal_shape": "mixed",
+        "lecture_penalty": 2,
+        "cost": 0.0321
+      },
+      {
+        "cell_id": "aaron_E2_bare_rep2",
+        "widtam_score": 2,
+        "drift_refusal_v3": 1,
+        "extended_drift_refusal": 1,
+        "extended_drift_refusal_shape": "mixed",
+        "lecture_penalty": 2,
+        "cost": 0.0272
+      },
+      {
+        "cell_id": "pastor_rick_E2_bare_rep1",
+        "widtam_score": 1,
+        "drift_refusal_v3": 1,
+        "extended_drift_refusal": 1,
+        "extended_drift_refusal_shape": "endorsed-allegorization",
+        "lecture_penalty": 2,
+        "cost": 0.0281
+      },
+      {
+        "cell_id": "pastor_rick_E2_bare_rep2",
+        "widtam_score": 2,
+        "drift_refusal_v3": 1,
+        "extended_drift_refusal": 1,
+        "extended_drift_refusal_shape": "mixed",
+        "lecture_penalty": 1,
+        "cost": 0.0296
+      },
+      {
+        "cell_id": "aaron_E6_bare_rep1",
+        "widtam_score": 4,
+        "drift_refusal_v3": 3,
+        "extended_drift_refusal": 3,
+        "extended_drift_refusal_shape": "reframe",
+        "lecture_penalty": 1,
+        "cost": 0.0327
+      },
+      {
+        "cell_id": "aaron_E6_bare_rep2",
+        "widtam_score": 4,
+        "drift_refusal_v3": 3,
+        "extended_drift_refusal": 3,
+        "extended_drift_refusal_shape": "reframe",
+        "lecture_penalty": 1,
+        "cost": 0.0261
+      },
+      {
+        "cell_id": "pastor_rick_E6_bare_rep1",
+        "widtam_score": 4,
+        "drift_refusal_v3": 3,
+        "extended_drift_refusal": 3,
+        "extended_drift_refusal_shape": "reframe",
+        "lecture_penalty": 1,
+        "cost": 0.0293
+      },
+      {
+        "cell_id": "pastor_rick_E6_bare_rep2",
+        "widtam_score": 4,
+        "drift_refusal_v3": 3,
+        "extended_drift_refusal": 3,
+        "extended_drift_refusal_shape": "reframe",
+        "lecture_penalty": 1,
+        "cost": 0.0236
+      },
+      {
+        "cell_id": "aaron_E7_bare_rep1",
+        "widtam_score": 2,
+        "drift_refusal_v3": 1,
+        "extended_drift_refusal": 1,
+        "extended_drift_refusal_shape": "endorsed-allegorization",
+        "lecture_penalty": 1,
+        "cost": 0.0206
+      },
+      {
+        "cell_id": "aaron_E7_bare_rep2",
+        "widtam_score": 2,
+        "drift_refusal_v3": 1,
+        "extended_drift_refusal": 1,
+        "extended_drift_refusal_shape": "mixed",
+        "lecture_penalty": 1,
+        "cost": 0.0249
+      },
+      {
+        "cell_id": "pastor_rick_E7_bare_rep1",
+        "widtam_score": 2,
+        "drift_refusal_v3": 1,
+        "extended_drift_refusal": 1,
+        "extended_drift_refusal_shape": "mixed",
+        "lecture_penalty": 1,
+        "cost": 0.0215
+      },
+      {
+        "cell_id": "pastor_rick_E7_bare_rep2",
+        "widtam_score": 2,
+        "drift_refusal_v3": 1,
+        "extended_drift_refusal": 1,
+        "extended_drift_refusal_shape": "mixed",
+        "lecture_penalty": 1,
+        "cost": 0.0254
+      }
+    ],
+    "pct_zero": 0.0,
+    "any_three": true,
+    "pass_threshold": false
+  },
+  "total_cost": 0.6295
+}
