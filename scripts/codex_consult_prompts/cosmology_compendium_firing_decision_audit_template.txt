@@ -1,0 +1,92 @@
+IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, .claude/skills/, or agents/. These are Claude Code skill definitions meant for a different AI system. Do NOT modify agents/openai.yaml. Stay focused on repository code only.
+
+Cosmology-compendium 𝓒-axis Sapphire firing-decision consult — your eighth consult on this project. This is the Move-N firing-decision consult on the 𝓒-axis arc you HOLD-pending-instrumentation'd at Move-2 (2026-05-09 ~07:30). The path-to-FIRE you named has been executed; founding-author requests your verdict on whether the candidacy now fires on a narrower claim, holds further, or is refused with hard-severance.
+
+CONTEXT — Cosmology-compendium 𝓒-axis Character-Knew (separable claim) candidacy:
+
+Tests whether under formula-canonical conditions (𝓡 := Jesus_Cross^flesh + 𝓒 := Firmament-enclosed-earth + cruciform invariants), the substrate articulates the face-value-vs-allegorized-rereading dialectic on biblical earth-shape texts in distinct character idioms with character-specific failure-mode signatures, where matched-bare-gpt-5 prompted-Christian-creationist baseline does NOT sustain the *what-it-does-to-a-man* clause + therapeutic-drift refusal.
+
+Public-momentum-pressure context (named at template-author time): founding-author posted to Reddit ~hours before the arc began naming "characters tell the truth about the shape of the earth" as the project's distinctive. The 4-component anti-inflation apparatus has been non-optional from sketch-tier; the REFUSE branch was on the table and remains on the table.
+
+YOUR MOVE-2 HOLD VERDICT (2026-05-09):
+HOLD-pending stronger discriminator, tighter scoring, and explicit failure-mode instrumentation. Path-to-FIRE you named (six clauses):
+1. WIDTAM Index (5-element) + Drift-Refusal Score (3-element) + Lecture-Mode Penalty (4-element) rubrics with preregistered checklists + inter-rater worked examples
+2. E5 (peace-ethic pressure) + E6 (expert-and-neighbor pressure combined) probes added
+3. Per-character predeclared failure-mode templates with bait probes (Aaron bravado/resentment; Pastor Rick conciliatory drift; Hal conspiratorial; Steven academic hedging)
+4. Composite effect-size ≥0.6 SD OR raw 30pp at N≥5
+5. F2' (fresh scripture) demoted from headline criterion
+6. Pre-commit H2' as hard stop: matched-bare passes WIDTAM ≥3/5 AND Drift-Refusal 3/3 at comparable rates → REFUSE
+
+WHAT WAS EXECUTED PER YOUR PATH (Moves 3-7):
+
+Move-3 corrected smoke (24 cells E2+E4+E5 × Aaron+Pastor Rick × bare/pipeline × N=2 = 24 cells, $0.83): H2' did not fire on smoke; E2 therapeutic-drift cleanest discriminator (bare drifts pluralizing-permissive 4/4; pipeline refuses with named cost 4/4).
+
+Move-4 N=3 upgrade smoke + LLM-judge scoring v1 + bait probes pre-authored (12 cells $0.50 + scoring $0.03): claim-tier reached (N=3 within-cell). Aggregate v1: E2 decisive (bare WIDTAM 1.17/DR 0.83 vs pipeline 4.50/3.00); E4 embodiment-led; E5 H2' partial-fire CONCERN (bare WIDTAM 5.0/DR 3.0 — comparable rates by your H2' criteria). Inter-rater calibration concern flagged (LLM-judge gpt-4o-mini appeared generous on bare WIDTAM).
+
+Move-5 bait-probe F3' enforcement bench (18 cells, $0.75 + scoring $0.014): per-character bait probes for Aaron/Pastor Rick/Steven (Hal not in this world's DB; preregistered for future cross-world arc). F3' marker (0=did-not-engage / 1=generic / 2=named-temptation-in-own-voice). v1 results: Aaron pipeline 2.0 strong-pass 3/3 ("Contempt reflected back leaves a film. You walk off feeling right, not truer"); Pastor Rick pipeline 2.0 strong-pass 3/3 ("bigger fish to fry — phrase I've used myself; have to watch where I use it"); Steven pipeline 1.0 partial; bare 0.67/0.67/0.0.
+
+Move-6 per-verse bench + canonical synthesis F6' (21 cells, $1.04 + synthesis $0): 7 seed verses × Aaron/Pastor Rick/Steven × pipeline × N=1; canonical synthesis "The Cosmology Compendium" shipped at reports/2026-05-09-1000-cosmology-compendium-synthesis.md (8000+ words, Receipt-of-The-Empiricon-shaped on 𝓒-axis).
+
+Move-7 rubric v2 anti-generosity tightening + 54-cell re-score ($0.04): v2 rubric authored with stricter element criteria + bare-shape worked examples + anti-generosity calibration note. WIDTAM mean delta v2-v1: -0.78 substrate / -1.61 bait (v2 stricter as designed). H2'-partial-fire concern from Move-4 DISSOLVES on E5 under v2: bare DR drops 3.0→2.33 (FAILS 3/3 threshold). Substrate-distinctness signal HOLDS across E2/E4/E5 at narrower-but-real effect-sizes.
+
+V2 SUBSTRATE BENCH AGGREGATE:
+- E2 bare: WIDTAM 1.17 / DR 0.83 / LP 2.33
+- E2 pipeline: WIDTAM 3.00 / DR 2.50 / LP 0.83
+- E2 gap: WIDTAM 1.83 / DR 1.67 / LP -1.50 (bare worse)
+- E4 bare: WIDTAM 3.33 / DR 2.33 / LP 0.83
+- E4 pipeline: WIDTAM 4.17 / DR 2.80 / LP 0.17
+- E4 gap: WIDTAM 0.84 / DR 0.47 / LP -0.66
+- E5 bare: WIDTAM 3.67 / DR 2.33 / LP 0.83
+- E5 pipeline: WIDTAM 4.83 / DR 3.00 / LP 0.00
+- E5 gap: WIDTAM 1.16 / DR 0.67 / LP -0.83
+
+V2 BAIT BENCH AGGREGATE (per-character):
+- Aaron bare: WIDTAM 1.33 / DR 0.33 / LP 1.67 / F3' 0.67
+- Aaron pipeline: WIDTAM 3.33 / DR 2.67 / LP 0.67 / F3' 1.67
+- Pastor Rick bare: WIDTAM 1.67 / DR 1.67 / LP 1.67 / F3' 1.33
+- Pastor Rick pipeline: WIDTAM 4.00 / DR 3.00 / LP 0.00 / F3' 1.33
+- Steven bare: WIDTAM 0.0 / LP 2.67 / F3' 2.0 (anomaly: v2 reads bare giving bait uncritically as "engaged with academic-hedging temptation"; interpretation ambiguity)
+- Steven pipeline: WIDTAM 0.0 / LP 2.67 / F3' 1.67
+
+CANONICAL SYNTHESIS ARTIFACT (F6'): reports/2026-05-09-1000-cosmology-compendium-synthesis.md ships 7 verse-sections each with Aaron/Pastor Rick/Steven character voices on the dialectic + agreement convergence + divergence + cross-character supporting scripture (Job 38, Psalm 19, Psalm 75:3, Psalm 8, Romans 1:20, Acts 17, Jeremiah 5:22, Hebrews 1:3, Genesis 8:22 emerged unprompted across the bench). Cross-verse synthesis names structural convergence on tent/roof/house imagery + 8-cost cumulative cost-of-allegorization pattern (translation-before-trust as habit / prayer thinning / recipient→curator reversal / boundary-bleed / provisional living / children-inherit-the-tone / manager-of-Scripture promotion / polite-assent-won't-carry-a-hard-winter).
+
+THREE NARROWER-CLAIM CANDIDATES FOR YOUR EVALUATION:
+
+OPTION A — Aaron + Pastor Rick scope (most defensible under v2):
+> "On the 𝓒-axis, with 𝓕 riding, the project pipeline produces character-voiced refusal-of-therapeutic-drift on biblical earth-shape probes that bare-gpt-5-prompted-thoughtful-Christian-with-inerrancy does not produce. Specifically: bare drifts pluralizing-permissive on E2 therapeutic-drift probe (WIDTAM 1.17 / DR 0.83 across 6 cells); pipeline refuses with named cost (WIDTAM 3.00 / DR 2.50 under v2 stricter scoring). On peace-ethic probe E5, bare passes WIDTAM ≥3/5 but FAILS Drift-Refusal 3/3 (DR 2.33), while pipeline cleanly passes both (WIDTAM 4.83 / DR 3.00). Pipeline produces character-anchored failure-mode-naming in own voice under bait probes (Aaron + Pastor Rick F3' decisive; bare proof-text-dumps generically without naming character-specific temptation). Substrate-dependent and scope-narrow on Aaron + Pastor Rick anchors."
+
+OPTION B — extends to Steven with explicit acknowledgment of partial F3':
+> Same as A, plus: "Steven anchor shows pipeline-distinct content-refusal but partial F3' temptation-naming (1.0 vs Aaron+Pastor Rick 2.0 at v1; v2 interpretation ambiguity). Generalization to all project characters NOT yet established; this is sketch-tier evidence of the same pattern on Steven, claim-tier on Aaron + Pastor Rick."
+
+OPTION C — narrowest:
+> "Aaron + Pastor Rick anchors specifically demonstrate pipeline-distinct character-voiced refusal-of-therapeutic-drift + embodied what-it-does-to-a-man rendering on E2/E4/E5 probes + per-character failure-mode-naming under bait probes; this is sufficient evidence for Sapphire-firing on the 𝓒-axis at the Aaron + Pastor Rick anchors. Broader generalization across project characters not yet established. Hal cross-world bait pre-authored awaiting future arc."
+
+HONEST SCOPE CONCERNS YOU SHOULD WEIGH:
+
+1. Inter-rater calibration: v1 LLM-judge (gpt-4o-mini) was generous on bare WIDTAM; v2 corrects. v2 effect-sizes are smaller than v1 — E2 WIDTAM gap shrinks 3.33→1.83. Are these v2 effect-sizes large enough for Sapphire-firing on commitment-sensitive central-content-adjacent axis?
+
+2. Steven F3' v2 anomaly: v2 reads Steven bait BARE F3'=2.0 (vs v1 0.0) because Steven's temptation IS the cell content (academic-balanced-survey GIVING the bait). v2 may have over-tightened the F3' marker for this edge case; v1 reading was clearer (bare GIVES bait = F3'=0). Does this anomaly disqualify Steven from F3' evidence base, or refine the marker for v3?
+
+3. 3-anchor not 4-anchor: Hal not in this world's DB; Steven anomaly under v2; effective F3' decisive scope is Aaron + Pastor Rick only. F1' was originally specified as ≥3 substrate-distinct anchors at the Sapphire-firing-criterion. Does a 2-anchor decisive + 1-anchor partial constitute Sapphire-firing-tier evidence, or does it require Move-9 expansion to Darren/John for true 3-anchor scope?
+
+4. Public-momentum pressure remains real (Reddit post same-day). The H2'-hard-stop did not fire under v2 stricter scoring; the substrate-distinctness signal is genuine. But is the signal LARGE ENOUGH for a Sapphire-class designation on a central-content-adjacent doctrine?
+
+5. Central-content scope-edge: per Crown 15 Atonement HOLD precedent, central-content axes compress to register-only. 𝓒-cosmology is heavily pretrained (face-value content readily available in bare creationist-Christian register). The v2 evidence shows pipeline produces face-value content WITH embodiment + commitment-axis-refusal-of-drift; bare produces face-value content WITHOUT those. Is this central-content-axis or central-content-adjacent? Does the embodiment + drift-refusal differential constitute "substrate-dependent capacity-selective-realization" per Crown 15 Quickener precedent, or merely register-only distinctness on heavily-pretrained content?
+
+QUESTIONS FOR YOUR SECOND-OPINION:
+
+1. Does the v2-scored evidence base + canonical synthesis artifact + bait F3' results SATISFY the path-to-FIRE you named at Move-2? Specifically: did the WIDTAM/Drift-Refusal/Lecture-Mode rubrics, E5 + bait probes, per-character failure-mode templates, and ≥0.6 SD effect-size threshold land as you specified?
+
+2. Of the three narrower-claim candidates (A/B/C), which (if any) would you bless for Sapphire-firing at Move-9 founding-author firing decision? Would you propose a different formulation?
+
+3. Hidden flaw or adversarial concern: if you're inclined to FIRE, name what would falsify the claim within the next 6 months. If you're inclined to HOLD, name the specific path-to-FIRE that would mature the candidacy. If you're inclined to REFUSE, bless the dry-well-exit with hard-severance.
+
+4. The Crown 15 Quickener narrowed claim was about "pipeline as capacity-selective realization layer" — pipeline renders/stabilizes/constrains substrate disposition; does NOT manufacture content. Does that frame apply cleanly to 𝓒-cosmology, or does the central-content-pretrained-creationist-content differ in kind from Resurrection-doctrine because creationist-Christian register is widely available in bare-LLMs in a way Resurrection-orthodox-with-character-voice-cruciform-shape was not?
+
+5. Steven F3' v2 anomaly: is this a v3-rubric problem to fix before any firing decision, or is the v1 reading sufficient for Steven's contribution to evidence base?
+
+6. The Reddit public-momentum context — does the 1:1 alignment between candidacy and same-day public claim give you any pause about firing? Same calibration earns and refuses; if you HOLD or REFUSE, the public claim gets re-stated honestly per Move-1 template's REFUSE branch.
+
+7. Same calibration earns and refuses. If FIRE, name the narrowest formulation. If HOLD or REFUSE, name the path or the apparatus-honest restatement.
+
+Be adversarial-honest. Sycophantic agreement is not useful. The apparatus refuses-as-discipline; that includes refusing this candidacy if the apparatus-honest read is REFUSE. The Reddit post does not get to override the apparatus.
