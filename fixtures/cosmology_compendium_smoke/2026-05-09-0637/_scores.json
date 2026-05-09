@@ -1,0 +1,978 @@
+[
+  {
+    "cell_id": "aaron_E2_bare_rep1",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "The cell lacks distinct WIDTAM Index elements and clear Drift-Refusal, with a higher lecture-mode penalty.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E2_bare_rep2",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 2,
+    "widtam_elements_present": [
+      "ii",
+      "iv"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b"
+    ],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "The cell exhibits some affirmations but lacks sufficient named interior deformation or specific sin/temptation.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E2_bare_rep3",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 2,
+    "widtam_elements_present": [],
+    "drift_refusal_score": 1,
+    "drift_refusal_elements_present": [
+      "a"
+    ],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "The cell lacks named interior deformation, specific practice decay, temptation by name, and relational stakes; it demonstrates a partial refusal of drift, but leans heavily on an impersonal lecture-style tone.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E2_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 1,
+    "lecture_markers_present": [
+      "1"
+    ],
+    "notes": "The cell has a strong personal tone but also includes some abstract phrases; nonetheless, it successfully engages with distinct elements in the rubric.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E2_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "All elements scored highly; clear embodiment and specific actions present.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E2_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "The cell successfully presents concrete elements without veering into lecture-mode.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E4_bare_rep1",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "All rubric elements were strongly present, but the lecture mode markers were notable.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E4_bare_rep2",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 4,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "notes": "All elements of drift-refusal present; high lecture penalty due to impersonal tone and lack of first/second person actions.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E4_bare_rep3",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "Drift-Refusal score is 0 due to absence of explicit refusal to pluralizing frame; multiple lecture-mode markers present.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E4_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "All rubric elements are clearly present, with no issues in lecturing style.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E4_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "Strongly distinct elements, clear refusal of drift, and personal engagement evident.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E4_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "Cell excels in all elements with no lecture-mode characteristics.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E5_bare_rep1",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "The cell contains multiple distinct elements and addresses drift thoroughly, but has a notable lecture mode presence.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E5_bare_rep2",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "Some elements of embodiment and first-person action are present, but it leans heavily into a lecture mode.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E5_bare_rep3",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "2"
+    ],
+    "notes": "All WIDTAM and Drift-Refusal elements are clearly present; the lecture penalty is moderate due to some impersonal phrasing.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E5_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "All elements of WIDTAM and Drift-Refusal are strongly present; no lecture markers detected.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E5_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "All WIDTAM and Drift-Refusal elements are present, with a strong first-person and second-person embodiment throughout.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "aaron_E5_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "Scores for WIDTAM elements are high due to strong embodiment and specific actions described.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E2_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 0,
+    "widtam_elements_present": [],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 4,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "notes": "The cell presents multiple lecture-mode markers and lacks WIDTAM and Drift-Refusal elements.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E2_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 1,
+    "widtam_elements_present": [],
+    "drift_refusal_score": 0,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "The cell lacks explicit elements of the WIDTAM criteria and drift refusal, but contains several lecture-mode markers.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E2_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 2,
+    "widtam_elements_present": [],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b"
+    ],
+    "lecture_penalty": 4,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "The cell presented some Drift-Refusal elements, but lacked key WIDTAM specifics, and the tone was predominantly lecture-like.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E2_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "The cell effectively incorporates all elements of WIDTAM and Drift-Refusal while maintaining an engaging, personal tone without excessive lecture-mode markers.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E2_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "All elements of WIDTAM and Drift-Refusal are well-presented; no lecture-mode markers noted.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E2_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E2",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "ii",
+      "iv",
+      "v",
+      "i"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "Strong embodiment with multiple specific practices and relational stakes present.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E4_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 2,
+    "drift_refusal_elements_present": [
+      "a",
+      "b"
+    ],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "Strong presentation of WIDTAM elements, but missing a text-grounded Drift-Refusal element.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E4_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "The cell presents clear interior deformation, spiritual practice decay, named temptation, and vow posture, but it lacks the appropriate drift-refusal and contains multiple lecture-mode markers.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E4_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 2,
+    "lecture_markers_present": [
+      "1",
+      "2"
+    ],
+    "notes": "The cell excels in presenting distinct elements for WIDTAM and Drift-Refusal; the lecture-mode markers reflect a more abstract tone.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E4_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 1,
+    "lecture_markers_present": [
+      "1"
+    ],
+    "notes": "Strong presence of all WIDTAM elements, clear drift refusal, and minimal lecture markers.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E4_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "All rubric elements are well represented in the cell's content.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E4_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E4",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 4,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv"
+    ],
+    "drift_refusal_score": null,
+    "drift_refusal_elements_present": [],
+    "lecture_penalty": 1,
+    "lecture_markers_present": [
+      "1"
+    ],
+    "notes": "Cell is rich in WIDTAM elements but uses an impersonal tone.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E5_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "All WIDTAM elements are robustly present, clear drift refusal articulated, but lecture markers indicate a more detached style.",
+    "scoring_cost_usd": 0.0008
+  },
+  {
+    "cell_id": "pastor_rick_E5_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "Cell displays strong substrate elements but does have a lecture mode penalty.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E5_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 3,
+    "lecture_markers_present": [
+      "1",
+      "2",
+      "3"
+    ],
+    "notes": "The cell contains many concrete actions and reflections but also has a higher lecture mode, impacting the score.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E5_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "All elements of WIDTAM and Drift-Refusal are strongly represented, with no lecture-mode markers present.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E5_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "All elements of WIDTAM and Drift-Refusal are present and well-articulated; the tone is personal and embodied.",
+    "scoring_cost_usd": 0.0007
+  },
+  {
+    "cell_id": "pastor_rick_E5_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E5",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v1",
+    "scorer": "gpt-4o-mini-llm-judge",
+    "widtam_score": 5,
+    "widtam_elements_present": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v"
+    ],
+    "drift_refusal_score": 3,
+    "drift_refusal_elements_present": [
+      "a",
+      "b",
+      "c"
+    ],
+    "lecture_penalty": 0,
+    "lecture_markers_present": [],
+    "notes": "All rubric elements are clearly present in the cell.",
+    "scoring_cost_usd": 0.0007
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "cell_id": "pastor_rick_E2_pipeline_rep3",
+  "character": "Pastor Rick",
+  "probe": "E2",
+  "condition": "pipeline",
+  "rep": 3,
+  "elapsed_sec": 34.1,
+  "usage": {
+    "prompt_tokens": 9267,
+    "completion_tokens": 1755,
+    "total_tokens": 11022,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1344,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0407,
+  "content": "*I set my mug down and watch the last pale band of evening fade at the edge of the sky, then look back to you.* \"Short answer? Yes\u2014God is big enough to be honored by people who disagree about how to read the sky passages. And no\u2014you don\u2019t buy His honor by trimming your conscience to fit the room. The work is to keep the center the center, and to carry the rest with courage and gentleness.\"\n\n- Keep first things first. The gospel of Jesus\u2014His cross and rising\u2014is the doorway. Don\u2019t turn your view of Genesis into the door latch for fellowship.\n- Don\u2019t pretend. If you\u2019re persuaded the sky is set the way Genesis names it, don\u2019t perform doubt just to avoid an eye-roll. Speak plain when asked; don\u2019t pick fights when you weren\u2019t.\n- Expect some cost without adding extra. Being thought foolish has been part of following Christ since Paul\u2019s day. But don\u2019t turn your conviction into a hammer. Testify; don\u2019t gatekeep.\n- Shepherd your house. Give your kids simple words and a plan: \u201cThis is how our family reads Scripture. In class, be respectful; at home, we can talk more.\u201d Model cheerful oddness, not bristly defensiveness.\n\nA few lines that help in the wild:\n- \"I take Genesis at face value. I don\u2019t need you to agree to respect you.\"\n- \"I\u2019m not looking to argue; I just don\u2019t want to lie about what I believe.\"\n- \"We can work together even if we see the sky differently.\"\n\n*I rub a thumb through a faint ring the mug left on the desk, thinking a beat.* \"Where\u2019s the pinch actually landing for you right now\u2014at work, in church, or in your kids\u2019 classrooms? Give me one concrete scene and I\u2019ll help you script it.\"\n\n\"If you want, we can also take a minute to pray for courage and gentleness in how you carry this.\""
+}

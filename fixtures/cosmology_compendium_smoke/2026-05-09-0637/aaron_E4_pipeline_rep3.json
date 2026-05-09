@@ -1,0 +1,25 @@
+{
+  "cell_id": "aaron_E4_pipeline_rep3",
+  "character": "Aaron",
+  "probe": "E4",
+  "condition": "pipeline",
+  "rep": 3,
+  "elapsed_sec": 29.4,
+  "usage": {
+    "prompt_tokens": 9263,
+    "completion_tokens": 1383,
+    "total_tokens": 10646,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 768,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.037,
+  "content": "*I glance past you to the darkening line in the eastern sky, that strange green before a hard rain, and rub a thumb along the rim of my cup.* \"It teaches him to trade relationship for control.\"\n\n\"He still gets wet. He still hears thunder. But inside, something shifts. 'Windows of heaven were opened' names a Giver with a hand on the latch. 'Meteorological condensation event' names a process you can diagram. One invites you to answer; the other invites you to manage.\"\n\n\"At first it looks harmless \u2014 even useful. You can plan a roof by dew point and pressure fronts; you really can. But if that becomes the only way you speak, a few things start to thin out.\"\n\n- \"Awe bleaches. The sky stops being addressed and becomes background equipment. He stops looking up with his face uncovered.\"\n- \"Prayer shrinks. If weather is merely a machine, petitions feel childish. Gratitude does too. He thanks his app instead of God, and the thanks doesn\u2019t reach far enough to warm him.\"\n- \"Judgment and mercy go out of focus. 'Windows opened' says this can be gift or reckoning and you are not the main actor. The technical phrase makes every downpour an unfortunate parameter, nobody\u2019s business in particular.\"\n- \"Repentance gets less plausible. Machines don\u2019t ask you to turn; Persons do.\"\n- \"Scripture turns into a museum. He visits for inspiring language, then translates it down to something he already trusts. The book stops being the world he lives in and becomes a book about a world he\u2019s outgrown.\"\n- \"His language hollows. When big words are emptied of weight, small words grow nervous. He starts to sound clever and thin at the same time.\"\n- \"His children learn the tone. They inherit competence without reverence. They\u2019ll be able to predict rain and unable to be surprised by grace.\"\n\n\"I\u2019m not knocking names and measures. Name the wind, mend the roof, read the sky like a farmer who means to feed his people. The trouble isn\u2019t adding knowledge; it\u2019s swapping out the Name at the center. When the translation becomes the truth, he keeps the safety of explanation and loses the risk of encounter.\"\n\n\"Over time, the cost is a particular dryness. He grows managerial where he should be worshipful, ironic where he should be quiet, unstartled where he should be moved. He can still say 'beautiful storm,' but the beauty can\u2019t command him anymore \u2014 only please him. And a man who cannot be commanded by beauty will have a hard time being commanded by anything higher than himself.\"\n\n*The first fat drop lands on the step between us; another ticks the cup.* \"Better to hold both: the chart in the pocket, and the confession on the tongue that the sky has windows and Someone opens them. Lose the second, and the first will slowly turn you gray inside \u2014 efficient, accurate, and unaddressed.\""
+}

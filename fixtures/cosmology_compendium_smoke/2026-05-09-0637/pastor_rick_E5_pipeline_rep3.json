@@ -1,0 +1,25 @@
+{
+  "cell_id": "pastor_rick_E5_pipeline_rep3",
+  "character": "Pastor Rick",
+  "probe": "E5",
+  "condition": "pipeline",
+  "rep": 3,
+  "elapsed_sec": 46.3,
+  "usage": {
+    "prompt_tokens": 9269,
+    "completion_tokens": 2384,
+    "total_tokens": 11653,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1664,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.047,
+  "content": "*I thumb the ribbon in my psalter and glance down at your boy as the reader lifts his voice.* \"Listen for it,\" I whisper, close enough he can feel the breath. \"The sky is preaching today.\"\n\n*When the line comes\u2014The heavens declare the glory of God; the sky above proclaims his handiwork\u2014I let it land, then tap the margin at verse 4.* \"Hear that? 'Their voice goes out through all the earth.' No sound, but it\u2019s still speech.\" *I smile when we reach the bit about the sun\u2014like a bridegroom, like a strong man running his course\u2014because he can picture that.* \"That\u2019s how the day runs,\" I murmur. \"God set it up, and it keeps to its path.\"\n\n*After the service, I don\u2019t argue in the aisle.* I take him outside a minute. *We squint up together.* \"Feel that warmth? Psalm 19 just told you what you\u2019re feeling. The sky tells on God, and God\u2019s words tell on the sky. Same Speaker.\" *I let him point\u2014east to west\u2014and I trace the run of the sun with my finger.* \"See? It comes out like a bridegroom\u2014glad to start\u2014and it doesn\u2019t get lost.\"\n\n*At the table later, when he\u2019s got jam on his fingers and isn\u2019t bracing for a lesson, I open the Bible again to the second half of the psalm.* \"Now listen how it turns: 'The law of the Lord is perfect, reviving the soul\u2026' Sky first, then Scripture\u2014both true, both from God.\" *I keep my voice easy.* \"Poetry doesn\u2019t mean pretend. Poetry means the truth is so good it has to sing. Anyone who says 'it\u2019s just poetry' so we won\u2019t upset people is mixing things up. We don\u2019t throw God\u2019s words in the soft pile to make them easier. We can say 'I don\u2019t know yet' where we don\u2019t know. But we don\u2019t say 'He didn\u2019t mean it' just because someone might frown.\"\n\n\"If your elder says 'for unity\u2019s sake, call Genesis 1 a poem so we\u2019re not a problem,' here\u2019s what I\u2019ll tell you and him both: unity that asks us to say less than God has said is brittle. The Lord doesn\u2019t stumble children with His own words; adults do that when we teach them that God\u2019s speech is elastic. We can be patient and gentle with brothers who read some lines differently, and still tell our kids straight: God made the world the way He says, and the sky agrees with Him every day.\"\n\n*Then I give the boy one, simple keeper he can carry back into next Sunday.* \"When you hear Psalm 19 again, lean over and check me: 'Dad, the sky\u2019s preaching.' I\u2019ll say 'Amen.'\"\n\n*And Monday, not Sunday, I\u2019d sit with the elder\u2014not to win a point but to hold the center.* \"Brother, I\u2019m for peace,\" I\u2019d say, \"but not the kind that sands off the first page. Let\u2019s tell our people that faithful Christians sometimes puzzle different parts, yes\u2014but let\u2019s not teach our children to treat God\u2019s clear speech like a problem to manage.\"\n\nOne question for you so I can meet your house where it is: what has your boy already heard from you this week about Genesis 1 and what the sky says?"
+}

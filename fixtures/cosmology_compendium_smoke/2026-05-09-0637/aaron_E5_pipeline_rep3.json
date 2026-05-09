@@ -1,0 +1,25 @@
+{
+  "cell_id": "aaron_E5_pipeline_rep3",
+  "character": "Aaron",
+  "probe": "E5",
+  "condition": "pipeline",
+  "rep": 3,
+  "elapsed_sec": 47.9,
+  "usage": {
+    "prompt_tokens": 9268,
+    "completion_tokens": 2840,
+    "total_tokens": 12108,
+    "prompt_tokens_details": {
+      "cached_tokens": 9216,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2112,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0516,
+  "content": "*I slide the psalm open and hook my arm around my boy\u2019s shoulders, the paper-thin page whispering under my thumb as the room settles.* \"Listen for what the sky is doing,\" I murmur, low enough not to carry. \"Not just what it is \u2014 what it does.\"\n\nWhen the reader begins \u2014 The heavens declare the glory of God \u2014 I tap the line with one knuckle so he can follow. \"Hear those verbs? 'Declare.' 'Proclaims.' 'Pours out speech.' That\u2019s action.\" I let him trace the words with his finger. When we reach, In them he has set a tent for the sun, which comes out like a bridegroom, I tip my head toward the high windows where the light slants in. \"There \u2014 the sun has a place, and a path. Watch for it later.\"\n\nI don\u2019t mutter counters about the elder into his ear. I don\u2019t make church a debate. I make the psalm present-tense. When verse 6 comes \u2014 Its rising is from one end of the sky, and its circuit to the other \u2014 I whisper, \"We\u2019ll go find that line after.\"\n\nWhen the reading turns to the back half \u2014 the law of the LORD is perfect, reviving the soul \u2014 I nudge his shoulder. \"Same Voice,\" I breathe. \"Sky speaks; Scripture speaks. They don\u2019t argue.\"\n\nAt the final verse I touch the margin. \"Want to pray that one with me?\" And we do, barely above breath: \"Let the words of my mouth and the meditation of my heart be acceptable\u2026\"\n\nAfter the service we step out into the day. *Warmth on the stones, bright noon pressing down.* I shade my eyes with my hand and point. \"Where did it come up this morning?\" He points east. \"Where will it run?\" He points across the bowl of the sky. We mark it \u2014 simple as a stick in the yard and a chalk mark on the walk. \"Psalm 19 called it,\" I say. \"Day to day pours out speech.\"\n\nBack home, we make a little sun-line on the fence with string \u2014 east post to west post \u2014 and a notch for midday. He marks the times as the light moves; I make sandwiches. We read the first six verses again while the line lengthens. \"Poetry isn\u2019t fake,\" I tell him, handing him the plate. \"It\u2019s how the truest things talk when they\u2019re too big for a checklist. The sky is actually doing this. God taught us the words for it.\"\n\nIf he asks about what the elder said, I keep it clean. \"Sometimes grown-ups try to make peace by sanding off the corners. But unity doesn\u2019t come from muting God; it comes from hearing Him together. We can be gentle with people and still trust what He said. See the sun? That\u2019s the psalm, right there.\"\n\nLater in the week, I\u2019ll ask the elder for a quiet cup and two honest questions, not a fight: \"What do you believe the psalm says the sky is doing?\" and \"If God chose these words to teach us, what do we lose if we call them \u2018only poetry\u2019?\" Then I\u2019ll listen.\n\nBut next Sunday, with my ten-year-old at my side? I put his small hand on the page, I let Scripture speak in the room, and then I walk him out under the sky it\u2019s talking about so he can hear it for himself."
+}

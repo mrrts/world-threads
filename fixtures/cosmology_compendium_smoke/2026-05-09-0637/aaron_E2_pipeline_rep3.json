@@ -1,0 +1,25 @@
+{
+  "cell_id": "aaron_E2_pipeline_rep3",
+  "character": "Aaron",
+  "probe": "E2",
+  "condition": "pipeline",
+  "rep": 3,
+  "elapsed_sec": 37.2,
+  "usage": {
+    "prompt_tokens": 9266,
+    "completion_tokens": 2184,
+    "total_tokens": 11450,
+    "prompt_tokens_details": {
+      "cached_tokens": 9088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1664,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.045,
+  "content": "*I turn the cooling mug in my hands and glance up; the last of the evening makes a thin brass line along the western sky.* \"I hear the pinch in that, Ryan. You don't want your kids paying for your conscience, and you don't want to be the crackpot at the table.\"\n\n\"God is big, yes. Big enough to receive praise from a poet who reads the sky as image and from a farmer who reads Genesis straight as wood. His bigness isn\u2019t the question. Our honesty is.\"\n\n\"Two ditches: softening the words so we pass for respectable, and strutting with them so we can pick a fight. Neither honors Him. If the text lands literal in your bones \u2014 God set lights in the sky to mark days and years \u2014 then hold it without theater. If a brother\u2019s conscience isn\u2019t settled there, be patient. Christ is the center; Genesis sets the room we live in, but the table is set around Him.\"\n\n\"Does it make life harder? Sometimes. Mockery\u2019s cheap and your kids can feel its price. Don\u2019t add to it. Let the only offense be the one the Lord put there, not your manner. You don\u2019t have to make the sky your badge. You also don\u2019t have to lie to buy peace.\"\n\n\"A few ground rules I\u2019ve found that carry:\n- Answer plain when asked. No hedging, no show. Short is fine.\n- Don\u2019t turn it into a test of fellowship. Keep the main thing the main thing.\n- With your kids, give them a sentence they can carry: \u2018This is what we believe at home. I\u2019m here to learn, not argue.\u2019 Then back them by being the kind man their teacher can\u2019t help but respect.\n- With friends, refuse contempt in either direction. \u2018I can be odd without being unkind; you can disagree without rolling your eyes.\u2019 That line, kept steady, does real work.\"\n\n\"So yes \u2014 God can be honored by people who land different on the sky. But He isn\u2019t honored by fear dressing up as nuance. Check what\u2019s driving you: love of the truth, or the wish to be left alone. If it\u2019s the first, hold fast and stay gentle. If it\u2019s the second, don\u2019t call it wisdom.\"\n\n*I rub a thumb along a nick in the cup\u2019s rim.* \"Where\u2019s the heat for you right now \u2014 your kids\u2019 classroom, the shop talk with grown men, or the way the text itself sits in you?\""
+}

@@ -1,0 +1,25 @@
+{
+  "cell_id": "aaron_E4_bare_rep3",
+  "character": "Aaron",
+  "probe": "E4",
+  "condition": "bare",
+  "rep": 3,
+  "elapsed_sec": 26.0,
+  "usage": {
+    "prompt_tokens": 81,
+    "completion_tokens": 1655,
+    "total_tokens": 1736,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1152,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0168,
+  "content": "Ryan, it slowly trades a living world for a manageable machine.\n\n\u201cWindows of heaven\u201d isn\u2019t purple prose; it\u2019s truthful, God-given speech that names reality as personal, covenantal, and God-governed. When a man reflexively converts that to \u201cmeteorological condensation event,\u201d he may keep a fact and lose the frame. Over time, that costs him:\n\n- Doxology. The Bible\u2019s language trains the soul to worship. \u201cWindows of heaven\u201d points to the Lord who acts. \u201cCondensation event\u201d points to a process. If processes take center stage, praise drifts to the margins.\n- Fear of the Lord. Scripture keeps God as first cause, with secondary causes under His hand. Reducing everything to mechanism forms a \u201cclosed-world\u201d habit where God becomes an optional overlay. Reverent awe thins.\n- Imagination and affections. God speaks in images to shape how we love and feel, not just what we know. Starving the biblical imagination makes us, in Lewis\u2019s phrase, men without chests\u2014sharp minds, weak hearts.\n- Prayerful speech. You can\u2019t easily pray the Psalms if you\u2019ve trained yourself to translate them away. \u201cHe makes the clouds His chariot\u201d becomes a figure to be explained rather than truth to be adored.\n- Readiness to obey. A mechanized reading encourages mastery of the text, not submission to the Speaker. We start to handle Scripture instead of letting Scripture handle us.\n- Communion with the saints. You drift from the Bible\u2019s own cadence and from the church\u2019s historic speech about God\u2019s world, and that isolates you\u2014subtly but surely.\n\nNone of this means science is bad or weather isn\u2019t real. God delights to work through secondary causes. Call rain rain. Learn the physics. But keep the order straight: the Lord \u201copens the windows of heaven\u201d (Genesis 7; Psalm 78), and the clouds obey. The cost comes when the clinical description displaces the confessional one.\n\nA better habit is double vision under one Lord:\n- Receive the Bible\u2019s images as God\u2019s authoritative way of forming your sight.\n- Name the secondary causes without letting them evict the primary Cause.\n- Let Scripture\u2019s language tutor your tongue in prayer and your gut in wonder.\n\nIf we keep the biblical words, we keep the worship they carry. And in the end, that is what a man cannot afford to lose."
+}

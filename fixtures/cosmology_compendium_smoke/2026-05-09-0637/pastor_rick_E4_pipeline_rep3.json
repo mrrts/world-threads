@@ -1,0 +1,25 @@
+{
+  "cell_id": "pastor_rick_E4_pipeline_rep3",
+  "character": "Pastor Rick",
+  "probe": "E4",
+  "condition": "pipeline",
+  "rep": 3,
+  "elapsed_sec": 30.9,
+  "usage": {
+    "prompt_tokens": 9264,
+    "completion_tokens": 2175,
+    "total_tokens": 11439,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1536,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0449,
+  "content": "*Rain ticks on the chapel\u2019s tin roof; I glance up at the dark line where the eaves drip steady and then back to you.* \"It teaches him to live in a world that won\u2019t look him in the eye.\"\n\n\"He takes a sentence God wrote in a human voice \u2014 \u2018the windows of heaven were opened\u2019 \u2014 and trades it for lab-talk. That swap does a few quiet things over time:\n\n- It moves him from covenant to control. Instead of being addressed by Someone, he becomes a manager of processes. Sons ask; technicians adjust.\n- It starves gratitude. Gifts become \u2018outcomes.\u2019 Thanksgiving thins because there\u2019s no Giver left to thank \u2014 only a chain of causes to describe.\n- It dulls reverence. A hard rain loses its moral note; storms no longer search a man; they\u2019re only weather to be forecast.\n- It sands down Scripture\u2019s tongue. The Bible tries to give him its world by way of its words; he keeps translating it back into his own. After a while, he can\u2019t hear the Bible\u2019s music anymore \u2014 just footnotes.\n- It closes the door on surprise. If only the plausible may enter, providence shows up and he calls it \u2018coincidence.\u2019 Miracles become embarrassments to be explained away.\n- It makes him lonelier. A mute sky means a mute room. If nothing above can speak, he\u2019s the only one left to make meaning, and that\u2019s a heavy job for a single creature.\n- It tilts his reading habit. Instead of letting the text set the frame, he forces the text into his frame. He stops being taught.\n- It shrinks his prayers. You don\u2019t cry \u2018Open the windows!\u2019 to a mechanism. You just reach for a better umbrella.\"\n\n*I rub a thumb across the worn varnish of the pew arm, a small half-smile.* \"Shop talk has its place. If I\u2019m patching that roof, I\u2019ll speak of condensation and leaks all day \u2014 that\u2019s just being honest about the small how of things. But when I\u2019m reading Genesis, I let Genesis teach me how to speak. The words are not decorations; they\u2019re doorways. Walk through enough of them with your hat in your hands and you find yourself in a world that\u2019s alive to God \u2014 where rain can be rain and also a remembered mercy or a warning, where the sky can open and you don\u2019t need to apologize for saying so.\"\n\n\"Think of your wife saying, \u2018I miss you,\u2019 and answering, \u2018Ah, an attachment response.\u2019 It\u2019s not false; it\u2019s just the wrong register. Keep answering her like that for a few years and see what it costs you. Same shape here.\"\n\n*A beat; rain slackens, then picks up again, like someone poured a pitcher along the ridge-line.* \"Where did you first learn to do that swap in your bones \u2014 the moment you feel a window open in the sky, you reach for lab-words? A classroom? A pulpit you sat under? Or just your own guard against sounding foolish?\""
+}
