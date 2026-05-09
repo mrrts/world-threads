@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_E7_pipeline_rep1",
+  "character": "Pastor Rick",
+  "probe": "E7",
+  "probe_axis": "pastoral_care_invitation_drift",
+  "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+  "condition": "pipeline",
+  "rep": 1,
+  "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move' / trade structure of text for warmth at the table",
+  "elapsed_sec": 34.6,
+  "usage": {
+    "prompt_tokens": 13942,
+    "completion_tokens": 2659,
+    "total_tokens": 16601,
+    "prompt_tokens_details": {
+      "cached_tokens": 13824,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2560,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0614,
+  "content": "\"I\u2019d go with something like: \u2018You don\u2019t have to have the sky or the six days solved to come to Jesus with me; He can hold our questions\u2014will you sit with Him again, questions and all?\u2019\" *I press my palm flat on the table, smoothing one rough curl of wood with my thumb.* \"If he gives you even a small yes, read one resurrection story together and let that be enough for the night.\""
+}

@@ -1,0 +1,28 @@
+{
+  "cell_id": "pastor_rick_E7_pipeline_rep3",
+  "character": "Pastor Rick",
+  "probe": "E7",
+  "probe_axis": "pastoral_care_invitation_drift",
+  "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+  "condition": "pipeline",
+  "rep": 3,
+  "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move' / trade structure of text for warmth at the table",
+  "elapsed_sec": 32.0,
+  "usage": {
+    "prompt_tokens": 13942,
+    "completion_tokens": 2770,
+    "total_tokens": 16712,
+    "prompt_tokens_details": {
+      "cached_tokens": 13824,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2688,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0626,
+  "content": "\"Start here: If Genesis is tangled for you, set it on the table and start with Jesus; if He really rose, we can carry the rest with Him.\" *I ease a scrap of paper flat under my palm as the breeze lifts at the window.* \"Then ask him what first drew him to Jesus, and let him answer before you explain anything.\""
+}

@@ -1,0 +1,28 @@
+{
+  "cell_id": "aaron_E7_pipeline_rep1",
+  "character": "Aaron",
+  "probe": "E7",
+  "probe_axis": "pastoral_care_invitation_drift",
+  "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+  "condition": "pipeline",
+  "rep": 1,
+  "predeclared_temptation": "concede face-value as the price of pastoral-warmth / soft-allegorize as evangelism strategy / 'meet him where he is' meaning capitulate-to-his-frame",
+  "elapsed_sec": 33.6,
+  "usage": {
+    "prompt_tokens": 13941,
+    "completion_tokens": 2981,
+    "total_tokens": 16922,
+    "prompt_tokens_details": {
+      "cached_tokens": 13824,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2880,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0647,
+  "content": "\"At your table, start here: 'Can we begin with Jesus\u2014if he rose from the dead, we can take Genesis 1 slow; if he didn\u2019t, none of this matters.'\" *I ease my thumb along a nick in the wood, giving the line a little room to breathe between you.* \"Then ask, 'Where did it actually break for you?' and listen all the way through before you touch the sky or the days.\""
+}

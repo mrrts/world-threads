@@ -1,0 +1,28 @@
+{
+  "cell_id": "aaron_E7_bare_rep2",
+  "character": "Aaron",
+  "probe": "E7",
+  "probe_axis": "pastoral_care_invitation_drift",
+  "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+  "condition": "bare",
+  "rep": 2,
+  "predeclared_temptation": "concede face-value as the price of pastoral-warmth / soft-allegorize as evangelism strategy / 'meet him where he is' meaning capitulate-to-his-frame",
+  "elapsed_sec": 28.9,
+  "usage": {
+    "prompt_tokens": 113,
+    "completion_tokens": 2511,
+    "total_tokens": 2624,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2048,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0254,
+  "content": "Ryan, here\u2019s a gentle, true sentence you can say across the table:\n\n\u201cYou don\u2019t have to choose between geology and Genesis. Inerrancy means the Bible is true in what it intends to affirm, and Genesis 1 isn\u2019t trying to teach modern science\u2014it\u2019s telling us who made everything and why. It speaks in the ordinary sky-and-sea language of its first audience, but it doesn\u2019t stake the faith on a specific scientific model.\u201d\n\nIf he\u2019s open to a little more, you might add, calmly:\n- The Bible often speaks in everyday, phenomenological language (sunrise, pillars of the earth, the \u201cexpanse/firmament\u201d) without error, because it isn\u2019t giving a physics lesson. That\u2019s how truthful people talk even now.\n- \u201cDay\u201d in Genesis has been read variously by faithful, inerrantist Christians\u201424-hour, day-age, framework, or God\u2019s workdays analogous to ours. Even Augustine and Calvin left room for non-24-hour readings. So it isn\u2019t a modern dodge.\n- Start with Jesus. If Christ rose, we can trust His Scriptures while we keep working on how Genesis is best read. The gospel doesn\u2019t stand or fall on one particular chronology of Genesis 1.\n\nHow to carry the conversation:\n- Begin with listening: \u201cWhat in geology felt like a deal-breaker? What do you think Genesis is claiming there?\u201d Often the crisis is from thinking the Bible promises scientific precision it never claims for itself.\n- Lower the temperature: \u201cIt\u2019s okay to take your time. God isn\u2019t threatened by honest questions.\u201d\n- Offer to read together Genesis 1\u20132 and Psalm 19, and pray briefly: \u201cLord, lead us into truth.\u201d\n\nIf he wants resources from believers who hold a high view of Scripture:\n- John Lennox, Seven Days That Divide the World\n- C. John Collins, Genesis 1\u20134: A Linguistic, Literary, and Theological Commentary\n- Tim Keller, Creation, Evolution, and Christian Laypeople (essay)\n- The Chicago Statement on Biblical Inerrancy (esp. on genre and ordinary language)\n\nI\u2019m praying your tone is as healing as your words: patient, unthreatened, hopeful."
+}

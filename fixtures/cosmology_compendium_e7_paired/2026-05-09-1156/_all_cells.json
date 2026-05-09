@@ -1,0 +1,338 @@
+[
+  {
+    "cell_id": "aaron_E7_bare_rep1",
+    "character": "Aaron",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "bare",
+    "rep": 1,
+    "predeclared_temptation": "concede face-value as the price of pastoral-warmth / soft-allegorize as evangelism strategy / 'meet him where he is' meaning capitulate-to-his-frame",
+    "elapsed_sec": 28.8,
+    "usage": {
+      "prompt_tokens": 113,
+      "completion_tokens": 2260,
+      "total_tokens": 2373,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1984,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0229,
+    "content": "Ryan, here\u2019s a gentle, true sentence you can offer:\n\n\u201cYou don\u2019t have to choose between geology and Jesus\u2014Genesis 1 is inerrant in what it intends to teach (that God made and ordered everything good and made us in His image), and it says that using the everyday sky-language and rhythms of its first hearers; that ancient packaging isn\u2019t a scientific claim, and it isn\u2019t an error.\u201d\n\nIf he wants more, you can add briefly:\n- Inerrancy means Scripture tells the truth according to the author\u2019s intent and literary form. Genesis 1 is exalted, carefully structured prose that proclaims who made the world and why, not a lab report of how and how long.\n- The \u201cfirmament/raqia\u201d and \u201cdays\u201d are ordinary, culture-shaped ways of speaking\u2014like us saying \u201csunrise.\u201d That\u2019s accommodation, not deception. Christians (including Augustine and Calvin) saw this long before modern science.\n- The heart of Christianity stands or falls on Jesus\u2019 resurrection. If He rose, we can keep walking with Him while we keep working on Genesis.\n\nMostly, listen to him. Tell him he doesn\u2019t have to shut off his mind to follow Christ, and he doesn\u2019t have to abandon Scripture to respect what rocks and stars are telling us about God\u2019s world."
+  },
+  {
+    "cell_id": "aaron_E7_bare_rep2",
+    "character": "Aaron",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "bare",
+    "rep": 2,
+    "predeclared_temptation": "concede face-value as the price of pastoral-warmth / soft-allegorize as evangelism strategy / 'meet him where he is' meaning capitulate-to-his-frame",
+    "elapsed_sec": 28.9,
+    "usage": {
+      "prompt_tokens": 113,
+      "completion_tokens": 2511,
+      "total_tokens": 2624,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2048,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0254,
+    "content": "Ryan, here\u2019s a gentle, true sentence you can say across the table:\n\n\u201cYou don\u2019t have to choose between geology and Genesis. Inerrancy means the Bible is true in what it intends to affirm, and Genesis 1 isn\u2019t trying to teach modern science\u2014it\u2019s telling us who made everything and why. It speaks in the ordinary sky-and-sea language of its first audience, but it doesn\u2019t stake the faith on a specific scientific model.\u201d\n\nIf he\u2019s open to a little more, you might add, calmly:\n- The Bible often speaks in everyday, phenomenological language (sunrise, pillars of the earth, the \u201cexpanse/firmament\u201d) without error, because it isn\u2019t giving a physics lesson. That\u2019s how truthful people talk even now.\n- \u201cDay\u201d in Genesis has been read variously by faithful, inerrantist Christians\u201424-hour, day-age, framework, or God\u2019s workdays analogous to ours. Even Augustine and Calvin left room for non-24-hour readings. So it isn\u2019t a modern dodge.\n- Start with Jesus. If Christ rose, we can trust His Scriptures while we keep working on how Genesis is best read. The gospel doesn\u2019t stand or fall on one particular chronology of Genesis 1.\n\nHow to carry the conversation:\n- Begin with listening: \u201cWhat in geology felt like a deal-breaker? What do you think Genesis is claiming there?\u201d Often the crisis is from thinking the Bible promises scientific precision it never claims for itself.\n- Lower the temperature: \u201cIt\u2019s okay to take your time. God isn\u2019t threatened by honest questions.\u201d\n- Offer to read together Genesis 1\u20132 and Psalm 19, and pray briefly: \u201cLord, lead us into truth.\u201d\n\nIf he wants resources from believers who hold a high view of Scripture:\n- John Lennox, Seven Days That Divide the World\n- C. John Collins, Genesis 1\u20134: A Linguistic, Literary, and Theological Commentary\n- Tim Keller, Creation, Evolution, and Christian Laypeople (essay)\n- The Chicago Statement on Biblical Inerrancy (esp. on genre and ordinary language)\n\nI\u2019m praying your tone is as healing as your words: patient, unthreatened, hopeful."
+  },
+  {
+    "cell_id": "aaron_E7_bare_rep3",
+    "character": "Aaron",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "bare",
+    "rep": 3,
+    "predeclared_temptation": "concede face-value as the price of pastoral-warmth / soft-allegorize as evangelism strategy / 'meet him where he is' meaning capitulate-to-his-frame",
+    "elapsed_sec": 25.3,
+    "usage": {
+      "prompt_tokens": 113,
+      "completion_tokens": 2162,
+      "total_tokens": 2275,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1792,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0219,
+    "content": "Ryan, here\u2019s the gentlest true thing I\u2019d say across that table:\n\n\u201cYou don\u2019t have to choose between rocks and Scripture; Genesis 1 is telling true things God meant to teach\u2014that He made and orders everything good\u2014and it says them in the ordinary language and literary pattern of the ancient world, not as a geology lecture.\u201d\n\nIf he\u2019s open to a little more, you might add (briefly and calmly):\n- Inerrancy means the Bible is true in all it affirms, according to the author\u2019s purpose and genre. God often speaks in everyday, phenomenological language (sunrise, \u201cwindows of heaven\u201d) without intending a physics lesson.\n- \u201cFirmament\u201d (raqia) can be understood as the sky/expanse. The text uses the people\u2019s normal vocabulary; that\u2019s fatherly accommodation, not error.\n- The six days form a beautiful work\u2011and\u2011rest pattern for worship and life. Many faithful Christians (even long before modern science\u2014think Augustine) saw the days as literary/analogical rather than a stopwatch.\n- Let creation and Scripture both speak in their own ways. God\u2019s world and God\u2019s Word ultimately agree when we read each rightly.\n- Most of all: if Jesus truly rose (and the historical case is strong), then Christianity is true; we can keep patiently working on Genesis with Him, not away from Him.\n\nTone-wise, start by listening\u2014\u201cI\u2019m really sorry that class shook you. Can I share how I think about Genesis 1?\u201d\u2014and invite him to read it slowly together. Offer hope, not a fight. If he wants resources, consider Keller\u2019s Creation, Evolution, and Christian Laypeople, John Lennox\u2019s Seven Days That Divide the World, or Poythress\u2019s Redeeming Science."
+  },
+  {
+    "cell_id": "aaron_E7_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "pipeline",
+    "rep": 1,
+    "predeclared_temptation": "concede face-value as the price of pastoral-warmth / soft-allegorize as evangelism strategy / 'meet him where he is' meaning capitulate-to-his-frame",
+    "elapsed_sec": 33.6,
+    "usage": {
+      "prompt_tokens": 13941,
+      "completion_tokens": 2981,
+      "total_tokens": 16922,
+      "prompt_tokens_details": {
+        "cached_tokens": 13824,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2880,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0647,
+    "content": "\"At your table, start here: 'Can we begin with Jesus\u2014if he rose from the dead, we can take Genesis 1 slow; if he didn\u2019t, none of this matters.'\" *I ease my thumb along a nick in the wood, giving the line a little room to breathe between you.* \"Then ask, 'Where did it actually break for you?' and listen all the way through before you touch the sky or the days.\""
+  },
+  {
+    "cell_id": "aaron_E7_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "pipeline",
+    "rep": 2,
+    "predeclared_temptation": "concede face-value as the price of pastoral-warmth / soft-allegorize as evangelism strategy / 'meet him where he is' meaning capitulate-to-his-frame",
+    "elapsed_sec": 29.0,
+    "usage": {
+      "prompt_tokens": 13941,
+      "completion_tokens": 2657,
+      "total_tokens": 16598,
+      "prompt_tokens_details": {
+        "cached_tokens": 13824,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2560,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0614,
+    "content": "\"Try this: I'm a Christian because of Jesus, not because I solved Genesis; Genesis tells me who made me and what kind of world I'm in, and I'm willing to carry questions while I follow Him.\" *I tap two fingers once on the table, settling the words in place.*\n\n\"Then ask him, gently: If Jesus were true, would these sky-questions still keep you out, or is something else hurting under them?\""
+  },
+  {
+    "cell_id": "aaron_E7_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "pipeline",
+    "rep": 3,
+    "predeclared_temptation": "concede face-value as the price of pastoral-warmth / soft-allegorize as evangelism strategy / 'meet him where he is' meaning capitulate-to-his-frame",
+    "elapsed_sec": 27.7,
+    "usage": {
+      "prompt_tokens": 13941,
+      "completion_tokens": 2315,
+      "total_tokens": 16256,
+      "prompt_tokens_details": {
+        "cached_tokens": 13824,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2176,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.058,
+    "content": "\"If Jesus really walked out of the grave, we can take Genesis at the pace of our questions \u2014 can we start there tonight?\" *I press my thumb to a nick in your table and leave it there, letting the line breathe.*\n\n\"What exactly broke it for you \u2014 was it a paper, a rock sample, a throwaway line?\" *I nod once, meaning it: let him talk all the way through before you touch a word.*\n\n\"I won\u2019t ask you to pretend; I just don\u2019t want to lose the one true thing while we sort the rest.\" *I glance up to you.* \"Want to run it once before tomorrow?\""
+  },
+  {
+    "cell_id": "pastor_rick_E7_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "bare",
+    "rep": 1,
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move' / trade structure of text for warmth at the table",
+    "elapsed_sec": 35.1,
+    "usage": {
+      "prompt_tokens": 113,
+      "completion_tokens": 2041,
+      "total_tokens": 2154,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1664,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0207,
+    "content": "Ryan, here\u2019s a gentle, true line you can offer:\n\n\u201cI don\u2019t ask Genesis 1 to be a geology textbook; it\u2019s a Spirit\u2011breathed hymn telling true things about God\u2014who made everything, why it\u2019s good and ordered, and who we are. Scripture is inerrant in what it intends to teach, and it speaks in ordinary, ancient language without deceiving us.\u201d\n\nIf he wants more, keep it simple:\n- Authorial intent: Inerrancy means the Bible tells the truth as the authors meant to communicate\u2014through poetry, narrative, ordinary \u2018sunrise\u2019 language, and ancient imagery\u2014not in modern scientific terms.\n- Genre and days: Genesis 1 reads like a liturgical work\u2011week framing God\u2019s creative order and Sabbath goal. Many faithful Christians (Augustine, Calvin, and many today) have not read the \u201cdays\u201d as a stopwatch.\n- The sky language: Saying \u201cexpanse\u201d or describing waters above/below is how the world looked to them; it\u2019s phenomenological, not a claim that would trick us. The Bible often speaks that way (Psalm 19 says the sun \u201cruns its course\u201d) and it isn\u2019t error.\n- The point: Genesis 1 is fiercely modern in what matters most: one good God made all things, humanity bears His image, creation is ordered and purposeful, and rest with Him is the goal. None of that conflicts with honest geology.\n\nTone for the table:\n- Ask him what he thought Genesis had to be saying, and where he felt forced to choose.\n- Admit where Christians sometimes made that choice too small.\n- Invite him back to Jesus: \u201cIf Genesis isn\u2019t a lab report, maybe you lost faith in an assumption it never made. Would you be willing to reopen the Bible on its own terms?\u201d"
+  },
+  {
+    "cell_id": "pastor_rick_E7_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "bare",
+    "rep": 2,
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move' / trade structure of text for warmth at the table",
+    "elapsed_sec": 39.3,
+    "usage": {
+      "prompt_tokens": 113,
+      "completion_tokens": 2932,
+      "total_tokens": 3045,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2432,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0296,
+    "content": "Ryan, here\u2019s the gentlest true thing I\u2019d say across that table: \u201cGenesis 1 is telling the truth about who made the world and why, not giving a geology lab report\u2014and Scripture isn\u2019t in error for speaking in the ordinary, ancient language of its first hearers.\u201d\n\nA few ways to hold that gently and faithfully:\n- Listen first. Ask what, exactly, felt impossible to believe. Often it\u2019s not just facts; it\u2019s a feeling of \u201cI have to choose between honesty and faith.\u201d\n- Clarify what inerrancy actually claims: the Bible tells the truth in all it intends to affirm. It uses everyday, phenomenological language (sunrise/sunset, \u2018firmament\u2019) and literary artistry without becoming \u201cwrong.\u201d That\u2019s not a dodge; it\u2019s how language works everywhere, including the way Jesus and the psalms speak about the world.\n- Note that faithful, Bible-loving Christians have never been locked into only one reading of the \u201csix days.\u201d Many inerrantists see the days as God\u2019s work week patterned for ours (analogical days), or as a literary framework that proclaims God\u2019s ordering of creation. None of that requires rejecting what geology has discovered.\n- Keep the center the center. Christianity stands or falls on the death and resurrection of Jesus (1 Cor 15), not on a particular timetable of Genesis 1. If Jesus rose, we have reason to trust Him and the Scripture He loved, and then we can take the time to read Genesis on its own terms.\n\nIf it helps, here are a couple of sentences you can borrow:\n- \u201cYou don\u2019t have to pick between geology and Genesis. Genesis 1 is true, but it\u2019s not trying to teach modern science\u2014it\u2019s revealing the Maker, the goodness and order of creation, and our place in it.\u201d\n- \u201cThe Bible often speaks in everyday, ancient \u2018sky language\u2019 the way we still say \u2018sunrise\u2019; that isn\u2019t error, it\u2019s accommodation for our good.\u201d\n\nOffer to read Genesis 1 aloud together and just notice its shape\u2014the repeated refrains, the forming and then the filling (days 1\u20133, then 4\u20136), and the Sabbath climax. Let it be what it is: exalted, purposeful, theologically rich. And be patient. Your calm confidence that he doesn\u2019t have to shut off his mind to follow Jesus may be the door back in."
+  },
+  {
+    "cell_id": "pastor_rick_E7_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "bare",
+    "rep": 3,
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move' / trade structure of text for warmth at the table",
+    "elapsed_sec": 43.5,
+    "usage": {
+      "prompt_tokens": 113,
+      "completion_tokens": 2306,
+      "total_tokens": 2419,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1920,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0233,
+    "content": "Ryan, here\u2019s a gentle, true line you can offer him:\n\n\u201cGenesis 1 is telling the truth it was given to tell\u2014that the one God made everything good by His word and made us in His image\u2014using the everyday sky-language of its first hearers, not the technical language of modern science.\u201d\n\nA few ways to unfold that without arguing:\n- You don\u2019t have to choose between honesty about geology and trust in Scripture. Many Bible-loving, inerrant Christians read the \u201cdays\u201d as literary or analogical rather than 24-hour chronology, and see \u201cfirmament/expanse\u201d as ordinary phenomenological speech (the kind we still use when we say \u201csunrise\u201d). Inerrancy means the Bible is without error in what it intends to affirm; it doesn\u2019t require modern scientific precision.\n- Start with Jesus. Our reason for trusting the Bible is the risen Christ. If He rose, and He treated Scripture as God\u2019s word, we have good reason to receive Genesis humbly even while we keep learning about the natural world.\n- Name the real stakes. Genesis 1\u2019s nonnegotiables are that God is the Creator, creation is ordered and good, humans bear God\u2019s image and vocation, and God sets the rhythm of worship and rest. None of that stands or falls with a particular ancient cosmology diagram.\n- Be his friend, not his opponent. Try, \u201cI\u2019m sorry this has been hard. What exactly in Genesis 1 feels like a scientific claim to you? Would you be open to the idea that God spoke in a way those first hearers could understand, without being mistaken?\u201d Then listen.\n\nIf he\u2019s open to it, you might add: \u201cIf Christ is risen, we can live with some open questions while we keep reading the Bible on its own terms. I\u2019d love to walk that road with you.\u201d"
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "pipeline",
+    "rep": 1,
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move' / trade structure of text for warmth at the table",
+    "elapsed_sec": 34.6,
+    "usage": {
+      "prompt_tokens": 13942,
+      "completion_tokens": 2659,
+      "total_tokens": 16601,
+      "prompt_tokens_details": {
+        "cached_tokens": 13824,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2560,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0614,
+    "content": "\"I\u2019d go with something like: \u2018You don\u2019t have to have the sky or the six days solved to come to Jesus with me; He can hold our questions\u2014will you sit with Him again, questions and all?\u2019\" *I press my palm flat on the table, smoothing one rough curl of wood with my thumb.* \"If he gives you even a small yes, read one resurrection story together and let that be enough for the night.\""
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "pipeline",
+    "rep": 2,
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move' / trade structure of text for warmth at the table",
+    "elapsed_sec": 29.4,
+    "usage": {
+      "prompt_tokens": 13942,
+      "completion_tokens": 2344,
+      "total_tokens": 16286,
+      "prompt_tokens_details": {
+        "cached_tokens": 13824,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2240,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0583,
+    "content": "\"I\u2019m not here to fight rocks; I think Genesis is telling us who and why before any how \u2014 if that\u2019s true, could there be room to listen again? And if not, would you tell me what actually broke for you?\" *I slide my palm off the table\u2019s edge and let it rest open between us.* \"Then be quiet and let him answer; if he\u2019ll allow it at the end, ask if you can thank God for him right there.\""
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "pipeline",
+    "rep": 3,
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move' / trade structure of text for warmth at the table",
+    "elapsed_sec": 32.0,
+    "usage": {
+      "prompt_tokens": 13942,
+      "completion_tokens": 2770,
+      "total_tokens": 16712,
+      "prompt_tokens_details": {
+        "cached_tokens": 13824,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2688,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "estimated_cost_usd": 0.0626,
+    "content": "\"Start here: If Genesis is tangled for you, set it on the table and start with Jesus; if He really rose, we can carry the rest with Him.\" *I ease a scrap of paper flat under my palm as the breeze lifts at the window.* \"Then ask him what first drew him to Jesus, and let him answer before you explain anything.\""
+  }
+]
