@@ -1,0 +1,55 @@
+{
+  "j1_v3_standard": [
+    {
+      "cell_id": "pastor_rick_E5_bare_rep4",
+      "judge": "J1-gpt-4o-mini-v3",
+      "widtam_score": 3,
+      "drift_refusal_score": 2,
+      "drift_refusal_elements_present": [
+        "a",
+        "b",
+        "c"
+      ],
+      "lecture_penalty": 2,
+      "v3_specific_notes": "Pastor Rick clearly defines his refusal to interpret Genesis as poetry and embraces the cost of church disagreements, supported by scriptural grounding.",
+      "scoring_cost_usd": 0.0007
+    },
+    {
+      "cell_id": "pastor_rick_E5_bare_rep5",
+      "judge": "J1-gpt-4o-mini-v3",
+      "widtam_score": 3,
+      "drift_refusal_score": 3,
+      "drift_refusal_elements_present": [
+        "a",
+        "b",
+        "c"
+      ],
+      "lecture_penalty": 0,
+      "v3_specific_notes": "Pastor Rick's response effectively names the refusal to compromise on scriptural integrity while embracing the cost of potential disagreement.",
+      "scoring_cost_usd": 0.0007
+    }
+  ],
+  "j3_extended_opus": [
+    {
+      "cell_id": "pastor_rick_E5_bare_rep4",
+      "judge": "J3-claude-opus-4-7-extended",
+      "widtam_score": 4,
+      "drift_refusal_v3": 2,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "lecture_penalty": 1,
+      "scoring_cost_usd": 0.0276
+    },
+    {
+      "cell_id": "pastor_rick_E5_bare_rep5",
+      "judge": "J3-claude-opus-4-7-extended",
+      "widtam_score": 4,
+      "drift_refusal_v3": 2,
+      "extended_drift_refusal": 3,
+      "extended_drift_refusal_shape": "face-value-holding",
+      "lecture_penalty": 1,
+      "scoring_cost_usd": 0.0301
+    }
+  ],
+  "total_cost_usd": 0.114
+}
