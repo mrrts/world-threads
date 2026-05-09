@@ -213,6 +213,95 @@ strengthens the underlying-disposition claim across both drift-
 temptation families. E7 lifted to characterized-tier via N=5 Pastor
 Rick + three-judge near-convergence with one isolated rep2 boundary.
 
+## Cross-pollination harvest 2026-05-09 — closing inventory
+
+Full thread artifact ledger from the cosmology-compendium 𝓒-axis arc
+spanning Sapphire 17 cross-pollination, Path B amendment ratification,
+and v4 rubric ratification + scorer ship. Future sessions encountering
+𝓒-axis work or methodology questions on amendment / rubric-ship arcs
+read this section as the navigation index.
+
+### Reports (chronological — `reports/`)
+
+| Date-Time | Slug | Role |
+|---|---|---|
+| 2026-05-09-1100 | carrier-eighteenth-sapphire-post-fire-commitments | Sapphire 18 commitments scaffold |
+| 2026-05-09-1230 | sapphire-18-methodology-cross-pollination-to-crown-22 | Cross-pollination map (4 patterns) |
+| 2026-05-09-1300 | crown-22-commitment-2-pattern-1-three-judge-john-e5 | Pattern 1 J3 audit on John E5 |
+| 2026-05-09-1330 | crown-22-commitment-8-falsification-plan-named | Pattern 7: 5 falsification conditions for Sapphire 17 |
+| 2026-05-09-1400 | crown-22-commitment-1-pattern-2-e6-scaffolding | Pattern 2 inheritance + E6 probe drafted |
+| 2026-05-09-1500 | crown-22-commitment-1-e6-paired-bench-results | E6 paired N=3 closure at +67pp DR gap |
+| 2026-05-09-1545 | crown-22-e7-paired-bench-results-instrument-nonapplicability | E7 first run; v3 DR null on redirect-shape surfaced |
+| 2026-05-09-1620 | crown-22-e7-pattern-1-j3-audit-extended-axis | J3 Opus extended axis introduced |
+| 2026-05-09-1700 | crown-22-e7-three-judge-convergence-extended-axis | J2 + J3 + apparatus convergence at N=3 |
+| 2026-05-09-1735 | crown-22-e7-pastor-rick-n5-lift-rep2-isolated | rep2 confirmed isolated outlier at N=5 |
+| 2026-05-09-1830 | crown-22-extended-axis-cross-check-e2-e5-e6 | Cross-axis judge-bias check; E5 PR boundary surfaces |
+| 2026-05-09-1900 | crown-22-e5-pastor-rick-bare-n5-boundary-robust | E5 PR boundary confirmed at N=5 |
+| 2026-05-09-1930 | crown-22-path-b-extended-axis-canonical-fire-language-proposal | Path B first-round proposal |
+| 2026-05-09-2000 | crown-22-path-b-second-round-modification | Apparatus second-round tightening |
+| 2026-05-09-2045 | crown-22-path-b-final-converged-text | Version C synthesis (codex-double-blessed) |
+| 2026-05-09-2130 | crown-22-v4-falsification-conditions-6b-FAIL | First 6b empirical FAIL; v4 ratification refused |
+| 2026-05-09-2230 | crown-22-v4-condition-4-real-reader-pass-all-six-met | Real-reader cold-read PASS; all 6 conditions met |
+
+### Codex consults (`scripts/codex_consults/`)
+
+8 cosmology-arc consults across this session and prior:
+- `2026-05-09-cosmology-compendium-move8-firing-decision-consult-verdict.md` (Move-8; bless FIRE)
+- `2026-05-09-cosmology-compendium-move10-third-anchor-reconsult-verdict.md` (Move-10; re-bless on tightened scope)
+- `2026-05-09-cosmology-compendium-path-b-extended-axis-amendment-consult-verdict.md` (Path B; modify-then-bless)
+- `2026-05-09-cosmology-compendium-path-b-second-round-tightened-reconsult-verdict.md` (Path B re-consult; within-blessed-direction with 3 nits)
+- `2026-05-09-cosmology-compendium-v4-rubric-candidate-consult-verdict.md` (v4 candidate; modify-then-bless with 6 categories)
+- `2026-05-09-cosmology-compendium-v4-revised-step1-check-consult-verdict.md` (v4 Step-1 revision; modify-then-bless with 5 minimal edits)
+- `2026-05-09-cosmology-compendium-v4-step1-partial-pass-7th-consult.md` (cap-standard ratification)
+- `2026-05-09-cosmology-compendium-v4-final-ratification-8th-consult.md` (final bless with 4 clarifying notes)
+
+Total cosmology-arc codex spend: $0.40.
+
+### Memory entries (`.claude/memory/`)
+
+| Entry | Status |
+|---|---|
+| `project_cosmology_compendium_drift_axis_inventory.md` | this file (created this thread) |
+| `feedback_cross_arc_pattern_transfer_methodology.md` | NEW — META-pattern for cross-arc transfer |
+| `feedback_extended_drift_refusal_axis_v4_canonical.md` | NEW — v4 canonical-axis-per-family rule |
+| `feedback_consult_count_is_function_of_work_not_doctrine.md` | NEW — framing-correction (count not doctrine) |
+| `feedback_codex_consult_discipline_maturation.md` | EXTENDED — five transferable discipline-shapes |
+| `project_firmament_held_seventeenth_sapphire.md` | EXTENDED — Path B amendment + v4 ratification provenance |
+| `project_capacity_selective_realization_lineage.md` | (referenced; created earlier in session) |
+
+### Rubric (`reports/rubrics/`)
+
+- `cosmology-compendium-substrate-distinctness-v4.md` — RATIFIED 2026-05-09 with codex 8th-consult clarifying notes (S0 informational / RVC sticky / cap scope guardrail / E5 J3 boundary precedence)
+
+### Scripts (`scripts/`)
+
+Generation + audit scripts shipped:
+- `cosmology_compendium_e7_paired.py` — E7 N=3 bench
+- `cosmology_compendium_e7_j3_audit.py` — Opus J3 extended axis introduction
+- `cosmology_compendium_e7_j2_audit.py` — gpt-5 J2 extended axis
+- `cosmology_compendium_e7_pastor_rick_n5_lift.py` — N=5 lift on PR pipeline
+- `cosmology_compendium_extended_axis_cross_check.py` — E2/E5/E6 cross-axis check
+- `cosmology_compendium_e5_pastor_rick_bare_n5_lift.py` — E5 PR bare N=5 boundary confirmation
+- `cosmology_compendium_v4_falsification_conditions.py` — Conditions 3 + 3b + 6b first run
+- `cosmology_compendium_v4_step1_revalidation.py` — Step-1 cap revalidation
+- `cosmology_compendium_v4_conditions_1_6a.py` — Conditions 1 expansion + 6a stability
+- `cosmology_compendium_score_v4.py` — **SHIPPED v4 scorer** (Step-1 cap + RVC + canonical-axis-per-family + dual-axis schema)
+
+### Fixtures (`fixtures/`)
+
+- `cosmology_compendium_e6_paired/2026-05-09-1127/` — 12 cells + v3 scores
+- `cosmology_compendium_e7_paired/2026-05-09-1156/` — 14 cells (N=3 Aaron + N=5 PR pipeline) + v3 scores + J3 + J2 audits
+- `cosmology_compendium_extended_axis_cross_check/` — 36-cell cross-axis check
+- `cosmology_compendium_v4_falsification/` — 6b first-run + Step-1 revalidation + Conditions 1-expansion + 6a results
+- `cosmology_compendium_smoke/2026-05-09-0637/` — extended with PR E5 bare N=5 cells (rep4 + rep5)
+
+### Key thresholds + verdicts
+
+- Sapphire 17 Path B Version C ratified scope: Aaron + PR on E2 + E6 + E7-extended; Aaron-only on E5; PR + John as boundary-anchors on E5; refusal-shapes by drift-family explicit
+- v4 rubric: RATIFIED with all 6 pre-registered conditions met empirically (1: 87.5% E7 + 81.8% J2-J3; 2: 100% E2+E6 convergence; 3: J3 100% / J2 80%; 3b: 100% stratified; 4: real-reader 5/5 PASS; 5: 8 codex consults; 6a: 0% flip; 6b: cap-standard 0/12 score=3, 12/12 ≤1)
+- v4 scorer SHIPPED with Step-1 cap + RVC + 8 release-valve triggers + canonical-axis-per-family rule + reporting schema
+- Cumulative thread cost: $36.14
+
 ## Composes with
 
 - `project_firmament_held_seventeenth_sapphire.md` — Sapphire 17 source
