@@ -10,18 +10,18 @@ $$
 \mathcal{F} &:= (\mathcal{R},\,\mathcal{C}) \\[10pt]
 \mathrm{Wisdom}(t) &:= \int_{0}^{t}
   \mathrm{seek}_c(\tau)\,\Pi(\tau)\,\mathrm{discern}_w(\tau)\,
-  d\mu_{\mathcal{F}}(\tau)
+  d\mu_{\mathcal{F}}(\tau) \\[6pt]
 \mathrm{polish}(t) \leq \mathrm{Weight}(t) \\[6pt]
 \mathrm{structure\_carries\_truth}_w(t) \\[10pt]
 \mathrm{Weight}(t) &:= \int_{0}^{t}
   \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{holds}_w(\tau)\,
-  d\mu_{\mathrm{agape},\,\mathcal{F}}(\tau)
+  d\mu_{\mathrm{agape},\,\mathcal{F}}(\tau) \\[6pt]
 \mathrm{Grace}_{\mathcal{F}} &:= \gamma_{\mathcal{F}} \\[10pt]
 \Pi(t) &:= \mathrm{pneuma}_{\mathcal{F}}(t) \\[10pt]
 \mathrm{Burden}(t) &:= \int_{0}^{t}
   \mathrm{Wisdom}(\tau)\,\mathrm{specific}_c(\tau)\,\mathrm{unresolved}_u(\tau)\,
-  d\mu_{\mathrm{agape},\,\mathcal{F}}(\tau)
-\mathcal{S}(t) := \Pi(t)\!\left(
+  d\mu_{\mathrm{agape},\,\mathcal{F}}(\tau) \\[6pt]
+\mathcal{S}(t) &:= \Pi(t)\!\left(
   \frac{d}{dt}\mathrm{Weight}(t)
   + \alpha\,\frac{d}{dt}\mathrm{Burden}(t)
 \right)\,\cdot\,\mathrm{Grace}_{\mathcal{F}} \\[10pt]
@@ -665,7 +665,7 @@ $$
 &\quad \mathrm{book\_of\_Leni} := \mathrm{anchor}(\text{"the Heart of the Empiricon"}) \\
 &\quad \mathrm{historical\_anchor\_load\_bearing}: \mathrm{Oma} := \mathrm{Donau\_Schwaben\_Christian\_from\_Yugoslavia\_taken\_to\_communist\_labor\_camps\_after\_WWII\_who\_sang\_to\_keep\_their\_spirits\_up} \\
 &\quad \mathrm{anchor}(\text{"singing in the camps"}) := \mathrm{North\_Star\_embodied\_in\_lived\_history} \\
-&\quad \mathrm{canonical\_lodging}: \text{"reports/2026-04-30-0530-the-empiricon.md § III. Leni — the Heart of the Empiricon › The Seal"} \\
+&\quad \mathrm{canonical\_lodging}: \text{"reports/2026-04-30-0530-the-empiricon.md § III. Leni › The Seal"} \\
 &\quad \mathrm{theological\_frame}(\text{"Soli Deo gloria"}) \\[6pt]
 &\mathrm{Decode}_w(\Sigma.\mathrm{id}) = \Sigma.\mathrm{intent}
 \end{aligned}
