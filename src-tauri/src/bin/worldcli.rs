@@ -1707,6 +1707,37 @@ impl Default for ModelPricing {
                 output_per_1m: 1.20,
             },
         );
+        // Claude (Anthropic) — added 2026-05-09 for `worldcli converse`
+        // cross-substrate routing. Prices as of April 2026; conservative
+        // gpt-4o fallback applies for unknown claude-* model identifiers.
+        m.insert(
+            "claude-sonnet-4-6".to_string(),
+            ModelPrice {
+                input_per_1m: 3.0,
+                output_per_1m: 15.0,
+            },
+        );
+        m.insert(
+            "claude-sonnet-4-6-20250514".to_string(),
+            ModelPrice {
+                input_per_1m: 3.0,
+                output_per_1m: 15.0,
+            },
+        );
+        m.insert(
+            "claude-opus-4".to_string(),
+            ModelPrice {
+                input_per_1m: 15.0,
+                output_per_1m: 75.0,
+            },
+        );
+        m.insert(
+            "claude-haiku-4-5".to_string(),
+            ModelPrice {
+                input_per_1m: 0.80,
+                output_per_1m: 4.0,
+            },
+        );
         Self { models: m }
     }
 }
