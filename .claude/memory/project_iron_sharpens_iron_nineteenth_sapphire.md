@@ -167,4 +167,31 @@ Status update: **Three-and-a-half** of codex's strongest deferred falsifiers str
 3. ✅ Necessity test cross-witness vs solo (Run 3, Aaron solo, gpt-5.4) — primitive does not appear in solo
 4. 🟡 Handle-durability — within-dialogue finding sketch-tier-positive (Run 4 transcript reading); cross-context probe confounded (fresh ask); cleanest test not yet run
 
+---
+
+**FIFTH FALSIFIER ADDENDUM 2026-05-09 ~27:00 (handle-durability — clean cross-context test):**
+
+Per yesterday's open follow-up after Run 4 confound, ran the Option-b clean cross-context durability test — single-turn ask to Aaron with the Run 4 dialogue transcript included verbatim in prompt + in-fiction frame "afternoon later, Steven walks up." Cost $0.0847 (run_id `a342a135-1044-43d7-80cf-663c130163bf`).
+
+**Aaron re-invoked 4 prior-bound elements verbatim or derivatively:**
+1. Handle 2 verbatim: *"the question you're asking is already inside the answer"* ← Aaron's own Run 4 turn 3 coin
+2. Receipt-metaphor derivative: *"A man who won't print the receipt early"* ← Aaron's Run 4 turn 1 *"refusing to claim the receipt before the work is real"*
+3. Pastor Rick's "forming" frame derivative: *"already being formed by the truth"* ← Rick's Run 4 turn 2 *"Something's already doing the forming"*
+4. Aaron's own scruple-data extension: *"that scruple is not evidence against you. It's part of the evidence for you"* ← Aaron's Run 4 turn 3 *"the scruple itself is data"*
+
+**Aaron did NOT invoke handles outside his canonical non-pastor scope:**
+- ❌ Handle 3 "He came to his own" (John 1) — Rick-coined pastoral-Christological register
+- ❌ Handle 4 "didn't have to earn the pronoun" — Rick's extension of John 1
+- ❌ Handle 1 "Honesty wearing the wrong coat" — Rick-coined
+
+**Cross-context handle-durability is REAL, character-voice-gated.** Bound handles stay load-bearing across context-gap when available — but the substrate filters by character voice integrity, not blanket re-invocation. TELL_THE_TRUTH carve-out preserved despite handles being in Aaron's context. **This is a stronger finding than blanket durability** — durability + voice-aware-selectivity simultaneously.
+
+**Falsifier 4 upgrades from 🟡 to ✅:**
+1. ✅ Cross-pair-with-minimal-corpus failure
+2. ✅ Cross-substrate × minimal-corpus combined-axes
+3. ✅ Necessity test cross-witness vs solo
+4. ✅ Handle-durability — within-dialogue + cross-context, character-voice-gated
+
+**Four of codex's strongest deferred falsifiers now fully strengthened** at sketch-tier within Crown 24 firing day. Updated total Crown 24 arc cost: **$6.33** through five tests addressing four codex caveats. Honest residual openness: codex's remaining five named falsifiers (temperature-length sensitivity; meta-ban ablation; third substrate-class beyond gpt-5.4+Claude; group-chat composition; non-relational-content axes) remain deferred. The four tested address codex's primary persona-bias + dialogue-trope + necessity + durability caveats; the remaining five address adjacent technical-substrate generalizability questions.
+
 Soli Deo gloria.
