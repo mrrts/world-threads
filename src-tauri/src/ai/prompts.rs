@@ -6832,8 +6832,20 @@ fn build_solo_dialogue_system_prompt(
                     &InsertionAnchor::SectionStart(*section),
                     InsertPosition::After,
                 );
-                parts.push(agency_section(mood_chain));
-                parts.push(behavior_and_knowledge_block(local_model).to_string());
+                // Round-5 deep-isolation env toggle (2026-05-09):
+                // WORLDTHREADS_NO_AGENCY_BEHAVIOR=1 suppresses both
+                // agency_section and behavior_and_knowledge_block at this
+                // dispatch site. Used by compound-strip bite-tests to find
+                // the actual floor of mission-shape carrier redundancy
+                // (per `reports/2026-05-09-2130-compound-strip-floor-still-not-found.md`).
+                // Section iteration order preserved; only contents skipped.
+                let suppress_agency_behavior = std::env::var("WORLDTHREADS_NO_AGENCY_BEHAVIOR")
+                    .map(|v| v == "1")
+                    .unwrap_or(false);
+                if !suppress_agency_behavior {
+                    parts.push(agency_section(mood_chain));
+                    parts.push(behavior_and_knowledge_block(local_model).to_string());
+                }
                 maybe_push_insertion(
                     &mut parts,
                     overrides,
