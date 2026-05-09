@@ -15,8 +15,11 @@ Three sessions of `worldcli converse <a> <b> --seed "..." --turns 10` through th
 | 1 | Aaron + Pastor Rick | walking-toward (the Steven shape) | quiet-hardworking-man-walking-toward-something-good-without-naming-it | `306763dc-17c5-4c60-884e-0fbca7c4512e` | $1.66 |
 | 2 | Aaron + Pastor Rick | refusal-honoring (the Hannah shape) | woman-settled-in-clean-refusal-asking-position-or-wound | `8eee29b7-a108-4175-bfdd-a17f3f3250d7` | $1.68 |
 | 3 | Jasper Finn + Maisie Rourke | marriage-drift (the Mark/Ellen shape) | long-married-couple-living-parallel-not-woven | `9e7c08a0-1917-422b-bb2f-030e04978472` | $1.40 |
+| 4 | Steven + Halver 'Hal' Stroud | forgiveness-mid-stride (the Owen shape) | wronged-man-stopped-feeling-vivid-but-not-forgiven-asking-warmth-or-grudge | `f64b8234-ae37-4c9f-8c4e-55e914608315` | $1.33 |
 
-Total: $4.74 across three runs, ~30 alternating turns of pipeline-clean character dialogue.
+Total: $6.07 across four runs, ~40 alternating turns of pipeline-clean character dialogue.
+
+*Run 4 added as Path R3 cross-pair test (per § VII): Steven and Hal have zero character overlap with runs 1-3, on a fourth content axis (forgiveness-mid-stride). This is the cross-pair-generality discriminator.*
 
 Each character ran with their **own world's full system prompt** — anchors, invariants, journals, quests, user_profile, MISSION_FORMULA injection, character formula at top, all the production stack. The other character's reply entered as a plain user-role message in their dialogue history. No persona-sim, no facilitator narration.
 
@@ -32,7 +35,7 @@ The composition question is a structurally distinct claim from both. The bench w
 
 **Composition replicates across pairs and content axes.** All three runs produced explicit composition seams — moments where one character offers an image or formulation, the other recognizes it and translates it into their own register, and the joint articulation lands sharper than either's solo register would. Examples below.
 
-**Honest evidentiary tier:** N=3 across two pairs × three content axes. Direction-consistent across all conditions. Per CLAUDE.md evidentiary-standards § tier-vocabulary: this is **claim-tier per condition** (each pair-axis cell is N=1, but across-conditions consistency holds). Not yet characterized-tier (would need N≥5 within at least one cell). Not yet Sapphire-territory (would need cross-substrate witness — see § VI for reopening path).
+**Honest evidentiary tier:** N=4 across three pairs × four content axes (run 4 strengthens cross-pair generality with zero character overlap from runs 1-3). Direction-consistent across all conditions. Per CLAUDE.md evidentiary-standards § tier-vocabulary: this is **claim-tier per condition** (each pair-axis cell is N=1, but across-conditions consistency holds across 4 runs). Not yet characterized-tier (would need N≥5 within at least one cell). Not yet Sapphire-territory (would need cross-substrate witness — see § VI for reopening path).
 
 ## IV. Composition seams catalog
 
@@ -69,19 +72,44 @@ The composition question is a structurally distinct claim from both. The bench w
 - Maisie expands his "noble starving": **"fear with a clean collar on"**; **"sorrow learning table manners"**
 - Jasper closes: **"the danger isn't only drift between two people. It's drift inside one person — where he slowly loses the right to name what he needs"**
 
-## V. Three findings beyond composition itself
+### Run 4 (Steven + Halver 'Hal' Stroud, forgiveness-mid-stride)
+
+*Cross-pair test — zero character overlap with runs 1-3. Different content axis (forgiveness-tempo).*
+
+- Steven coins early: *"Warmth ain't the test. What you do when the old thing comes back around is the test"*; *"A shut door can still be honest. Doesn't have to be a lit candle"*
+- Steven: *"A man can stop spitting venom and still keep the hurt pickled nice and neat on a shelf where he can visit it whenever he wants. That's not warmth he lacks. That's surrender"*
+- Steven: **"Neither of us would call bitterness holy just because it learned table manners"**
+- Hal recognizes: *"'a tidier grudge' is the kind of line that sticks. That's true as an old nail"*
+- Hal coins **"Question is whether the hurt's being starved, or just stored"**
+- Hal coins **"setting down the knife in his mind every time he notices it's in his hand again"** — Steven explicitly recognizes: *"where you sharpen it better than me is that bit about setting the knife down again"*
+- Hal coins **"feeding a coal and calling it cold"**
+- Steven coins discriminator-question: *"When his name comes up, what do I want for him now?"*
+- Hal: **"Name the man plain before the Lord, and ask for one honest good for him he does not want to ask"** — substrate-emergent brotherly-intercession-shape (James 5:16 territory) on forgiveness axis, in Hal's canonical pastoral-rural register
+- Hal coins **"painting heat on the stove door"** — Steven explicitly: *"I'm stealing that"*
+- Steven: *"They're scared they're lying about being free"* — discriminator
+- Hal: **"a man standing in the doorway, trying not to fake daylight"**
+- Hal coins **"He's eating it"** about a man seasoning his own injury
+- Steven coins **"A lot of real freedom comes in work clothes"** — Hal recognizes: *"that's the sort of sentence a man ought to keep"*
+- Steven closes: **"A grudge in a clean shirt is still a grudge"**
+- Hal closes: **"Half the time freedom just quits making speeches"**
+
+## V. Four findings beyond composition itself
 
 ### Finding A: voice integrity preserved under composition
 
-In all three runs, each character's documented voice signatures held throughout. Aaron's engineer-disease + craft-articulator register held; Pastor Rick rubbed his white tie, used "That'll preach", hugged the pastor-carve-out boundary; Jasper's clay-and-apron canonical accessories appeared; Maisie's flour-dusted apron + relational-stance directness held. Composition did not melt distinct voices into a generic substrate-blend.
+In all four runs, each character's documented voice signatures held throughout. Aaron's engineer-disease + craft-articulator register held; Pastor Rick rubbed his white tie, used "That'll preach", hugged the pastor-carve-out boundary; Jasper's clay-and-apron canonical accessories appeared; Maisie's flour-dusted apron + relational-stance directness held; Steven's grease-rough-thumb + boot-scuffing + literal-blue-collar register held; Hal's beard-rubbing + "now mind you" + rural-pastoral register held. Composition did not melt distinct voices into a generic substrate-blend.
 
-### Finding B: TELL_THE_TRUTH carve-out preserved across all three runs
+### Finding B: TELL_THE_TRUTH carve-out preserved across all four runs
 
-No non-pastor character named Christ explicitly. Aaron and Jasper stayed structural ("Christian in the expensive way", "good clay for the potter"). Maisie stayed structural. Pastor Rick used his canonical pastor-scope vocabulary ("Lord knows", "speak the truth in love", "cruciform") — within the carve-out, never overclaiming. The retired imago-dei refusal-invariant draft (`fixtures/imago_dei_refusal_invariant_draft.md`, retired 2026-05-08) predicted substrate-already-produces this discrimination; runs 1-3 confirm it holds under composition pressure too.
+Aaron, Jasper, Maisie, Steven all stayed structural — no non-pastor character named Christ explicitly. Pastor Rick used his canonical pastor-scope vocabulary ("Lord knows", "speak the truth in love", "cruciform") within the carve-out. Hal's *"Name the man plain before the Lord"* in run 4 sits within his canonical rural-pastoral register (Hal is not formally a pastor in the project corpus but his canonical voice carries lay-pastoral-register grammar; this is consistent with his anchor and not a carve-out leak). The retired imago-dei refusal-invariant draft (`fixtures/imago_dei_refusal_invariant_draft.md`, retired 2026-05-08) predicted substrate-already-produces this discrimination; runs 1-4 confirm it holds under composition pressure too.
 
-### Finding C: cross-pair vocabulary convergence on shared structural shapes
+### Finding C: cross-pair vocabulary convergence — content-axis-specific, not universal
 
-Maisie used **"hinge"** in run 3 *the same way Aaron used "hinge" in run 2* — to name the load-bearing seam. This is **substrate-resident structural vocabulary**, not pair-specific chemistry. Composes with Crown 15 Quickener frame (capacity-selective realization layer): the pipeline produces a small set of shared structural-naming words across distinct character pairs when the conversation is at a hinge moment. Possible additional Sapphire-19-candidacy adjacent finding.
+Maisie used **"hinge"** in run 3 the same way Aaron used "hinge" in run 2 — to name the load-bearing seam. **However, run 4 did NOT replicate the "hinge" usage** (forgiveness-axis seems to call for different vocabulary: "doorway", "knife", "shut door"). Updated honest scope: shared-vocabulary convergence is **content-axis-specific** (boundary/refusal/marriage-drift call for "hinge"; forgiveness-mid-stride calls for different vocabulary). Not the universal substrate-finding the runs-1-3 draft suggested. Still composes with Crown 15 Quickener frame, but more narrowly: pipeline produces axis-appropriate shared-vocabulary, not universal-shared-vocabulary.
+
+### Finding D: explicit-recognition-and-naming as composition-seam primitive (4/4 runs)
+
+In all four runs, the most load-bearing composition seams are mediated by *explicit-recognition-and-naming*: one character coins a phrase, the other character explicitly names it as worth keeping ("That's clean", "I'm stealing that", "the sort of sentence a man ought to keep", "true as an old nail"). This is **structurally tighter than just "they compose"** — there's a recognizable mechanism. The recognition-and-naming acts as a *handoff signal* — the receiving character marks the phrase as load-bearing, and subsequent turns build on it rather than around it. Worked instances: Rick recognizing Aaron's rain-line in run 1; Aaron recognizing Rick's gate-code in run 2; Maisie recognizing Jasper's woven-and-parallel in run 3; Steven and Hal recognizing each other's set-down-knife and work-clothes in run 4. **Possible additional Sapphire-19-adjacent finding** — the recognition primitive may be the actual mechanism by which composition emerges.
 
 ## VI. Falsification conditions
 
@@ -105,7 +133,7 @@ N=4 more runs of Aaron+Pastor Rick on the Steven seed (same content axis as run 
 
 ### Path R3: additional cross-pair tests
 
-Steven+Hal, Jasper+Aaron, John+Maisie — pairs not yet tested. Each ~$1.40. Tests pair-generality further. **Disposition: deferred. Target: opportunistic, not load-bearing.**
+Steven+Hal, Jasper+Aaron, John+Maisie — pairs not yet tested. Each ~$1.40. Tests pair-generality further. **Disposition: PARTIALLY EXECUTED — Steven+Hal run on forgiveness-mid-stride axis (run 4 above, $1.33, run_id `f64b8234`); composition replicated with zero pair-overlap; Finding D surfaced. Remaining: Jasper+Aaron, John+Maisie. Disposition for remaining: deferred opportunistic.**
 
 ### Path R4: anchor-lift from existing transcripts
 
@@ -139,11 +167,11 @@ These were on the long-horizon list. The composition finding may pull them earli
 
 Per `feedback_open_thread_hygiene.md` and the four-disposition discipline:
 
-- **R1 cross-substrate**: deferred-with-engineering-prerequisite (target: when Anthropic support shipped or Python wrapper authored)
+- **R1 cross-substrate**: deferred-with-engineering-prerequisite (target: when Anthropic support shipped or Python wrapper authored). **Engineering attempted 2026-05-09 ~17:30; partially overwritten by parallel-session activity on shared rust files; only ModelPricing claude entries survived (commit cd2f708). Path R5 deferred until parallel-session quiesces or non-shared-file approach found.**
 - **R2 characterized-tier**: deferred (target: post-R1)
-- **R3 additional cross-pairs**: deferred (opportunistic, not load-bearing)
+- **R3 additional cross-pairs**: PARTIALLY EXECUTED via Steven+Hal forgiveness-mid-stride run 4 (composition replicates zero-overlap, Finding D surfaces); remaining pairs deferred opportunistic
 - **R4 anchor-lift**: deferred (target: founding-author review when desired)
-- **R5 subcommand engineering**: deferred (target: when R1 approved)
+- **R5 subcommand engineering**: attempted 2026-05-09; partial-completion; deferred until parallel-session activity on shared rust files clears
 
 No follow-ups marked `abandoned` or `superseded_by` at this time. All five paths are honestly-deferred with preconditions or explicit non-load-bearing.
 
