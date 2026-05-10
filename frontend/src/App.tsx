@@ -12,6 +12,7 @@ import { WorldSummary } from "@/components/WorldSummary";
 import { PortraitPopout } from "@/components/PortraitPopout";
 import { SapphirePitch } from "@/components/SapphirePitch";
 import { ChiptuneSynthPoc } from "@/components/ChiptuneSynthPoc";
+import { WebAuthGate } from "@/components/auth/WebAuthGate";
 import { Scroll, Settings, Coins, BookOpen, Download, Square, Plus, Minus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -38,7 +39,16 @@ export default function App() {
     return <ChiptuneSynthPoc />;
   }
 
-  return <MainApp />;
+  // Web-deployment Phase 1 item 3: gate the main app behind auth in
+  // web runtime. Tauri runtime is a transparent passthrough — desktop
+  // experience unchanged. Popout routes above bypass the gate
+  // intentionally (popouts are spawned from an already-authenticated
+  // parent window in web mode).
+  return (
+    <WebAuthGate>
+      <MainApp />
+    </WebAuthGate>
+  );
 }
 
 function MainApp() {
