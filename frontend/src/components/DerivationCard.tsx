@@ -18,9 +18,30 @@ import { markdownComponents, remarkPlugins, rehypePlugins } from "./chat/formatM
  * while still rendering prettily through the existing pipeline.
  */
 function normalizeMathDelimiters(text: string): string {
-  return text
+  const stage1 = text
     .replace(/\\\[([\s\S]+?)\\\]/g, (_m, inner) => `\n$$${inner}$$\n`)
     .replace(/\\\(([\s\S]+?)\\\)/g, (_m, inner) => `$${inner}$`);
+
+  // Legacy stored derivations were authored before the \[ ... \] delimiter
+  // convention landed and live in the DB as bare \boxed{...} / \begin{aligned}
+  // ...\end{aligned} blocks with NO math delimiters. validate_derivation
+  // accepts that form (it's still valid LaTeX), but remark-math can't see
+  // math boundaries without delimiters and the LaTeX source shows as literal
+  // text in the rendered card. Detect that shape and wrap it so the same
+  // pipeline renders both old and new data prettily. Skip if stage1 already
+  // produced $$ markers (text was \[...\]-delimited).
+  if (!stage1.includes("$$")) {
+    const boxedAligned = /\\boxed\{[\s\S]*?\\end\{aligned\}[\s\S]*?\}/;
+    const bareAligned = /\\begin\{aligned\}[\s\S]*?\\end\{aligned\}/;
+    const m = stage1.match(boxedAligned) ?? stage1.match(bareAligned);
+    if (m && m.index !== undefined) {
+      const before = stage1.slice(0, m.index);
+      const block = m[0];
+      const after = stage1.slice(m.index + block.length);
+      return `${before}\n$$${block}$$\n${after}`;
+    }
+  }
+  return stage1;
 }
 
 interface Props {
