@@ -8,6 +8,29 @@ import { api, type WorldImageInfo, type MeanwhileEvent, type DailyReading } from
 import { InventoryStrip } from "@/components/chat/InventoryStrip";
 import { WeatherPicker } from "@/components/WeatherPicker";
 import { weatherById } from "@/lib/weather";
+
+/** Common honorifics/titles to skip when extracting a "first name" from a
+ * character's display_name. "Pastor Rick" → "Rick"; "Aaron" → "Aaron";
+ * "Mr. Jasper Finn" → "Jasper". If every token is a title, fall back to
+ * the first token unchanged. Used by the group-chat sidebar row to keep
+ * the line legible when two characters' full names would otherwise be
+ * cluttered ("Pastor Rick & Aaron Greene" → "Rick & Aaron"). */
+const FIRST_NAME_TITLE_PREFIXES = new Set([
+  "pastor", "father", "rev", "reverend", "sister", "brother",
+  "dr", "mr", "mrs", "ms", "miss", "sir", "lady", "madam", "madame",
+  "prof", "professor", "captain", "capt", "col", "colonel",
+  "sgt", "sergeant", "lt", "lieutenant", "saint", "st",
+]);
+function firstNameOf(displayName: string | undefined | null): string {
+  if (!displayName) return "";
+  const tokens = displayName.trim().split(/\s+/).filter(Boolean);
+  if (tokens.length === 0) return displayName;
+  for (const t of tokens) {
+    const stripped = t.toLowerCase().replace(/\.$/, "");
+    if (!FIRST_NAME_TITLE_PREFIXES.has(stripped)) return t;
+  }
+  return tokens[0] ?? displayName;
+}
 import { DailyReadingHUD } from "@/components/DailyReadingHUD";
 import { GenesisModal } from "@/components/GenesisModal";
 
@@ -388,7 +411,10 @@ export function Sidebar({ store, onNavigate }: Props) {
                 {store.groupChats.map((gc) => {
                   const isActive = store.activeGroupChat?.group_chat_id === gc.group_chat_id;
                   const charIds: string[] = Array.isArray(gc.character_ids) ? gc.character_ids : [];
-                  const charNames = charIds.map((cid) => store.characters.find((c) => c.character_id === cid)?.display_name).filter(Boolean);
+                  const charNames = charIds
+                    .map((cid) => store.characters.find((c) => c.character_id === cid)?.display_name)
+                    .filter(Boolean)
+                    .map((name) => firstNameOf(name));
                   const groupChars = charIds.map((cid) => store.characters.find((c) => c.character_id === cid)).filter(Boolean) as typeof store.characters;
                   return (
                     <div key={gc.group_chat_id} className="relative"
