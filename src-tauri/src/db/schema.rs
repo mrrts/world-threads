@@ -2391,6 +2391,56 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         CREATE INDEX IF NOT EXISTS idx_location_derivations_world ON location_derivations(world_id);"
     )?;
 
+    // ── Web-deployment Phase 0 — users + sessions ───────────────────────
+    //
+    // Per the web-hosting architecture plan at
+    // reports/2026-05-10-0100-web-hosting-architecture-plan.md.
+    //
+    // Scaffolding only. Tables are present so code paths can REFERENCE
+    // them without breaking; migration is non-destructive (CREATE TABLE
+    // IF NOT EXISTS) and ON DELETE CASCADE preserves existing per-user
+    // table semantics IF the future per-user-id wiring lifts a user_id
+    // column onto each table. No existing per-user table has user_id YET
+    // — that's Phase 2 work and explicitly NOT done in this commit.
+    //
+    // Tauri-mode: these tables stay empty; the existing Tauri app does
+    // not depend on a logged-in user. They exist to keep the schema
+    // forward-compatible with web deployment per the plan's hybrid
+    // IndexedDB-content + server-metering architecture (§ XXI.4): server
+    // would still hold auth + sessions even when content lives client-
+    // side. SQLite tables here mirror what the future Postgres schema
+    // would declare — same shape, different SQL dialect.
+    //
+    // Not exposing any Tauri commands or runtime code paths against
+    // these tables in this commit. That's later phase work.
+    conn.execute_batch(
+        "CREATE TABLE IF NOT EXISTS users (
+            id TEXT PRIMARY KEY,
+            email TEXT NOT NULL UNIQUE,
+            email_verified_at TEXT,
+            password_hash TEXT NOT NULL,
+            display_name TEXT NOT NULL DEFAULT '',
+            timezone TEXT NOT NULL DEFAULT 'UTC',
+            created_at TEXT NOT NULL DEFAULT (datetime('now')),
+            updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+
+        CREATE TABLE IF NOT EXISTS sessions (
+            id TEXT PRIMARY KEY,
+            user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            token_hash TEXT NOT NULL UNIQUE,
+            expires_at TEXT NOT NULL,
+            last_seen_at TEXT NOT NULL DEFAULT (datetime('now')),
+            user_agent TEXT,
+            ip_address TEXT,
+            created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
+        CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token_hash);
+        CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);"
+    )?;
+
     // ── VGUS vows + event log + invocations ─────────────────────────────
     //
     // Vow-Governed Unattended Substrate (VGUS) Stage 1 Phase 0 instrumentation.

@@ -1,6 +1,8 @@
 pub mod ai;
+pub mod auth;
 mod commands;
 pub mod db;
+pub mod storage;
 
 // Surgical re-exports for the worldcli bin crate (which can't reach
 // into private `commands::group_chat_cmds` directly). Used by the
