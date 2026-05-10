@@ -1237,7 +1237,11 @@ pub fn maybe_refresh_location(
         return;
     }
     let key_for_release = key.clone();
-    tokio::spawn(async move {
+    // tauri::async_runtime::spawn (not tokio::spawn) because this fn is
+    // reachable from sync Tauri commands (set_chat_location_cmd) where
+    // no Tokio runtime is active on the calling worker thread. The Tauri
+    // runtime handle is always available regardless of caller context.
+    tauri::async_runtime::spawn(async move {
         if let Err(e) =
             refresh_location_inner(&db, &base_url, &api_key, &model, &world_id, &trimmed_name).await
         {
