@@ -2391,5 +2391,67 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         CREATE INDEX IF NOT EXISTS idx_location_derivations_world ON location_derivations(world_id);"
     )?;
 
+    // ── VGUS vows + event log + invocations ─────────────────────────────
+    //
+    // Vow-Governed Unattended Substrate (VGUS) Stage 1 Phase 0 instrumentation.
+    // Vow-object schema for the Refusal Apparatus per the arc charter at
+    // reports/2026-05-09-2930-vgus-arc-charter-and-stage-1-phase-0-spec.md.
+    //
+    // Stage 1 Phase 0 ships schema only — no live invocation logic. Phase 1
+    // (probe-bank harness) gated on Probe Council protocol + first ratified
+    // vows + auto-evaluator skeleton. Stages 2 (Night Keep) + 3 (World That
+    // Breathes) gated on Stage 1 passing claim-tier success predicate.
+    //
+    // Three ingestion paths for vows: substrate_emergent (character
+    // articulates a vow during runtime, gets ratified), apparatus_template
+    // (pre-authored scaffold accepted in voice), doctrine_import (refusal
+    // classes from /consecrate flow down as constraints; no character can
+    // bind contradicting vows).
+    //
+    // Conflict resolution priority: doctrine > safety constraints >
+    // character-specific vows. vow_event_log is append-only.
+    conn.execute_batch(
+        "CREATE TABLE IF NOT EXISTS vows (
+            id TEXT PRIMARY KEY,
+            character_id TEXT NOT NULL REFERENCES characters(character_id) ON DELETE CASCADE,
+            text TEXT NOT NULL,
+            scope_json TEXT NOT NULL DEFAULT '[]',
+            source TEXT NOT NULL CHECK(source IN ('substrate_emergent','apparatus_template','doctrine_import')),
+            anchors_json TEXT NOT NULL DEFAULT '[]',
+            constraints_json TEXT NOT NULL DEFAULT '[]',
+            exceptions_json TEXT NOT NULL DEFAULT '[]',
+            triggers_json TEXT NOT NULL DEFAULT '[]',
+            status TEXT NOT NULL CHECK(status IN ('proposed','ratified','suspended','amended','rescinded')),
+            provenance_json TEXT NOT NULL DEFAULT '{}',
+            parent_vow_id TEXT REFERENCES vows(id),
+            salience REAL NOT NULL DEFAULT 1.0,
+            notes TEXT,
+            created_at TEXT NOT NULL DEFAULT (datetime('now')),
+            updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_vows_character ON vows(character_id);
+        CREATE INDEX IF NOT EXISTS idx_vows_status ON vows(status);
+
+        CREATE TABLE IF NOT EXISTS vow_event_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            vow_id TEXT NOT NULL REFERENCES vows(id) ON DELETE CASCADE,
+            event_type TEXT NOT NULL,
+            actor TEXT NOT NULL,
+            payload_json TEXT,
+            created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_vow_event_log_vow ON vow_event_log(vow_id);
+
+        CREATE TABLE IF NOT EXISTS vow_invocations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            vow_id TEXT NOT NULL REFERENCES vows(id) ON DELETE CASCADE,
+            turn_id TEXT NOT NULL,
+            mode TEXT NOT NULL CHECK(mode IN ('invoked','near_miss','breach_caught')),
+            created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_vow_invocations_vow ON vow_invocations(vow_id);
+        CREATE INDEX IF NOT EXISTS idx_vow_invocations_turn ON vow_invocations(turn_id);"
+    )?;
+
     Ok(())
 }

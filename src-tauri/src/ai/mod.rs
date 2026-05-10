@@ -14,3 +14,4 @@ pub mod orchestrator;
 pub mod prompts;
 pub mod relational_stance;
 pub mod substrate_atlas;
+pub mod vow_trace;
