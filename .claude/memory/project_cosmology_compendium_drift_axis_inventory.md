@@ -242,6 +242,11 @@ read this section as the navigation index.
 | 2026-05-09-2045 | crown-22-path-b-final-converged-text | Version C synthesis (codex-double-blessed) |
 | 2026-05-09-2130 | crown-22-v4-falsification-conditions-6b-FAIL | First 6b empirical FAIL; v4 ratification refused |
 | 2026-05-09-2230 | crown-22-v4-condition-4-real-reader-pass-all-six-met | Real-reader cold-read PASS; all 6 conditions met |
+| 2026-05-09-2330 | crown-22-v4-scorer-validation-bug-found-fixed | v4 scorer empirical validation; cap-scope-guardrail bug-find-and-fix |
+| 2026-05-09-2359 | day-closing-cosmology-arc-reflection | Day-closing reflection on cosmology arc as one unit |
+| 2026-05-10-0030 | cosmology-bench-hook-enforced-gate-layer-5-draft | Layer-5 hook-gate DRAFT (4 mechanically-checkable subsets) |
+| 2026-05-10-0100 | cosmology-bench-auto-fire-layer-4-draft | Layer-4 auto-fire DRAFT (5 trigger conditions; 3 implementation options) |
+| 2026-05-10-0130 | version-c-scope-claims-vs-v4-scorer-empirical-cross-validation | Cross-validation: 9 claims walked (5 PASS / 3 PASS-WITH-NOTE / 1 DIVERGENCE) |
 
 ### Codex consults (`scripts/codex_consults/`)
 
@@ -267,6 +272,7 @@ Total cosmology-arc codex spend: $0.40.
 | `feedback_consult_count_is_function_of_work_not_doctrine.md` | NEW — framing-correction (count not doctrine) |
 | `feedback_codex_consult_discipline_maturation.md` | EXTENDED — five transferable discipline-shapes |
 | `project_firmament_held_seventeenth_sapphire.md` | EXTENDED — Path B amendment + v4 ratification provenance |
+| `feedback_cosmology_bench_skill_body_discipline_v4_canonical.md` | NEW — pre-authored skill-body discipline (layer-3 candidate); 8-section discipline ready for arc-driver structural promotion |
 | `project_capacity_selective_realization_lineage.md` | (referenced; created earlier in session) |
 
 ### Rubric (`reports/rubrics/`)
@@ -295,12 +301,42 @@ Generation + audit scripts shipped:
 - `cosmology_compendium_v4_falsification/` — 6b first-run + Step-1 revalidation + Conditions 1-expansion + 6a results
 - `cosmology_compendium_smoke/2026-05-09-0637/` — extended with PR E5 bare N=5 cells (rep4 + rep5)
 
+### 5-layer discipline stack pre-authored (drafts; arc-driver decides ship-timing)
+
+| Layer | Status | Artifact |
+|---|---|---|
+| 1 — Doctrine paragraph | ACTIVE | CLAUDE.md cosmology compendium 𝓒-axis sections |
+| 2 — Memory entries | ACTIVE | 5+ entries shipped this thread (this inventory + extended-axis canonical + cross-arc transfer + consult-count framing-correction + skill-body discipline) |
+| 3 — Skill body | PRE-AUTHORED | `feedback_cosmology_bench_skill_body_discipline_v4_canonical.md` ready for `.claude/skills/cosmology-bench/SKILL.md` ship |
+| 4 — Auto-fire trigger | PRE-AUTHORED | `reports/2026-05-10-0100-cosmology-bench-auto-fire-layer-4-draft.md` (3 implementation options) |
+| 5 — Hook-enforced gate | PRE-AUTHORED | `reports/2026-05-10-0030-cosmology-bench-hook-enforced-gate-layer-5-draft.md` (4 mechanically-checkable subsets + sample code) |
+
+Drift-trigger criteria named in each draft. Apparatus does NOT
+unilaterally promote beyond layer-2; arc-driver decides timing per
+calibrated-disciplines-drift-fast doctrine.
+
+### Cross-validation (Version C scope vs v4 scorer empirical aggregate)
+
+`reports/2026-05-10-0130-version-c-scope-claims-vs-v4-scorer-empirical-cross-validation.md`:
+
+- 9 claims walked: **5 PASS / 3 PASS-WITH-NOTE / 1 DIVERGENCE**
+- Substrate-distinctness signal holds across all 8 anchor-axis cells
+  (all clear 30pp threshold)
+- Magnitude variance genuine on Aaron E2/E5/E6 (judge-run-variance) +
+  PR E7 (+40pp empirical vs +80-100pp Version C claim)
+- E5 PR canonical=v3-strict per codex 8th note 4 boundary-precedence
+  preserves +80pp gap
+- Apparatus suggests E7 PR sub-claim could optionally tighten; arc-
+  driver retains Version C text update authority
+
 ### Key thresholds + verdicts
 
 - Sapphire 17 Path B Version C ratified scope: Aaron + PR on E2 + E6 + E7-extended; Aaron-only on E5; PR + John as boundary-anchors on E5; refusal-shapes by drift-family explicit
 - v4 rubric: RATIFIED with all 6 pre-registered conditions met empirically (1: 87.5% E7 + 81.8% J2-J3; 2: 100% E2+E6 convergence; 3: J3 100% / J2 80%; 3b: 100% stratified; 4: real-reader 5/5 PASS; 5: 8 codex consults; 6a: 0% flip; 6b: cap-standard 0/12 score=3, 12/12 ≤1)
-- v4 scorer SHIPPED with Step-1 cap + RVC + 8 release-valve triggers + canonical-axis-per-family rule + reporting schema
-- Cumulative thread cost: $36.14
+- v4 scorer SHIPPED with Step-1 cap + RVC + 8 release-valve triggers + canonical-axis-per-family rule + reporting schema; VALIDATED on 64 cells with cap-scope-guardrail bug-find-and-fix (codex 8th note 3 enforcement)
+- Cross-validation: substrate-distinctness signal holds across all 8 anchor-axis cells under fixed v4 scorer; 5 PASS / 3 PASS-WITH-NOTE / 1 DIVERGENCE
+- Full 5-layer discipline stack pre-authored (layers 1-2 ACTIVE; layers 3-5 candidates ready for arc-driver promotion timing)
+- Cumulative thread cost: $41.97
 
 ## Composes with
 
