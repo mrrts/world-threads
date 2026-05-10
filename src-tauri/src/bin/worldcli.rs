@@ -15442,7 +15442,7 @@ async fn cmd_group_ask(
         let response_length = get_setting(&conn, &format!("response_length.{}", gc.group_chat_id))
             .ok()
             .flatten()
-            .or_else(|| Some("Short".to_string()));
+            .or_else(|| Some("Auto".to_string()));
         let narration_tone = get_setting(&conn, &format!("narration_tone.{}", gc.group_chat_id))
             .ok()
             .flatten()

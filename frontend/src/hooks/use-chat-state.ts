@@ -82,7 +82,7 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
   const [includeSceneSummary, setIncludeSceneSummary] = useState(true);
   const [narrationTone, setNarrationTone] = useState("Cinematic");
   const [narrationInstructions, setNarrationInstructions] = useState("");
-  const [responseLength, setResponseLength] = useState("Short");
+  const [responseLength, setResponseLength] = useState("Auto");
   // Three-mode reactions setting: "off" | "occasional" | "always".
   // Default "off" per the persona-sim convergence (commit a8a7b0c).
   // "occasional" produces text-message-realistic reactions (~25% of
@@ -134,7 +134,7 @@ export function useChatState({ store, chatId, chatType }: UseChatStateOptions) {
     ]).then(([tone, instructions, length, reactions, arcade]) => {
       setNarrationTone(tone || "Cinematic");
       setNarrationInstructions(instructions || "");
-      setResponseLength(length || "Short");
+      setResponseLength(length || "Auto");
       // Three-mode parsing matches Rust reactions_helpers.rs: "off" /
       // "occasional" / "always", with legacy "true"/"on" → "always",
       // legacy "false"/missing → "off".

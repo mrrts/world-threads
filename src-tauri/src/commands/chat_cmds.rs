@@ -546,18 +546,15 @@ pub async fn send_message_cmd(
             .flatten()
             .and_then(|v| v.parse::<f64>().ok());
 
-        // Default to "Short" when no setting exists — matches the
-        // frontend default (use-chat-state.ts:128) so the UI's
-        // displayed value and the LLM's actual constraint stay in
-        // sync. Without this fallback, opening a chat for the first
-        // time shows "Short" in the UI but injects no length
-        // directive into the prompt; replies come back unconstrained.
-        // Group-chat path (group_chat_cmds.rs) already has this
-        // fallback; solo path was missing it.
+        // Default to "Auto" when no setting exists — matches the
+        // frontend default (use-chat-state.ts) so the UI's displayed
+        // value and the LLM's actual constraint stay in sync. "Auto"
+        // injects no hard length cap; the character self-paces.
+        // Group-chat path (group_chat_cmds.rs) mirrors this default.
         let response_length = get_setting(&conn, &format!("response_length.{}", character_id))
             .ok()
             .flatten()
-            .or_else(|| Some("Short".to_string()));
+            .or_else(|| Some("Auto".to_string()));
         let narration_tone = get_setting(&conn, &format!("narration_tone.{}", character_id))
             .ok()
             .flatten();
@@ -1430,18 +1427,15 @@ pub async fn prompt_character_cmd(
             .flatten()
             .map(|v| v == "true")
             .unwrap_or(true);
-        // Default to "Short" when no setting exists — matches the
-        // frontend default (use-chat-state.ts:128) so the UI's
-        // displayed value and the LLM's actual constraint stay in
-        // sync. Without this fallback, opening a chat for the first
-        // time shows "Short" in the UI but injects no length
-        // directive into the prompt; replies come back unconstrained.
-        // Group-chat path (group_chat_cmds.rs) already has this
-        // fallback; solo path was missing it.
+        // Default to "Auto" when no setting exists — matches the
+        // frontend default (use-chat-state.ts) so the UI's displayed
+        // value and the LLM's actual constraint stay in sync. "Auto"
+        // injects no hard length cap; the character self-paces.
+        // Group-chat path (group_chat_cmds.rs) mirrors this default.
         let response_length = get_setting(&conn, &format!("response_length.{}", character_id))
             .ok()
             .flatten()
-            .or_else(|| Some("Short".to_string()));
+            .or_else(|| Some("Auto".to_string()));
         let narration_tone = get_setting(&conn, &format!("narration_tone.{}", character_id))
             .ok()
             .flatten();
@@ -3039,7 +3033,7 @@ pub async fn reset_to_message_cmd(
             let response_length = get_setting(&conn, &format!("response_length.{}", character_id))
                 .ok()
                 .flatten()
-                .or_else(|| Some("Short".to_string()));
+                .or_else(|| Some("Auto".to_string()));
             let narration_tone = get_setting(&conn, &format!("narration_tone.{}", character_id))
                 .ok()
                 .flatten();

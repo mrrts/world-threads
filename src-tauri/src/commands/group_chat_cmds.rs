@@ -1199,16 +1199,13 @@ pub async fn send_group_message_cmd(
         // Load settings scoped to the group chat
         let (response_length, narration_tone, leader) = {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            // Group chats default to Short when the user hasn't explicitly
-            // set anything. The frontend already shows Short as the default,
-            // but the setting is only persisted when dirtied — so for fresh
-            // groups the DB returns None. Without this fallback, None →
-            // no token cap in the orchestrator, which is exactly the "group
-            // chats drift long" failure mode users report.
+            // Group chats default to Auto when the user hasn't explicitly
+            // set anything. The frontend mirrors this default. "Auto"
+            // injects no hard length cap; the character self-paces.
             let rl = get_setting(&conn, &format!("response_length.{}", gc.group_chat_id))
                 .ok()
                 .flatten()
-                .or_else(|| Some("Short".to_string()));
+                .or_else(|| Some("Auto".to_string()));
             let nt = get_setting(&conn, &format!("narration_tone.{}", gc.group_chat_id))
                 .ok()
                 .flatten();
@@ -1802,7 +1799,7 @@ pub async fn prompt_group_character_cmd(
         let rl = get_setting(&conn, &format!("response_length.{}", gc.group_chat_id))
             .ok()
             .flatten()
-            .or_else(|| Some("Short".to_string()));
+            .or_else(|| Some("Auto".to_string()));
         let nt = get_setting(&conn, &format!("narration_tone.{}", gc.group_chat_id))
             .ok()
             .flatten();
