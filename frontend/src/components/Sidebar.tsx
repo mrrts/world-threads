@@ -324,7 +324,12 @@ export function Sidebar({ store, onNavigate }: Props) {
                     >
                       {ch.display_name}
                     </button>
-                    <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 flex-shrink-0 transition-opacity">
+                    {/* Settings + Archive overlay — absolute-positioned so the
+                       name button claims the full row width and only truncates
+                       at the row edge. Gradient backdrop fades from transparent
+                       on the left to sidebar-card on the right so truncated
+                       text fades behind buttons cleanly on hover. */}
+                    <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity pl-4 pr-0.5 bg-gradient-to-r from-transparent via-card/90 to-card rounded-md pointer-events-none group-hover:pointer-events-auto">
                       <button
                         onClick={() => { store.selectCharacter(ch); onNavigate?.("character"); }}
                         className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer"
