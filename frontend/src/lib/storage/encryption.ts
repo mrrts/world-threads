@@ -1,5 +1,5 @@
 /**
- * Web-deployment Phase 0 — content encryption helpers.
+ * Web-deployment content encryption helpers.
  *
  * Per the web-hosting architecture plan § XXI.2: a per-user `content_key`
  * is derived from the user's password via a separate KDF salt (distinct
@@ -7,24 +7,36 @@
  * session is active, never persisted to disk in the browser, and used
  * to encrypt all content stored in IndexedDB.
  *
- * Stage of work: TOOLING ONLY. This module ships the SIGNATURE of the
- * encryption interface plus a Web-Crypto-backed AES-GCM implementation
- * sufficient to demonstrate the abstraction. Phase 1 will:
- *   - Replace PBKDF2 with Argon2id via argon2-browser or @noble/hashes
- *     (Argon2id is the standard choice; PBKDF2 is the Web-Crypto-native
- *     fallback for Phase 0 scaffolding).
- *   - Add key-rotation logic.
- *   - Add an encrypted-recovery-key offline-export flow per § XXI.3.
- *   - Wire into a session-state store that holds the live ContentKey
- *     in memory (not localStorage).
+ * Phase 1 item 4 (commit landing now): KDF is **Argon2id** via
+ * @noble/hashes (pure-JS, ~30 kB gzipped, no native deps). Parameters
+ * t=3 / m=19456 (19 MiB) / p=1 / dkLen=32 follow OWASP 2024 baseline
+ * for password-based KDF in browser contexts. Version tag bumped from
+ * `pbkdf2-aesgcm-v1` (Phase 0 stub) to `argon2id-aesgcm-v1`.
  *
- * Honest scope statement: PBKDF2 with 600k iterations is acceptable
- * for Phase 0 stub validation but is NOT the production target. Argon2id
- * is the production target.
+ * The envelope's version tag is the migration anchor: if the KDF or
+ * cipher parameters change in a future v2, ciphertexts authored under
+ * v1 can still be decrypted by re-deriving a v1 key on demand (not
+ * implemented yet — Phase 0 had no production data so no v1 migration
+ * is needed today). Future v2 migrations will pass version through
+ * the deriveContentKey signature.
+ *
+ * Honest scope: Argon2id is the production target per architecture
+ * plan. The browser-only context limits memory parameters compared to
+ * server-side recommendations (browsers can't reliably allocate 64+
+ * MiB per derivation without OOM risk); 19 MiB is the safe middle.
+ * If we ever offer server-assisted KDF (Phase 2+) we can use larger
+ * memory parameters.
  */
 
-const PBKDF2_ITERATIONS = 600_000; // OWASP 2024 minimum for SHA-256
-const PBKDF2_SALT_PREFIX_CONTENT = "wt-content-v1:";
+import { argon2idAsync } from "@noble/hashes/argon2.js";
+
+const ARGON2ID_PARAMS = {
+  t: 3, // iterations
+  m: 19_456, // 19 MiB memory cost
+  p: 1, // parallelism
+  dkLen: 32, // 32-byte output (256-bit AES key)
+} as const;
+const KDF_SALT_PREFIX_CONTENT = "wt-content-v1:";
 const AES_GCM_IV_BYTES = 12;
 
 /** Opaque content-encryption key. Held only in memory; never persisted.
@@ -51,10 +63,12 @@ export interface Ciphertext {
  *  KDF salt. The salt should be stored server-side (it's not secret;
  *  it's just per-user). The passphrase should NEVER leave the browser.
  *
- *  Phase 0 uses PBKDF2-HMAC-SHA-256 because it's natively available in
- *  Web Crypto API. Phase 1 replaces with Argon2id (memory-hard, best
- *  practice for password-based KDF in 2024+). The version tag locks the
- *  KDF used; ciphertexts carry version too so they can be migrated. */
+ *  Argon2id parameters (t=3 / m=19MiB / p=1 / dkLen=32) follow OWASP
+ *  2024 password-KDF baseline scaled for browser memory budgets. The
+ *  derived raw bytes are imported as an AES-GCM-256 key marked
+ *  non-extractable so it never leaves the Web Crypto context after
+ *  import. Version tag "argon2id-aesgcm-v1" gets stamped on every
+ *  Ciphertext envelope this key encrypts. */
 export async function deriveContentKey(
   passphrase: string,
   saltHex: string,
@@ -63,28 +77,22 @@ export async function deriveContentKey(
   if (!saltHex || saltHex.length < 16) {
     throw new Error("deriveContentKey: salt too short");
   }
-  const salt = new TextEncoder().encode(PBKDF2_SALT_PREFIX_CONTENT + saltHex);
+  const saltBytes = new TextEncoder().encode(KDF_SALT_PREFIX_CONTENT + saltHex);
   const passwordBytes = new TextEncoder().encode(passphrase);
-  const baseKey = await crypto.subtle.importKey(
+  // Argon2id derives 32 raw bytes from passphrase + salt; we then
+  // import those as a non-extractable AES-GCM key. The intermediate
+  // raw bytes exist briefly in JS memory; defense-in-depth would zero
+  // them after importKey but Web Crypto's importKey copies internally
+  // so the JS reference is detached after this function returns.
+  const rawKey = await argon2idAsync(passwordBytes, saltBytes, ARGON2ID_PARAMS);
+  const key = await crypto.subtle.importKey(
     "raw",
-    passwordBytes,
-    { name: "PBKDF2" },
-    false,
-    ["deriveKey"],
-  );
-  const key = await crypto.subtle.deriveKey(
-    {
-      name: "PBKDF2",
-      salt,
-      iterations: PBKDF2_ITERATIONS,
-      hash: "SHA-256",
-    },
-    baseKey,
+    rawKey as BufferSource,
     { name: "AES-GCM", length: 256 },
     false, // not extractable — key never leaves Web Crypto context
     ["encrypt", "decrypt"],
   );
-  return { key, version: "pbkdf2-aesgcm-v1" };
+  return { key, version: "argon2id-aesgcm-v1" };
 }
 
 /** Encrypt a UTF-8 string with the given content key. Returns a
