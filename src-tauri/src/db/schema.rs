@@ -2488,6 +2488,49 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         CREATE INDEX IF NOT EXISTS idx_stripe_events_type ON stripe_events(event_type);"
     )?;
 
+    // ── Web-deployment Phase 1 item 8 — usage metering ──────────────────
+    //
+    // Per the web-hosting architecture plan § VIII. Each LLM call (chat,
+    // narration, consultant, dream, etc.) inserts a row recording the
+    // user_id + kind + token counts + session_id + ISO-week-start (in
+    // user's timezone, computed at insert time). Per-request middleware
+    // checks session + weekly aggregates against tier limits and returns
+    // 429 if exhausted.
+    //
+    // session_id semantics: a "session" rolls over after 4 hours of
+    // inactivity. The api-server computes this at insert time by looking
+    // up the user's most recent usage_event; if within 4h, reuses the
+    // session_id, else generates a new one. Session IDs are opaque
+    // strings (UUID or short token).
+    //
+    // week_start_iso semantics: ISO-week-start (Monday 00:00) computed
+    // in the user's declared timezone (from users.timezone). When the
+    // user crosses a week boundary, the week_start_iso of new events
+    // changes; weekly aggregates query WHERE week_start_iso = current
+    // week's start.
+    //
+    // Phase 1 item 8 ships the table + helper functions + tier limit
+    // constants. Phase 2 content routes wire the actual middleware that
+    // enforces limits before LLM calls; the api-server has no content
+    // routes yet so enforcement is structurally deferred but the data
+    // shape is locked in.
+    conn.execute_batch(
+        "CREATE TABLE IF NOT EXISTS usage_events (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            kind TEXT NOT NULL,
+            input_tokens INTEGER NOT NULL DEFAULT 0,
+            output_tokens INTEGER NOT NULL DEFAULT 0,
+            session_id TEXT NOT NULL,
+            week_start_iso TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_usage_events_user ON usage_events(user_id);
+        CREATE INDEX IF NOT EXISTS idx_usage_events_user_session ON usage_events(user_id, session_id);
+        CREATE INDEX IF NOT EXISTS idx_usage_events_user_week ON usage_events(user_id, week_start_iso);
+        CREATE INDEX IF NOT EXISTS idx_usage_events_created ON usage_events(created_at);"
+    )?;
+
     // ── VGUS vows + event log + invocations ─────────────────────────────
     //
     // Vow-Governed Unattended Substrate (VGUS) Stage 1 Phase 0 instrumentation.

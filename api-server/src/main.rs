@@ -57,6 +57,7 @@ use tower_cookies::{Cookie, Cookies, CookieManagerLayer};
 use tracing::info;
 
 mod billing;
+mod usage;
 
 // ── Shared app state ────────────────────────────────────────────────────
 
@@ -406,6 +407,8 @@ async fn main() -> Result<()> {
         tier_price_map: billing::TierPriceMap::from_env(),
     };
 
+    let state_for_usage = state.db.clone();
+
     let auth_routes = Router::new()
         .route("/api/v1/auth/signup", post(signup))
         .route("/api/v1/auth/login", post(login))
@@ -418,10 +421,16 @@ async fn main() -> Result<()> {
         .route("/api/v1/billing/webhook", post(billing::webhook))
         .with_state(billing_state);
 
+    let usage_state = usage::UsageState { db: state_for_usage };
+    let usage_routes = Router::new()
+        .route("/api/v1/usage/current", get(usage::get_usage_current))
+        .with_state(usage_state);
+
     let app = Router::new()
         .route("/health", get(health))
         .merge(auth_routes)
         .merge(billing_routes)
+        .merge(usage_routes)
         .layer(CookieManagerLayer::new());
 
     let bind_addr = std::env::var("WT_API_BIND").unwrap_or_else(|_| "127.0.0.1:8787".into());
