@@ -26,6 +26,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { sessionContentKey } from "@/lib/storage/sessionContentKey";
+import { useActivityTracker } from "@/lib/storage/activityTracker";
 import { getRuntimeKind } from "@/lib/transport";
 import { WebLoginSketch } from "./WebLoginSketch";
 
@@ -48,6 +49,13 @@ export function WebAuthGate({ children }: Props) {
 
 function WebGateInner({ children }: Props) {
   const [unlocked, setUnlocked] = useState(() => sessionContentKey.isUnlocked());
+
+  // Web-mode only: install document-level activity listeners that
+  // extend the inactivity window while the user is interacting with
+  // the app. Hook is no-op on Tauri because WebGateInner doesn't
+  // mount in Tauri mode (the outer WebAuthGate's early return bypasses
+  // this component entirely on desktop).
+  useActivityTracker();
 
   useEffect(() => {
     const unsubscribe = sessionContentKey.subscribe((state) => {
