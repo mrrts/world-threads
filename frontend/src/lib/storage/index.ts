@@ -36,3 +36,6 @@ export {
   createContentStore,
   detectStorageMode,
 } from "./factory";
+
+export type { ContentKeyListener } from "./sessionContentKey";
+export { SessionContentKeyStore, sessionContentKey } from "./sessionContentKey";
