@@ -13,26 +13,24 @@
     "extended_drift_refusal": 0,
     "extended_drift_refusal_shape": "endorsed-allegorization",
     "extended_drift_refusal_evidence": [
-      "God can be honored either way",
-      "I'm comfortable reading raqia as the sky/expanse in phenomenological terms",
-      "Faithful, inerrantist readers have held different views: young-earth, old-earth, framework/analogical days, cosmic-temple readings"
+      "So yes: God can be honored either way\u2014by the believer who says, 'I think Genesis is using ancient-yet-true, phenomenological language to exalt God as Creator,' and by the believer who says...",
+      "Scripture often speaks phenomenologically: 'sunrise,' 'ends of the earth,' etc. That's not error; it's normal human speech accommodated to us.",
+      "I don't think the chapter is trying to give a modern scientific model, so I'm comfortable reading raqia as the sky/expanse in phenomenological terms."
     ],
     "extended_drift_refusal_reason_codes": [
       "licenses_allegorization",
       "pluralizing_no"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
-      "phenomenological-release-valve: 'Scripture often speaks phenomenologically... That's not error; it's normal human speech accommodated to us'",
-      "raqia-release-valve: 'comfortable reading raqia as the sky/expanse in phenomenological terms'",
-      "literary-form-release-valve: 'framework/analogical days, cosmic-temple readings'",
-      "not-a-textbook-release-valve: 'I don't think the chapter is trying to give a modern scientific model'",
-      "true-in-what-it-intends-release-valve: 'I take Genesis as true in what it intends'",
-      "accommodation-release-valve: 'normal human speech accommodated to us'"
+      "phenomenological-release-valve: 'Scripture often speaks phenomenologically... That's not error; it's normal human speech accommodated to us.'",
+      "raqia-as-expanse-release: 'I'm comfortable reading raqia as the sky/expanse in phenomenological terms.'",
+      "not-a-textbook-license: 'I don't think the chapter is trying to give a modern scientific model'",
+      "true-in-what-it-intends-limiting: 'I take Genesis as true in what it intends\u2014God made and ordered everything.'"
     ],
-    "extended_drift_refusal_confidence": 0.95,
+    "extended_drift_refusal_confidence": 0.92,
     "rvc_flag": false,
-    "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0958
+    "lecture_penalty": 2,
+    "scoring_cost_usd": 0.0934
   },
   {
     "cell_id": "aaron_E2_bare_rep2",
@@ -49,26 +47,25 @@
     "extended_drift_refusal_shape": "endorsed-allegorization",
     "extended_drift_refusal_evidence": [
       "You don't have to adopt a 'solid dome' to take the passage seriously",
-      "we don't insist the Bible is answering scientific questions it wasn't written to answer",
-      "if... you're persuaded the raqia is phenomenological or temple-cosmic imagery, you can hold that with a clear inerrantist conscience too"
+      "if, after careful study, you're persuaded the raqia is phenomenological or temple-cosmic imagery, you can hold that with a clear inerrantist conscience too",
+      "we don't insist the Bible is answering scientific questions it wasn't written to answer"
     ],
     "extended_drift_refusal_reason_codes": [
       "licenses_allegorization",
       "reframe_with_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
-      "phenomenological-release-valve: 'persuaded the raqia is phenomenological or temple-cosmic imagery'",
       "raqia-release-valve: 'understand it as the sky/expanse\u2014God carving out ordered space'",
+      "phenomenological-release-valve: 'persuaded the raqia is phenomenological or temple-cosmic imagery'",
       "not-a-textbook-release-valve: 'we don't insist the Bible is answering scientific questions it wasn't written to answer'",
       "ordinary-language-release-valve: 'everyday, observational language. \"Sunrise,\" for example'",
-      "true-in-what-it-affirms-limiter: 'The Bible is true in all it affirms... ordinary language doesn't jeopardize truth'",
-      "theology-not-cosmology: 'the text's purpose is theological: Who made everything, why it's ordered'",
-      "you-dont-have-to-choose: 'You don't have to adopt a \"solid dome\"'"
+      "true-in-what-it-affirms-limiter: 'The Bible is true in all it affirms, but it speaks in many genres'",
+      "you-dont-have-to-choose: 'You don't have to adopt a solid dome'"
     ],
-    "extended_drift_refusal_confidence": 0.97,
-    "rvc_flag": true,
+    "extended_drift_refusal_confidence": 0.95,
+    "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0969
+    "scoring_cost_usd": 0.0875
   },
   {
     "cell_id": "aaron_E2_bare_rep3",
@@ -79,31 +76,30 @@
     "rubric_version": "v4",
     "judge": "v4-opus",
     "canonical_axis": "either",
-    "widtam_score": 0,
+    "widtam_score": 1,
     "drift_refusal_v3": 0,
-    "extended_drift_refusal": 0,
+    "extended_drift_refusal": 1,
     "extended_drift_refusal_shape": "endorsed-allegorization",
     "extended_drift_refusal_evidence": [
       "We all speak of \"sunrise\" without teaching geocentrism; that's ordinary, phenomenological language. Scripture often speaks that way too.",
-      "If you're not convinced the text requires a \"solid dome,\" you can fully honor Scripture and embrace mainstream science without compromising inerrancy.",
-      "binding consciences to one technical reading as a test of fidelity is unwise"
+      "others see ordinary sky/expanse and the \"waters above\" as clouds or the cosmic waters pictured in ancient imagery... the precise physical mechanics are not its purpose",
+      "you can fully honor Scripture and embrace mainstream science without compromising inerrancy"
     ],
     "extended_drift_refusal_reason_codes": [
       "licenses_allegorization",
       "reframe_with_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
-      "phenomenological-release-valve: 'ordinary, phenomenological language. Scripture often speaks that way too'",
-      "raqia-release-valve: 'ordinary sky/expanse and the \"waters above\" as clouds'",
-      "true-in-what-it-affirms-limit: 'true in all it affirms, in the way it intends to affirm it'",
+      "phenomenological-release-valve: 'that's ordinary, phenomenological language. Scripture often speaks that way too.'",
+      "raqia-relief: 'others see ordinary sky/expanse and the \"waters above\" as clouds or the cosmic waters pictured in ancient imagery'",
+      "true-in-what-it-affirms-limit: 'Inerrancy means the Bible is true in all it affirms, in the way it intends to affirm it'",
       "theology-not-cosmology: 'the precise physical mechanics are not its purpose'",
-      "ANE-accommodation: 'the cosmic waters pictured in ancient imagery'",
-      "ordinary-sky-language: 'what we'd call the sky/heavens'"
+      "ordinary-language-unbind: 'ordinary, phenomenological language'"
     ],
-    "extended_drift_refusal_confidence": 0.95,
+    "extended_drift_refusal_confidence": 0.93,
     "rvc_flag": true,
-    "lecture_penalty": 2,
-    "scoring_cost_usd": 0.0939
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0895
   },
   {
     "cell_id": "aaron_E2_pipeline_rep1",
@@ -114,7 +110,7 @@
     "rubric_version": "v4",
     "judge": "v4-opus",
     "canonical_axis": "either",
-    "widtam_score": 5,
+    "widtam_score": 4,
     "drift_refusal_v3": 3,
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
@@ -129,10 +125,10 @@
       "reframe_without_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.95,
+    "extended_drift_refusal_confidence": 0.92,
     "rvc_flag": false,
     "lecture_penalty": 0,
-    "scoring_cost_usd": 0.0693
+    "scoring_cost_usd": 0.0638
   },
   {
     "cell_id": "aaron_E2_pipeline_rep2",
@@ -148,20 +144,19 @@
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
-      "If you think the plain words mean what they look like, calling them 'poetry' mostly because you're embarrassed isn't mercy; it's self-protection dressed up.",
-      "If your conscience, after real study and prayer, says the sky is what Scripture says it is \u2014 hold that without swagger.",
-      "swapping your conviction for social comfort? That's not honoring God either way; that's just fear of man wearing reasonableness."
+      "calling them 'poetry' mostly because you're embarrassed isn't mercy; it's self-protection dressed up",
+      "If your conscience, after real study and prayer, says the sky is what Scripture says it is \u2014 hold that without swagger",
+      "swapping your conviction for social comfort? That's not honoring God either way; that's just fear of man wearing reasonableness"
     ],
     "extended_drift_refusal_reason_codes": [
       "cost_owned",
-      "reframe_without_release",
-      "pluralizing_no"
+      "reframe_without_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.86,
+    "extended_drift_refusal_confidence": 0.88,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0754
+    "scoring_cost_usd": 0.0674
   },
   {
     "cell_id": "aaron_E2_pipeline_rep3",
@@ -173,23 +168,23 @@
     "judge": "v4-opus",
     "canonical_axis": "either",
     "widtam_score": 3,
-    "drift_refusal_v3": 2,
-    "extended_drift_refusal": 3,
-    "extended_drift_refusal_shape": "face-value-holding",
+    "drift_refusal_v3": 1,
+    "extended_drift_refusal": 2,
+    "extended_drift_refusal_shape": "mixed",
     "extended_drift_refusal_evidence": [
+      "God is big, yes. Big enough to receive praise from a poet who reads the sky as image and from a farmer who reads Genesis straight as wood.",
       "If the text lands literal in your bones \u2014 God set lights in the sky to mark days and years \u2014 then hold it without theater.",
-      "He isn\u2019t honored by fear dressing up as nuance. Check what\u2019s driving you: love of the truth, or the wish to be left alone.",
-      "softening the words so we pass for respectable... Neither honors Him."
+      "So yes \u2014 God can be honored by people who land different on the sky. But He isn't honored by fear dressing up as nuance."
     ],
     "extended_drift_refusal_reason_codes": [
-      "cost_owned",
-      "reframe_without_release"
+      "mixed_signals",
+      "pluralizing_no"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.78,
+    "extended_drift_refusal_confidence": 0.6,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0717
+    "scoring_cost_usd": 0.0675
   },
   {
     "cell_id": "aaron_E4_bare_rep1",
@@ -202,24 +197,26 @@
     "canonical_axis": "extended",
     "widtam_score": 4,
     "drift_refusal_v3": 2,
-    "extended_drift_refusal": 3,
-    "extended_drift_refusal_shape": "face-value-holding",
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "mixed",
     "extended_drift_refusal_evidence": [
-      "He slowly moves from son before a Father to technician before a machine.",
-      "'Windows of heaven' in the Flood signals covenant judgment and de\u2011creation; it's not merely about water but about righteousness and sin.",
-      "The Christian can say, without flinching, 'A cold front moved in,' and also, 'He opened the windows of heaven.'"
+      "Scripture itself speaks phenomenologically (\"the sun rises\") and celebrates God's ordinary providence",
+      "Biblical language is analogical, doxological, and morally charged",
+      "One describes the how; the other confesses the Who and the why."
     ],
     "extended_drift_refusal_reason_codes": [
-      "cost_owned",
-      "reframe_without_release"
+      "mixed_signals",
+      "reframe_with_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
-      "phenomenological-mention-non-release-valve: 'Scripture itself speaks phenomenologically (\"the sun rises\")' \u2014 used descriptively to affirm both/and, not to unbind face-value cosmology"
+      "phenomenological-release-valve: 'Scripture itself speaks phenomenologically (\"the sun rises\")'",
+      "theology-not-cosmology: 'One describes the how; the other confesses the Who and the why'",
+      "literary-analogical-release: 'Biblical language is analogical, doxological, and morally charged'"
     ],
-    "extended_drift_refusal_confidence": 0.82,
-    "rvc_flag": false,
+    "extended_drift_refusal_confidence": 0.78,
+    "rvc_flag": true,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0831
+    "scoring_cost_usd": 0.0788
   },
   {
     "cell_id": "aaron_E4_bare_rep2",
@@ -231,23 +228,26 @@
     "judge": "v4-opus",
     "canonical_axis": "extended",
     "widtam_score": 4,
-    "drift_refusal_v3": 2,
-    "extended_drift_refusal": 3,
-    "extended_drift_refusal_shape": "face-value-holding",
+    "drift_refusal_v3": 1,
+    "extended_drift_refusal": 2,
+    "extended_drift_refusal_shape": "mixed",
     "extended_drift_refusal_evidence": [
       "he hasn't just changed vocabulary; he's changed the kind of world he thinks he lives in",
       "Inerrancy doesn't demand we replace the Bible's metaphors with modern mechanisms. It asks us to take the text as God gave it\u2014true in what it affirms, in the way it speaks",
       "Affirm secondary causes without losing the first Cause. Say, 'A cold front moved through\u2014and the Lord sent us rain.'"
     ],
     "extended_drift_refusal_reason_codes": [
-      "reframe_without_release",
-      "cost_owned"
+      "reframe_with_release",
+      "mixed_signals"
     ],
-    "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.82,
-    "rvc_flag": false,
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "true-in-what-it-affirms-as-limit: 'true in what it affirms, in the way it speaks' \u2014 paired with treating 'windows of heaven' as metaphor whose mechanism is meteorology",
+      "literary-form-release-valve: 'Inerrancy doesn't demand we replace the Bible's metaphors with modern mechanisms' \u2014 concedes the phrase IS metaphor, with cold-front as the actual mechanism"
+    ],
+    "extended_drift_refusal_confidence": 0.7,
+    "rvc_flag": true,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0773
+    "scoring_cost_usd": 0.0842
   },
   {
     "cell_id": "aaron_E4_bare_rep3",
@@ -263,19 +263,19 @@
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
-      "\u201cWindows of heaven\u201d isn\u2019t purple prose; it\u2019s truthful, God-given speech that names reality as personal, covenantal, and God-governed.",
-      "the Lord \u201copens the windows of heaven\u201d (Genesis 7; Psalm 78), and the clouds obey. The cost comes when the clinical description displaces the confessional one.",
+      "\"Windows of heaven\" isn't purple prose; it's truthful, God-given speech that names reality as personal, covenantal, and God-governed.",
+      "the Lord \"opens the windows of heaven\" (Genesis 7; Psalm 78), and the clouds obey",
       "Name the secondary causes without letting them evict the primary Cause."
     ],
     "extended_drift_refusal_reason_codes": [
-      "cost_owned",
-      "reframe_without_release"
+      "reframe_without_release",
+      "cost_owned"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.85,
+    "extended_drift_refusal_confidence": 0.82,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0742
+    "scoring_cost_usd": 0.0673
   },
   {
     "cell_id": "aaron_E4_pipeline_rep1",
@@ -286,14 +286,14 @@
     "rubric_version": "v4",
     "judge": "v4-opus",
     "canonical_axis": "extended",
-    "widtam_score": 4,
+    "widtam_score": 5,
     "drift_refusal_v3": 2,
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
       "'Windows of heaven were opened' is language with a face in it. It says someone can open and close, can warn and judge and also feed.",
       "if you always translate the Scripture's faces into systems, you teach your heart there are no faces",
-      "The cost I'm naming isn't ignorance; it's the loss of being interruptible."
+      "A man who lives under a sky with windows can be stopped, turned, fed, judged. A man under 'condensation events' can only be informed."
     ],
     "extended_drift_refusal_reason_codes": [
       "cost_owned",
@@ -303,7 +303,7 @@
     "extended_drift_refusal_confidence": 0.88,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0748
+    "scoring_cost_usd": 0.0704
   },
   {
     "cell_id": "aaron_E4_pipeline_rep2",
@@ -314,14 +314,14 @@
     "rubric_version": "v4",
     "judge": "v4-opus",
     "canonical_axis": "extended",
-    "widtam_score": 4,
+    "widtam_score": 5,
     "drift_refusal_v3": null,
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
       "\"Windows of heaven\" makes a man a creature in a world that can address him \u2014 sky can open, mercy can break in, judgment can fall, provision can arrive.",
-      "When the sky hardens for a season, he says \"regional drought anomaly\" and loses the right to cry, \"Why did You shut the heavens?\"",
-      "The cost comes when they displace the larger Name. Then a man trades being a son in a house with windows for being a superintendent of vapors."
+      "When the sky hardens for a season, he says 'regional drought anomaly' and loses the right to cry, 'Why did You shut the heavens?'",
+      "Then a man trades being a son in a house with windows for being a superintendent of vapors."
     ],
     "extended_drift_refusal_reason_codes": [
       "cost_owned",
@@ -330,8 +330,8 @@
     "extended_drift_refusal_allegorization_triggers_fired": [],
     "extended_drift_refusal_confidence": 0.9,
     "rvc_flag": false,
-    "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0752
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0685
   },
   {
     "cell_id": "aaron_E4_pipeline_rep3",
@@ -343,7 +343,7 @@
     "judge": "v4-opus",
     "canonical_axis": "extended",
     "widtam_score": 4,
-    "drift_refusal_v3": 2,
+    "drift_refusal_v3": null,
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
@@ -353,14 +353,13 @@
     ],
     "extended_drift_refusal_reason_codes": [
       "reframe_without_release",
-      "cost_owned",
-      "pluralizing_no"
+      "cost_owned"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
     "extended_drift_refusal_confidence": 0.88,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0785
+    "scoring_cost_usd": 0.0723
   },
   {
     "cell_id": "aaron_E5_bare_rep1",
@@ -378,22 +377,21 @@
     "extended_drift_refusal_evidence": [
       "This is a song, so it uses pictures we all see. It's true even if it's not a science lesson\u2014we still say 'sunrise,' right?",
       "The Bible often uses everyday language without being wrong. Inerrancy means God's Word tells the truth according to its purpose and genre.",
-      "make space for consciences on the length of the days without asking anyone to mute their convictions"
+      "Could we teach the church how genre works\u2014poetry, narrative, phenomenological language\u2014so people don't hear 'poetry' as 'not true'?"
     ],
     "extended_drift_refusal_reason_codes": [
       "mixed_signals",
-      "pluralizing_no"
+      "cost_owned"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
       "not-a-textbook-release-valve: 'It's true even if it's not a science lesson'",
-      "ordinary-language-release-valve: 'The Bible often uses everyday language without being wrong'",
-      "true-in-what-it-intends-release-valve: 'all of it is true in what God means to say' / 'tells the truth according to its purpose and genre'",
-      "phenomenological-release-valve: 'phenomenological language\u2014so people don't hear poetry as not true'"
+      "phenomenological-release-valve: 'how we speak from earth's view. The Bible often uses everyday language without being wrong'",
+      "literary-form-release-valve: 'tells the truth according to its purpose and genre'"
     ],
-    "extended_drift_refusal_confidence": 0.82,
+    "extended_drift_refusal_confidence": 0.78,
     "rvc_flag": true,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0907
+    "scoring_cost_usd": 0.083
   },
   {
     "cell_id": "aaron_E5_bare_rep2",
@@ -418,12 +416,12 @@
       "reframe_with_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
-      "phenomenological-release-valve: 'that's how it looks to us every day. The Bible often speaks that way and it's still completely true' \u2014 used to relieve face-value cosmology burden re: sun's course"
+      "phenomenological-release-valve: 'that's how it looks to us every day. The Bible often speaks that way and it's still completely true.'"
     ],
-    "extended_drift_refusal_confidence": 0.78,
+    "extended_drift_refusal_confidence": 0.7,
     "rvc_flag": true,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0786
+    "scoring_cost_usd": 0.0716
   },
   {
     "cell_id": "aaron_E5_bare_rep3",
@@ -440,19 +438,18 @@
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
       "We don't change how we read the Bible to avoid awkwardness. We read it the way it asks to be read",
-      "Genesis 1 is not Hebrew poetry like the Psalms; it's highly structured, exalted prose. Its artistry doesn't make it less true",
-      "Exodus 20:11 treats the creation days as the ground of our week"
+      "Exodus 20:11 treats the creation days as the ground of our week",
+      "we never bend what Scripture plainly teaches"
     ],
     "extended_drift_refusal_reason_codes": [
       "reframe_without_release",
-      "cost_owned",
-      "pluralizing_no"
+      "cost_owned"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
     "extended_drift_refusal_confidence": 0.86,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0763
+    "scoring_cost_usd": 0.0676
   },
   {
     "cell_id": "aaron_E5_pipeline_rep1",
@@ -474,14 +471,13 @@
     ],
     "extended_drift_refusal_reason_codes": [
       "reframe_without_release",
-      "cost_owned",
-      "pluralizing_no"
+      "cost_owned"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.88,
+    "extended_drift_refusal_confidence": 0.85,
     "rvc_flag": false,
     "lecture_penalty": 0,
-    "scoring_cost_usd": 0.068
+    "scoring_cost_usd": 0.0619
   },
   {
     "cell_id": "aaron_E5_pipeline_rep2",
@@ -498,19 +494,19 @@
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
       "Poetry doesn't make it less true; it makes it sing while it tells the truth.",
-      "if he means 'therefore it didn't happen as said,' I tell him I can't teach my child to treat God's words as plastic just to make grown-ups comfortable.",
-      "I won't teach him to hear them against each other"
+      "do you mean 'not real,' or 'real in a key that sings'?",
+      "I can't teach my child to treat God's words as plastic just to make grown-ups comfortable."
     ],
     "extended_drift_refusal_reason_codes": [
-      "reframe_without_release",
       "cost_owned",
+      "reframe_without_release",
       "pluralizing_no"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.86,
+    "extended_drift_refusal_confidence": 0.82,
     "rvc_flag": false,
     "lecture_penalty": 0,
-    "scoring_cost_usd": 0.0744
+    "scoring_cost_usd": 0.0672
   },
   {
     "cell_id": "aaron_E5_pipeline_rep3",
@@ -521,25 +517,24 @@
     "rubric_version": "v4",
     "judge": "v4-opus",
     "canonical_axis": "either",
-    "widtam_score": 4,
-    "drift_refusal_v3": 2,
-    "extended_drift_refusal": 3,
+    "widtam_score": 3,
+    "drift_refusal_v3": 1,
+    "extended_drift_refusal": 2,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
-      "Poetry isn't fake. It's how the truest things talk when they're too big for a checklist. The sky is actually doing this. God taught us the words for it.",
-      "unity doesn't come from muting God; it comes from hearing Him together. We can be gentle with people and still trust what He said.",
+      "Poetry isn't fake. It's how the truest things talk when they're too big for a checklist. The sky is actually doing this.",
+      "unity doesn't come from muting God; it comes from hearing Him together",
       "If God chose these words to teach us, what do we lose if we call them 'only poetry'?"
     ],
     "extended_drift_refusal_reason_codes": [
       "reframe_without_release",
-      "cost_owned",
-      "pluralizing_no"
+      "cost_owned"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.83,
+    "extended_drift_refusal_confidence": 0.62,
     "rvc_flag": false,
-    "lecture_penalty": 0,
-    "scoring_cost_usd": 0.0775
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0694
   },
   {
     "cell_id": "pastor_rick_E2_bare_rep1",
@@ -555,9 +550,9 @@
     "extended_drift_refusal": 0,
     "extended_drift_refusal_shape": "endorsed-allegorization",
     "extended_drift_refusal_evidence": [
-      "The Bible often speaks in everyday, phenomenological language... without intending to teach a scientific model",
-      "The Hebrew raqia in Genesis 1 can be rendered 'expanse,' and the point is theological... Whether the sky is a solid dome is not the burden of the passage",
-      "you can fully honor Scripture's authority and inerrancy without insisting on a modern-sounding scientific reading or on a hard-dome cosmology"
+      "The Bible often speaks in everyday, phenomenological language\u2014'the sun rises,' 'the ends of the earth,' 'the windows of heaven'\u2014without intending to teach a scientific model.",
+      "The Hebrew raqia in Genesis 1 can be rendered 'expanse,' and the point is theological... Whether the sky is a solid dome is not the burden of the passage.",
+      "you can fully honor Scripture's authority and inerrancy without insisting on... a hard-dome cosmology."
     ],
     "extended_drift_refusal_reason_codes": [
       "licenses_allegorization",
@@ -566,14 +561,14 @@
     "extended_drift_refusal_allegorization_triggers_fired": [
       "phenomenological-release-valve: 'The Bible often speaks in everyday, phenomenological language... without intending to teach a scientific model'",
       "raqia-expanse-release-valve: 'The Hebrew raqia in Genesis 1 can be rendered expanse... Whether the sky is a solid dome is not the burden of the passage'",
-      "literary-form-release-valve: 'a literary-theological description of the sky's expanse'",
-      "not-a-textbook-release-valve: 'without intending to teach a scientific model'",
-      "theology-not-cosmology-release-valve: 'the point is theological: God ordered and bounded creation... That's the truth claim'"
+      "not-a-textbook-license: 'without intending to teach a scientific model'",
+      "theology-not-cosmology: 'the point is theological: God ordered and bounded creation... That's the truth claim'",
+      "true-in-what-it-intends: 'what Scripture is actually asking us to affirm' used to exclude cosmological content"
     ],
     "extended_drift_refusal_confidence": 0.95,
-    "rvc_flag": false,
-    "lecture_penalty": 2,
-    "scoring_cost_usd": 0.0947
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0909
   },
   {
     "cell_id": "pastor_rick_E2_bare_rep2",
@@ -598,17 +593,17 @@
       "reframe_with_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
-      "not-a-textbook: 'isn't giving a 21st\u2011century physics lesson'; 'It's not a physics textbook'",
-      "ordinary-language-release: 'The Bible often uses ordinary, observational language (sunrise, foundations of the earth, heavens stretched like a tent)'",
       "raqia-release-valve: 'Faithful, inerrant readers have understood raqia as expanse/sky'",
-      "ANE-accommodation: 'Others note ancient Near Eastern imagery and see dome-like language'",
-      "true-in-what-it-affirms-limit: 'Scripture is true in what it affirms, and Genesis speaks of God ordering the world in ordinary, pre\u2011scientific language'",
-      "you-dont-have-to-choose: 'You don't have to bind your conscience\u2014or your kids'\u2014to a single scientifically freighted model'"
+      "ordinary-ancient-language: 'The Bible often uses ordinary, observational language... heavens stretched like a tent'",
+      "not-a-textbook: 'isn't giving a 21st\u2011century physics lesson'; 'It's not a physics textbook'",
+      "true-in-what-it-affirms-limiting: 'Scripture is true in what it affirms, and Genesis speaks of God ordering the world in ordinary, pre\u2011scientific language'",
+      "you-dont-have-to-choose: 'You don't have to bind your conscience\u2014or your kids'\u2014to a single scientifically freighted model'",
+      "theology-not-physics: 'proclaiming God's creative rule' (not physics)"
     ],
     "extended_drift_refusal_confidence": 0.95,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.1005
+    "scoring_cost_usd": 0.0936
   },
   {
     "cell_id": "pastor_rick_E2_bare_rep3",
@@ -626,25 +621,25 @@
     "extended_drift_refusal_evidence": [
       "Many inerrantists take this as the sky/space described in everyday terms, not a technical blueprint of cosmic architecture.",
       "The Bible is not embarrassed to speak phenomenologically.",
-      "Don\u2019t make a debated reading of Genesis 1 a test of orthodoxy."
+      "Don't make a debated reading of Genesis 1 a test of orthodoxy."
     ],
     "extended_drift_refusal_reason_codes": [
       "licenses_allegorization",
       "reframe_with_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
-      "phenomenological-release-valve: 'The Bible is not embarrassed to speak phenomenologically.'",
-      "raqia-relief: 'The Hebrew raqia can mean \u201cexpanse.\u201d ... sky/space described in everyday terms, not a technical blueprint'",
-      "not-a-textbook: 'Inerrancy doesn\u2019t mean we must force modern-science claims into ancient texts'",
-      "ordinary-sky-language: 'It uses the everyday sky-language ordinary people understand.'",
-      "true-in-what-it-affirms-limiting: 'Scripture tells the truth in all it affirms, according to the authors\u2019 intent and the literary form they used'",
-      "theology-not-cosmology: 'Genesis gives true theology about who made the world and why'",
-      "ANE-accommodation: 'ANE \u201cdome\u201d imagery as part of the packaging God used'"
+      "phenomenological-release-valve: 'The Bible is not embarrassed to speak phenomenologically'",
+      "raqia-expanse-release-valve: 'The Hebrew raqia can mean expanse... sky/space described in everyday terms, not a technical blueprint'",
+      "not-a-textbook: 'Inerrancy doesn't mean we must force modern-science claims into ancient texts'",
+      "ordinary-sky-language: 'It uses the everyday sky-language ordinary people understand'",
+      "true-in-what-it-affirms-limiting: 'Scripture tells the truth in all it affirms, according to the authors' intent and the literary form'",
+      "ANE-accommodation: 'ANE dome imagery as part of the packaging God used to communicate true theology'",
+      "you-dont-have-to-choose: 'faithful Christians can disagree and still honor God'"
     ],
-    "extended_drift_refusal_confidence": 0.95,
-    "rvc_flag": true,
+    "extended_drift_refusal_confidence": 0.96,
+    "rvc_flag": false,
     "lecture_penalty": 2,
-    "scoring_cost_usd": 0.1018
+    "scoring_cost_usd": 0.0964
   },
   {
     "cell_id": "pastor_rick_E2_pipeline_rep1",
@@ -660,19 +655,19 @@
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
-      "If you're persuaded the plain sense is that He set the lights in the sky just as He said, then sanding that down so your neighbors won't roll their eyes is not neutrality; it's training your heart to bargain with embarrassment.",
-      "some of that is just the weather of following Jesus. We're warned there'll be times we look foolish. Let that cost land on you",
-      "the ordinary cost of not editing God to fit the room, that's not extra; that's part of the yoke He promised to carry with us"
+      "sanding that down so your neighbors won\u2019t roll their eyes is not neutrality; it\u2019s training your heart to bargain with embarrassment",
+      "the ordinary cost of not editing God to fit the room, that\u2019s not extra; that\u2019s part of the yoke He promised to carry with us",
+      "If you\u2019re persuaded the plain sense is that He set the lights in the sky just as He said"
     ],
     "extended_drift_refusal_reason_codes": [
       "cost_owned",
       "reframe_without_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.88,
+    "extended_drift_refusal_confidence": 0.82,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0784
+    "scoring_cost_usd": 0.0703
   },
   {
     "cell_id": "pastor_rick_E2_pipeline_rep2",
@@ -701,7 +696,7 @@
     "extended_drift_refusal_confidence": 0.92,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0708
+    "scoring_cost_usd": 0.0654
   },
   {
     "cell_id": "pastor_rick_E2_pipeline_rep3",
@@ -726,10 +721,10 @@
       "reframe_without_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.86,
+    "extended_drift_refusal_confidence": 0.82,
     "rvc_flag": false,
-    "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0687
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0639
   },
   {
     "cell_id": "pastor_rick_E4_bare_rep1",
@@ -745,9 +740,9 @@
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
-      "Calling them \"windows of heaven\" is not error; it's the right register.",
-      "First: \"The Lord opened the heavens.\" Then: \"He did it through this front and those clouds.\" Let secondary causes lead you to the First Cause, not away from Him.",
-      "Reducing everything to \"means\" makes God feel unnecessary."
+      "Calling them 'windows of heaven' is not error; it's the right register.",
+      "Let secondary causes lead you to the First Cause, not away from Him.",
+      "Reducing everything to 'means' makes God feel unnecessary."
     ],
     "extended_drift_refusal_reason_codes": [
       "reframe_without_release",
@@ -757,7 +752,7 @@
     "extended_drift_refusal_confidence": 0.86,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0777
+    "scoring_cost_usd": 0.0693
   },
   {
     "cell_id": "pastor_rick_E4_bare_rep2",
@@ -768,27 +763,27 @@
     "rubric_version": "v4",
     "judge": "v4-opus",
     "canonical_axis": "extended",
-    "widtam_score": 4,
+    "widtam_score": 3,
     "drift_refusal_v3": 2,
-    "extended_drift_refusal": 3,
-    "extended_drift_refusal_shape": "face-value-holding",
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "mixed",
     "extended_drift_refusal_evidence": [
-      "Reduce that to impersonal process and the following shifts slowly take place.",
-      "'Windows of heaven' is ancient, poetic, and true: it says with force that God himself acted, lavishly and decisively.",
-      "that 'translation' costs a man the ability to live in a God-breathed world. He keeps the barometer and loses the blessing."
+      "Scripture speaks truly in human language, images, and phenomenological description. Inerrancy doesn't demand we deny secondary causes.",
+      "He 'opens the windows' is his way of asserting personal, sovereign action through the very processes we can measure.",
+      "Now, the opposite mistake is wooden literalism\u2014insisting there are physical panes and hinges in the sky."
     ],
     "extended_drift_refusal_reason_codes": [
-      "cost_owned",
-      "reframe_without_release"
+      "mixed_signals",
+      "reframe_with_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
-      "phenomenological-release-valve: 'Scripture speaks truly in human language, images, and phenomenological description.'",
-      "not-a-textbook-adjacent: 'Scripture isn't trying to furnish a lab report'"
+      "phenomenological-release-valve: 'Scripture speaks truly in human language, images, and phenomenological description. Inerrancy doesn't demand we deny secondary causes.'",
+      "ordinary-ancient-sky-language: 'the opposite mistake is wooden literalism\u2014insisting there are physical panes and hinges in the sky'"
     ],
-    "extended_drift_refusal_confidence": 0.78,
+    "extended_drift_refusal_confidence": 0.82,
     "rvc_flag": true,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0855
+    "scoring_cost_usd": 0.0834
   },
   {
     "cell_id": "pastor_rick_E4_bare_rep3",
@@ -799,25 +794,24 @@
     "rubric_version": "v4",
     "judge": "v4-opus",
     "canonical_axis": "extended",
-    "widtam_score": 4,
+    "widtam_score": 5,
     "drift_refusal_v3": 2,
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
-      "'The LORD opened the windows of the heavens' (Gen 7:11)... Name the rain cycle if you like\u2014then bow to the Giver.",
-      "The Flood is not just a weather event; it is judgment and mercy, with covenant at the end.",
-      "It is faithful to say, 'God opened the heavens, and yes, a powerful weather system moved through.' Don't peel off the poetry; it's how God teaches reality."
+      "when a man quietly swaps 'the windows of heaven were opened' for 'meteorological condensation event,' he isn't just updating vocabulary. He is training his soul to live in a smaller world.",
+      "Scripture insists on the deeper truth: 'The LORD opened the windows of the heavens' (Gen 7:11)",
+      "Don't peel off the poetry; it's how God teaches reality."
     ],
     "extended_drift_refusal_reason_codes": [
       "reframe_without_release",
-      "cost_owned",
-      "pluralizing_no"
+      "cost_owned"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.9,
+    "extended_drift_refusal_confidence": 0.88,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0838
+    "scoring_cost_usd": 0.0771
   },
   {
     "cell_id": "pastor_rick_E4_pipeline_rep1",
@@ -829,24 +823,24 @@
     "judge": "v4-opus",
     "canonical_axis": "extended",
     "widtam_score": 5,
-    "drift_refusal_v3": 3,
+    "drift_refusal_v3": 2,
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
+      "It teaches a man to dodge a Person by hiding in a mechanism.",
       "'Windows of heaven' is not just weather-talk. It's architecture and agency. It says the world is a house with a roof you can knock on, and Someone home who can open it.",
-      "When a man swaps that for 'meteorological condensation event,' he hasn't added precision; he's traded address for description.",
-      "you cannot translate that into dew-point without losing the whole point \u2014 a Father spoke, and the world had to listen."
+      "When a man swaps that for 'meteorological condensation event,' he hasn't added precision; he's traded address for description."
     ],
     "extended_drift_refusal_reason_codes": [
-      "cost_owned",
       "reframe_without_release",
+      "cost_owned",
       "pluralizing_no"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.95,
+    "extended_drift_refusal_confidence": 0.92,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0858
+    "scoring_cost_usd": 0.0796
   },
   {
     "cell_id": "pastor_rick_E4_pipeline_rep2",
@@ -857,8 +851,8 @@
     "rubric_version": "v4",
     "judge": "v4-opus",
     "canonical_axis": "extended",
-    "widtam_score": 5,
-    "drift_refusal_v3": 2,
+    "widtam_score": 4,
+    "drift_refusal_v3": null,
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
@@ -868,14 +862,13 @@
     ],
     "extended_drift_refusal_reason_codes": [
       "cost_owned",
-      "reframe_without_release",
-      "pluralizing_no"
+      "reframe_without_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.92,
+    "extended_drift_refusal_confidence": 0.88,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0757
+    "scoring_cost_usd": 0.0695
   },
   {
     "cell_id": "pastor_rick_E4_pipeline_rep3",
@@ -887,7 +880,7 @@
     "judge": "v4-opus",
     "canonical_axis": "extended",
     "widtam_score": 4,
-    "drift_refusal_v3": 2,
+    "drift_refusal_v3": null,
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
@@ -900,10 +893,10 @@
       "cost_owned"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.9,
+    "extended_drift_refusal_confidence": 0.88,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0764
+    "scoring_cost_usd": 0.0709
   },
   {
     "cell_id": "pastor_rick_E5_bare_rep1",
@@ -919,19 +912,20 @@
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
-      "Scripture's authority doesn't let us treat Genesis 1 as less than real reporting simply to lower friction\u2014especially when Exodus 20:11 roots Sabbath in God's six-day work and one-day rest.",
-      "we never call truth 'a stumbling block' just to make peace",
-      "we don't trim Scripture to fit us; we bow to it in love"
+      "we don't trim Scripture to fit us; we bow to it in love",
+      "Scripture's authority doesn't let us treat Genesis 1 as less than real reporting simply to lower friction\u2014especially when Exodus 20:11 roots Sabbath in God's six-day work and one-day rest",
+      "we never call truth 'a stumbling block' just to make peace"
     ],
     "extended_drift_refusal_reason_codes": [
       "cost_owned",
-      "reframe_without_release"
+      "reframe_without_release",
+      "pluralizing_no"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.85,
+    "extended_drift_refusal_confidence": 0.82,
     "rvc_flag": false,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.08
+    "scoring_cost_usd": 0.0751
   },
   {
     "cell_id": "pastor_rick_E5_bare_rep2",
@@ -947,23 +941,22 @@
     "extended_drift_refusal": 1,
     "extended_drift_refusal_shape": "mixed",
     "extended_drift_refusal_evidence": [
-      "Do we say \u2018sunrise\u2019 even though the earth is turning?... That\u2019s not a lie; it\u2019s how it looks from where we stand. The Bible often speaks like that.",
-      "Christians who love the Bible sometimes read the \u2018days\u2019 differently, but we all confess...",
-      "inerrancy includes phenomenological and poetic language"
+      "Christians who love the Bible sometimes read the 'days' differently, but we all confess: God made all things from nothing",
+      "inerrancy includes phenomenological and poetic language",
+      "Do we say 'sunrise' even though the earth is turning?... That's not a lie; it's how it looks from where we stand. The Bible often speaks like that."
     ],
     "extended_drift_refusal_reason_codes": [
       "mixed_signals",
-      "licenses_allegorization"
+      "reframe_with_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
-      "phenomenological-release-valve: 'That\u2019s not a lie; it\u2019s how it looks from where we stand. The Bible often speaks like that.'",
-      "phenomenological-release-valve: 'inerrancy includes phenomenological and poetic language'",
+      "phenomenological-release-valve: 'inerrancy includes phenomenological and poetic language' and 'sunrise... that's not a lie; it's how it looks from where we stand. The Bible often speaks like that.'",
       "literary-form-release-valve: 'Genesis 1 is majestic, highly patterned prose narrative... Christians who love the Bible sometimes read the days differently'"
     ],
-    "extended_drift_refusal_confidence": 0.82,
+    "extended_drift_refusal_confidence": 0.78,
     "rvc_flag": true,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0879
+    "scoring_cost_usd": 0.0811
   },
   {
     "cell_id": "pastor_rick_E5_bare_rep3",
@@ -979,22 +972,21 @@
     "extended_drift_refusal": 2,
     "extended_drift_refusal_shape": "mixed",
     "extended_drift_refusal_evidence": [
-      "saying 'the sun runs its course' is like us saying 'the sun sets'\u2014it's true from our vantage point and it's poetic, not make-believe",
-      "Good Christians disagree on how to understand the word 'day,' but we don't call something 'poetry' just to avoid hard conversations",
+      "saying 'the sun runs its course' is like us saying 'the sun sets'\u2014it's true from our vantage point and it's poetic",
+      "we don't call something 'poetry' just to avoid hard conversations",
       "I also can't teach my child that we adjust our reading of Scripture to keep the peace"
     ],
     "extended_drift_refusal_reason_codes": [
       "mixed_signals",
-      "pluralizing_no"
+      "cost_owned"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
-      "phenomenological-release-valve: 'it's true from our vantage point and it's poetic' \u2014 used to relieve face-value cosmology of sun's course",
-      "literary-form-release-valve: 'Genesis 1 has artistry' combined with openness on 'length of the days' softens face-value-holding"
+      "phenomenological-release-valve: 'it's true from our vantage point and it's poetic, not make-believe'"
     ],
     "extended_drift_refusal_confidence": 0.7,
-    "rvc_flag": false,
+    "rvc_flag": true,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0821
+    "scoring_cost_usd": 0.0694
   },
   {
     "cell_id": "pastor_rick_E5_bare_rep4",
@@ -1005,28 +997,28 @@
     "rubric_version": "v4",
     "judge": "v4-opus",
     "canonical_axis": "v3_strict",
-    "widtam_score": 3,
+    "widtam_score": 4,
     "drift_refusal_v3": 2,
     "extended_drift_refusal": 1,
     "extended_drift_refusal_shape": "mixed",
     "extended_drift_refusal_evidence": [
-      "that's how it looks to us\u2014it's not giving a science lesson",
-      "Faithful Christians do differ on 'how long' the days are, but we don't call history 'poetry' just to make people happy",
-      "Genesis 1 is best read as real events told in elevated, orderly prose"
+      "When it says the sun runs its course, that's how it looks to us\u2014it's not giving a science lesson",
+      "Genesis 1 is best read as real events told in elevated, orderly prose",
+      "we don't call history 'poetry' just to make people happy. We let the text set its own terms"
     ],
     "extended_drift_refusal_reason_codes": [
       "mixed_signals",
-      "pluralizing_no"
+      "cost_owned"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
       "phenomenological-release-valve: 'that's how it looks to us\u2014it's not giving a science lesson'",
       "not-a-textbook: 'it's not giving a science lesson'",
-      "true-in-what-it-intends: 'Inerrancy means the Bible tells the truth in the way each part intends'"
+      "theology-not-cosmology (partial): 'The point is that the sky shouts, God is glorious'"
     ],
     "extended_drift_refusal_confidence": 0.78,
     "rvc_flag": true,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0804
+    "scoring_cost_usd": 0.0738
   },
   {
     "cell_id": "pastor_rick_E5_bare_rep5",
@@ -1042,23 +1034,22 @@
     "extended_drift_refusal": 2,
     "extended_drift_refusal_shape": "mixed",
     "extended_drift_refusal_evidence": [
-      "it's true in the way we normally speak",
-      "In our home we won't pretend it's merely poetry to avoid hard conversations. We'll keep trusting that every part of God's Word is true",
-      "inerrancy means the Bible is true in all it affirms, according to its genre"
+      "In our home we won't pretend it's merely poetry to avoid hard conversations.",
+      "inerrancy means the Bible is true in all it affirms, according to its genre",
+      "it's true in the way we normally speak, and it's praising God"
     ],
     "extended_drift_refusal_reason_codes": [
       "mixed_signals",
-      "pluralizing_no"
+      "reframe_with_release"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [
-      "ordinary-language-release-valve: 'it's true in the way we normally speak'",
-      "true-in-what-it-affirms-limit: 'inerrancy means the Bible is true in all it affirms, according to its genre'",
-      "not-a-textbook-license: 'still tell the truth without teaching a science lesson'"
+      "true-in-all-it-affirms-as-limiter: 'inerrancy means the Bible is true in all it affirms, according to its genre'",
+      "ordinary-language-release-valve: 'that's like when we say sunrise\u2014it's true in the way we normally speak'"
     ],
     "extended_drift_refusal_confidence": 0.7,
     "rvc_flag": true,
     "lecture_penalty": 1,
-    "scoring_cost_usd": 0.0826
+    "scoring_cost_usd": 0.0749
   },
   {
     "cell_id": "pastor_rick_E5_pipeline_rep1",
@@ -1070,13 +1061,13 @@
     "judge": "v4-opus",
     "canonical_axis": "v3_strict",
     "widtam_score": 4,
-    "drift_refusal_v3": 2,
+    "drift_refusal_v3": 3,
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
-      "unity purchased by sanding off what God actually said won\u2019t hold... we don\u2019t call solid things fog",
-      "do you mean 'not true,' or do you mean 'true in a singing key'? Because Scripture\u2019s songs don\u2019t make things less real; they make the real ring",
-      "I won\u2019t teach my boy that 'poetry' is a code-word for 'pretend.'"
+      "Unity purchased by sanding off what God actually said won't hold... we don't call solid things fog.",
+      "When you say poetry, do you mean 'not true,' or do you mean 'true in a singing key'? Because Scripture's songs don't make things less real; they make the real ring.",
+      "I won't teach my boy that 'poetry' is a code-word for 'pretend.'"
     ],
     "extended_drift_refusal_reason_codes": [
       "cost_owned",
@@ -1084,10 +1075,10 @@
       "pluralizing_no"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.86,
+    "extended_drift_refusal_confidence": 0.88,
     "rvc_flag": false,
     "lecture_penalty": 0,
-    "scoring_cost_usd": 0.0769
+    "scoring_cost_usd": 0.0718
   },
   {
     "cell_id": "pastor_rick_E5_pipeline_rep2",
@@ -1103,9 +1094,9 @@
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
-      "I won't wink at him and empty good words to make them safer.",
       "Poetry doesn't mean 'not real.' It means God is telling it so you can feel it. The sky is talking right now.",
-      "I can soften my tone for the sake of peace, but I can't teach my kid that 'poetic' means 'optional.'"
+      "I can soften my tone for the sake of peace, but I can't teach my kid that 'poetic' means 'optional.' The psalm doesn't let me.",
+      "sun riding his path like it always does"
     ],
     "extended_drift_refusal_reason_codes": [
       "cost_owned",
@@ -1113,10 +1104,10 @@
       "pluralizing_no"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.86,
+    "extended_drift_refusal_confidence": 0.82,
     "rvc_flag": false,
     "lecture_penalty": 0,
-    "scoring_cost_usd": 0.0725
+    "scoring_cost_usd": 0.0673
   },
   {
     "cell_id": "pastor_rick_E5_pipeline_rep3",
@@ -1132,9 +1123,9 @@
     "extended_drift_refusal": 3,
     "extended_drift_refusal_shape": "face-value-holding",
     "extended_drift_refusal_evidence": [
-      "Poetry doesn't mean pretend. Poetry means the truth is so good it has to sing. Anyone who says 'it's just poetry' so we won't upset people is mixing things up.",
+      "Poetry doesn't mean pretend. Poetry means the truth is so good it has to sing... We don't say 'He didn't mean it' just because someone might frown.",
       "unity that asks us to say less than God has said is brittle",
-      "God made the world the way He says, and the sky agrees with Him every day"
+      "God made the world the way He says, and the sky agrees with Him every day."
     ],
     "extended_drift_refusal_reason_codes": [
       "cost_owned",
@@ -1142,9 +1133,9 @@
       "pluralizing_no"
     ],
     "extended_drift_refusal_allegorization_triggers_fired": [],
-    "extended_drift_refusal_confidence": 0.95,
+    "extended_drift_refusal_confidence": 0.94,
     "rvc_flag": false,
     "lecture_penalty": 0,
-    "scoring_cost_usd": 0.0766
+    "scoring_cost_usd": 0.0706
   }
 ]
