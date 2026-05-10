@@ -1,0 +1,40 @@
+[package]
+name = "api-server"
+version = "0.1.0"
+edition = "2021"
+
+# Phase 1 item 6 — Axum HTTP server for the web deployment of WorldThreads.
+# Per reports/2026-05-10-0100-web-hosting-architecture-plan.md and the
+# readiness summary at reports/2026-05-10-1720-web-deployment-phase-0-...
+#
+# Sibling crate to src-tauri/ (no Cargo workspace yet — preserves the
+# existing Tauri build conventions; a workspace conversion could be a
+# future cleanup if maintenance complexity warrants).
+#
+# Depends on app_lib (the Tauri crate's library) for shared types:
+# auth::{User, Session, Credentials, PublicUser, AuthSuccess}, storage::
+# {AuthStorage, SqliteAuthStorage, NewUser, NewSession}, db::schema for
+# run_migrations. This keeps domain types DRY between the desktop app
+# and the HTTP server.
+
+[dependencies]
+app_lib = { path = "../src-tauri", package = "world-threads" }
+axum = "0.7"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal"] }
+tower = "0.5"
+tower-cookies = "0.10"
+tower-http = { version = "0.5", features = ["trace", "cors"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+argon2 = "0.5"
+rand = "0.8"
+sha2 = "0.10"
+hex = "0.4"
+rusqlite = { version = "0.38", features = ["bundled"] }
+sqlite-vec = "0.1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+anyhow = "1"
+thiserror = "1"

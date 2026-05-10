@@ -5,6 +5,9 @@ frontend/dist/
 
 # Rust
 src-tauri/target/
+api-server/target/
+api-server/Cargo.lock
+api-server/wt-api-dev.db*
 
 # Stronghold vault & salt (contains encrypted secrets)
 vault.hold
