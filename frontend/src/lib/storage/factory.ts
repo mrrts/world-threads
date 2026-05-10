@@ -27,8 +27,9 @@
 import type { ContentKey } from "./encryption";
 import type { ContentStore } from "./contentStore";
 import { IndexedDBContentStore } from "./contentStore";
-import { type StorageMode } from "./types";
+import { type Character, type StorageMode, type World } from "./types";
 import { getRuntimeKind } from "../transport";
+import { api } from "../tauri";
 
 /** Factory dependencies. Web mode requires a live ContentKey derived
  *  from the user's passphrase at login; Tauri mode requires nothing. */
@@ -63,46 +64,69 @@ export function createContentStore(deps: CreateContentStoreDeps = {}): ContentSt
   return new IndexedDBContentStore(deps.dbName ?? "worldthreads-content-v1", deps.contentKey);
 }
 
-/** Tauri-mode content store. Phase 0 stub: throws on every method.
- *  Phase 1 fills in by delegating to the existing tauri.ts API
- *  (api.listWorlds / api.getWorld / api.updateWorld / api.deleteWorld
- *  / api.listCharacters / api.getCharacter / api.updateCharacter / etc.).
- *  Existing frontend code continues to call tauri.ts directly until the
- *  Phase 1 refactor lands; this stub exists only so the factory's
- *  return-type is satisfied symmetrically. */
+/** Tauri-mode content store. Phase 1 implementation: delegates to the
+ *  existing tauri.ts api.* methods, which are themselves transport-routed
+ *  via the alias landed in commit e68601c so the data path is uniform.
+ *
+ *  Type boundary: storage/types.ts defines a forward-compatible subset
+ *  shape for World + Character (intentionally lighter than the production
+ *  shape exported from tauri.ts). Casting at the boundary is safe under
+ *  structural typing because the field names overlap and the runtime
+ *  serializer doesn't care about extra fields. Phase 2 will reconcile the
+ *  type definitions when content tables are mirrored fully across both
+ *  stores; for now the casts let both impls satisfy the same interface
+ *  without forcing immediate domain-type unification.
+ *
+ *  putWorld + putCharacter assume the entity already exists (delegate to
+ *  api.updateWorld / api.updateCharacter which both UPDATE not UPSERT).
+ *  Creation continues to go through api.createWorld / api.createCharacter
+ *  in the existing call paths; the ContentStore is for steady-state CRUD
+ *  not first-time creation. Phase 2 may add upsert helpers if needed. */
 export class TauriContentStore implements ContentStore {
-  private static unimplemented(method: string): never {
-    throw new Error(
-      `TauriContentStore.${method}: Phase 1 stub — frontend currently calls tauri.ts directly. ` +
-        `Phase 1 wires this to delegate to the existing API.`,
+  async listWorlds(): Promise<World[]> {
+    return (await api.listWorlds()) as unknown as World[];
+  }
+
+  async getWorld(world_id: string): Promise<World | null> {
+    try {
+      return (await api.getWorld(world_id)) as unknown as World;
+    } catch {
+      // api.getWorld throws on not-found; ContentStore semantics return null.
+      return null;
+    }
+  }
+
+  async putWorld(world: World): Promise<void> {
+    await api.updateWorld(world as unknown as Parameters<typeof api.updateWorld>[0]);
+  }
+
+  async deleteWorld(world_id: string): Promise<void> {
+    await api.deleteWorld(world_id);
+  }
+
+  async listCharacters(world_id: string): Promise<Character[]> {
+    return (await api.listCharacters(world_id)) as unknown as Character[];
+  }
+
+  async getCharacter(character_id: string): Promise<Character | null> {
+    try {
+      return (await api.getCharacter(character_id)) as unknown as Character;
+    } catch {
+      return null;
+    }
+  }
+
+  async putCharacter(character: Character): Promise<void> {
+    await api.updateCharacter(
+      character as unknown as Parameters<typeof api.updateCharacter>[0],
     );
   }
 
-  async listWorlds(): Promise<never> {
-    return TauriContentStore.unimplemented("listWorlds");
+  async deleteCharacter(character_id: string): Promise<void> {
+    await api.deleteCharacter(character_id);
   }
-  async getWorld(_id: string): Promise<never> {
-    return TauriContentStore.unimplemented("getWorld");
-  }
-  async putWorld(_w: unknown): Promise<never> {
-    return TauriContentStore.unimplemented("putWorld");
-  }
-  async deleteWorld(_id: string): Promise<never> {
-    return TauriContentStore.unimplemented("deleteWorld");
-  }
-  async listCharacters(_world: string): Promise<never> {
-    return TauriContentStore.unimplemented("listCharacters");
-  }
-  async getCharacter(_id: string): Promise<never> {
-    return TauriContentStore.unimplemented("getCharacter");
-  }
-  async putCharacter(_c: unknown): Promise<never> {
-    return TauriContentStore.unimplemented("putCharacter");
-  }
-  async deleteCharacter(_id: string): Promise<never> {
-    return TauriContentStore.unimplemented("deleteCharacter");
-  }
+
   async close(): Promise<void> {
-    /* no-op */
+    /* no-op for Tauri — IPC channel managed by Tauri runtime */
   }
 }
