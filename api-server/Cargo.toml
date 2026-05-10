@@ -38,3 +38,11 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 anyhow = "1"
 thiserror = "1"
+# Stripe skeleton (Phase 1 item 7): hand-rolled types + reqwest for the
+# few outbound calls (Checkout Session create, Portal Session create);
+# webhook signature verification via hmac+sha2. async-stripe SDK is
+# heavyweight; sticking to direct HTTP keeps the skeleton honest and
+# minimizes compile time. Phase 1+ may swap if SDK ergonomics pay off.
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+hmac = "0.12"
+subtle = "2.6"

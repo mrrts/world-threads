@@ -2441,6 +2441,53 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);"
     )?;
 
+    // ── Web-deployment Phase 1 item 7 — subscriptions + stripe events ───
+    //
+    // Per the web-hosting architecture plan § X (Stripe integration). The
+    // subscriptions table tracks Stripe's view of each user's billing
+    // state; stripe_events is an append-only ledger of received webhook
+    // events keyed by Stripe's event id for idempotency (Stripe may
+    // deliver the same webhook multiple times under network conditions).
+    //
+    // tier values: "trial" / "hearth" / "town" / "compendium" per the
+    // recommended subscription tiers at architecture plan § VII.2. The
+    // CHECK constraint accepts any TEXT to stay forward-compatible if
+    // Ryan changes the tier names; runtime code validates against the
+    // canonical set.
+    //
+    // status mirrors Stripe's subscription status taxonomy: "trialing"
+    // / "active" / "past_due" / "canceled" / "unpaid" / "incomplete" /
+    // "incomplete_expired" / "paused".
+    //
+    // Scaffolding only in Phase 1 item 7 commit: tables created; the
+    // Axum route handlers in api-server/ that write into these tables
+    // ship in the same commit as stubs.
+    conn.execute_batch(
+        "CREATE TABLE IF NOT EXISTS subscriptions (
+            user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+            stripe_customer_id TEXT NOT NULL,
+            stripe_subscription_id TEXT,
+            tier TEXT NOT NULL DEFAULT 'trial',
+            status TEXT NOT NULL DEFAULT 'trialing',
+            current_period_start TEXT,
+            current_period_end TEXT,
+            trial_end TEXT,
+            cancel_at_period_end INTEGER NOT NULL DEFAULT 0,
+            created_at TEXT NOT NULL DEFAULT (datetime('now')),
+            updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_subscriptions_customer ON subscriptions(stripe_customer_id);
+        CREATE INDEX IF NOT EXISTS idx_subscriptions_subscription ON subscriptions(stripe_subscription_id);
+
+        CREATE TABLE IF NOT EXISTS stripe_events (
+            event_id TEXT PRIMARY KEY,
+            event_type TEXT NOT NULL,
+            payload_json TEXT NOT NULL,
+            processed_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_stripe_events_type ON stripe_events(event_type);"
+    )?;
+
     // ── VGUS vows + event log + invocations ─────────────────────────────
     //
     // Vow-Governed Unattended Substrate (VGUS) Stage 1 Phase 0 instrumentation.

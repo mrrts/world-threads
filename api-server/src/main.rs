@@ -56,6 +56,8 @@ use sha2::{Digest, Sha256};
 use tower_cookies::{Cookie, Cookies, CookieManagerLayer};
 use tracing::info;
 
+mod billing;
+
 // ── Shared app state ────────────────────────────────────────────────────
 
 /// Carried across all route handlers via axum's State extractor. The
@@ -324,7 +326,7 @@ async fn extract_user(state: &AppState, headers: &HeaderMap) -> Option<User> {
 // ── Error type ──────────────────────────────────────────────────────────
 
 #[derive(Debug, thiserror::Error)]
-enum ApiError {
+pub enum ApiError {
     #[error("bad request: {0}")]
     BadRequest(String),
     #[error("unauthorized: {0}")]
@@ -334,13 +336,13 @@ enum ApiError {
 }
 
 impl ApiError {
-    fn bad_request(m: impl Into<String>) -> Self {
+    pub fn bad_request(m: impl Into<String>) -> Self {
         ApiError::BadRequest(m.into())
     }
-    fn unauthorized(m: impl Into<String>) -> Self {
+    pub fn unauthorized(m: impl Into<String>) -> Self {
         ApiError::Unauthorized(m.into())
     }
-    fn server(m: impl Into<String>) -> Self {
+    pub fn server(m: impl Into<String>) -> Self {
         ApiError::Server(m.into())
     }
 }
@@ -397,13 +399,30 @@ async fn main() -> Result<()> {
         db: Arc::new(Mutex::new(conn)),
     };
 
-    let app = Router::new()
-        .route("/health", get(health))
+    let billing_state = billing::BillingState {
+        db: state.db.clone(),
+        stripe_api_key: std::env::var("STRIPE_API_KEY").ok(),
+        stripe_webhook_secret: std::env::var("STRIPE_WEBHOOK_SECRET").ok(),
+        tier_price_map: billing::TierPriceMap::from_env(),
+    };
+
+    let auth_routes = Router::new()
         .route("/api/v1/auth/signup", post(signup))
         .route("/api/v1/auth/login", post(login))
         .route("/api/v1/auth/logout", post(logout))
-        .layer(CookieManagerLayer::new())
         .with_state(state);
+
+    let billing_routes = Router::new()
+        .route("/api/v1/billing/checkout-session", post(billing::create_checkout_session))
+        .route("/api/v1/billing/portal-session", post(billing::create_portal_session))
+        .route("/api/v1/billing/webhook", post(billing::webhook))
+        .with_state(billing_state);
+
+    let app = Router::new()
+        .route("/health", get(health))
+        .merge(auth_routes)
+        .merge(billing_routes)
+        .layer(CookieManagerLayer::new());
 
     let bind_addr = std::env::var("WT_API_BIND").unwrap_or_else(|_| "127.0.0.1:8787".into());
     info!("api-server listening on {bind_addr}");
