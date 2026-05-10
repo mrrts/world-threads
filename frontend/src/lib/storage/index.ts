@@ -29,3 +29,10 @@ export {
 
 export type { ContentStore } from "./contentStore";
 export { IndexedDBContentStore } from "./contentStore";
+
+export type { CreateContentStoreDeps } from "./factory";
+export {
+  TauriContentStore,
+  createContentStore,
+  detectStorageMode,
+} from "./factory";
