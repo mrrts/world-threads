@@ -1,6 +1,18 @@
-import { invoke } from "@tauri-apps/api/core";
+// Phase 1 of web-deployment: invoke now goes through the transport
+// abstraction so the same lib/tauri.ts wrappers work for both Tauri
+// (IPC bridge) and web (HTTP fetch to /api/v1/<cmd>) runtimes. The
+// transport singleton picks the right backend at module load.
+//
+// appDataDir + Stronghold remain Tauri-specific. They're used only by
+// the api-key encrypted-vault path (around line 440); the web-mode
+// equivalent is server-side encrypted storage per the architecture
+// plan § VI / § XXI. Web mode never reaches that code path because the
+// signup flow doesn't surface the Stronghold UI.
+import { transport } from "./transport";
 import { appDataDir } from "@tauri-apps/api/path";
 import { Client, Stronghold } from "@tauri-apps/plugin-stronghold";
+
+const invoke = transport.invoke.bind(transport);
 
 /** Summary length mode for the on-demand summary modal. "auto" lets the
  *  model pick a length appropriate to the conversation; the named tiers
