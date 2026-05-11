@@ -98,11 +98,25 @@ export interface ScorePhrase {
 }
 
 let audioCtx: AudioContext | null = null;
-const pulseWaveCache = new Map<number, PeriodicWave>();
+let pulseWaveCache = new Map<number, PeriodicWave>();
 let noiseBuffer: AudioBuffer | null = null;
 
 function getContext(): AudioContext {
-  if (!audioCtx) audioCtx = new AudioContext();
+  // Recreate if the prior context was closed (rare; doesn't recover via resume).
+  // PeriodicWave + AudioBuffer instances belong to the context that created
+  // them; reset the caches so they get rebuilt against the new context.
+  if (!audioCtx || audioCtx.state === "closed") {
+    audioCtx = new AudioContext();
+    pulseWaveCache = new Map();
+    noiseBuffer = null;
+  }
+  // After macOS sleep/wake, the context transitions to "suspended" and never
+  // resumes on its own — osc.start() and noteOn() schedule against a frozen
+  // clock and silently produce no audio. resume() is async/fire-and-forget;
+  // the next scheduling call after wake will land against the resumed clock.
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume().catch(() => {});
+  }
   return audioCtx;
 }
 
