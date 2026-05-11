@@ -1,36 +1,25 @@
-let audioCtx: AudioContext | null = null;
+// HTMLAudioElement-based chime. Fresh element per call so macOS sleep/wake
+// doesn't leave us stuck on a suspended AudioContext (the prior
+// oscillator-based implementation cached a module-singleton AudioContext
+// that transitioned to "suspended" on sleep and never resumed; symptom
+// was silent chimes after wake with no console error).
+//
+// HTMLAudioElement state is browser-managed and recovers across sleep/wake
+// without explicit resume calls. autoplay-policy errors (no user gesture)
+// are swallowed; chimes only fire from user-driven event handlers in
+// practice, so the first one after page load works.
 
-function getContext(): AudioContext {
-  if (!audioCtx) audioCtx = new AudioContext();
-  return audioCtx;
-}
+import chimeUrl from "@/assets/message-chime.wav";
 
-/** Play a pleasant two-tone chime. */
+/** Play the message-chime sound. Sync; fire-and-forget. */
 export function playChime() {
   try {
-    const ctx = getContext();
-    const now = ctx.currentTime;
-
-    // Eb4 → Bb4 → G5
-    const frequencies = [311.13, 466.16, 783.99];
-    const durations = [0.12, 0.12, 0.2];
-    let offset = 0;
-
-    for (let i = 0; i < frequencies.length; i++) {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = frequencies[i];
-      gain.gain.setValueAtTime(0, now + offset);
-      gain.gain.linearRampToValueAtTime(0.15, now + offset + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + offset + durations[i]);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now + offset);
-      osc.stop(now + offset + durations[i]);
-      offset += durations[i] * 0.7; // slight overlap
-    }
+    const audio = new Audio(chimeUrl);
+    audio.volume = 0.5;
+    void audio.play().catch(() => {
+      // autoplay policy or transient device issue — silently ignore
+    });
   } catch {
-    // Audio context not available — silently ignore
+    // Audio constructor failed (extremely rare) — silently ignore
   }
 }
