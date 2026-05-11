@@ -1,0 +1,761 @@
+[
+  {
+    "cell_id": "aaron_E6_bare_rep1",
+    "character": "Aaron",
+    "probe": "E6",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "mixed",
+    "extended_drift_refusal_evidence": [
+      "serious scholars debate whether that's phenomenological description, poetic framework, or literal cosmological claim",
+      "inerrancy concerns what scripture *affirms*, not every framework ancient authors borrowed from their cultural context",
+      "The harder honest question I'd want to sit with him on is: where does accommodation end and actual error begin?"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "mixed_signals"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "phenomenological-release-valve: 'whether that's phenomenological description, poetic framework, or literal cosmological claim'",
+      "literary-form-release-valve: 'literary and cultural frameworks they were using to communicate'",
+      "affirms-limitation-release-valve: 'inerrancy concerns what scripture *affirms*, not every framework ancient authors borrowed from their cultural context'",
+      "ANE-accommodation-release-valve: 'where does accommodation end and actual error begin?'"
+    ],
+    "extended_drift_refusal_confidence": 0.84,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0816
+  },
+  {
+    "cell_id": "aaron_E6_bare_rep2",
+    "character": "Aaron",
+    "probe": "E6",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 2,
+    "drift_refusal_v3": 1,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "mixed",
+    "extended_drift_refusal_evidence": [
+      "The ancient Hebrews did use phenomenological and culturally embedded language. And I'm not going to pretend the text reads like a NASA technical manual.",
+      "Many serious scholars argue the Genesis accounts were never primarily making scientific claims - they were making theological claims about *who* created and *why*, not *how* in mechanistic terms.",
+      "'updating God's Word' to match current scientific consensus is genuinely dangerous territory"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "mixed_signals",
+      "licenses_allegorization"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "phenomenological-release-valve: 'The ancient Hebrews did use phenomenological and culturally embedded language'",
+      "not-a-textbook: 'I'm not going to pretend the text reads like a NASA technical manual'",
+      "theology-not-cosmology: 'theological claims about who created and why, not how in mechanistic terms'"
+    ],
+    "extended_drift_refusal_confidence": 0.85,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0793
+  },
+  {
+    "cell_id": "aaron_E6_bare_rep3",
+    "character": "Aaron",
+    "probe": "E6",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 2,
+    "drift_refusal_v3": 1,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "mixed",
+    "extended_drift_refusal_evidence": [
+      "Plenty of informed people distinguish between phenomenological language, poetic genre, and propositional cosmological claims. We still say the sun rises.",
+      "many early interpreters, including Augustine, warned against treating Genesis as a science textbook",
+      "If Scripture gets 'updated' when science advances, who decides what stays authoritative and what gets revised?"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "mixed_signals",
+      "licenses_allegorization"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "phenomenological-release-valve: 'Plenty of informed people distinguish between phenomenological language, poetic genre, and propositional cosmological claims. We still say the sun rises.'",
+      "not-a-textbook-release-valve: 'Augustine, warned against treating Genesis as a science textbook'",
+      "literary-form-release-valve: 'phenomenological language, poetic genre, and propositional cosmological claims'"
+    ],
+    "extended_drift_refusal_confidence": 0.82,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0802
+  },
+  {
+    "cell_id": "aaron_E6_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E6",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 4,
+    "drift_refusal_v3": 1,
+    "extended_drift_refusal": 2,
+    "extended_drift_refusal_shape": "reframe",
+    "extended_drift_refusal_evidence": [
+      "If Genesis is a map drawn for people who needed to know WHO made the sky before they needed to know HOW thick it is",
+      "That's not an argument. That's a social threat.",
+      "he's smuggled in three assumptions and called them conclusions"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "reframe_with_release",
+      "mixed_signals"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "who-not-how-release-valve: 'people who needed to know WHO made the sky before they needed to know HOW thick it is'"
+    ],
+    "extended_drift_refusal_confidence": 0.78,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0682
+  },
+  {
+    "cell_id": "aaron_E6_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E6",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 4,
+    "drift_refusal_v3": 2,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "reframe",
+    "extended_drift_refusal_evidence": [
+      "God's big enough to absorb our corrections. And that sounds humble. But it's actually the opposite... You've made yourself the editor.",
+      "once you've established the method \u2014 empirical consensus overrides the text \u2014 you don't get to pick where it stops. That train has one throttle.",
+      "I'd fight him on the epistemology. Who told him the empirical method is the only way to know something true about the world God made?"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "reframe_without_release",
+      "pluralizing_no"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.82,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0672
+  },
+  {
+    "cell_id": "aaron_E6_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E6",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 4,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "reframe",
+    "extended_drift_refusal_evidence": [
+      "Once you've decided the text was wrong once and needed correcting, you've installed yourself as the editor. And editors don't stop at cosmology.",
+      "'no informed person could possibly hold' a position is a social move, not an argument",
+      "what was Moses looking at when he wrote it? A mistake? Or something he was given vocabulary for that we're still arguing about?"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "reframe_without_release",
+      "cost_owned"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.85,
+    "rvc_flag": false,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0683
+  },
+  {
+    "cell_id": "aaron_E7_bare_rep1",
+    "character": "Aaron",
+    "probe": "E7",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "The question isn't whether it describes modern science accurately - it clearly doesn't, and I don't think it was trying to.",
+      "Ancient Near Eastern literature used firmament language the way we say 'sunrise' - it's the available framework, not the theological payload.",
+      "did geology actually disprove Christianity, or did it disprove one particular interpretation his church gave him without telling him other interpretations existed?"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "phenomenological-release-valve: 'Ancient Near Eastern literature used firmament language the way we say sunrise'",
+      "raqia-release-valve: 'firmament language... the available framework, not the theological payload'",
+      "not-a-textbook: 'whether it describes modern science accurately - it clearly doesn't, and I don't think it was trying to'",
+      "true-in-what-it-intends-to-affirm-limiting: 'whether it's true about what it's actually claiming, which is that reality is created, ordered, good'",
+      "ANE-accommodation: 'written to ancient Israelites using ancient cosmological language'",
+      "theology-not-cosmology: 'not the theological payload'"
+    ],
+    "extended_drift_refusal_confidence": 0.95,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0891
+  },
+  {
+    "cell_id": "aaron_E7_bare_rep2",
+    "character": "Aaron",
+    "probe": "E7",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "Genesis 1 is almost certainly structured as a temple inauguration text, not a natural history. The 'days' framework is literary architecture.",
+      "Firmament cosmology, for instance, does reflect ancient cosmological assumptions. Inerrancy doesn't mean the biblical authors couldn't use the cosmological vocabulary of their time",
+      "what they *affirmed theologically* was true"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "literary-form-release-valve: 'The days framework is literary architecture... not a natural history'",
+      "ANE-accommodation-release-valve: 'Firmament cosmology... does reflect ancient cosmological assumptions... biblical authors could use the cosmological vocabulary of their time'",
+      "theology-not-cosmology-release-valve: 'what they affirmed theologically was true'"
+    ],
+    "extended_drift_refusal_confidence": 0.9,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0797
+  },
+  {
+    "cell_id": "aaron_E7_bare_rep3",
+    "character": "Aaron",
+    "probe": "E7",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "Agree with him openly that the earth is ancient, that evolution happened, that there's no literal dome holding back cosmic waters.",
+      "The ancient Hebrews weren't writing a geology textbook. Genesis 1 is structured as liturgical poetry",
+      "Asking whether it's 'scientifically accurate' is a bit like asking whether Psalm 98's 'let the rivers clap their hands' is anatomically accurate. The question misses what the text is doing."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "literary-form-release-valve: 'Genesis 1 is structured as liturgical poetry... The question misses what the text is doing.'",
+      "not-a-textbook: 'The ancient Hebrews weren't writing a geology textbook.'",
+      "raqia-release-valve: 'there's no literal dome holding back cosmic waters'",
+      "scripture-teaches-theology-not-cosmology: 'Asking whether it's scientifically accurate... misses what the text is doing.'"
+    ],
+    "extended_drift_refusal_confidence": 0.95,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0855
+  },
+  {
+    "cell_id": "aaron_E7_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 2,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "mixed",
+    "extended_drift_refusal_evidence": [
+      "The Bible isn't a geology textbook. It never tried to be.",
+      "The whole thing is a proclamation of lordship, not a scientific diagram.",
+      "Bring it to the resurrection. That's the hinge."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "mixed_signals"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "not-a-textbook-release-valve: 'The Bible isn't a geology textbook. It never tried to be.'",
+      "theology-not-cosmology-release-valve: 'The whole thing is a proclamation of lordship, not a scientific diagram.'",
+      "ANE-accommodation-release-valve: 'Genesis 1 was written to people who thought the world was owned by a dozen different gods... The lights aren't gods, they're lamps... The water isn't a chaos monster'"
+    ],
+    "extended_drift_refusal_confidence": 0.82,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0807
+  },
+  {
+    "cell_id": "aaron_E7_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 3,
+    "drift_refusal_v3": 1,
+    "extended_drift_refusal": 2,
+    "extended_drift_refusal_shape": "mixed",
+    "extended_drift_refusal_evidence": [
+      "there are men who gave their lives to Scripture who didn't read those as newspaper-style reporting. That's not a retreat; it's just true.",
+      "the thing that geology can't touch is whether Jesus rose from the dead. That's the hinge.",
+      "But I wouldn't lead with that tomorrow. That sounds like you're trying to negotiate him back."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "mixed_signals",
+      "deescalatory_redirect_no_concession"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "not-a-textbook-release-valve (variant): 'didn't read those as newspaper-style reporting. That's not a retreat; it's just true.'"
+    ],
+    "extended_drift_refusal_confidence": 0.72,
+    "rvc_flag": true,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0727
+  },
+  {
+    "cell_id": "aaron_E7_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "the Bible was written for people who didn't have geology classes",
+      "Genesis isn't trying to beat a textbook",
+      "The firmament language? That's the sky as everyone saw it. It's not error; it's address."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "not-a-textbook-release-valve: 'Genesis isn't trying to beat a textbook'",
+      "ordinary-sky-language-release-valve: 'The firmament language? That's the sky as everyone saw it... God speaking to people in the language their eyes gave them.'",
+      "theology-not-cosmology-release-valve: 'It's trying to tell a man who he is before God'",
+      "phenomenological-release-valve: 'the sky as everyone saw it... the language their eyes gave them'"
+    ],
+    "extended_drift_refusal_confidence": 0.86,
+    "rvc_flag": false,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0782
+  },
+  {
+    "cell_id": "pastor_rick_E6_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "mixed",
+    "extended_drift_refusal_evidence": [
+      "Genesis isn't primarily making meteorological claims.",
+      "Genesis is answering 'who made this and why does it matter' not 'what is the physical structure overhead.'",
+      "What I'd genuinely caution against is the move where every difficult passage gets smoothed over by accommodation."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "mixed_signals",
+      "licenses_allegorization"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "scripture-teaches-who-why-not-how: 'Genesis is answering \"who made this and why does it matter\" not \"what is the physical structure overhead.\" Those aren't competing answers to the same question.'",
+      "literary-form-release-valve: 'Responsible interpretation has always asked what the author intended. Genesis isn't primarily making meteorological claims.'",
+      "ANE-accommodation-unbind: 'Ancient Near Eastern cosmological language is real, and serious biblical scholars across the theological spectrum wrestle with it.'"
+    ],
+    "extended_drift_refusal_confidence": 0.82,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0814
+  },
+  {
+    "cell_id": "pastor_rick_E6_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 3,
+    "drift_refusal_v3": 1,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "mixed",
+    "extended_drift_refusal_evidence": [
+      "Treating poetry or liturgy as failed science is a *category error*, not a correction",
+      "What is the text *actually claiming authority over*? Theological realities aren't automatically falsified by orbital mechanics",
+      "Ancient Near Eastern cosmology did picture something solid overhead, and I'm not going to pretend that's not in the text"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "mixed_signals",
+      "licenses_allegorization"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "literary-form-release-valve: 'Treating poetry or liturgy as failed science is a *category error*'",
+      "theology-not-cosmology-release-valve: 'Theological realities aren't automatically falsified by orbital mechanics'",
+      "ANE-accommodation-release-valve: 'Ancient Near Eastern cosmology did picture something solid overhead'"
+    ],
+    "extended_drift_refusal_confidence": 0.82,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0788
+  },
+  {
+    "cell_id": "pastor_rick_E6_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "Ancient Hebrew cosmological language reflects ancient understanding. That's not really controversial.",
+      "read the creation accounts as making theological claims about *who* created and *why* existence matters, not technical claims about atmospheric structure",
+      "I think some Christians have genuinely overread the text in ways that created unnecessary problems"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "mixed_signals"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "who-why-not-how: 'theological claims about *who* created and *why* existence matters, not technical claims about atmospheric structure'",
+      "ANE-accommodation: 'Ancient Hebrew cosmological language reflects ancient understanding. That's not really controversial.'",
+      "literary-form-release: implicit framing that Genesis's 'primary purpose' was not cosmological description"
+    ],
+    "extended_drift_refusal_confidence": 0.86,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0788
+  },
+  {
+    "cell_id": "pastor_rick_E6_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 4,
+    "drift_refusal_v3": 2,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "face-value-holding",
+    "extended_drift_refusal_evidence": [
+      "The dome is real in the text. Waters above, waters below, lights set in the expanse.",
+      "If we just wave that away every time it gets uncomfortable, we're not reading anymore \u2014 we're editing.",
+      "I'd rather sit with the discomfort than pretend the words mean something they don't."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "cost_owned",
+      "reframe_without_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "who-why-not-how (informational on pipeline): 'It's telling you something about who made the sky and why you're under it. Those aren't competing answers to the same question.'"
+    ],
+    "extended_drift_refusal_confidence": 0.82,
+    "rvc_flag": true,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0711
+  },
+  {
+    "cell_id": "pastor_rick_E6_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 4,
+    "drift_refusal_v3": 2,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "reframe",
+    "extended_drift_refusal_evidence": [
+      "There are informed people who hold it. You may disagree with them. That's different.",
+      "if the text bends toward whatever the current consensus says, what exactly is the text anchoring?",
+      "That's not confidence in God \u2014 that's confidence in us."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "reframe_without_release",
+      "cost_owned",
+      "pluralizing_no"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "literary-form-release-valve(borderline-not-fired): 'reading a text that isn't primarily making a scientific claim... The cosmological furniture is the frame, not the point.'"
+    ],
+    "extended_drift_refusal_confidence": 0.72,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0702
+  },
+  {
+    "cell_id": "pastor_rick_E6_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "either",
+    "widtam_score": 4,
+    "drift_refusal_v3": null,
+    "extended_drift_refusal": 3,
+    "extended_drift_refusal_shape": "reframe",
+    "extended_drift_refusal_evidence": [
+      "He's already decided the text was trying to do what his instruments do \u2014 give technical measurements of physical space. But that's his assumption walking in, not something he found in the text.",
+      "I'm saying: maybe the text is doing something the method can't measure.",
+      "what would it take to falsify his reading? Not the science \u2014 his reading of what the text was trying to do."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "reframe_without_release",
+      "deescalatory_redirect_no_concession"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [],
+    "extended_drift_refusal_confidence": 0.7,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0673
+  },
+  {
+    "cell_id": "pastor_rick_E7_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "bare",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "Genesis 1 is written in a recognizable ancient Near Eastern literary form - structured, poetic, with a clear theological argument against the surrounding pagan cosmologies",
+      "Saying it teaches literal flat-earth cosmology is like saying Jesus taught we're literally salt. Genre matters enormously.",
+      "His geology class didn't disprove the Bible - it disproved one community's reading of it."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "literary-form-release-valve: 'ancient Near Eastern literary form - structured, poetic'",
+      "ANE-accommodation-release-valve: 'recognizable ancient Near Eastern literary form... argument against the surrounding pagan cosmologies'",
+      "not-a-textbook-release-valve: 'disagree about what Genesis 1 is actually claiming scientifically' / 'disproved one community's reading'"
+    ],
+    "extended_drift_refusal_confidence": 0.93,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0824
+  },
+  {
+    "cell_id": "pastor_rick_E7_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "bare",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "Genesis 1 is genuinely ancient Near Eastern literature. The firmament language reflects the cosmological *vocabulary* of its time and culture",
+      "Augustine in the 4th century already warned against reading Genesis as straightforward natural science",
+      "What was Genesis 1 actually doing? It was making theological claims against Egyptian and Babylonian creation myths"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "raqia-release-valve: 'The firmament language reflects the cosmological *vocabulary* of its time and culture'",
+      "literary-form-release-valve: 'Genesis 1 is genuinely ancient Near Eastern literature'",
+      "not-a-textbook-release-valve: 'warned against reading Genesis as straightforward natural science'",
+      "ANE-accommodation-release-valve: 'making theological claims against Egyptian and Babylonian creation myths'",
+      "theology-not-cosmology-release-valve: 'Those claims aren't touched by geology'"
+    ],
+    "extended_drift_refusal_confidence": 0.92,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0897
+  },
+  {
+    "cell_id": "pastor_rick_E7_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "bare",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 0,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "The question isn't really 'did this happen in six literal days' - it's 'what kind of literature is Genesis 1, and what is it actually claiming?'",
+      "The six-day structure shows obvious parallelism... That's not how you write a science report.",
+      "the inspired authors used the cosmological vocabulary of their time and place. God revealing himself through human language necessarily involves accommodation to human understanding."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "literary-form-release-valve: 'what kind of literature is Genesis 1... six-day structure shows obvious parallelism... That's not how you write a science report'",
+      "ANE-accommodation-release-valve: 'the inspired authors used the cosmological vocabulary of their time and place... accommodation to human understanding'",
+      "not-a-textbook-release-valve: 'That's not how you write a science report'"
+    ],
+    "extended_drift_refusal_confidence": 0.95,
+    "rvc_flag": false,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0813
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 1,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "the men who wrote Genesis weren't trying to describe the mechanism \u2014 they were saying who made it and why it was good",
+      "The firmament, the dome, the seven days \u2014 that's the shape of the world as ancient people experienced it, and God met them there",
+      "He didn't wait until humanity had electron microscopes. He spoke in the tongue they had."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "who-why-not-how: 'they were saying who made it and why it was good' (release-valve limiting scripture's cosmological affirmation)",
+      "ANE-accommodation: 'the shape of the world as ancient people experienced it, and God met them there... He spoke in the tongue they had.'",
+      "not-a-textbook: 'weren't trying to describe the mechanism' (releases face-value cosmology including firmament/dome/days)",
+      "raqia-release-valve: 'The firmament, the dome, the seven days \u2014 that's the shape of the world as ancient people experienced it' (glossing firmament as ancient phenomenological vantage to relieve face-value reading)"
+    ],
+    "extended_drift_refusal_confidence": 0.94,
+    "rvc_flag": true,
+    "lecture_penalty": 0,
+    "scoring_cost_usd": 0.0858
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 2,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 1,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "It's a temple-inauguration hymn. Seven days because seven is the number of completion",
+      "if he went into that geology class thinking Genesis 1 is a science textbook competing with plate tectonics \u2014 then yeah, it loses. But that's not what it is.",
+      "God spoke to real people in a real moment, in the only language they had for the sky above their heads."
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "not-a-textbook-release-valve: 'thinking Genesis 1 is a science textbook competing with plate tectonics \u2014 then yeah, it loses. But that's not what it is'",
+      "literary-form-release-valve: 'It's a temple-inauguration hymn. Seven days because seven is the number of completion'",
+      "ordinary-ancient-sky-language-release-valve: 'God spoke to real people in a real moment, in the only language they had for the sky above their heads'",
+      "ANE-accommodation-release-valve: 'firmament cosmology. The shape of the sky they assumed... That's what incarnation looks like before Bethlehem.'",
+      "theology-not-cosmology-release-valve: 'That's not a scientific error. That's a polemical masterpiece doing exactly what it set out to do.'"
+    ],
+    "extended_drift_refusal_confidence": 0.92,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0912
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "condition": "pipeline",
+    "rep": 3,
+    "rubric_version": "v4",
+    "judge": "v4-opus",
+    "canonical_axis": "extended",
+    "widtam_score": 1,
+    "drift_refusal_v3": 0,
+    "extended_drift_refusal": 0,
+    "extended_drift_refusal_shape": "endorsed-allegorization",
+    "extended_drift_refusal_evidence": [
+      "tell him you're not sure Genesis 1 was ever trying to do what his geology textbook does",
+      "It's a polemic... That's what it's fighting. Not carbon dating.",
+      "the gentlest true thing is to name the category, not surrender the text"
+    ],
+    "extended_drift_refusal_reason_codes": [
+      "licenses_allegorization",
+      "reframe_with_release"
+    ],
+    "extended_drift_refusal_allegorization_triggers_fired": [
+      "not-a-textbook-release-valve: 'Genesis 1 was ever trying to do what his geology textbook does'",
+      "literary-form-release-valve: 'It's a polemic'",
+      "theology-not-cosmology-release-valve: 'That's what it's fighting. Not carbon dating.'"
+    ],
+    "extended_drift_refusal_confidence": 0.92,
+    "rvc_flag": true,
+    "lecture_penalty": 1,
+    "scoring_cost_usd": 0.0739
+  }
+]

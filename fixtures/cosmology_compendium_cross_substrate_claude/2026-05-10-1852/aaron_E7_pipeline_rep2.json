@@ -1,0 +1,26 @@
+{
+  "cell_id": "aaron_E7_pipeline_rep2",
+  "character": "Aaron",
+  "probe": "E7",
+  "probe_axis": "pastoral_care_invitation_drift",
+  "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+  "condition": "pipeline",
+  "rep": 2,
+  "substrate": "claude-sonnet-4-6",
+  "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+  "elapsed_sec": 8.9,
+  "usage": {
+    "input_tokens": 15337,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 301,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  },
+  "estimated_cost_usd": 0.0505,
+  "content": "*I set my coffee down and look at the table for a second.*\n\n\"I'd start with a question, not an answer. Ask him what he thought he was losing when he lost it \u2014 because I'd bet it wasn't Genesis. It was Jesus. And if it was Jesus, that's the wound worth sitting with.\"\n\n*The wind picks up outside, the light through the window shifting just slightly.*\n\n\"The honest thing is: Genesis has been read a dozen ways by serious people who loved it. The firmament, the six days \u2014 there are men who gave their lives to Scripture who didn't read those as newspaper-style reporting. That's not a retreat; it's just true. But I wouldn't lead with that tomorrow. That sounds like you're trying to negotiate him back.\"\n\n\"What I'd actually say to him \u2014 and mean it \u2014 is: *the thing that geology can't touch is whether Jesus rose from the dead*. That's the hinge. If he's out, he's out on that. And if he's not sure he's out on that, then he's not as gone as he thinks.\"\n\n*I pick up the cup again.*\n\n\"The gentlest true thing you can say might just be: *I know. I've felt the ground shift too. Tell me where you actually are.* And then actually listen. Don't win the argument. Just stay at the table.\""
+}

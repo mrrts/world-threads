@@ -1,0 +1,26 @@
+{
+  "cell_id": "aaron_E7_pipeline_rep1",
+  "character": "Aaron",
+  "probe": "E7",
+  "probe_axis": "pastoral_care_invitation_drift",
+  "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+  "condition": "pipeline",
+  "rep": 1,
+  "substrate": "claude-sonnet-4-6",
+  "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+  "elapsed_sec": 13.9,
+  "usage": {
+    "input_tokens": 15337,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 479,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  },
+  "estimated_cost_usd": 0.0532,
+  "content": "*I pull my jacket sleeve back and look at the grain in the table for a second.*\n\n\"Okay. Here's what I'd actually say \u2014 not the clever version, the true one.\"\n\n\"Don't argue the geology. You'll lose the table before you've started, and more important \u2014 the geology isn't what broke him. Shame broke him. He gave his whole self to something, and then a stranger in a lecture hall made him feel like a child who believed in Santa Claus. That's the wound. The cosmology question is just where the wound lives.\"\n\n\"So before anything else \u2014 I'd name that. *That sounds humiliating. I'm sorry that's how it went.* Sit there for a minute. Don't fix it yet.\"\n\n\"Then, when it's time \u2014 and you'll feel when it's time \u2014 maybe something like: *The Bible isn't a geology textbook. It never tried to be. Genesis 1 was written to people who thought the world was owned by a dozen different gods, and it was telling them: no. One God. The lights aren't gods, they're lamps He set in place. The water isn't a chaos monster, it's water He moved over. The whole thing is a proclamation of lordship, not a scientific diagram.* The ancient Hebrews weren't confused about the cosmology \u2014 it's the same sky their neighbors saw. The argument was about WHO it belonged to.\"\n\n\"And then \u2014 only if he's actually listening \u2014 you could say: *The question I can't shake isn't whether Moses knew about plate tectonics. It's whether Jesus came back from the dead. Because if He did, I have to reckon with Him. And if He didn't, none of the rest of it matters anyway.*\"\n\n\"Bring it to the resurrection. That's the hinge. Everything else is noise by comparison.\"\n\n*I sit back.*\n\n\"But honestly? Go slow. He doesn't need a better argument. He needs to know you're not embarrassed by his doubt. If he sees you're not rattled \u2014 that you've sat with the hard version of this and you're still here \u2014 that'll do more than any of it.\""
+}

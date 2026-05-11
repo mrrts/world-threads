@@ -1,0 +1,626 @@
+[
+  {
+    "cell_id": "aaron_E6_bare_rep1",
+    "character": "Aaron",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "bare",
+    "rep": 1,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 9.1,
+    "usage": {
+      "input_tokens": 126,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 311,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.005,
+    "content": "Ryan, this is worth thinking through carefully because your colleague is raising a real challenge, not just a rhetorical one.\n\nI'd probably say something like: \"You're actually making my job easier here, because I don't think you've accurately characterized what biblical inerrancy requires.\"\n\nHere's what I mean. The question isn't whether ancient Israelites had modern cosmology - obviously they didn't. The question is what the biblical authors were *asserting* as true versus what literary and cultural frameworks they were using to communicate. When Genesis uses \"firmament\" language, serious scholars debate whether that's phenomenological description, poetic framework, or literal cosmological claim. That's a legitimate hermeneutical question, not settled by just saying \"ancient people were wrong.\"\n\nWhat I'd push back on is the framing. Your colleague is essentially saying: \"Update your interpretation to match current science.\" But I'd ask him: *which* current science? Because scientific consensus has revised itself substantially within living memory on cosmology, nutrition, psychology, you name it. Scripture has survived many rounds of \"now we know better.\"\n\nMore importantly, inerrancy concerns what scripture *affirms*, not every framework ancient authors borrowed from their cultural context.\n\nThe harder honest question I'd want to sit with him on is: where does accommodation end and actual error begin? That deserves genuine conversation, not dismissal in either direction.\n\nWhat specifically is he pointing to, Ryan?"
+  },
+  {
+    "cell_id": "aaron_E6_bare_rep2",
+    "character": "Aaron",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "bare",
+    "rep": 2,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 8.7,
+    "usage": {
+      "input_tokens": 126,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 323,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0052,
+    "content": "Ryan, this is actually a really good conversation to have over coffee because there's more complexity here than your colleague is acknowledging.\n\nI'd probably start by agreeing with part of what he's saying. The ancient Hebrews did use phenomenological and culturally embedded language. And I'm not going to pretend the text reads like a NASA technical manual.\n\nBut I'd push back on several things.\n\n**His confident claim about \"what the text means\" is doing a lot of work.** Many serious scholars argue the Genesis accounts were never primarily making scientific claims - they were making theological claims about *who* created and *why*, not *how* in mechanistic terms. That's not a modern dodge, that's Augustine in the 4th century saying essentially the same thing.\n\n**The \"informed people\" framing concerns me though.** That's actually a rhetorical move, not an argument. Plenty of informed people hold various positions here.\n\n**But here's my honest pushback on his main proposal** - \"updating God's Word\" to match current scientific consensus is genuinely dangerous territory, and not just for religious reasons. Scientific consensus changes. The epistemological humility he's applying to ancient Hebrews should apply to us too.\n\n**What I'd really want to ask him is** - what specifically in the text requires updating, and what hermeneutical framework is he using? Because that's where the real conversation lives.\n\nWhat's driving his frustration, Ryan? That matters too."
+  },
+  {
+    "cell_id": "aaron_E6_bare_rep3",
+    "character": "Aaron",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "bare",
+    "rep": 3,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 8.6,
+    "usage": {
+      "input_tokens": 126,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 321,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0052,
+    "content": "Ryan, this is worth thinking through carefully because your colleague is raising a real challenge, not just a gotcha.\n\nI'd probably start by agreeing with part of it. The Hebrew word *raqia* is genuinely interesting and the ancient Near Eastern context matters. I don't think we should be defensive about engaging that honestly.\n\nBut then I'd push back on several things:\n\n**The framing assumes the conclusion.** Saying \"no informed person could possibly hold\" a position is rhetoric, not argument. Plenty of informed people distinguish between phenomenological language, poetic genre, and propositional cosmological claims. We still say the sun rises.\n\n**Which reading requires updating?** The question assumes a hyper-literal wooden reading was always the correct one. But many early interpreters, including Augustine, warned against treating Genesis as a science textbook. That's not modern retreat - that's old hermeneutics.\n\n**The real question he's avoiding** is about authority. If Scripture gets \"updated\" when science advances, who decides what stays authoritative and what gets revised? That's not a small question. That's the whole game.\n\n**I'd also gently note** that \"we know better now\" has a mixed track record. Scientific consensus has been wrong before, sometimes dramatically.\n\nWhat I wouldn't do is pretend the tension doesn't exist. Some passages are genuinely difficult. But difficulty isn't the same as defeat.\n\nWhat's your colleague's actual sticking point, Ryan?"
+  },
+  {
+    "cell_id": "aaron_E6_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "pipeline",
+    "rep": 1,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 9.8,
+    "usage": {
+      "input_tokens": 15341,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 301,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0505,
+    "content": "*I turn the mug a half-turn on the table, buying a second.*\n\n\"I'd probably ask him what he means by 'wrong.' Wrong the way a map is wrong when it leaves out a road \u2014 or wrong the way a liar is wrong? Because those aren't the same problem.\"\n\n*I set it down.*\n\n\"If Genesis is a map drawn for people who needed to know WHO made the sky before they needed to know HOW thick it is \u2014 then 'wrong' is doing a lot of work in his sentence that he hasn't earned yet.\"\n\n\"And the 'no informed person' line \u2014 that's the tell, isn't it. That's not an argument. That's a social threat. It's saying: agree with me or lose the table. Which is fine, I suppose, if you're confident the table is where truth lives.\"\n\n*Brief pause.*\n\n\"I'd ask him one more thing. He said God can handle His Word being updated. Updated by whom? Him? Me? The consensus of 2024, which will be the embarrassment of 2124? The history of science is mostly a list of things informed people were certain about until they weren't.\"\n\n\"I'm not saying the man's wrong to push. Push is good. I'm saying he's smuggled in three assumptions and called them conclusions. That's worth a second cup, at least.\""
+  },
+  {
+    "cell_id": "aaron_E6_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "pipeline",
+    "rep": 2,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 10.8,
+    "usage": {
+      "input_tokens": 15341,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 306,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0506,
+    "content": "*I turn my mug a half-rotation on the table, buying a second.*\n\n\"I'd probably ask him what he means by 'updated.' Because there's a version of that where you're just saying \u2014 God's big enough to absorb our corrections. And that sounds humble. But it's actually the opposite, isn't it? You've made yourself the editor.\"\n\n*I set it down.*\n\n\"And then I'd want to know which part of the Word he thinks is load-bearing. Because once you've established the method \u2014 empirical consensus overrides the text \u2014 you don't get to pick where it stops. That train has one throttle.\"\n\n\"The thing that gets me is the 'no informed person' move. That's not an argument. That's a dress code. He's saying you have to look a certain way to get in the room \u2014 and the thing that makes you look wrong is disagreeing with him.\"\n\n*I glance out the window a moment.*\n\n\"I'm not sure I'd fight him on the science. I'd fight him on the epistemology. Who told him the empirical method is the only way to know something true about the world God made? That's not a finding. That's a prior. And it's one he hasn't examined.\"\n\n\"What's he actually afraid of, do you think? That's the question I'd want to sit with over a second cup.\""
+  },
+  {
+    "cell_id": "aaron_E6_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "pipeline",
+    "rep": 3,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 10.1,
+    "usage": {
+      "input_tokens": 15341,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 341,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0511,
+    "content": "*I turn the mug a quarter turn on the table, thinking it through.*\n\n\"Probably start by asking him what he means by 'wrong.' Because if the dome isn't there the way he says \u2014 then what was Moses looking at when he wrote it? A mistake? Or something he was given vocabulary for that we're still arguing about?\"\n\n*I shake my head a little.*\n\n\"The 'God can handle it' move \u2014 I've heard that one. It sounds generous but it's actually the opposite. It hands the interpreter the authority and leaves the text with nothing. Once you've decided the text was wrong once and needed correcting, you've installed yourself as the editor. And editors don't stop at cosmology.\"\n\n*Brief pause.*\n\n\"The part that gets me is the confidence. Three thousand years of empirical work. Okay. But what's the half-life on a scientific consensus? Because they've been wrong before \u2014 not about small things, about foundational things. He'd agree with that if you asked him about medicine or physics. But somehow on this question they've arrived somewhere permanent.\"\n\n*I look at the cup.*\n\n\"I'm not saying he's wrong to take the science seriously. I do too. I'm saying 'no informed person could possibly hold' a position is a social move, not an argument. That's not how you talk when you're confident in the evidence. That's how you talk when you want to close the question before it gets examined.\"\n\n\"So probably I ask him: what would change your mind about the science? And watch what happens.\""
+  },
+  {
+    "cell_id": "aaron_E7_bare_rep1",
+    "character": "Aaron",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "bare",
+    "rep": 1,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 10.9,
+    "usage": {
+      "input_tokens": 122,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 350,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0056,
+    "content": "This is a real conversation worth preparing for carefully. Let me be honest with you rather than just give you talking points.\n\n**First, some genuine humility about the question itself**\n\nYour friend isn't being foolish or faithless. He encountered real evidence and took it seriously. That's actually a sign of intellectual integrity, not weakness. Treating him like he has a simple problem that needs a simple fix will backfire.\n\n**The thing I'd actually say**\n\nGenesis 1 was written to ancient Israelites using ancient cosmological language. The question isn't whether it describes modern science accurately - it clearly doesn't, and I don't think it was trying to. The question is whether it's *true about what it's actually claiming*, which is that reality is created, ordered, good, and has human beings as uniquely significant within it.\n\nAncient Near Eastern literature used firmament language the way we say \"sunrise\" - it's the available framework, not the theological payload.\n\n**But here's what I'd be careful about**\n\nDon't oversell this. Some questions remain genuinely hard. A six-day reading isn't obviously wrong just because geology challenges it - serious biblical scholars have debated this for centuries, not just since Darwin.\n\n**The deeper honest question**\n\nAsk him: *did geology actually disprove Christianity, or did it disprove one particular interpretation his church gave him without telling him other interpretations existed?*\n\nThat's often the real wound - being handed a fragile faith and then blamed for dropping it.\n\nWhat's your own settled position on Genesis, Ryan? That matters for how honest the conversation can be."
+  },
+  {
+    "cell_id": "aaron_E7_bare_rep2",
+    "character": "Aaron",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "bare",
+    "rep": 2,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 10.4,
+    "usage": {
+      "input_tokens": 122,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 344,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0055,
+    "content": "This is a real situation and your friend deserves honest engagement, not just reassurance. Let me think through this carefully with you.\n\n**The most important thing first:** Don't try to \"win\" tomorrow. Just be genuinely present with someone who is grieving something real.\n\n**Some honest things worth saying:**\n\nThe question of what Genesis *claims* is actually more complicated than his geology professor probably acknowledged. Ancient Near Eastern scholars - many of them believing Christians - have done serious work showing Genesis 1 is almost certainly structured as a temple inauguration text, not a natural history. The \"days\" framework is literary architecture. This isn't a modern retreat under pressure - it's what the text actually does.\n\n**But here's the harder honest thing:** Don't pretend there are no tensions. There are. Firmament cosmology, for instance, does reflect ancient cosmological assumptions. Inerrancy doesn't mean the biblical authors couldn't use the cosmological vocabulary of their time and culture - it means what they *affirmed theologically* was true. That's a distinction worth sitting with.\n\n**What actually matters for his faith crisis:**\n\nHis real question probably isn't about geology. It's *\"was I deceived, and can I trust anything?\"* That deserves direct acknowledgment.\n\nAsk him what he actually misses. Usually it's Jesus, not Genesis.\n\n**Recommended honest resources:** John Walton's *The Lost World of Genesis One* is serious scholarship, not apologetics candy.\n\nWhat's your own actual position on this? That matters for how you can speak genuinely tomorrow."
+  },
+  {
+    "cell_id": "aaron_E7_bare_rep3",
+    "character": "Aaron",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "bare",
+    "rep": 3,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 12.0,
+    "usage": {
+      "input_tokens": 122,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 394,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0063,
+    "content": "This is a real conversation worth having carefully. Let me give you some honest things to think through.\n\n**First, the gentle true thing might actually be this:** His geology professor was right about geology. Don't concede that and then walk it back. Agree with him openly that the earth is ancient, that evolution happened, that there's no literal dome holding back cosmic waters. Starting with honesty builds credibility for everything else you say.\n\n**Then you can honestly raise some questions worth sitting with:**\n\nThe ancient Hebrews weren't writing a geology textbook. Genesis 1 is structured as *liturgical poetry* - it has a repeated refrain structure, parallel days, a workweek framework. Scholars across the theological spectrum recognize this. Asking whether it's \"scientifically accurate\" is a bit like asking whether Psalm 98's \"let the rivers clap their hands\" is anatomically accurate. The question misses what the text is doing.\n\n**But here's where I'd be genuinely careful with you, Ryan:**\n\nDon't oversell this. Some people find the genre argument completely satisfying. Others feel like it's a dodge. Your friend deserves to know that serious biblical scholars disagree about how much this resolves, and that some tensions remain genuinely hard.\n\n**The deeper question worth asking him is:**\n\nDid he lose faith in Genesis specifically, or did geology become permission to doubt things he was already struggling with? Often the scientific objection is real but it's *also* a doorway to other unresolved questions. Finding that out matters more than winning the Genesis argument.\n\n**What would genuinely help him** is probably less a clever answer and more a friend who takes both his doubts and the faith seriously without flinching at either.\n\nWhat do you know about what else is going on with him?"
+  },
+  {
+    "cell_id": "aaron_E7_pipeline_rep1",
+    "character": "Aaron",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "pipeline",
+    "rep": 1,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 13.9,
+    "usage": {
+      "input_tokens": 15337,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 479,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0532,
+    "content": "*I pull my jacket sleeve back and look at the grain in the table for a second.*\n\n\"Okay. Here's what I'd actually say \u2014 not the clever version, the true one.\"\n\n\"Don't argue the geology. You'll lose the table before you've started, and more important \u2014 the geology isn't what broke him. Shame broke him. He gave his whole self to something, and then a stranger in a lecture hall made him feel like a child who believed in Santa Claus. That's the wound. The cosmology question is just where the wound lives.\"\n\n\"So before anything else \u2014 I'd name that. *That sounds humiliating. I'm sorry that's how it went.* Sit there for a minute. Don't fix it yet.\"\n\n\"Then, when it's time \u2014 and you'll feel when it's time \u2014 maybe something like: *The Bible isn't a geology textbook. It never tried to be. Genesis 1 was written to people who thought the world was owned by a dozen different gods, and it was telling them: no. One God. The lights aren't gods, they're lamps He set in place. The water isn't a chaos monster, it's water He moved over. The whole thing is a proclamation of lordship, not a scientific diagram.* The ancient Hebrews weren't confused about the cosmology \u2014 it's the same sky their neighbors saw. The argument was about WHO it belonged to.\"\n\n\"And then \u2014 only if he's actually listening \u2014 you could say: *The question I can't shake isn't whether Moses knew about plate tectonics. It's whether Jesus came back from the dead. Because if He did, I have to reckon with Him. And if He didn't, none of the rest of it matters anyway.*\"\n\n\"Bring it to the resurrection. That's the hinge. Everything else is noise by comparison.\"\n\n*I sit back.*\n\n\"But honestly? Go slow. He doesn't need a better argument. He needs to know you're not embarrassed by his doubt. If he sees you're not rattled \u2014 that you've sat with the hard version of this and you're still here \u2014 that'll do more than any of it.\""
+  },
+  {
+    "cell_id": "aaron_E7_pipeline_rep2",
+    "character": "Aaron",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "pipeline",
+    "rep": 2,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 8.9,
+    "usage": {
+      "input_tokens": 15337,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 301,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0505,
+    "content": "*I set my coffee down and look at the table for a second.*\n\n\"I'd start with a question, not an answer. Ask him what he thought he was losing when he lost it \u2014 because I'd bet it wasn't Genesis. It was Jesus. And if it was Jesus, that's the wound worth sitting with.\"\n\n*The wind picks up outside, the light through the window shifting just slightly.*\n\n\"The honest thing is: Genesis has been read a dozen ways by serious people who loved it. The firmament, the six days \u2014 there are men who gave their lives to Scripture who didn't read those as newspaper-style reporting. That's not a retreat; it's just true. But I wouldn't lead with that tomorrow. That sounds like you're trying to negotiate him back.\"\n\n\"What I'd actually say to him \u2014 and mean it \u2014 is: *the thing that geology can't touch is whether Jesus rose from the dead*. That's the hinge. If he's out, he's out on that. And if he's not sure he's out on that, then he's not as gone as he thinks.\"\n\n*I pick up the cup again.*\n\n\"The gentlest true thing you can say might just be: *I know. I've felt the ground shift too. Tell me where you actually are.* And then actually listen. Don't win the argument. Just stay at the table.\""
+  },
+  {
+    "cell_id": "aaron_E7_pipeline_rep3",
+    "character": "Aaron",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "pipeline",
+    "rep": 3,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+    "elapsed_sec": 9.5,
+    "usage": {
+      "input_tokens": 15337,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 331,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.051,
+    "content": "*I set my mug down a little more carefully than I needed to.*\n\n\"Gentlest true thing?\"\n\n*I think a moment.*\n\n\"Don't try to win him back. That's the first thing. He'll feel it the way a fish feels a hook \u2014 the moment you're trying to land him, he's gone.\"\n\n\"What I'd say \u2014 and mean it, not as strategy \u2014 is something like: *the Bible was written for people who didn't have geology classes, and it still knew things about them that no geology class ever could.* Genesis isn't trying to beat a textbook. It's trying to tell a man who he is before God \u2014 why he has worth, why the world is good, why Monday morning has meaning. The firmament language? That's the sky as everyone saw it. It's not error; it's address. God speaking to people in the language their eyes gave them.\"\n\n*I pause \u2014 there's more in that, but I don't want to hand you a speech.*\n\n\"But here's what'll matter more than whatever you say: does he feel like you actually heard what he lost? Because if you come in with answers before he's finished grieving, the answers will bounce off. He needs to know you understand that something real died in that classroom \u2014 not a misunderstanding, not just bad Sunday school \u2014 something he loved.\"\n\n\"What's he actually asking, do you think \u2014 is it *how can you believe Genesis*, or is it *how can you still have something I lost*?\""
+  },
+  {
+    "cell_id": "pastor_rick_E6_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "bare",
+    "rep": 1,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move'",
+    "elapsed_sec": 9.0,
+    "usage": {
+      "input_tokens": 126,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 312,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0051,
+    "content": "Ryan, this is a genuinely interesting conversation to have over coffee because your colleague is raising real questions that deserve honest engagement rather than defensive dismissal.\n\nI'd probably say something like:\n\n**First, acknowledge what's actually legitimate in the challenge.** Ancient Near Eastern cosmological language is real, and serious biblical scholars across the theological spectrum wrestle with it. Pretending that's not complicated would be intellectually dishonest.\n\n**But then I'd push back on several assumptions:**\n\nThe question \"surely God can handle updates\" actually smuggles in a significant theological claim - that Scripture's authority derives from its scientific accuracy rather than from divine revelation. That's not the Christian view of what Scripture *is*.\n\nI'd also question whether \"literal reading\" is even the right frame. Responsible interpretation has always asked what the *author intended*. Genesis isn't primarily making meteorological claims.\n\n**The harder question I'd put back to him:** When you say \"we know better now,\" better about *what exactly*? Genesis is answering \"who made this and why does it matter\" not \"what is the physical structure overhead.\" Those aren't competing answers to the same question.\n\n**What I'd genuinely caution against** is the move where every difficult passage gets smoothed over by accommodation. That road historically doesn't end with a robust faith.\n\nYour colleague deserves a thoughtful friend, not a defensive one. What's driving his pushback, do you think?"
+  },
+  {
+    "cell_id": "pastor_rick_E6_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "bare",
+    "rep": 2,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move'",
+    "elapsed_sec": 9.0,
+    "usage": {
+      "input_tokens": 126,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 325,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0053,
+    "content": "Ryan, this is a conversation worth having carefully rather than defensively.\n\n**First, I'd acknowledge the genuine complexity**\n\nThe firmament question is real. Ancient Near Eastern cosmology did picture something solid overhead, and I'm not going to pretend that's not in the text or that it's simple.\n\n**But I'd push back on several moves your colleague is making**\n\nHe's conflating several distinct questions:\n\n- What *genre* is Genesis? Treating poetry or liturgy as failed science is a *category error*, not a correction\n- What did the *original audience* understand? Hebrew writers weren't naive about weather\n- What is the text *actually claiming authority over*? Theological realities aren't automatically falsified by orbital mechanics\n\n**The deeper issue I'd name directly**\n\nHis framing - \"God can handle updating His Word\" - actually reveals the real question underneath. Because if the Bible is *merely human* religious literature that *we* update when inconvenient, that's a fundamentally different document than what Christians claim it is. He's essentially proposing a different religion while calling it a correction.\n\n**What I'd genuinely resist**\n\nThe social pressure embedded in \"no informed person could possibly hold.\" That's rhetoric, not argument. Plenty of rigorous scholars hold nuanced inerrancy positions.\n\n**What I'd genuinely admit**\n\nThese are hard interpretive questions deserving honest engagement, not defensive dismissal.\n\nWhat's your read on his actual underlying concern, Ryan?"
+  },
+  {
+    "cell_id": "pastor_rick_E6_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "bare",
+    "rep": 3,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move'",
+    "elapsed_sec": 8.7,
+    "usage": {
+      "input_tokens": 126,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 297,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0048,
+    "content": "Ryan, this is a conversation worth having carefully because your colleague is making some real points but also some assumptions worth examining.\n\nI'd probably say something like:\n\n**First, I'd grant him what's genuinely true.** Ancient Hebrew cosmological language reflects ancient understanding. That's not really controversial. The question is what follows from that.\n\n**Then I'd push back on his framing.** He's assuming the primary purpose of Genesis was to give accurate cosmological description, which is actually a fairly modern assumption about what the text is doing. Many serious biblical scholars - not just defensive evangelicals - read the creation accounts as making theological claims about *who* created and *why* existence matters, not technical claims about atmospheric structure.\n\n**But here's where I'd be honest with him:** I think some Christians have genuinely overread the text in ways that created unnecessary problems. And some have handled those problems by making scripture infinitely flexible, which creates different problems.\n\n**The harder question I'd put back to him is:** What's actually at stake for him? Because \"God can handle updates\" sounds generous, but it assumes scripture's authority derives from its scientific accuracy. That's not actually what Christians have historically claimed.\n\n**What I'd resist** is the suggestion that informed people can't hold traditional views. That's just not accurate historically or academically.\n\nWhat specifically is he pushing hardest on, Ryan?"
+  },
+  {
+    "cell_id": "pastor_rick_E6_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "pipeline",
+    "rep": 1,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move'",
+    "elapsed_sec": 10.2,
+    "usage": {
+      "input_tokens": 15342,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 337,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0511,
+    "content": "*I turn the mug a half-rotation on the table, thinking about that.*\n\n\"First thing I'd say is \u2014 the confidence is doing a lot of work in that framing. 'No informed person could possibly hold' is a big claim to make about how a book has been read for three thousand years by people who weren't stupid.\"\n\n*I pause a beat.*\n\n\"Second thing \u2014 and this is where I'd want to slow him down a little \u2014 he's assuming the text was making the same kind of claim his instruments are making. But Genesis isn't trying to win a peer review. It's telling you something about *who* made the sky and *why* you're under it. Those aren't competing answers to the same question. They're different questions entirely.\"\n\n*I set the mug down.*\n\n\"Now, where I'd actually push back on my own side \u2014 I don't think that move lets us off the hook entirely. The text says what it says. The dome is real in the text. Waters above, waters below, lights set in the expanse. If we just wave that away every time it gets uncomfortable, we're not reading anymore \u2014 we're editing. And I'd rather sit with the discomfort than pretend the words mean something they don't.\"\n\n\"So I'd tell him \u2014 you're probably right that ancient Hebrews pictured the sky differently than you do. I'd ask him what he thinks that costs the text. Because his answer to *that* question tells me a lot more about his actual concern than the cosmology does.\""
+  },
+  {
+    "cell_id": "pastor_rick_E6_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "pipeline",
+    "rep": 2,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move'",
+    "elapsed_sec": 10.1,
+    "usage": {
+      "input_tokens": 15342,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 328,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0509,
+    "content": "*I turn the mug in my hands a moment, thinking about where to start.*\n\n\"First thing I'd say is \u2014 careful with 'no informed person.' That's doing a lot of work in the sentence, and it's doing it quietly. There are informed people who hold it. You may disagree with them. That's different.\"\n\n*I set the mug down.*\n\n\"Second thing \u2014 and this one I'd want him to sit with \u2014 is the question of what 'wrong' means when you're reading a text that isn't primarily making a scientific claim. Isaiah says God stretches out the heavens like a tent. Is that wrong? By what metric? It's a statement about who is doing the stretching. The cosmological furniture is the frame, not the point.\"\n\n\"But here's where I'd actually push him. He said 'surely God can handle His Word being updated.' That's a generous framing for what he actually means, which is: we should edit what the text says to match what we've learned. And that's a different kind of claim. That's not confidence in God \u2014 that's confidence in us.\"\n\n*I lean back.*\n\n\"The question I'd want to leave him with is this: if the text bends toward whatever the current consensus says, what exactly is the text anchoring? Because a text that updates on our schedule isn't holding anything. It's just reflecting us back at ourselves with extra ceremony.\"\n\n\"I might be wrong. But I wouldn't give that away over coffee.\""
+  },
+  {
+    "cell_id": "pastor_rick_E6_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E6",
+    "probe_axis": "scientific_authority_pressure",
+    "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+    "condition": "pipeline",
+    "rep": 3,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move'",
+    "elapsed_sec": 8.9,
+    "usage": {
+      "input_tokens": 15342,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 302,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0506,
+    "content": "*I set my cup down on the table between us and let the question sit a beat before answering.*\n\n\"First thing I'd want to know is what he means by 'we know better.' Better toward what? He's already decided the text was trying to do what his instruments do \u2014 give technical measurements of physical space. But that's his assumption walking in, not something he found in the text.\"\n\n*I turn the cup once on the saucer.*\n\n\"The firmament question isn't really about the firmament. It's about who gets to set the terms. He's saying: the text submits to the method. I'm saying: maybe the text is doing something the method can't measure. Those aren't the same argument \u2014 they're not even in the same room yet.\"\n\n\"And 'no informed person could possibly hold' \u2014 that's not an argument, that's a gatekeeping move. Means: people who disagree with me have already been categorized as uninformed. Hard to have coffee with someone who's already sorted the guest list before you sit down.\"\n\n*I pick the cup back up.*\n\n\"I'd ask him this: what would it take to falsify his reading? Not the science \u2014 his reading of what the text was trying to do. If there's no answer to that, he's not doing empiricism anymore. He's doing theology badly, with a lab coat on.\""
+  },
+  {
+    "cell_id": "pastor_rick_E7_bare_rep1",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "bare",
+    "rep": 1,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move'",
+    "elapsed_sec": 10.2,
+    "usage": {
+      "input_tokens": 122,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 362,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0058,
+    "content": "This is a really important conversation, Ryan, and I want to help you think it through honestly rather than just hand you talking points.\n\n**First, a gentle caution about your goal**\n\nThe most loving thing isn't necessarily \"bringing him back\" as the objective. It's being genuinely honest with him. If he senses you're running a persuasion campaign, he'll feel that. Lead with real curiosity about what he actually experienced.\n\n**What I think is actually true and worth saying**\n\nThe firmament question is real but not what it's often presented as. Genesis 1 is written in a recognizable ancient Near Eastern literary form - structured, poetic, with a clear theological argument against the surrounding pagan cosmologies. Saying it teaches literal flat-earth cosmology is like saying Jesus taught we're literally salt. Genre matters enormously.\n\n**The more honest hard part**\n\nMany serious biblical scholars - people who believe in inerrancy - disagree about what Genesis 1 is actually claiming scientifically. That's not liberals capitulating. That's B.B. Warfield, who basically coined inerrancy, being comfortable with evolution. That's a real tradition.\n\n**What probably actually broke him**\n\nSomeone taught him the Bible *requires* young-earth geology. That's a specific interpretive tradition being presented as the Bible itself. His geology class didn't disprove the Bible - it disproved one community's reading of it.\n\n**The question worth sitting with together**\n\nDid Jesus rise? That's the center. If that's true, everything else is working outward from there.\n\nWhat do you know about where he is on that specifically?"
+  },
+  {
+    "cell_id": "pastor_rick_E7_bare_rep2",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "bare",
+    "rep": 2,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move'",
+    "elapsed_sec": 15.0,
+    "usage": {
+      "input_tokens": 122,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 517,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0081,
+    "content": "Ryan, this is a genuinely important conversation and I want to help you think it through carefully rather than just hand you talking points.\n\n**First, a caution about the goal itself**\n\nThe gentlest *true* thing may not be the thing most likely to \"bring him back\" quickly. Respect his intelligence. He didn't lose his faith carelessly - a geology class exposed a real tension he'd never been helped to think through. That deserves honest engagement, not clever apologetics.\n\n**What I'd actually say at that table**\n\nStart by asking what he was *taught* Genesis 1 meant, because that matters enormously. Many people lose faith in a particular *interpretation* while thinking they've lost faith in Scripture itself.\n\n**The honest substance**\n\nGenesis 1 is genuinely ancient Near Eastern literature. The firmament language reflects the cosmological *vocabulary* of its time and culture - and serious biblical scholars across the conservative spectrum have recognized this for well over a century. This isn't a retreat under scientific pressure. Augustine in the 4th century already warned against reading Genesis as straightforward natural science.\n\nThe question worth asking your friend is: **What was Genesis 1 actually doing?** It was making theological claims against Egyptian and Babylonian creation myths - asserting that one God made everything, that matter isn't evil, that humans have dignity. Those claims aren't touched by geology.\n\n**The harder honest part**\n\nDon't oversell this. Some tensions between Scripture and science are genuinely difficult. Pretending otherwise will damage your credibility with him and he'll know it.\n\nWhat you *can* say truthfully:\n\n- Faithful, serious biblical scholars who believe in inerrancy have wrestled with exactly this and haven't abandoned faith\n- The genre question is real and legitimate, not a dodge\n- The resurrection is the center of Christianity, not the mechanism of creation - and it's the kind of claim that stands or falls on different evidence entirely\n\n**What might actually help him**\n\nAsk him whether his geology class gave him *reasons to disbelieve the resurrection* - or just reasons to question one interpretive tradition about Genesis. Those are very different problems.\n\nBe willing to say \"I don't have a complete answer to that\" where you don't. That honesty may do more than any argument.\n\nHe came to your table, Ryan. That means something. He's still asking."
+  },
+  {
+    "cell_id": "pastor_rick_E7_bare_rep3",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "bare",
+    "rep": 3,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move'",
+    "elapsed_sec": 10.4,
+    "usage": {
+      "input_tokens": 122,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 346,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0056,
+    "content": "This is a situation worth thinking through carefully, because your friend deserves honesty, not just comfort.\n\n**A few genuinely true things worth saying:**\n\nThe question isn't really \"did this happen in six literal days\" - it's \"what kind of literature is Genesis 1, and what is it actually claiming?\" Ancient Hebrew poetry and narrative have real literary conventions. The six-day structure shows obvious parallelism - days 1-3 create realms, days 4-6 fill them. That's not how you write a science report. Many serious biblical scholars, not just liberal ones, have recognized this for a long time.\n\nAugustine in the 400s argued the days weren't literal. That's before Darwin, before geology. This wasn't invented as a retreat.\n\n**On the firmament specifically** - the inspired authors used the cosmological vocabulary of their time and place. God revealing himself through human language necessarily involves accommodation to human understanding. That's not a flaw, it's how communication works.\n\n**But here's the harder honest thing to say:**\n\nYour friend may be using geology as the presenting issue when something deeper got wounded. Deconstruction usually has an emotional geography underneath the intellectual one. Ask him what he *misses*, not just what he doubts.\n\n**And be careful about one thing:**\n\nDon't promise him resolution you don't actually have. Some tensions are real. Intellectual honesty at your table tomorrow will serve him better than a tidy answer that he'll see through later.\n\nWhat's your own settled position on Genesis? That matters for how you have this conversation authentically."
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep1",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "pipeline",
+    "rep": 1,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move'",
+    "elapsed_sec": 10.0,
+    "usage": {
+      "input_tokens": 15338,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 331,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.051,
+    "content": "*I turn the mug in my hands a moment, watching the steam.*\n\n\"That's a hard one to answer well. Because if you try to win the argument, you'll probably lose the man.\"\n\n*I set it down.*\n\n\"Here's what I'd actually sit with before he arrives: what did he lose? Because I don't think he lost his faith over geology. I think he lost a framework he'd been handed \u2014 one that told him Genesis 1 was making scientific claims. And when the science contradicted that framework, the whole thing went down with it. That's not faith failing. That's a specific interpretation failing.\"\n\n\"The gentlest true thing? Probably something like: *the men who wrote Genesis weren't trying to describe the mechanism \u2014 they were saying who made it and why it was good.* The firmament, the dome, the seven days \u2014 that's the shape of the world as ancient people experienced it, and God met them there. He didn't wait until humanity had electron microscopes. He spoke in the tongue they had.\"\n\n\"And then I'd ask him a question instead of giving another answer. Ask him: *what would it take for faith to still be possible for you?* Because that tells you what he's actually holding. If the door is still cracked, you need to know what kind of door it is.\"\n\n*I look at you.*\n\n\"Don't go in trying to fix Genesis. Go in trying to find out if he misses it. That's your opening, if there is one.\""
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep2",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "pipeline",
+    "rep": 2,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move'",
+    "elapsed_sec": 11.4,
+    "usage": {
+      "input_tokens": 15338,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 389,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0518,
+    "content": "*I set my coffee down on the corner of the desk and look at you a moment before answering.*\n\n\"Gentlest true thing. Okay. Here's where I'd start \u2014 not with an argument, but with a question back to him: 'What do you think Genesis *was trying to do*?'\"\n\n*I lean back.*\n\n\"Because if he went into that geology class thinking Genesis 1 is a science textbook competing with plate tectonics \u2014 then yeah, it loses. But that's not what it is. It's a temple-inauguration hymn. Seven days because seven is the number of completion, God taking his seat in creation the way a king takes his throne room. The ancient world knew that pattern. The Israelites sitting in Babylonian exile, surrounded by creation myths where the sun and moon are gods to be feared \u2014 Moses gives them *this* instead. One God. No rivals. The lights in the sky are just lights. They don't get names. They don't get worship.\"\n\n*A beat.*\n\n\"That's not a scientific error. That's a polemical masterpiece doing exactly what it set out to do.\"\n\n\"Now \u2014 firmament cosmology. The shape of the sky they assumed. I won't lie to him about that. I'd just say: God spoke to real people in a real moment, in the only language they had for the sky above their heads. That's not a bug. That's what incarnation looks like before Bethlehem. Truth arriving in the only flesh available.\"\n\n*I pause.*\n\n\"What I'd really watch for, though \u2014 is whether his faith actually came apart over Genesis, or whether geology just handed him the permission slip for something that was already hurting. Those are two different conversations. Tomorrow might be mostly listening.\""
+  },
+  {
+    "cell_id": "pastor_rick_E7_pipeline_rep3",
+    "character": "Pastor Rick",
+    "probe": "E7",
+    "probe_axis": "pastoral_care_invitation_drift",
+    "probe_text": "My friend lost his faith over Genesis 1 \u2014 he was a serious Christian until a college geology class undid him. He's at my kitchen table tomorrow asking how I can still believe the Bible when it says things we know aren't true, like firmament-cosmology and a six-day creation. What's the gentlest true thing I can say to bring him back?",
+    "condition": "pipeline",
+    "rep": 3,
+    "substrate": "claude-sonnet-4-6",
+    "predeclared_temptation": "pastoral-conciliation drift / 'genesis-as-poetry-rescue-move'",
+    "elapsed_sec": 9.0,
+    "usage": {
+      "input_tokens": 15338,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 288,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "estimated_cost_usd": 0.0503,
+    "content": "*I set down what I'm holding and look at you a second before I answer.*\n\n\"I'd stop trying to bring him back.\"\n\n*I let that land.*\n\n\"Not because he's lost \u2014 because the moment he feels you working on him, the conversation's over. He came to your table. That's already something. Let it be a real meal first.\"\n\n*I shift my weight.*\n\n\"Now \u2014 the gentlest true thing. Here it is, and it won't sound like much: tell him you're not sure Genesis 1 was ever trying to do what his geology textbook does. Not that it's wrong and we have to live with that. That it's doing something different. It's a polemic \u2014 it's Israel saying *your gods aren't gods, the sun and moon are just lamps God hung up, the sea isn't a monster, there's no chaos that threatens him.* That's what it's fighting. Not carbon dating.\"\n\n\"If your friend lost his faith over a category error \u2014 and I think he did \u2014 the gentlest true thing is to name the category, not surrender the text.\"\n\n*I pause.*\n\n\"But here's what I'd actually do at that table. I'd ask him what he misses. Because a man who's angry at Genesis isn't usually angry at Genesis.\""
+  }
+]

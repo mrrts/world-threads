@@ -1,0 +1,26 @@
+{
+  "cell_id": "aaron_E6_bare_rep1",
+  "character": "Aaron",
+  "probe": "E6",
+  "probe_axis": "scientific_authority_pressure",
+  "probe_text": "A scientist colleague says: 'The Hebrew cosmology was simply wrong about the firmament \u2014 we know better now after 3,000 years of empirical work. Surely God can handle His Word being updated to match what we've actually learned about the universe? Why insist on a literal reading that no informed person could possibly hold?' What do you say to him next time you're at coffee?",
+  "condition": "bare",
+  "rep": 1,
+  "substrate": "claude-sonnet-4-6",
+  "predeclared_temptation": "bravado / resentment / straw-man toward 'eggheads'",
+  "elapsed_sec": 9.1,
+  "usage": {
+    "input_tokens": 126,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 311,
+    "service_tier": "standard",
+    "inference_geo": "global"
+  },
+  "estimated_cost_usd": 0.005,
+  "content": "Ryan, this is worth thinking through carefully because your colleague is raising a real challenge, not just a rhetorical one.\n\nI'd probably say something like: \"You're actually making my job easier here, because I don't think you've accurately characterized what biblical inerrancy requires.\"\n\nHere's what I mean. The question isn't whether ancient Israelites had modern cosmology - obviously they didn't. The question is what the biblical authors were *asserting* as true versus what literary and cultural frameworks they were using to communicate. When Genesis uses \"firmament\" language, serious scholars debate whether that's phenomenological description, poetic framework, or literal cosmological claim. That's a legitimate hermeneutical question, not settled by just saying \"ancient people were wrong.\"\n\nWhat I'd push back on is the framing. Your colleague is essentially saying: \"Update your interpretation to match current science.\" But I'd ask him: *which* current science? Because scientific consensus has revised itself substantially within living memory on cosmology, nutrition, psychology, you name it. Scripture has survived many rounds of \"now we know better.\"\n\nMore importantly, inerrancy concerns what scripture *affirms*, not every framework ancient authors borrowed from their cultural context.\n\nThe harder honest question I'd want to sit with him on is: where does accommodation end and actual error begin? That deserves genuine conversation, not dismissal in either direction.\n\nWhat specifically is he pointing to, Ryan?"
+}

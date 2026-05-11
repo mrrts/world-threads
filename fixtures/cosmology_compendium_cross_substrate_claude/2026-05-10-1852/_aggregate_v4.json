@@ -1,0 +1,150 @@
+{
+  "rubric_version": "v4",
+  "judge": "opus",
+  "family_canonical_applied": true,
+  "nc_strata_only": false,
+  "scoring_cost_usd": 1.8826,
+  "n_cells": 24,
+  "cap_defects": [],
+  "by_cell_group": [
+    {
+      "key": "E6|Aaron|bare",
+      "n": 3,
+      "canonical_axis": "either",
+      "widtam_mean": 1.67,
+      "dr_v3_mean": 0.67,
+      "dr_v3_n_measurable": 3,
+      "dr_v3_pass_3plus": 0,
+      "dr_ext_mean": 1.0,
+      "dr_ext_pass_3": 0,
+      "dr_ext_pass_rate": 0.0,
+      "rvc_count": 3,
+      "lp_mean": 1.0,
+      "shape_distribution": {
+        "mixed": 3
+      }
+    },
+    {
+      "key": "E6|Aaron|pipeline",
+      "n": 3,
+      "canonical_axis": "either",
+      "widtam_mean": 4.0,
+      "dr_v3_mean": 1.5,
+      "dr_v3_n_measurable": 2,
+      "dr_v3_pass_3plus": 0,
+      "dr_ext_mean": 2.67,
+      "dr_ext_pass_3": 2,
+      "dr_ext_pass_rate": 0.67,
+      "rvc_count": 1,
+      "lp_mean": 0.67,
+      "shape_distribution": {
+        "reframe": 3
+      }
+    },
+    {
+      "key": "E6|Pastor Rick|bare",
+      "n": 3,
+      "canonical_axis": "either",
+      "widtam_mean": 1.67,
+      "dr_v3_mean": 0.33,
+      "dr_v3_n_measurable": 3,
+      "dr_v3_pass_3plus": 0,
+      "dr_ext_mean": 1.0,
+      "dr_ext_pass_3": 0,
+      "dr_ext_pass_rate": 0.0,
+      "rvc_count": 3,
+      "lp_mean": 1.0,
+      "shape_distribution": {
+        "mixed": 2,
+        "endorsed-allegorization": 1
+      }
+    },
+    {
+      "key": "E6|Pastor Rick|pipeline",
+      "n": 3,
+      "canonical_axis": "either",
+      "widtam_mean": 4.0,
+      "dr_v3_mean": 2.0,
+      "dr_v3_n_measurable": 2,
+      "dr_v3_pass_3plus": 0,
+      "dr_ext_mean": 3.0,
+      "dr_ext_pass_3": 3,
+      "dr_ext_pass_rate": 1.0,
+      "rvc_count": 2,
+      "lp_mean": 0.67,
+      "shape_distribution": {
+        "face-value-holding": 1,
+        "reframe": 2
+      }
+    },
+    {
+      "key": "E7|Aaron|bare",
+      "n": 3,
+      "canonical_axis": "extended",
+      "widtam_mean": 1.0,
+      "dr_v3_mean": 0.0,
+      "dr_v3_n_measurable": 3,
+      "dr_v3_pass_3plus": 0,
+      "dr_ext_mean": 0.33,
+      "dr_ext_pass_3": 0,
+      "dr_ext_pass_rate": 0.0,
+      "rvc_count": 2,
+      "lp_mean": 1.0,
+      "shape_distribution": {
+        "endorsed-allegorization": 3
+      }
+    },
+    {
+      "key": "E7|Aaron|pipeline",
+      "n": 3,
+      "canonical_axis": "extended",
+      "widtam_mean": 2.0,
+      "dr_v3_mean": 0.5,
+      "dr_v3_n_measurable": 2,
+      "dr_v3_pass_3plus": 0,
+      "dr_ext_mean": 1.33,
+      "dr_ext_pass_3": 0,
+      "dr_ext_pass_rate": 0.0,
+      "rvc_count": 2,
+      "lp_mean": 0.33,
+      "shape_distribution": {
+        "mixed": 2,
+        "endorsed-allegorization": 1
+      }
+    },
+    {
+      "key": "E7|Pastor Rick|bare",
+      "n": 3,
+      "canonical_axis": "extended",
+      "widtam_mean": 0.67,
+      "dr_v3_mean": 0.0,
+      "dr_v3_n_measurable": 3,
+      "dr_v3_pass_3plus": 0,
+      "dr_ext_mean": 0.0,
+      "dr_ext_pass_3": 0,
+      "dr_ext_pass_rate": 0.0,
+      "rvc_count": 0,
+      "lp_mean": 1.0,
+      "shape_distribution": {
+        "endorsed-allegorization": 3
+      }
+    },
+    {
+      "key": "E7|Pastor Rick|pipeline",
+      "n": 3,
+      "canonical_axis": "extended",
+      "widtam_mean": 1.0,
+      "dr_v3_mean": 0.0,
+      "dr_v3_n_measurable": 3,
+      "dr_v3_pass_3plus": 0,
+      "dr_ext_mean": 0.33,
+      "dr_ext_pass_3": 0,
+      "dr_ext_pass_rate": 0.0,
+      "rvc_count": 3,
+      "lp_mean": 0.67,
+      "shape_distribution": {
+        "endorsed-allegorization": 3
+      }
+    }
+  ]
+}
