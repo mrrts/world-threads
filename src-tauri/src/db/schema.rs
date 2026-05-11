@@ -2823,5 +2823,130 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         CREATE INDEX IF NOT EXISTS idx_vow_invocations_turn ON vow_invocations(turn_id);"
     )?;
 
+    // ── Web-deployment Phase 1 item 9 (third batch) — final 10 tables ──
+    //
+    // Closes out the user_id scoping work across all 23+ per-user tables.
+    // PLACED AT THE END of run_migrations so the ALTER TABLE statements
+    // run AFTER all CREATE TABLE statements (including VGUS vows / vow_
+    // event_log / vow_invocations and location_derivations which are
+    // created earlier in this function but AFTER the original batches 1+2
+    // user_id blocks). Earlier placement attempted in a prior commit
+    // silently failed via .ok() on missing-table ALTER TABLE calls;
+    // moving here guarantees all tables exist before column additions.
+    //
+    // Tables in this batch (10):
+    //   chunk_metadata - FTS/vector chunks per-character
+    //   settings - GLOBAL+PER-USER mixed; see special handling below
+    //   group_chats - parallel chat path
+    //   group_messages - parallel chat path
+    //   dev_chat_sessions - worldcli dev chat
+    //   dev_chat_messages - worldcli dev chat
+    //   vows - VGUS per-character (character_id FK already user-scoped via batch 1)
+    //   vow_event_log - VGUS append-only log
+    //   vow_invocations - VGUS per-turn index
+    //   location_derivations - per-(world,name); world_id already scoped via batch 1
+    //
+    // Settings special-handling: the settings table has BOTH global keys
+    // (schema.* migration markers, app-wide defaults) AND per-user keys
+    // (response_length.<character_id>, leader.<character_id>, etc.). The
+    // user_id column is added but the sentinel backfill EXCLUDES settings
+    // — global rows correctly stay user_id IS NULL; per-user keys get
+    // user_id assigned at INSERT time by application code (Phase 2+ wiring
+    // when commands/* and db/queries/* thread user_id through). A future
+    // cleanup commit may split the settings table into a `system_config`
+    // table (global, no user_id) + `user_settings` table (always user-
+    // scoped) for cleaner invariants; deferred until the application
+    // code is ready.
+    let per_user_tables_third_batch: &[&str] = &[
+        "chunk_metadata",
+        "settings",
+        "group_chats",
+        "group_messages",
+        "dev_chat_sessions",
+        "dev_chat_messages",
+        "vows",
+        "vow_event_log",
+        "vow_invocations",
+        "location_derivations",
+    ];
+    for table in per_user_tables_third_batch {
+        let has: bool = conn
+            .query_row(
+                "SELECT COUNT(*) FROM pragma_table_info(?1) WHERE name = 'user_id'",
+                rusqlite::params![table],
+                |r| r.get::<_, i64>(0),
+            )
+            .unwrap_or(0)
+            > 0;
+        if !has {
+            conn.execute(
+                &format!("ALTER TABLE {table} ADD COLUMN user_id TEXT"),
+                [],
+            )
+            .ok();
+            conn.execute(
+                &format!("CREATE INDEX IF NOT EXISTS idx_{table}_user ON {table}(user_id)"),
+                [],
+            )
+            .ok();
+        }
+    }
+
+    // Batch-3 sentinel backfill — EXCLUDES settings (mixed global+per-user
+    // keys; global rows correctly stay NULL; per-user keys get assigned
+    // by application code at INSERT time per Phase 2 wiring).
+    let batch3_done: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM settings WHERE key = 'schema.user_id_backfill_v3_done'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
+    if !batch3_done {
+        let backfill_tables: &[&str] = &[
+            "chunk_metadata",
+            "group_chats",
+            "group_messages",
+            "dev_chat_sessions",
+            "dev_chat_messages",
+            "vows",
+            "vow_event_log",
+            "vow_invocations",
+            "location_derivations",
+        ];
+        let any_rows_batch3: bool = backfill_tables.iter().any(|t| {
+            conn.query_row(
+                &format!("SELECT COUNT(*) FROM {t}"),
+                [],
+                |r| r.get::<_, i64>(0),
+            )
+            .unwrap_or(0)
+                > 0
+        });
+        if any_rows_batch3 {
+            const SENTINEL_USER_ID: &str = "00000000-0000-0000-0000-000000000001";
+            conn.execute(
+                "INSERT OR IGNORE INTO users (id, email, password_hash, display_name, timezone)
+                 VALUES (?1, 'local-tauri@worldthreads.localdomain', '$disabled$cannot-login',
+                         'Local Tauri (sentinel)', 'UTC')",
+                rusqlite::params![SENTINEL_USER_ID],
+            )
+            .ok();
+            for table in backfill_tables {
+                conn.execute(
+                    &format!("UPDATE {table} SET user_id = ?1 WHERE user_id IS NULL"),
+                    rusqlite::params![SENTINEL_USER_ID],
+                )
+                .ok();
+            }
+        }
+        conn.execute(
+            "INSERT OR IGNORE INTO settings (key, value) VALUES ('schema.user_id_backfill_v3_done', '1')",
+            [],
+        )
+        .ok();
+    }
+
     Ok(())
 }
