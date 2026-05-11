@@ -1,4 +1,9 @@
-//! Web-deployment Phase 0 — auth scaffolding (types only, no live logic).
+//! Web-deployment Phase 0 + Phase 2 — auth scaffolding + user-context helper.
+//!
+//! Phase 0 ships types only (User / Session / Credentials / etc.).
+//! Phase 2 (this commit's sibling, src/auth/context.rs) adds the
+//! current_user_id() helper that Tauri commands use to thread user_id
+//! through query paths during the user_id-everywhere rollout.
 //!
 //! Per the web-hosting architecture plan at
 //! `reports/2026-05-10-0100-web-hosting-architecture-plan.md`. Stage of
@@ -16,6 +21,8 @@
 //! Schema for `users` + `sessions` is defined in `db::schema::run_migrations`.
 
 use serde::{Deserialize, Serialize};
+
+pub mod context;
 
 /// A user account. Keyed by UUID (string form for SQLite + Postgres
 /// portability). Email is unique. password_hash is argon2id (per the

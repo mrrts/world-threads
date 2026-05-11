@@ -24,13 +24,23 @@ pub struct World {
     pub derived_formula: Option<String>,
 }
 
-pub fn create_world(conn: &Connection, world: &World) -> Result<(), rusqlite::Error> {
+/// Insert a new world owned by `user_id`. Phase 2 thread-through: every
+/// per-user-table INSERT now takes a user_id parameter, populating the
+/// scoping column added in Phase 1 item 9. Tauri-mode callers pass
+/// crate::auth::context::current_user_id(conn)? which returns the
+/// sentinel; future Axum-mode routes pass the user_id from the
+/// authenticated session.
+pub fn create_world(
+    conn: &Connection,
+    world: &World,
+    user_id: &str,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO worlds (world_id, name, description, tone_tags, invariants, state, created_at, updated_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
+        "INSERT INTO worlds (world_id, name, description, tone_tags, invariants, state, created_at, updated_at, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
         params![world.world_id, world.name, world.description,
             world.tone_tags.to_string(), world.invariants.to_string(),
-            world.state.to_string(), world.created_at, world.updated_at],
+            world.state.to_string(), world.created_at, world.updated_at, user_id],
     )?;
     Ok(())
 }

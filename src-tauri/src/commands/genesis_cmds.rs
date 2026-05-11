@@ -668,7 +668,8 @@ pub async fn auto_generate_world_with_characters_cmd(
     let char_names: Vec<String>;
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        create_world(&conn, &world_record).map_err(|e| e.to_string())?;
+        let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+        create_world(&conn, &world_record, user_id).map_err(|e| e.to_string())?;
 
         let mut ids = Vec::new();
         let mut names = Vec::new();

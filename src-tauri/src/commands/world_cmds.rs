@@ -27,7 +27,8 @@ pub fn create_world_cmd(db: State<Database>, name: String) -> Result<World, Stri
         updated_at: now,
         derived_formula: None,
     };
-    create_world(&conn, &world).map_err(|e| e.to_string())?;
+    let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+    create_world(&conn, &world, user_id).map_err(|e| e.to_string())?;
 
     let colors = ["#c4a882", "#82a8c4"];
     let default_names = ["Mara", "Ion"];
