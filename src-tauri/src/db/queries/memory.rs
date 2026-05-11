@@ -19,13 +19,14 @@ pub struct MemoryArtifact {
 pub fn upsert_memory_artifact(
     conn: &Connection,
     a: &MemoryArtifact,
+    user_id: &str,
 ) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO memory_artifacts (artifact_id, artifact_type, subject_id, world_id, content, sources, created_at, updated_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
+        "INSERT INTO memory_artifacts (artifact_id, artifact_type, subject_id, world_id, content, sources, created_at, updated_at, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)
          ON CONFLICT(artifact_id) DO UPDATE SET content=excluded.content, sources=excluded.sources, updated_at=datetime('now')",
         params![a.artifact_id, a.artifact_type, a.subject_id, a.world_id,
-            a.content, a.sources.to_string(), a.created_at, a.updated_at],
+            a.content, a.sources.to_string(), a.created_at, a.updated_at, user_id],
     )?;
     Ok(())
 }

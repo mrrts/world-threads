@@ -51,7 +51,9 @@ pub fn compute_and_persist_mood(
     };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = upsert_character_mood(&conn, &updated);
+        if let Ok(user_id) = crate::auth::context::current_user_id(&conn) {
+            let _ = upsert_character_mood(&conn, &updated, user_id);
+        }
     }
 
     log::info!(
@@ -1180,7 +1182,9 @@ pub async fn send_message_cmd(
                         created_at: Utc::now().to_rfc3339(),
                         updated_at: Utc::now().to_rfc3339(),
                     };
-                    let _ = upsert_memory_artifact(&conn, &artifact);
+                    if let Ok(user_id) = crate::auth::context::current_user_id(&conn) {
+                        let _ = upsert_memory_artifact(&conn, &artifact, user_id);
+                    }
                 }
                 let _ = reset_message_counter(&conn, &thread.thread_id);
                 log::info!(
@@ -2969,7 +2973,9 @@ pub async fn reset_to_message_cmd(
                             created_at: Utc::now().to_rfc3339(),
                             updated_at: Utc::now().to_rfc3339(),
                         };
-                        let _ = upsert_memory_artifact(&conn, &artifact);
+                        if let Ok(user_id) = crate::auth::context::current_user_id(&conn) {
+                            let _ = upsert_memory_artifact(&conn, &artifact, user_id);
+                        }
                         log::info!(
                             "[Reset] Rebuilt thread summary ({} chars)",
                             new_summary.len()

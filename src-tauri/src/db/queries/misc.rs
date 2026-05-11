@@ -213,12 +213,13 @@ pub fn get_character_mood(conn: &Connection, character_id: &str) -> Option<Chara
 pub fn upsert_character_mood(
     conn: &Connection,
     mood: &CharacterMood,
+    user_id: &str,
 ) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO character_mood (character_id, valence, energy, tension, history, updated_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, datetime('now'))
+        "INSERT INTO character_mood (character_id, valence, energy, tension, history, updated_at, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, datetime('now'), ?6)
          ON CONFLICT(character_id) DO UPDATE SET valence=?2, energy=?3, tension=?4, history=?5, updated_at=datetime('now')",
-        params![mood.character_id, mood.valence, mood.energy, mood.tension, mood.history.to_string()],
+        params![mood.character_id, mood.valence, mood.energy, mood.tension, mood.history.to_string(), user_id],
     )?;
     Ok(())
 }

@@ -21,7 +21,8 @@ pub fn get_user_profile_cmd(
 #[tauri::command]
 pub fn update_user_profile_cmd(db: State<Database>, profile: UserProfile) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
-    upsert_user_profile(&conn, &profile).map_err(|e| e.to_string())
+    let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+    upsert_user_profile(&conn, &profile, user_id).map_err(|e| e.to_string())
 }
 
 /// Result type for the UI-facing two-output user-derivation regenerate
