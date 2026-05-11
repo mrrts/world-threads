@@ -239,13 +239,34 @@ export function GenesisModal({ open, onClose, apiKey, googleApiKey: _googleApiKe
     return appearance || about;
   };
 
-  const saveSelfProfile = async (): Promise<void> => {
+  // Save the user-profile row. Accepts optional `overrides` so that
+  // callers (e.g. onImportFromWorld) which have just queued React state
+  // updates via setSelfAppearance/setSelfName/setSelfFacts can pass the
+  // freshly-computed values directly — React state setters don't update
+  // closure-captured values synchronously, so reading from `selfName`
+  // etc. immediately after `setSelfName(...)` returns stale data.
+  //
+  // We always pass avatar_file: "" because Genesis doesn't track the
+  // avatar filename in React state; the backend's upsert preserves any
+  // existing non-empty avatar_file when "" is passed (see
+  // src-tauri/src/db/queries/user_profile.rs::upsert_user_profile).
+  const saveSelfProfile = async (overrides?: {
+    name?: string;
+    appearance?: string;
+    about?: string;
+    facts?: string[];
+  }): Promise<void> => {
     if (!result) return;
+    const name = overrides?.name ?? selfName;
+    const appearance = (overrides?.appearance ?? selfAppearance).trim();
+    const about = (overrides?.about ?? selfAbout).trim();
+    const facts = overrides?.facts ?? selfFacts;
+    const description = appearance && about ? `${appearance}\n\n${about}` : appearance || about;
     await api.updateUserProfile({
       world_id: result.world_id,
-      display_name: selfName.trim() || "Me",
-      description: composedSelfDescription(),
-      facts: selfFacts.filter((f) => f.trim()),
+      display_name: name.trim() || "Me",
+      description,
+      facts: facts.filter((f) => f.trim()),
       boundaries: [],
       avatar_file: "",
       updated_at: "",
@@ -266,14 +287,24 @@ export function GenesisModal({ open, onClose, apiKey, googleApiKey: _googleApiKe
       const dataUrl = await api.setUserAvatarFromGallery(result.world_id, avatar.avatar_file);
       setUserAvatarUrl(dataUrl || "");
       const sourceProfile = await api.getUserProfile(avatar.world_id).catch(() => null);
+      // Track the freshly-imported values locally so we can pass them
+      // to saveSelfProfile() in this same tick — React setters queue
+      // updates that don't appear in closure-captured state until the
+      // next render, so reading `selfName` etc. directly after calling
+      // `setSelfName(...)` returns stale (pre-import) values.
+      let importedName = selfName;
+      let importedAppearance = selfAppearance;
+      let importedFacts = selfFacts;
       if (sourceProfile) {
         // Pre-fill ONLY blank fields — never clobber what the user
         // already typed. Treat appearance/name/about/facts as separate
         // imports so partial-edits don't get reset.
         if (!selfAppearance.trim() && sourceProfile.description) {
+          importedAppearance = sourceProfile.description;
           setSelfAppearance(sourceProfile.description);
         }
         if (!selfName.trim() && sourceProfile.display_name && sourceProfile.display_name !== "Me") {
+          importedName = sourceProfile.display_name;
           setSelfName(sourceProfile.display_name);
         }
         const existingFacts = (sourceProfile.facts as unknown);
@@ -281,6 +312,7 @@ export function GenesisModal({ open, onClose, apiKey, googleApiKey: _googleApiKe
           ? (existingFacts as unknown[]).filter((x): x is string => typeof x === "string")
           : [];
         if (selfFacts.filter((f) => f.trim()).length === 0 && factsArr.length > 0) {
+          importedFacts = factsArr;
           setSelfFacts(factsArr);
           // Open the advanced section so the imported facts are visible
           // and the user can see what got carried over.
@@ -289,7 +321,14 @@ export function GenesisModal({ open, onClose, apiKey, googleApiKey: _googleApiKe
       }
       // Persist the freshly-imported state so the world has a real
       // profile row (mirrors what onPaintSelf does after a paint).
-      await saveSelfProfile();
+      // Pass explicit overrides so saveSelfProfile doesn't read stale
+      // closure-state. Backend upsert preserves the avatar_file just
+      // set by setUserAvatarFromGallery (see user_profile.rs upsert).
+      await saveSelfProfile({
+        name: importedName,
+        appearance: importedAppearance,
+        facts: importedFacts,
+      });
     } catch (e: any) {
       setSelfError(String(e));
     } finally {

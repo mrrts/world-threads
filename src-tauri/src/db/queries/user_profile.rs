@@ -91,9 +91,15 @@ pub fn upsert_user_profile(
     p: &UserProfile,
     user_id: &str,
 ) -> Result<(), rusqlite::Error> {
+    // Defensive: when the caller passes an empty avatar_file on UPDATE
+    // (e.g. Genesis's saveSelfProfile hard-codes "" because it doesn't
+    // know about an avatar set out-of-band by set_user_avatar_from_gallery
+    // or generate_user_avatar), preserve any existing non-empty avatar_file
+    // rather than wiping it. INSERT-path keeps "" because there's no
+    // prior value to preserve.
     conn.execute(
         "INSERT INTO user_profiles (world_id, display_name, description, facts, boundaries, avatar_file, updated_at, derived_formula, derived_summary, user_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, datetime('now'), ?7, ?8, ?9)
-         ON CONFLICT(world_id) DO UPDATE SET display_name=?2, description=?3, facts=?4, boundaries=?5, avatar_file=?6, updated_at=datetime('now'), derived_formula=?7, derived_summary=?8",
+         ON CONFLICT(world_id) DO UPDATE SET display_name=?2, description=?3, facts=?4, boundaries=?5, avatar_file=CASE WHEN ?6 = '' THEN avatar_file ELSE ?6 END, updated_at=datetime('now'), derived_formula=?7, derived_summary=?8",
         params![p.world_id, p.display_name, p.description, p.facts.to_string(), p.boundaries.to_string(), p.avatar_file, p.derived_formula, p.derived_summary, user_id],
     )?;
     Ok(())
