@@ -396,7 +396,8 @@ pub async fn generate_imagined_chapter_cmd(
             breadcrumb_message_id: None,
             canonized: false,
         };
-        create_imagined_chapter(&conn, &row).map_err(|e| e.to_string())?;
+        let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+        create_imagined_chapter(&conn, &row, user_id).map_err(|e| e.to_string())?;
     }
 
     // ─── Stage 1: invent the scene ──────────────────────────────────────
@@ -1048,7 +1049,7 @@ mod tests {
             breadcrumb_message_id: Some(breadcrumb_id.to_string()),
             canonized: true,
         };
-        create_imagined_chapter(&conn, &chapter).expect("create chapter");
+        create_imagined_chapter(&conn, &chapter, "test-user").expect("create chapter");
         conn.execute(
             "INSERT INTO messages (message_id, thread_id, role, content, created_at)
              VALUES (?1, ?2, 'imagined_chapter', ?3, ?4)",
@@ -1108,7 +1109,7 @@ mod tests {
             breadcrumb_message_id: Some(breadcrumb_id.to_string()),
             canonized: true,
         };
-        create_imagined_chapter(&conn, &chapter).expect("create chapter");
+        create_imagined_chapter(&conn, &chapter, "test-user").expect("create chapter");
         conn.execute(
             "INSERT INTO messages (message_id, thread_id, role, content, created_at)
              VALUES (?1, ?2, 'imagined_chapter', ?3, ?4)",

@@ -277,7 +277,8 @@ pub async fn refresh_relational_stance(
     };
     {
         let conn = conn_arc.lock().map_err(|e| e.to_string())?;
-        insert_relational_stance(&conn, &stance).map_err(|e| e.to_string())?;
+        let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+        insert_relational_stance(&conn, &stance, user_id).map_err(|e| e.to_string())?;
     }
     Ok(())
 }

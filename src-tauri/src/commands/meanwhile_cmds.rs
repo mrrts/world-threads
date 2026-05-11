@@ -117,7 +117,8 @@ pub async fn generate_meanwhile_events_cmd(
         };
         {
             let conn = db.conn.lock().map_err(|e| e.to_string())?;
-            if let Err(e) = create_meanwhile_event(&conn, &event) {
+            let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+            if let Err(e) = create_meanwhile_event(&conn, &event, user_id) {
                 log::warn!(
                     "[Meanwhile] insert failed for {}: {e}",
                     character.display_name

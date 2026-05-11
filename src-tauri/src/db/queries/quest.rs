@@ -39,15 +39,21 @@ pub struct Quest {
     pub origin_ref: Option<String>,
 }
 
-pub fn create_quest(conn: &Connection, q: &Quest) -> Result<(), rusqlite::Error> {
+/// Phase 2 thread-through (batch-4): user_id now populated on INSERT.
+/// Tauri callers pass crate::auth::context::current_user_id(conn)?.
+pub fn create_quest(
+    conn: &Connection,
+    q: &Quest,
+    user_id: &str,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
         "INSERT INTO quests
            (quest_id, world_id, title, description, notes,
             accepted_at, accepted_world_day,
             completed_at, completed_world_day, completion_note,
             abandoned_at, abandoned_world_day, abandonment_note,
-            origin_kind, origin_ref)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)",
+            origin_kind, origin_ref, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)",
         params![
             q.quest_id,
             q.world_id,
@@ -64,6 +70,7 @@ pub fn create_quest(conn: &Connection, q: &Quest) -> Result<(), rusqlite::Error>
             q.abandonment_note,
             q.origin_kind,
             q.origin_ref,
+            user_id,
         ],
     )?;
     Ok(())

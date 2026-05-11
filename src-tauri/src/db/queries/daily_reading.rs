@@ -21,20 +21,23 @@ pub struct DailyReading {
     pub created_at: String,
 }
 
+/// Phase 2 thread-through (batch-4): user_id now populated on INSERT.
+/// user_id is identity-stable on conflict.
 pub fn upsert_daily_reading(
     conn: &Connection,
     reading: &DailyReading,
+    user_id: &str,
 ) -> Result<(), rusqlite::Error> {
     let domains_json = serde_json::to_string(&reading.domains).unwrap_or_else(|_| "[]".to_string());
     conn.execute(
-        "INSERT INTO daily_readings (reading_id, world_id, world_day, domains, complication, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6)
+        "INSERT INTO daily_readings (reading_id, world_id, world_day, domains, complication, created_at, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
          ON CONFLICT(world_id, world_day) DO UPDATE SET
            domains = excluded.domains,
            complication = excluded.complication,
            created_at = excluded.created_at",
         params![reading.reading_id, reading.world_id, reading.world_day,
-            domains_json, reading.complication, reading.created_at],
+            domains_json, reading.complication, reading.created_at, user_id],
     )?;
     Ok(())
 }

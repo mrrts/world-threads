@@ -57,7 +57,8 @@ pub fn create_quest_cmd(
         origin_kind: kind,
         origin_ref,
     };
-    create_quest(&conn, &quest).map_err(|e| e.to_string())?;
+    let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+    create_quest(&conn, &quest, user_id).map_err(|e| e.to_string())?;
     Ok(quest)
 }
 

@@ -13,13 +13,16 @@ pub struct JournalEntry {
 /// Upsert an entry for (character_id, world_day). ON CONFLICT REPLACE
 /// semantics mean re-running the generate button for today overwrites
 /// today's entry instead of accumulating — one per char per day.
+/// Phase 2 thread-through (batch-4): user_id now populated on INSERT.
+/// user_id is identity-stable on conflict.
 pub fn upsert_journal_entry(
     conn: &Connection,
     entry: &JournalEntry,
+    user_id: &str,
 ) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO character_journals (journal_id, character_id, world_day, content, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5)
+        "INSERT INTO character_journals (journal_id, character_id, world_day, content, created_at, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6)
          ON CONFLICT(character_id, world_day) DO UPDATE SET
            content = excluded.content,
            created_at = excluded.created_at",
@@ -28,7 +31,8 @@ pub fn upsert_journal_entry(
             entry.character_id,
             entry.world_day,
             entry.content,
-            entry.created_at
+            entry.created_at,
+            user_id,
         ],
     )?;
     Ok(())

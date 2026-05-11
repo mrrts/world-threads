@@ -700,7 +700,8 @@ pub fn save_novel_entry_cmd(
         created_at: now.clone(),
         updated_at: now,
     };
-    upsert_novel_entry(&conn, &entry).map_err(|e| e.to_string())?;
+    let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+    upsert_novel_entry(&conn, &entry, user_id).map_err(|e| e.to_string())?;
 
     Ok(entry)
 }
@@ -1016,7 +1017,9 @@ pub async fn run_background_novelization_cmd(
                         updated_at: now,
                     };
                     if let Ok(conn) = db.conn.lock() {
-                        let _ = upsert_novel_entry(&conn, &entry);
+                        if let Ok(user_id) = crate::auth::context::current_user_id(&conn) {
+                            let _ = upsert_novel_entry(&conn, &entry, user_id);
+                        }
                     }
                     let _ = ah.emit(
                         "bg-novelize",

@@ -18,13 +18,22 @@ pub struct KeptRecord {
     pub created_at: String,
 }
 
-pub fn create_kept_record(conn: &Connection, e: &KeptRecord) -> Result<(), rusqlite::Error> {
+/// Phase 2 thread-through (batch-4 query-threading): user_id now
+/// populated on INSERT. Tauri-mode callers pass
+/// crate::auth::context::current_user_id(conn)? which returns the
+/// sentinel; future Axum-mode routes pass the user_id from the
+/// authenticated session.
+pub fn create_kept_record(
+    conn: &Connection,
+    e: &KeptRecord,
+    user_id: &str,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO kept_records (kept_id, source_message_id, source_thread_id, source_world_day, source_created_at, subject_type, subject_id, record_type, content, user_note, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
+        "INSERT INTO kept_records (kept_id, source_message_id, source_thread_id, source_world_day, source_created_at, subject_type, subject_id, record_type, content, user_note, created_at, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
         params![
             e.kept_id, e.source_message_id, e.source_thread_id, e.source_world_day, e.source_created_at,
-            e.subject_type, e.subject_id, e.record_type, e.content, e.user_note, e.created_at,
+            e.subject_type, e.subject_id, e.record_type, e.content, e.user_note, e.created_at, user_id,
         ],
     )?;
     Ok(())

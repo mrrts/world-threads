@@ -35,16 +35,18 @@ pub struct LoadTestAnchor {
     pub created_at: String,
 }
 
+/// Phase 2 thread-through (batch-4): user_id now populated on INSERT.
 pub fn insert_load_test_anchor(
     conn: &Connection,
     a: &LoadTestAnchor,
+    user_id: &str,
 ) -> Result<(), rusqlite::Error> {
     conn.execute(
         "INSERT INTO character_load_test_anchors (
             anchor_id, character_id, world_id, axis_kind, anchor_label, anchor_body,
             derivation_summary, world_day_at_generation, source_message_count,
-            refresh_trigger, model_used, created_at
-        ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
+            refresh_trigger, model_used, created_at, user_id
+        ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
         params![
             a.anchor_id,
             a.character_id,
@@ -58,6 +60,7 @@ pub fn insert_load_test_anchor(
             a.refresh_trigger,
             a.model_used,
             a.created_at,
+            user_id,
         ],
     )?;
     Ok(())

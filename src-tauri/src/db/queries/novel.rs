@@ -11,12 +11,20 @@ pub struct NovelEntry {
     pub updated_at: String,
 }
 
-pub fn upsert_novel_entry(conn: &Connection, entry: &NovelEntry) -> Result<(), rusqlite::Error> {
+/// Phase 2 thread-through (batch-4): user_id now populated on INSERT.
+/// user_id is identity-stable on conflict (ON CONFLICT DO UPDATE does
+/// not touch user_id — only content and updated_at, matching the
+/// established Phase 2 pattern).
+pub fn upsert_novel_entry(
+    conn: &Connection,
+    entry: &NovelEntry,
+    user_id: &str,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO novel_entries (novel_id, thread_id, world_day, content, created_at, updated_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6)
+        "INSERT INTO novel_entries (novel_id, thread_id, world_day, content, created_at, updated_at, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
          ON CONFLICT(thread_id, world_day) DO UPDATE SET content = ?4, updated_at = ?6",
-        params![entry.novel_id, entry.thread_id, entry.world_day, entry.content, entry.created_at, entry.updated_at],
+        params![entry.novel_id, entry.thread_id, entry.world_day, entry.content, entry.created_at, entry.updated_at, user_id],
     )?;
     Ok(())
 }

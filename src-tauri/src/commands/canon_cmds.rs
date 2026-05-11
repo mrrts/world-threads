@@ -342,7 +342,8 @@ pub fn save_kept_record_cmd(
         user_note: request.user_note,
         created_at: Utc::now().to_rfc3339(),
     };
-    create_kept_record(&conn, &entry).map_err(|e| e.to_string())?;
+    let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+    create_kept_record(&conn, &entry, user_id).map_err(|e| e.to_string())?;
 
     // Stance refresh trigger — same logic as commit_auto_canon_cmd:
     // canonization is the moment that earned this re-synthesis.
@@ -839,7 +840,8 @@ fn write_kept_record(
         user_note: request.user_note.clone(),
         created_at: Utc::now().to_rfc3339(),
     };
-    create_kept_record(conn, &entry).map_err(|e| e.to_string())?;
+    let user_id = crate::auth::context::current_user_id(conn).map_err(|e| e.to_string())?;
+    create_kept_record(conn, &entry, user_id).map_err(|e| e.to_string())?;
     Ok(kept_id)
 }
 

@@ -12,14 +12,17 @@ pub struct MeanwhileEvent {
     pub created_at: String,
 }
 
+/// Phase 2 thread-through (batch-4): user_id now populated on INSERT.
+/// Tauri callers pass crate::auth::context::current_user_id(conn)?.
 pub fn create_meanwhile_event(
     conn: &Connection,
     e: &MeanwhileEvent,
+    user_id: &str,
 ) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO meanwhile_events (event_id, world_id, character_id, world_day, time_of_day, summary, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
-        params![e.event_id, e.world_id, e.character_id, e.world_day, e.time_of_day, e.summary, e.created_at],
+        "INSERT INTO meanwhile_events (event_id, world_id, character_id, world_day, time_of_day, summary, created_at, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
+        params![e.event_id, e.world_id, e.character_id, e.world_day, e.time_of_day, e.summary, e.created_at, user_id],
     )?;
     Ok(())
 }

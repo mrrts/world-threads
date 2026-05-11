@@ -147,7 +147,8 @@ pub async fn generate_daily_reading_cmd(
     };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        upsert_daily_reading(&conn, &reading).map_err(|e| e.to_string())?;
+        let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+        upsert_daily_reading(&conn, &reading, user_id).map_err(|e| e.to_string())?;
     }
     log::info!("[DailyReading] wrote reading for world {world_id} Day {world_day}");
     Ok(reading)

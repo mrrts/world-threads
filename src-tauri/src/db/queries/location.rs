@@ -95,10 +95,16 @@ pub fn list_saved_places(
 /// the source of truth; the modal's checkbox-disable is the user-side
 /// guard against ever hitting it). New rows start with last_used_at =
 /// created_at so they sort to the top of the freshness list immediately.
-pub fn create_saved_place(conn: &Connection, place: &SavedPlace) -> Result<(), rusqlite::Error> {
+/// Phase 2 thread-through (batch-4): user_id now populated on INSERT.
+/// Tauri callers pass crate::auth::context::current_user_id(conn)?.
+pub fn create_saved_place(
+    conn: &Connection,
+    place: &SavedPlace,
+    user_id: &str,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT OR IGNORE INTO saved_places (saved_place_id, world_id, name, created_at, last_used_at) VALUES (?1, ?2, ?3, ?4, ?4)",
-        params![place.saved_place_id, place.world_id, place.name, place.created_at],
+        "INSERT OR IGNORE INTO saved_places (saved_place_id, world_id, name, created_at, last_used_at, user_id) VALUES (?1, ?2, ?3, ?4, ?4, ?5)",
+        params![place.saved_place_id, place.world_id, place.name, place.created_at, user_id],
     )?;
     Ok(())
 }

@@ -16,17 +16,19 @@ pub struct RelationalStance {
     pub created_at: String,
 }
 
+/// Phase 2 thread-through (batch-4): user_id now populated on INSERT.
 pub fn insert_relational_stance(
     conn: &Connection,
     s: &RelationalStance,
+    user_id: &str,
 ) -> Result<(), rusqlite::Error> {
     conn.execute(
         "INSERT INTO relational_stances (
             stance_id, character_id, world_id, stance_text,
             world_day_at_generation, source_kept_record_count,
             source_journal_count, source_message_count,
-            refresh_trigger, model_used, created_at
-        ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
+            refresh_trigger, model_used, created_at, user_id
+        ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
         params![
             s.stance_id,
             s.character_id,
@@ -39,6 +41,7 @@ pub fn insert_relational_stance(
             s.refresh_trigger,
             s.model_used,
             s.created_at,
+            user_id,
         ],
     )?;
     Ok(())

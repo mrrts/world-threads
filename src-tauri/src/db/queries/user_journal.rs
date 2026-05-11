@@ -15,13 +15,16 @@ pub struct UserJournalEntry {
     pub created_at: String,
 }
 
+/// Phase 2 thread-through (batch-4): user_id now populated on INSERT.
+/// user_id is identity-stable on conflict.
 pub fn upsert_user_journal_entry(
     conn: &Connection,
     entry: &UserJournalEntry,
+    user_id: &str,
 ) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO user_journals (journal_id, world_id, world_day, content, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5)
+        "INSERT INTO user_journals (journal_id, world_id, world_day, content, created_at, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6)
          ON CONFLICT(world_id, world_day) DO UPDATE SET
            content = excluded.content,
            created_at = excluded.created_at",
@@ -30,7 +33,8 @@ pub fn upsert_user_journal_entry(
             entry.world_id,
             entry.world_day,
             entry.content,
-            entry.created_at
+            entry.created_at,
+            user_id,
         ],
     )?;
     Ok(())

@@ -202,7 +202,8 @@ fn maybe_save_place(
         created_at: when.to_string(),
         last_used_at: when.to_string(),
     };
-    create_saved_place(conn, &place).map_err(|e| e.to_string())?;
+    let user_id = crate::auth::context::current_user_id(conn).map_err(|e| e.to_string())?;
+    create_saved_place(conn, &place, user_id).map_err(|e| e.to_string())?;
     Ok(Some(place))
 }
 

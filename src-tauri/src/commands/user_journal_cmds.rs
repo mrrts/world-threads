@@ -90,7 +90,8 @@ pub async fn generate_user_journal_cmd(
     };
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        upsert_user_journal_entry(&conn, &entry).map_err(|e| e.to_string())?;
+        let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+        upsert_user_journal_entry(&conn, &entry, user_id).map_err(|e| e.to_string())?;
     }
     log::info!(
         "[UserJournal] wrote entry for {} on Day {target_day} (current world-day: {})",

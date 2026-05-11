@@ -29,13 +29,15 @@ pub struct ImaginedChapter {
     pub canonized: bool,
 }
 
+/// Phase 2 thread-through (batch-4): user_id now populated on INSERT.
 pub fn create_imagined_chapter(
     conn: &Connection,
     chapter: &ImaginedChapter,
+    user_id: &str,
 ) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO imagined_chapters (chapter_id, thread_id, world_day, title, seed_hint, scene_location, scene_description, image_id, content, created_at, breadcrumb_message_id, canonized)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
+        "INSERT INTO imagined_chapters (chapter_id, thread_id, world_day, title, seed_hint, scene_location, scene_description, image_id, content, created_at, breadcrumb_message_id, canonized, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
         params![
             chapter.chapter_id,
             chapter.thread_id,
@@ -49,6 +51,7 @@ pub fn create_imagined_chapter(
             chapter.created_at,
             chapter.breadcrumb_message_id,
             chapter.canonized as i32,
+            user_id,
         ],
     )?;
     Ok(())

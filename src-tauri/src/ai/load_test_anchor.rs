@@ -343,6 +343,7 @@ pub async fn refresh_load_test_anchor(
     let mut inserted = 0usize;
     {
         let conn = conn_arc.lock().map_err(|e| e.to_string())?;
+        let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
         for axis_def in REGISTER_AXES {
             let synth = match parsed.get(axis_def.kind) {
                 Some(s) => s,
@@ -375,7 +376,7 @@ pub async fn refresh_load_test_anchor(
                 model_used: model.clone(),
                 created_at: now.clone(),
             };
-            insert_load_test_anchor(&conn, &row).map_err(|e| e.to_string())?;
+            insert_load_test_anchor(&conn, &row, user_id).map_err(|e| e.to_string())?;
             inserted += 1;
         }
     }
