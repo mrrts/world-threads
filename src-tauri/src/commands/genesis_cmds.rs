@@ -720,6 +720,7 @@ pub async fn auto_generate_world_with_characters_cmd(
                     world_id: world_id.clone(),
                     created_at: ch_now,
                 },
+                user_id,
             )
             .map_err(|e| e.to_string())?;
             names.push(character.display_name.clone());

@@ -11,7 +11,14 @@ pub struct Thread {
     pub created_at: String,
 }
 
-pub fn create_thread(conn: &Connection, t: &Thread) -> Result<(), rusqlite::Error> {
+/// Insert a new (solo) thread owned by `user_id`. Phase 2 thread-through:
+/// signature extends with user_id parameter; INSERT SQL appends user_id
+/// column. See create_world / create_character for the same template.
+pub fn create_thread(
+    conn: &Connection,
+    t: &Thread,
+    user_id: &str,
+) -> Result<(), rusqlite::Error> {
     // create_thread is solo-only (Thread.character_id is String, never
     // NULL). Group-chat shell threads are inserted directly in group.rs
     // with character_id = NULL and no current_location (the group_chats
@@ -19,8 +26,8 @@ pub fn create_thread(conn: &Connection, t: &Thread) -> Result<(), rusqlite::Erro
     // to 'Town Square'; the schema migration backfills any pre-existing
     // NULL solo-thread rows to match.
     conn.execute(
-        "INSERT INTO threads (thread_id, character_id, world_id, created_at, current_location) VALUES (?1, ?2, ?3, ?4, 'Town Square')",
-        params![t.thread_id, t.character_id, t.world_id, t.created_at],
+        "INSERT INTO threads (thread_id, character_id, world_id, created_at, current_location, user_id) VALUES (?1, ?2, ?3, ?4, 'Town Square', ?5)",
+        params![t.thread_id, t.character_id, t.world_id, t.created_at, user_id],
     )?;
     Ok(())
 }

@@ -162,6 +162,7 @@ pub fn create_character_cmd(
             world_id,
             created_at: now,
         },
+        user_id,
     )
     .map_err(|e| e.to_string())?;
 

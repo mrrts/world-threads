@@ -75,6 +75,7 @@ pub fn create_world_cmd(db: State<Database>, name: String) -> Result<World, Stri
                 world_id: world_id.clone(),
                 created_at: ch_now,
             },
+            user_id,
         )
         .map_err(|e| e.to_string())?;
     }
