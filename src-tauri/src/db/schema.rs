@@ -2551,6 +2551,126 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         .ok();
     }
 
+    // ── Web-deployment Phase 1 item 9 (second batch) — 10 more tables ──
+    //
+    // Continues the user_id scoping pattern landed in batch 1 (worlds /
+    // characters / threads). Same migration shape: ALTER TABLE ADD COLUMN
+    // user_id TEXT (nullable) + per-table idx_{table}_user index +
+    // optional one-shot sentinel-user backfill gated by its own settings
+    // marker so already-batch-1-applied DBs run only this new batch.
+    //
+    // Tables in this batch (10):
+    //   user_profiles - per-world per-user namespaced (1 row per user)
+    //   messages - per-thread per-user
+    //   world_events - per-world per-user
+    //   memory_artifacts - per-character per-user
+    //   character_portraits - per-character per-user
+    //   world_images - per-world per-user
+    //   chat_backgrounds - per-thread per-user
+    //   token_usage - per-thread per-user
+    //   reactions - per-message per-user
+    //   character_mood - per-character per-user
+    //
+    // Deferred to batch 3+: chunk_metadata (FTS chunks; high-volume so
+    // separate batch); settings (mixed global+per-user keys; needs
+    // careful per-key analysis to avoid scoping global schema markers);
+    // group_chats / group_messages / dev_chat_sessions / dev_chat_messages
+    // (parallel-chat path); location_derivations (already keyed by
+    // world_id which is now scoped; could inherit indirectly).
+    let per_user_tables_second_batch: &[&str] = &[
+        "user_profiles",
+        "messages",
+        "world_events",
+        "memory_artifacts",
+        "character_portraits",
+        "world_images",
+        "chat_backgrounds",
+        "token_usage",
+        "reactions",
+        "character_mood",
+    ];
+    for table in per_user_tables_second_batch {
+        let has: bool = conn
+            .query_row(
+                "SELECT COUNT(*) FROM pragma_table_info(?1) WHERE name = 'user_id'",
+                rusqlite::params![table],
+                |r| r.get::<_, i64>(0),
+            )
+            .unwrap_or(0)
+            > 0;
+        if !has {
+            conn.execute(
+                &format!("ALTER TABLE {table} ADD COLUMN user_id TEXT"),
+                [],
+            )
+            .ok();
+            conn.execute(
+                &format!("CREATE INDEX IF NOT EXISTS idx_{table}_user ON {table}(user_id)"),
+                [],
+            )
+            .ok();
+        }
+    }
+
+    // Batch-2 sentinel backfill. Independent marker from batch 1 so
+    // upgrades from a batch-1-applied DB to a batch-2-applied DB don't
+    // skip these new tables. The sentinel user (if it exists) was
+    // created in batch 1; we reuse it here. Fresh installs that ran
+    // batch 1 + 2 in the same migration pass already-have-marker-1-set
+    // and skip both; batch 2 marker is set regardless to enable batch 3.
+    let batch2_done: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM settings WHERE key = 'schema.user_id_backfill_v2_done'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
+    if !batch2_done {
+        let any_rows_batch2: bool = conn
+            .query_row(
+                "SELECT
+                    (SELECT COUNT(*) FROM user_profiles) +
+                    (SELECT COUNT(*) FROM messages) +
+                    (SELECT COUNT(*) FROM world_events) +
+                    (SELECT COUNT(*) FROM memory_artifacts) +
+                    (SELECT COUNT(*) FROM character_portraits) +
+                    (SELECT COUNT(*) FROM world_images) +
+                    (SELECT COUNT(*) FROM chat_backgrounds) +
+                    (SELECT COUNT(*) FROM token_usage) +
+                    (SELECT COUNT(*) FROM reactions) +
+                    (SELECT COUNT(*) FROM character_mood) AS total",
+                [],
+                |r| r.get::<_, i64>(0),
+            )
+            .unwrap_or(0)
+            > 0;
+        if any_rows_batch2 {
+            const SENTINEL_USER_ID: &str = "00000000-0000-0000-0000-000000000001";
+            // Ensure sentinel exists (might be a fresh install upgrading
+            // straight to v2; INSERT OR IGNORE makes this idempotent).
+            conn.execute(
+                "INSERT OR IGNORE INTO users (id, email, password_hash, display_name, timezone)
+                 VALUES (?1, 'local-tauri@worldthreads.localdomain', '$disabled$cannot-login',
+                         'Local Tauri (sentinel)', 'UTC')",
+                rusqlite::params![SENTINEL_USER_ID],
+            )
+            .ok();
+            for table in per_user_tables_second_batch {
+                conn.execute(
+                    &format!("UPDATE {table} SET user_id = ?1 WHERE user_id IS NULL"),
+                    rusqlite::params![SENTINEL_USER_ID],
+                )
+                .ok();
+            }
+        }
+        conn.execute(
+            "INSERT OR IGNORE INTO settings (key, value) VALUES ('schema.user_id_backfill_v2_done', '1')",
+            [],
+        )
+        .ok();
+    }
+
     // ── Web-deployment Phase 1 item 7 — subscriptions + stripe events ───
     //
     // Per the web-hosting architecture plan § X (Stripe integration). The
