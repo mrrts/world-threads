@@ -3054,5 +3054,95 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         .ok();
     }
 
+    // ─── Web-deployment Phase 1 item 9 (FIFTH BATCH): user_id scoping on
+    // the final five per-user tables surfaced as the explicitly-deferred
+    // set in the batch-4 commit (680d3acd). These were not on the Phase 2
+    // query-threading inventory's candidate list, so they fell out of
+    // batches 1-4; this batch lands them so per-user-table scoping at
+    // column level is complete across every per-user surface known to
+    // the schema.
+    //
+    // Tables added in this batch:
+    //   character_inventory_snapshots - per-character per-user inventory snapshot
+    //   consultant_chats - per-thread per-user consultant interaction
+    //   consultant_messages - per-consultant_chat per-user
+    //   inventory_update_records - per-character per-user inventory diff
+    //   message_count_tracker - per-thread per-user message counter
+    //
+    // Same migration pattern + sentinel-user backfill + per-batch
+    // marker (schema.user_id_backfill_v5_done). With this batch landing,
+    // per-user-table scoping by-table is now 39 of 39 at column level.
+    let per_user_tables_fifth_batch: &[&str] = &[
+        "character_inventory_snapshots",
+        "consultant_chats",
+        "consultant_messages",
+        "inventory_update_records",
+        "message_count_tracker",
+    ];
+    for table in per_user_tables_fifth_batch {
+        let has: bool = conn
+            .query_row(
+                "SELECT COUNT(*) FROM pragma_table_info(?1) WHERE name = 'user_id'",
+                rusqlite::params![table],
+                |r| r.get::<_, i64>(0),
+            )
+            .unwrap_or(0)
+            > 0;
+        if !has {
+            conn.execute(
+                &format!("ALTER TABLE {table} ADD COLUMN user_id TEXT"),
+                [],
+            )
+            .ok();
+            conn.execute(
+                &format!("CREATE INDEX IF NOT EXISTS idx_{table}_user ON {table}(user_id)"),
+                [],
+            )
+            .ok();
+        }
+    }
+
+    let batch5_done: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM settings WHERE key = 'schema.user_id_backfill_v5_done'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
+    if !batch5_done {
+        let any_rows_batch5: bool = per_user_tables_fifth_batch.iter().any(|t| {
+            conn.query_row(
+                &format!("SELECT COUNT(*) FROM {t}"),
+                [],
+                |r| r.get::<_, i64>(0),
+            )
+            .unwrap_or(0)
+                > 0
+        });
+        if any_rows_batch5 {
+            const SENTINEL_USER_ID: &str = "00000000-0000-0000-0000-000000000001";
+            conn.execute(
+                "INSERT OR IGNORE INTO users (id, email, password_hash, display_name, timezone)
+                 VALUES (?1, 'local-tauri@worldthreads.localdomain', '$disabled$cannot-login',
+                         'Local Tauri (sentinel)', 'UTC')",
+                rusqlite::params![SENTINEL_USER_ID],
+            )
+            .ok();
+            for table in per_user_tables_fifth_batch {
+                conn.execute(
+                    &format!("UPDATE {table} SET user_id = ?1 WHERE user_id IS NULL"),
+                    rusqlite::params![SENTINEL_USER_ID],
+                )
+                .ok();
+            }
+        }
+        conn.execute(
+            "INSERT OR IGNORE INTO settings (key, value) VALUES ('schema.user_id_backfill_v5_done', '1')",
+            [],
+        )
+        .ok();
+    }
+
     Ok(())
 }
