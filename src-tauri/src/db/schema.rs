@@ -2948,5 +2948,111 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         .ok();
     }
 
+    // ── Web-deployment Phase 1 item 9 (fourth batch) — 11 missed tables ─
+    //
+    // Surfaced 2026-05-11 during Phase 2 query-threading inventory: the
+    // original "23+ tables" estimate from the readiness summary was
+    // approximate; actual per-user-table count is closer to 33+. This
+    // batch closes the gap on 11 tables that weren't in batches 1-3:
+    //
+    //   kept_records - canonized memory records per-user
+    //   meanwhile_events - between-world-events per-user
+    //   quests - per-user quest tracking
+    //   saved_places - per-world per-user saved locations
+    //   novel_entries - per-character per-user novel chapters
+    //   daily_readings - per-world per-user daily-reading entries
+    //   relational_stances - per-character per-user relational state
+    //   imagined_chapters - per-thread per-user imagined chapters
+    //   character_journals - per-character per-user journal entries
+    //   user_journals - per-world per-user user-journal entries
+    //   character_load_test_anchors - per-character load-test anchors
+    //
+    // Same migration pattern + sentinel-user backfill + per-batch
+    // marker (schema.user_id_backfill_v4_done). Three name corrections
+    // from initial inventory: relational_stance→relational_stances;
+    // journal_entries→character_journals; user_journal_entries→
+    // user_journals; load_test_anchors→character_load_test_anchors.
+    //
+    // Remaining tables NOT in any user_id batch yet (deferred to batch 5+):
+    // character_inventory_snapshots / consultant_chats / consultant_messages
+    // / inventory_update_records / message_count_tracker.
+    let per_user_tables_fourth_batch: &[&str] = &[
+        "kept_records",
+        "meanwhile_events",
+        "quests",
+        "saved_places",
+        "novel_entries",
+        "daily_readings",
+        "relational_stances",
+        "imagined_chapters",
+        "character_journals",
+        "user_journals",
+        "character_load_test_anchors",
+    ];
+    for table in per_user_tables_fourth_batch {
+        let has: bool = conn
+            .query_row(
+                "SELECT COUNT(*) FROM pragma_table_info(?1) WHERE name = 'user_id'",
+                rusqlite::params![table],
+                |r| r.get::<_, i64>(0),
+            )
+            .unwrap_or(0)
+            > 0;
+        if !has {
+            conn.execute(
+                &format!("ALTER TABLE {table} ADD COLUMN user_id TEXT"),
+                [],
+            )
+            .ok();
+            conn.execute(
+                &format!("CREATE INDEX IF NOT EXISTS idx_{table}_user ON {table}(user_id)"),
+                [],
+            )
+            .ok();
+        }
+    }
+
+    let batch4_done: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM settings WHERE key = 'schema.user_id_backfill_v4_done'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
+    if !batch4_done {
+        let any_rows_batch4: bool = per_user_tables_fourth_batch.iter().any(|t| {
+            conn.query_row(
+                &format!("SELECT COUNT(*) FROM {t}"),
+                [],
+                |r| r.get::<_, i64>(0),
+            )
+            .unwrap_or(0)
+                > 0
+        });
+        if any_rows_batch4 {
+            const SENTINEL_USER_ID: &str = "00000000-0000-0000-0000-000000000001";
+            conn.execute(
+                "INSERT OR IGNORE INTO users (id, email, password_hash, display_name, timezone)
+                 VALUES (?1, 'local-tauri@worldthreads.localdomain', '$disabled$cannot-login',
+                         'Local Tauri (sentinel)', 'UTC')",
+                rusqlite::params![SENTINEL_USER_ID],
+            )
+            .ok();
+            for table in per_user_tables_fourth_batch {
+                conn.execute(
+                    &format!("UPDATE {table} SET user_id = ?1 WHERE user_id IS NULL"),
+                    rusqlite::params![SENTINEL_USER_ID],
+                )
+                .ok();
+            }
+        }
+        conn.execute(
+            "INSERT OR IGNORE INTO settings (key, value) VALUES ('schema.user_id_backfill_v4_done', '1')",
+            [],
+        )
+        .ok();
+    }
+
     Ok(())
 }
