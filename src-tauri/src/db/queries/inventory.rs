@@ -200,6 +200,8 @@ pub struct InventoryUpdateRecord {
 /// Write (or replace) the record for one (message_id, character_id) pair.
 /// Safe no-op when all three lists are empty — we don't want phantom
 /// "no-change" records cluttering the UI.
+/// Phase 2 thread-through (batch-5): user_id now populated on INSERT.
+/// user_id is identity-stable on conflict.
 pub fn record_inventory_update(
     conn: &Connection,
     message_id: &str,
@@ -207,6 +209,7 @@ pub fn record_inventory_update(
     added: &[String],
     updated: &[String],
     removed: &[String],
+    user_id: &str,
 ) -> Result<(), rusqlite::Error> {
     if added.is_empty() && updated.is_empty() && removed.is_empty() {
         return Ok(());
@@ -215,14 +218,14 @@ pub fn record_inventory_update(
     let updated_json = serde_json::to_string(updated).unwrap_or_else(|_| "[]".to_string());
     let removed_json = serde_json::to_string(removed).unwrap_or_else(|_| "[]".to_string());
     conn.execute(
-        "INSERT INTO inventory_update_records (message_id, character_id, added, updated, removed, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, datetime('now'))
+        "INSERT INTO inventory_update_records (message_id, character_id, added, updated, removed, created_at, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, datetime('now'), ?6)
          ON CONFLICT(message_id, character_id) DO UPDATE SET
            added = excluded.added,
            updated = excluded.updated,
            removed = excluded.removed,
            created_at = excluded.created_at",
-        params![message_id, character_id, added_json, updated_json, removed_json],
+        params![message_id, character_id, added_json, updated_json, removed_json, user_id],
     )?;
     Ok(())
 }
@@ -253,10 +256,12 @@ pub struct InventorySnapshotData {
 /// beyond the cap. A no-op if the character row isn't found. Callers
 /// should run this BEFORE writing the new inventory so the snapshot
 /// captures the state about to be overwritten.
+/// Phase 2 thread-through (batch-5): user_id now populated on INSERT.
 pub fn snapshot_inventory_pre_mutation(
     conn: &Connection,
     character_id: &str,
     trigger: &str,
+    user_id: &str,
 ) -> Result<(), rusqlite::Error> {
     let current: Option<(String, Option<i64>)> = conn
         .query_row(
@@ -272,9 +277,9 @@ pub fn snapshot_inventory_pre_mutation(
     let snapshot_id = uuid::Uuid::new_v4().to_string();
     conn.execute(
         "INSERT INTO character_inventory_snapshots
-           (snapshot_id, character_id, inventory, last_inventory_day, created_at, trigger)
-         VALUES (?1, ?2, ?3, ?4, datetime('now'), ?5)",
-        params![snapshot_id, character_id, inv_json, last_day, trigger],
+           (snapshot_id, character_id, inventory, last_inventory_day, created_at, trigger, user_id)
+         VALUES (?1, ?2, ?3, ?4, datetime('now'), ?5, ?6)",
+        params![snapshot_id, character_id, inv_json, last_day, trigger, user_id],
     )?;
 
     // Trim to newest N per character. Use a rowid-scoped DELETE so we

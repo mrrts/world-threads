@@ -361,14 +361,17 @@ pub fn count_messages_since_maintenance(conn: &Connection, thread_id: &str) -> i
     .unwrap_or(0)
 }
 
+/// Phase 2 thread-through (batch-5): user_id now populated on INSERT.
+/// user_id is identity-stable on conflict.
 pub fn increment_message_counter(
     conn: &Connection,
     thread_id: &str,
+    user_id: &str,
 ) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO message_count_tracker (thread_id, count_since_maintenance) VALUES (?1, 1)
+        "INSERT INTO message_count_tracker (thread_id, count_since_maintenance, user_id) VALUES (?1, 1, ?2)
          ON CONFLICT(thread_id) DO UPDATE SET count_since_maintenance = count_since_maintenance + 1",
-        params![thread_id],
+        params![thread_id, user_id],
     )?;
     Ok(())
 }

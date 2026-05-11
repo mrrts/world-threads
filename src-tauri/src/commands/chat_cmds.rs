@@ -381,7 +381,8 @@ pub fn save_user_message_cmd(
         formula_signature: None,
     };
     create_message(&conn, &msg).map_err(|e| e.to_string())?;
-    increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
+    let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+    increment_message_counter(&conn, &thread.thread_id, user_id).map_err(|e| e.to_string())?;
 
     Ok(msg)
 }
@@ -484,7 +485,8 @@ pub async fn send_message_cmd(
             formula_signature: None,
         };
         create_message(&conn, &user_msg).map_err(|e| e.to_string())?;
-        increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
+        let uid = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+        increment_message_counter(&conn, &thread.thread_id, uid).map_err(|e| e.to_string())?;
 
         let recent_msgs = list_messages_within_budget(
             &conn,
@@ -1029,7 +1031,8 @@ pub async fn send_message_cmd(
             formula_signature: formula_momentstamp_signature.clone(),
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
-        increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
+        let uid = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+        increment_message_counter(&conn, &thread.thread_id, uid).map_err(|e| e.to_string())?;
 
         let user_message = recent_msgs.last().cloned().unwrap_or_else(|| Message {
             message_id: String::new(),
@@ -1753,7 +1756,8 @@ pub async fn prompt_character_cmd(
             formula_signature: None,
         };
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
-        increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
+        let uid = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+        increment_message_counter(&conn, &thread.thread_id, uid).map_err(|e| e.to_string())?;
         msg
     };
 
@@ -2139,7 +2143,8 @@ pub async fn try_proactive_ping_cmd(
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         create_message(&conn, &msg).map_err(|e| e.to_string())?;
-        increment_message_counter(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
+        let uid = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+        increment_message_counter(&conn, &thread.thread_id, uid).map_err(|e| e.to_string())?;
         record_proactive_ping(&conn, &thread.thread_id, &now_iso).map_err(|e| e.to_string())?;
     }
 
@@ -3375,7 +3380,8 @@ pub async fn reset_to_message_cmd(
                 formula_signature: None,
             };
             create_message(&conn, &msg).map_err(|e| e.to_string())?;
-            increment_message_counter(&conn, &thread_id).map_err(|e| e.to_string())?;
+            let uid = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+            increment_message_counter(&conn, &thread_id, uid).map_err(|e| e.to_string())?;
 
             let user_message = recent_msgs.last().cloned().unwrap_or_else(|| Message {
                 message_id: String::new(),

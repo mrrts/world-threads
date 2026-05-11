@@ -186,7 +186,8 @@ pub async fn refresh_one_character_inventory(
     // rewind the character's keeping along with the messages.
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = snapshot_inventory_pre_mutation(&conn, &character.character_id, mode);
+        let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+        let _ = snapshot_inventory_pre_mutation(&conn, &character.character_id, mode, user_id);
         let json = serde_json::to_value(&new_items).unwrap_or(Value::Array(vec![]));
         let _ = set_character_inventory(&conn, &character.character_id, &json, Some(today));
     }
@@ -501,7 +502,8 @@ async fn update_one_inventory_from_message(
 
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
-        let _ = snapshot_inventory_pre_mutation(&conn, &character.character_id, "moment");
+        let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+        let _ = snapshot_inventory_pre_mutation(&conn, &character.character_id, "moment", user_id);
         let json = serde_json::to_value(&new_items).unwrap_or(Value::Array(vec![]));
         let _ = set_character_inventory(&conn, &character.character_id, &json, Some(today));
     }
@@ -955,6 +957,7 @@ pub async fn update_inventory_for_moment_cmd(
     // old record rather than accumulating.
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
         for r in &results {
             let added_names: Vec<String> = r.added.iter().map(|i| i.name.clone()).collect();
             let updated_names: Vec<String> = r.updated.iter().map(|i| i.name.clone()).collect();
@@ -965,6 +968,7 @@ pub async fn update_inventory_for_moment_cmd(
                 &added_names,
                 &updated_names,
                 &r.removed,
+                user_id,
             ) {
                 log::warn!(
                     "[Inventory] record_inventory_update failed for {}: {e}",
@@ -1044,7 +1048,8 @@ pub fn set_character_inventory_cmd(
     let character = get_character(&conn, &character_id).map_err(|e| e.to_string())?;
     let world = get_world(&conn, &character.world_id).map_err(|e| e.to_string())?;
     let today = current_world_day(&world);
-    let _ = snapshot_inventory_pre_mutation(&conn, &character_id, "user_edit");
+    let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+    let _ = snapshot_inventory_pre_mutation(&conn, &character_id, "user_edit", user_id);
     let json = serde_json::to_value(&cleaned).unwrap_or(Value::Array(vec![]));
     set_character_inventory(&conn, &character_id, &json, Some(today)).map_err(|e| e.to_string())?;
     Ok(cleaned)

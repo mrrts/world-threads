@@ -57,9 +57,10 @@ pub fn create_consultant_chat_cmd(
         last_seen_message_id: last_msg_id.clone(),
         mode,
     };
+    let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
     conn.execute(
-        "INSERT INTO consultant_chats (chat_id, thread_id, title, created_at, last_seen_message_id, mode) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-        params![chat.chat_id, chat.thread_id, chat.title, chat.created_at, last_msg_id, chat.mode],
+        "INSERT INTO consultant_chats (chat_id, thread_id, title, created_at, last_seen_message_id, mode, user_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+        params![chat.chat_id, chat.thread_id, chat.title, chat.created_at, last_msg_id, chat.mode, user_id],
     ).map_err(|e| e.to_string())?;
     Ok(chat)
 }
@@ -185,6 +186,7 @@ pub fn save_consultant_messages_cmd(
     messages: Vec<ConsultantMessage>,
 ) -> Result<(), String> {
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
     conn.execute(
         "DELETE FROM consultant_messages WHERE chat_id = ?1",
         params![chat_id],
@@ -192,8 +194,8 @@ pub fn save_consultant_messages_cmd(
     .map_err(|e| e.to_string())?;
     for msg in &messages {
         conn.execute(
-            "INSERT INTO consultant_messages (chat_id, role, content) VALUES (?1, ?2, ?3)",
-            params![chat_id, msg.role, msg.content],
+            "INSERT INTO consultant_messages (chat_id, role, content, user_id) VALUES (?1, ?2, ?3, ?4)",
+            params![chat_id, msg.role, msg.content, user_id],
         )
         .map_err(|e| e.to_string())?;
     }
@@ -351,9 +353,10 @@ pub fn import_chat_messages_cmd(
     }
 
     // Persist as import message
+    let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
     conn.execute(
-        "INSERT INTO consultant_messages (chat_id, role, content) VALUES (?1, 'import', ?2)",
-        params![chat_id, content],
+        "INSERT INTO consultant_messages (chat_id, role, content, user_id) VALUES (?1, 'import', ?2, ?3)",
+        params![chat_id, content, user_id],
     )
     .map_err(|e| e.to_string())?;
 
@@ -619,14 +622,15 @@ pub async fn story_consultant_cmd(
     // Persist both messages
     {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
         conn.execute(
-            "INSERT INTO consultant_messages (chat_id, role, content) VALUES (?1, 'user', ?2)",
-            params![chat_id, user_message],
+            "INSERT INTO consultant_messages (chat_id, role, content, user_id) VALUES (?1, 'user', ?2, ?3)",
+            params![chat_id, user_message, user_id],
         )
         .map_err(|e| e.to_string())?;
         conn.execute(
-            "INSERT INTO consultant_messages (chat_id, role, content) VALUES (?1, 'assistant', ?2)",
-            params![chat_id, reply],
+            "INSERT INTO consultant_messages (chat_id, role, content, user_id) VALUES (?1, 'assistant', ?2, ?3)",
+            params![chat_id, reply, user_id],
         )
         .map_err(|e| e.to_string())?;
     }
