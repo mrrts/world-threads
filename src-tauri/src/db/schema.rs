@@ -2441,6 +2441,116 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);"
     )?;
 
+    // ── Web-deployment Phase 1 item 9 (first batch) — user_id scoping ──
+    //
+    // Per architecture plan § XI.1 + readiness summary § IV item 9.
+    // Phase 2 work adds `user_id` to all 23+ existing per-user tables
+    // so the per-user-isolation invariant holds end-to-end. This commit
+    // ships the FIRST BATCH for 3 representative tables (worlds /
+    // characters / threads); subsequent batches mechanically apply the
+    // same pattern to the remaining 20+ tables.
+    //
+    // Migration strategy: ADD COLUMN user_id TEXT NULL (no FK constraint
+    // yet; Phase 2+ tightens to NOT NULL after all per-user tables are
+    // scoped and backfill is complete). For existing Tauri installs with
+    // rows in these tables, a one-shot backfill creates a "local-tauri"
+    // sentinel user and assigns all pre-existing rows to it. Fresh
+    // installs and web-mode installs (where users sign up before
+    // creating worlds) leave the column populated by the application
+    // layer at row-insert time.
+    //
+    // The sentinel pattern is gated by a settings marker so it runs
+    // exactly once per database; subsequent re-runs of the migration
+    // function become no-ops on the backfill step.
+    let per_user_tables_first_batch: &[&str] = &["worlds", "characters", "threads"];
+    for table in per_user_tables_first_batch {
+        let has: bool = conn
+            .query_row(
+                "SELECT COUNT(*) FROM pragma_table_info(?1) WHERE name = 'user_id'",
+                rusqlite::params![table],
+                |r| r.get::<_, i64>(0),
+            )
+            .unwrap_or(0)
+            > 0;
+        if !has {
+            conn.execute(
+                &format!("ALTER TABLE {table} ADD COLUMN user_id TEXT"),
+                [],
+            )
+            .ok();
+            conn.execute(
+                &format!("CREATE INDEX IF NOT EXISTS idx_{table}_user ON {table}(user_id)"),
+                [],
+            )
+            .ok();
+        }
+    }
+
+    // One-shot sentinel-user backfill for existing Tauri installs.
+    // Gated by a settings marker (schema.user_id_backfill_v1_done) so
+    // it runs at most once per database. The sentinel user is keyed
+    // by a fixed UUID so subsequent re-runs are idempotent even if the
+    // marker is somehow cleared.
+    let already_backfilled: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM settings WHERE key = 'schema.user_id_backfill_v1_done'",
+            [],
+            |r| r.get::<_, i64>(0),
+        )
+        .unwrap_or(0)
+        > 0;
+    if !already_backfilled {
+        // Only create the sentinel if there's actual data to backfill.
+        let any_rows: bool = conn
+            .query_row(
+                "SELECT
+                    (SELECT COUNT(*) FROM worlds) +
+                    (SELECT COUNT(*) FROM characters) +
+                    (SELECT COUNT(*) FROM threads) AS total",
+                [],
+                |r| r.get::<_, i64>(0),
+            )
+            .unwrap_or(0)
+            > 0;
+        if any_rows {
+            // Sentinel user id — fixed UUID. The email is namespaced to
+            // avoid conflict with any real user; password_hash is set
+            // to a value that argon2 will never verify against (since
+            // the sentinel is never meant to log in). Display name is
+            // human-readable for ledger/debug clarity.
+            const SENTINEL_USER_ID: &str = "00000000-0000-0000-0000-000000000001";
+            const SENTINEL_EMAIL: &str = "local-tauri@worldthreads.localdomain";
+            const SENTINEL_PW_HASH: &str = "$disabled$cannot-login";
+            const SENTINEL_DISPLAY: &str = "Local Tauri (sentinel)";
+            conn.execute(
+                "INSERT OR IGNORE INTO users (id, email, password_hash, display_name, timezone)
+                 VALUES (?1, ?2, ?3, ?4, 'UTC')",
+                rusqlite::params![
+                    SENTINEL_USER_ID,
+                    SENTINEL_EMAIL,
+                    SENTINEL_PW_HASH,
+                    SENTINEL_DISPLAY,
+                ],
+            )
+            .ok();
+            for table in per_user_tables_first_batch {
+                conn.execute(
+                    &format!("UPDATE {table} SET user_id = ?1 WHERE user_id IS NULL"),
+                    rusqlite::params![SENTINEL_USER_ID],
+                )
+                .ok();
+            }
+        }
+        // Mark complete regardless — fresh installs with no rows still
+        // record completion so future re-runs of the migration skip the
+        // check loop.
+        conn.execute(
+            "INSERT OR IGNORE INTO settings (key, value) VALUES ('schema.user_id_backfill_v1_done', '1')",
+            [],
+        )
+        .ok();
+    }
+
     // ── Web-deployment Phase 1 item 7 — subscriptions + stripe events ───
     //
     // Per the web-hosting architecture plan § X (Stripe integration). The
