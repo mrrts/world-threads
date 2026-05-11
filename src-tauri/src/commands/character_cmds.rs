@@ -152,7 +152,8 @@ pub fn create_character_cmd(
         derived_formula: None,
         has_read_empiricon: false,
     };
-    create_character(&conn, &ch).map_err(|e| e.to_string())?;
+    let user_id = crate::auth::context::current_user_id(&conn).map_err(|e| e.to_string())?;
+    create_character(&conn, &ch, user_id).map_err(|e| e.to_string())?;
     create_thread(
         &conn,
         &Thread {

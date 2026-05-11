@@ -75,17 +75,26 @@ fn default_action_beat_density() -> String {
 
 const CHAR_COLS: &str = "character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at, visual_description, visual_description_portrait_id, inventory, last_inventory_day, signature_emoji, action_beat_density, derived_formula, has_read_empiricon";
 
-pub fn create_character(conn: &Connection, ch: &Character) -> Result<(), rusqlite::Error> {
+/// Insert a new character owned by `user_id`. Phase 2 thread-through:
+/// signature extends with user_id parameter; INSERT SQL appends user_id
+/// column. Tauri callers pass crate::auth::context::current_user_id(conn)?
+/// (which returns the sentinel constant); future api-server callers
+/// pass user_id from the authenticated session cookie via auth_middleware.
+pub fn create_character(
+    conn: &Connection,
+    ch: &Character,
+    user_id: &str,
+) -> Result<(), rusqlite::Error> {
     conn.execute(
-        "INSERT INTO characters (character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at, visual_description, visual_description_portrait_id, inventory, last_inventory_day, signature_emoji, action_beat_density, has_read_empiricon)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21)",
+        "INSERT INTO characters (character_id, world_id, display_name, identity, voice_rules, boundaries, backstory_facts, relationships, state, avatar_color, sex, is_archived, created_at, updated_at, visual_description, visual_description_portrait_id, inventory, last_inventory_day, signature_emoji, action_beat_density, has_read_empiricon, user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22)",
         params![ch.character_id, ch.world_id, ch.display_name, ch.identity,
             ch.voice_rules.to_string(), ch.boundaries.to_string(),
             ch.backstory_facts.to_string(), ch.relationships.to_string(),
             ch.state.to_string(), ch.avatar_color, ch.sex, ch.is_archived, ch.created_at, ch.updated_at,
             ch.visual_description, ch.visual_description_portrait_id,
             ch.inventory.to_string(), ch.last_inventory_day, ch.signature_emoji, ch.action_beat_density,
-            ch.has_read_empiricon as i32],
+            ch.has_read_empiricon as i32, user_id],
     )?;
     Ok(())
 }
