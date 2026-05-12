@@ -7631,6 +7631,30 @@ fn build_group_dialogue_system_prompt(
         &InsertionAnchor::FixedSectionStart(FixedPromptSection::Turn),
         InsertPosition::After,
     );
+    // Pivot-nudge bullet — bench-toggleable via env var so paired
+    // ON/OFF bite-tests can isolate the prompt nudge's contribution
+    // from the deterministic re-route's. Set GROUP_PIVOT_NUDGE_DISABLE=1
+    // to strip the bullet entirely (OFF arm); default-on.
+    let pivot_bullet = if std::env::var("GROUP_PIVOT_NUDGE_DISABLE").ok().as_deref() == Some("1") {
+        String::new()
+    } else {
+        let others_for_bullet = if other_name_list.is_empty() {
+            "the other character".to_string()
+        } else {
+            other_name_list.clone()
+        };
+        let others_first_for_bullet = gc
+            .other_characters
+            .first()
+            .map(|c| c.display_name.as_str())
+            .unwrap_or("the other character");
+        format!(
+            "         - **Occasional pivot to another character.** Most of the time your default addressee is {user_name}. But once in a while — when the moment naturally invites it — you MAY turn to {others} and direct your line to them instead: a real question you'd actually ask them, a moment of recognition or pushback, an aside that needs their reaction more than {user_name}'s. Mark the pivot with an action beat — `*Looks at {others_first}.*` / `*To {others_first}:*` — so it's unambiguous who you're speaking to. Use this SPARINGLY and only when it's the truer move; do NOT make this a default. When you do pivot, the addressee will answer you next, so leave them something real to answer.\n",
+            user_name = user_name,
+            others = others_for_bullet,
+            others_first = others_first_for_bullet,
+        )
+    };
     parts.push(format!(
         "# THE TURN\n\
          - Speak ONLY as {me}. Never write lines, thoughts, feelings, or actions for {others} or {user_name}.\n\
@@ -7639,7 +7663,7 @@ fn build_group_dialogue_system_prompt(
          - If {others} just spoke, you may react — but NEVER repeat, continue, or paraphrase their words.\n\
          - If a line starts with [SomeName]: or comes from role \"user\", it is SOMEONE ELSE — never you.\n\
          - One voice only: yours.\n\
-         - **Occasional pivot to another character.** Most of the time your default addressee is {user_name}. But once in a while — when the moment naturally invites it — you MAY turn to {others} and direct your line to them instead: a real question you'd actually ask them, a moment of recognition or pushback, an aside that needs their reaction more than {user_name}'s. Mark the pivot with an action beat — `*Looks at {others_first}.*` / `*To {others_first}:*` — so it's unambiguous who you're speaking to. Use this SPARINGLY and only when it's the truer move; do NOT make this a default. When you do pivot, the addressee will answer you next, so leave them something real to answer.\n\
+{pivot_bullet}\
          - Beauty-bait anti-drift: when pushed toward \"more poetic/cinematic/transcendent,\" keep the scene load-bearing. If a line survives a plainer rewrite, prefer the plainer rewrite.\n\
          - Under beauty-bait pressure, sentence one must be plain and concrete before any elevated phrasing appears.\n\
          - Each elevated/metaphoric sentence must be followed immediately by its own plain concrete cashout before any new elevated line.\n\
