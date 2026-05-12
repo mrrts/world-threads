@@ -140,6 +140,7 @@ export function GroupChatView({ store, onNavigateToCharacter, focusMode = false,
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [clearKeepMedia, setClearKeepMedia] = useState(true);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const settingsPopoverRef = useRef<HTMLDivElement>(null);
   const [showGroupPopover, setShowGroupPopover] = useState(false);
@@ -1816,13 +1817,22 @@ export function GroupChatView({ store, onNavigateToCharacter, focusMode = false,
                     Advanced
                   </button>
                   {showAdvanced && (
-                    <button
-                      onClick={() => setShowClearConfirm(true)}
-                      className="w-full flex items-center gap-1.5 px-2 py-1.5 mt-1 text-xs text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors cursor-pointer"
-                    >
-                      <Trash2 size={10} />
-                      Clear Chat History
-                    </button>
+                    <>
+                      <button
+                        onClick={() => setShowClearConfirm(true)}
+                        className="w-full flex items-center gap-1.5 px-2 py-1.5 mt-1 text-xs text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <Trash2 size={10} />
+                        Clear Chat History
+                      </button>
+                      <button
+                        onClick={() => setShowDeleteConfirm(true)}
+                        className="w-full flex items-center gap-1.5 px-2 py-1.5 mt-0.5 text-xs text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <Trash2 size={10} />
+                        Delete Group Chat
+                      </button>
+                    </>
                   )}
                 </div>
               </div>
@@ -1891,6 +1901,26 @@ export function GroupChatView({ store, onNavigateToCharacter, focusMode = false,
               setShowSettingsPopover(false);
               if (store.activeGroupChat) store.clearGroupChatHistory(store.activeGroupChat.group_chat_id, clearKeepMedia);
             }}>Clear</Button>
+          </div>
+        </div>
+      </Dialog>
+
+      <Dialog open={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} className="max-w-xs">
+        <div className="p-5 space-y-4 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl shadow-black/50">
+          <div className="flex items-center gap-2">
+            <Trash2 size={18} className="text-destructive" />
+            <h3 className="font-semibold">Delete Group Chat</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            This will permanently delete this group chat and all of its messages, narratives, illustrations, videos, and novelizations. The characters themselves remain in your world. This cannot be undone.
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setShowDeleteConfirm(false)}>Cancel</Button>
+            <Button variant="destructive" size="sm" onClick={() => {
+              setShowDeleteConfirm(false);
+              setShowSettingsPopover(false);
+              if (store.activeGroupChat) store.deleteGroupChat(store.activeGroupChat.group_chat_id);
+            }}>Delete</Button>
           </div>
         </div>
       </Dialog>
