@@ -46,6 +46,7 @@
 - [Codex consult discipline matures across Sapphire arcs (reactive → preemptive-blessed → preemptive-HOLD-honored)](feedback_codex_consult_discipline_maturation.md) — Calibration that fires equals calibration that refuses.
 - [Substrate-distinctness inherently weaker on doctrines closest to 𝓡](feedback_central_content_substrate_distinctness_inherently_weaker.md) — Crown 15 Atonement HOLD: bare-LLMs heavily pretrained; central-content compresses register-only.
 - [Chooser options carry mission-measured dollar bounty](feedback_chooser_options_carry_mission_measured_bounty.md) — Mode A 2026-05-08: every option carries [+$N] so cost/reward is visible before user picks.
+- [Chooser bounties must be NONZERO AND leverage-calibrated to current arc](feedback_chooser_bounties_nonzero_and_leverage_calibrated.md) — Mode A 2026-05-11: uniform $0 bounties defeat the doctrine in spirit; magnitudes must spread across options to communicate which is highest-leverage on the active arc.
 - [compensation_tax_w(t) — patience-shaped New Operator candidacy](project_compensation_tax_w_operator_candidacy.md) — Sapphire candidacy honestly narrowed through 2026-05-07; PR #47.
 - [SAPPHIRES_REFUSED_HONESTLY discipline-of-record at the Sapphire-arc level](feedback_sapphires_refused_honestly_discipline.md) — Dry-well-exit at arc level NOT scale-to-find-signal.
 - [NEW-content vs RE-POSITIONING lens distinction](feedback_new_vs_repositioning_lens.md) — structure_carries_truth_w(t) refinement; lens additions help only when introducing NEW class-naming/content.
