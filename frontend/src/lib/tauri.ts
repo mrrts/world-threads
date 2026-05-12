@@ -698,6 +698,11 @@ export const api = {
     invoke<string | null>("get_last_message_time_cmd", { worldId }),
   getMessages: (characterId: string, limit?: number, offset?: number) =>
     invoke<PaginatedMessages>("get_messages_cmd", { characterId, limit, offset }),
+  // Counts-only sibling of getMessages; cheap (no payload). Used by
+  // WorldSummary to compute per-character badges without IPC'ing every
+  // illustration body.
+  getCharacterMessageCounts: (characterId: string) =>
+    invoke<{ total: number; dialogue: number }>("get_character_message_counts_cmd", { characterId }),
 
 
   // TTS
@@ -873,6 +878,9 @@ export const api = {
     invoke<void>("clear_group_chat_history_cmd", { groupChatId, keepMedia }),
   getGroupMessages: (groupChatId: string, limit?: number, offset?: number) =>
     invoke<PaginatedMessages>("get_group_messages_cmd", { groupChatId, limit, offset }),
+  // Counts-only sibling of getGroupMessages; cheap (no payload).
+  getGroupMessageCounts: (groupChatId: string) =>
+    invoke<{ total: number; dialogue: number }>("get_group_message_counts_cmd", { groupChatId }),
   saveGroupUserMessage: (groupChatId: string, content: string) =>
     invoke<Message>("save_group_user_message_cmd", { groupChatId, content }),
   sendGroupMessage: (apiKey: string, groupChatId: string, content: string) =>

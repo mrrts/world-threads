@@ -230,6 +230,21 @@ pub fn count_group_messages(conn: &Connection, thread_id: &str) -> Result<i64, r
     )
 }
 
+/// Count dialogue messages (everything except illustration role) for a
+/// group-chat thread. Sibling to count_group_messages. Used by
+/// WorldSummary to compute the dialogue-count badge without paying the
+/// IPC cost of serializing every message body.
+pub fn count_group_dialogue_messages(
+    conn: &Connection,
+    thread_id: &str,
+) -> Result<i64, rusqlite::Error> {
+    conn.query_row(
+        "SELECT count(*) FROM group_messages WHERE thread_id = ?1 AND role != 'illustration'",
+        params![thread_id],
+        |r| r.get(0),
+    )
+}
+
 pub fn delete_group_messages_after(
     conn: &Connection,
     thread_id: &str,

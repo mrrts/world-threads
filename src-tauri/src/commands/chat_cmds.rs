@@ -1287,6 +1287,31 @@ pub fn get_messages_cmd(
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct MessageCounts {
+    pub total: i64,
+    pub dialogue: i64,
+}
+
+/// Count messages for a character's thread without serializing message
+/// bodies over IPC. Used by WorldSummary to compute the per-character
+/// total + dialogue-count badges; the prior implementation called
+/// get_messages_cmd (no limit) for each character, which loaded every
+/// message including illustration `content` fields (base64-encoded
+/// image data), making sidebar-button → world-summary slow on rich
+/// worlds. Returns counts only; no payload.
+#[tauri::command]
+pub fn get_character_message_counts_cmd(
+    db: State<Database>,
+    character_id: String,
+) -> Result<MessageCounts, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let thread = get_thread_for_character(&conn, &character_id).map_err(|e| e.to_string())?;
+    let total = count_messages(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
+    let dialogue = count_dialogue_messages(&conn, &thread.thread_id).map_err(|e| e.to_string())?;
+    Ok(MessageCounts { total, dialogue })
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PromptCharacterResult {
     pub assistant_message: Message,
     pub ai_reactions: Vec<Reaction>,

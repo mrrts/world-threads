@@ -352,6 +352,22 @@ pub fn count_messages(conn: &Connection, thread_id: &str) -> Result<i64, rusqlit
     )
 }
 
+/// Count dialogue messages (everything except illustration role) for a
+/// thread. Sibling to count_messages. Used by WorldSummary to compute
+/// the dialogue-count badge without paying the IPC cost of serializing
+/// every message's content (illustration messages store base64-encoded
+/// image data which is megabytes per character at scale).
+pub fn count_dialogue_messages(
+    conn: &Connection,
+    thread_id: &str,
+) -> Result<i64, rusqlite::Error> {
+    conn.query_row(
+        "SELECT count(*) FROM messages WHERE thread_id = ?1 AND role != 'illustration'",
+        params![thread_id],
+        |r| r.get(0),
+    )
+}
+
 pub fn count_messages_since_maintenance(conn: &Connection, thread_id: &str) -> i64 {
     conn.query_row(
         "SELECT count_since_maintenance FROM message_count_tracker WHERE thread_id = ?1",

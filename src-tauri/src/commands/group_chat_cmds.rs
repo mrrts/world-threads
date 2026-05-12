@@ -773,6 +773,21 @@ pub fn get_group_messages_cmd(
     Ok(chat_cmds::PaginatedMessages { messages, total })
 }
 
+/// Counts-only sibling of get_group_messages_cmd. Returns total + dialogue
+/// counts without serializing group-message bodies. Used by WorldSummary
+/// to compute per-group-chat badges cheaply.
+#[tauri::command]
+pub fn get_group_message_counts_cmd(
+    db: State<Database>,
+    group_chat_id: String,
+) -> Result<chat_cmds::MessageCounts, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let gc = get_group_chat(&conn, &group_chat_id).map_err(|e| e.to_string())?;
+    let total = count_group_messages(&conn, &gc.thread_id).map_err(|e| e.to_string())?;
+    let dialogue = count_group_dialogue_messages(&conn, &gc.thread_id).map_err(|e| e.to_string())?;
+    Ok(chat_cmds::MessageCounts { total, dialogue })
+}
+
 #[tauri::command]
 pub fn save_group_user_message_cmd(
     db: State<Database>,

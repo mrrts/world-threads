@@ -136,14 +136,18 @@ export function WorldSummary({ store, onChat, onSettings }: Props) {
     if (!world) return;
     setLoading(true);
     try {
-      // Load all character info in parallel
+      // Counts-only IPC; previous shape called getMessages (no limit)
+      // for each character + group chat, which serialized every
+      // illustration message's base64-encoded image content over IPC
+      // just to compute counts. On rich worlds that was megabytes of
+      // wasted data and the source of the spinning-rainbow-wheel hang
+      // when opening the WorldSummary tab.
       const charResults = await Promise.all(
         store.characters.map(async (ch) => {
           const portrait = store.activePortraits[ch.character_id] ?? null;
           try {
-            const paginated = await api.getMessages(ch.character_id);
-            const dialogueCount = paginated.messages.filter((m) => m.role !== "illustration").length;
-            return { character: ch, portrait, messageCount: paginated.total, dialogueCount };
+            const counts = await api.getCharacterMessageCounts(ch.character_id);
+            return { character: ch, portrait, messageCount: counts.total, dialogueCount: counts.dialogue };
           } catch {
             return { character: ch, portrait, messageCount: 0, dialogueCount: 0 };
           }
@@ -151,12 +155,11 @@ export function WorldSummary({ store, onChat, onSettings }: Props) {
       );
       setCharInfos(charResults);
 
-      // Load group chat dialogue counts in parallel
       const gcEntries = await Promise.all(
         store.groupChats.map(async (gc) => {
           try {
-            const page = await api.getGroupMessages(gc.group_chat_id);
-            return [gc.group_chat_id, page.messages.filter((m) => m.role !== "illustration").length] as const;
+            const counts = await api.getGroupMessageCounts(gc.group_chat_id);
+            return [gc.group_chat_id, counts.dialogue] as const;
           } catch { return [gc.group_chat_id, 0] as const; }
         })
       );
