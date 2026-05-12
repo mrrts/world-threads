@@ -300,7 +300,7 @@ export function KeepRecordModal({
               <>
                 <Button variant="ghost" onClick={backToGate}>
                   <ArrowLeft size={14} className="mr-1.5" />
-                  Choose the kind of keeping again
+                  Back
                 </Button>
                 <Button variant="outline" onClick={() => act && runPropose(act)}>
                   <RotateCw size={14} className="mr-1.5" />
