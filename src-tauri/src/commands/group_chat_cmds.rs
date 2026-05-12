@@ -539,6 +539,74 @@ Output RULES (strict):
     }
 }
 
+/// After a character in a group chat speaks, detect whether they
+/// pivoted to address another in-room character by name. Returns the
+/// addressee's `character_id` when a pivot is detected and the
+/// addressee is in-room and hasn't already spoken this turn-cycle.
+///
+/// Detection is deterministic and scoped to the prompt's canonical
+/// pivot affordances:
+///   1. Asterisk-fenced action-beat markers ("*Looks at X*", "*To X:*",
+///      "*Turns to X*", "*Glances at X*"). The group dialogue prompt
+///      tells the substrate to mark addressee pivots this way, so these
+///      are the high-precision signals.
+///   2. Trailing vocative shapes within the body ("..., X?",
+///      "..., X.", "..., X!", "..., X —"). Lower precision but catches
+///      the natural-question pivot without a stage direction.
+///
+/// Pure substring match (case-insensitive). Names are matched on the
+/// trimmed display_name so a multi-word name like "Pastor Rick" works.
+pub fn detect_addressed_other_character(
+    reply: &str,
+    others: &[Character],
+    already_spoken_ids: &std::collections::HashSet<String>,
+) -> Option<String> {
+    let reply_lower = reply.to_lowercase();
+    for c in others {
+        if already_spoken_ids.contains(&c.character_id) {
+            continue;
+        }
+        let name = c.display_name.trim();
+        if name.is_empty() {
+            continue;
+        }
+        let n = name.to_lowercase();
+        // High-precision: action-beat pivots. The prompt explicitly
+        // asks for these markers when redirecting address.
+        let pivots = [
+            format!("looks at {n}"),
+            format!("looking at {n}"),
+            format!("turns to {n}"),
+            format!("turning to {n}"),
+            format!("glances at {n}"),
+            format!("glancing at {n}"),
+            format!("to {n}:"),
+            format!("to {n},"),
+        ];
+        for p in &pivots {
+            if reply_lower.contains(p.as_str()) {
+                return Some(c.character_id.clone());
+            }
+        }
+        // Trailing vocative — natural-question pivot without a stage
+        // direction. Lower precision (a third-person reference like
+        // "I was with Aaron." could match), so kept narrow to true
+        // sentence-final shapes with terminal punctuation.
+        let vocatives = [
+            format!(", {n}?"),
+            format!(", {n}!"),
+            format!(", {n} —"),
+            format!(", {n}—"),
+        ];
+        for v in &vocatives {
+            if reply_lower.contains(v.as_str()) {
+                return Some(c.character_id.clone());
+            }
+        }
+    }
+    None
+}
+
 /// Render a list of names as "A", "A and B", or "A, B, and C".
 fn join_names_english(names: &[String]) -> String {
     match names.len() {
@@ -1193,10 +1261,21 @@ pub async fn send_group_message_cmd(
     // already spoken in this turn-cycle so second-and-later characters
     // can be explicitly told they may respond to what another character
     // just said (not only to the user).
+    //
+    // Queue (not Vec) because of the character-to-character address
+    // re-route: when a speaker pivots to address another in-room
+    // character by name, we splice that character to the front of the
+    // remaining queue so the addressee answers next. See
+    // `detect_addressed_other_character` above for the detection rules.
     let mut responses: Vec<Message> = Vec::new();
     let mut prior_speakers_this_turn: Vec<String> = Vec::new();
+    let mut already_spoken_ids: std::collections::HashSet<String> =
+        std::collections::HashSet::new();
+    let mut responder_queue: std::collections::VecDeque<Character> =
+        responders.into_iter().collect();
 
-    for (_i, character) in responders.iter().enumerate() {
+    while let Some(character_owned) = responder_queue.pop_front() {
+        let character = &character_owned;
         // Build group context (other characters, excluding the one responding)
         let other_chars: Vec<OtherCharacter> = characters
             .iter()
@@ -1662,7 +1741,49 @@ pub async fn send_group_message_cmd(
         }
 
         prior_speakers_this_turn.push(character.display_name.clone());
+        already_spoken_ids.insert(character.character_id.clone());
         responses.push(response_msg);
+
+        // Character-to-character address re-route: if the speaker
+        // pivoted to address another in-room character by name (action
+        // beat or trailing vocative), splice that character to the
+        // front of the queue so they answer next. Skips characters
+        // already spoken this turn-cycle.
+        if let Some(last_reply) = responses.last().map(|m| m.content.clone()) {
+            let others_in_room: Vec<Character> = characters
+                .iter()
+                .filter(|c| c.character_id != character.character_id)
+                .cloned()
+                .collect();
+            if let Some(addressee_id) = detect_addressed_other_character(
+                &last_reply,
+                &others_in_room,
+                &already_spoken_ids,
+            ) {
+                if let Some(addr_char) =
+                    characters.iter().find(|c| c.character_id == addressee_id).cloned()
+                {
+                    // If already queued, move to front; otherwise push front.
+                    if let Some(pos) = responder_queue
+                        .iter()
+                        .position(|c| c.character_id == addressee_id)
+                    {
+                        if pos != 0 {
+                            if let Some(c) = responder_queue.remove(pos) {
+                                responder_queue.push_front(c);
+                            }
+                        }
+                    } else {
+                        responder_queue.push_front(addr_char.clone());
+                    }
+                    log::info!(
+                        "[GroupTurn] {} addressed {} by name — routing them next",
+                        character.display_name,
+                        addr_char.display_name
+                    );
+                }
+            }
+        }
     }
 
     // Await the parallel reaction pick (launched before the character loop).
