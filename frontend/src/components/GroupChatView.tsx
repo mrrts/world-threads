@@ -183,7 +183,18 @@ export function GroupChatView({ store, onNavigateToCharacter, focusMode = false,
         trailing.push(ev);
       }
     }
-    return { before, trailing };
+    // Within each contiguous bucket, keep only the most-recent event per
+    // character so the user doesn't see a long line of meanwhiles back-to-
+    // back (one each, tops). `scoped` is sorted ascending, so the LAST
+    // occurrence of each character in a bucket is the newest one.
+    const dedupeByCharacter = (events: MeanwhileEvent[]): MeanwhileEvent[] => {
+      const byChar = new Map<string, MeanwhileEvent>();
+      for (const ev of events) byChar.set(ev.character_id, ev);
+      return Array.from(byChar.values()).sort((a, b) => a.created_at.localeCompare(b.created_at));
+    };
+    const beforeDeduped = new Map<string, MeanwhileEvent[]>();
+    for (const [k, v] of before) beforeDeduped.set(k, dedupeByCharacter(v));
+    return { before: beforeDeduped, trailing: dedupeByCharacter(trailing) };
   }, [meanwhileEvents, store.messages, groupCharIdsKey]);
 
   // ── Shared chat state from hook ──────────────────────────────────────

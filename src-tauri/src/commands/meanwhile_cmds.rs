@@ -154,9 +154,9 @@ pub async fn maybe_generate_meanwhile_events_cmd(
     api_key: String,
     world_id: String,
 ) -> Result<Vec<MeanwhileEventWithName>, String> {
-    // Short-circuit check: is there already an event for this world +
+    // Short-circuit check #1: is there already an event for this world +
     // current world_day? If yes, no-op.
-    let (world_day, already_exists) = {
+    let (world_day, already_exists, latest_meanwhile_at) = {
         let conn = db.conn.lock().map_err(|e| e.to_string())?;
         let world = get_world(&conn, &world_id).map_err(|e| e.to_string())?;
         let (wd, _) = current_world_day_and_time(&world);
@@ -167,11 +167,55 @@ pub async fn maybe_generate_meanwhile_events_cmd(
                 |r| r.get(0),
             )
             .unwrap_or(0);
-        (wd, count > 0)
+        let latest_at: Option<String> = conn
+            .query_row(
+                "SELECT MAX(created_at) FROM meanwhile_events WHERE world_id = ?1",
+                rusqlite::params![world_id],
+                |r| r.get(0),
+            )
+            .ok()
+            .flatten();
+        (wd, count > 0, latest_at)
     };
     if already_exists {
         log::info!("[Meanwhile] world {world_id} already has events for Day {world_day} — skipping auto-gen");
         return Ok(Vec::new());
+    }
+
+    // Short-circuit check #2: if the most recent meanwhile event in this
+    // world is newer than the most recent dialogue message across all of
+    // the world's chats (solo + group), don't generate a fresh one. This
+    // prevents back-to-back meanwhile cards when the user re-opens a chat
+    // across a day transition without any actual conversation having
+    // happened since the last meanwhile.
+    if let Some(latest_mw) = latest_meanwhile_at.as_ref() {
+        let conn = db.conn.lock().map_err(|e| e.to_string())?;
+        let latest_msg_at: Option<String> = conn
+            .query_row(
+                "SELECT MAX(latest) FROM (
+                    SELECT MAX(m.created_at) AS latest
+                      FROM messages m
+                      JOIN threads t ON t.thread_id = m.thread_id
+                     WHERE t.world_id = ?1
+                    UNION ALL
+                    SELECT MAX(gm.created_at) AS latest
+                      FROM group_messages gm
+                      JOIN threads t ON t.thread_id = gm.thread_id
+                     WHERE t.world_id = ?1
+                 )",
+                rusqlite::params![world_id],
+                |r| r.get(0),
+            )
+            .ok()
+            .flatten();
+        let no_activity_since_last_meanwhile = match latest_msg_at {
+            None => true,
+            Some(msg_at) => msg_at.as_str() <= latest_mw.as_str(),
+        };
+        if no_activity_since_last_meanwhile {
+            log::info!("[Meanwhile] world {world_id} has no dialogue activity since last meanwhile ({latest_mw}) — skipping auto-gen");
+            return Ok(Vec::new());
+        }
     }
     if api_key.trim().is_empty() {
         return Ok(Vec::new());
