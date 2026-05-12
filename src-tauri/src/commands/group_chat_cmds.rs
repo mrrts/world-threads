@@ -601,6 +601,14 @@ pub fn create_group_chat_cmd(
     if character_ids.len() != 2 {
         return Err("Group chats require exactly 2 characters".to_string());
     }
+    // Defense-in-depth against LLM action-card payloads listing the
+    // same character twice (saw "Steven & Steven" in the wild 2026-05-12
+    // when the consultant proposed a Steven-and-Rick chat but emitted
+    // a duplicate id). The frontend BackstageActionCard also validates
+    // distinctness; this is the canonical guard.
+    if character_ids[0] == character_ids[1] {
+        return Err("Group chat needs two distinct characters; got the same character twice".to_string());
+    }
 
     let conn = db.conn.lock().map_err(|e| e.to_string())?;
 

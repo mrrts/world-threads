@@ -97,6 +97,14 @@ export interface BackstageActionContext {
   apiKey: string;
   /// World id — required for new_group_chat creation.
   worldId: string;
+  /// Optional callback for creating a new group chat. When provided,
+  /// the new_group_chat action card uses this instead of calling
+  /// api.createGroupChat directly — typically wired to
+  /// store.createGroupChat, which refreshes the sidebar's groupChats
+  /// list and selects the new chat. Without this, a group chat created
+  /// here exists in the DB but doesn't appear in the sidebar until the
+  /// next store refresh.
+  createGroupChat?: (characterIds: string[]) => Promise<void>;
 }
 
 interface Props {
@@ -453,10 +461,24 @@ export function BackstageActionCard({ block, ctx }: Props) {
         setState("error");
         return;
       }
+      // Defend against LLM emitting duplicate character_ids — would
+      // otherwise produce a "Steven & Steven"-style group chat per the
+      // backend's display-name builder (saw this in the wild 2026-05-12).
+      if (block.character_ids[0] === block.character_ids[1]) {
+        setError("Group chat needs two distinct characters; the action card listed the same character twice.");
+        setState("error");
+        return;
+      }
       setState("applying");
       setError(null);
       try {
-        await api.createGroupChat(ctx.worldId, block.character_ids);
+        // Prefer the store callback (refreshes sidebar) over api direct
+        // call (DB-only — sidebar stays stale until next refresh).
+        if (ctx.createGroupChat) {
+          await ctx.createGroupChat(block.character_ids);
+        } else {
+          await api.createGroupChat(ctx.worldId, block.character_ids);
+        }
         setState("applied");
         setTimeout(() => ctx.onAppliedClose(), 800);
       } catch (e: any) {

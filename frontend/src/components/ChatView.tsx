@@ -1955,6 +1955,7 @@ export function ChatView({ store, onNavigateToCharacter, focusMode = false, onTo
         chatFontSize={store.chatFontSize}
         autoSendOnOpen={consultantAutoSend}
         onAutoSendConsumed={() => setConsultantAutoSend(null)}
+        onCreateGroupChat={store.createGroupChat}
       />
 
       <ImaginedChapterModal

@@ -46,6 +46,11 @@ interface Props {
    *  later doesn't re-send the same prompt. */
   autoSendOnOpen?: string | null;
   onAutoSendConsumed?: () => void;
+  /** Optional callback for action-card new-group-chat creation.
+   *  When provided, threaded into BackstageActionContext.createGroupChat
+   *  so the action card uses store.createGroupChat (refreshes sidebar)
+   *  instead of api.createGroupChat directly (DB-only, sidebar stale). */
+  onCreateGroupChat?: (characterIds: string[]) => Promise<void>;
 }
 
 interface PromptCategory {
@@ -190,7 +195,7 @@ function buildCategories(names: string[]): PromptCategory[] {
   ];
 }
 
-export function StoryConsultantModal({ open, onClose, apiKey, characterId, groupChatId, threadId, characterNames, worldImageUrl, portraits, userAvatarUrl, notifyOnMessage, chatFontSize, worldId, autoSendOnOpen, onAutoSendConsumed }: Props) {
+export function StoryConsultantModal({ open, onClose, apiKey, characterId, groupChatId, threadId, characterNames, worldImageUrl, portraits, userAvatarUrl, notifyOnMessage, chatFontSize, worldId, autoSendOnOpen, onAutoSendConsumed, onCreateGroupChat }: Props) {
   const [chats, setChats] = useState<ConsultantChat[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   // Which tab the sidebar is showing. Also determines the mode of any
@@ -814,6 +819,7 @@ export function StoryConsultantModal({ open, onClose, apiKey, characterId, group
                                         onAppliedClose: onClose,
                                         apiKey,
                                         worldId,
+                                        createGroupChat: onCreateGroupChat,
                                       } as BackstageActionContext}
                                     />
                               ))}
